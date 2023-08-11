@@ -4,7 +4,7 @@
 <a href="https://www.oasis-open.org/committees/xacml/">OASIS eXtensible Access Control Markup Language (XACML) TC</a>, for any
 substantive contributions.  Anyone wishing to <a href="https://www.oasis-open.org/org/faq#committee-participation">participate</a>
 in the TC's technical activity is invited to <a href="https://www.oasis-open.org/committees/join">join</a> as a TC Member.
-__Member___ in this context means any TC role other than OASIS TC Observer, per
+_Member_ in this context means any TC role other than OASIS TC Observer, per
 <a href="https://www.oasis-open.org/policies-guidelines/tc-process#membership">TC Process</a>.
 
 Persons who are not TC members are invited to open issues and provide comments using this repository's <a href="https://github.com/oasis-tcs/xacml-spec/issues/new">GitHub Issues</a> tracking facility or using the
