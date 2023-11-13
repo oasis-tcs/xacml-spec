@@ -1,0 +1,20 @@
+= 5.23 Element <VariableDefinition> =
+
+The `<VariableDefinition>` element SHALL be used to define a value that can be referenced by a `<VariableReference>` element. The name supplied for its `VariableId` attribute SHALL NOT occur in the `VariableId` attribute of any other `<VariableDefinition>` element within the encompassing *_policy_*.  The `<VariableDefinition>` element MAY contain undefined `<VariableReference>` elements, but if it does, a corresponding `<VariableDefinition>` element MUST be defined later in the encompassing *_policy_*. `<VariableDefinition>` elements MAY be grouped together or MAY be placed close to the reference in the encompassing *_policy_*. There MAY be zero or more references to each *_<VariableDefinition>_* element.
+
+[source,xml]
+----
+<xs:element name="VariableDefinition" type="xacml:VariableDefinitionType"/>
+<xs:complexType name="VariableDefinitionType">
+   <xs:sequence>
+          <xs:element ref="xacml:Expression"/>
+   </xs:sequence>
+   <xs:attribute name="VariableId" type="xs:string" use="required"/>
+</xs:complexType>
+----
+
+The `<VariableDefinition>` element is of `VariableDefinitionType` complex type.  The `<VariableDefinition>` element has the following elements and attributes:
+
+`<Expression>` [Required]:: Any element of `ExpressionType` complex type.
+
+`VariableId` [Required]:: The name of the variable definition.
