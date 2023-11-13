@@ -1,0 +1,22 @@
+= 5.24 Element <VariableReference> =
+
+The `<VariableReference>` element is used to reference a value defined within the same encompassing `<Policy>` element. The `<VariableReference>` element SHALL refer to the `<VariableDefinition>` element by *_identifier equality_* on the value of their respective `VariableId` attributes. One and only one `<VariableDefinition>` MUST exist within the same encompassing `<Policy>` element to which the `<VariableReference>` refers. There MAY be zero or more `<VariableReference>` elements that refer to the same `<VariableDefinition>` element.
+
+[source,xml]
+----
+<xs:element name="VariableReference" type="xacml:VariableReferenceType" substitutionGroup="xacml:Expression"/>
+<xs:complexType name="VariableReferenceType">
+   <xs:complexContent>
+          <xs:extension base="xacml:ExpressionType">
+                <xs:attribute name="VariableId" type="xs:string"
+                    use="required"/>
+          </xs:extension>
+   </xs:complexContent>
+</xs:complexType>
+----
+
+The `<VariableReference>` element is of the `VariableReferenceType` complex type, which is of the `ExpressionType` complex type and is a member of the `<Expression>` element substitution group.  The `<VariableReference>` element MAY appear any place where an `<Expression>` element occurs in the schema.
+
+The `<VariableReference>` element has the following attribute:
+
+`VariableId` [Required]:: The name used to refer to the value defined in a `<VariableDefinition>` element.
