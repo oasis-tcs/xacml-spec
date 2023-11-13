@@ -1,0 +1,38 @@
+= 5.21 Element <Rule> =
+
+The `<Rule>` element SHALL define the individual *_rules_* in the *_policy_*. The main components of this element are the `<Target>`, `<Condition>`, `<ObligationExpressions>` and `<AdviceExpressions>` elements and the `Effect` attribute.
+
+A `<Rule>` element may be evaluated, in which case the evaluation procedure defined in Section 7.10 SHALL be used.
+
+[source,xml]
+----
+<xs:element name="Rule" type="xacml:RuleType"/>
+<xs:complexType name="RuleType">
+   <xs:sequence>
+          <xs:element ref="xacml:Description" minOccurs="0"/>
+          <xs:element ref="xacml:Target" minOccurs="0"/>
+          <xs:element ref="xacml:Condition" minOccurs="0"/>
+          <xs:element ref="xacml:ObligationExpressions" minOccurs="0"/>
+          <xs:element ref="xacml:AdviceExpressions" minOccurs="0"/>     </xs:sequence>
+   <xs:attribute name="RuleId" type="xs:string" use="required"/>
+   <xs:attribute name="Effect" type="xacml:EffectType" use="required"/>
+</xs:complexType>
+----
+
+The `<Rule>` element is of `RuleType` complex type.
+
+The `<Rule>` element contains the following attributes and elements:
+
+`RuleId` [Required]:: A string identifying this *_rule_*.
+
+`Effect` [Required]:: *_Rule effect_*. The value of this attribute is either "Permit" or "Deny".
+
+`<Description>` [Optional]:: A free-form description of the *_rule_*.
+
+`<Target>` [Optional]:: Identifies the set of *_decision requests_* that the `<Rule>` element is intended to evaluate. If this element is omitted, then the *_target_* for the `<Rule>` SHALL be defined by the `<Target>` element of the enclosing `<Policy>` element. See Section 7.7 for details.
+
+`<Condition>` [Optional]:: A *_predicate_* that MUST be satisfied for the *_rule_* to be assigned its `Effect` value.
+
+`<ObligationExpressions>` [Optional]:: A *_conjunctive sequence_* of *_obligation_* expressions which MUST be evaluated into *_obligations_* by the PDP. The corresponsding *_obligations_* MUST be fulfilled by the *_PEP_* in conjunction with the *_authorization decision_*.  See Section 7.18 for a description of how the set of *_obligations_* to be returned by the *_PDP_* SHALL be determined. See section 7.2 about enforcement of *_obligations_*.
+
+`<AdviceExpressions>` [Optional]:: A *_conjunctive sequence_* of *_advice_* expressions which MUST evaluated into *_advice_* by the *_PDP_*. The corresponding *_advice_* provide supplementary information to the *_PEP_* in conjunction with the *_authorization decision_*.  See Section 7.18 for a description of how the set of *_advice_* to be returned by the *_PDP_* SHALL be determined.
