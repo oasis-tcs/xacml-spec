@@ -1,0 +1,7 @@
+= 7.8 VariableReference Evaluation =
+
+The `<VariableReference>` element references a single `<VariableDefinition>` element contained within the same `<Policy>` element. A `<VariableReference>` that does not reference a particular `<VariableDefinition>` element within the encompassing `<Policy>` element is called an undefined reference. *_Policies_* with undefined references are invalid.
+
+In any place where a `<VariableReference>` occurs, it has the effect as if the text of the `<Expression>` element defined in the `<VariableDefinition>` element replaces the `<VariableReference>` element. Any evaluation scheme that preserves this semantic is acceptable. For instance, the expression in the `<VariableDefinition>` element may be evaluated to a particular value and cached for multiple references without consequence. (I.e. the value of an `<Expression>` element remains the same for the entire *_policy_* evaluation.)  This characteristic is one of the benefits of XACML being a declarative language.
+
+A variable reference containing circular references is invalid. The PDP MUST detect circular references either at policy loading time or during runtime evaluation. If the PDP detects a circular reference during runtime the variable reference evaluates to "Indeterminate" with status code urn:oasis:names:tc:xacml:1.0:status:processing-error.
