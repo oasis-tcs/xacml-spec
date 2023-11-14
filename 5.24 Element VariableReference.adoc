@@ -1,6 +1,6 @@
 = 5.24 Element <VariableReference> =
 
-The `<VariableReference>` element is used to reference a value defined within the same encompassing `<Policy>` element. The `<VariableReference>` element SHALL refer to the `<VariableDefinition>` element by *_identifier equality_* on the value of their respective `VariableId` attributes. One and only one `<VariableDefinition>` MUST exist within the same encompassing `<Policy>` element to which the `<VariableReference>` refers. There MAY be zero or more `<VariableReference>` elements that refer to the same `<VariableDefinition>` element.
+The `<VariableReference>` element is used to reference a value defined within the same encompassing `<Policy>` or `<Rule>` element. The `<VariableReference>` element SHALL refer to the `<VariableDefinition>` element by *_identifier equality_* on the value of their respective `VariableId` attributes. One and only one `<VariableDefinition>` MUST exist within the same encompassing `<Policy>` or `<Rule>` element to which the `<VariableReference>` refers. There MAY be zero or more `<VariableReference>` elements that refer to the same `<VariableDefinition>` element.
 
 [source,xml]
 ----

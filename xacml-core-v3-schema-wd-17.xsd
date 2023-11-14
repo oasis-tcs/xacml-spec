@@ -375,6 +375,7 @@
 		<xs:sequence>
 			<xs:element ref="xacml:Description" minOccurs="0"/>
 			<xs:element ref="xacml:Target" minOccurs="0"/>
+			<xs:element ref="xacml:VariableDefinition" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element ref="xacml:Condition" minOccurs="0"/>
 			<xs:element ref="xacml:ObligationExpressions" minOccurs="0"/>
 			<xs:element ref="xacml:AdviceExpressions" minOccurs="0"/>
