@@ -8,7 +8,7 @@
 
 ## Committee Specification Draft 01
 
-## 09 August 2024
+## 09 September 2024
 
 &nbsp;
 
@@ -92,7 +92,7 @@ When referencing this specification the following citation format should be used
 **[XACML-v4.0]**
 
 _eXtensible Access Control Markup Language (XACML) Version 4.0_.
-Edited by Steven Legg and Cyril Dangerville. 9 August 2024. OASIS Committee Specification Draft 01.
+Edited by Steven Legg and Cyril Dangerville. 9 September 2024. OASIS Committee Specification Draft 01.
 https://docs.oasis-open.org/xacml/xacml/v4.0/csd01/xacml-v4.0-csd01.html.
 Latest stage: https://docs.oasis-open.org/xacml/xacml/v4.0/xacml-v4.0.html.
 
@@ -139,7 +139,11 @@ XACML 4.0 differs from XACML 3.0 in the following ways:
 
   * The `PolicyType` type now allows child `<Policy>`, `<PolicyIdReference>` and `<PolicyCombinerParameters>` elements.
 
-  * Separate rule and policy combining algorithms have been replaced with a single collection of **_combining algorithms_**. Legacy **_combining algorithms_** have been removed.
+  * Separate rule and policy **_combining algorithms_** have been replaced with a single collection of **_combining algorithms_**. Legacy **_combining algorithms_** have been removed. The only-one-applicable policy **_combining algorithm_** has been removed.
+
+* The `<Target>` element's type has been changed to be the same as the `<Condition>` element's type (a single Boolean expression). The `<AnyOf>`, `<AllOf>` and `<Match>` elements have been removed.
+
+* The `<Target>` element has been removed from `RuleType`.
 
 ## 1.2 Glossary
 
@@ -169,7 +173,7 @@ XACML 4.0 differs from XACML 3.0 in the following ways:
 
 **Attribute**
 
-* Characteristic of a **_subject_**, **_resource_**, **_action_** or **_environment_** that may be referenced in a **_predicate_** or **_target_** (see also – **_named attribute_**)
+* Characteristic of a **_subject_**, **_resource_**, **_action_** or **_environment_** that may be referenced in a **_predicate_** (see also – **_named attribute_**)
 
 **Authorization decision**
 
@@ -265,7 +269,7 @@ XACML 4.0 differs from XACML 3.0 in the following ways:
 
 **Rule**
 
-* A **_target_**, an **_effect_**, a **_condition_** and (optionally) a set of **_obligations_** or **_advice_**. A component of a **_policy_**
+* An **_effect_**, a **_condition_** and (optionally) a set of **_obligations_** or **_advice_**. A component of a **_policy_**
 
 **Subject**
 
@@ -273,7 +277,7 @@ XACML 4.0 differs from XACML 3.0 in the following ways:
 
 **Target**
 
-* An element of an XACML **_rule_** or **_policy_** which matches specified values of **_resource_**, **_subject_**, **_environment_**, **_action_**, or other custom attributes against those provided in the request **_context_** as a part of the process of determining whether the **_rule_** or **_policy_** is applicable to the current decision.
+* An element of an XACML **_policy_** which matches specified values of **_resource_**, **_subject_**, **_environment_**, **_action_**, or other custom **_attributes_** against those provided in the request **_context_** as a part of the process of determining whether the **_policy_** is applicable to the current decision.
 
 **Type Unification**
 
@@ -381,9 +385,7 @@ In the case of the Deny-overrides algorithm, if a single `<Rule>` or `<Policy>` 
 
 Likewise, in the case of the Permit-overrides algorithm, if a single "Permit" result is encountered, then the combined result is "Permit".
 
-In the case of the “First-applicable” combining algorithm, the combined result is the same as the result of evaluating the first `<Rule>` or `<Policy>` element in the list of **_rules_** and **_policies_** whose **_target_** and **_condition_** is applicable to the **_decision request_**.
-
-The "Only-one-applicable" **_combining algorithm_** only applies to **_policies_**. The result of this combining algorithm ensures that one and only one **_policy_** is applicable by virtue of their **_targets_**. If no **_policy_** applies, then the result is "NotApplicable", but if more than one **_policy_** is applicable, then the result is "Indeterminate". When exactly one **_policy_** is applicable, the result of the **_combining algorithm_** is the result of evaluating the single applicable **_policy_**.
+In the case of the “First-applicable” **_combining algorithm_**, the combined result is the same as the result of the first `<Rule>` or `<Policy>` element in the list of **_rules_** and **_policies_** that is applicable to the **_decision request_**.
 
 **_Policies_** may take parameters that modify the behavior of the **_combining algorithms_**. However, none of the standard **_combining algorithms_** is affected by parameters.
 
@@ -533,8 +535,6 @@ These are described in the following sub-sections.
 
 A **_rule_** is the most elementary unit of **_policy_**. It may exist in isolation only within one of the major actors of the XACML domain. In order to exchange **_rules_** between major actors, they must be encapsulated in a **_policy_**. A **_rule_** can be evaluated on the basis of its contents. The main components of a **_rule_** are:
 
-* a **_target_**;
-
 * an **_effect_**,
 
 * a **_condition_**,
@@ -545,11 +545,11 @@ A **_rule_** is the most elementary unit of **_policy_**. It may exist in isolat
 
 These are discussed in the following sub-sections.
 
-#### 3.3.1.1 Rule target
+#### 3.3.1.1 Condition
 
-The **_target_** defines the set of requests to which the **_rule_** is intended to apply in the form of a logical expression on **_attributes_** in the request. The `<Condition>` element may further refine the applicability established by the **_target_**. If the **_rule_** is intended to apply to all entities of a particular data-type, then the corresponding entity is omitted from the **_target_**. An XACML **_PDP_** verifies that the matches defined by the **_target_** are satisfied by the **_attributes_** in the request **_context_**.
+The **_condition_** defines the set of requests to which the **_rule_** is intended to apply in the form of a logical expression on **_attributes_** in the request. If the **_rule_** is intended to apply to all entities of a particular data-type, then the corresponding entity is omitted from the **_condition_**. An XACML **_PDP_** verifies that the matches defined by the **_condition_** are satisfied by the **_attributes_** in the request **_context_**.
 
-The `<Target>` element may be absent from a `<Rule>`. In this case, the **_target_** of the `<Rule>` is the same as that of the parent `<Policy>` element.
+The `<Condition>` element may be absent from a `<Rule>`. In this case, the **_condition_** of the `<Rule>` is the same as the **_target_** of the parent `<Policy>` element.
 
 Certain **_subject_** name-forms, **_resource_** name-forms and certain types of **_resource_** are internally structured. For instance, the X.500 directory name-form and RFC 822 name-form are structured **_subject_** name-forms, whereas an account number commonly has no discernible structure. UNIX file-system path-names and URIs are examples of structured **_resource_** name-forms. An XML document is an example of a structured **_resource_**.
 
@@ -561,11 +561,7 @@ In the case of **_subjects_**, there is no real entity that corresponds to such 
 
 #### 3.3.1.2 Effect
 
-The **_effect_** of the **_rule_** indicates the **_rule_**-writer's intended consequence of a "True" evaluation for the **_rule_**. Two values are allowed: "Permit" and "Deny".
-
-#### 3.3.1.3 Condition
-
-**_Condition_** represents a Boolean expression that refines the applicability of the **_rule_** beyond the **_predicates_** implied by its **_target_**. Therefore, it may be absent.
+The **_effect_** of the **_rule_** indicates the **_rule_**-writer's intended consequence of a "True" evaluation for the **_condition_**. Two values are allowed: "Permit" and "Deny".
 
 #### 3.3.1.4 Obligation expressions
 
@@ -597,11 +593,11 @@ From the data-flow model one can see that **_rules_** are not exchanged amongst 
 
 #### 3.3.2.1 Policy target
 
-An XACML `<Policy>` or `<Rule>` element contains a `<Target>` element that specifies the set of requests to which it applies. The `<Target>` of a `<Policy>` may be declared by the writer of the `<Policy>`, or it may be calculated from the `<Target>` elements of the `<Policy>` and `<Rule>` elements that it contains.
+An XACML `<Policy>` element contains a `<Target>` element that specifies the set of requests to which it applies. The `<Target>` of a `<Policy>` may be declared by the writer of the `<Policy>`, or it may be calculated from the `<Target>` and `<Condition>` elements of the `<Policy>` and `<Rule>` elements (respectively) that it contains.
 
-A system entity that calculates a `<Target>` in this way is not defined by XACML, but there are two logical methods that might be used. In one method, the `<Target>` element of the outer `<Policy>` (the "outer component") is calculated as the union of all the `<Target>` elements of the referenced `<Policy>` or `<Rule>` elements (the "inner components"). In another method, the `<Target>` element of the outer component is calculated as the intersection of all the `<Target>` elements of the inner components. The results of evaluation in each case will be very different: in the first case, the `<Target>` element of the outer component makes it applicable to any **_decision request_** that matches the `<Target>` element of at least one inner component; in the second case, the `<Target>` element of the outer component makes it applicable only to **_decision requests_** that match the `<Target>` elements of every inner component. Note that computing the intersection of a set of `<Target>` elements is likely only practical if the **_target_** data-model is relatively simple.
+A system entity that calculates a `<Target>` in this way is not defined by XACML, but there are two logical methods that might be used. In one method, the `<Target>` element of the outer `<Policy>` (the "outer component") is calculated as the union of all the `<Target>` elements of the referenced `<Policy>` elements and the `<Condition>` elements of the referenced `<Rule>` elements (the "inner components"). In another method, the `<Target>` element of the outer component is calculated as the intersection of all the `<Target>` and `<Condition>` elements of the inner components. The results of evaluation in each case will be very different: in the first case, the `<Target>` element of the outer component makes it applicable to any **_decision request_** that matches the `<Target>` or `<Condition>` element of at least one inner component; in the second case, the `<Target>` element of the outer component makes it applicable only to **_decision requests_** that match the `<Target>` and `<Condition>` elements of every inner component. Note that computing the intersection of a set of `<Target>` and `<Condition>` elements is likely only practical if the data-model is relatively simple.
 
-In cases where the `<Target>` of a `<Policy>` is declared by the **_policy_** writer, any component `<Rule>` elements in the `<Policy>` that have the same `<Target>` element as the `<Policy>` element may omit the `<Target>` element. Such `<Rule>` elements inherit the `<Target>` of the `<Policy>` in which they are contained.
+In cases where the `<Target>` of a `<Policy>` is declared by the **_policy_** writer, any component `<Rule>` elements in the `<Policy>` that have the same `<Condition>` element as the `<Target>` element may omit the `<Condition>` element. Such `<Rule>` elements inherit the `<Target>` of the `<Policy>` in which they are contained.
 
 #### 3.3.2.2 Combining algorithm
 
@@ -688,7 +684,7 @@ The `<AdviceExpressions>` element contains a set of **_advice_** expressions tha
       <xs:element ref="xacml:Description" minOccurs="0"/>
       <xs:element ref="xacml:PolicyIssuer" minOccurs="0"/>
       <xs:element ref="xacml:PolicyDefaults" minOccurs="0"/>
-      <xs:element ref="xacml:Target"/>
+      <xs:element ref="xacml:Target" minOccurs="0"/>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
          <xs:element ref="xacml:Policy"/>
          <xs:element ref="xacml:PolicyIdReference"/>
@@ -722,7 +718,7 @@ The `<Policy>` element contains the following attributes and elements:
 
 `CombiningAlgId` [Required]
 
-* The identifier of the **_combining algorithm_** by which the `<Policy>`, `<Rule>`, `<CombinerParameters>`, `<PolicyCombinerParameters>` and `<RuleCombinerParameters>` components MUST be combined. Standard combining algorithms are listed in [Appendix G](#appendix-g-combining-algorithms-normative). Standard **_combining algorithm_** identifiers are listed in [Appendix F.9](#f9-combining-algorithms).
+* The identifier of the **_combining algorithm_** by which the `<Policy>`, `<Rule>`, `<CombinerParameters>`, `<PolicyCombinerParameters>` and `<RuleCombinerParameters>` components MUST be combined. Standard **_combining algorithms_** are listed in [Appendix G](#appendix-g-combining-algorithms-normative). Standard **_combining algorithm_** identifiers are listed in [Appendix F.9](#f9-combining-algorithms).
 
 `MaxDelegationDepth` [Optional]
 
@@ -740,11 +736,11 @@ The `<Policy>` element contains the following attributes and elements:
 
 * A set of default values applicable to the **_policy_**. The scope of the `<PolicyDefaults>` element SHALL be the enclosing **_policy_**.
 
-`<Target>` [Required]
+`<Target>` [Optional]
 
 * The `<Target>` element defines the applicability of a **_policy_** to a set of **_decision requests_**.
 
-* The `<Target>` element MAY be declared by the creator of the `<Policy>` element or it MAY be computed from the `<Target>` elements of the referenced `<Policy>` and `<Rule>` elements, either as an intersection or as a union.
+* The `<Target>` element MAY be declared by the creator of the `<Policy>` element or it MAY be computed from the `<Target>` elements of the referenced `<Policy>` and `<Rule>` elements, either as an conjunction or as a disjunction.
 
 `<Policy>` [Any Number]
 
@@ -760,7 +756,7 @@ The `<Policy>` element contains the following attributes and elements:
 
 `<Rule>` [Any Number]
 
-* A sequence of **_rules_** that MUST be combined according to the `CombiningAlgId` attribute. **_Rules_** whose `<Target>` elements and conditions match the **_decision request_** MUST be considered. Rules whose `<Target>` elements or conditions do not match the **_decision request_** SHALL be ignored.
+* A sequence of **_rules_** that MUST be combined according to the `CombiningAlgId` attribute. **_Rules_** whose **_conditions_** match the **_decision request_** MUST be considered. Rules whose **_conditions_** do not match the **_decision request_** SHALL be ignored.
 
 `<ObligationExpressions>` [Optional]
 
@@ -772,7 +768,7 @@ The `<Policy>` element contains the following attributes and elements:
 
 `<CombinerParameters>` [Optional]
 
-* Contains a sequence of `<CombinerParameter>` elements. The parameters apply to the combining algorithm as such and it is up to the specific combining algorithm to interpret them and adjust its behavior accordingly.
+* Contains a sequence of `<CombinerParameter>` elements. The parameters apply to the **_combining algorithm_** as such and it is up to the specific **_combining algorithm_** to interpret them and adjust its behavior accordingly.
 
 `<PolicyCombinerParameters>` [Optional]
 
@@ -853,108 +849,31 @@ The URI for the XPath 2.0 specification is “http://www.w3.org/TR/2007/REC-xpat
 
 The `<XPathVersion>` element is REQUIRED if the XACML enclosing **_policy_** contains `<AttributeSelector>` elements or XPath-based functions.
 
-## 5.6 Element \<Target>
+## 5.6 Complex type BooleanExpressionType
 
-The `<Target>` element identifies the set of **_decision requests_** that the parent element is intended to evaluate. The `<Target>` element SHALL appear as a child of a `<Policy>` element and MAY appear as a child of a `<Rule>` element.
-
-The `<Target>` element SHALL contain a **_conjunctive sequence_** of `<AnyOf>` elements. For the parent of the `<Target>` element to be applicable to the **_decision request_**, there MUST be at least one positive match between each `<AnyOf>` element of the `<Target>` element and the corresponding section of the `<Request>` element.
+The `BooleanExpressionType` complex type contains one `<Expression>` child element, with the restriction that the `<Expression>` return data-type MUST be “http://www.w3.org/2001/XMLSchema#boolean”.
 
 ```
-<xs:element name="Target" type="xacml:TargetType"/>
-<xs:complexType name="TargetType">
-   <xs:sequence minOccurs="0" maxOccurs="unbounded">
-      <xs:element ref="xacml:AnyOf"/>
-   </xs:sequence>
-</xs:complexType>
-```
-
-The `<Target>` element is of `TargetType` complex type.
-
-The `<Target>` element contains the following elements:
-
-`<AnyOf>` [Zero to Many]
-
-* Matching specification for **_attributes_** in the **_context_**. If this element is missing, then the **_target_** SHALL match all **_contexts_**.
-
-## 5.7 Element \<AnyOf>
-
-The `<AnyOf>` element SHALL contain a **_disjunctive sequence_** of `<AllOf>` elements.
-
-```
-<xs:element name="AnyOf" type="xacml:AnyOfType"/>
-<xs:complexType name="AnyOfType">
-   <xs:sequence minOccurs="1" maxOccurs="unbounded">
-      <xs:element ref="xacml:AllOf"/>
-   </xs:sequence>
-</xs:complexType>
-```
-
-The `<AnyOf>` element is of `AnyOfType` complex type.
-
-The `<AnyOf>` element contains the following elements:
-
-`<AllOf>` [One to Many, Required]
-
-* See [Section 5.8](#58-element-allof).
-
-## 5.8 Element \<AllOf>
-
-The `<AllOf>` element SHALL contain a **_conjunctive sequence_** of `<Match>` elements.
-
-```
-<xs:element name="AllOf" type="xacml:AllOfType"/>
-<xs:complexType name="AllOfType">
-   <xs:sequence minOccurs="1" maxOccurs="unbounded">
-      <xs:element ref="xacml:Match"/>
-   </xs:sequence>
-</xs:complexType>
-```
-
-The `<AllOf>` element is of `AllOfType` complex type.
-
-The `<AllOf>` element contains the following elements:
-
-`<Match>` [One to Many]
-
-* A **_conjunctive sequence_** of individual matches of the **_attributes_** in the request **_context_** and the embedded **_attribute_** values. See [Section 5.9](#59-element-match).
-
-## 5.9 Element \<Match>
-
-The `<Match>` element SHALL identify a set of entities by matching **_attribute_** values in an `<Attributes>` element of the request **_context_** with the embedded **_attribute_** value.
-
-```
-<xs:element name="Match" type="xacml:MatchType"/>
-<xs:complexType name="MatchType">
+<xs:complexType name="BooleanExpressionType">
    <xs:sequence>
-      <xs:element ref="xacml:AttributeValue"/>
-      <xs:choice>
-         <xs:element ref="xacml:AttributeDesignator"/>
-         <xs:element ref="xacml:AttributeSelector"/>
-      </xs:choice>
+      <xs:element ref="xacml:Expression"/>
    </xs:sequence>
-   <xs:attribute name="MatchId" type="xs:anyURI" use="required"/>
 </xs:complexType>
 ```
 
-The `<Match>` element is of `MatchType` complex type.
+The `<Target>` and `<Condition>` elements are of this type.
 
-The `<Match>` element contains the following attributes and elements:
+Expression evaluation is described in [Section 7.4](#74-expression-evaluation).
 
-`MatchId` [Required]
+## 5.7 Element \<Target>
 
-* Specifies a matching function. The value of this attribute MUST be of type xs:anyURI with legal values documented in [Section 7.6](#76-match-evaluation).
+The `<Target>` element identifies the set of **_decision requests_** that the parent `<Policy>` element is intended to evaluate. If this element is omitted from the `<Policy>` element then the **_policy_** matches all **_decision requests_**.
 
-`<AttributeValue>` [Required]
+```
+<xs:element name="Target" type="xacml:BooleanExpressionType"/>
+```
 
-* Embedded **_attribute_** value.
-
-`<AttributeDesignator>` [Required choice]
-
-* MAY be used to identify one or more **_attribute_** values in an `<Attributes>` element of the request **_context_**.
-
-`<AttributeSelector>` [Required choice]
-
-* MAY be used to identify one or more **_attribute_** values in a `<Content>` element of the request **_context_**.
+The `<Target>` element is of `BooleanExpressionType` complex type. Evaluation of the `<Target>` element is described in [Section 7.7](#77-target-evaluation).
 
 ## 5.11 Element \<PolicyIdReference>
 
@@ -1028,7 +947,7 @@ The `<CombinerParameters>` element conveys parameters for a **_combining algorit
 
 If multiple `<CombinerParameters>` elements occur within the same **_policy_**, they SHALL be considered equal to one `<CombinerParameters>` element containing the concatenation of all the sequences of `<CombinerParameters>` contained in all the aforementioned `<CombinerParameters>` elements, such that the order of occurrence of the `<CombinerParameters>` elements is preserved in the concatenation of the `<CombinerParameter>` elements.
 
-Note that none of the combining algorithms specified in XACML 4.0 is parameterized.
+Note that none of the **_combining algorithms_** specified in XACML 4.0 is parameterized.
 
 ```
 <xs:element name="CombinerParameters" type="xacml:CombinerParametersType"/>
@@ -1137,7 +1056,7 @@ Support for the `<PolicyCombinerParameters>` element is optional, only if suppor
 
 ## 5.21 Element \<Rule>
 
-The `<Rule>` element SHALL define the individual **_rules_** in the **_policy_**. The main components of this element are the `<Target>`, `<Condition>`, `<ObligationExpressions>` and `<AdviceExpressions>` elements and the `Effect` attribute.
+The `<Rule>` element SHALL define the individual **_rules_** in the **_policy_**. The main components of this element are the `<Condition>`, `<ObligationExpressions>` and `<AdviceExpressions>` elements and the `Effect` attribute.
 
 A `<Rule>` element may be evaluated, in which case the evaluation procedure defined in [Section 7.10](#710-extended-indeterminate) SHALL be used.
 
@@ -1146,7 +1065,6 @@ A `<Rule>` element may be evaluated, in which case the evaluation procedure defi
 <xs:complexType name="RuleType">
    <xs:sequence>
       <xs:element ref="xacml:Description" minOccurs="0"/>
-      <xs:element ref="xacml:Target" minOccurs="0"/>
       <xs:element ref="xacml:Condition" minOccurs="0"/>
       <xs:element ref="xacml:ObligationExpressions" minOccurs="0"/>
       <xs:element ref="xacml:AdviceExpressions" minOccurs="0"/>
@@ -1171,10 +1089,6 @@ A string identifying this **_rule_**.
 `<Description>` [Optional]
 
 A free-form description of the **_rule_**.
-
-`<Target>` [Optional]
-
-Identifies the set of **_decision requests_** that the `<Rule>` element is intended to evaluate. If this element is omitted, then the **_target_** for the `<Rule>` SHALL be defined by the `<Target>` element of the enclosing `<Policy>` element. See [Section 7.7](#77-target-evaluation) for details.
 
 `<Condition>` [Optional]
 
@@ -1268,15 +1182,10 @@ The following elements are in the `<Expression>` element substitution group:
 The `<Condition>` element is a Boolean function over **_attributes_** or functions of **_attributes_**.
 
 ```
-<xs:element name="Condition" type="xacml:ConditionType"/>
-<xs:complexType name="ConditionType">
-   <xs:sequence>
-      <xs:element ref="xacml:Expression"/>
-   </xs:sequence>
-</xs:complexType>
+<xs:element name="Condition" type="xacml:BooleanExpressionType"/>
 ```
 
-The `<Condition>` contains one `<Expression>` element, with the restriction that the `<Expression>` return data-type MUST be “http://www.w3.org/2001/XMLSchema#boolean”. Evaluation of the `<Condition>` element is described in [Section 7.9](#79-condition-evaluation).
+The `<Condition>` element is of `BooleanExpressionType` complex type. Evaluation of the `<Condition>` element is described in [Section 7.9](#79-condition-evaluation).
 
 ## 5.27 Element \<Apply>
 
@@ -2470,78 +2379,17 @@ IEEE 754 [[IEEE754](#ieee754)] specifies how to evaluate arithmetic functions in
 
 * rounding -  is set to round-half-even (IEEE 854 §4.1)
 
-## 7.6 Match evaluation
-
-The **_attribute_** matching element `<Match>` appears in the `<Target>` element of **_rules_** and **_policies_**.
-
-This element represents a Boolean expression over **_attributes_** of the request **_context_**. A matching element contains a `MatchId` attribute that specifies the function to be used in performing the match evaluation, an `<AttributeValue>` and an `<AttributeDesignator>` or `<AttributeSelector>` element that specifies the **_attribute_** in the **_context_** that is to be matched against the specified value.
-
-The `MatchId` attribute SHALL specify a function that takes two arguments, returning a result type of "http://www.w3.org/2001/XMLSchema#boolean". The **_attribute_** value specified in the matching element SHALL be supplied to the `MatchId` function as its first argument. An element of the **_bag_** returned by the `<AttributeDesignator>` or `<AttributeSelector>` element SHALL be supplied to the `MatchId` function as its second argument, as explained below. The DataType of the `<AttributeValue>` SHALL match the data-type of the first argument expected by the `MatchId` function. The DataType of the `<AttributeDesignator>` or `<AttributeSelector>` element SHALL match the data-type of the second argument expected by the `MatchId` function.
-
-In addition, functions that are strictly within an extension to XACML MAY appear as a value for the `MatchId` attribute, and those functions MAY use data-types that are also extensions, so long as the extension function returns a Boolean result and takes two single base types as its inputs. The function used as the value for the `MatchId` attribute SHOULD be easily indexable. Use of non-indexable or complex functions may prevent efficient evaluation of **_decision requests_**.
-
-The evaluation semantics for a matching element is as follows. If an operational error were to occur while evaluating the `<AttributeDesignator>` or `<AttributeSelector>` element, then the result of the entire expression SHALL be "Indeterminate". If the `<AttributeDesignator>` or `<AttributeSelector>` element were to evaluate to an empty **_bag_**, then the result of the expression SHALL be "False". Otherwise, the `MatchId` function SHALL be applied between the `<AttributeValue>` and each element of the **_bag_** returned from the `<AttributeDesignator>` or `<AttributeSelector>` element. If at least one of those function applications were to evaluate to "True", then the result of the entire expression SHALL be "True". Otherwise, if at least one of the function applications results in "Indeterminate", then the result SHALL be "Indeterminate". Finally, if all function applications evaluate to "False", then the result of the entire expression SHALL be "False".
-
-It is also possible to express the semantics of a **_target_** matching element in a **_condition_**. For instance, the **_target_** match expression that compares a **_subject_** "name” starting with the name “John” can be expressed as follows:
-
-```
-<Match MatchId=”urn:oasis:names:tc:xacml:1.0:function:string-regexp-match”>
-    <AttributeValue DataType=”http://www.w3.org/2001/XMLSchema#string”>
-       John.*
-    </AttributeValue>
-    <AttributeDesignator
-          Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject"
-          AttributeId=”urn:oasis:names:tc:xacml:1.0:subject:subject-id”
-          DataType=”http://www.w3.org/2001/XMLSchema#string”/>
-</Match>
-```
-
-Alternatively, the same match semantics can be expressed as an `<Apply>` element in a **_condition_** by using the “urn:oasis:names:tc:xacml:3.0:function:any-of” function, as follows:
-
-```
-<Apply FunctionId=”urn:oasis:names:tc:xacml:3.0:function:any-of”>
-    <Function FunctionId=”urn:oasis:names:tc:xacml:1.0:function:string-regexp-match”/>
-    <AttributeValue DataType=”http://www.w3.org/2001/XMLSchema#string”>
-        John.*
-    </AttributeValue>
-    <AttributeDesignator
-       Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject"
-       AttributeId=”urn:oasis:names:tc:xacml:1.0:subject:subject-id”
-       DataType=”http://www.w3.org/2001/XMLSchema#string”/>
-</Apply>
-```
-
 ## 7.7 Target evaluation
 
-An empty **_target_** matches any request. Otherwise the **_target_** value SHALL be "Match" if all the AnyOf specified in the **_target_** match values in the request **_context_**. Otherwise, if any one of the AnyOf specified in the **_target_** is “No Match”, then the **_target_** SHALL be “No Match”. Otherwise, the **_target_** SHALL be “Indeterminate”. The **_target_** match table is shown in Table 1.
+The **_target_** value SHALL be "Match" if the `<Target>` element is absent or the expression specified in the **_target_** evaluates to "True". Otherwise, if the expression evaluates to "False", then the **_target_** SHALL be “No Match”. Otherwise, the **_target_** SHALL be “Indeterminate”. The **_target_** match table is shown in Table 1.
 
 ###### Table 1 Target match table
 
-| <AnyOf> values | Target value |
+| Expression value | Target value |
 | :--- | :--- |
-| All “Match” | “Match” |
-| At least one “No Match” | “No Match” |
-| Otherwise | “Indeterminate” |
-
-The AnyOf SHALL match values in the request **_context_** if at least one of their `<AllOf>` elements matches a value in the request **_context_**. The AnyOf table is shown in Table 2.
-
-###### Table 2 AnyOf match table
-
-| <AllOf> values | <AnyOf> Value |
-| :--- | :--- |
-| At least one “Match” | “Match” |
-| None matches and at least one “Indeterminate” | “Indeterminate” |
-| All “No match” | “No match” |
-
-An AllOf SHALL match a value in the request **_context_** if the value of all its `<Match>` elements is “True”. The AllOf table is shown in Table 3.
-
-###### Table 3 AllOf match table
-
-| <Match> values | <AllOf> Value |
-| :--- | :--- |
-| All “True” | “Match” |
-| No “False” and at least one “Indeterminate” | “Indeterminate” |
-| At least one “False” | “No match” |
+| "True" | “Match” |
+| "False" | “No Match” |
+| "Indeterminate" | “Indeterminate” |
 
 ## 7.8 VariableReference Evaluation
 
@@ -2553,7 +2401,7 @@ A variable reference containing circular references is invalid. The PDP MUST det
 
 ## 7.9 Condition evaluation
 
-The **_condition_** value SHALL be "True" if the `<Condition>` element is absent, or if it evaluates to "True". Its value SHALL be "False" if the `<Condition>` element evaluates to "False". The **_condition_** value SHALL be "Indeterminate", if the expression contained in the `<Condition>` element evaluates to "Indeterminate."
+The **_condition_** value SHALL be "True" if the `<Condition>` element is absent, or if the expression contained in the `<Condition>` element evaluates to "True". Its value SHALL be "False" if the expression evaluates to "False". The **_condition_** value SHALL be "Indeterminate", if the expression evaluates to "Indeterminate."
 
 ## 7.10 Extended Indeterminate
 
@@ -2573,17 +2421,15 @@ The tables in the following four sections define how extended “Indeterminate�
 
 ## 7.11 Rule evaluation
 
-A **_rule_** has a value that can be calculated by evaluating its contents. **_Rule_** evaluation involves separate evaluation of the **_rule_**'s **_target_** and **_condition_**. The **_rule_** truth table is shown in Table 4.
+A **_rule_** has a value that can be calculated by evaluating the **_rule_**'s **_condition_**. The **_rule_** truth table is shown in Table 4.
 
 ###### Table 4 Rule truth table
 
-| **_Target_** | Condition | **_Rule_** Value |
-| :--- | :--- | :--- |
-| “Match” or no target | “True” | **_Effect_** |
-| “Match” or no target | “False” | “NotApplicable” |
-| “Match” or no target | “Indeterminate” | “Indeterminate{P}” if the **_Effect_** is Permit, or “Indeterminate{D}” if the **_Effect_** is Deny |
-| “No-match” | Don’t care | “NotApplicable” |
-| “Indeterminate” | Don’t care | “Indeterminate{P}” if the **_Effect_** is Permit, or “Indeterminate{D}” if the **_Effect_** is Deny |
+| Condition | **_Rule_** Value |
+| :--- | :--- |
+| “True” | **_Effect_** |
+| “False” | “NotApplicable” |
+| “Indeterminate” | “Indeterminate{P}” if the **_Effect_** is Permit, or “Indeterminate{D}” if the **_Effect_** is Deny |
 
 ## 7.12 Policy evaluation
 
@@ -2593,13 +2439,13 @@ The **_policy_** truth table is shown in Table 5.
 
 ###### Table 5 Policy truth table
 
-| **_Target_** | **_Rule_** values | **_Policy_** Value |
+| **_Target_** | Child **_Policy_** and **_Rule_** Values | **_Policy_** Value |
 | :--- | :--- | :--- |
 | “Match” | Don’t care | Specified by the **_combining algorithm_** |
 | “No-match” | Don’t care | “NotApplicable” |
 | “Indeterminate” | See [Table 6](#table-6-the-value-of-a-policy-when-the-target-is-indeterminate) | See [Table 6](#table-6-the-value-of-a-policy-when-the-target-is-indeterminate) |
 
-Note that none of the **_combining algorithms_** defined by XACML 4.0 take parameters. However, non-standard combining algorithms MAY take parameters. In such a case, the values of these parameters associated with the **_policies_** and **_rules_**, MUST be taken into account when evaluating the **_policy_**. The parameters and their types should be defined in the specification of the **_combining algorithm_**. If the implementation supports combiner parameters and if combiner parameters are present in a **_policy_**, then the parameter values MUST be supplied to the **_combining algorithm_** implementation.
+Note that none of the **_combining algorithms_** defined by XACML 4.0 take parameters. However, non-standard **_combining algorithms_** MAY take parameters. In such a case, the values of these parameters associated with the **_policies_** and **_rules_**, MUST be taken into account when evaluating the **_policy_**. The parameters and their types should be defined in the specification of the **_combining algorithm_**. If the implementation supports combiner parameters and if combiner parameters are present in a **_policy_**, then the parameter values MUST be supplied to the **_combining algorithm_** implementation.
 
 ## 7.14 Policy value for Indeterminate Target
 
@@ -2643,7 +2489,7 @@ A **_rule_** or **_policy_** may contain one or more **_obligation_** or **_advi
 
 As a consequence of this procedure, **_obligations_** or **_advice_** SHALL NOT be returned to the **_PEP_** if the **_rules_** or **_policies_** from which they are drawn are not evaluated, or if their evaluated result is "Indeterminate" or "NotApplicable", or if the **_decision_** resulting from evaluating the **_rule_** or **_policy_** does not match the **_decision_** resulting from evaluating an enclosing **_policy_**.
 
-If the **_PDP_**'s evaluation is viewed as a tree of **_rules_** and **_policies_**, each of which returns "Permit" or "Deny", then the set of **_obligations_** and **_advice_** returned by the **_PDP_** to the **_PEP_** will include only the **_obligations_** and **_advice_** associated with those paths where the result at each level of evaluation is the same as the result being returned by the **_PDP_**. In situations where any lack of determinism is unacceptable, a deterministic combining algorithm, such as ordered-deny-overrides, should be used.
+If the **_PDP_**'s evaluation is viewed as a tree of **_rules_** and **_policies_**, each of which returns "Permit" or "Deny", then the set of **_obligations_** and **_advice_** returned by the **_PDP_** to the **_PEP_** will include only the **_obligations_** and **_advice_** associated with those paths where the result at each level of evaluation is the same as the result being returned by the **_PDP_**. In situations where any lack of determinism is unacceptable, a deterministic **_combining algorithm_**, such as ordered-deny-overrides, should be used.
 
 Also see [Section 7.2](#72-policy-enforcement-point).
 
@@ -2793,8 +2639,6 @@ The implementation MUST support those schema elements that are marked “M”.
 | xacml:Advice | M |
 | xacml:AdviceExpression | M |
 | xacml:AdviceExpressions | M |
-| xacml:AllOf | M |
-| xacml:AnyOf | M |
 | xacml:Apply | M |
 | xacml:AssociatedAdvice | M |
 | xacml:Attribute | M |
@@ -2813,7 +2657,6 @@ The implementation MUST support those schema elements that are marked “M”.
 | xacml:Description | M |
 | xacml:Expression | M |
 | xacml:Function | M |
-| xacml:Match | M |
 | xacml:MissingAttributeDetail | M |
 | xacml:MultiRequests | O |
 | xacml:Obligation | M |
@@ -2872,7 +2715,6 @@ The implementation MUST include the **_combining algorithms_** associated with t
 | urn:oasis:names:tc:xacml:4.0:combining-algorithm:deny-overrides | M |
 | urn:oasis:names:tc:xacml:4.0:combining-algorithm:permit-overrides | M |
 | urn:oasis:names:tc:xacml:4.0:combining-algorithm:first-applicable | M |
-| urn:oasis:names:tc:xacml:4.0:combining-algorithm:only-one-applicable | M |
 | urn:oasis:names:tc:xacml:4.0:combining-algorithm:ordered-deny-overrides | M |
 | urn:oasis:names:tc:xacml:4.0:combining-algorithm:ordered-permit-overrides | M |
 | urn:oasis:names:tc:xacml:4.0:combining-algorithm:deny-unless-permit | M |
@@ -3622,6 +3464,7 @@ Cyril | Dangerville | THALES
 | Revision | Date | Editor | Changes Made |
 | :--- | :--- | :--- | :--- |
 | specname-v1.0-wd01 | 2024-08-09 | Steven Legg | Initial working draft |
+| | 2024-09-09 | Steven Legg | Changed **_targets_** to a single child expression. Removed the `<AnyOf>`, `<AllOf>` and `<Match>` elements. Removed **_targets_** from rules. Removed the only-one-applicable **_combining algorithm_**. |
 
 -------
 
@@ -3629,7 +3472,7 @@ Cyril | Dangerville | THALES
 
 ## E.1 Introduction
 
-This section specifies the data-types and functions used in XACML to create **_predicates_** for **_conditions_** and **_target_** matches.
+This section specifies the data-types and functions used in XACML to create **_predicates_** for **_conditions_** and **_targets_**.
 
 This specification combines the various standards set forth by IEEE and ANSI for string representation of numeric values, as well as the evaluation of arithmetic functions. It describes the primitive data-types and **_bags_**. The standard functions are named and their operational semantics are described.
 
@@ -4763,35 +4606,31 @@ This identifier indicates that an error occurred during **_policy_** evaluation.
 
 ## F.9 Combining algorithms
 
-The deny-overrides combining algorithm has the following value for the `CombiningAlgId` attribute:
+The deny-overrides **_combining algorithm_** has the following value for the `CombiningAlgId` attribute:
 
 `urn:oasis:names:tc:xacml:4.0:combining-algorithm:deny-overrides`
 
-The permit-overrides combining algorithm has the following value for the `CombiningAlgId` attribute:
+The permit-overrides **_combining algorithm_** has the following value for the `CombiningAlgId` attribute:
 
 `urn:oasis:names:tc:xacml:4.0:combining-algorithm:permit-overrides`
 
-The first-applicable combining algorithm has the following value for the `CombiningAlgId` attribute:
+The first-applicable **_combining algorithm_** has the following value for the `CombiningAlgId` attribute:
 
 `urn:oasis:names:tc:xacml:4.0:combining-algorithm:first-applicable`
 
-The only-one-applicable-policy combining algorithm has the following value for the `CombiningAlgId` attribute:
-
-`urn:oasis:names:tc:xacml:4.0:combining-algorithm:only-one-applicable`
-
-The ordered-deny-overrides combining algorithm has the following value for the `CombiningAlgId` attribute:
+The ordered-deny-overrides **_combining algorithm_** has the following value for the `CombiningAlgId` attribute:
 
 `urn:oasis:names:tc:xacml:4.0:combining-algorithm:ordered-deny-overrides`
 
-The ordered-permit-overrides combining algorithm has the following value for the `CombiningAlgId` attribute:
+The ordered-permit-overrides **_combining algorithm_** has the following value for the `CombiningAlgId` attribute:
 
 `urn:oasis:names:tc:xacml:4.0:combining-algorithm:ordered-permit-overrides`
 
-The deny-unless-permit combining algorithm has the following value for the `CombiningAlgId` attribute:
+The deny-unless-permit **_combining algorithm_** has the following value for the `CombiningAlgId` attribute:
 
 `urn:oasis:names:tc:xacml:4.0:combining-algorithm:deny-unless-permit`
 
-The permit-unless-deny combining algorithm has the following value for the `CombiningAlgId` attribute:
+The permit-unless-deny **_combining algorithm_** has the following value for the `CombiningAlgId` attribute:
 
 `urn:oasis:names:tc:xacml:4.0:combining-algorithm:permit-unless-deny`
 
@@ -4805,11 +4644,11 @@ Note that in each case an implementation is conformant as long as it produces th
 
 ## G.1 Extended Indeterminate values
 
-Some combining algorithms are defined in terms of an extended set of “Indeterminate” values. See [Section 7.10](#710-extended-indeterminate) for the definition of the Extended Indeterminate values. For these algorithms, the **_PDP_** MUST keep track of the extended set of “Indeterminate” values during **_rule_** and **_policy_** combining.
+Some **_combining algorithms_** are defined in terms of an extended set of “Indeterminate” values. See [Section 7.10](#710-extended-indeterminate) for the definition of the Extended Indeterminate values. For these algorithms, the **_PDP_** MUST keep track of the extended set of “Indeterminate” values during **_rule_** and **_policy_** combining.
 
-The output of a combining algorithm which does not track the extended set of “Indeterminate” values MUST be treated as “Indeterminate{DP}” for the value “Indeterminate” by a combining algorithm which tracks the extended set of “Indeterminate” values.
+The output of a **_combining algorithm_** which does not track the extended set of “Indeterminate” values MUST be treated as “Indeterminate{DP}” for the value “Indeterminate” by a **_combining algorithm_** which tracks the extended set of “Indeterminate” values.
 
-A combining algorithm which does not track the extended set of “Indeterminate” values MUST treat the output of a combining algorithm which tracks the extended set of “Indeterminate” values as an “Indeterminate” for any of the possible values of the extended set of “Indeterminate”.
+A **_combining algorithm_** which does not track the extended set of “Indeterminate” values MUST treat the output of a **_combining algorithm_** which tracks the extended set of “Indeterminate” values as an “Indeterminate” for any of the possible values of the extended set of “Indeterminate”.
 
 ## G.2 Deny-overrides
 
@@ -4821,7 +4660,7 @@ The **_combining algorithm_** defined here has the following identifier:
 
 `urn:oasis:names:tc:xacml:4.0:combining-algorithm:deny-overrides`
 
-The following is a non-normative informative description of this **_combining algorithm_**. The deny overrides combining algorithm is intended for those cases where a deny decision should have priority over a permit decision. This algorithm has the following behavior.
+The following is a non-normative informative description of this **_combining algorithm_**. The deny overrides **_combining algorithm_** is intended for those cases where a deny decision should have priority over a permit decision. This algorithm has the following behavior.
 
 1. If any decision is "Deny", the result is "Deny".
 
@@ -4922,7 +4761,7 @@ The **_combining algorithm_** defined here has the following identifier:
 
 `urn:oasis:names:tc:xacml:4.0:combining-algorithm:permit-overrides`
 
-The following is a non-normative informative description of this combining algorithm. The permit overrides **_combining algorithm_** is intended for those cases where a permit decision should have priority over a deny decision. This algorithm has the following behavior.
+The following is a non-normative informative description of this **_combining algorithm_**. The permit overrides **_combining algorithm_** is intended for those cases where a permit decision should have priority over a deny decision. This algorithm has the following behavior.
 
 1. If any decision is "Permit", the result is "Permit".
 
@@ -5054,7 +4893,7 @@ The **_combining algorithm_** defined here has the following identifier:
 
 `urn:oasis:names:tc:xacml:4.0:combining-algorithm:permit-unless-deny`
 
-The following is a non-normative informative description of this **_combining algorithm_**. The “Permit-unless-deny” combining algorithm is intended for those cases where a deny decision should have priority over a permit decision, and an “Indeterminate” or “NotApplicable” must never be the result. It is particularly useful at the top level in a **_policy_** structure to ensure that a **_PDP_** will always return a definite “Permit” or “Deny” result. This algorithm has the following behavior.
+The following is a non-normative informative description of this **_combining algorithm_**. The “Permit-unless-deny” **_combining algorithm_** is intended for those cases where a deny decision should have priority over a permit decision, and an “Indeterminate” or “NotApplicable” must never be the result. It is particularly useful at the top level in a **_policy_** structure to ensure that a **_PDP_** will always return a definite “Permit” or “Deny” result. This algorithm has the following behavior.
 
 1. If any decision is "Deny", the result is "Deny".
 
@@ -5090,7 +4929,7 @@ The following is a non-normative informative description of the "First-Applicabl
 
 For a particular child **_policy_** or **_rule_**, if that **_policy_** or **_rule_** evaluates to "Permit", "Deny" or "Indeterminate", then the evaluation SHALL halt and the enclosing **_policy_** shall evaluate to the value of that **_policy_** or **_rule_**. If the **_policy_** or **_rule_** evaluates to "NotApplicable", then the next child **_policy_** or **_rule_** in the order SHALL be evaluated. If no further child **_policy_** or **_rule_** exists in the order, then the enclosing **_policy_** shall evaluate to "NotApplicable". If an error occurs while evaluating a **_policy_** or **_rule_**, or a **_policy_** reference is considered invalid, then the evaluation shall halt, and the enclosing **_policy_** shall evaluate to "Indeterminate", with the appropriate error status.
 
-The following pseudo-code represents the normative specification of this combining algorithm.
+The following pseudo-code represents the normative specification of this **_combining algorithm_**.
 
 ```
 Decision firstApplicableEffectRuleCombiningAlgorithm(Node[] children)
@@ -5120,62 +4959,6 @@ Decision firstApplicableEffectRuleCombiningAlgorithm(Node[] children)
 ```
 
 **_Obligations_** and **_advice_** SHALL be combined as described in [Section 7.18](#718-obligations-and-advice).
-
-## G.9 Only-one-applicable
-
-This section defines the “Only-one-applicable” **_combining algorithm_** of a **_policy_**.
-
-The **_combining algorithm_** defined here has the following identifier:
-
-`urn:oasis:names:tc:xacml:4.0:combining-algorithm:only-one-applicable`
-
-The following is a non-normative informative description of the “Only-one-applicable" **_combining algorithm_** of a **_policy_**. In the entire set of child **_policies_** in the enclosing **_policy_**, if no **_policy_** is considered applicable by virtue of its **_target_**, then the result of the **_combining algorithm_** shall be "NotApplicable". If more than one **_policy_** is considered applicable by virtue of its **_target_**, then the result of the **_combining algorithm_** shall be "Indeterminate". If only one **_policy_** is considered applicable by evaluation of its **_target_**, then the result of the **_combining algorithm_** shall be the result of evaluating that **_policy_**. If an error occurs while evaluating the **_target_** of a **_policy_**, or a reference to a **_policy_** is considered invalid or the **_policy_** evaluation results in "Indeterminate, then the enclosing **_policy_** shall evaluate to "Indeterminate", with the appropriate error status.
-
-The following pseudo-code represents the normative specification of this **_combining algorithm_**.
-
-```
-Decision onlyOneApplicablePolicyPolicyCombiningAlogrithm(Node[] children)
-{
-  Boolean          atLeastOne     = false;
-  Policy           selectedPolicy = null;
-  ApplicableResult appResult;
-
-  for ( i = 0; i < lengthOf(children) ; i++ )
-  {
-     appResult = isApplicable(children[i]);
-     if ( appResult == Indeterminate )
-     {
-         return Indeterminate;
-     }
-     if ( appResult == Applicable )
-     {
-         if ( atLeastOne )
-         {
-             return Indeterminate;
-         }
-         else
-         {
-             atLeastOne     = true;
-             selectedPolicy = policies[i];
-         }
-     }
-     if ( appResult == NotApplicable )
-     {
-         continue;
-     }
-  }
-  if ( atLeastOne )
-  {
-      return evaluate(selectedPolicy);
-  }
-  else
-  {
-      return NotApplicable;
-  }
-}
-```
-
-**_Obligations_** and **_advice_** of the individual rules shall be combined as described in [Section 7.18](#718-obligations-and-advice).
 
 -------
 
