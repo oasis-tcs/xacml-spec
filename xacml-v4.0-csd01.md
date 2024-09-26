@@ -484,8 +484,7 @@ The major actors in the XACML domain are shown in the data-flow diagram of [Figu
 
 ###### Figure 1 - Data-flow diagram
 
-> [!NOTE]  
-> TODO (cdanger): replace PNG with Graphviz source
+<!-- TODO (cdanger): replace PNG with Graphviz source -->
 
 ![data-flow diagram](images/DataFlowDiagram.png)
 
@@ -514,8 +513,7 @@ XACML is intended to be suitable for a variety of application environments. The 
 
 ###### Figure 2 - XACML context
 
-> [!NOTE]  
-> TODO (cdanger): replace PNG with [Mermaid source](https://github.com/oasis-tcs/xacml-spec/discussions/37#discussioncomment-10331954)
+<!-- TODO (cdanger): replace PNG with [Mermaid source](https://github.com/oasis-tcs/xacml-spec/discussions/37#discussioncomment-10331954) -->
 
 ![context](images/Context.png)
 
@@ -537,8 +535,7 @@ These are described in the following sub-sections.
 
 ###### Figure 3 - Policy language model
 
-> [!NOTE]  
-> TODO (cdanger): replace PNG with [PlantUML](https://github.com/oasis-tcs/xacml-spec/discussions/37#discussioncomment-10338398) and align the next sections with the model.
+<!-- TODO (cdanger): replace PNG with [PlantUML](https://github.com/oasis-tcs/xacml-spec/discussions/37#discussioncomment-10338398) and align the next sections with the model. -->
 
 ![policy language model](images/PolicyLanguageModel.png)
 
@@ -634,8 +631,7 @@ When a **_PDP_** evaluates a **_policy_** containing **_advice_** expressions, i
 
 This section contains two examples of the use of XACML for illustrative purposes. The first example is a relatively simple one to illustrate the use of **_target_**, **_context_**, matching functions and **_subject attributes_**. The second example additionally illustrates the use of the **_combining algorithm_**, **_conditions_** and **_obligations_**.
 
-> [!NOTE]  
-> TODO: update the examples before finalizing the spec.
+<!-- TODO update the examples before finalizing the spec. -->
 
 ## 4.1 Example one
 
