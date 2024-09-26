@@ -153,137 +153,104 @@ XACML 4.0 differs from XACML 3.0 in the following ways:
 
 ### 1.2.1 Definitions of terms
 
-**Access**
+**Access**\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Performing an **_action_**.
 
-* Performing an **_action_**
+**Access control**\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Controlling **_access_** in accordance with a **_policy_**.
 
-**Access control**
+**Action**\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;An operation on a **_resource_**.
 
-* Controlling **_access_** in accordance with a **_policy_**
+**Advice**\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A supplementary piece of information in a **_policy_** which is provided to the **_PEP_** with the **_decision_** of the **_PDP_**.
 
-**Action**
+**Applicable policy**\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The set of **_policies_** that governs **_access_** for a specific **_decision request_**.
 
-* An operation on a **_resource_**
+**Attribute**\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Characteristic of a **_subject_**, **_resource_**, **_action_** or **_environment_** that may be referenced in a **_predicate_** (see also – **_named attribute_**).
 
-**Advice**
+**Authorization decision**\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The result of evaluating **_applicable policy_**, returned by the **_PDP_** to the **_PEP_**. A function that evaluates to `Permit`, `Deny`, `Indeterminate` or `NotApplicable`, and (optionally) a set of **_obligations_** and **_advice_**.
 
-* A supplementary piece of information in a **_policy_** which is provided to the **_PEP_** with the **_decision_** of the **_PDP_**.
+**Bag**\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;An unordered collection of values, in which there may be duplicate values.
 
-**Applicable policy**
+**Combining algorithm**\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The procedure for combining the **_decision_**, **_obligations_** and **_advice_** from multiple **_policies_** and **_rules_**.
 
-* The set of **_policies_** that governs **_access_** for a specific **_decision request_**
+**Condition**\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;An expression of **_predicates_**. A function that evaluates to `True`, `False` or `Indeterminate`.
 
-**Attribute**
+**Conjunctive sequence**\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A sequence of **_predicates_** combined using the logical `AND` operation.
 
-* Characteristic of a **_subject_**, **_resource_**, **_action_** or **_environment_** that may be referenced in a **_predicate_** (see also – **_named attribute_**)
+**Context**\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The canonical representation of a **_decision request_** and an **_authorization decision_**.
 
-**Authorization decision**
+**Context handler**\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The system entity that converts **_decision requests_** in the native request format to the XACML canonical form, coordinates with Policy Information Points to add attribute values to the request **_context_**, and converts **_authorization decisions_** in the XACML canonical form to the native response format.
 
-* The result of evaluating **_applicable policy_**, returned by the **_PDP_** to the **_PEP_**. A function that evaluates to `Permit`, `Deny`, `Indeterminate` or `NotApplicable`, and (optionally) a set of **_obligations_** and **_advice_**
+**Decision**\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The result of evaluating a **_rule_** or **_policy_**.
 
-**Bag**
+**Decision request**\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The request by a **_PEP_** to a **_PDP_** to render an **_authorization decision_**.
 
-* An unordered collection of values, in which there may be duplicate values
+**Disjunctive sequence**\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A sequence of **_predicates_** combined using the logical `OR` operation.
 
-**Combining algorithm**
+**Effect**\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The intended consequence of a satisfied **_rule_** (either `Permit` or `Deny`).
 
-* The procedure for combining the **_decision_**, **_obligations_** and **_advice_** from multiple **_policies_** and **_rules_**
+**Environment**\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The set of **_attributes_** that are relevant to an **_authorization decision_** and are independent of a particular **_subject_**, **_resource_** or **_action_**.
 
-**Condition**
+**Identifier equality**\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The identifier equality operation which is defined in [Section 7.20](#720-identifier-equality).
 
-* An expression of **_predicates_**. A function that evaluates to `True`, `False` or `Indeterminate`
+**Issuer**\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A set of **_attributes_** describing the source of a **_policy_**.
 
-**Conjunctive sequence**
+**Named attribute**\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A specific instance of an **_attribute_**, determined by the **_attribute_** name and type, the identity of the **_attribute_** holder (which may be of type: **_subject_**, **_resource_**, **_action_** or **_environment_**) and (optionally) the identity of the issuing authority.
 
-* A sequence of **_predicates_** combined using the logical `AND` operation
+**Obligation**\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;An operation specified in a **_rule_** or **_policy_** that should be performed by the **_PEP_** in conjunction with the enforcement of an **_authorization decision_**.
 
-**Context**
+**Policy**\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A set of **_rules_**, other **_policies_**, an identifier for the **_combining algorithm_** and (optionally) a set of **_obligations_** or **_advice_**. May be a component of another **_policy_**.
 
-* The canonical representation of a **_decision request_** and an **_authorization decision_**
+**Policy administration point (PAP)**\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The system entity that creates a **_policy_**.
 
-**Context handler**
+**Policy decision point (PDP)**\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The system entity that evaluates **_applicable policy_** and renders an **_authorization decision_**. This term is defined in a joint effort by the IETF Policy Framework Working Group and the Distributed Management Task Force (DMTF)/Common Information Model (CIM) in [[RFC3198](#rfc3198)]. This term corresponds to "Access Decision Function" (ADF) in [[ISO10181-3](#iso10181-3)].
 
-* The system entity that converts **_decision requests_** in the native request format to the XACML canonical form, coordinates with Policy Information Points to add attribute values to the request **_context_**, and converts **_authorization decisions_** in the XACML canonical form to the native response format
+**Policy enforcement point (PEP)**\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The system entity that performs **_access control_**, by making **_decision requests_** and enforcing **_authorization decisions_**. This term is defined in a joint effort by the IETF Policy Framework Working Group and the Distributed Management Task Force (DMTF)/Common Information Model (CIM) in [[RFC3198](#rfc3198)]. This term corresponds to "Access Enforcement Function" (AEF) in [[ISO10181-3](#iso10181-3)].
 
-**Decision**
+**Policy information point (PIP)**\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The system entity that acts as a source of **_attribute_** values.
 
-* The result of evaluating a **_rule_** or **_policy_**
+**Predicate**\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A statement about **_attributes_** whose truth can be evaluated.
 
-**Decision request**
+**Resource**\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Data, service or system component.
 
-* The request by a **_PEP_** to a **_PDP_** to render an **_authorization decision_**
+**Rule**\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;An **_effect_**, a **_condition_** and (optionally) a set of **_obligations_** or **_advice_**. A component of a **_policy_**.
 
-**Disjunctive sequence**
+**Subject**\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;An actor whose **_attributes_** may be referenced by a **_predicate_**.
 
-* A sequence of **_predicates_** combined using the logical `OR` operation
+**Target**\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;An element of an XACML **_policy_** which matches specified values of **_resource_**, **_subject_**, **_environment_**, **_action_**, or other custom **_attributes_** against those provided in the request **_context_** as a part of the process of determining whether the **_policy_** is applicable to the current decision.
 
-**Effect**
-
-* The intended consequence of a satisfied **_rule_** (either `Permit` or `Deny`)
-
-**Environment**
-
-* The set of **_attributes_** that are relevant to an **_authorization decision_** and are independent of a particular **_subject_**, **_resource_** or **_action_**
-
-**Identifier equality**
-
-* The identifier equality operation which is defined in [Section 7.20](#720-identifier-equality).
-
-**Issuer**
-
-* A set of **_attributes_** describing the source of a **_policy_**
-
-**Named attribute**
-
-* A specific instance of an **_attribute_**, determined by the **_attribute_** name and type, the identity of the **_attribute_** holder (which may be of type: **_subject_**, **_resource_**, **_action_** or **_environment_**) and (optionally) the identity of the issuing authority
-
-**Obligation**
-
-* An operation specified in a **_rule_** or **_policy_** that should be performed by the **_PEP_** in conjunction with the enforcement of an **_authorization decision_**
-
-**Policy**
-
-* A set of **_rules_**, other **_policies_**, an identifier for the **_combining algorithm_** and (optionally) a set of **_obligations_** or **_advice_**. May be a component of another **_policy_**
-
-**Policy administration point (PAP)**
-
-* The system entity that creates a **_policy_**
-
-**Policy decision point (PDP)**
-
-* The system entity that evaluates **_applicable policy_** and renders an **_authorization decision_**. This term is defined in a joint effort by the IETF Policy Framework Working Group and the Distributed Management Task Force (DMTF)/Common Information Model (CIM) in [[RFC3198](#rfc3198)]. This term corresponds to "Access Decision Function" (ADF) in [[ISO10181-3](#iso10181-3)].
-
-**Policy enforcement point (PEP)**
-
-* The system entity that performs **_access control_**, by making **_decision requests_** and enforcing **_authorization decisions_**. This term is defined in a joint effort by the IETF Policy Framework Working Group and the Distributed Management Task Force (DMTF)/Common Information Model (CIM) in [[RFC3198](#rfc3198)]. This term corresponds to "Access Enforcement Function" (AEF) in [[ISO10181-3](#iso10181-3)].
-
-**Policy information point (PIP)**
-
-* The system entity that acts as a source of **_attribute_** values
-
-**Predicate**
-
-* A statement about **_attributes_** whose truth can be evaluated
-
-**Resource**
-
-* Data, service or system component
-
-**Rule**
-
-* An **_effect_**, a **_condition_** and (optionally) a set of **_obligations_** or **_advice_**. A component of a **_policy_**
-
-**Subject**
-
-* An actor whose **_attributes_** may be referenced by a **_predicate_**
-
-**Target**
-
-* An element of an XACML **_policy_** which matches specified values of **_resource_**, **_subject_**, **_environment_**, **_action_**, or other custom **_attributes_** against those provided in the request **_context_** as a part of the process of determining whether the **_policy_** is applicable to the current decision.
-
-**Type Unification**
-
-* The method by which two type expressions are "unified". The type expressions are matched along their structure. Where a type variable appears in one expression it is then "unified" to represent the corresponding structure element of the other expression, be it another variable or subexpression. All variable assignments must remain consistent in both structures. Unification fails if the two expressions cannot be aligned, either by having dissimilar structure, or by having instance conflicts, such as a variable needs to represent both `xs:string` and `xs:integer`. For a full explanation of **_type unification_**, please see [[Hancock](#hancock)].
+**Type Unification**\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The method by which two type expressions are "unified". The type expressions are matched along their structure. Where a type variable appears in one expression it is then "unified" to represent the corresponding structure element of the other expression, be it another variable or subexpression. All variable assignments must remain consistent in both structures. Unification fails if the two expressions cannot be aligned, either by having dissimilar structure, or by having instance conflicts, such as a variable needs to represent both `xs:string` and `xs:integer`. For a full explanation of **_type unification_**, please see [[Hancock](#hancock)].
 
 ### 1.2.2 Related terms
 
