@@ -118,8 +118,10 @@ For complete copyright information please see the full Notices section in an App
 
 Here is a customized command line which will generate HTML from this markdown file (named `xacml-v4.0-csd01.md`):
 
+_In order to generate the diagrams, Graphviz and PlantUML must be installed first. (For example with this command on Linux Debian/Ubuntu: `$ sudo apt install graphviz plantuml` )_
+
 ```shell
-pandoc -f gfm -t html xacml-v4.0-csd01.md -c https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3a.css --toc --toc-depth=5 -s -o xacml-v4.0-csd01.html --metadata title="eXtensible Access Control Markup Language (XACML) Version 4.0"
+pandoc -f gfm -t html xacml-v4.0-csd01.md -c https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3a.css --toc --toc-depth=5 -s --lua-filter diagram.lua -o xacml-v4.0-csd01.html --metadata title="eXtensible Access Control Markup Language (XACML) Version 4.0"
 ```
 
 OASIS staff are currently using pandoc 3.0 from https://github.com/jgm/pandoc/releases/tag/3.0.
@@ -484,9 +486,205 @@ The major actors in the XACML domain are shown in the data-flow diagram of [Figu
 
 ###### Figure 1 - Data-flow diagram
 
-<!-- TODO (cdanger): replace PNG with Graphviz source -->
+<!-- ![data-flow diagram](images/DataFlowDiagram.png) -->
 
-![data-flow diagram](images/DataFlowDiagram.png)
+```dot
+// do not use strict keyword to allow multiple edges between PDP and context handler
+digraph Fig1 {
+    compound=true // Allow links to/from/between PEP/PDP/PIP boxes)
+    splines=false // Straight links (avoid curves whenever possible)
+    fontname=Arial
+    newrank=true // Allows to enforce rank constraints (horizontal alignment) across clusters (PEP/PDP/PIP boxes)
+    ranksep=0.02
+    //nodesep=1 // more space between nodes on the same rank (horizontally aligned)
+    // Default parameters for nodes
+    node [shape=box, style=rounded, width=2, height=0.5, fontname=Arial, fontsize=14.0]
+    // Default parameters for links (smaller font than nodes)
+    edge [fontname=Arial, fontsize=10.0]
+    
+    
+    // TODO: remove group attributes to see if this makes a difference
+    
+    // BEGIN LEFT PART 
+    // Define the Access requester, PDP and PAP boxes, then link them together in order to be aligned vertically by Graphviz dot engine.
+    
+    // Access requester box
+    AR [label="access\nrequester"/*, group=left*/]
+    
+    // PDP box
+    subgraph pdp {
+        /*
+        The PDP box is a cluster of 3 nodes in descending vertical order:
+        - 1 top node (invisible), used only as connection point for the links of "flows 4-5" from/to the context handler
+        - 1 node in-between for the box label "PDP"
+        - 1 bottom node (invisible), used only as connection point for the links of "flows 10-11" from/to the context handler
+        Having two separate connector nodes (top and bottom) is a way to space out the two pairs of links, i.e. prevent flows 10-11 to overlap flows 4-5.
+        An alternative would be to use node ports (https://graphviz.org/docs/attr-types/portPos/), e.g. north-east / south-east, but it does not look nice, esp. with rounded corners. The link heads/tails don't reach the box corners.   
+        */
+        cluster=true
+        style=rounded
+        // Increase the margin if the bottom link (flow 11) is too low
+        //margin="40"
+        
+        // Top connector node that will connect to the top-left part of the context handler (ch_top_left node). Make it invisible and small (empty label, zero height).
+        // (width ajusted to make the PDP box as wide as access requester / PAP boxes)
+        pdp_top [label="", shape=plaintext, height=0, width=1.8, /*style=invis*/]
+        
+        // between label and top node
+        pdp_middle_up [label="", shape=plaintext, height=0, width=1.8, /*style=invis*/]
+        
+        // Center node for a label "PDP" centered in the box (width ajusted to make the PDP box as wide as access requester / PAP boxes)
+        pdp_label [label="PDP", shape=plaintext, height=0, width=1.8]
+        
+        // between label and bottom node
+        pdp_middle_down [label="", shape=plaintext, height=0, width=1.8, /*style=invis*/]
+        
+        // Bottom connector node that will connect to the bottom-left part of the context handler (ch_bottom_left node). Make it invisible and small (empty label, zero height).
+        pdp_bottom [label="",shape=plaintext,  height=0, width=1.8, /*style=invis*/]
+        
+        // Link the nodes to force vertical alignment from top to bottom and make the links invisible
+        // NB: changing minlen to 0 to reduce edge length screws up everything, don't do it.
+        pdp_top -> pdp_middle_up -> pdp_label -> pdp_middle_down -> pdp_bottom [style=invis]
+    }
+    
+    // Link AR and PAP boxes with PDP box to align them vertically from top to bottom
+    AR -> pdp_top [style="invis"] // link not visible, just for alignment
+    
+    // PDP - PAP link (PAP box is created implicitly when creating this link)
+    pdp_bottom -> PAP [dir=back, label="  1. policy",ltail=pdp]
+    // END LEFT PART
+	
+	// BEGIN MIDDLE PART
+	// Define the PEP, context handler, PIP and subjects boxes, then link them together in order to be aligned vertically by Graphviz dot engine.
+	
+	// PEP box
+	subgraph pep {
+	    /*
+        The PEP box is a cluster of 3 nodes aligned hotizontally:
+        - 1 left node (invisible), used primarily as connection point for the link of "flow 3" to the context handler
+        - 1 node in-between for the box label "PEP"
+        - 1 right node (invisible), used primarily as connection point for the link of "flow 12" from the context handler
+        Having two separate connector nodes (left and right) is a way to space out the two links, i.e. prevent flow 3 to be too close to flow 12.
+        An alternative would be to use node ports (https://graphviz.org/docs/attr-types/portPos/), e.g. north-east / south-east, but it does not look nice, esp. with rounded corners. The link heads/tails don't reach the box corners.
+        */
+	    cluster=true
+        style=rounded
+        // Assign pep_left to same group as ch_top_left to make sure they are aligned vertically
+        pep_left [label="",  shape=plaintext, height=0, width=0.5, group=middle_left, style=invis]
+        pep_label [label="PEP",shape=plaintext, height=0, width=0, style=""]
+        pep_right [label="",  shape=plaintext, height=0, width=0.5, style=invis]
+    }
+
+    // Context handler box
+    subgraph ch {
+        /*
+        This box is defined very similary to the PDP box but with two extra connector nodes on the right for the flows 8 and 12 respectively
+        */
+        cluster=true
+        style=rounded
+        //margin=10
+        
+        // Top connector node that will connect to the top-left part of the context handler (ch_top_left node). Make it invisible and small (empty label, zero height).
+        ch_top_left [label="",  shape=plaintext, height=0, width=0.5, group=middle_left, /*style=invis*/]
+        // This node adds enough space between ch_top_left and ch_top_right to make sure they are aligned with pep_left and pep_right nodes to have straight vertical links (width must be the same as pep_label node)
+        ch_top_middle[label="", shape=plaintext,  height=0, width=0.6, /*style=invis*/]
+        ch_top_right [label="", shape=plaintext,  height=0, width=0.5, /*style=invis*/]
+        // between ch_top_left and ch_label
+        ch_middle_up [label="",  shape=plaintext, height=0, width=2.1, /*style=invis*/]
+        
+        // Set same width as pdp_label to make PDP and context handler boxes the same size
+        ch_label [label="context\nhandler", shape=plaintext, height=0, width=2.1, style=""]
+        
+        // between label and bottom nodes
+        ch_middle_down [label="",  shape=plaintext, height=0, width=2.1, /*style=invis*/]
+        ch_bottom_left [label="", shape=plaintext, height=0, width=0.5, group=middle_left, /*style=invis*/]
+        // This node adds enough space between ch_bottom_left and ch_bottom_right to make sure they are aligned with pip_top_left and pip_top_right nodes to have straight vertical links (width must be the same as pip_label node)
+        ch_bottom_middle[label="", shape=plaintext, height=0, width=0.6, /*style=invis*/]
+        ch_bottom_right [label="", shape=plaintext, height=0, width=0.5, /*style=invis*/]
+        
+        // Link the nodes to force vertical alignment from top to bottom and make the links invisible
+        // NB: changing minlen to 0 to reduce edge length screws up everything, don't do it.
+        ch_top_left -> ch_middle_up [style=invis]
+        ch_top_middle -> ch_middle_up -> ch_label -> ch_middle_down -> ch_bottom_middle [style=invis]
+        ch_top_right -> ch_middle_up [style=invis]
+        ch_middle_down -> ch_bottom_left [style=invis]
+        ch_middle_down -> ch_bottom_right [style=invis]
+    }
+    
+    // PEP - Context-handler links
+    pep_left -> ch_top_left [label="  3. request\n\n ", ltail=pep, lhead=ch]
+    // try xlabel instead of label
+    pep_right -> ch_top_right [xlabel="12. response ", dir=back, ltail=pep, lhead=ch]
+    
+    // PIP box
+    subgraph pip {
+        cluster=true
+        style=rounded
+        // Assign pip_top_left to same group as ch_bottom_left for vertical alignment
+        pip_top_left [label="", shape=plaintext, height=0, width=0.5, group=middle_left, style=invis]
+        // This node adds enough space between pip_top_left and pip_top_right to make sure they are aligned with ch_bottom_left and ch_bottom_right nodes to have straight vertical links (width must be the same as ch_label node)
+        pip_top_middle [label="",  shape=plaintext, height=0, width=0.6, style=invis]
+        pip_top_right [label="",  shape=plaintext, height=0, width=0.5, style=invis]
+        // Set same width as ch_label to make PIP, context handler and subjects boxes the same size
+        pip_label [label="PIP", shape=plaintext, height=0, width=2.1, style=""]
+        pip_bottom [label="",  shape=plaintext, height=0, width=2.1, style=invis]
+        
+        // Link the nodes to force vertical alignment from top to bottom and make the links invisible
+        // NB: changing minlen to 0 to reduce edge length screws up everything, don't do it.
+        pip_top_left -> pip_label [style=invis]
+        pip_top_middle -> pip_label -> pip_bottom [style=invis]
+        pip_top_right -> pip_label [style=invis]
+    }
+    
+    // Context-handler - PIP links
+    ch_bottom_left -> pip_top_left [label="  6. attribute\nquery", ltail=ch,lhead=pip]
+    ch_bottom_right -> pip_top_right [xlabel="8. attribute  ", dir=back, ltail=ch, lhead=pip]
+    
+    // PIP - subjects link (subjects box is created implicitly when creating this link)
+    pip_bottom -> subjects [dir=back, label="   7a. subject\nattributes", ltail=pip]
+    // END MIDDLE PART
+    
+    // Horizontal links between left and middle parts
+    AR -> pep_left [label="2. access request  ", lhead=pep, constraint=false]
+    pdp_top -> ch_top_left [label="4. request notification", dir=back, constraint=false, ltail=pdp, lhead=ch]
+    pdp_middle_up -> ch_middle_up [label="5. attribute queries",constraint=false, ltail=pdp, lhead=ch]
+    pdp_middle_down -> ch_middle_down [label=" 10. attributes ", dir=back, constraint=false, ltail=pdp, lhead=ch]
+    pdp_bottom -> ch_bottom_left [label="11. response context",constraint=false, ltail=pdp, lhead=ch]
+    
+    // BEGIN RIGHT PART
+    // Assign the same group to all boxes to make sure they are aligned vertically
+    // Obligations service box
+    OS [label="obligations\nservice", group=right]
+    resource [group=right]
+    // Node for labeling flows 7b./7c and work as the link angle
+    label7c [label="7c. resource\nattributes", shape=plaintext,fontsize=10.0, height=0, width=1, group=right]
+    label7b [label="7b. environment\nattributes", shape=plaintext,fontsize=10.0, height=0, width=1, group=right]
+    
+    // Link OS, resource, label7b label7c and environment boxes in order to align them vertically from top to bottom
+    // (Resource box created with the link)
+    OS -> resource [style="invis"] // link not visible, just for alignment
+    resource -> label7c [arrowhead=none]
+    label7c -> label7b [style=invis]
+    label7b -> environment [arrowhead=none]
+    // END RIGHT PART
+    
+    // Horizontal links between middle and right parts
+    pep_right -> OS [label=" 13. obligations", ltail=pep, constraint=false]
+    ch_label -> resource [label="9. resource\ncontent", dir=back, ltail=ch]
+    pip_top_right -> label7c [dir=back,ltail=pip]
+    pip_bottom -> label7b [dir=back,ltail=pip]
+    
+    // Align certain boxes horizontally
+	{rank=same; AR; pep_left; pep_right; OS;}
+	{rank=same; pdp_top; ch_top_left;ch_top_right;}
+	{rank=same; pdp_label; ch_label;resource;}
+	{rank=same; pdp_bottom; ch_bottom_left;ch_bottom_right;}
+	{rank=same; pip_top_right; label7c;}
+	{rank=same; pip_bottom; label7b;}
+	{rank=same; PAP; subjects; environment;}
+    
+}
+```
 
 * Note: some of the data-flows shown in the diagram may be facilitated by a repository. For instance, the communications between the **_context handler_** and the **_PIP_** or the communications between the **_PDP_** and the **_PAP_** may be facilitated by a repository. The XACML specification is not intended to place restrictions on the location of any such repository, or indeed to prescribe a particular communication protocol for any of the data-flows.
 
@@ -509,13 +707,63 @@ The model operates by the following steps.
 
 ## 3.2 XACML context
 
-XACML is intended to be suitable for a variety of application environments. The core language is insulated from the application environment by the XACML **_context_**, as shown in [Figure 2](#figure-2---xacml-context), in which the scope of the XACML specification is indicated by the shaded area. The XACML **_context_** is defined in XML schema, describing a canonical representation for the inputs and outputs of the **_PDP_**. **_Attributes_** referenced by an instance of XACML **_policy_** may be in the form of XPath expressions over the `<Content>` elements of the **_context_**, or **_attribute_** designators that identify the **_attribute_** by its category, identifier, data-type and (optionally) its issuer. Implementations must convert between the **_attribute_** representations in the application environment (e.g., SAML, J2SE, CORBA, and so on) and the **_attribute_** representations in the XACML **_context_**. How this is achieved is outside the scope of the XACML specification. In some cases, such as SAML, this conversion may be accomplished in an automated way through the use of an XSLT transformation.
+XACML is intended to be suitable for a variety of application environments. The core language is insulated from the application environment by the XACML **_context_**, as shown in [Figure 2](#figure-2---xacml-context), in which the scope of the XACML specification is indicated by the shaded area. The XACML **_context_** is defined in XML schema, describing a canonical representation for the inputs and outputs of the **_PDP_**. **_Attributes_** referenced by an instance fof XACML **_policy_** may be in the form of XPath expressions over the `<Content>` elements of the **_context_**, or **_attribute_** designators that identify the **_attribute_** by its category, identifier, data-type and (optionally) its issuer. Implementations must convert between the **_attribute_** representations in the application environment (e.g., SAML, J2SE, CORBA, and so on) and the **_attribute_** representations in the XACML **_context_**. How this is achieved is outside the scope of the XACML specification. In some cases, such as SAML, this conversion may be accomplished in an automated way through the use of an XSLT transformation.
 
 ###### Figure 2 - XACML context
 
-<!-- TODO (cdanger): replace PNG with [Mermaid source](https://github.com/oasis-tcs/xacml-spec/discussions/37#discussioncomment-10331954) -->
+<!-- ![context](images/Context.png) -->
+```dot
+// do not use strict keyword to allow multiple edges between PDP and context handler
+digraph Fig1 {
+    compound=true // Allow links to/from/between PEP/PDP/PIP boxes)
+    splines=false // Straight links (avoid curves whenever possible)
+    fontname=Arial
+    newrank=true // Allows to enforce rank constraints (horizontal alignment) across clusters (PEP/PDP/PIP boxes)
+    ranksep=0.5
+    nodesep=0.1 // space between nodes on the same rank (horizontally aligned)
+    // Default parameters for nodes
+    node [shape=box, style=rounded, width=1, height=0.5, fontname=Arial, fontsize=14.0, fillcolor=white]
+    // Default parameters for links (smaller font than nodes)
+    edge [fontname=Arial, fontsize=10.0, arrowhead=onormal]
 
-![context](images/Context.png)
+    // domain-specific inputs box
+    inputs [label="domain-specific\ninputs"]
+    
+    inputs_to_request [shape=rarrow, label=""]
+    
+    // XACML scope (grey) box
+    subgraph xacml_scope {
+        cluster=true
+        style=rounded
+        bgcolor=lightgrey
+        // Increase the margin if the bottom link (flow 11) is too low
+        //margin="40"
+        policy [label="xacml\nPolicy.xml", shape=box, style="filled,rounded"]
+        request [label="xacml Context/\nRequest.xml", style="filled,rounded"]
+        request_to_pdp [shape=rarrow, label="", style="filled"]
+        pdp [label="PDP", style="filled"]
+        pdp_to_response [shape=rarrow, label="", style=filled]
+        response [label="xacml Context/\nResponse.xml", style="filled,rounded"]
+        
+        // Link the nodes to force vertical alignment from top to bottom and make the links invisible
+        // NB: changing minlen to 0 to reduce edge length screws up everything, don't do it.
+        policy -> pdp
+        request -> request_to_pdp -> pdp -> pdp_to_response -> response [style=invis]
+    }
+    
+    inputs -> inputs_to_request -> request [style=invis]
+    
+    response_to_outputs [shape=rarrow, label=""]
+    // domain-specific outputs box
+    outputs [label="domain-specific\noutputs"]
+    
+    
+    response -> response_to_outputs -> outputs [style=invis]
+    
+    {rank=same; inputs; inputs_to_request; request; request_to_pdp; pdp; pdp_to_response; response; response_to_outputs; outputs}
+	
+}
+```
 
 Note: The **_PDP_** is not required to operate directly on the XACML representation of a **_policy_**. It may operate directly on an alternative representation.
 
@@ -535,9 +783,38 @@ These are described in the following sub-sections.
 
 ###### Figure 3 - Policy language model
 
-<!-- TODO (cdanger): replace PNG with [PlantUML](https://github.com/oasis-tcs/xacml-spec/discussions/37#discussioncomment-10338398) and align the next sections with the model. -->
+<!-- ![policy language model](images/PolicyLanguageModel.png) -->
 
-![policy language model](images/PolicyLanguageModel.png)
+```plantuml {width=60% }
+@startuml
+skinparam monochrome true
+skinparam classFontSize 14
+hide circle
+'skinparam linetype ortho
+
+' Policy "0..1" *-- "1" Description
+' Policy "0..1" *-- "1" PolicyIssuer
+' Policy "0..1" *-- "1" PolicyDefaults
+' Policy "*" *-- "1" Parameter
+
+Policy "*" *-- "*" Policy
+Policy "1" *-left- "1" CombiningAlgorithm: \t
+Policy "0..1" *-- "1" Target
+Policy "*" *-- "1" Rule
+' Policy "*" *-- "1" CombinerParameter
+' Policy "*" *-- "1" VariableDefinition
+Policy "*" *-- "1" NoticeExpression
+' Policy "1" *-- "1" PolicyId
+' Policy "1" *-- "1" Version
+' Policy "1" *-- "1" MaxDelegationDepth
+
+' Rule "0..1" *-- "1" Description
+Rule "0..1" *-left- "1" Condition: \t
+Rule "*" *-right- "1" NoticeExpression: \t
+' Rule "1"*--"1" RuleId 
+Rule "1" *-- "1" Effect 
+@enduml
+```
 
 ### 3.3.1 Rule
 
