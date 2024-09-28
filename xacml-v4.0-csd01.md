@@ -118,11 +118,14 @@ For complete copyright information please see the full Notices section in an App
 
 Here is a customized command line which will generate HTML from this markdown file (named `xacml-v4.0-csd01.md`):
 
-_In order to generate the diagrams, Graphviz and PlantUML must be installed first. (For example with this command on Linux Debian/Ubuntu: `$ sudo apt install graphviz plantuml` )_
-
-```shell
-pandoc -f gfm -t html xacml-v4.0-csd01.md -c https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3a.css --toc --toc-depth=5 -s --lua-filter diagram.lua -o xacml-v4.0-csd01.html --metadata title="eXtensible Access Control Markup Language (XACML) Version 4.0"
-```
+  ```shell
+  pandoc -f gfm -t html xacml-v4.0-csd01.md -c https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3a.css --toc --toc-depth=5 -s --lua-filter diagram.lua --embed-resources -o xacml-v4.0-csd01.html --metadata title="eXtensible Access Control Markup Language (XACML) Version 4.0"
+  ```
+  **N.B.:** before running this command, you must either install Pandoc, Graphviz and PlantUML on your system; or else simply use Docker with the following shell alias:
+  ```
+  alias pandoc='docker run --rm --volume "$(pwd):/data" cdang/pandoc-plantuml'
+  ```
+  _The Dockerfile (named `Dockerfile`) of the docker image used in the alias above is provided with this markdown file for your convenience if you wish to build it yourself._  
 
 OASIS staff are currently using pandoc 3.0 from https://github.com/jgm/pandoc/releases/tag/3.0.
 
@@ -785,10 +788,11 @@ These are described in the following sub-sections.
 
 <!-- ![policy language model](images/PolicyLanguageModel.png) -->
 
-```plantuml {width=60% }
+```plantuml
 @startuml
 skinparam monochrome true
-skinparam classFontSize 14
+skinparam classFontName Arial
+skinparam classFontSize 18
 hide circle
 'skinparam linetype ortho
 
