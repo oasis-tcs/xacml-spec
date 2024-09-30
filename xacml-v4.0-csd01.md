@@ -727,14 +727,14 @@ digraph Fig1 {
     ranksep=0.5
     nodesep=0.1 // space between nodes on the same rank (horizontally aligned)
     // Default parameters for nodes
-    node [shape=box, style=rounded, width=1, height=0.5, fontname=Arial, fontsize=14.0, fillcolor=white]
+    node [shape=box, style=rounded, width=1, height=0.5, fontname=Arial, fontsize=10.0, fillcolor=white]
     // Default parameters for links (smaller font than nodes)
-    edge [fontname=Arial, fontsize=10.0, arrowhead=onormal]
+    edge [fontname=Arial, arrowhead=onormal]
 
     // domain-specific inputs box
     inputs [label="domain-specific\ninputs"]
     
-    inputs_to_request [shape=rarrow, label=""]
+    inputs_to_request [shape=rarrow, label="", width=0.5]
     
     // XACML scope (grey) box
     subgraph xacml_scope {
@@ -745,9 +745,9 @@ digraph Fig1 {
         //margin="40"
         policy [label="xacml\nPolicy.xml", shape=box, style="filled,rounded"]
         request [label="xacml Context/\nRequest.xml", style="filled,rounded"]
-        request_to_pdp [shape=rarrow, label="", style="filled"]
+        request_to_pdp [shape=rarrow, label="", style="filled", width=0.5]
         pdp [label="PDP", style="filled"]
-        pdp_to_response [shape=rarrow, label="", style=filled]
+        pdp_to_response [shape=rarrow, label="", style=filled, width=0.5]
         response [label="xacml Context/\nResponse.xml", style="filled,rounded"]
         
         // Link the nodes to force vertical alignment from top to bottom and make the links invisible
@@ -758,15 +758,13 @@ digraph Fig1 {
     
     inputs -> inputs_to_request -> request [style=invis]
     
-    response_to_outputs [shape=rarrow, label=""]
+    response_to_outputs [shape=rarrow, label="", width=0.5]
     // domain-specific outputs box
     outputs [label="domain-specific\noutputs"]
-    
     
     response -> response_to_outputs -> outputs [style=invis]
     
     {rank=same; inputs; inputs_to_request; request; request_to_pdp; pdp; pdp_to_response; response; response_to_outputs; outputs}
-	
 }
 ```
 
@@ -789,6 +787,7 @@ These are described in the following sub-sections.
 ###### Figure 3 - Policy language model
 
 <!-- ![policy language model](images/PolicyLanguageModel.png) -->
+<div style="text-align: center;">
 
 ```plantuml
 @startuml
@@ -821,6 +820,7 @@ Rule "*" *-right- "1" NoticeExpression: \t
 Rule "1" *-- "1" Effect 
 @enduml
 ```
+</div>
 
 ### 3.3.1 Rule
 
