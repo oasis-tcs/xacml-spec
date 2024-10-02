@@ -1,4 +1,11 @@
 <link rel="stylesheet" href="https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3a.css" />
+<style>
+img {
+  max-width: 100%;
+  height: auto;
+}
+</style>
+
 
 ![OASIS Logo](https://docs.oasis-open.org/templates/OASISLogo-v3.0.png)
 
@@ -690,6 +697,7 @@ digraph Fig1 {
     
 }
 ```
+
 
 * Note: some of the data-flows shown in the diagram may be facilitated by a repository. For instance, the communications between the **_context handler_** and the **_PIP_** or the communications between the **_PDP_** and the **_PAP_** may be facilitated by a repository. The XACML specification is not intended to place restrictions on the location of any such repository, or indeed to prescribe a particular communication protocol for any of the data-flows.
 
