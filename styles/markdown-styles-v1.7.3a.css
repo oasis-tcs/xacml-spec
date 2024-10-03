@@ -88,3 +88,9 @@ blockquote {
 li {
     margin: 3px 0;
 }
+
+/* XACML TC customization */
+img {
+  max-width: 100%;
+  height: auto;
+}

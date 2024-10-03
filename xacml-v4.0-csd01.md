@@ -1,11 +1,4 @@
 <link rel="stylesheet" href="https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3a.css" />
-<style>
-img {
-  max-width: 100%;
-  height: auto;
-}
-</style>
-
 
 ![OASIS Logo](https://docs.oasis-open.org/templates/OASISLogo-v3.0.png)
 
@@ -126,7 +119,7 @@ For complete copyright information please see the full Notices section in an App
 Here is a customized command line which will generate HTML from this markdown file (named `xacml-v4.0-csd01.md`):
 
 ```shell
-pandoc -f gfm++definition_lists -t html xacml-v4.0-csd01.md -c https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3a.css --toc --toc-depth=5 -s --lua-filter diagram.lua --embed-resources -o xacml-v4.0-csd01.html --metadata title="eXtensible Access Control Markup Language (XACML) Version 4.0"
+pandoc -f gfm++definition_lists -t html xacml-v4.0-csd01.md -c styles/markdown-styles-v1.7.3a.css --toc --toc-depth=5 -s --lua-filter diagram.lua --embed-resources -o xacml-v4.0-csd01.html --metadata title="eXtensible Access Control Markup Language (XACML) Version 4.0"
 ```
 **N.B.:** before running this command, you must either install Pandoc, Graphviz and PlantUML on your system; or else simply use Docker with the following shell alias:
 ```
