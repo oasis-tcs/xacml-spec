@@ -119,7 +119,7 @@ For complete copyright information please see the full Notices section in an App
 Here is a customized command line which will generate HTML from this markdown file (named `xacml-v4.0-csd01.md`):
 
 ```shell
-pandoc -f gfm++definition_lists -t html xacml-v4.0-csd01.md -c styles/markdown-styles-v1.7.3a.css --toc --toc-depth=5 -s --lua-filter diagram.lua --embed-resources -o xacml-v4.0-csd01.html --metadata title="eXtensible Access Control Markup Language (XACML) Version 4.0"
+pandoc -f gfm+definition_lists -t html xacml-v4.0-csd01.md -c styles/markdown-styles-v1.7.3a.css --toc --toc-depth=5 -s --lua-filter diagram.lua --embed-resources -o xacml-v4.0-csd01.html --metadata title="eXtensible Access Control Markup Language (XACML) Version 4.0"
 ```
 **N.B.:** before running this command, you must either install Pandoc, Graphviz and PlantUML on your system; or else simply use Docker with the following shell alias:
 ```
@@ -692,7 +692,7 @@ digraph Fig1 {
 ```
 
 
-* Note: some of the data-flows shown in the diagram may be facilitated by a repository. For instance, the communications between the **_context handler_** and the **_PIP_** or the communications between the **_PDP_** and the **_PAP_** may be facilitated by a repository. The XACML specification is not intended to place restrictions on the location of any such repository, or indeed to prescribe a particular communication protocol for any of the data-flows.
+: Note: some of the data-flows shown in the diagram may be facilitated by a repository. For instance, the communications between the **_context handler_** and the **_PIP_** or the communications between the **_PDP_** and the **_PAP_** may be facilitated by a repository. The XACML specification is not intended to place restrictions on the location of any such repository, or indeed to prescribe a particular communication protocol for any of the data-flows.
 
 The model operates by the following steps.
 
@@ -1004,73 +1004,73 @@ The `<Policy>` element contains the following attributes and elements:
 
 `PolicyId` [Required]
 
-* **_Policy_** identifier. It is the responsibility of the **_PAP_** to ensure that no two **_policies_** visible to the **_PDP_** have the same identifier. This MAY be achieved by following a predefined URN or URI scheme. If the **_policy_** identifier is in the form of a URL, then it MAY be resolvable.
+: **_Policy_** identifier. It is the responsibility of the **_PAP_** to ensure that no two **_policies_** visible to the **_PDP_** have the same identifier. This MAY be achieved by following a predefined URN or URI scheme. If the **_policy_** identifier is in the form of a URL, then it MAY be resolvable.
 
 `Version` [Required]
 
-* The version number of the Policy.
+: The version number of the Policy.
 
 `CombiningAlgId` [Required]
 
-* The identifier of the **_combining algorithm_** by which the `<Policy>`, `<Rule>`, `<CombinerParameters>`, `<PolicyCombinerParameters>` and `<RuleCombinerParameters>` components MUST be combined. Standard **_combining algorithms_** are listed in [Appendix G](#appendix-g-combining-algorithms-normative). Standard **_combining algorithm_** identifiers are listed in [Appendix F.9](#f9-combining-algorithms).
+: The identifier of the **_combining algorithm_** by which the `<Policy>`, `<Rule>`, `<CombinerParameters>`, `<PolicyCombinerParameters>` and `<RuleCombinerParameters>` components MUST be combined. Standard **_combining algorithms_** are listed in [Appendix G](#appendix-g-combining-algorithms-normative). Standard **_combining algorithm_** identifiers are listed in [Appendix F.9](#f9-combining-algorithms).
 
 `MaxDelegationDepth` [Optional]
 
-* If present, limits the depth of delegation which is authorized by this **_policy_**. See the delegation profile [[XACMLAdmin](#xacmladmin)].
+: If present, limits the depth of delegation which is authorized by this **_policy_**. See the delegation profile [[XACMLAdmin](#xacmladmin)].
 
 `<Description>` [Optional]
 
-* A free-form description of the **_policy_**.
+: A free-form description of the **_policy_**.
 
 `<PolicyIssuer>` [Optional]
 
-* **_Attributes_** of the **_issuer_** of the **_policy_**.
+: **_Attributes_** of the **_issuer_** of the **_policy_**.
 
 `<PolicyDefaults>` [Optional]
 
-* A set of default values applicable to the **_policy_**. The scope of the `<PolicyDefaults>` element SHALL be the enclosing **_policy_**.
+: A set of default values applicable to the **_policy_**. The scope of the `<PolicyDefaults>` element SHALL be the enclosing **_policy_**.
 
 `<Target>` [Optional]
 
-* The `<Target>` element defines the applicability of a **_policy_** to a set of **_decision requests_**.
+: The `<Target>` element defines the applicability of a **_policy_** to a set of **_decision requests_**.
 
-* The `<Target>` element MAY be declared by the creator of the `<Policy>` element or it MAY be computed from the `<Target>` elements of the referenced `<Policy>` and `<Rule>` elements, either as an conjunction or as a disjunction.
+: The `<Target>` element MAY be declared by the creator of the `<Policy>` element or it MAY be computed from the `<Target>` elements of the referenced `<Policy>` and `<Rule>` elements, either as an conjunction or as a disjunction.
 
 `<Policy>` [Any Number]
 
-* A **_policy_** that is included in this **_policy_**. **_Policies_** whose `<Target>` elements match the **_decision request_** MUST be considered. **_Policies_** whose `<Target>` elements do not match the **_decision request_** SHALL be ignored.
+: A **_policy_** that is included in this **_policy_**. **_Policies_** whose `<Target>` elements match the **_decision request_** MUST be considered. **_Policies_** whose `<Target>` elements do not match the **_decision request_** SHALL be ignored.
 
 `<PolicyIdReference>` [Any Number]
 
-* A reference to a **_policy_** that MUST be included in this **_policy_**. If the `<PolicyIdReference>` is a URL, then it MAY be resolvable. **_Policies_** whose `<Target>` elements match the **_decision request_** MUST be considered. **_Policies_** whose `<Target>` elements do not match the **_decision request_** SHALL be ignored.
+: A reference to a **_policy_** that MUST be included in this **_policy_**. If the `<PolicyIdReference>` is a URL, then it MAY be resolvable. **_Policies_** whose `<Target>` elements match the **_decision request_** MUST be considered. **_Policies_** whose `<Target>` elements do not match the **_decision request_** SHALL be ignored.
 
 `<VariableDefinition>` [Any Number]
 
-* Common function definitions that can be referenced from anywhere in a contained **_policy_** or **_rule_** where an expression can be found.
+: Common function definitions that can be referenced from anywhere in a contained **_policy_** or **_rule_** where an expression can be found.
 
 `<Rule>` [Any Number]
 
-* A sequence of **_rules_** that MUST be combined according to the `CombiningAlgId` attribute. **_Rules_** whose **_conditions_** match the **_decision request_** MUST be considered. Rules whose **_conditions_** do not match the **_decision request_** SHALL be ignored.
+: A sequence of **_rules_** that MUST be combined according to the `CombiningAlgId` attribute. **_Rules_** whose **_conditions_** match the **_decision request_** MUST be considered. Rules whose **_conditions_** do not match the **_decision request_** SHALL be ignored.
 
 `<ObligationExpressions>` [Optional]
 
-* Contains the set of `<ObligationExpression>` elements. See [Section 7.18](#718-obligations-and-advice) for a description of how the set of **_obligations_** to be returned by the **_PDP_** shall be determined.
+: Contains the set of `<ObligationExpression>` elements. See [Section 7.18](#718-obligations-and-advice) for a description of how the set of **_obligations_** to be returned by the **_PDP_** shall be determined.
 
 `<AdviceExpressions>` [Optional]
 
-* Contains the set of `<AdviceExpression>` elements. See [Section 7.18](#718-obligations-and-advice) for a description of how the set of **_advice_** to be returned by the **_PDP_** shall be determined.
+: Contains the set of `<AdviceExpression>` elements. See [Section 7.18](#718-obligations-and-advice) for a description of how the set of **_advice_** to be returned by the **_PDP_** shall be determined.
 
 `<CombinerParameters>` [Optional]
 
-* Contains a sequence of `<CombinerParameter>` elements. The parameters apply to the **_combining algorithm_** as such and it is up to the specific **_combining algorithm_** to interpret them and adjust its behavior accordingly.
+: Contains a sequence of `<CombinerParameter>` elements. The parameters apply to the **_combining algorithm_** as such and it is up to the specific **_combining algorithm_** to interpret them and adjust its behavior accordingly.
 
 `<PolicyCombinerParameters>` [Optional]
 
-* Contains a sequence of `<CombinerParameter>` elements that are associated with a particular `<Policy>` or `<PolicyIdReference>` element within the `<Policy>`. It is up to the specific **_combining algorithm_** to interpret them and adjust its behavior accordingly.
+: Contains a sequence of `<CombinerParameter>` elements that are associated with a particular `<Policy>` or `<PolicyIdReference>` element within the `<Policy>`. It is up to the specific **_combining algorithm_** to interpret them and adjust its behavior accordingly.
 
 `<RuleCombinerParameters>` [Optional]
 
-* Contains a sequence of `<CombinerParameter>` elements that are associated with a particular `<Rule>` element within the `<Policy>`. It is up to the specific **_combining algorithm_** to interpret them and adjust its behavior accordingly.
+: Contains a sequence of `<CombinerParameter>` elements that are associated with a particular `<Rule>` element within the `<Policy>`. It is up to the specific **_combining algorithm_** to interpret them and adjust its behavior accordingly.
 
 ## 5.2 Element \<Description>
 
@@ -1100,11 +1100,11 @@ The `<PolicyIssuer>` element contains the following elements:
 
 `<Content>` [Optional]
 
-* Free form XML describing the **_issuer_**. See [Section 5.45](#545-element-content).
+: Free form XML describing the **_issuer_**. See [Section 5.45](#545-element-content).
 
 `<Attribute>` [Zero to many]
 
-* An **_attribute_** of the **_issuer_**. See [Section 5.46](#546-element-attribute).
+: An **_attribute_** of the **_issuer_**. See [Section 5.46](#546-element-attribute).
 
 ## 5.4 Element \<PolicyDefaults>
 
@@ -1127,7 +1127,7 @@ The `<PolicyDefaults>` element contains the following elements:
 
 `<XPathVersion>` [Optional]
 
-* Default XPath version.
+: Default XPath version.
 
 ## 5.5 Element \<XPathVersion>
 
@@ -1195,15 +1195,15 @@ Element `<PolicyIdReference>` is of `xacml:IdReferenceType` complex type.
 
 `Version` [Optional]
 
-* Specifies a matching expression for the version of the **_policy_** referenced.
+: Specifies a matching expression for the version of the **_policy_** referenced.
 
 `EarliestVersion` [Optional]
 
-* Specifies a matching expression for the earliest acceptable version of the **_policy_** referenced.
+: Specifies a matching expression for the earliest acceptable version of the **_policy_** referenced.
 
 `LatestVersion` [Optional]
 
-* Specifies a matching expression for the latest acceptable version of the **_policy_** referenced.
+: Specifies a matching expression for the latest acceptable version of the **_policy_** referenced.
 
 The matching operation is defined in [Section 5.13](#513-simple-type-versionmatchtype). Any combination of these attributes MAY be present in a `<PolicyIdReference>`. The referenced **_policy_** MUST match all expressions. If none of these attributes is present, then any version of the **_policy_** is acceptable. In the case that more than one matching version can be obtained, then the most recent one SHOULD be used.
 
@@ -1259,7 +1259,7 @@ The `<CombinerParameters>` element contains the following elements:
 
 `<CombinerParameter>` [Any Number]
 
-* A single parameter. See [Section 5.17](#517-element-combinerparameter).
+: A single parameter. See [Section 5.17](#517-element-combinerparameter).
 
 Support for the `<CombinerParameters>` element is optional.
 
@@ -1283,11 +1283,11 @@ The `<CombinerParameter>` element contains the following attributes:
 
 `ParameterName` [Required]
 
-* The identifier of the parameter.
+: The identifier of the parameter.
 
 `<AttributeValue>` [Required]
 
-* The value of the parameter.
+: The value of the parameter.
 
 Support for the `<CombinerParameter>` element is optional.
 
@@ -1315,7 +1315,7 @@ The `<RuleCombinerParameters>` element contains the following attribute:
 
 `RuleIdRef` [Required]
 
-* The identifier of the `<Rule>` contained in the **_policy_**.
+: The identifier of the `<Rule>` contained in the **_policy_**.
 
 Support for the `<RuleCombinerParameters>` element is optional, only if support for combiner parameters is not implemented.
 
@@ -1344,7 +1344,7 @@ The `<PolicyCombinerParameters>` element contains the following attribute:
 
 `PolicyIdRef` [Required]
 
-* The identifier of a `<Policy>` or the value of a `<PolicyIdReference>` contained in the **_policy_**.
+: The identifier of a `<Policy>` or the value of a `<PolicyIdReference>` contained in the **_policy_**.
 
 Support for the `<PolicyCombinerParameters>` element is optional, only if support for combiner parameters is not implemented.
 
@@ -1374,27 +1374,27 @@ The `<Rule>` element contains the following attributes and elements:
 
 `RuleId` [Required]
 
-A string identifying this **_rule_**.
+: A string identifying this **_rule_**.
 
 `Effect` [Required]
 
-**_Rule effect_**. The value of this attribute is either `Permit` or `Deny`.
+: **_Rule effect_**. The value of this attribute is either `Permit` or `Deny`.
 
 `<Description>` [Optional]
 
-A free-form description of the **_rule_**.
+: A free-form description of the **_rule_**.
 
 `<Condition>` [Optional]
 
-A **_predicate_** that MUST be satisfied for the **_rule_** to be assigned its `Effect` value.
+: A **_predicate_** that MUST be satisfied for the **_rule_** to be assigned its `Effect` value.
 
 `<ObligationExpressions>` [Optional]
 
-A **_conjunctive sequence_** of **_obligation_** expressions which MUST be evaluated into **_obligations_** by the **_PDP_**. The corresponding **_obligations_** MUST be fulfilled by the **_PEP_** in conjunction with the **_authorization decision_**. See [Section 7.18](#718-obligations-and-advice) for a description of how the set of **_obligations_** to be returned by the **_PDP_** SHALL be determined. See [Section 7.2](#72-policy-enforcement-point) about enforcement of **_obligations_**.
+: A **_conjunctive sequence_** of **_obligation_** expressions which MUST be evaluated into **_obligations_** by the **_PDP_**. The corresponding **_obligations_** MUST be fulfilled by the **_PEP_** in conjunction with the **_authorization decision_**. See [Section 7.18](#718-obligations-and-advice) for a description of how the set of **_obligations_** to be returned by the **_PDP_** SHALL be determined. See [Section 7.2](#72-policy-enforcement-point) about enforcement of **_obligations_**.
 
 `<AdviceExpressions>` [Optional]
 
-A **_conjunctive sequence_** of **_advice_** expressions which MUST evaluated into **_advice_** by the **_PDP_**. The corresponding **_advice_** provide supplementary information to the **_PEP_** in conjunction with the **_authorization decision_**. See [Section 7.18](#718-obligations-and-advice) for a description of how the set of **_advice_** to be returned by the **_PDP_** SHALL be determined.
+: A **_conjunctive sequence_** of **_advice_** expressions which MUST evaluated into **_advice_** by the **_PDP_**. The corresponding **_advice_** provide supplementary information to the **_PEP_** in conjunction with the **_authorization decision_**. See [Section 7.18](#718-obligations-and-advice) for a description of how the set of **_advice_** to be returned by the **_PDP_** SHALL be determined.
 
 ## 5.22 Simple type EffectType
 
@@ -1427,11 +1427,11 @@ The `<VariableDefinition>` element is of `VariableDefinitionType` complex type. 
 
 `<Expression>` [Required]
 
-* Any element of `ExpressionType` complex type.
+: Any element of `ExpressionType` complex type.
 
 `VariableId` [Required]
 
-* The name of the variable definition.
+: The name of the variable definition.
 
 ## 5.24 Element \<VariableReference>
 
@@ -1456,7 +1456,7 @@ The `<VariableReference>` element has the following attribute:
 
 `VariableId` [Required]
 
-* The name used to refer to the value defined in a `<VariableDefinition>` element.
+: The name used to refer to the value defined in a `<VariableDefinition>` element.
 
 ## 5.25 Element \<Expression>
 
@@ -1509,15 +1509,15 @@ The `<Apply>` element contains the following attributes and elements:
 
 `FunctionId` [Required]
 
-* The identifier of the function to be applied to the arguments. XACML-defined functions are described in [Appendix E.3](#e3-functions).
+: The identifier of the function to be applied to the arguments. XACML-defined functions are described in [Appendix E.3](#e3-functions).
 
 `<Description>` [Optional]
 
-* A free-form description of the `<Apply>` element.
+: A free-form description of the `<Apply>` element.
 
 `<Expression>` [Optional]
 
-* Arguments to the function, which may include other functions.
+: Arguments to the function, which may include other functions.
 
 ## 5.28 Element \<Function>
 
@@ -1541,7 +1541,7 @@ The `<Function>` element contains the following attribute:
 
 `FunctionId` [Required]
 
-* The identifier of the function.
+: The identifier of the function.
 
 ## 5.29 Element \<AttributeDesignator>
 
@@ -1581,23 +1581,23 @@ The `<AttributeDesignatorType>` contains the following attributes:
 
 `Category` [Required]
 
-* This attribute SHALL specify the Category with which to match the **_attribute_**.
+: This attribute SHALL specify the Category with which to match the **_attribute_**.
 
 `AttributeId` [Required]
 
-* This attribute SHALL specify the AttributeId with which to match the **_attribute_**.
+: This attribute SHALL specify the AttributeId with which to match the **_attribute_**.
 
 `DataType` [Required]
 
-* The **_bag_** returned by the `<AttributeDesignator>` element SHALL contain values of this data-type.
+: The **_bag_** returned by the `<AttributeDesignator>` element SHALL contain values of this data-type.
 
 `Issuer` [Optional]
 
-* This attribute, if supplied, SHALL specify the Issuer with which to match the **_attribute_**.
+: This attribute, if supplied, SHALL specify the Issuer with which to match the **_attribute_**.
 
 `MustBePresent` [Required]
 
-* This attribute governs whether the element returns `Indeterminate` or an empty **_bag_** in the event the **_named attribute_** is absent from the request **_context_**. See [Section 7.3.5](#735-attribute-retrieval). Also see [Section 7.19.2](#7192-syntax-and-type-errors) and [Section 7.19.3](#7193-missing-attributes).
+: This attribute governs whether the element returns `Indeterminate` or an empty **_bag_** in the event the **_named attribute_** is absent from the request **_context_**. See [Section 7.3.5](#735-attribute-retrieval). Also see [Section 7.19.2](#7192-syntax-and-type-errors) and [Section 7.19.3](#7193-missing-attributes).
 
 ## 5.30 Element \<AttributeSelector>
 
@@ -1632,23 +1632,23 @@ The `<AttributeSelector>` element has the following attributes:
 
 `Category` [Required]
 
-* This attribute SHALL specify the **_attributes_** category of the `<Content>` element containing the XML from which nodes will be selected. It also indicates the **_attributes_** category containing the applicable `ContextSelectorId` attribute, if the element includes a `ContextSelectorId` XML attribute.
+: This attribute SHALL specify the **_attributes_** category of the `<Content>` element containing the XML from which nodes will be selected. It also indicates the **_attributes_** category containing the applicable `ContextSelectorId` attribute, if the element includes a `ContextSelectorId` XML attribute.
 
 `ContextSelectorId` [Optional]
 
-* This attribute refers to the **_attribute_** (by its `AttributeId`) in the request **_context_** in the category given by the `Category` attribute. The referenced **_attribute_** MUST have data type urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression, and must select a single node in the `<Content>` element. The `XPathCategory` attribute of the referenced **_attribute_** MUST be equal to the `Category` attribute of the attribute selector.
+: This attribute refers to the **_attribute_** (by its `AttributeId`) in the request **_context_** in the category given by the `Category` attribute. The referenced **_attribute_** MUST have data type urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression, and must select a single node in the `<Content>` element. The `XPathCategory` attribute of the referenced **_attribute_** MUST be equal to the `Category` attribute of the attribute selector.
 
 `Path` [Required]
 
-* This attribute SHALL contain an XPath expression to be evaluated against the specified XML content. See [Section 7.3.7](#737-attributeselector-evaluation) for details of the XPath evaluation during `<AttributeSelector>` processing. The namespace context for the value of the Path attribute is given by the [in-scope namespaces] [[INFOSET](#infoset)] of the `<AttributeSelector>` element.
+: This attribute SHALL contain an XPath expression to be evaluated against the specified XML content. See [Section 7.3.7](#737-attributeselector-evaluation) for details of the XPath evaluation during `<AttributeSelector>` processing. The namespace context for the value of the Path attribute is given by the [in-scope namespaces] [[INFOSET](#infoset)] of the `<AttributeSelector>` element.
 
 `DataType` [Required]
 
-* The attribute specifies the datatype of the values returned from the evaluation of this `<AttributeSelector>` element.
+: The attribute specifies the datatype of the values returned from the evaluation of this `<AttributeSelector>` element.
 
 `MustBePresent` [Required]
 
-* This attribute governs whether the element returns `Indeterminate` or an empty **_bag_** in the event that the attributes category specified by the `Category` attribute does not exist in the request **_context_**, or the attributes category does exist but it does not have a `<Content>` child element, or the `<Content>` element does exist but the XPath expression selects no node. See [Section 7.3.5](#735-attribute-retrieval). Also see [Section 7.19.2](#7192-syntax-and-type-errors) and [Section 7.19.3](#7193-missing-attributes).
+: This attribute governs whether the element returns `Indeterminate` or an empty **_bag_** in the event that the attributes category specified by the `Category` attribute does not exist in the request **_context_**, or the attributes category does exist but it does not have a `<Content>` child element, or the `<Content>` element does exist but the XPath expression selects no node. See [Section 7.3.5](#735-attribute-retrieval). Also see [Section 7.19.2](#7192-syntax-and-type-errors) and [Section 7.19.3](#7193-missing-attributes).
 
 ## 5.31 Element \<AttributeValue>
 
@@ -1677,7 +1677,7 @@ The `<AttributeValue>` element has the following attributes:
 
 `DataType` [Required]
 
-* The data-type of the **_attribute_** value.
+: The data-type of the **_attribute_** value.
 
 ## 5.32 Element \<Obligations>
 
@@ -1698,7 +1698,7 @@ The `<Obligations>` element contains the following element:
 
 `<Obligation>` [One to Many]
 
-* A sequence of **_obligations_**. See [Section 5.34](#534-element-obligation).
+: A sequence of **_obligations_**. See [Section 5.34](#534-element-obligation).
 
 ## 5.33 Element \<AssociatedAdvice>
 
@@ -1719,7 +1719,7 @@ The `<AssociatedAdvice>` element contains the following element:
 
 `<Advice>` [One to Many]
 
-* A sequence of **_advice_**. See [Section 5.35](#535-element-advice).
+: A sequence of **_advice_**. See [Section 5.35](#535-element-advice).
 
 ## 5.34 Element \<Obligation>
 
@@ -1742,11 +1742,11 @@ The `<Obligation>` element contains the following elements and attributes:
 
 `ObligationId` [Required]
 
-* **_Obligation_** identifier. The value of the **_obligation_** identifier SHALL be interpreted by the **_PEP_**.
+: **_Obligation_** identifier. The value of the **_obligation_** identifier SHALL be interpreted by the **_PEP_**.
 
 `<AttributeAssignment>` [Optional]
 
-* **_Obligation_** arguments assignment. The values of the **_obligation_** arguments SHALL be interpreted by the **_PEP_**.
+: **_Obligation_** arguments assignment. The values of the **_obligation_** arguments SHALL be interpreted by the **_PEP_**.
 
 ## 5.35 Element \<Advice>
 
@@ -1769,11 +1769,11 @@ The `<Advice>` element contains the following elements and attributes:
 
 `AdviceId` [Required]
 
-* **_Advice_** identifier. The value of the **_advice_** identifier MAY be interpreted by the **_PEP_**.
+: **_Advice_** identifier. The value of the **_advice_** identifier MAY be interpreted by the **_PEP_**.
 
 `<AttributeAssignment>` [Optional]
 
-* **_Advice_** arguments assignment. The values of the **_advice_** arguments MAY be interpreted by the **_PEP_**.
+: **_Advice_** arguments assignment. The values of the **_advice_** arguments MAY be interpreted by the **_PEP_**.
 
 ## 5.36 Element \<AttributeAssignment>
 
@@ -1800,15 +1800,15 @@ The `<AttributeAssignment>` element contains the following attributes:
 
 `AttributeId` [Required]
 
-* The **_attribute_** Identifier.
+: The **_attribute_** Identifier.
 
 `Category` [Optional]
 
-* An optional category of the **_attribute_**. If this attribute is missing, the **_attribute_** has no category. The **_PEP_** SHALL interpret the significance and meaning of any `Category` attribute. Non-normative note: an expected use of the category is to disambiguate **_attributes_** that are relayed from the request.
+: An optional category of the **_attribute_**. If this attribute is missing, the **_attribute_** has no category. The **_PEP_** SHALL interpret the significance and meaning of any `Category` attribute. Non-normative note: an expected use of the category is to disambiguate **_attributes_** that are relayed from the request.
 
 `Issuer` [Optional]
 
-* An optional issuer of the **_attribute_**. If this attribute is missing, the **_attribute_** has no issuer. The **_PEP_** SHALL interpret the significance and meaning of any `Issuer` attribute. Non-normative note: an expected use of the issuer is to disambiguate **_attributes_** that are relayed from the request.
+: An optional issuer of the **_attribute_**. If this attribute is missing, the **_attribute_** has no issuer. The **_PEP_** SHALL interpret the significance and meaning of any `Issuer` attribute. Non-normative note: an expected use of the issuer is to disambiguate **_attributes_** that are relayed from the request.
 
 ## 5.37 Element \<ObligationExpressions>
 
@@ -1830,7 +1830,7 @@ The `<ObligationExpressions>` element contains the following element:
 
 `<ObligationExpression>` [One to Many]
 
-* A sequence of **_obligations_** expressions. See [Section 5.39](#539-element-obligationexpression).
+: A sequence of **_obligations_** expressions. See [Section 5.39](#539-element-obligationexpression).
 
 ## 5.38 Element \<AdviceExpressions>
 
@@ -1851,7 +1851,7 @@ The `<AdviceExpressions>` element contains the following element:
 
 `<AdviceExpression>` [One to Many]
 
-* A sequence of **_advice_** expressions. See [Section 5.40](#540-element-adviceexpression).
+: A sequence of **_advice_** expressions. See [Section 5.40](#540-element-adviceexpression).
 
 ## 5.39 Element \<ObligationExpression>
 
@@ -1876,15 +1876,15 @@ The `<ObligationExpression>` element contains the following elements and attribu
 
 `ObligationId` [Required]
 
-* **_Obligation_** identifier. The value of the **_obligation_** identifier SHALL be interpreted by the **_PEP_**.
+: **_Obligation_** identifier. The value of the **_obligation_** identifier SHALL be interpreted by the **_PEP_**.
 
 `FulfillOn` [Required]
 
-* The **_effect_** for which this **_obligation_** must be fulfilled by the **_PEP_**.
+: The **_effect_** for which this **_obligation_** must be fulfilled by the **_PEP_**.
 
 `<AttributeAssignmentExpression>` [Optional]
 
-* **_Obligation_** arguments in the form of expressions. The expressions SHALL be evaluated by the PDP to constant `<AttributeValue>` elements or **_bags_**, which shall be the attribute assignments in the `<Obligation>` returned to the PEP. If an `<AttributeAssignmentExpression>` evaluates to an atomic **_attribute_** value, then there MUST be one resulting `<AttributeAssignment>` which MUST contain this single **_attribute_** value. If the `<AttributeAssignmentExpression>` evaluates to a **_bag_**, then there MUST be a resulting `<AttributeAssignment>` for each of the values in the **_bag_**. If the **_bag_** is empty, there shall be no `<AttributeAssignment>` from this `<AttributeAssignmentExpression>`.The values of the **_obligation_** arguments SHALL be interpreted by the **_PEP_**.
+: **_Obligation_** arguments in the form of expressions. The expressions SHALL be evaluated by the PDP to constant `<AttributeValue>` elements or **_bags_**, which shall be the attribute assignments in the `<Obligation>` returned to the PEP. If an `<AttributeAssignmentExpression>` evaluates to an atomic **_attribute_** value, then there MUST be one resulting `<AttributeAssignment>` which MUST contain this single **_attribute_** value. If the `<AttributeAssignmentExpression>` evaluates to a **_bag_**, then there MUST be a resulting `<AttributeAssignment>` for each of the values in the **_bag_**. If the **_bag_** is empty, there shall be no `<AttributeAssignment>` from this `<AttributeAssignmentExpression>`.The values of the **_obligation_** arguments SHALL be interpreted by the **_PEP_**.
 
 ## 5.40 Element \<AdviceExpression>
 
@@ -1908,15 +1908,15 @@ The `<AdviceExpression>` element contains the following elements and attributes:
 
 `AdviceId` [Required]
 
-* **_Advice_** identifier. The value of the **_advice_** identifier MAY be interpreted by the **_PEP_**.
+: **_Advice_** identifier. The value of the **_advice_** identifier MAY be interpreted by the **_PEP_**.
 
 `AppliesTo` [Required]
 
-* The **_effect_** for which this **_advice_** must be provided to the **_PEP_**.
+: The **_effect_** for which this **_advice_** must be provided to the **_PEP_**.
 
 `<AttributeAssignmentExpression>` [Optional]
 
-* **_Advice_** arguments in the form of expressions. The expressions SHALL be evaluated by the PDP to constant `<AttributeValue>` elements or **_bags_**, which shall be the attribute assignments in the `<Advice>` returned to the **_PEP_**. If an `<AttributeAssignmentExpression>` evaluates to an atomic **_attribute_** value, then there MUST be one resulting `<AttributeAssignment>` which MUST contain this single **_attribute_** value. If the `<AttributeAssignmentExpression>` evaluates to a **_bag_**, then there MUST be a resulting `<AttributeAssignment>` for each of the values in the **_bag_**. If the **_bag_** is empty, there shall be no `<AttributeAssignment>` from this `<AttributeAssignmentExpression>`. The values of the **_advice_** arguments MAY be interpreted by the **_PEP_**.
+: **_Advice_** arguments in the form of expressions. The expressions SHALL be evaluated by the PDP to constant `<AttributeValue>` elements or **_bags_**, which shall be the attribute assignments in the `<Advice>` returned to the **_PEP_**. If an `<AttributeAssignmentExpression>` evaluates to an atomic **_attribute_** value, then there MUST be one resulting `<AttributeAssignment>` which MUST contain this single **_attribute_** value. If the `<AttributeAssignmentExpression>` evaluates to a **_bag_**, then there MUST be a resulting `<AttributeAssignment>` for each of the values in the **_bag_**. If the **_bag_** is empty, there shall be no `<AttributeAssignment>` from this `<AttributeAssignmentExpression>`. The values of the **_advice_** arguments MAY be interpreted by the **_PEP_**.
 
 ## 5.41 Element \<AttributeAssignmentExpression>
 
@@ -1941,19 +1941,19 @@ The `<AttributeAssignmentExpression>` element contains the following attributes:
 
 `<Expression>` [Required]
 
-* The expression which evaluates to a constant **_attribute_** value or a bag of zero or more attribute values. See [Section 5.25](#525-element-expression).
+: The expression which evaluates to a constant **_attribute_** value or a bag of zero or more attribute values. See [Section 5.25](#525-element-expression).
 
 `AttributeId` [Required]
 
-* The **_attribute_** identifier. The value of the AttributeId attribute in the resulting `<AttributeAssignment>` element MUST be equal to this value.
+: The **_attribute_** identifier. The value of the AttributeId attribute in the resulting `<AttributeAssignment>` element MUST be equal to this value.
 
 `Category` [Optional]
 
-* An optional category of the **_attribute_**. If this attribute is missing, the **_attribute_** has no category. The value of the `Category` attribute in the resulting `<AttributeAssignment>` element MUST be equal to this value.
+: An optional category of the **_attribute_**. If this attribute is missing, the **_attribute_** has no category. The value of the `Category` attribute in the resulting `<AttributeAssignment>` element MUST be equal to this value.
 
 `Issuer` [Optional]
 
-* An optional issuer of the **_attribute_**. If this attribute is missing, the **_attribute_** has no issuer. The value of the `Issuer` attribute in the resulting `<AttributeAssignment>` element MUST be equal to this value.
+: An optional issuer of the **_attribute_**. If this attribute is missing, the **_attribute_** has no issuer. The value of the `Issuer` attribute in the resulting `<AttributeAssignment>` element MUST be equal to this value.
 
 ## 5.42 Element \<Request>
 
@@ -1978,25 +1978,25 @@ The `<Request>` element contains the following elements and attributes:
 
 `ReturnPolicyIdList` [Required]
 
-* This attribute is used to request that the **_PDP_** return a list of all fully applicable **_policies_** which were used in the decision as a part of the decision response.
+: This attribute is used to request that the **_PDP_** return a list of all fully applicable **_policies_** which were used in the decision as a part of the decision response.
 
 `CombinedDecision` [Required]
 
-* This attribute is used to request that the **_PDP_** combines multiple decisions into a single decision. The use of this attribute is specified in [[Multi](#multi)]. If the **_PDP_** does not implement the relevant functionality in [[Multi](#multi)], then the **_PDP_** must return an Indeterminate with a status code of urn:oasis:names:tc:xacml:1.0:status:processing-error if it receives a request with this attribute set to `true`.
+: This attribute is used to request that the **_PDP_** combines multiple decisions into a single decision. The use of this attribute is specified in [[Multi](#multi)]. If the **_PDP_** does not implement the relevant functionality in [[Multi](#multi)], then the **_PDP_** must return an Indeterminate with a status code of urn:oasis:names:tc:xacml:1.0:status:processing-error if it receives a request with this attribute set to `true`.
 
 `<RequestDefaults>` [Optional]
 
-* Contains default values for the request, such as XPath version. See [Section 5.43](#543-element-requestdefaults).
+: Contains default values for the request, such as XPath version. See [Section 5.43](#543-element-requestdefaults).
 
 `<Attributes>` [One to Many]
 
-* Specifies information about **_attributes_** of the request **_context_** by listing a sequence of `<Attribute>` elements associated with an **_attribute_** category. One or more `<Attributes>` elements are allowed. Different `<Attributes>` elements with different categories are used to represent information about the **_subject_**, **_resource_**, **_action_**, **_environment_** or other categories of the **_access_** request.
+: Specifies information about **_attributes_** of the request **_context_** by listing a sequence of `<Attribute>` elements associated with an **_attribute_** category. One or more `<Attributes>` elements are allowed. Different `<Attributes>` elements with different categories are used to represent information about the **_subject_**, **_resource_**, **_action_**, **_environment_** or other categories of the **_access_** request.
 
-* The `<Request>` element contains `<Attributes>` elements. There may be multiple `<Attributes>` elements with the same `Category` attribute if the **_PDP_** implements the multiple decision profile, see [[Multi](#Multi)]. Under other conditions, it is a syntax error if there are multiple `<Attributes>` elements with the same `Category` (see [Section 7.19.2](#7192-syntax-and-type-errors) for error codes).
+: The `<Request>` element contains `<Attributes>` elements. There may be multiple `<Attributes>` elements with the same `Category` attribute if the **_PDP_** implements the multiple decision profile, see [[Multi](#Multi)]. Under other conditions, it is a syntax error if there are multiple `<Attributes>` elements with the same `Category` (see [Section 7.19.2](#7192-syntax-and-type-errors) for error codes).
 
 `<MultiRequests>` [Optional]
 
-* Lists multiple **_request contexts_** by references to the `<Attributes>` elements. Implementation of this element is optional. The semantics of this element is defined in [[Multi](#multi)]. If the implementation does not implement this element, it MUST return an Indeterminate result if it encounters this element. See [Section 5.50](#550-element-multirequests).
+: Lists multiple **_request contexts_** by references to the `<Attributes>` elements. Implementation of this element is optional. The semantics of this element is defined in [[Multi](#multi)]. If the implementation does not implement this element, it MUST return an Indeterminate result if it encounters this element. See [Section 5.50](#550-element-multirequests).
 
 ## 5.43 Element \<RequestDefaults>
 
@@ -2019,7 +2019,7 @@ The `<RequestDefaults>` element contains the following elements:
 
 `<XPathVersion>` [Optional]
 
-* Default XPath version for XPath expressions occurring in the request.
+: Default XPath version for XPath expressions occurring in the request.
 
 ## 5.44 Element \<Attributes>
 
@@ -2044,19 +2044,19 @@ The `<Attributes>` element contains the following elements and attributes:
 
 `Category` [Required]
 
-* This attribute indicates which **_attribute_** category the contained **_attributes_** belong to. The `Category` attribute is used to differentiate between **_attributes_** of **_subject_**, **_resource_**, **_action_**, **_environment_** or other categories.
+: This attribute indicates which **_attribute_** category the contained **_attributes_** belong to. The `Category` attribute is used to differentiate between **_attributes_** of **_subject_**, **_resource_**, **_action_**, **_environment_** or other categories.
 
 `xml:id` [Optional]
 
-* This attribute provides a unique identifier for this `<Attributes>` element. See [[XMLid](#xmlid)]. It is primarily intended to be referenced in multiple requests. See [[Multi](#Multi)].
+: This attribute provides a unique identifier for this `<Attributes>` element. See [[XMLid](#xmlid)]. It is primarily intended to be referenced in multiple requests. See [[Multi](#Multi)].
 
 `<Content>` [Optional]
 
-* Specifies additional sources of **_attributes_** in free form XML document format which can be referenced using `<AttributeSelector>` elements.
+: Specifies additional sources of **_attributes_** in free form XML document format which can be referenced using `<AttributeSelector>` elements.
 
 `<Attribute>` [Any Number]
 
-* A sequence of **_attributes_** that apply to the category of the request.
+: A sequence of **_attributes_** that apply to the category of the request.
 
 ## 5.45 Element \<Content>
 
@@ -2097,19 +2097,19 @@ The `<Attribute>` element contains the following attributes and elements:
 
 `AttributeId` [Required]
 
-* The **_attribute_** identifier. A number of identifiers are reserved by XACML to denote commonly used **_attributes_**. See [Appendix F](#appendix-f-xacml-identifiers-normative).
+: The **_attribute_** identifier. A number of identifiers are reserved by XACML to denote commonly used **_attributes_**. See [Appendix F](#appendix-f-xacml-identifiers-normative).
 
 `Issuer` [Optional]
 
-* The **_attribute_** issuer. For example, this attribute value MAY be an `x500Name` that binds to a public key, or it may be some other identifier exchanged out-of-band by issuing and relying parties.
+: The **_attribute_** issuer. For example, this attribute value MAY be an `x500Name` that binds to a public key, or it may be some other identifier exchanged out-of-band by issuing and relying parties.
 
 `IncludeInResult` [Default: false]
 
-* Whether to include this **_attribute_** in the result. This is useful to correlate requests with their responses in case of multiple requests.
+: Whether to include this **_attribute_** in the result. This is useful to correlate requests with their responses in case of multiple requests.
 
 `<AttributeValue>` [One to Many]
 
-* One or more **_attribute_** values. Each **_attribute_** value MAY have contents that are empty, occur once or occur multiple times.
+: One or more **_attribute_** values. Each **_attribute_** value MAY have contents that are empty, occur once or occur multiple times.
 
 ## 5.47 Element \<Response>
 
@@ -2132,7 +2132,7 @@ The `<Response>` element contains the following elements:
 
 `<Result>` [One to Many]
 
-* An **_authorization decision_** result. See [Section 5.48](#548-element-result).
+: An **_authorization decision_** result. See [Section 5.48](#548-element-result).
 
 ## 5.48 Element \<Result>
 
@@ -2157,27 +2157,27 @@ The `<Result>` element contains the following attributes and elements:
 
 `<Decision>` [Required]
 
-* The **_authorization decision_**: `Permit`, `Deny`, `Indeterminate` or `NotApplicable`.
+: The **_authorization decision_**: `Permit`, `Deny`, `Indeterminate` or `NotApplicable`.
 
 `<Status>` [Optional]
 
-* Indicates whether errors occurred during evaluation of the **_decision request_**, and optionally, information about those errors. If the `<Response>` element contains `<Result>` elements whose `<Status>` elements are all identical, and the `<Response>` element is contained in a protocol wrapper that can convey status information, then the common status information MAY be placed in the protocol wrapper and this `<Status>` element MAY be omitted from all `<Result>` elements.
+: Indicates whether errors occurred during evaluation of the **_decision request_**, and optionally, information about those errors. If the `<Response>` element contains `<Result>` elements whose `<Status>` elements are all identical, and the `<Response>` element is contained in a protocol wrapper that can convey status information, then the common status information MAY be placed in the protocol wrapper and this `<Status>` element MAY be omitted from all `<Result>` elements.
 
 `<Obligations>` [Optional]
 
-* A list of **_obligations_** that MUST be fulfilled by the **_PEP_**. If the **_PEP_** does not understand or cannot fulfill an **_obligation_**, then the action of the **_PEP_** is determined by its bias, see [Section 7.2](#72-policy-enforcement-point). See [Section 7.18](#718-obligations-and-advice) for a description of how the set of **_obligations_** to be returned by the **_PDP_** is determined.
+: A list of **_obligations_** that MUST be fulfilled by the **_PEP_**. If the **_PEP_** does not understand or cannot fulfill an **_obligation_**, then the action of the **_PEP_** is determined by its bias, see [Section 7.2](#72-policy-enforcement-point). See [Section 7.18](#718-obligations-and-advice) for a description of how the set of **_obligations_** to be returned by the **_PDP_** is determined.
 
 `<AssociatedAdvice>` [Optional]
 
-* A list of **_advice_** that provide supplemental information to the **_PEP_**. If the **_PEP_** does not understand an **_advice_**, the **_PEP_** may safely ignore the **_advice_**. See [Section 7.18](#718-obligations-and-advice) for a description of how the set of **_advice_** to be returned by the **_PDP_** is determined.
+: A list of **_advice_** that provide supplemental information to the **_PEP_**. If the **_PEP_** does not understand an **_advice_**, the **_PEP_** may safely ignore the **_advice_**. See [Section 7.18](#718-obligations-and-advice) for a description of how the set of **_advice_** to be returned by the **_PDP_** is determined.
 
 `<Attributes>` [Optional]
 
-* A list of **_attributes_** that were part of the request. The choice of which **_attributes_** are included here is made with the `IncludeInResult` attribute of the `<Attribute>` elements of the request. See [Section 5.46](#546-element-attribute).
+: A list of **_attributes_** that were part of the request. The choice of which **_attributes_** are included here is made with the `IncludeInResult` attribute of the `<Attribute>` elements of the request. See [Section 5.46](#546-element-attribute).
 
 `<PolicyIdentifierList>` [Optional]
 
-* If the `ReturnPolicyIdList` attribute in the `<Request>` is true (see [Section 5.42](#542-element-request)), a **_PDP_** that implements this optional feature MUST return a list which includes the identifiers of all **_policies_** which were found to be fully applicable, whether or not the `<Effect>` (after rule combining) was the same or different from the `<Decision>`. The list MAY include the identifiers of other policies which are currently in force, as long as no policies required for the decision are omitted. A **_PDP_** MAY satisfy this requirement by including all policies currently in force, or by including all policies which were evaluated in making the decision, or by including all policies which did not evaluate to `NotApplicable`, or by any other algorithm which does not omit any policies which contributed to the decision. However, a decision which returns `NotApplicable` MUST return an empty list.
+: If the `ReturnPolicyIdList` attribute in the `<Request>` is true (see [Section 5.42](#542-element-request)), a **_PDP_** that implements this optional feature MUST return a list which includes the identifiers of all **_policies_** which were found to be fully applicable, whether or not the `<Effect>` (after rule combining) was the same or different from the `<Decision>`. The list MAY include the identifiers of other policies which are currently in force, as long as no policies required for the decision are omitted. A **_PDP_** MAY satisfy this requirement by including all policies currently in force, or by including all policies which were evaluated in making the decision, or by including all policies which did not evaluate to `NotApplicable`, or by any other algorithm which does not omit any policies which contributed to the decision. However, a decision which returns `NotApplicable` MUST return an empty list.
 
 ## 5.49 Element \<PolicyIdentifierList>
 
@@ -2199,7 +2199,7 @@ The `<PolicyIdentifierList>` element contains the following elements.
 
 `<PolicyIdReference>` [Any number]
 
-* The identifier and version of a **_policy_** that was applicable to the request. See [Section 5.11](#511-element-policyidreference). The `<PolicyIdReference>` element MUST use the `Version` attribute to specify the version and MUST NOT use the `LatestVersion` or `EarliestVersion` attributes.
+: The identifier and version of a **_policy_** that was applicable to the request. See [Section 5.11](#511-element-policyidreference). The `<PolicyIdReference>` element MUST use the `Version` attribute to specify the version and MUST NOT use the `LatestVersion` or `EarliestVersion` attributes.
 
 ## 5.50 Element \<MultiRequests>
 
@@ -2218,7 +2218,7 @@ The `<MultiRequests>` element contains the following elements.
 
 `<RequestReference>` [one to many]
 
-* Defines a request instance by reference to `<Attributes>` elements in the enclosing `<Request>` element. See [Section 5.51](#551-element-requestreference).
+: Defines a request instance by reference to `<Attributes>` elements in the enclosing `<Request>` element. See [Section 5.51](#551-element-requestreference).
 
 ## 5.51 Element \<RequestReference>
 
@@ -2237,7 +2237,7 @@ The `<RequestReference>` element contains the following elements.
 
 `<AttributesReference>` [one to many]
 
-* A reference to an `<Attributes>` element in the enclosing `<Request>` element. See [Section 5.52](#552-element-attributesreference).
+: A reference to an `<Attributes>` element in the enclosing `<Request>` element. See [Section 5.52](#552-element-attributesreference).
 
 ## 5.52 Element \<AttributesReference>
 
@@ -2254,7 +2254,7 @@ The `<AttributesReference>` element contains the following attributes.
 
 `ReferenceId` [required]
 
-* A reference to the `xml:id` attribute of an `<Attributes>` element in the enclosing `<Request>` element.
+: A reference to the `xml:id` attribute of an `<Attributes>` element in the enclosing `<Request>` element.
 
 ## 5.53 Element \<Decision>
 
@@ -2276,13 +2276,13 @@ The `<Decision>` element is of `DecisionType` simple type.
 
 The values of the `<Decision>` element have the following meanings:
 
-* `Permit`: the requested **_access_** is permitted.
+: `Permit`: the requested **_access_** is permitted.
 
-* `Deny`: the requested **_access_** is denied.
+: `Deny`: the requested **_access_** is denied.
 
-* `Indeterminate`: the **_PDP_** is unable to evaluate the requested **_access_**. Reasons for such inability include: missing **_attributes_**, network errors while retrieving **_policies_**, division by zero during **_policy_** evaluation, syntax errors in the **_decision request_** or in the **_policy_**, etc.
+: `Indeterminate`: the **_PDP_** is unable to evaluate the requested **_access_**. Reasons for such inability include: missing **_attributes_**, network errors while retrieving **_policies_**, division by zero during **_policy_** evaluation, syntax errors in the **_decision request_** or in the **_policy_**, etc.
 
-* `NotApplicable`: the **_PDP_** does not have any **_policy_** that applies to this **_decision request_**.
+: `NotApplicable`: the **_PDP_** does not have any **_policy_** that applies to this **_decision request_**.
 
 ## 5.54 Element \<Status>
 
@@ -2305,15 +2305,15 @@ The `<Status>` element contains the following elements:
 
 `<StatusCode>` [Required]
 
-* Status code.
+: Status code.
 
 `<StatusMessage>` [Optional]
 
-* A status message describing the status code.
+: A status message describing the status code.
 
 `<StatusDetail>` [Optional]
 
-* Additional status information.
+: Additional status information.
 
 ## 5.55 Element \<StatusCode>
 
@@ -2335,11 +2335,11 @@ The `<StatusCode>` element contains the following attributes and elements:
 
 `Value` [Required]
 
-* See [Appendix F.8](#f8-status-codes) for a list of values.
+: See [Appendix F.8](#f8-status-codes) for a list of values.
 
 `<StatusCode>` [Any Number]
 
-* Minor status code. This status code qualifies its parent status code.
+: Minor status code. This status code qualifies its parent status code.
 
 ## 5.56 Element \<StatusMessage>
 
@@ -2418,23 +2418,23 @@ The `<MissingAttributeDetal>` element contains the following attributes and elem
 
 `<AttributeValue>` [Optional]
 
-* The required value of the missing **_attribute_**.
+: The required value of the missing **_attribute_**.
 
 `Category` [Required]
 
-* The category identifier of the missing **_attribute_**.
+: The category identifier of the missing **_attribute_**.
 
 `AttributeId` [Required]
 
-* The identifier of the missing **_attribute_**.
+: The identifier of the missing **_attribute_**.
 
 `DataType` [Required]
 
-* The data-type of the missing **_attribute_**.
+: The data-type of the missing **_attribute_**.
 
 `Issuer` [Optional]
 
-* This attribute, if supplied, SHALL specify the required `Issuer` of the missing **_attribute_**.
+: This attribute, if supplied, SHALL specify the required `Issuer` of the missing **_attribute_**.
 
 If the **_PDP_** includes `<AttributeValue>` elements in the `<MissingAttributeDetail>` element, then this indicates the acceptable values for that **_attribute_**. If no `<AttributeValue>` elements are included, then this indicates the names of **_attributes_** that the **_PDP_** failed to resolve during its evaluation. The list of **_attributes_** may be partial or complete. There is no guarantee by the **_PDP_** that supplying the missing values or **_attributes_** will be sufficient to satisfy the **_policy_**.
 
@@ -2447,71 +2447,92 @@ The XPath 2.0 specification leaves a number of aspects of behavior implementatio
 `http://www.w3.org/TR/2007/REC-xpath20-20070123/#id-impl-defined-items` defines the following items:
 
 1. The version of Unicode that is used to construct expressions.
-    * XACML leaves this implementation defined. It is RECOMMENDED that the latest version is used.
+
+    : XACML leaves this implementation defined. It is RECOMMENDED that the latest version is used.
 
 2. The statically-known collations.
-    * XACML leaves this implementation defined.
+
+    : XACML leaves this implementation defined.
 
 3. The implicit timezone.
-    * XACML defines the implicit time zone as UTC.
+
+    : XACML defines the implicit time zone as UTC.
 
 4. The circumstances in which warnings are raised, and the ways in which warnings are handled.
-    * XACML leaves this implementation defined.
+
+    : XACML leaves this implementation defined.
 
 5. The method by which errors are reported to the external processing environment.
-    * An XPath error causes an XACML Indeterminate value in the element where the XPath error occurs. The StatusCode value SHALL be `urn:oasis:names:tc:xacml:1.0:status:processing-error`. Implementations MAY provide additional details about the error in the response or by some other means.
+
+    : An XPath error causes an XACML Indeterminate value in the element where the XPath error occurs. The StatusCode value SHALL be `urn:oasis:names:tc:xacml:1.0:status:processing-error`. Implementations MAY provide additional details about the error in the response or by some other means.
 
 6. Whether the implementation is based on the rules of XML 1.0 or 1.1.
-    * XACML is based on XML 1.0.
+
+    : XACML is based on XML 1.0.
 
 7. Whether the implementation supports the namespace axis.
-    * XACML leaves this implementation defined. It is RECOMMENDED that users of XACML do not make use of the namespace axis.
+
+    : XACML leaves this implementation defined. It is RECOMMENDED that users of XACML do not make use of the namespace axis.
 
 8. Any static typing extensions supported by the implementation, if the Static Typing Feature is supported.
-    * XACML leaves this implementation defined.
+
+    : XACML leaves this implementation defined.
 
 `http://www.w3.org/TR/2007/REC-xpath-datamodel-20070123/#implementation-defined` defines the following items:
 
 1. Support for additional user-defined or implementation-defined types is implementation-defined.
-    * It is RECOMMENDED that implementations of XACML do not define any additional types and it is RECOMMENDED that users of XACML do not make use of any additional types.
+
+    : It is RECOMMENDED that implementations of XACML do not define any additional types and it is RECOMMENDED that users of XACML do not make use of any additional types.
 
 2. Some typed values in the data model are undefined. Attempting to access an undefined property is always an error. Behavior in these cases is implementation-defined and the host language is responsible for determining the result.
-    * An XPath error causes an XACML Indeterminate value in the element where the XPath error occurs. The StatusCode value SHALL be `urn:oasis:names:tc:xacml:1.0:status:processing-error`. Implementations MAY provide additional details about the error in the response or by some other means.
+
+    : An XPath error causes an XACML Indeterminate value in the element where the XPath error occurs. The StatusCode value SHALL be `urn:oasis:names:tc:xacml:1.0:status:processing-error`. Implementations MAY provide additional details about the error in the response or by some other means.
 
 `http://www.w3.org/TR/2007/REC-xpath-functions-20070123/#impl-def` defines the following items:
 
 1. The destination of the trace output is implementation-defined.
-    * XACML leaves this implementation defined.
+
+    : XACML leaves this implementation defined.
 
 2. For `xs:integer` operations, implementations that support limited-precision integer operations must either raise an error [err:FOAR0002] or provide an implementation-defined mechanism that allows users to choose between raising an error and returning a result that is modulo the largest representable integer value.
-    * XACML leaves this implementation defined. If an implementation chooses to raise an error, the StatusCode value SHALL be `urn:oasis:names:tc:xacml:1.0:status:processing-error`. Implementations MAY provide additional details about the error in the response or by some other means.
+
+    : XACML leaves this implementation defined. If an implementation chooses to raise an error, the StatusCode value SHALL be `urn:oasis:names:tc:xacml:1.0:status:processing-error`. Implementations MAY provide additional details about the error in the response or by some other means.
 
 3. For `xs:decimal` values the number of digits of precision returned by the numeric operators is implementation-defined.
-    * XACML leaves this implementation defined.
+
+    : XACML leaves this implementation defined.
 
 4. If the number of digits in the result of a numeric operation exceeds the number of digits that the implementation supports, the result is truncated or rounded in an implementation-defined manner.
-    * XACML leaves this implementation defined.
+
+    : XACML leaves this implementation defined.
 
 5. It is implementation-defined which version of Unicode is supported.
-    * XACML leaves this implementation defined. It is RECOMMENDED that the latest version is used.
+
+    : XACML leaves this implementation defined. It is RECOMMENDED that the latest version is used.
 
 6. For `fn:normalize-unicode`, conforming implementations must support normalization form "NFC" and may support normalization forms "NFD", "NFKC", "NFKD", "FULLY-NORMALIZED". They may also support other normalization forms with implementation-defined semantics.
-    * XACML leaves this implementation defined.
+
+    : XACML leaves this implementation defined.
 
 7. The ability to decompose strings into collation units suitable for substring matching is an implementation-defined property of a collation.
-    * XACML leaves this implementation defined.
+
+    : XACML leaves this implementation defined.
 
 8. All minimally conforming processors must support year values with a minimum of 4 digits (i.e., YYYY) and a minimum fractional second precision of 1 millisecond or three digits (i.e., s.sss). However, conforming processors may set larger implementation-defined limits on the maximum number of digits they support in these two situations.
-    * XACML leaves this implementation defined, and it is RECOMMENDED that users of XACML do not expect greater limits and precision.
+
+    : XACML leaves this implementation defined, and it is RECOMMENDED that users of XACML do not expect greater limits and precision.
 
 9. The result of casting a string to `xs:decimal`, when the resulting value is not too large or too small but nevertheless has too many decimal digits to be accurately represented, is implementation-defined.
-    * XACML leaves this implementation defined.
+
+    : XACML leaves this implementation defined.
 
 10. Various aspects of the processing provided by `fn:doc` are implementation-defined. Implementations may provide external configuration options that allow any aspect of the processing to be controlled by the user.
-    * XACML leaves this implementation defined.
+
+    : XACML leaves this implementation defined.
 
 11. The manner in which implementations provide options to weaken the stable characteristic of `fn:collection` and `fn:doc` are implementation-defined.
-    * XACML leaves this implementation defined.
+
+    : XACML leaves this implementation defined.
 
 -------
 
@@ -2559,7 +2580,7 @@ If the **_decision_** is `Permit`, then the **_PEP_** SHALL permit **_access_**.
 
 All other **_decisions_** SHALL result in the denial of **_access_**.
 
-Note: other actions, e.g. consultation of additional **_PDPs_**, reformulation/resubmission of the **_decision request_**, etc., are not prohibited.
+: Note: other actions, e.g. consultation of additional **_PDPs_**, reformulation/resubmission of the **_decision request_**, etc., are not prohibited.
 
 ### 7.2.3 Permit-biased PEP
 
@@ -2567,7 +2588,7 @@ If the **_decision_** is `Deny`, then the **_PEP_** SHALL deny **_access_**. If 
 
 All other **_decisions_** SHALL result in the permission of **_access_**.
 
-Note: other actions, e.g. consultation of additional **_PDPs_**, reformulation/resubmission of the **_decision request_**, etc., are not prohibited.
+: Note: other actions, e.g. consultation of additional **_PDPs_**, reformulation/resubmission of the **_decision request_**, etc., are not prohibited.
 
 ## 7.3 Attribute evaluation
 
@@ -2580,12 +2601,12 @@ Note: other actions, e.g. consultation of additional **_PDPs_**, reformulation/r
 1. In some cases, such elements MAY be compared using one of the XACML string functions, such as `string-regexp-match`, described below. This requires that the element be given the data-type `http://www.w3.org/2001/XMLSchema#string`. For example, a structured data-type that is actually a `ds:KeyInfo/KeyName` would appear in the **_context_** as:
 
 ```xml
-<AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">
-   &lt;ds:KeyName&gt;jhibbert-key&lt;/ds:KeyName&gt;
-</AttributeValue>
+    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">
+       &lt;ds:KeyName&gt;jhibbert-key&lt;/ds:KeyName&gt;
+    </AttributeValue>
 ```
 
-* In general, this method will not be adequate unless the structured data-type is quite simple.
+In general, this method will not be adequate unless the structured data-type is quite simple.
 
 2. The structured **_attribute_** MAY be made available in the `<Content>` element of the appropriate **_attribute_** category and an `<AttributeSelector>` element MAY be used to select the contents of a leaf sub-element of the structured data-type by means of an XPath expression. That value MAY then be compared using one of the supported XACML functions appropriate for its primitive data-type. This method requires support by the **_PDP_** for the optional XPath expressions feature.
 
@@ -2621,7 +2642,7 @@ Standard **_environment_** **_attributes_** are listed in [Appendix F.7](#f7-env
 
 An `<AttributeSelector>` element will be evaluated according to the following processing model.
 
-* NOTE: It is not necessary for an implementation to actually follow these steps. It is only necessary to produce results identical to those that would be produced by following these steps.
+: NOTE: It is not necessary for an implementation to actually follow these steps. It is only necessary to produce results identical to those that would be produced by following these steps.
 
 1. If the **_attributes_** category given by the `Category` attribute is not found or does not have a `<Content>` child element, then the return value is either `Indeterminate` or an empty **_bag_** as determined by the `MustBePresent` attribute; otherwise, construct an XML data structure suitable for xpath processing from the `<Content>` element in the **_attributes_** category given by the Category attribute. The data structure shall be constructed so that the document node of this structure contains a single document element which corresponds to the single child element of the `<Content>` element. The constructed data structure shall be equivalent to one that would result from parsing a stand-alone XML document consisting of the contents of the `<Content>` element (including any comment and processing-instruction markup). Namespace declarations from the `<Content>` element and its ancestor elements for namespace prefixes that are "visibly utilized", as defined by [[exc-c14n](#exc-c14n)], within the contents MUST be present. Namespace declarations from the `<Content>` element or its ancestor elements for namespace prefixes that are not "visibly utilized" MAY be present. The data structure must meet the requirements of the applicable XPath version.
 
@@ -2631,22 +2652,25 @@ An `<AttributeSelector>` element will be evaluated according to the following pr
 
 4. If the data type is a primitive data type, convert the text value of each selected node to the desired data type, as specified in the `DataType` attribute. Each value shall be constructed using the appropriate constructor function from
 [[XF](#xf)] Section 5 listed below, corresponding to the specified data type.
-  * `xs:string()`
-  * `xs:boolean()`
-  * `xs:integer()`
-  * `xs:double()`
-  * `xs:dateTime()`
-  * `xs:date()`
-  * `xs:time()`
-  * `xs:hexBinary()`
-  * `xs:base64Binary()`
-  * `xs:anyURI()`
-  * `xs:yearMonthDuration()`
-  * `xs:dayTimeDuration()`
 
-* If the `DataType` is not one of the primitive types listed above, then the return values shall be constructed from the nodeset in a manner specified by the particular `DataType` extension specification. If the data type extension does not specify an appropriate contructor function, then the `<AttributeSelector>` MUST return `Indeterminate` with a status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`.
+_
 
-* If an error occurs when converting the values returned by the XPath expression to the specified `DataType`, then the result of the `<AttributeSelector>` MUST be `Indeterminate`, with a status code `urn:oasis:names:tc:xacml:1.0:status:processing-error`
+: `xs:string()`
+: `xs:boolean()`
+: `xs:integer()`
+: `xs:double()`
+: `xs:dateTime()`
+: `xs:date()`
+: `xs:time()`
+: `xs:hexBinary()`
+: `xs:base64Binary()`
+: `xs:anyURI()`
+: `xs:yearMonthDuration()`
+: `xs:dayTimeDuration()`
+
+: If the `DataType` is not one of the primitive types listed above, then the return values shall be constructed from the nodeset in a manner specified by the particular `DataType` extension specification. If the data type extension does not specify an appropriate contructor function, then the `<AttributeSelector>` MUST return `Indeterminate` with a status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`.
+
+: If an error occurs when converting the values returned by the XPath expression to the specified `DataType`, then the result of the `<AttributeSelector>` MUST be `Indeterminate`, with a status code `urn:oasis:names:tc:xacml:1.0:status:processing-error`
 
 ## 7.4 Expression evaluation
 
@@ -2665,13 +2689,13 @@ XACML defines these elements to be in the substitution group of the `<Expression
 
 IEEE 754 [[IEEE754](#ieee754)] specifies how to evaluate arithmetic functions in a context, which specifies defaults for precision, rounding, etc. XACML SHALL use this specification for the evaluation of all integer and double functions relying on the Extended Default Context, enhanced with double precision:
 
-* flags -  all set to 0
+: flags -  all set to 0
 
-* trap-enablers -  all set to 0 (IEEE 854 §7) with the exception of the "division-by-zero" trap enabler, which SHALL be set to 1
+: trap-enablers -  all set to 0 (IEEE 854 §7) with the exception of the "division-by-zero" trap enabler, which SHALL be set to 1
 
-* precision - is set to the designated double precision
+: precision - is set to the designated double precision
 
-* rounding -  is set to round-half-even (IEEE 854 §4.1)
+: rounding -  is set to round-half-even (IEEE 854 §4.1)
 
 ## 7.7 Target evaluation
 
@@ -2920,7 +2944,7 @@ The XACML specification defines a number of functions, etc. that have somewhat s
 
 This section lists those portions of the specification that MUST be included in an implementation of a **_PDP_** that claims to conform to XACML 4.0. A set of test cases has been created to assist in this process. These test cases can be located from the OASIS XACML TC Web page. The site hosting the test cases contains a full description of the test cases and how to execute them.
 
-* Note: `M` means mandatory-to-implement. `O` means optional.
+: Note: "M" means mandatory-to-implement. "O" means optional.
 
 The implementation MUST follow [Section 5](#5-syntax-normative-with-the-exception-of-the-schema-fragments), [Section 6](#6-xpath-20-definitions), [Section 7](#7-functional-requirements), [Appendix E](#appendix-e-data-types-and-functions-normative), [Appendix F](#appendix-f-xacml-identifiers-normative) and [Appendix G](#appendix-g-combining-algorithms-normative) where they apply to implemented items in the following tables.
 
@@ -3759,6 +3783,9 @@ Cyril | Dangerville | THALES
 | :--- | :--- | :--- | :--- |
 | specname-v1.0-wd01 | 2024-08-09 | Steven Legg | Initial working draft |
 | | 2024-09-09 | Steven Legg | Changed **_targets_** to a single child expression. Removed the `<AnyOf>`, `<AllOf>` and `<Match>` elements. Removed **_targets_** from rules. Removed the only-one-applicable **_combining algorithm_**. |
+| | 2024-09-28 | Cyril Dangerville | Embedded diagrams. |
+| | 2024-09-30 | Cyril Dangerville | Added support for definition lists. |
+| | 2024-10-22 | Steven Legg | Reformatted indented paragraphs. |
 
 -------
 
@@ -3880,73 +3907,73 @@ The following functions are the equality functions for the various primitive typ
 
 urn:oasis:names:tc:xacml:1.0:function:string-equal
 
-* This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#string` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. The function SHALL return `True` if and only if the value of both of its arguments are of equal length and each string is determined to be equal. Otherwise, it SHALL return `False`. The comparison SHALL use Unicode codepoint collation, as defined for the identifier http://www.w3.org/2005/xpath-functions/collation/codepoint by [XF].
+  : This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#string` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. The function SHALL return `True` if and only if the value of both of its arguments are of equal length and each string is determined to be equal. Otherwise, it SHALL return `False`. The comparison SHALL use Unicode codepoint collation, as defined for the identifier http://www.w3.org/2005/xpath-functions/collation/codepoint by [XF].
 
 urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case
 
-* This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#string` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. The result SHALL be `True` if and only if the two strings are equal as defined by urn:oasis:names:tc:xacml:1.0:function:string-equal after they have both been converted to lower case with urn:oasis:names:tc:xacml:1.0:function:string-normalize-to-lower-case.
+  : This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#string` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. The result SHALL be `True` if and only if the two strings are equal as defined by urn:oasis:names:tc:xacml:1.0:function:string-equal after they have both been converted to lower case with urn:oasis:names:tc:xacml:1.0:function:string-normalize-to-lower-case.
 
 urn:oasis:names:tc:xacml:1.0:function:boolean-equal
 
-* This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#boolean` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. The function SHALL return `True` if and only if the arguments are equal. Otherwise, it SHALL return `False`.
+  : This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#boolean` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. The function SHALL return `True` if and only if the arguments are equal. Otherwise, it SHALL return `False`.
 
 urn:oasis:names:tc:xacml:1.0:function:integer-equal
 
-* This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#integer` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. The function SHALL return `True` if and only if the two arguments represent the same number.
+  : This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#integer` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. The function SHALL return `True` if and only if the two arguments represent the same number.
 
 urn:oasis:names:tc:xacml:1.0:function:double-equal
 
-* This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#double` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL perform its evaluation on doubles according to IEEE 754 [IEEE754].
+  : This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#double` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL perform its evaluation on doubles according to IEEE 754 [IEEE754].
 
 urn:oasis:names:tc:xacml:1.0:function:date-equal
 
-* This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#date` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL perform its evaluation according to the `op:date-equal` function [XF] Section 10.4.9.
+  : This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#date` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL perform its evaluation according to the `op:date-equal` function [XF] Section 10.4.9.
 
 urn:oasis:names:tc:xacml:1.0:function:time-equal
 
-* This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#time` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL perform its evaluation according to the `op:time-equal` function [XF] Section 10.4.12.
+  : This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#time` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL perform its evaluation according to the `op:time-equal` function [XF] Section 10.4.12.
 
 urn:oasis:names:tc:xacml:1.0:function:dateTime-equal
 
-* This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#dateTime` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL perform its evaluation according to the `op:dateTime-equal` function [XF] Section 10.4.6.
+  : This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#dateTime` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL perform its evaluation according to the `op:dateTime-equal` function [XF] Section 10.4.6.
 
 urn:oasis:names:tc:xacml:3.0:function:dayTimeDuration-equal
 
-* This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#dayTimeDuration` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. This function shall perform its evaluation according to the `op:duration-equal` function [XF] Section 10.4.5. Note that the lexical representation of each argument MUST be converted to a value expressed in fractional seconds [XF] Section 10.3.2.
+  : This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#dayTimeDuration` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. This function shall perform its evaluation according to the `op:duration-equal` function [XF] Section 10.4.5. Note that the lexical representation of each argument MUST be converted to a value expressed in fractional seconds [XF] Section 10.3.2.
 
 urn:oasis:names:tc:xacml:3.0:function:yearMonthDuration-equal
 
-* This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#yearMonthDuration` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. This function shall perform its evaluation according to the `op:duration-equal` function [XF] Section 10.4.5. Note that the lexical representation of each argument MUST be converted to a value expressed in fractional seconds [XF] Section 10.3.2.
+  : This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#yearMonthDuration` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. This function shall perform its evaluation according to the `op:duration-equal` function [XF] Section 10.4.5. Note that the lexical representation of each argument MUST be converted to a value expressed in fractional seconds [XF] Section 10.3.2.
 
 urn:oasis:names:tc:xacml:1.0:function:anyURI-equal
 
-* This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#anyURI` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. The function SHALL convert the arguments to strings with urn:oasis:names:tc:xacml:3.0:function:string-from-anyURI and return `True` if and only if the values of the two arguments are equal on a codepoint-by-codepoint basis.
+  : This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#anyURI` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. The function SHALL convert the arguments to strings with urn:oasis:names:tc:xacml:3.0:function:string-from-anyURI and return `True` if and only if the values of the two arguments are equal on a codepoint-by-codepoint basis.
 
 urn:oasis:names:tc:xacml:1.0:function:x500Name-equal
 
-* This function SHALL take two arguments of `urn:oasis:names:tc:xacml:1.0:data-type:x500Name` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if each Relative Distinguished Name (RDN) in the two arguments matches. Otherwise, it SHALL return `False`. Two RDNs shall be said to match if and only if the result of the following operations is `True` .
+  : This function SHALL take two arguments of `urn:oasis:names:tc:xacml:1.0:data-type:x500Name` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if each Relative Distinguished Name (RDN) in the two arguments matches. Otherwise, it SHALL return `False`. Two RDNs shall be said to match if and only if the result of the following operations is `True` .
 
-  1. Normalize the two arguments according to IETF RFC 2253 `Lightweight Directory Access Protocol (v3): UTF-8 String Representation of Distinguished Names`.
+    1. Normalize the two arguments according to IETF RFC 2253 `Lightweight Directory Access Protocol (v3): UTF-8 String Representation of Distinguished Names`.
 
-  2. If any RDN contains multiple attributeTypeAndValue pairs, re-order the Attribute ValuePairs in that RDN in ascending order when compared as octet strings (described in ITU-T Rec. X.690 (1997 E) Section 11.6 `Set-of components`).
+    2. If any RDN contains multiple attributeTypeAndValue pairs, re-order the Attribute ValuePairs in that RDN in ascending order when compared as octet strings (described in ITU-T Rec. X.690 (1997 E) Section 11.6 `Set-of components`).
 
-  3. Compare RDNs using the rules in IETF RFC 3280 `Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile`, Section 4.1.2.4 `Issuer`.
+    3. Compare RDNs using the rules in IETF RFC 3280 `Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile`, Section 4.1.2.4 `Issuer`.
 
 urn:oasis:names:tc:xacml:1.0:function:rfc822Name-equal
 
-* This function SHALL take two arguments of data-type `urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the two arguments are equal. Otherwise, it SHALL return `False`. An RFC822 name consists of a local-part followed by `@` followed by a domain-part. The local-part is case-sensitive, while the domain-part (which is usually a DNS host name) is not case-sensitive. Perform the following operations:
+  : This function SHALL take two arguments of data-type `urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the two arguments are equal. Otherwise, it SHALL return `False`. An RFC822 name consists of a local-part followed by `@` followed by a domain-part. The local-part is case-sensitive, while the domain-part (which is usually a DNS host name) is not case-sensitive. Perform the following operations:
 
-  1. Normalize the domain-part of each argument to lower case
+    1. Normalize the domain-part of each argument to lower case
 
-  2. Compare the expressions by applying the function `urn:oasis:names:tc:xacml:1.0:function:string-equal` to the normalized arguments.
+    2. Compare the expressions by applying the function `urn:oasis:names:tc:xacml:1.0:function:string-equal` to the normalized arguments.
 
 urn:oasis:names:tc:xacml:1.0:function:hexBinary-equal
 
-* This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#hexBinary` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if the octet sequences represented by the value of both arguments have equal length and are equal in a conjunctive, point-wise, comparison using the `urn:oasis:names:tc:xacml:1.0:function:integer-equal` function. Otherwise, it SHALL return `False`. The conversion from the string representation to an octet sequence SHALL be as specified in [XS] Section 3.2.15.
+  : This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#hexBinary` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if the octet sequences represented by the value of both arguments have equal length and are equal in a conjunctive, point-wise, comparison using the `urn:oasis:names:tc:xacml:1.0:function:integer-equal` function. Otherwise, it SHALL return `False`. The conversion from the string representation to an octet sequence SHALL be as specified in [XS] Section 3.2.15.
 
 urn:oasis:names:tc:xacml:1.0:function:base64Binary-equal
 
-* This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#base64Binary` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if the octet sequences represented by the value of both arguments have equal length and are equal in a conjunctive, point-wise, comparison using the `urn:oasis:names:tc:xacml:1.0:function:integer-equal` function. Otherwise, it SHALL return `False`. The conversion from the string representation to an octet sequence SHALL be as specified in [XS] Section 3.2.16.
+  : This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#base64Binary` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if the octet sequences represented by the value of both arguments have equal length and are equal in a conjunctive, point-wise, comparison using the `urn:oasis:names:tc:xacml:1.0:function:integer-equal` function. Otherwise, it SHALL return `False`. The conversion from the string representation to an octet sequence SHALL be as specified in [XS] Section 3.2.16.
 
 ### E.3.2 Arithmetic functions
 
@@ -3954,39 +3981,39 @@ All of the following functions SHALL take two arguments of the specified data-ty
 
 urn:oasis:names:tc:xacml:1.0:function:integer-add
 
-* This function MUST accept two or more arguments.
+: This function MUST accept two or more arguments.
 
 urn:oasis:names:tc:xacml:1.0:function:double-add
 
-* This function MUST accept two or more arguments.
+: This function MUST accept two or more arguments.
 
 urn:oasis:names:tc:xacml:1.0:function:integer-subtract
 
-* The result is the second argument subtracted from the first argument.
+: The result is the second argument subtracted from the first argument.
 
 urn:oasis:names:tc:xacml:1.0:function:double-subtract
 
-* The result is the second argument subtracted from the first argument.
+: The result is the second argument subtracted from the first argument.
 
 urn:oasis:names:tc:xacml:1.0:function:integer-multiply
 
-* This function MUST accept two or more arguments.
+: This function MUST accept two or more arguments.
 
 urn:oasis:names:tc:xacml:1.0:function:double-multiply
 
-* This function MUST accept two or more arguments.
+: This function MUST accept two or more arguments.
 
 urn:oasis:names:tc:xacml:1.0:function:integer-divide
 
-* The result is the first argument divided by the second argument.
+: The result is the first argument divided by the second argument.
 
 urn:oasis:names:tc:xacml:1.0:function:double-divide
 
-* The result is the first argument divided by the second argument.
+: The result is the first argument divided by the second argument.
 
 urn:oasis:names:tc:xacml:1.0:function:integer-mod
 
-* The result is remainder of the first argument divided by the second argument.
+: The result is remainder of the first argument divided by the second argument.
 
 The following functions SHALL take a single argument of the specified data-type. The round and floor functions SHALL take a single argument of data-type `http://www.w3.org/2001/XMLSchema#double` and return a value of the data-type `http://www.w3.org/2001/XMLSchema#double`.
 
@@ -4004,11 +4031,11 @@ The following functions convert between values of the data-type `http://www.w3.o
 
 urn:oasis:names:tc:xacml:1.0:function:string-normalize-space
 
-* This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string` and SHALL normalize the value by stripping off all leading and trailing white space characters. The whitespace characters are defined in the metasymbol S (Production 3) of [XML].
+: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string` and SHALL normalize the value by stripping off all leading and trailing white space characters. The whitespace characters are defined in the metasymbol S (Production 3) of [XML].
 
 urn:oasis:names:tc:xacml:1.0:function:string-normalize-to-lower-case
 
-* This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string` and SHALL normalize the value by converting each upper case character to its lower case equivalent. Case mapping shall be done as specified for the fn:lower-case function in [XF] with no tailoring for particular languages or environments.
+: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string` and SHALL normalize the value by converting each upper case character to its lower case equivalent. Case mapping shall be done as specified for the fn:lower-case function in [XF] with no tailoring for particular languages or environments.
 
 ### E.3.4 Numeric data-type conversion functions
 
@@ -4016,11 +4043,11 @@ The following functions convert between the data-type `http://www.w3.org/2001/XM
 
 urn:oasis:names:tc:xacml:1.0:function:double-to-integer
 
-* This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#double` and SHALL truncate its numeric value to a whole number and return an element of data-type `http://www.w3.org/2001/XMLSchema#integer`.
+: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#double` and SHALL truncate its numeric value to a whole number and return an element of data-type `http://www.w3.org/2001/XMLSchema#integer`.
 
 urn:oasis:names:tc:xacml:1.0:function:integer-to-double
 
-* This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#integer` and SHALL promote its value to an element of data-type `http://www.w3.org/2001/XMLSchema#double` with the same numeric value. If the integer argument is outside the range which can be represented by a double, the result SHALL be Indeterminate, with the status code `urn:oasis:names:tc:xacml:1.0:status:processing-error`.
+: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#integer` and SHALL promote its value to an element of data-type `http://www.w3.org/2001/XMLSchema#double` with the same numeric value. If the integer argument is outside the range which can be represented by a double, the result SHALL be Indeterminate, with the status code `urn:oasis:names:tc:xacml:1.0:status:processing-error`.
 
 ### E.3.5 Logical functions
 
@@ -4028,19 +4055,19 @@ This section contains the specification for logical functions that operate on ar
 
 urn:oasis:names:tc:xacml:1.0:function:or
 
-* This function SHALL return `False` if it has no arguments and SHALL return `True` if at least one of its arguments evaluates to `True`. The order of evaluation SHALL be from first argument to last. The evaluation SHALL stop with a result of `True` if any argument evaluates to `True`, leaving the rest of the arguments unevaluated.
+: This function SHALL return `False` if it has no arguments and SHALL return `True` if at least one of its arguments evaluates to `True`. The order of evaluation SHALL be from first argument to last. The evaluation SHALL stop with a result of `True` if any argument evaluates to `True`, leaving the rest of the arguments unevaluated.
 
 urn:oasis:names:tc:xacml:1.0:function:and
 
-* This function SHALL return `True` if it has no arguments and SHALL return `False` if one of its arguments evaluates to `False`. The order of evaluation SHALL be from first argument to last. The evaluation SHALL stop with a result of `False` if any argument evaluates to `False`, leaving the rest of the arguments unevaluated.
+: This function SHALL return `True` if it has no arguments and SHALL return `False` if one of its arguments evaluates to `False`. The order of evaluation SHALL be from first argument to last. The evaluation SHALL stop with a result of `False` if any argument evaluates to `False`, leaving the rest of the arguments unevaluated.
 
 urn:oasis:names:tc:xacml:1.0:function:n-of
 
-* The first argument to this function SHALL be of data-type http://www.w3.org/2001/XMLSchema#integer. The remaining arguments SHALL be of data-type http://www.w3.org/2001/XMLSchema#boolean. The first argument specifies the minimum number of the remaining arguments that MUST evaluate to `True` for the expression to be considered `True`. If the first argument is 0, the result SHALL be `True`. If the number of arguments after the first one is less than the value of the first argument, then the expression SHALL result in `Indeterminate`. The order of evaluation SHALL be: first evaluate the integer value, and then evaluate each subsequent argument. The evaluation SHALL stop and return `True` if the specified number of arguments evaluate to `True`. The evaluation of arguments SHALL stop if it is determined that evaluating the remaining arguments will not satisfy the requirement.
+: The first argument to this function SHALL be of data-type http://www.w3.org/2001/XMLSchema#integer. The remaining arguments SHALL be of data-type http://www.w3.org/2001/XMLSchema#boolean. The first argument specifies the minimum number of the remaining arguments that MUST evaluate to `True` for the expression to be considered `True`. If the first argument is 0, the result SHALL be `True`. If the number of arguments after the first one is less than the value of the first argument, then the expression SHALL result in `Indeterminate`. The order of evaluation SHALL be: first evaluate the integer value, and then evaluate each subsequent argument. The evaluation SHALL stop and return `True` if the specified number of arguments evaluate to `True`. The evaluation of arguments SHALL stop if it is determined that evaluating the remaining arguments will not satisfy the requirement.
 
 urn:oasis:names:tc:xacml:1.0:function:not
 
-* This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#boolean`. If the argument evaluates to `True`, then the result of the expression SHALL be `False`. If the argument evaluates to `False`, then the result of the expression SHALL be `True`.
+: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#boolean`. If the argument evaluates to `True`, then the result of the expression SHALL be `False`. If the argument evaluates to `False`, then the result of the expression SHALL be `True`.
 
 Note: When evaluating and, or, or n-of, it may not be necessary to attempt a full evaluation of each argument in order to determine whether the evaluation of the argument would result in `Indeterminate`. Analysis of the argument regarding the availability of its **_attributes_**, or other analysis regarding errors, such as "divide-by-zero", may render the argument error free. Such arguments occurring in the expression in a position after the evaluation is stated to stop need not be processed.
 
@@ -4070,27 +4097,27 @@ These functions perform arithmetic operations with date and time.
 
 urn:oasis:names:tc:xacml:3.0:function:dateTime-add-dayTimeDuration
 
-* This function SHALL take two arguments, the first SHALL be of data-type `http://www.w3.org/2001/XMLSchema#dateTime` and the second SHALL be of data-type `http://www.w3.org/2001/XMLSchema#dayTimeDuration`. It SHALL return a result of `http://www.w3.org/2001/XMLSchema#dateTime`. This function SHALL return the value by adding the second argument to the first argument according to the specification of adding durations to date and time [XS] Appendix E.
+: This function SHALL take two arguments, the first SHALL be of data-type `http://www.w3.org/2001/XMLSchema#dateTime` and the second SHALL be of data-type `http://www.w3.org/2001/XMLSchema#dayTimeDuration`. It SHALL return a result of `http://www.w3.org/2001/XMLSchema#dateTime`. This function SHALL return the value by adding the second argument to the first argument according to the specification of adding durations to date and time [XS] Appendix E.
 
 urn:oasis:names:tc:xacml:3.0:function:dateTime-add-yearMonthDuration
 
-* This function SHALL take two arguments, the first SHALL be a `http://www.w3.org/2001/XMLSchema#dateTime` and the second SHALL be a `http://www.w3.org/2001/XMLSchema#yearMonthDuration`. It SHALL return a result of `http://www.w3.org/2001/XMLSchema#dateTime`. This function SHALL return the value by adding the second argument to the first argument according to the specification of adding durations to date and time [XS] Appendix E.
+: This function SHALL take two arguments, the first SHALL be a `http://www.w3.org/2001/XMLSchema#dateTime` and the second SHALL be a `http://www.w3.org/2001/XMLSchema#yearMonthDuration`. It SHALL return a result of `http://www.w3.org/2001/XMLSchema#dateTime`. This function SHALL return the value by adding the second argument to the first argument according to the specification of adding durations to date and time [XS] Appendix E.
 
 urn:oasis:names:tc:xacml:3.0:function:dateTime-subtract-dayTimeDuration
 
-* This function SHALL take two arguments, the first SHALL be a `http://www.w3.org/2001/XMLSchema#dateTime` and the second SHALL be a `http://www.w3.org/2001/XMLSchema#dayTimeDuration`. It SHALL return a result of `http://www.w3.org/2001/XMLSchema#dateTime`. If the second argument is a positive duration, then this function SHALL return the value by adding the corresponding negative duration, as per the specification [XS] Appendix E. If the second argument is a negative duration, then the result SHALL be as if the function `urn:oasis:names:tc:xacml:1.0:function:dateTime-add-dayTimeDuration` had been applied to the corresponding positive duration.
+: This function SHALL take two arguments, the first SHALL be a `http://www.w3.org/2001/XMLSchema#dateTime` and the second SHALL be a `http://www.w3.org/2001/XMLSchema#dayTimeDuration`. It SHALL return a result of `http://www.w3.org/2001/XMLSchema#dateTime`. If the second argument is a positive duration, then this function SHALL return the value by adding the corresponding negative duration, as per the specification [XS] Appendix E. If the second argument is a negative duration, then the result SHALL be as if the function `urn:oasis:names:tc:xacml:1.0:function:dateTime-add-dayTimeDuration` had been applied to the corresponding positive duration.
 
 urn:oasis:names:tc:xacml:3.0:function:dateTime-subtract-yearMonthDuration
 
-* This function SHALL take two arguments, the first SHALL be a `http://www.w3.org/2001/XMLSchema#dateTime` and the second SHALL be a `http://www.w3.org/2001/XMLSchema#yearMonthDuration`. It SHALL return a result of `http://www.w3.org/2001/XMLSchema#dateTime`. If the second argument is a positive duration, then this function SHALL return the value by adding the corresponding negative duration, as per the specification [XS] Appendix E. If the second argument is a negative duration, then the result SHALL be as if the function `urn:oasis:names:tc:xacml:1.0:function:dateTime-add-yearMonthDuration` had been applied to the corresponding positive duration.
+: This function SHALL take two arguments, the first SHALL be a `http://www.w3.org/2001/XMLSchema#dateTime` and the second SHALL be a `http://www.w3.org/2001/XMLSchema#yearMonthDuration`. It SHALL return a result of `http://www.w3.org/2001/XMLSchema#dateTime`. If the second argument is a positive duration, then this function SHALL return the value by adding the corresponding negative duration, as per the specification [XS] Appendix E. If the second argument is a negative duration, then the result SHALL be as if the function `urn:oasis:names:tc:xacml:1.0:function:dateTime-add-yearMonthDuration` had been applied to the corresponding positive duration.
 
 urn:oasis:names:tc:xacml:3.0:function:date-add-yearMonthDuration
 
-* This function SHALL take two arguments, the first SHALL be a `http://www.w3.org/2001/XMLSchema#date` and the second SHALL be a `http://www.w3.org/2001/XMLSchema#yearMonthDuration`. It SHALL return a result of `http://www.w3.org/2001/XMLSchema#date`. This function SHALL return the value by adding the second argument to the first argument according to the specification of adding duration to date [XS] Appendix E.
+: This function SHALL take two arguments, the first SHALL be a `http://www.w3.org/2001/XMLSchema#date` and the second SHALL be a `http://www.w3.org/2001/XMLSchema#yearMonthDuration`. It SHALL return a result of `http://www.w3.org/2001/XMLSchema#date`. This function SHALL return the value by adding the second argument to the first argument according to the specification of adding duration to date [XS] Appendix E.
 
 urn:oasis:names:tc:xacml:3.0:function:date-subtract-yearMonthDuration
 
-* This function SHALL take two arguments, the first SHALL be a `http://www.w3.org/2001/XMLSchema#date` and the second SHALL be a `http://www.w3.org/2001/XMLSchema#yearMonthDuration`. It SHALL return a result of `http://www.w3.org/2001/XMLSchema#date`. If the second argument is a positive duration, then this function SHALL return the value by adding the corresponding negative duration, as per the specification [XS] Appendix E. If the second argument is a negative duration, then the result SHALL be as if the function `urn:oasis:names:tc:xacml:1.0:function:date-add-yearMonthDuration` had been applied to the corresponding positive duration.
+: This function SHALL take two arguments, the first SHALL be a `http://www.w3.org/2001/XMLSchema#date` and the second SHALL be a `http://www.w3.org/2001/XMLSchema#yearMonthDuration`. It SHALL return a result of `http://www.w3.org/2001/XMLSchema#date`. If the second argument is a positive duration, then this function SHALL return the value by adding the corresponding negative duration, as per the specification [XS] Appendix E. If the second argument is a negative duration, then the result SHALL be as if the function `urn:oasis:names:tc:xacml:1.0:function:date-add-yearMonthDuration` had been applied to the corresponding positive duration.
 
 ### E.3.8 Non-numeric comparison functions
 
@@ -4098,71 +4125,71 @@ These functions perform comparison operations on two arguments of non-numerical 
 
 urn:oasis:names:tc:xacml:1.0:function:string-greater-than
 
-* This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#string` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is lexicographically strictly greater than the second argument. Otherwise, it SHALL return `False`. The comparison SHALL use Unicode codepoint collation, as defined for the identifier `http://www.w3.org/2005/xpath-functions/collation/codepoint` by [XF].
+: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#string` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is lexicographically strictly greater than the second argument. Otherwise, it SHALL return `False`. The comparison SHALL use Unicode codepoint collation, as defined for the identifier `http://www.w3.org/2005/xpath-functions/collation/codepoint` by [XF].
 
 urn:oasis:names:tc:xacml:1.0:function:string-greater-than-or-equal
 
-* This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#string` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is lexicographically greater than or equal to the second argument. Otherwise, it SHALL return `False`. The comparison SHALL use Unicode codepoint collation, as defined for the identifier `http://www.w3.org/2005/xpath-functions/collation/codepoint` by [XF].
+: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#string` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is lexicographically greater than or equal to the second argument. Otherwise, it SHALL return `False`. The comparison SHALL use Unicode codepoint collation, as defined for the identifier `http://www.w3.org/2005/xpath-functions/collation/codepoint` by [XF].
 
 urn:oasis:names:tc:xacml:1.0:function:string-less-than
 
-* This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#string` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only the first argument is lexigraphically strictly less than the second argument. Otherwise, it SHALL return `False`. The comparison SHALL use Unicode codepoint collation, as defined for the identifier `http://www.w3.org/2005/xpath-functions/collation/codepoint` by [XF].
+: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#string` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only the first argument is lexigraphically strictly less than the second argument. Otherwise, it SHALL return `False`. The comparison SHALL use Unicode codepoint collation, as defined for the identifier `http://www.w3.org/2005/xpath-functions/collation/codepoint` by [XF].
 
 urn:oasis:names:tc:xacml:1.0:function:string-less-than-or-equal
 
-* This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#string` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only the first argument is lexigraphically less than or equal to the second argument. Otherwise, it SHALL return `False`. The comparison SHALL use Unicode codepoint collation, as defined for the identifier `http://www.w3.org/2005/xpath-functions/collation/codepoint` by [XF].
+: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#string` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only the first argument is lexigraphically less than or equal to the second argument. Otherwise, it SHALL return `False`. The comparison SHALL use Unicode codepoint collation, as defined for the identifier `http://www.w3.org/2005/xpath-functions/collation/codepoint` by [XF].
 
 urn:oasis:names:tc:xacml:1.0:function:time-greater-than
 
-* This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#time` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is greater than the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#time` [XS] Section 3.2.8. Otherwise, it SHALL return `False`. Note: it is illegal to compare a time that includes a time-zone value with one that does not. In such cases, the time-in-range function should be used.
+: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#time` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is greater than the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#time` [XS] Section 3.2.8. Otherwise, it SHALL return `False`. Note: it is illegal to compare a time that includes a time-zone value with one that does not. In such cases, the time-in-range function should be used.
 
 urn:oasis:names:tc:xacml:1.0:function:time-greater-than-or-equal
 
-* This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#time` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is greater than or equal to the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#time` [XS] Section 3.2.8. Otherwise, it SHALL return `False`. Note: it is illegal to compare a time that includes a time-zone value with one that does not. In such cases, the time-in-range function should be used.
+: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#time` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is greater than or equal to the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#time` [XS] Section 3.2.8. Otherwise, it SHALL return `False`. Note: it is illegal to compare a time that includes a time-zone value with one that does not. In such cases, the time-in-range function should be used.
 
 urn:oasis:names:tc:xacml:1.0:function:time-less-than
 
-* This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#time` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is less than the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#time` [XS] Section 3.2.8. Otherwise, it SHALL return `False`. Note: it is illegal to compare a time that includes a time-zone value with one that does not. In such cases, the time-in-range function should be used.
+: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#time` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is less than the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#time` [XS] Section 3.2.8. Otherwise, it SHALL return `False`. Note: it is illegal to compare a time that includes a time-zone value with one that does not. In such cases, the time-in-range function should be used.
 
 urn:oasis:names:tc:xacml:1.0:function:time-less-than-or-equal
 
-* This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#time` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is less than or equal to the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#time` [XS] Section 3.2.8. Otherwise, it SHALL return `False`. Note: it is illegal to compare a time that includes a time-zone value with one that does not. In such cases, the time-in-range function should be used.
+: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#time` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is less than or equal to the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#time` [XS] Section 3.2.8. Otherwise, it SHALL return `False`. Note: it is illegal to compare a time that includes a time-zone value with one that does not. In such cases, the time-in-range function should be used.
 
 urn:oasis:names:tc:xacml:2.0:function:time-in-range
 
-* This function SHALL take three arguments of data-type `http://www.w3.org/2001/XMLSchema#time` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if the first argument falls in the range defined inclusively by the second and third arguments. Otherwise, it SHALL return `False`. Regardless of its value, the third argument SHALL be interpreted as a time that is equal to, or later than by less than twenty-four hours, the second argument. If no time zone is provided for the first argument, it SHALL use the default time zone at the context handler. If no time zone is provided for the second or third arguments, then they SHALL use the time zone from the first argument.
+: This function SHALL take three arguments of data-type `http://www.w3.org/2001/XMLSchema#time` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if the first argument falls in the range defined inclusively by the second and third arguments. Otherwise, it SHALL return `False`. Regardless of its value, the third argument SHALL be interpreted as a time that is equal to, or later than by less than twenty-four hours, the second argument. If no time zone is provided for the first argument, it SHALL use the default time zone at the context handler. If no time zone is provided for the second or third arguments, then they SHALL use the time zone from the first argument.
 
 urn:oasis:names:tc:xacml:1.0:function:dateTime-greater-than
 
-* This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#dateTime` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is greater than the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#dateTime` by [XS] part 2, section 3.2.7. Otherwise, it SHALL return `False`. Note: if a dateTime value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [XS].
+: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#dateTime` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is greater than the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#dateTime` by [XS] part 2, section 3.2.7. Otherwise, it SHALL return `False`. Note: if a dateTime value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [XS].
 
 urn:oasis:names:tc:xacml:1.0:function:dateTime-greater-than-or-equal
 
-* This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#dateTime` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is greater than or equal to the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#dateTime` by [XS] part 2, section 3.2.7. Otherwise, it SHALL return `False`. Note: if a dateTime value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [XS].
+: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#dateTime` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is greater than or equal to the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#dateTime` by [XS] part 2, section 3.2.7. Otherwise, it SHALL return `False`. Note: if a dateTime value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [XS].
 
 urn:oasis:names:tc:xacml:1.0:function:dateTime-less-than
 
-* This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#dateTime` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is less than the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#dateTime` by [XS, part 2, section 3.2.7]. Otherwise, it SHALL return `False`. Note: if a dateTime value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [XS].
+: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#dateTime` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is less than the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#dateTime` by [XS, part 2, section 3.2.7]. Otherwise, it SHALL return `False`. Note: if a dateTime value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [XS].
 
 urn:oasis:names:tc:xacml:1.0:function:dateTime-less-than-or-equal
 
-* This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema# dateTime` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is less than or equal to the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#dateTime` by [XS] part 2, section 3.2.7. Otherwise, it SHALL return `False`. Note: if a dateTime value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [XS].
+: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema# dateTime` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is less than or equal to the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#dateTime` by [XS] part 2, section 3.2.7. Otherwise, it SHALL return `False`. Note: if a dateTime value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [XS].
 
 urn:oasis:names:tc:xacml:1.0:function:date-greater-than
 
-* This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#date` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is greater than the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#date` by [XS] part 2, section 3.2.9. Otherwise, it SHALL return `False`. Note: if a date value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [XS].
+: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#date` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is greater than the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#date` by [XS] part 2, section 3.2.9. Otherwise, it SHALL return `False`. Note: if a date value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [XS].
 
 urn:oasis:names:tc:xacml:1.0:function:date-greater-than-or-equal
 
-* This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#date` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is greater than or equal to the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#date` by [XS] part 2, section 3.2.9. Otherwise, it SHALL return `False`. Note: if a date value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [XS].
+: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#date` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is greater than or equal to the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#date` by [XS] part 2, section 3.2.9. Otherwise, it SHALL return `False`. Note: if a date value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [XS].
 
 urn:oasis:names:tc:xacml:1.0:function:date-less-than
 
-* This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#date` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is less than the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#date` by [XS] part 2, section 3.2.9. Otherwise, it SHALL return `False`. Note: if a date value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [XS].
+: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#date` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is less than the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#date` by [XS] part 2, section 3.2.9. Otherwise, it SHALL return `False`. Note: if a date value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [XS].
 
 urn:oasis:names:tc:xacml:1.0:function:date-less-than-or-equal
 
-* This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#date` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is less than or equal to the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#date` by [XS] part 2, section 3.2.9. Otherwise, it SHALL return `False`. Note: if a date value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [XS].
+: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#date` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is less than or equal to the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#date` by [XS] part 2, section 3.2.9. Otherwise, it SHALL return `False`. Note: if a date value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [XS].
 
 ### E.3.9 String functions
 
@@ -4170,143 +4197,143 @@ The following functions operate on strings and convert to and from other data ty
 
 urn:oasis:names:tc:xacml:2.0:function:string-concatenate
 
-* This function SHALL take two or more arguments of data-type `http://www.w3.org/2001/XMLSchema#string` and SHALL return a `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the concatenation, in order, of the arguments.
+: This function SHALL take two or more arguments of data-type `http://www.w3.org/2001/XMLSchema#string` and SHALL return a `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the concatenation, in order, of the arguments.
 
 urn:oasis:names:tc:xacml:3.0:function:boolean-from-string
 
-* This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. The result SHALL be the string converted to a boolean. If the argument is not a valid lexical representation of a boolean, then the result SHALL be Indeterminate with status code urn:oasis:names:tc:xacml:1.0:status:syntax-error.
+: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. The result SHALL be the string converted to a boolean. If the argument is not a valid lexical representation of a boolean, then the result SHALL be Indeterminate with status code urn:oasis:names:tc:xacml:1.0:status:syntax-error.
 
 urn:oasis:names:tc:xacml:3.0:function:string-from-boolean
 
-* This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#boolean`, and SHALL return an `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the boolean converted to a string in the canonical form specified in [XS].
+: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#boolean`, and SHALL return an `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the boolean converted to a string in the canonical form specified in [XS].
 
 urn:oasis:names:tc:xacml:3.0:function:integer-from-string
 
-* This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `http://www.w3.org/2001/XMLSchema#integer`. The result SHALL be the string converted to an integer. If the argument is not a valid lexical representation of an integer, then the result SHALL be Indeterminate with status code urn:oasis:names:tc:xacml:1.0:status:syntax-error.
+: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `http://www.w3.org/2001/XMLSchema#integer`. The result SHALL be the string converted to an integer. If the argument is not a valid lexical representation of an integer, then the result SHALL be Indeterminate with status code urn:oasis:names:tc:xacml:1.0:status:syntax-error.
 
 urn:oasis:names:tc:xacml:3.0:function:string-from-integer
 
-* This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#integer`, and SHALL return an `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the integer converted to a string in the canonical form specified in [XS].
+: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#integer`, and SHALL return an `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the integer converted to a string in the canonical form specified in [XS].
 
 urn:oasis:names:tc:xacml:3.0:function:double-from-string
 
-* This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `http://www.w3.org/2001/XMLSchema#double`. The result SHALL be the string converted to a double. If the argument is not a valid lexical representation of a double, then the result SHALL be Indeterminate with status code urn:oasis:names:tc:xacml:1.0:status:syntax-error.
+: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `http://www.w3.org/2001/XMLSchema#double`. The result SHALL be the string converted to a double. If the argument is not a valid lexical representation of a double, then the result SHALL be Indeterminate with status code urn:oasis:names:tc:xacml:1.0:status:syntax-error.
 
 urn:oasis:names:tc:xacml:3.0:function:string-from-double
 
-* This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#double`, and SHALL return an `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the double converted to a string in the canonical form specified in [XS].
+: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#double`, and SHALL return an `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the double converted to a string in the canonical form specified in [XS].
 
 urn:oasis:names:tc:xacml:3.0:function:time-from-string
 
-* This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `http://www.w3.org/2001/XMLSchema#time`. The result SHALL be the string converted to a time. If the argument is not a valid lexical representation of a time, then the result SHALL be Indeterminate with status code urn:oasis:names:tc:xacml:1.0:status:syntax-error.
+: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `http://www.w3.org/2001/XMLSchema#time`. The result SHALL be the string converted to a time. If the argument is not a valid lexical representation of a time, then the result SHALL be Indeterminate with status code urn:oasis:names:tc:xacml:1.0:status:syntax-error.
 
 urn:oasis:names:tc:xacml:3.0:function:string-from-time
 
-* This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#time`, and SHALL return an `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the time converted to a string in the canonical form specified in [XS].
+: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#time`, and SHALL return an `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the time converted to a string in the canonical form specified in [XS].
 
 urn:oasis:names:tc:xacml:3.0:function:date-from-string
 
-* This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `http://www.w3.org/2001/XMLSchema#date`. The result SHALL be the string converted to a date. If the argument is not a valid lexical representation of a date, then the result SHALL be Indeterminate with status code urn:oasis:names:tc:xacml:1.0:status:syntax-error.
+: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `http://www.w3.org/2001/XMLSchema#date`. The result SHALL be the string converted to a date. If the argument is not a valid lexical representation of a date, then the result SHALL be Indeterminate with status code urn:oasis:names:tc:xacml:1.0:status:syntax-error.
 
 urn:oasis:names:tc:xacml:3.0:function:string-from-date
 
-* This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#date`, and SHALL return an `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the date converted to a string in the canonical form specified in [XS].
+: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#date`, and SHALL return an `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the date converted to a string in the canonical form specified in [XS].
 
 urn:oasis:names:tc:xacml:3.0:function:dateTime-from-string
 
-* This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `http://www.w3.org/2001/XMLSchema#dateTime`. The result SHALL be the string converted to a dateTime. If the argument is not a valid lexical representation of a dateTime, then the result SHALL be Indeterminate with status code urn:oasis:names:tc:xacml:1.0:status:syntax-error.
+: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `http://www.w3.org/2001/XMLSchema#dateTime`. The result SHALL be the string converted to a dateTime. If the argument is not a valid lexical representation of a dateTime, then the result SHALL be Indeterminate with status code urn:oasis:names:tc:xacml:1.0:status:syntax-error.
 
 urn:oasis:names:tc:xacml:3.0:function:string-from-dateTime
 
-* This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#dateTime`, and SHALL return an `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the dateTime converted to a string in the canonical form specified in [XS].
+: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#dateTime`, and SHALL return an `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the dateTime converted to a string in the canonical form specified in [XS].
 
 urn:oasis:names:tc:xacml:3.0:function:anyURI-from-string
 
-* This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return a `http://www.w3.org/2001/XMLSchema#anyURI`. The result SHALL be the URI constructed by converting the argument to an URI. If the argument is not a valid lexical representation of a URI, then the result SHALL be Indeterminate with status code urn:oasis:names:tc:xacml:1.0:status:syntax-error.
+: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return a `http://www.w3.org/2001/XMLSchema#anyURI`. The result SHALL be the URI constructed by converting the argument to an URI. If the argument is not a valid lexical representation of a URI, then the result SHALL be Indeterminate with status code urn:oasis:names:tc:xacml:1.0:status:syntax-error.
 
 urn:oasis:names:tc:xacml:3.0:function:string-from-anyURI
 
-* This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#anyURI`, and SHALL return an `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the URI converted to a string in the form it was originally represented in XML form.
+: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#anyURI`, and SHALL return an `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the URI converted to a string in the form it was originally represented in XML form.
 
 urn:oasis:names:tc:xacml:3.0:function:dayTimeDuration-from-string
 
-* This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `http://www.w3.org/2001/XMLSchema#dayTimeDuration `. The result SHALL be the string converted to a dayTimeDuration. If the argument is not a valid lexical representation of a dayTimeDuration, then the result SHALL be Indeterminate with status code urn:oasis:names:tc:xacml:1.0:status:syntax-error.
+: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `http://www.w3.org/2001/XMLSchema#dayTimeDuration `. The result SHALL be the string converted to a dayTimeDuration. If the argument is not a valid lexical representation of a dayTimeDuration, then the result SHALL be Indeterminate with status code urn:oasis:names:tc:xacml:1.0:status:syntax-error.
 
-* urn:oasis:names:tc:xacml:3.0:function:string-from-dayTimeDuration
+urn:oasis:names:tc:xacml:3.0:function:string-from-dayTimeDuration
 
-* This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#dayTimeDuration`, and SHALL return an `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the dayTimeDuration converted to a string in the canonical form specified in [XPathFunc].
+: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#dayTimeDuration`, and SHALL return an `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the dayTimeDuration converted to a string in the canonical form specified in [XPathFunc].
 
 urn:oasis:names:tc:xacml:3.0:function:yearMonthDuration-from-string
 
-* This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `http://www.w3.org/2001/XMLSchema#yearMonthDuration`. The result SHALL be the string converted to a yearMonthDuration. If the argument is not a valid lexical representation of a yearMonthDuration, then the result SHALL be Indeterminate with status code urn:oasis:names:tc:xacml:1.0:status:syntax-error.
+: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `http://www.w3.org/2001/XMLSchema#yearMonthDuration`. The result SHALL be the string converted to a yearMonthDuration. If the argument is not a valid lexical representation of a yearMonthDuration, then the result SHALL be Indeterminate with status code urn:oasis:names:tc:xacml:1.0:status:syntax-error.
 
 urn:oasis:names:tc:xacml:3.0:function:string-from-yearMonthDuration
 
-* This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#yearMonthDuration`, and SHALL return an `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the yearMonthDuration converted to a string in the canonical form specified in [XPathFunc].
+: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#yearMonthDuration`, and SHALL return an `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the yearMonthDuration converted to a string in the canonical form specified in [XPathFunc].
 
 urn:oasis:names:tc:xacml:3.0:function:x500Name-from-string
 
-* This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `urn:oasis:names:tc:xacml:1.0:data-type:x500Name`. The result SHALL be the string converted to an x500Name. If the argument is not a valid lexical representation of a X500Name, then the result SHALL be Indeterminate with status code urn:oasis:names:tc:xacml:1.0:status:syntax-error.
+: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `urn:oasis:names:tc:xacml:1.0:data-type:x500Name`. The result SHALL be the string converted to an x500Name. If the argument is not a valid lexical representation of a X500Name, then the result SHALL be Indeterminate with status code urn:oasis:names:tc:xacml:1.0:status:syntax-error.
 
 urn:oasis:names:tc:xacml:3.0:function:string-from-x500Name
 
-* This function SHALL take one argument of data-type `urn:oasis:names:tc:xacml:1.0:data-type:x500Name`, and SHALL return an `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the x500Name converted to a string in the form it was originally represented in XML form..
+: This function SHALL take one argument of data-type `urn:oasis:names:tc:xacml:1.0:data-type:x500Name`, and SHALL return an `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the x500Name converted to a string in the form it was originally represented in XML form..
 
 urn:oasis:names:tc:xacml:3.0:function:rfc822Name-from-string
 
-* This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name`. The result SHALL be the string converted to an rfc822Name. If the argument is not a valid lexical representation of an rfc822Name, then the result SHALL be Indeterminate with status code urn:oasis:names:tc:xacml:1.0:status:syntax-error.
+: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name`. The result SHALL be the string converted to an rfc822Name. If the argument is not a valid lexical representation of an rfc822Name, then the result SHALL be Indeterminate with status code urn:oasis:names:tc:xacml:1.0:status:syntax-error.
 
 urn:oasis:names:tc:xacml:3.0:function:string-from-rfc822Name
 
-* This function SHALL take one argument of data-type `urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name`, and SHALL return an `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the rfc822Name converted to a string in the form it was originally represented in XML form.
+: This function SHALL take one argument of data-type `urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name`, and SHALL return an `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the rfc822Name converted to a string in the form it was originally represented in XML form.
 
 urn:oasis:names:tc:xacml:3.0:function:ipAddress-from-string
 
-* This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `urn:oasis:names:tc:xacml:2.0:data-type:ipAddress`. The result SHALL be the string converted to an ipAddress. If the argument is not a valid lexical representation of an ipAddress, then the result SHALL be Indeterminate with status code urn:oasis:names:tc:xacml:1.0:status:syntax-error.
+: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `urn:oasis:names:tc:xacml:2.0:data-type:ipAddress`. The result SHALL be the string converted to an ipAddress. If the argument is not a valid lexical representation of an ipAddress, then the result SHALL be Indeterminate with status code urn:oasis:names:tc:xacml:1.0:status:syntax-error.
 
 urn:oasis:names:tc:xacml:3.0:function:string-from-ipAddress
 
-* This function SHALL take one argument of data-type `urn:oasis:names:tc:xacml:2.0:data-type:ipAddress`, and SHALL return an `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the ipAddress converted to a string in the form it was originally represented in XML form.
+: This function SHALL take one argument of data-type `urn:oasis:names:tc:xacml:2.0:data-type:ipAddress`, and SHALL return an `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the ipAddress converted to a string in the form it was originally represented in XML form.
 
 urn:oasis:names:tc:xacml:3.0:function:dnsName-from-string
 
-* This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `urn:oasis:names:tc:xacml:2.0:data-type:dnsName`. The result SHALL be the string converted to a dnsName. If the argument is not a valid lexical representation of a dnsName, then the result SHALL be Indeterminate with status code urn:oasis:names:tc:xacml:1.0:status:syntax-error.
+: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `urn:oasis:names:tc:xacml:2.0:data-type:dnsName`. The result SHALL be the string converted to a dnsName. If the argument is not a valid lexical representation of a dnsName, then the result SHALL be Indeterminate with status code urn:oasis:names:tc:xacml:1.0:status:syntax-error.
 
 urn:oasis:names:tc:xacml:3.0:function:string-from-dnsName
 
-* This function SHALL take one argument of data-type `urn:oasis:names:tc:xacml:2.0:data-type:dnsName`, and SHALL return an `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the dnsName converted to a string in the form it was originally represented in XML form.
+: This function SHALL take one argument of data-type `urn:oasis:names:tc:xacml:2.0:data-type:dnsName`, and SHALL return an `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the dnsName converted to a string in the form it was originally represented in XML form.
 
 urn:oasis:names:tc:xacml:3.0:function:string-starts-with
 
-* This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#string` and SHALL return a `http://www.w3.org/2001/XMLSchema#boolean`. The result SHALL be true if the second string begins with the first string, and false otherwise. Equality testing SHALL be done as defined for urn:oasis:names:tc:xacml:1.0:function:string-equal.
+: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#string` and SHALL return a `http://www.w3.org/2001/XMLSchema#boolean`. The result SHALL be true if the second string begins with the first string, and false otherwise. Equality testing SHALL be done as defined for urn:oasis:names:tc:xacml:1.0:function:string-equal.
 
 urn:oasis:names:tc:xacml:3.0:function:anyURI-starts-with
 
-* This function SHALL take a first argument of data-type`http://www.w3.org/2001/XMLSchema#string` and an a second argument of data-type `http://www.w3.org/2001/XMLSchema#anyURI` and SHALL return a `http://www.w3.org/2001/XMLSchema#boolean`. The result SHALL be true if the URI converted to a string with urn:oasis:names:tc:xacml:3.0:function:string-from-anyURI begins with the string, and false otherwise. Equality testing SHALL be done as defined for urn:oasis:names:tc:xacml:1.0:function:string-equal.
+: This function SHALL take a first argument of data-type`http://www.w3.org/2001/XMLSchema#string` and an a second argument of data-type `http://www.w3.org/2001/XMLSchema#anyURI` and SHALL return a `http://www.w3.org/2001/XMLSchema#boolean`. The result SHALL be true if the URI converted to a string with urn:oasis:names:tc:xacml:3.0:function:string-from-anyURI begins with the string, and false otherwise. Equality testing SHALL be done as defined for urn:oasis:names:tc:xacml:1.0:function:string-equal.
 
 urn:oasis:names:tc:xacml:3.0:function:string-ends-with
 
-* This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#string` and SHALL return a `http://www.w3.org/2001/XMLSchema#boolean`. The result SHALL be true if the second string ends with the first string, and false otherwise. Equality testing SHALL be done as defined for urn:oasis:names:tc:xacml:1.0:function:string-equal.
+: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#string` and SHALL return a `http://www.w3.org/2001/XMLSchema#boolean`. The result SHALL be true if the second string ends with the first string, and false otherwise. Equality testing SHALL be done as defined for urn:oasis:names:tc:xacml:1.0:function:string-equal.
 
 urn:oasis:names:tc:xacml:3.0:function:anyURI-ends-with
 
-* This function SHALL take a first argument of data-type `http://www.w3.org/2001/XMLSchema#string` and an a second argument of data-type `http://www.w3.org/2001/XMLSchema#anyURI` and SHALL return a `http://www.w3.org/2001/XMLSchema#boolean`. The result SHALL be true if the URI converted to a string with urn:oasis:names:tc:xacml:3.0:function:string-from-anyURI ends with the string, and false otherwise. Equality testing SHALL be done as defined for urn:oasis:names:tc:xacml:1.0:function:string-equal.
+: This function SHALL take a first argument of data-type `http://www.w3.org/2001/XMLSchema#string` and an a second argument of data-type `http://www.w3.org/2001/XMLSchema#anyURI` and SHALL return a `http://www.w3.org/2001/XMLSchema#boolean`. The result SHALL be true if the URI converted to a string with urn:oasis:names:tc:xacml:3.0:function:string-from-anyURI ends with the string, and false otherwise. Equality testing SHALL be done as defined for urn:oasis:names:tc:xacml:1.0:function:string-equal.
 
 urn:oasis:names:tc:xacml:3.0:function:string-contains
 
-* This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#string` and SHALL return a `http://www.w3.org/2001/XMLSchema#boolean`. The result SHALL be true if the second string contains the first string, and false otherwise. Equality testing SHALL be done as defined for urn:oasis:names:tc:xacml:1.0:function:string-equal.
+: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#string` and SHALL return a `http://www.w3.org/2001/XMLSchema#boolean`. The result SHALL be true if the second string contains the first string, and false otherwise. Equality testing SHALL be done as defined for urn:oasis:names:tc:xacml:1.0:function:string-equal.
 
 urn:oasis:names:tc:xacml:3.0:function:anyURI-contains
 
-* This function SHALL take a first argument of data-type `http://www.w3.org/2001/XMLSchema#string` and an a second argument of data-type `http://www.w3.org/2001/XMLSchema#anyURI` and SHALL return a `http://www.w3.org/2001/XMLSchema#boolean`. The result SHALL be true if the URI converted to a string with urn:oasis:names:tc:xacml:3.0:function:string-from-anyURI contains the string, and false otherwise. Equality testing SHALL be done as defined for urn:oasis:names:tc:xacml:1.0:function:string-equal.
+: This function SHALL take a first argument of data-type `http://www.w3.org/2001/XMLSchema#string` and an a second argument of data-type `http://www.w3.org/2001/XMLSchema#anyURI` and SHALL return a `http://www.w3.org/2001/XMLSchema#boolean`. The result SHALL be true if the URI converted to a string with urn:oasis:names:tc:xacml:3.0:function:string-from-anyURI contains the string, and false otherwise. Equality testing SHALL be done as defined for urn:oasis:names:tc:xacml:1.0:function:string-equal.
 
 urn:oasis:names:tc:xacml:3.0:function:string-substring
 
-* This function SHALL take a first argument of data-type `http://www.w3.org/2001/XMLSchema#string` and a second and a third argument of type `http://www.w3.org/2001/XMLSchema#integer` and SHALL return a `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the substring of the first argument beginning at the position given by the second argument and ending at the position before the position given by the third argument. The first character of the string has position zero. The negative integer value -1 given for the third arguments indicates the end of the string. If the second or third arguments are out of bounds, then the function MUST evaluate to Indeterminate with a status code of urn:oasis:names:tc:xacml:1.0:status:processing-error.
+: This function SHALL take a first argument of data-type `http://www.w3.org/2001/XMLSchema#string` and a second and a third argument of type `http://www.w3.org/2001/XMLSchema#integer` and SHALL return a `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the substring of the first argument beginning at the position given by the second argument and ending at the position before the position given by the third argument. The first character of the string has position zero. The negative integer value -1 given for the third arguments indicates the end of the string. If the second or third arguments are out of bounds, then the function MUST evaluate to Indeterminate with a status code of urn:oasis:names:tc:xacml:1.0:status:processing-error.
 
 urn:oasis:names:tc:xacml:3.0:function:anyURI-substring
 
-* This function SHALL take a first argument of data-type `http://www.w3.org/2001/XMLSchema#anyURI` and a second and a third argument of type `http://www.w3.org/2001/XMLSchema#integer` and SHALL return a `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the substring of the first argument converted to a string with urn:oasis:names:tc:xacml:3.0:function:string-from-anyURI beginning at the position given by the second argument and ending at the position before the position given by the third argument. The first character of the URI converted to a string has position zero. The negative integer value -1 given for the third arguments indicates the end of the string. If the second or third arguments are out of bounds, then the function MUST evaluate to Indeterminate with a status code of urn:oasis:names:tc:xacml:1.0:status:processing-error. If the resulting substring is not syntactically a valid URI, then the function MUST evaluate to Indeterminate with a status code of urn:oasis:names:tc:xacml:1.0:status:processing-error.
+: This function SHALL take a first argument of data-type `http://www.w3.org/2001/XMLSchema#anyURI` and a second and a third argument of type `http://www.w3.org/2001/XMLSchema#integer` and SHALL return a `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the substring of the first argument converted to a string with urn:oasis:names:tc:xacml:3.0:function:string-from-anyURI beginning at the position given by the second argument and ending at the position before the position given by the third argument. The first character of the URI converted to a string has position zero. The negative integer value -1 given for the third arguments indicates the end of the string. If the second or third arguments are out of bounds, then the function MUST evaluate to Indeterminate with a status code of urn:oasis:names:tc:xacml:1.0:status:processing-error. If the resulting substring is not syntactically a valid URI, then the function MUST evaluate to Indeterminate with a status code of urn:oasis:names:tc:xacml:1.0:status:processing-error.
 
 ### E.3.10 Bag functions
 
@@ -4314,19 +4341,19 @@ These functions operate on a **_bag_** of `type` values, where type is one of th
 
 urn:oasis:names:tc:xacml:x.x:function:type-one-and-only
 
-* This function SHALL take a **_bag_** of `type` values as an argument and SHALL return a value of `type`. It SHALL return the only value in the **_bag_**. If the **_bag_** does not have one and only one value, then the expression SHALL evaluate to `Indeterminate`.
+: This function SHALL take a **_bag_** of `type` values as an argument and SHALL return a value of `type`. It SHALL return the only value in the **_bag_**. If the **_bag_** does not have one and only one value, then the expression SHALL evaluate to `Indeterminate`.
 
 urn:oasis:names:tc:xacml:x.x:function:type-bag-size
 
-* This function SHALL take a **_bag_** of `type` values as an argument and SHALL return an `http://www.w3.org/2001/XMLSchema#integer` indicating the number of values in the **_bag_**.
+: This function SHALL take a **_bag_** of `type` values as an argument and SHALL return an `http://www.w3.org/2001/XMLSchema#integer` indicating the number of values in the **_bag_**.
 
 urn:oasis:names:tc:xacml:x.x:function:type-is-in
 
-* This function SHALL take an argument of `type` as the first argument and a **_bag_** of `type` values as the second argument and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. The function SHALL evaluate to `True` if and only if the first argument matches by the `urn:oasis:names:tc:xacml:x.x:function:type-equal` any value in the **_bag_**. Otherwise, it SHALL return `False`.
+: This function SHALL take an argument of `type` as the first argument and a **_bag_** of `type` values as the second argument and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. The function SHALL evaluate to `True` if and only if the first argument matches by the `urn:oasis:names:tc:xacml:x.x:function:type-equal` any value in the **_bag_**. Otherwise, it SHALL return `False`.
 
 urn:oasis:names:tc:xacml:x.x:function:type-bag
 
-* This function SHALL take any number of arguments of `type` and return a **_bag_** of `type` values containing the values of the arguments. An application of this function to zero arguments SHALL produce an empty **_bag_** of the specified data-type.
+: This function SHALL take any number of arguments of `type` and return a **_bag_** of `type` values containing the values of the arguments. An application of this function to zero arguments SHALL produce an empty **_bag_** of the specified data-type.
 
 ### E.3.11 Set functions
 
@@ -4334,23 +4361,23 @@ These functions operate on **_bags_** mimicking sets by eliminating duplicate el
 
 urn:oasis:names:tc:xacml:x.x:function:type-intersection
 
-* This function SHALL take two arguments that are both a **_bag_** of `type` values. It SHALL return a **_bag_** of `type` values such that it contains only elements that are common between the two **_bags_**, which is determined by `urn:oasis:names:tc:xacml:x.x:function:type-equal`. No duplicates, as determined by `urn:oasis:names:tc:xacml:x.x:function:type-equal`, SHALL exist in the result.
+: This function SHALL take two arguments that are both a **_bag_** of `type` values. It SHALL return a **_bag_** of `type` values such that it contains only elements that are common between the two **_bags_**, which is determined by `urn:oasis:names:tc:xacml:x.x:function:type-equal`. No duplicates, as determined by `urn:oasis:names:tc:xacml:x.x:function:type-equal`, SHALL exist in the result.
 
 urn:oasis:names:tc:xacml:x.x:function:type-at-least-one-member-of
 
-* This function SHALL take two arguments that are both a **_bag_** of `type` values. It SHALL return a `http://www.w3.org/2001/XMLSchema#boolean`. The function SHALL evaluate to `True` if and only if at least one element of the first argument is contained in the second argument as determined by `urn:oasis:names:tc:xacml:x.x:function:type-is-in`.
+: This function SHALL take two arguments that are both a **_bag_** of `type` values. It SHALL return a `http://www.w3.org/2001/XMLSchema#boolean`. The function SHALL evaluate to `True` if and only if at least one element of the first argument is contained in the second argument as determined by `urn:oasis:names:tc:xacml:x.x:function:type-is-in`.
 
 urn:oasis:names:tc:xacml:x.x:function:type-union
 
-* This function SHALL take two or more arguments that are both a **_bag_** of `type` values. The expression SHALL return a **_bag_** of `type` such that it contains all elements of all the argument **_bags_**. No duplicates, as determined by `urn:oasis:names:tc:xacml:x.x:function:type-equal`, SHALL exist in the result.
+: This function SHALL take two or more arguments that are both a **_bag_** of `type` values. The expression SHALL return a **_bag_** of `type` such that it contains all elements of all the argument **_bags_**. No duplicates, as determined by `urn:oasis:names:tc:xacml:x.x:function:type-equal`, SHALL exist in the result.
 
 urn:oasis:names:tc:xacml:x.x:function:type-subset
 
-* This function SHALL take two arguments that are both a **_bag_** of `type` values. It SHALL return a `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is a subset of the second argument. Each argument SHALL be considered to have had its duplicates removed, as determined by `urn:oasis:names:tc:xacml:x.x:function:type-equal`, before the subset calculation.
+: This function SHALL take two arguments that are both a **_bag_** of `type` values. It SHALL return a `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is a subset of the second argument. Each argument SHALL be considered to have had its duplicates removed, as determined by `urn:oasis:names:tc:xacml:x.x:function:type-equal`, before the subset calculation.
 
 urn:oasis:names:tc:xacml:x.x:function:type-set-equals
 
-* This function SHALL take two arguments that are both a **_bag_** of `type` values. It SHALL return a `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return the result of applying `urn:oasis:names:tc:xacml:1.0:function:and` to the application of `urn:oasis:names:tc:xacml:x.x:function:type-subset` to the first and second arguments and the application of `urn:oasis:names:tc:xacml:x.x:function:type-subset` to the second and first arguments.
+: This function SHALL take two arguments that are both a **_bag_** of `type` values. It SHALL return a `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return the result of applying `urn:oasis:names:tc:xacml:1.0:function:and` to the application of `urn:oasis:names:tc:xacml:x.x:function:type-subset` to the first and second arguments and the application of `urn:oasis:names:tc:xacml:x.x:function:type-subset` to the second and first arguments.
 
 ### E.3.12 Higher-order bag functions
 
@@ -4358,168 +4385,156 @@ This section describes functions in XACML that perform operations on bags such t
 
 urn:oasis:names:tc:xacml:3.0:function:any-of
 
-* This function applies a Boolean function between specific primitive values and a bag of values, and SHALL return `True` if and only if the predicate is `True` for at least one element of the bag.
+: This function applies a Boolean function between specific primitive values and a bag of values, and SHALL return `True` if and only if the predicate is `True` for at least one element of the bag.
 
-* This function SHALL take n+1 arguments, where n is one or greater. The first argument SHALL be an `<Function>` element that names a Boolean function that takes n arguments of primitive types. Under the remaining n arguments, n-1 parameters SHALL be values of primitive data-types and one SHALL be a bag of a primitive data-type. The expression SHALL be evaluated as if the function named in the `<Function>` argument were applied to the n-1 non-bag arguments and each element of the bag argument and the results are combined with `urn:oasis:names:tc:xacml:1.0:function:or`.
+: This function SHALL take n+1 arguments, where n is one or greater. The first argument SHALL be an `<Function>` element that names a Boolean function that takes n arguments of primitive types. Under the remaining n arguments, n-1 parameters SHALL be values of primitive data-types and one SHALL be a bag of a primitive data-type. The expression SHALL be evaluated as if the function named in the `<Function>` argument were applied to the n-1 non-bag arguments and each element of the bag argument and the results are combined with `urn:oasis:names:tc:xacml:1.0:function:or`.
 
-* For example, the following expression SHALL return `True`:
+: For example, the following expression SHALL return `True` because the first argument is equal to at least one of the elements of the bag:
 
 ```xml
-<Apply FunctionId="urn:oasis:names:tc:xacml:3.0:function:any-of">
-   <Function FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal"/>
-   <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Paul</AttributeValue>
-   <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
-      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">John</AttributeValue>
-      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Paul</AttributeValue>
-      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">George</AttributeValue>
-      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Ringo</AttributeValue>
-   </Apply>
-</Apply>
+    <Apply FunctionId="urn:oasis:names:tc:xacml:3.0:function:any-of">
+       <Function FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal"/>
+       <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Paul</AttributeValue>
+       <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
+          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">John</AttributeValue>
+          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Paul</AttributeValue>
+          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">George</AttributeValue>
+          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Ringo</AttributeValue>
+       </Apply>
+    </Apply>
 ```
-
-* This expression is `True` because the first argument is equal to at least one of the elements of the bag, according to the function.
 
 urn:oasis:names:tc:xacml:3.0:function:all-of
 
-* This function applies a Boolean function between a specific primitive value and a bag of values, and returns `True` if and only if the predicate is `True` for every element of the bag.
+: This function applies a Boolean function between a specific primitive value and a bag of values, and returns `True` if and only if the predicate is `True` for every element of the bag.
 
-* This function SHALL take n+1 arguments, where n is one or greater. The first argument SHALL be a `<Function>` element that names a Boolean function that takes n arguments of primitive types. Under the remaining n arguments, n-1 parameters SHALL be values of primitive data-types and one SHALL be a bag of a primitive data-type. The expression SHALL be evaluated as if the function named in the `<Function>` argument were applied to the n-1 non-bag arguments and each element of the bag argument and the results are combined with `urn:oasis:names:tc:xacml:1.0:function:and`.
+: This function SHALL take n+1 arguments, where n is one or greater. The first argument SHALL be a `<Function>` element that names a Boolean function that takes n arguments of primitive types. Under the remaining n arguments, n-1 parameters SHALL be values of primitive data-types and one SHALL be a bag of a primitive data-type. The expression SHALL be evaluated as if the function named in the `<Function>` argument were applied to the n-1 non-bag arguments and each element of the bag argument and the results are combined with `urn:oasis:names:tc:xacml:1.0:function:and`.
 
-* For example, the following expression SHALL evaluate to `True`:
+: For example, the following expression SHALL evaluate to `True` because the first argument (10) is greater than all of the elements of the bag (9,3,4 and 2):
 
 ```xml
-<Apply FunctionId="urn:oasis:names:tc:xacml:3.0:function:all-of">
-   <Function FunctionId="urn:oasis:names:tc:xacml:2.0:function:integer-greater-than"/>
-   <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">10</AttributeValue>
-   <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-bag">
-      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">9</AttributeValue>
-      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">3</AttributeValue>
-      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">4</AttributeValue>
-      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">2</AttributeValue>
-   </Apply>
-</Apply>
+    <Apply FunctionId="urn:oasis:names:tc:xacml:3.0:function:all-of">
+       <Function FunctionId="urn:oasis:names:tc:xacml:2.0:function:integer-greater-than"/>
+       <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">10</AttributeValue>
+       <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-bag">
+          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">9</AttributeValue>
+          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">3</AttributeValue>
+          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">4</AttributeValue>
+          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">2</AttributeValue>
+       </Apply>
+    </Apply>
 ```
-
-* This expression is `True` because the first argument (10) is greater than all of the elements of the bag (9,3,4 and 2).
 
 urn:oasis:names:tc:xacml:3.0:function:any-of-any
 
-* This function applies a Boolean function on each tuple from the cross product on all bags arguments, and returns `True` if and only if the predicate is `True` for at least one inside-function call.
+: This function applies a Boolean function on each tuple from the cross product on all bags arguments, and returns `True` if and only if the predicate is `True` for at least one inside-function call.
 
-* This function SHALL take n+1 arguments, where n is one or greater. The first argument SHALL be an `<Function>` element that names a Boolean function that takes n arguments. The remaining arguments are either primitive data types or bags of primitive types. The expression SHALL be evaluated as if the function named in the `<Function>` argument was applied between every tuple of the cross product on all bags and the primitive values, and the results were combined using `urn:oasis:names:tc:xacml:1.0:function:or`. The semantics are that the result of the expression SHALL be `True` if and only if the applied predicate is `True` for at least one function call on the tuples from the bags and primitive values.
+: This function SHALL take n+1 arguments, where n is one or greater. The first argument SHALL be an `<Function>` element that names a Boolean function that takes n arguments. The remaining arguments are either primitive data types or bags of primitive types. The expression SHALL be evaluated as if the function named in the `<Function>` argument was applied between every tuple of the cross product on all bags and the primitive values, and the results were combined using `urn:oasis:names:tc:xacml:1.0:function:or`. The semantics are that the result of the expression SHALL be `True` if and only if the applied predicate is `True` for at least one function call on the tuples from the bags and primitive values.
 
-* For example, the following expression SHALL evaluate to `True`:
+: For example, the following expression SHALL evaluate to `True` because at least one of the elements of the first bag, namely `Ringo`, is equal to at least one of the elements of the second bag:
 
 ```xml
-<Apply FunctionId="urn:oasis:names:tc:xacml:3.0:function:any-of-any">
-   <Function FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal"/>
-   <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
-      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Ringo</AttributeValue>
-      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Mary</AttributeValue>
-   </Apply>
-   <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
-      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">John</AttributeValue>
-      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Paul</AttributeValue>
-      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">George</AttributeValue>
-      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Ringo</AttributeValue>
-   </Apply>
-</Apply>
+    <Apply FunctionId="urn:oasis:names:tc:xacml:3.0:function:any-of-any">
+       <Function FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal"/>
+       <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
+          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Ringo</AttributeValue>
+          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Mary</AttributeValue>
+       </Apply>
+       <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
+          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">John</AttributeValue>
+          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Paul</AttributeValue>
+          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">George</AttributeValue>
+          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Ringo</AttributeValue>
+       </Apply>
+    </Apply>
 ```
-
-* This expression is `True` because at least one of the elements of the first bag, namely `Ringo`, is equal to at least one of the elements of the second bag.
 
 urn:oasis:names:tc:xacml:1.0:function:all-of-any
 
-* This function applies a Boolean function between the elements of two bags. The expression SHALL be `True` if and only if the supplied predicate is `True` between each element of the first bag and any element of the second bag.
+: This function applies a Boolean function between the elements of two bags. The expression SHALL be `True` if and only if the supplied predicate is `True` between each element of the first bag and any element of the second bag.
 
-* This function SHALL take three arguments. The first argument SHALL be an `<Function>` element that names a Boolean function that takes two arguments of primitive types. The second argument SHALL be a bag of a primitive data-type. The third argument SHALL be a bag of a primitive data-type. The expression SHALL be evaluated as if the `urn:oasis:names:tc:xacml:3.0:function:any-of` function had been applied to each value of the first bag and the whole of the second bag using the supplied xacml:Function, and the results were then combined using `urn:oasis:names:tc:xacml:1.0:function:and`.
+: This function SHALL take three arguments. The first argument SHALL be an `<Function>` element that names a Boolean function that takes two arguments of primitive types. The second argument SHALL be a bag of a primitive data-type. The third argument SHALL be a bag of a primitive data-type. The expression SHALL be evaluated as if the `urn:oasis:names:tc:xacml:3.0:function:any-of` function had been applied to each value of the first bag and the whole of the second bag using the supplied xacml:Function, and the results were then combined using `urn:oasis:names:tc:xacml:1.0:function:and`.
 
-* For example, the following expression SHALL evaluate to `True`:
+: For example, the following expression SHALL evaluate to `True` because each of the elements of the first bag is greater than at least one of the elements of the second bag:
 
 ```xml
-<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:all-of-any">
-   <Function FunctionId="urn:oasis:names:tc:xacml:2.0:function:integer-greater-than"/>
-   <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-bag">
-      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">10</AttributeValue>
-      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">20</AttributeValue>
-   </Apply>
-   <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-bag">
-      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">1</AttributeValue>
-      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">3</AttributeValue>
-      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">5</AttributeValue>
-      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">19</AttributeValue>
-   </Apply>
-</Apply>
+    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:all-of-any">
+       <Function FunctionId="urn:oasis:names:tc:xacml:2.0:function:integer-greater-than"/>
+       <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-bag">
+          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">10</AttributeValue>
+          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">20</AttributeValue>
+       </Apply>
+       <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-bag">
+          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">1</AttributeValue>
+          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">3</AttributeValue>
+          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">5</AttributeValue>
+          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">19</AttributeValue>
+       </Apply>
+    </Apply>
 ```
-
-* This expression is `True` because each of the elements of the first bag is greater than at least one of the elements of the second bag.
 
 urn:oasis:names:tc:xacml:1.0:function:any-of-all
 
-* This function applies a Boolean function between the elements of two bags. The expression SHALL be `True` if and only if the supplied predicate is `True` between each element of the second bag and any element of the first bag.
+: This function applies a Boolean function between the elements of two bags. The expression SHALL be `True` if and only if the supplied predicate is `True` between each element of the second bag and any element of the first bag.
 
-* This function SHALL take three arguments. The first argument SHALL be an `<Function>` element that names a Boolean function that takes two arguments of primitive types. The second argument SHALL be a bag of a primitive data-type. The third argument SHALL be a bag of a primitive data-type. The expression SHALL be evaluated as if the `urn:oasis:names:tc:xacml:3.0:function:any-of` function had been applied to each value of the second bag and the whole of the first bag using the supplied xacml:Function, and the results were then combined using `urn:oasis:names:tc:xacml:1.0:function:and`.
+: This function SHALL take three arguments. The first argument SHALL be an `<Function>` element that names a Boolean function that takes two arguments of primitive types. The second argument SHALL be a bag of a primitive data-type. The third argument SHALL be a bag of a primitive data-type. The expression SHALL be evaluated as if the `urn:oasis:names:tc:xacml:3.0:function:any-of` function had been applied to each value of the second bag and the whole of the first bag using the supplied xacml:Function, and the results were then combined using `urn:oasis:names:tc:xacml:1.0:function:and`.
 
-* For example, the following expression SHALL evaluate to `True`:
+: For example, the following expression SHALL evaluate to `True` because, for all of the values in the second bag, there is a value in the first bag that is greater:
 
 ```xml
-<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:fu`nction:integer-bag">
-      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">3</AttributeValue>
-      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">5</AttributeValue>
-   </Apply>
-   <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-bag">
-      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">1</AttributeValue>
-      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">2</AttributeValue>
-      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">3</AttributeValue>
-      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">4</AttributeValue>
-   </Apply>
-</Apply>
+    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:fu`nction:integer-bag">
+          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">3</AttributeValue>
+          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">5</AttributeValue>
+       </Apply>
+       <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-bag">
+          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">1</AttributeValue>
+          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">2</AttributeValue>
+          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">3</AttributeValue>
+          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">4</AttributeValue>
+       </Apply>
+    </Apply>
 ```
-
-* This expression is `True` because, for all of the values in the second bag, there is a value in the first bag that is greater.
 
 urn:oasis:names:tc:xacml:1.0:function:all-of-all
 
-* This function applies a Boolean function between the elements of two bags. The expression SHALL be `True` if and only if the supplied predicate is `True` between each and every element of the first bag collectively against all the elements of the second bag.
+: This function applies a Boolean function between the elements of two bags. The expression SHALL be `True` if and only if the supplied predicate is `True` between each and every element of the first bag collectively against all the elements of the second bag.
 
-* This function SHALL take three arguments. The first argument SHALL be an `<Function>` element that names a Boolean function that takes two arguments of primitive types. The second argument SHALL be a bag of a primitive data-type. The third argument SHALL be a bag of a primitive data-type. The expression is evaluated as if the function named in the `<Function>` element were applied between every element of the second argument and every element of the third argument and the results were combined using `urn:oasis:names:tc:xacml:1.0:function:and`. The semantics are that the result of the expression is `True` if and only if the applied predicate is `True` for all elements of the first bag compared to all the elements of the second bag.
+: This function SHALL take three arguments. The first argument SHALL be an `<Function>` element that names a Boolean function that takes two arguments of primitive types. The second argument SHALL be a bag of a primitive data-type. The third argument SHALL be a bag of a primitive data-type. The expression is evaluated as if the function named in the `<Function>` element were applied between every element of the second argument and every element of the third argument and the results were combined using `urn:oasis:names:tc:xacml:1.0:function:and`. The semantics are that the result of the expression is `True` if and only if the applied predicate is `True` for all elements of the first bag compared to all the elements of the second bag.
 
-* For example, the following expression SHALL evaluate to `True`:
+: For example, the following expression SHALL evaluate to `True` because all elements of the first bag, `5` and `6`, are each greater than all of the integer values `1`, `2`, `3`, `4` of the second bag:
 
 ```xml
-<Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:all-of-all">
-   <Function FunctionId="urn:oasis:names:tc:xacml:2.0:function:integer-greater-than"/>
-   <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-bag">
-      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">6</AttributeValue>
-      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">5</AttributeValue>
-   </Apply>
-   <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-bag">
-      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">1</AttributeValue>
-      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">2</AttributeValue>
-      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">3</AttributeValue>
-      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">4</AttributeValue>
-   </Apply>
-</Apply>
+    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:all-of-all">
+       <Function FunctionId="urn:oasis:names:tc:xacml:2.0:function:integer-greater-than"/>
+       <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-bag">
+          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">6</AttributeValue>
+          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">5</AttributeValue>
+       </Apply>
+       <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-bag">
+          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">1</AttributeValue>
+          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">2</AttributeValue>
+          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">3</AttributeValue>
+          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">4</AttributeValue>
+       </Apply>
+    </Apply>
 ```
-
-* This expression is `True` because all elements of the first bag, `5` and `6`, are each greater than all of the integer values `1`, `2`, `3`, `4` of the second bag.
 
 urn:oasis:names:tc:xacml:3.0:function:map
 
-* This function converts a bag of values to another bag of values.
+: This function converts a bag of values to another bag of values.
 
-* This function SHALL take n+1 arguments, where n is one or greater. The first argument SHALL be a `<Function>` element naming a function that takes a n arguments of a primitive data-type and returns a value of a primitive data-type Under the remaining n arguments, n-1 parameters SHALL be values of primitive data-types and one SHALL be a bag of a primitive data-type. The expression SHALL be evaluated as if the function named in the `<Function>` argument were applied to the n-1 non-bag arguments and each element of the bag argument and resulting in a bag of the converted value. The result SHALL be a bag of the primitive data-type that is returned by the function named in the `<xacml:Function>` element.
+: This function SHALL take n+1 arguments, where n is one or greater. The first argument SHALL be a `<Function>` element naming a function that takes a n arguments of a primitive data-type and returns a value of a primitive data-type Under the remaining n arguments, n-1 parameters SHALL be values of primitive data-types and one SHALL be a bag of a primitive data-type. The expression SHALL be evaluated as if the function named in the `<Function>` argument were applied to the n-1 non-bag arguments and each element of the bag argument and resulting in a bag of the converted value. The result SHALL be a bag of the primitive data-type that is returned by the function named in the `<xacml:Function>` element.
 
-* For example, the following expression, evaluates to a bag containing `hello` and `world!`.
+: For example, the following expression, evaluates to a bag containing `hello` and `world!`.
 
 ```xml
-<Apply FunctionId="urn:oasis:names:tc:xacml:3.0:function:map">
-   <Function FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-normalize-to-lower-case">
-   <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
-      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Hello</AttributeValue>
-      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">World!</AttributeValue>
-   </Apply>
-</Apply>
+    <Apply FunctionId="urn:oasis:names:tc:xacml:3.0:function:map">
+       <Function FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-normalize-to-lower-case">
+       <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
+          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Hello</AttributeValue>
+          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">World!</AttributeValue>
+       </Apply>
+    </Apply>
 ```
 
 ### E.3.13 Regular-expression-based functions
@@ -4528,27 +4543,27 @@ These functions operate on various types using regular expressions and evaluate 
 
 urn:oasis:names:tc:xacml:1.0:function:string-regexp-match
 
-* This function decides a regular expression match. It SHALL take two arguments of `http://www.w3.org/2001/XMLSchema#string` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. The first argument SHALL be a regular expression and the second argument SHALL be a general string. The function specification SHALL be that of the `xf:matches` function with the arguments reversed [XF] Section 7.6.2.
+: This function decides a regular expression match. It SHALL take two arguments of `http://www.w3.org/2001/XMLSchema#string` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. The first argument SHALL be a regular expression and the second argument SHALL be a general string. The function specification SHALL be that of the `xf:matches` function with the arguments reversed [XF] Section 7.6.2.
 
 urn:oasis:names:tc:xacml:2.0:function:anyURI-regexp-match
 
-* This function decides a regular expression match. It SHALL take two arguments; the first is of type `http://www.w3.org/2001/XMLSchema#string` and the second is of type `http://www.w3.org/2001/XMLSchema#anyURI`. It SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. The first argument SHALL be a regular expression and the second argument SHALL be a URI. The function SHALL convert the second argument to type `http://www.w3.org/2001/XMLSchema#string` with urn:oasis:names:tc:xacml:3.0:function:string-from-anyURI, then apply `urn:oasis:names:tc:xacml:1.0:function:string-regexp-match`.
+: This function decides a regular expression match. It SHALL take two arguments; the first is of type `http://www.w3.org/2001/XMLSchema#string` and the second is of type `http://www.w3.org/2001/XMLSchema#anyURI`. It SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. The first argument SHALL be a regular expression and the second argument SHALL be a URI. The function SHALL convert the second argument to type `http://www.w3.org/2001/XMLSchema#string` with urn:oasis:names:tc:xacml:3.0:function:string-from-anyURI, then apply `urn:oasis:names:tc:xacml:1.0:function:string-regexp-match`.
 
 urn:oasis:names:tc:xacml:2.0:function:ipAddress-regexp-match
 
-* This function decides a regular expression match. It SHALL take two arguments; the first is of type `http://www.w3.org/2001/XMLSchema#string` and the second is of type `urn:oasis:names:tc:xacml:2.0:data-type:ipAddress`. It SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. The first argument SHALL be a regular expression and the second argument SHALL be an IPv4 or IPv6 address. The function SHALL convert the second argument to type `http://www.w3.org/2001/XMLSchema#string` with urn:oasis:names:tc:xacml:3.0:function:string-from-ipAddress, then apply `urn:oasis:names:tc:xacml:1.0:function:string-regexp-match`.
+: This function decides a regular expression match. It SHALL take two arguments; the first is of type `http://www.w3.org/2001/XMLSchema#string` and the second is of type `urn:oasis:names:tc:xacml:2.0:data-type:ipAddress`. It SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. The first argument SHALL be a regular expression and the second argument SHALL be an IPv4 or IPv6 address. The function SHALL convert the second argument to type `http://www.w3.org/2001/XMLSchema#string` with urn:oasis:names:tc:xacml:3.0:function:string-from-ipAddress, then apply `urn:oasis:names:tc:xacml:1.0:function:string-regexp-match`.
 
 urn:oasis:names:tc:xacml:2.0:function:dnsName-regexp-match
 
-* This function decides a regular expression match. It SHALL take two arguments; the first is of type `http://www.w3.org/2001/XMLSchema#string` and the second is of type `urn:oasis:names:tc:xacml:2.0:data-type:dnsName`. It SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. The first argument SHALL be a regular expression and the second argument SHALL be a DNS name. The function SHALL convert the second argument to type `http://www.w3.org/2001/XMLSchema#string` with urn:oasis:names:tc:xacml:3.0:function:string-from-dnsName, then apply `urn:oasis:names:tc:xacml:1.0:function:string-regexp-match`.
+: This function decides a regular expression match. It SHALL take two arguments; the first is of type `http://www.w3.org/2001/XMLSchema#string` and the second is of type `urn:oasis:names:tc:xacml:2.0:data-type:dnsName`. It SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. The first argument SHALL be a regular expression and the second argument SHALL be a DNS name. The function SHALL convert the second argument to type `http://www.w3.org/2001/XMLSchema#string` with urn:oasis:names:tc:xacml:3.0:function:string-from-dnsName, then apply `urn:oasis:names:tc:xacml:1.0:function:string-regexp-match`.
 
 urn:oasis:names:tc:xacml:2.0:function:rfc822Name-regexp-match
 
-* This function decides a regular expression match. It SHALL take two arguments; the first is of type `http://www.w3.org/2001/XMLSchema#string` and the second is of type `urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name`. It SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. The first argument SHALL be a regular expression and the second argument SHALL be an RFC 822 name. The function SHALL convert the second argument to type `http://www.w3.org/2001/XMLSchema#string` with urn:oasis:names:tc:xacml:3.0:function:string-from-rfc822Name, then apply `urn:oasis:names:tc:xacml:1.0:function:string-regexp-match`.
+: This function decides a regular expression match. It SHALL take two arguments; the first is of type `http://www.w3.org/2001/XMLSchema#string` and the second is of type `urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name`. It SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. The first argument SHALL be a regular expression and the second argument SHALL be an RFC 822 name. The function SHALL convert the second argument to type `http://www.w3.org/2001/XMLSchema#string` with urn:oasis:names:tc:xacml:3.0:function:string-from-rfc822Name, then apply `urn:oasis:names:tc:xacml:1.0:function:string-regexp-match`.
 
 urn:oasis:names:tc:xacml:2.0:function:x500Name-regexp-match
 
-* This function decides a regular expression match. It SHALL take two arguments; the first is of type `http://www.w3.org/2001/XMLSchema#string` and the second is of type `urn:oasis:names:tc:xacml:1.0:data-type:x500Name`. It SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. The first argument SHALL be a regular expression and the second argument SHALL be an X.500 directory name. The function SHALL convert the second argument to type `http://www.w3.org/2001/XMLSchema#string` with urn:oasis:names:tc:xacml:3.0:function:string-from-x500Name, then apply `urn:oasis:names:tc:xacml:1.0:function:string-regexp-match`.
+: This function decides a regular expression match. It SHALL take two arguments; the first is of type `http://www.w3.org/2001/XMLSchema#string` and the second is of type `urn:oasis:names:tc:xacml:1.0:data-type:x500Name`. It SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. The first argument SHALL be a regular expression and the second argument SHALL be an X.500 directory name. The function SHALL convert the second argument to type `http://www.w3.org/2001/XMLSchema#string` with urn:oasis:names:tc:xacml:3.0:function:string-from-x500Name, then apply `urn:oasis:names:tc:xacml:1.0:function:string-regexp-match`.
 
 ### E.3.14 Special match functions
 
@@ -4556,23 +4571,23 @@ These functions operate on various types and evaluate to `http://www.w3.org/2001
 
 urn:oasis:names:tc:xacml:1.0:function:x500Name-match
 
-* This function shall take two arguments of `urn:oasis:names:tc:xacml:1.0:data-type:x500Name` and shall return an `http://www.w3.org/2001/XMLSchema#boolean`. It shall return `True` if and only if the first argument matches some terminal sequence of RDNs from the second argument when compared using x500Name-equal.
+: This function shall take two arguments of `urn:oasis:names:tc:xacml:1.0:data-type:x500Name` and shall return an `http://www.w3.org/2001/XMLSchema#boolean`. It shall return `True` if and only if the first argument matches some terminal sequence of RDNs from the second argument when compared using x500Name-equal.
 
-* As an example (non-normative), if the first argument is `O=Medico Corp,C=US` and the second argument is `cn=John Smith,o=Medico Corp, c=US`, then the function will return `True`.
+: As an example (non-normative), if the first argument is `O=Medico Corp,C=US` and the second argument is `cn=John Smith,o=Medico Corp, c=US`, then the function will return `True`.
 
 urn:oasis:names:tc:xacml:1.0:function:rfc822Name-match
 
-* This function SHALL take two arguments, the first is of data-type `http://www.w3.org/2001/XMLSchema#string` and the second is of data-type `urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. This function SHALL evaluate to `True` if the first argument matches the second argument according to the following specification.
+: This function SHALL take two arguments, the first is of data-type `http://www.w3.org/2001/XMLSchema#string` and the second is of data-type `urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. This function SHALL evaluate to `True` if the first argument matches the second argument according to the following specification.
 
-* An RFC822 name consists of a local-part followed by `@` followed by a domain-part. The local-part is case-sensitive, while the domain-part (which is usually a DNS name) is not case-sensitive.
+: An RFC822 name consists of a local-part followed by `@` followed by a domain-part. The local-part is case-sensitive, while the domain-part (which is usually a DNS name) is not case-sensitive.
 
-* The second argument contains a complete rfc822Name. The first argument is a complete or partial rfc822Name used to select appropriate values in the second argument as follows.
+: The second argument contains a complete rfc822Name. The first argument is a complete or partial rfc822Name used to select appropriate values in the second argument as follows.
 
-* In order to match a particular address in the second argument, the first argument must specify the complete mail address to be matched. For example, if the first argument is `Anderson@sun.com`, this matches a value in the second argument of `Anderson@sun.com` and `Anderson@SUN.COM`, but not `Anne.Anderson@sun.com`, `anderson@sun.com` or `Anderson@east.sun.com`.
+: In order to match a particular address in the second argument, the first argument must specify the complete mail address to be matched. For example, if the first argument is `Anderson@sun.com`, this matches a value in the second argument of `Anderson@sun.com` and `Anderson@SUN.COM`, but not `Anne.Anderson@sun.com`, `anderson@sun.com` or `Anderson@east.sun.com`.
 
-* In order to match any address at a particular domain in the second argument, the first argument must specify only a domain name (usually a DNS name). For example, if the first argument is `sun.com`, this matches a value in the second argument of `Anderson@sun.com` or `Baxter@SUN.COM`, but not `Anderson@east.sun.com`.
+: In order to match any address at a particular domain in the second argument, the first argument must specify only a domain name (usually a DNS name). For example, if the first argument is `sun.com`, this matches a value in the second argument of `Anderson@sun.com` or `Baxter@SUN.COM`, but not `Anderson@east.sun.com`.
 
-* In order to match any address in a particular domain in the second argument, the first argument must specify the desired domain-part with a leading `.`. For example, if the first argument is `.east.sun.com`, this matches a value in the second argument of `Anderson@east.sun.com` and `anne.anderson@ISRG.EAST.SUN.COM` but not `Anderson@sun.com`.
+: In order to match any address in a particular domain in the second argument, the first argument must specify the desired domain-part with a leading `.`. For example, if the first argument is `.east.sun.com`, this matches a value in the second argument of `Anderson@east.sun.com` and `anne.anderson@ISRG.EAST.SUN.COM` but not `Anderson@sun.com`.
 
 ### E.3.15 XPath-based functions
 
@@ -4580,15 +4595,15 @@ This section specifies functions that take XPath expressions for arguments. An X
 
 urn:oasis:names:tc:xacml:3.0:function:xpath-node-count
 
-*This function SHALL take an `urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression` as an argument and evaluates to an `http://www.w3.org/2001/XMLSchema#integer`. The value returned from the function SHALL be the count of the nodes within the node-set that match the given XPath expression. If the `<Content>` element of the category to which the XPath expression applies to is not present in the request, this function SHALL return a value of zero.
+: This function SHALL take an `urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression` as an argument and evaluates to an `http://www.w3.org/2001/XMLSchema#integer`. The value returned from the function SHALL be the count of the nodes within the node-set that match the given XPath expression. If the `<Content>` element of the category to which the XPath expression applies to is not present in the request, this function SHALL return a value of zero.
 
 urn:oasis:names:tc:xacml:3.0:function:xpath-node-equal
 
-* This function SHALL take two `urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression` arguments and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. The function SHALL return `True` if any of the XML nodes in the node-set matched by the first argument equals any of the XML nodes in the node-set matched by the second argument. Two nodes are considered equal if they have the same identity. If the `<Content>` element of the category to which either XPath expression applies to is not present in the request, this function SHALL return a value of `False`.
+: This function SHALL take two `urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression` arguments and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. The function SHALL return `True` if any of the XML nodes in the node-set matched by the first argument equals any of the XML nodes in the node-set matched by the second argument. Two nodes are considered equal if they have the same identity. If the `<Content>` element of the category to which either XPath expression applies to is not present in the request, this function SHALL return a value of `False`.
 
 urn:oasis:names:tc:xacml:3.0:function:xpath-node-match
 
-* This function SHALL take two `urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression` arguments and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. This function SHALL evaluate to `True` if one of the following two conditions is satisfied: (1) Any of the XML nodes in the node-set matched by the first argument is equal to any of the XML nodes in the node-set matched by the second argument; (2) any node below any of the XML nodes in the node-set matched by the first argument is equal to any of the XML nodes in the node-set matched by the second argument. Two nodes are considered equal if they have the same identity. If the `<Content>` element of the category to which either XPath expression applies to is not present in the request, this function SHALL return a value of `False`.
+: This function SHALL take two `urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression` arguments and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. This function SHALL evaluate to `True` if one of the following two conditions is satisfied: (1) Any of the XML nodes in the node-set matched by the first argument is equal to any of the XML nodes in the node-set matched by the second argument; (2) any node below any of the XML nodes in the node-set matched by the first argument is equal to any of the XML nodes in the node-set matched by the second argument. Two nodes are considered equal if they have the same identity. If the `<Content>` element of the category to which either XPath expression applies to is not present in the request, this function SHALL return a value of `False`.
 
 NOTE: The first condition is equivalent to `xpath-node-equal`, and guarantees that `xpath-node-equal` is a special case of `xpath-node-match`.
 
@@ -4596,15 +4611,15 @@ NOTE: The first condition is equivalent to `xpath-node-equal`, and guarantees th
 
 urn:oasis:names:tc:xacml:3.0:function:access-permitted
 
-* This function SHALL take an `http://www.w3.org/2001/XMLSchema#anyURI` and an `http://www.w3.org/2001/XMLSchema#string` as arguments. The first argument SHALL be interpreted as an **_attribute_** category. The second argument SHALL be interpreted as the XML content of an `<Attributes>` element with `Category` equal to the first argument. The function evaluates to an `http://www.w3.org/2001/XMLSchema#boolean`. This function SHALL return `True` if and only if the **_policy_** evaluation described below returns the value of `Permit`.
+: This function SHALL take an `http://www.w3.org/2001/XMLSchema#anyURI` and an `http://www.w3.org/2001/XMLSchema#string` as arguments. The first argument SHALL be interpreted as an **_attribute_** category. The second argument SHALL be interpreted as the XML content of an `<Attributes>` element with `Category` equal to the first argument. The function evaluates to an `http://www.w3.org/2001/XMLSchema#boolean`. This function SHALL return `True` if and only if the **_policy_** evaluation described below returns the value of `Permit`.
 
-* The following evaluation is described as if the **_context_** is actually instantiated, but it is only required that an equivalent result be obtained.
+: The following evaluation is described as if the **_context_** is actually instantiated, but it is only required that an equivalent result be obtained.
 
-* The function SHALL construct a new **_context_**, by copying all the information from the current **_context_**, omitting any `<Attributes>` element with `Category` equal to the first argument. The second function argument SHALL be added to the **_context_** as the content of an `<Attributes>` element with `Category` equal to the first argument.
+: The function SHALL construct a new **_context_**, by copying all the information from the current **_context_**, omitting any `<Attributes>` element with `Category` equal to the first argument. The second function argument SHALL be added to the **_context_** as the content of an `<Attributes>` element with `Category` equal to the first argument.
 
-* The function SHALL invoke a complete **_policy_** evaluation using the newly constructed **_context_**. This evaluation SHALL be completely isolated from the evaluation which invoked the function, but shall use all current **_policies_** and **_combining algorithms_**, including any per request **_policies_**.
+: The function SHALL invoke a complete **_policy_** evaluation using the newly constructed **_context_**. This evaluation SHALL be completely isolated from the evaluation which invoked the function, but shall use all current **_policies_** and **_combining algorithms_**, including any per request **_policies_**.
 
-* The **_PDP_** SHALL detect any loop which may occur if successive evaluations invoke this function by counting the number of total invocations of any instance of this function during any single initial invocation of the **_PDP_**. If the total number of invocations exceeds the bound for such invocations, the initial invocation of this function evaluates to Indeterminate with a `urn:oasis:names:tc:xacml:1.0:status:processing-error` status code. Also, see the security considerations in [Appendix B.1.8](#b18-denial-of-service).
+: The **_PDP_** SHALL detect any loop which may occur if successive evaluations invoke this function by counting the number of total invocations of any instance of this function during any single initial invocation of the **_PDP_**. If the total number of invocations exceeds the bound for such invocations, the initial invocation of this function evaluates to Indeterminate with a `urn:oasis:names:tc:xacml:1.0:status:processing-error` status code. Also, see the security considerations in [Appendix B.1.8](#b18-denial-of-service).
 
 ### E.3.17 Extension functions and primitive types
 
@@ -4620,75 +4635,75 @@ The following xpath based functions have been replaced with equivalent functions
 
 urn:oasis:names:tc:xacml:1.0:function:xpath-node-count
 
-* Replaced with urn:oasis:names:tc:xacml:3.0:function:xpath-node-count
+: Replaced with urn:oasis:names:tc:xacml:3.0:function:xpath-node-count
 
 urn:oasis:names:tc:xacml:1.0:function:xpath-node-equal
 
-* Replaced with urn:oasis:names:tc:xacml:3.0:function:xpath-node-equal
+: Replaced with urn:oasis:names:tc:xacml:3.0:function:xpath-node-equal
 
 urn:oasis:names:tc:xacml:1.0:function:xpath-node-match
 
-* Replaced with urn:oasis:names:tc:xacml:3.0:function:xpath-node-match
+: Replaced with urn:oasis:names:tc:xacml:3.0:function:xpath-node-match
 
 The following URI and string concatenation function has been replaced with a string to URI conversion function, which allows the use of the general string functions with URI through string conversion.
 
 urn:oasis:names:tc:xacml:2.0:function:uri-string-concatenate
 
-* Replaced by urn:oasis:names:tc:xacml:3.0:function:string-from-anyURI
+: Replaced by urn:oasis:names:tc:xacml:3.0:function:string-from-anyURI
 
 The following identifiers have been replaced with official identifiers defined by W3C.
 
 http://www.w3.org/TR/2002/WD-xquery-operators-20020816#dayTimeDuration
 
-* Replaced with http://www.w3.org/2001/XMLSchema#dayTimeDuration
+: Replaced with http://www.w3.org/2001/XMLSchema#dayTimeDuration
 
 http://www.w3.org/TR/2002/WD-xquery-operators-20020816#yearMonthDuration
 
-* Replaced with http://www.w3.org/2001/XMLSchema#yearMonthDuration
+: Replaced with http://www.w3.org/2001/XMLSchema#yearMonthDuration
 
 The following functions have been replaced with functions which use the updated dayTimeDuration and yearMonthDuration data types.
 
 urn:oasis:names:tc:xacml:1.0:function:dayTimeDuration-equal
 
-* Replaced with urn:oasis:names:tc:xacml:3.0:function:dayTimeDuration-equal
+: Replaced with urn:oasis:names:tc:xacml:3.0:function:dayTimeDuration-equal
 
 urn:oasis:names:tc:xacml:1.0:function:yearMonthDuration-equal
 
-* Replaced with urn:oasis:names:tc:xacml:3.0:function:yearMonthDuration-equal
+: Replaced with urn:oasis:names:tc:xacml:3.0:function:yearMonthDuration-equal
 
 urn:oasis:names:tc:xacml:1.0:function:dateTime-add-dayTimeDuration
 
-* Replaced with urn:oasis:names:tc:xacml:3.0:function:dateTime-add-dayTimeDuration
+: Replaced with urn:oasis:names:tc:xacml:3.0:function:dateTime-add-dayTimeDuration
 
 urn:oasis:names:tc:xacml:1.0:function:dateTime-add-yearMonthDuration
 
-* Replaced with urn:oasis:names:tc:xacml:3.0:function:dateTime-add-yearMonthDuration
+: Replaced with urn:oasis:names:tc:xacml:3.0:function:dateTime-add-yearMonthDuration
 
 urn:oasis:names:tc:xacml:1.0:function:dateTime-subtract-dayTimeDuration
 
-* Replaced with urn:oasis:names:tc:xacml:3.0:function:dateTime-subtract-dayTimeDuration
+: Replaced with urn:oasis:names:tc:xacml:3.0:function:dateTime-subtract-dayTimeDuration
 
 urn:oasis:names:tc:xacml:1.0:function:dateTime-subtract-yearMonthDuration
 
-* Replaced with urn:oasis:names:tc:xacml:3.0:function:dateTime-subtract-yearMonthDuration
+: Replaced with urn:oasis:names:tc:xacml:3.0:function:dateTime-subtract-yearMonthDuration
 
 urn:oasis:names:tc:xacml:1.0:function:date-add-yearMonthDuration
 
-* Replaced with urn:oasis:names:tc:xacml:3.0:function:date-add-yearMonthDuration
+: Replaced with urn:oasis:names:tc:xacml:3.0:function:date-add-yearMonthDuration
 
 urn:oasis:names:tc:xacml:1.0:function:date-subtract-yearMonthDuration
 
-* Replaced with urn:oasis:names:tc:xacml:3.0:function:date-subtract-yearMonthDuration
+: Replaced with urn:oasis:names:tc:xacml:3.0:function:date-subtract-yearMonthDuration
 
-The following attribute identifiers have been replaced with new identifiers
+The following attribute identifiers have been replaced with new identifiers.
 
 urn:oasis:names:tc:xacml:1.0:subject:authn-locality:ip-address
 
-* Replaced with urn:oasis:names:tc:xacml:3.0:subject:authn-locality:ip-address
+: Replaced with urn:oasis:names:tc:xacml:3.0:subject:authn-locality:ip-address
 
 urn:oasis:names:tc:xacml:1.0:subject:authn-locality:dns-name
 
-* Replaced with urn:oasis:names:tc:xacml:3.0:subject:authn-locality:dns-name
+: Replaced with urn:oasis:names:tc:xacml:3.0:subject:authn-locality:dns-name
 
 -------
 
@@ -4700,7 +4715,7 @@ This section defines standard identifiers for commonly used entities.
 
 XACML is defined using this identifier.
 
-`urn:oasis:names:tc:xacml:3.0:core:schema`
+`urn:oasis:names:tc:xacml:4.0:core:schema`
 
 ## F.2 Attribute categories
 
