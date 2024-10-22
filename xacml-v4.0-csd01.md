@@ -1178,12 +1178,9 @@ The `<PolicyIdReference>` element SHALL be used to reference a `<Policy>` elemen
 <xs:complexType name="IdReferenceType">
    <xs:simpleContent>
       <xs:extension base="xs:anyURI">
-         <xs:attribute name="xacml:Version"
-                       type="xacml:VersionMatchType" use="optional"/>
-         <xs:attribute name="xacml:EarliestVersion"
-                       type="xacml:VersionMatchType" use="optional"/>
-         <xs:attribute name="xacml:LatestVersion"
-                       type="xacml:VersionMatchType" use="optional"/>
+         <xs:attribute name="xacml:Version" type="xacml:VersionMatchType" use="optional"/>
+         <xs:attribute name="xacml:EarliestVersion" type="xacml:VersionMatchType" use="optional"/>
+         <xs:attribute name="xacml:LatestVersion" type="xacml:VersionMatchType" use="optional"/>
        </xs:extension>
    </xs:simpleContent>
 </xs:complexType>
@@ -1247,8 +1244,7 @@ Note that none of the **_combining algorithms_** specified in XACML 4.0 is param
 <xs:element name="CombinerParameters" type="xacml:CombinerParametersType"/>
 <xs:complexType name="CombinerParametersType">
    <xs:sequence>
-      <xs:element ref="xacml:CombinerParameter" minOccurs="0"
-                  maxOccurs="unbounded"/>
+      <xs:element ref="xacml:CombinerParameter" minOccurs="0" maxOccurs="unbounded"/>
    </xs:sequence>
 </xs:complexType>
 ```
@@ -1304,8 +1300,7 @@ Note that none of the **_combining algorithms_** specified in XACML 4.0 is param
 <xs:complexType name="RuleCombinerParametersType">
    <xs:complexContent>
       <xs:extension base="xacml:CombinerParametersType">
-         <xs:attribute name="RuleIdRef" type="xs:string"
-                       use="required"/>
+         <xs:attribute name="RuleIdRef" type="xs:string" use="required"/>
       </xs:extension>
    </xs:complexContent>
 </xs:complexType>
@@ -1438,13 +1433,11 @@ The `<VariableDefinition>` element is of `VariableDefinitionType` complex type. 
 The `<VariableReference>` element is used to reference a value defined within the same encompassing `<Policy>` element. The `<VariableReference>` element SHALL refer to the `<VariableDefinition>` element by **_identifier equality_** on the value of their respective `VariableId` attributes. One and only one `<VariableDefinition>` MUST exist within the same encompassing `<Policy>` element to which the `<VariableReference>` refers. There MAY be zero or more `<VariableReference>` elements that refer to the same `<VariableDefinition>` element.
 
 ```xml
-<xs:element name="VariableReference" type="xacml:VariableReferenceType"
-            substitutionGroup="xacml:Expression"/>
+<xs:element name="VariableReference" type="xacml:VariableReferenceType" substitutionGroup="xacml:Expression"/>
 <xs:complexType name="VariableReferenceType">
    <xs:complexContent>
       <xs:extension base="xacml:ExpressionType">
-         <xs:attribute name="VariableId" type="xs:string"
-                       use="required"/>
+         <xs:attribute name="VariableId" type="xs:string" use="required"/>
       </xs:extension>
    </xs:complexContent>
 </xs:complexType>
@@ -1486,18 +1479,15 @@ The `<Condition>` element is of `BooleanExpressionType` complex type. Evaluation
 The `<Apply>` element denotes application of a function to its arguments, thus encoding a function call. The `<Apply>` element can be applied to any combination of the members of the `<Expression>` element substitution group. See [Section 5.25](#525-element-expression).
 
 ```xml
-<xs:element name="Apply" type="xacml:ApplyType"
-                         substitutionGroup="xacml:Expression"/>
+<xs:element name="Apply" type="xacml:ApplyType" substitutionGroup="xacml:Expression"/>
 <xs:complexType name="ApplyType">
    <xs:complexContent>
       <xs:extension base="xacml:ExpressionType">
          <xs:sequence>
             <xs:element ref="xacml:Description" minOccurs="0"/>
-            <xs:element ref="xacml:Expression" minOccurs="0"
-                        maxOccurs="unbounded"/>
+            <xs:element ref="xacml:Expression" minOccurs="0" maxOccurs="unbounded"/>
          </xs:sequence>
-         <xs:attribute name="FunctionId" type="xs:anyURI"
-                       use="required"/>
+         <xs:attribute name="FunctionId" type="xs:anyURI" use="required"/>
        </xs:extension>
    </xs:complexContent>
 </xs:complexType>
@@ -1528,8 +1518,7 @@ The `<Function>` element SHALL be used to name a function as an argument to the 
 <xs:complexType name="FunctionType">
    <xs:complexContent>
           <xs:extension base="xacml:ExpressionType">
-                <xs:attribute name="FunctionId" type="xs:anyURI"
-                    use="required"/>
+                <xs:attribute name="FunctionId" type="xs:anyURI" use="required"/>
           </xs:extension>
    </xs:complexContent>
 </xs:complexType>
@@ -1554,20 +1543,15 @@ The `<AttributeDesignator>` MAY appear in the `<Match>` element and MAY be passe
 The `<AttributeDesignator>` element is of the `AttributeDesignatorType` complex type.
 
 ```xml
-<xs:element name="AttributeDesignator" type="xacml:AttributeDesignatorType"
-            substitutionGroup="xacml:Expression"/>
+<xs:element name="AttributeDesignator" type="xacml:AttributeDesignatorType" substitutionGroup="xacml:Expression"/>
 <xs:complexType name="AttributeDesignatorType">
    <xs:complexContent>
       <xs:extension base="xacml:ExpressionType">
-         <xs:attribute name="Category" type="xs:anyURI"
-                       use="required"/>
-         <xs:attribute name="AttributeId" type="xs:anyURI"
-                       use="required"/>
-         <xs:attribute name="DataType" type="xs:anyURI"
-                       use="required"/>
+         <xs:attribute name="Category" type="xs:anyURI" use="required"/>
+         <xs:attribute name="AttributeId" type="xs:anyURI" use="required"/>
+         <xs:attribute name="DataType" type="xs:anyURI" use="required"/>
          <xs:attribute name="Issuer" type="xs:string" use="optional"/>
-         <xs:attribute name="MustBePresent" type="xs:boolean"
-                       use="required"/>
+         <xs:attribute name="MustBePresent" type="xs:boolean" use="optional" default="false"/>
        </xs:extension>
    </xs:complexContent>
 </xs:complexType>
@@ -1595,9 +1579,9 @@ The `<AttributeDesignatorType>` contains the following attributes:
 
 : This attribute, if supplied, SHALL specify the Issuer with which to match the **_attribute_**.
 
-`MustBePresent` [Required]
+`MustBePresent` [Optional]
 
-: This attribute governs whether the element returns `Indeterminate` or an empty **_bag_** in the event the **_named attribute_** is absent from the request **_context_**. See [Section 7.3.5](#735-attribute-retrieval). Also see [Section 7.19.2](#7192-syntax-and-type-errors) and [Section 7.19.3](#7193-missing-attributes).
+: This attribute governs whether the element returns `Indeterminate` or an empty **_bag_** in the event the **_named attribute_** is absent from the request **_context_**. See [Section 7.3.5](#735-attribute-retrieval). Also see [Section 7.19.2](#7192-syntax-and-type-errors) and [Section 7.19.3](#7193-missing-attributes). If this attribute is omitted it is treated as being set to 'false'.
 
 ## 5.30 Element \<AttributeSelector>
 
@@ -1606,21 +1590,15 @@ The `<AttributeSelector>` element produces a **_bag_** of unnamed and uncategori
 See [Section 7.3.7](#737-attributeselector-evaluation) for details of `<AttributeSelector>` evaluation.
 
 ```xml
-<xs:element name="AttributeSelector" type="xacml:AttributeSelectorType"
-            substitutionGroup="xacml:Expression"/>
+<xs:element name="AttributeSelector" type="xacml:AttributeSelectorType" substitutionGroup="xacml:Expression"/>
 <xs:complexType name="AttributeSelectorType">
    <xs:complexContent>
       <xs:extension base="xacml:ExpressionType">
-         <xs:attribute name="Category" type="xs:anyURI"
-                       use="required"/>
-         <xs:attribute name="ContextSelectorId" type="xs:anyURI"
-                       use="optional"/>
-         <xs:attribute name="Path" type="xs:string"
-                       use="required"/>
-         <xs:attribute name="DataType" type="xs:anyURI"
-                       use="required"/>
-         <xs:attribute name="MustBePresent" type="xs:boolean"
-                       use="required"/>
+         <xs:attribute name="Category" type="xs:anyURI" use="required"/>
+         <xs:attribute name="ContextSelectorId" type="xs:anyURI" use="optional"/>
+         <xs:attribute name="Path" type="xs:string" use="required"/>
+         <xs:attribute name="DataType" type="xs:anyURI" use="required"/>
+         <xs:attribute name="MustBePresent" type="xs:boolean" use="optional" default="false"/>
        </xs:extension>
    </xs:complexContent>
 </xs:complexType>
@@ -1646,23 +1624,21 @@ The `<AttributeSelector>` element has the following attributes:
 
 : The attribute specifies the datatype of the values returned from the evaluation of this `<AttributeSelector>` element.
 
-`MustBePresent` [Required]
+`MustBePresent` [Optional]
 
-: This attribute governs whether the element returns `Indeterminate` or an empty **_bag_** in the event that the attributes category specified by the `Category` attribute does not exist in the request **_context_**, or the attributes category does exist but it does not have a `<Content>` child element, or the `<Content>` element does exist but the XPath expression selects no node. See [Section 7.3.5](#735-attribute-retrieval). Also see [Section 7.19.2](#7192-syntax-and-type-errors) and [Section 7.19.3](#7193-missing-attributes).
+: This attribute governs whether the element returns `Indeterminate` or an empty **_bag_** in the event that the attributes category specified by the `Category` attribute does not exist in the request **_context_**, or the attributes category does exist but it does not have a `<Content>` child element, or the `<Content>` element does exist but the XPath expression selects no node. See [Section 7.3.5](#735-attribute-retrieval). Also see [Section 7.19.2](#7192-syntax-and-type-errors) and [Section 7.19.3](#7193-missing-attributes). If this attribute is omitted it is treated as being set to 'false'.
 
 ## 5.31 Element \<AttributeValue>
 
 The `<AttributeValue>` element SHALL contain a literal **_attribute_** value.
 
 ```xml
-<xs:element name="AttributeValue" type="xacml:AttributeValueType"
-            substitutionGroup="xacml:Expression"/>
+<xs:element name="AttributeValue" type="xacml:AttributeValueType" substitutionGroup="xacml:Expression"/>
 <xs:complexType name="AttributeValueType" mixed="true">
    <xs:complexContent mixed="true">
       <xs:extension base="xacml:ExpressionType">
          <xs:sequence>
-            <xs:any namespace="##any" processContents="lax"
-                    minOccurs="0" maxOccurs="unbounded"/>
+            <xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
          </xs:sequence>
          <xs:attribute name="DataType" type="xs:anyURI" use="required"/>
          <xs:anyAttribute namespace="##any" processContents="lax"/>
@@ -1729,8 +1705,7 @@ The `<Obligation>` element SHALL contain an identifier for the **_obligation_** 
 <xs:element name="Obligation" type="xacml:ObligationType"/>
 <xs:complexType name="ObligationType">
    <xs:sequence>
-      <xs:element ref="xacml:AttributeAssignment" minOccurs="0"
-                  maxOccurs="unbounded"/>
+      <xs:element ref="xacml:AttributeAssignment" minOccurs="0" maxOccurs="unbounded"/>
    </xs:sequence>
    <xs:attribute name="ObligationId" type="xs:anyURI" use="required"/>
 </xs:complexType>
@@ -1756,8 +1731,7 @@ The `<Advice>` element SHALL contain an identifier for the **_advice_** and a se
 <xs:element name="Advice" type="xacml:AdviceType"/>
 <xs:complexType name="AdviceType">
    <xs:sequence>
-      <xs:element ref="xacml:AttributeAssignment"
-                  minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="xacml:AttributeAssignment" minOccurs="0" maxOccurs="unbounded"/>
    </xs:sequence>
    <xs:attribute name="AdviceId" type="xs:anyURI" use="required"/>
 </xs:complexType>
@@ -1784,10 +1758,8 @@ The `<AttributeAssignment>` element is used for including arguments in **_obliga
 <xs:complexType name="AttributeAssignmentType" mixed="true">
    <xs:complexContent>
       <xs:extension base="xacml:AttributeValueType">
-         <xs:attribute name="AttributeId" type="xs:anyURI"
-                       use="required"/>
-         <xs:attribute name="Category" type="xs:anyURI"
-                       use="optional"/>
+         <xs:attribute name="AttributeId" type="xs:anyURI" use="required"/>
+         <xs:attribute name="Category" type="xs:anyURI" use="optional"/>
          <xs:attribute name="Issuer" type="xs:string" use="optional"/>
       </xs:extension>
    </xs:complexContent>
@@ -1815,8 +1787,7 @@ The `<AttributeAssignment>` element contains the following attributes:
 The `<ObligationExpressions>` element SHALL contain a set of `<ObligationExpression>` elements.
 
 ```xml
-<xs:element name="ObligationExpressions"
-            type="xacml:ObligationExpressionsType"/>
+<xs:element name="ObligationExpressions" type="xacml:ObligationExpressionsType"/>
 <xs:complexType name="ObligationExpressionsType">
    <xs:sequence>
       <xs:element ref="xacml:ObligationExpression" maxOccurs="unbounded"/>
@@ -1858,12 +1829,10 @@ The `<AdviceExpressions>` element contains the following element:
 The `<ObligationExpression>` element evaluates to an **_obligation_** and SHALL contain an identifier for an **_obligation_** and a set of expressions that form arguments of the action defined by the **_obligation_**. The `FulfillOn` attribute SHALL indicate the **_effect_** for which this **_obligation_** must be fulfilled by the **_PEP_**.
 
 ```xml
-<xs:element name="ObligationExpression"
-            type="xacml:ObligationExpressionType"/>
+<xs:element name="ObligationExpression" type="xacml:ObligationExpressionType"/>
 <xs:complexType name="ObligationExpressionType">
   <xs:sequence>
-     <xs:element ref="xacml:AttributeAssignmentExpression"
-                 minOccurs="0" maxOccurs="unbounded"/>
+     <xs:element ref="xacml:AttributeAssignmentExpression" minOccurs="0" maxOccurs="unbounded"/>
   </xs:sequence>
   <xs:attribute name="ObligationId" type="xs:anyURI" use="required"/>
   <xs:attribute name="FulfillOn" type="xacml:EffectType" use="required"/>
@@ -1894,8 +1863,7 @@ The `<AdviceExpression>` element evaluates to an **_advice_** and SHALL contain 
 <xs:element name="AdviceExpression" type="xacml:AdviceExpressionType"/>
 <xs:complexType name="AdviceExpressionType">
    <xs:sequence>
-      <xs:element ref="xacml:AttributeAssignmentExpression"
-                  minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="xacml:AttributeAssignmentExpression" minOccurs="0" maxOccurs="unbounded"/>
    </xs:sequence>
    <xs:attribute name="AdviceId" type="xs:anyURI" use="required"/>
    <xs:attribute name="AppliesTo" type="xacml:EffectType" use="required"/>
@@ -1923,8 +1891,7 @@ The `<AdviceExpression>` element contains the following elements and attributes:
 The `<AttributeAssignmentExpression>` element is used for including arguments in **_obligations_** and **_advice_**. It SHALL contain an `AttributeId` and an expression which SHALL by evaluated into the corresponding **_attribute_** value. The value specified SHALL be understood by the **_PEP_**, but it is not further specified by XACML. See [Section 7.18](#718-obligations-and-advice). [Section 4.2.4.3](#4243-rule-3) provides a number of examples of arguments included in **_obligations_**.
 
 ```xml
-<xs:element name="AttributeAssignmentExpression"
-            type="xacml:AttributeAssignmentExpressionType"/>
+<xs:element name="AttributeAssignmentExpression" type="xacml:AttributeAssignmentExpressionType"/>
 <xs:complexType name="AttributeAssignmentExpressionType">
    <xs:sequence>
       <xs:element ref="xacml:Expression"/>
@@ -1967,8 +1934,8 @@ The `<Request>` element is an abstraction layer used by the **_policy_** languag
       <xs:element ref="xacml:Attributes" maxOccurs="unbounded"/>
       <xs:element ref="xacml:MultiRequests" minOccurs="0"/>
    </xs:sequence>
-   <xs:attribute name="ReturnPolicyIdList" type="xs:boolean" use="required"/>
-   <xs:attribute name="CombinedDecision" type="xs:boolean" use="required" />
+   <xs:attribute name="ReturnPolicyIdList" type="xs:boolean" use="optional" default="false"/>
+   <xs:attribute name="CombinedDecision" type="xs:boolean" use="optional" default="false"/>
 </xs:complexType>
 ```
 
@@ -1976,13 +1943,13 @@ The `<Request>` element is of `RequestType` complex type.
 
 The `<Request>` element contains the following elements and attributes:
 
-`ReturnPolicyIdList` [Required]
+`ReturnPolicyIdList` [Optional]
 
-: This attribute is used to request that the **_PDP_** return a list of all fully applicable **_policies_** which were used in the decision as a part of the decision response.
+: This attribute is used to request that the **_PDP_** return a list of all fully applicable **_policies_** which were used in the decision as a part of the decision response. If this attribute is omitted it is treated as being set to `false`.
 
-`CombinedDecision` [Required]
+`CombinedDecision` [Optional]
 
-: This attribute is used to request that the **_PDP_** combines multiple decisions into a single decision. The use of this attribute is specified in [[Multi](#multi)]. If the **_PDP_** does not implement the relevant functionality in [[Multi](#multi)], then the **_PDP_** must return an Indeterminate with a status code of urn:oasis:names:tc:xacml:1.0:status:processing-error if it receives a request with this attribute set to `true`.
+: This attribute is used to request that the **_PDP_** combines multiple decisions into a single decision. The use of this attribute is specified in [[Multi](#multi)]. If the **_PDP_** does not implement the relevant functionality in [[Multi](#multi)], then the **_PDP_** must return an Indeterminate with a status code of urn:oasis:names:tc:xacml:1.0:status:processing-error if it receives a request with this attribute set to `true`. If this attribute is omitted it is treated as being set to `false`.
 
 `<RequestDefaults>` [Optional]
 
@@ -2030,8 +1997,7 @@ The `<Attributes>` element specifies **_attributes_** of a **_subject_**, **_res
 <xs:complexType name="AttributesType">
    <xs:sequence>
       <xs:element ref="xacml:Content" minOccurs="0"/>
-      <xs:element ref="xacml:Attribute" minOccurs="0"
-                  maxOccurs="unbounded"/>
+      <xs:element ref="xacml:Attribute" minOccurs="0" maxOccurs="unbounded"/>
    </xs:sequence>
    <xs:attribute name="Category" type="xs:anyURI" use="required"/>
    <xs:attribute ref="xml:id" use="optional"/>
@@ -2184,12 +2150,9 @@ The `<Result>` element contains the following attributes and elements:
 The `<PolicyIdentifierList>` element contains a list of **_policy_** identifiers of **_policies_** that have been applicable to a request. The list is unordered.
 
 ```xml
-<xs:element name="PolicyIdentifierList"
-            type="xacml:PolicyIdentifierListType"/>
+<xs:element name="PolicyIdentifierList" type="xacml:PolicyIdentifierListType"/>
 <xs:complexType name="PolicyIdentifierListType">
-   <xs:choice minOccurs="0" maxOccurs="unbounded">
-      <xs:element ref="xacml:PolicyIdReference"/>
-   </xs:choice>
+   <xs:element ref="xacml:PolicyIdReference" minOccurs="0" maxOccurs="unbounded"/>
 </xs:complexType>
 ```
 
@@ -2359,8 +2322,7 @@ The `<StatusDetail>` element qualifies the `<Status>` element with additional in
 <xs:element name="StatusDetail" type="xacml:StatusDetailType"/>
 <xs:complexType name="StatusDetailType">
    <xs:sequence>
-      <xs:any namespace="##any" processContents="lax" minOccurs="0"
-              maxOccurs="unbounded"/>
+      <xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
    </xs:sequence>
 </xs:complexType>
 ```
@@ -3786,6 +3748,7 @@ Cyril | Dangerville | THALES
 | | 2024-09-28 | Cyril Dangerville | Embedded diagrams. |
 | | 2024-09-30 | Cyril Dangerville | Added support for definition lists. |
 | | 2024-10-22 | Steven Legg | Reformatted indented paragraphs. |
+| | | | Made MustBePresent, CombinedDecision and ReturnPolicyIdList XML attributes default false. |
 
 -------
 
