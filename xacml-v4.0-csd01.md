@@ -2612,27 +2612,25 @@ An `<AttributeSelector>` element will be evaluated according to the following pr
 
 3. Evaluate the XPath expression given in the `Path` attribute against the xml data structure, using the context node selected in the previous step. It shall be an error if this evaluation returns anything other than a sequence of nodes (possibly empty), in which case the `<AttributeSelector>` MUST return `Indeterminate` with a status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`. If the evaluation returns an empty sequence of nodes, then the return value is either `Indeterminate` or an empty **_bag_** as determined by the `MustBePresent` attribute.
 
-4. If the data type is a primitive data type, convert the text value of each selected node to the desired data type, as specified in the `DataType` attribute. Each value shall be constructed using the appropriate constructor function from
-[[XF](#xf)] Section 5 listed below, corresponding to the specified data type.
+4. If the data type is a primitive data type, convert the text value of each selected node to the desired data type, as specified in the `DataType` attribute. Each value shall be constructed using the appropriate constructor function from [[XF](#xf)] Section 5 listed below, corresponding to the specified data type:
 
-_
+   * `xs:string`
+   * `xs:boolean`
+   * `xs:integer()`
+   * `xs:double()`
+   * `xs:dateTime()`
+   * `xs:date()`
+   * `xs:time()`
+   * `xs:hexBinary()`
+   * `xs:base64Binary()`
+   * `xs:anyURI()`
+   * `xs:yearMonthDuration()`
+   * `xs:dayTimeDuration()`
 
-: `xs:string()`
-: `xs:boolean()`
-: `xs:integer()`
-: `xs:double()`
-: `xs:dateTime()`
-: `xs:date()`
-: `xs:time()`
-: `xs:hexBinary()`
-: `xs:base64Binary()`
-: `xs:anyURI()`
-: `xs:yearMonthDuration()`
-: `xs:dayTimeDuration()`
+   If the `DataType` is not one of the primitive types listed above, then the return values shall be constructed from the nodeset in a manner specified by the particular `DataType` extension specification. If the data type extension does not specify an appropriate contructor function, then the `<AttributeSelector>` MUST return `Indeterminate` with a status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`.
 
-: If the `DataType` is not one of the primitive types listed above, then the return values shall be constructed from the nodeset in a manner specified by the particular `DataType` extension specification. If the data type extension does not specify an appropriate contructor function, then the `<AttributeSelector>` MUST return `Indeterminate` with a status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`.
+   If an error occurs when converting the values returned by the XPath expression to the specified `DataType`, then the result of the `<AttributeSelector>` MUST be `Indeterminate`, with a status code `urn:oasis:names:tc:xacml:1.0:status:processing-error`
 
-: If an error occurs when converting the values returned by the XPath expression to the specified `DataType`, then the result of the `<AttributeSelector>` MUST be `Indeterminate`, with a status code `urn:oasis:names:tc:xacml:1.0:status:processing-error`
 
 ## 7.4 Expression evaluation
 
