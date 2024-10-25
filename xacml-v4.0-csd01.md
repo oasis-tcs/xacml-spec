@@ -691,8 +691,7 @@ digraph Fig1 {
 }
 ```
 
-
-: Note: some of the data-flows shown in the diagram may be facilitated by a repository. For instance, the communications between the **_context handler_** and the **_PIP_** or the communications between the **_PDP_** and the **_PAP_** may be facilitated by a repository. The XACML specification is not intended to place restrictions on the location of any such repository, or indeed to prescribe a particular communication protocol for any of the data-flows.
+> Note: some of the data-flows shown in the diagram may be facilitated by a repository. For instance, the communications between the **_context handler_** and the **_PIP_** or the communications between the **_PDP_** and the **_PAP_** may be facilitated by a repository. The XACML specification is not intended to place restrictions on the location of any such repository, or indeed to prescribe a particular communication protocol for any of the data-flows.
 
 The model operates by the following steps.
 
@@ -769,7 +768,7 @@ digraph Fig1 {
 }
 ```
 
-Note: The **_PDP_** is not required to operate directly on the XACML representation of a **_policy_**. It may operate directly on an alternative representation.
+> Note: The **_PDP_** is not required to operate directly on the XACML representation of a **_policy_**. It may operate directly on an alternative representation.
 
 Typical categories of **_attributes_** in the **_context_** are the **_subject_**, **_resource_**, **_action_** and **_environment_**, but users may define their own categories as needed. See [Appendix F.2](#f2-attribute-categories) for suggested **_attribute_** categories.
 
@@ -2542,7 +2541,7 @@ If the **_decision_** is `Permit`, then the **_PEP_** SHALL permit **_access_**.
 
 All other **_decisions_** SHALL result in the denial of **_access_**.
 
-: Note: other actions, e.g. consultation of additional **_PDPs_**, reformulation/resubmission of the **_decision request_**, etc., are not prohibited.
+> Note: other actions, e.g. consultation of additional **_PDPs_**, reformulation/resubmission of the **_decision request_**, etc., are not prohibited.
 
 ### 7.2.3 Permit-biased PEP
 
@@ -2550,7 +2549,7 @@ If the **_decision_** is `Deny`, then the **_PEP_** SHALL deny **_access_**. If 
 
 All other **_decisions_** SHALL result in the permission of **_access_**.
 
-: Note: other actions, e.g. consultation of additional **_PDPs_**, reformulation/resubmission of the **_decision request_**, etc., are not prohibited.
+> Note: other actions, e.g. consultation of additional **_PDPs_**, reformulation/resubmission of the **_decision request_**, etc., are not prohibited.
 
 ## 7.3 Attribute evaluation
 
@@ -2604,7 +2603,7 @@ Standard **_environment_** **_attributes_** are listed in [Appendix F.7](#f7-env
 
 An `<AttributeSelector>` element will be evaluated according to the following processing model.
 
-: NOTE: It is not necessary for an implementation to actually follow these steps. It is only necessary to produce results identical to those that would be produced by following these steps.
+> NOTE: It is not necessary for an implementation to actually follow these steps. It is only necessary to produce results identical to those that would be produced by following these steps.
 
 1. If the **_attributes_** category given by the `Category` attribute is not found or does not have a `<Content>` child element, then the return value is either `Indeterminate` or an empty **_bag_** as determined by the `MustBePresent` attribute; otherwise, construct an XML data structure suitable for xpath processing from the `<Content>` element in the **_attributes_** category given by the Category attribute. The data structure shall be constructed so that the document node of this structure contains a single document element which corresponds to the single child element of the `<Content>` element. The constructed data structure shall be equivalent to one that would result from parsing a stand-alone XML document consisting of the contents of the `<Content>` element (including any comment and processing-instruction markup). Namespace declarations from the `<Content>` element and its ancestor elements for namespace prefixes that are "visibly utilized", as defined by [[exc-c14n](#exc-c14n)], within the contents MUST be present. Namespace declarations from the `<Content>` element or its ancestor elements for namespace prefixes that are not "visibly utilized" MAY be present. The data structure must meet the requirements of the applicable XPath version.
 
@@ -2904,7 +2903,7 @@ The XACML specification defines a number of functions, etc. that have somewhat s
 
 This section lists those portions of the specification that MUST be included in an implementation of a **_PDP_** that claims to conform to XACML 4.0. A set of test cases has been created to assist in this process. These test cases can be located from the OASIS XACML TC Web page. The site hosting the test cases contains a full description of the test cases and how to execute them.
 
-: Note: "M" means mandatory-to-implement. "O" means optional.
+> Note: "M" means mandatory-to-implement. "O" means optional.
 
 The implementation MUST follow [Section 5](#5-syntax-normative-with-the-exception-of-the-schema-fragments), [Section 6](#6-xpath-20-definitions), [Section 7](#7-functional-requirements), [Appendix E](#appendix-e-data-types-and-functions-normative), [Appendix F](#appendix-f-xacml-identifiers-normative) and [Appendix G](#appendix-g-combining-algorithms-normative) where they apply to implemented items in the following tables.
 
@@ -4030,7 +4029,7 @@ urn:oasis:names:tc:xacml:1.0:function:not
 
 : This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#boolean`. If the argument evaluates to `True`, then the result of the expression SHALL be `False`. If the argument evaluates to `False`, then the result of the expression SHALL be `True`.
 
-Note: When evaluating and, or, or n-of, it may not be necessary to attempt a full evaluation of each argument in order to determine whether the evaluation of the argument would result in `Indeterminate`. Analysis of the argument regarding the availability of its **_attributes_**, or other analysis regarding errors, such as "divide-by-zero", may render the argument error free. Such arguments occurring in the expression in a position after the evaluation is stated to stop need not be processed.
+> Note: When evaluating and, or, or n-of, it may not be necessary to attempt a full evaluation of each argument in order to determine whether the evaluation of the argument would result in `Indeterminate`. Analysis of the argument regarding the availability of its **_attributes_**, or other analysis regarding errors, such as "divide-by-zero", may render the argument error free. Such arguments occurring in the expression in a position after the evaluation is stated to stop need not be processed.
 
 ### E.3.6 Numeric comparison functions
 
@@ -4102,19 +4101,23 @@ urn:oasis:names:tc:xacml:1.0:function:string-less-than-or-equal
 
 urn:oasis:names:tc:xacml:1.0:function:time-greater-than
 
-: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#time` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is greater than the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#time` [XS] Section 3.2.8. Otherwise, it SHALL return `False`. Note: it is illegal to compare a time that includes a time-zone value with one that does not. In such cases, the time-in-range function should be used.
+: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#time` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is greater than the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#time` [XS] Section 3.2.8. Otherwise, it SHALL return `False`. 
+> Note: it is illegal to compare a time that includes a time-zone value with one that does not. In such cases, the time-in-range function should be used.
 
 urn:oasis:names:tc:xacml:1.0:function:time-greater-than-or-equal
 
-: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#time` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is greater than or equal to the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#time` [XS] Section 3.2.8. Otherwise, it SHALL return `False`. Note: it is illegal to compare a time that includes a time-zone value with one that does not. In such cases, the time-in-range function should be used.
+: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#time` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is greater than or equal to the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#time` [XS] Section 3.2.8. Otherwise, it SHALL return `False`. 
+> Note: it is illegal to compare a time that includes a time-zone value with one that does not. In such cases, the time-in-range function should be used.
 
 urn:oasis:names:tc:xacml:1.0:function:time-less-than
 
-: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#time` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is less than the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#time` [XS] Section 3.2.8. Otherwise, it SHALL return `False`. Note: it is illegal to compare a time that includes a time-zone value with one that does not. In such cases, the time-in-range function should be used.
+: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#time` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is less than the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#time` [XS] Section 3.2.8. Otherwise, it SHALL return `False`. 
+> Note: it is illegal to compare a time that includes a time-zone value with one that does not. In such cases, the time-in-range function should be used.
 
 urn:oasis:names:tc:xacml:1.0:function:time-less-than-or-equal
 
-: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#time` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is less than or equal to the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#time` [XS] Section 3.2.8. Otherwise, it SHALL return `False`. Note: it is illegal to compare a time that includes a time-zone value with one that does not. In such cases, the time-in-range function should be used.
+: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#time` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is less than or equal to the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#time` [XS] Section 3.2.8. Otherwise, it SHALL return `False`. 
+> Note: it is illegal to compare a time that includes a time-zone value with one that does not. In such cases, the time-in-range function should be used.
 
 urn:oasis:names:tc:xacml:2.0:function:time-in-range
 
@@ -4122,35 +4125,42 @@ urn:oasis:names:tc:xacml:2.0:function:time-in-range
 
 urn:oasis:names:tc:xacml:1.0:function:dateTime-greater-than
 
-: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#dateTime` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is greater than the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#dateTime` by [XS] part 2, section 3.2.7. Otherwise, it SHALL return `False`. Note: if a dateTime value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [XS].
+: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#dateTime` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is greater than the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#dateTime` by [XS] part 2, section 3.2.7. Otherwise, it SHALL return `False`. 
+> Note: if a dateTime value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [XS].
 
 urn:oasis:names:tc:xacml:1.0:function:dateTime-greater-than-or-equal
 
-: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#dateTime` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is greater than or equal to the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#dateTime` by [XS] part 2, section 3.2.7. Otherwise, it SHALL return `False`. Note: if a dateTime value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [XS].
+: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#dateTime` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is greater than or equal to the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#dateTime` by [XS] part 2, section 3.2.7. Otherwise, it SHALL return `False`. 
+> Note: if a dateTime value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [XS].
 
 urn:oasis:names:tc:xacml:1.0:function:dateTime-less-than
 
-: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#dateTime` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is less than the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#dateTime` by [XS, part 2, section 3.2.7]. Otherwise, it SHALL return `False`. Note: if a dateTime value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [XS].
+: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#dateTime` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is less than the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#dateTime` by [XS, part 2, section 3.2.7]. Otherwise, it SHALL return `False`. 
+> Note: if a dateTime value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [XS].
 
 urn:oasis:names:tc:xacml:1.0:function:dateTime-less-than-or-equal
 
-: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema# dateTime` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is less than or equal to the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#dateTime` by [XS] part 2, section 3.2.7. Otherwise, it SHALL return `False`. Note: if a dateTime value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [XS].
+: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema# dateTime` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is less than or equal to the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#dateTime` by [XS] part 2, section 3.2.7. Otherwise, it SHALL return `False`. 
+> Note: if a dateTime value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [XS].
 
 urn:oasis:names:tc:xacml:1.0:function:date-greater-than
 
-: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#date` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is greater than the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#date` by [XS] part 2, section 3.2.9. Otherwise, it SHALL return `False`. Note: if a date value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [XS].
+: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#date` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is greater than the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#date` by [XS] part 2, section 3.2.9. Otherwise, it SHALL return `False`. 
+> Note: if a date value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [XS].
 
 urn:oasis:names:tc:xacml:1.0:function:date-greater-than-or-equal
 
-: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#date` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is greater than or equal to the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#date` by [XS] part 2, section 3.2.9. Otherwise, it SHALL return `False`. Note: if a date value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [XS].
+: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#date` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is greater than or equal to the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#date` by [XS] part 2, section 3.2.9. Otherwise, it SHALL return `False`. 
+> Note: if a date value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [XS].
 
 urn:oasis:names:tc:xacml:1.0:function:date-less-than
 
-: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#date` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is less than the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#date` by [XS] part 2, section 3.2.9. Otherwise, it SHALL return `False`. Note: if a date value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [XS].
+: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#date` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is less than the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#date` by [XS] part 2, section 3.2.9. Otherwise, it SHALL return `False`. > Note: if a date value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [XS].
 
 urn:oasis:names:tc:xacml:1.0:function:date-less-than-or-equal
 
-: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#date` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is less than or equal to the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#date` by [XS] part 2, section 3.2.9. Otherwise, it SHALL return `False`. Note: if a date value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [XS].
+: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#date` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is less than or equal to the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#date` by [XS] part 2, section 3.2.9. Otherwise, it SHALL return `False`. 
+> Note: if a date value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [XS].
 
 ### E.3.9 String functions
 
@@ -4566,7 +4576,7 @@ urn:oasis:names:tc:xacml:3.0:function:xpath-node-match
 
 : This function SHALL take two `urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression` arguments and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. This function SHALL evaluate to `True` if one of the following two conditions is satisfied: (1) Any of the XML nodes in the node-set matched by the first argument is equal to any of the XML nodes in the node-set matched by the second argument; (2) any node below any of the XML nodes in the node-set matched by the first argument is equal to any of the XML nodes in the node-set matched by the second argument. Two nodes are considered equal if they have the same identity. If the `<Content>` element of the category to which either XPath expression applies to is not present in the request, this function SHALL return a value of `False`.
 
-NOTE: The first condition is equivalent to `xpath-node-equal`, and guarantees that `xpath-node-equal` is a special case of `xpath-node-match`.
+> NOTE: The first condition is equivalent to `xpath-node-equal`, and guarantees that `xpath-node-equal` is a special case of `xpath-node-match`.
 
 ### E.3.16 Other functions
 
