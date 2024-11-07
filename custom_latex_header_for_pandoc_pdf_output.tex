@@ -1,0 +1,13 @@
+% Fix to add line breaks in definition lists for PDF output
+\usepackage{enumitem}
+\setlist[description]{style=nextline}
+
+% Smaller font size in code blocks
+\usepackage{fancyvrb}
+\fvset{fontsize=\footnotesize}
+\RecustomVerbatimEnvironment{verbatim}{Verbatim}{}
+
+% Reduce paper margins
+\usepackage[a4paper, total={6in, 8in}]{geometry}
+\geometry{margin=2cm}
+

@@ -119,11 +119,14 @@ For complete copyright information please see the full Notices section in an App
 Here is a customized command line which will generate HTML from this markdown file (named `xacml-v4.0-csd01.md`):
 
 ```shell
-pandoc -f gfm+definition_lists -t html xacml-v4.0-csd01.md -c styles/markdown-styles-v1.7.3a.css --toc --toc-depth=5 -s --lua-filter diagram.lua --embed-resources -o xacml-v4.0-csd01.html --metadata title="eXtensible Access Control Markup Language (XACML) Version 4.0"
-```
+$ pandoc -f gfm+definition_lists -t html xacml-v4.0-csd01.md -c styles/markdown-styles-v1.7.3a.css --toc --toc-depth=5 \ 
+         -s --lua-filter diagram.lua --embed-resources \
+         --metadata title="eXtensible Access Control Markup Language (XACML) Version 4.0" \
+         -o xacml-v4.0-csd01.html
+ ```
 **N.B.:** before running this command, you must either install Pandoc, Graphviz and PlantUML on your system; or else simply use Docker with the following shell alias:
 ```
-alias pandoc='docker run --rm --volume "$(pwd):/data" cdang/pandoc-plantuml'
+$ alias pandoc='docker run --rm --volume "$(pwd):/data" cdang/pandoc-plantuml'
 ```
 _The Dockerfile (named `Dockerfile`) of the docker image used in the alias above is provided with this markdown file for your convenience if you wish to build it yourself._  
 
@@ -135,6 +138,15 @@ Generating HTML in OASIS style requires a reference to a .css file containing th
 
 Note this command generates a Table of Contents (TOC) in HTML which is located at the top of the HTML document, and which requires additional editing in order to be published in the expected OASIS style. This editing will be handled by OASIS staff during publication.
 A TC may use other ways to generate HTML from markdown, which may generate a TOC in a different way. For instance, github can build a TOC.
+
+For PDF output, the command line is the following (different `-t` and `-H` arguments):
+
+```shell
+$ pandoc -f gfm+definition_lists -t pdf xacml-v4.0-csd01.md -c styles/markdown-styles-v1.7.3a.css \
+         -H custom_latex_header_for_pandoc_pdf_output.tex --toc --toc-depth=5 -s -L diagram.lua \
+         --metadata title="eXtensible Access Control Markup Language (XACML) Version 4.0" --embed-resources \
+         -o /tmp/xacml-v4.0-csd01.pdf 
+```
 
 ## 1.1 Changes from earlier Versions
 
@@ -166,7 +178,7 @@ XACML 4.0 differs from XACML 3.0 in the following ways:
 
 **Access control**
 
-: Controlling **_access_** in accordance with a **_policy_**.
+:    Controlling **_access_** in accordance with a **_policy_**.
 
 **Action**
 
@@ -188,7 +200,8 @@ XACML 4.0 differs from XACML 3.0 in the following ways:
 
 : The result of evaluating **_applicable policy_**, returned by the **_PDP_** to the **_PEP_**. A function that evaluates to `Permit`, `Deny`, `Indeterminate` or `NotApplicable`, and (optionally) a set of **_obligations_** and **_advice_**.
 
-**Bag**
+<!-- For some reason, if the line below is only 'Bag', the line break is missing from the PDF output -->
+**Bag (a.k.a. _multiset_)**
 
 : An unordered collection of values, in which there may be duplicate values.
 
@@ -327,7 +340,9 @@ This specification uses the following typographical conventions in text: `<XACML
 
 ## 1.3 Schema organization and namespaces
 
-The XACML syntax is defined in a schema associated with the following XML namespace: `urn:oasis:names:tc:xacml:4.0:core:schema`
+The XACML syntax is defined in a schema associated with the following XML namespace:
+<!-- Newline to fit on PDF page -->
+`urn:oasis:names:tc:xacml:4.0:core:schema`
 
 -------
 
@@ -848,7 +863,9 @@ Generally, the name of a node (other than a leaf node) in a structured name-form
 
 The question arises: how should a name that identifies a set of **_subjects_** or **_resources_** be interpreted by the **_PDP_**, whether it appears in a **_policy_** or a request **_context_**? Are they intended to represent just the node explicitly identified by the name, or are they intended to represent the entire sub-tree subordinate to that node?
 
-In the case of **_subjects_**, there is no real entity that corresponds to such a node. So, names of this type always refer to the set of **_subjects_** subordinate in the name structure to the identified node. Consequently, non-leaf **_subject_** names should not be used in equality functions, only in match functions, such as `urn:oasis:names:tc:xacml:1.0:function:rfc822Name-match` not `urn:oasis:names:tc:xacml:1.0:function:rfc822Name-equal` (see [Appendix E.3.14](#e314-special-match-functions)).
+In the case of **_subjects_**, there is no real entity that corresponds to such a node. So, names of this type always refer to the set of **_subjects_** subordinate in the name structure to the identified node. Consequently, non-leaf **_subject_** names should not be used in equality functions, only in match functions, such as `urn:oasis:names:tc:xacml:1.0:function:rfc822Name-match` 
+<!-- Newline to fit on PDF page -->
+instead of `urn:oasis:names:tc:xacml:1.0:function:rfc822Name-equal` (see [Appendix E.3.14](#e314-special-match-functions)).
 
 #### 3.3.1.2 Effect
 
@@ -2744,7 +2761,9 @@ If the **_target_** of a **_policy_** evaluates to `Indeterminate`, the value of
 
 A **_policy_** id reference is evaluated by resolving the reference and evaluating the referenced **_policy_**.
 
-If resolving the reference fails, the reference evaluates to `Indeterminate` with status code urn:oasis:names:tc:xacml:1.0:status:processing-error.
+If resolving the reference fails, the reference evaluates to `Indeterminate` with status code:
+<!--Newline to fit on PDF page -->
+`urn:oasis:names:tc:xacml:1.0:status:processing-error`.
 
 A **_policy_** id reference containing circular references is invalid. The PDP MUST detect circular references either at **_policy_** loading time or during runtime evaluation. If the PDP detects a circular reference during runtime the reference evaluates to `Indeterminate` with status code urn:oasis:names:tc:xacml:1.0:status:processing-error.
 
@@ -3398,7 +3417,8 @@ While any hyperlinks included in this appendix were valid at the time of publica
 `(Reference sources:
 For references to IETF RFCs, use the approved citation formats at:  
 https://docs.oasis-open.org/templates/ietf-rfc-list/ietf-rfc-list.html.  
-For references to W3C Recommendations, use the approved citation formats at:  
+For references to W3C Recommendations, use the approved citation formats at: 
+<!-- Newline to fit on PDF page -->
 https://docs.oasis-open.org/templates/w3c-recommendations-list/w3c-recommendations-list.html.  
 Remove this note before submitting for publication.)`
 
@@ -3741,7 +3761,10 @@ Cyril | Dangerville | THALES
 | Revision | Date | Editor | Changes Made |
 | :--- | :--- | :--- | :--- |
 | specname-v1.0-wd01 | 2024-08-09 | Steven Legg | Initial working draft |
-| | 2024-09-09 | Steven Legg | Changed **_targets_** to a single child expression. Removed the `<AnyOf>`, `<AllOf>` and `<Match>` elements. Removed **_targets_** from rules. Removed the only-one-applicable **_combining algorithm_**. |
+| | 2024-09-09 | Steven Legg | Changed **_targets_** to a single child expression. |
+| | | | Removed the `<AnyOf>`, `<AllOf>` and `<Match>` elements. |
+| | | | Removed **_targets_** from rules. |
+| | | | Removed the only-one-applicable **_combining algorithm_**. |
 | | 2024-09-28 | Cyril Dangerville | Embedded diagrams. |
 | | 2024-09-30 | Cyril Dangerville | Added support for definition lists. |
 | | 2024-10-22 | Steven Legg | Reformatted indented paragraphs. |
@@ -3761,39 +3784,39 @@ This specification combines the various standards set forth by IEEE and ANSI for
 
 Although XML instances represent all data-types as strings, an XACML **_PDP_* must operate on types of data that, while they have string representations, are not just strings. Types such as Boolean, integer, and double MUST be converted from their XML string representations to values that can be compared with values in their domain of discourse, such as numbers. The following primitive data-types are specified for use with XACML and have explicit data representations:
 
-* http://www.w3.org/2001/XMLSchema#string
+* `http://www.w3.org/2001/XMLSchema#string`
 
-* http://www.w3.org/2001/XMLSchema#boolean
+* `http://www.w3.org/2001/XMLSchema#boolean`
 
-* http://www.w3.org/2001/XMLSchema#integer
+* `http://www.w3.org/2001/XMLSchema#integer`
 
-* http://www.w3.org/2001/XMLSchema#double
+* `http://www.w3.org/2001/XMLSchema#double`
 
-* http://www.w3.org/2001/XMLSchema#time
+* `http://www.w3.org/2001/XMLSchema#time`
 
-* http://www.w3.org/2001/XMLSchema#date
+* `http://www.w3.org/2001/XMLSchema#date`
 
-* http://www.w3.org/2001/XMLSchema#dateTime
+* `http://www.w3.org/2001/XMLSchema#dateTime`
 
-* http://www.w3.org/2001/XMLSchema#anyURI
+* `http://www.w3.org/2001/XMLSchema#anyURI`
 
-* http://www.w3.org/2001/XMLSchema#hexBinary
+* `http://www.w3.org/2001/XMLSchema#hexBinary`
 
-* http://www.w3.org/2001/XMLSchema#base64Binary
+* `http://www.w3.org/2001/XMLSchema#base64Binary`
 
-* http://www.w3.org/2001/XMLSchema#dayTimeDuration
+* `http://www.w3.org/2001/XMLSchema#dayTimeDuration`
 
-* http://www.w3.org/2001/XMLSchema#yearMonthDuration
+* `http://www.w3.org/2001/XMLSchema#yearMonthDuration`
 
-* urn:oasis:names:tc:xacml:1.0:data-type:x500Name
+* `urn:oasis:names:tc:xacml:1.0:data-type:x500Name`
 
-* urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name
+* `urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name`
 
-* urn:oasis:names:tc:xacml:2.0:data-type:ipAddress
+* `urn:oasis:names:tc:xacml:2.0:data-type:ipAddress`
 
-* urn:oasis:names:tc:xacml:2.0:data-type:dnsName
+* `urn:oasis:names:tc:xacml:2.0:data-type:dnsName`
 
-* urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression
+* `urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression`
 
 For the sake of improved interoperability, it is RECOMMENDED that all time references be in UTC time.
 
@@ -3801,13 +3824,13 @@ An XACML **_PDP_** SHALL be capable of converting string representations into va
 
 XACML defines four data-types representing identifiers for **_subjects_** or **_resources_**; these are:
 
-`urn:oasis:names:tc:xacml:1.0:data-type:x500Name`,
+* `urn:oasis:names:tc:xacml:1.0:data-type:x500Name`,
 
-`urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name`,
+* `urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name`,
 
-`urn:oasis:names:tc:xacml:2.0:data-type:ipAddress` and
+* `urn:oasis:names:tc:xacml:2.0:data-type:ipAddress` and
 
-`urn:oasis:names:tc:xacml:2.0:data-type:dnsName`.
+* `urn:oasis:names:tc:xacml:2.0:data-type:dnsName`.
 
 These types appear in several standard applications, such as TLS/SSL and electronic mail.
 
@@ -3841,7 +3864,9 @@ dnsName = hostname [ `:` portrange ]
 
 The hostname is formatted in accordance with IETF RFC 2396 "Uniform Resource Identifiers (URI): Generic Syntax", section 3.2, except that a wildcard `*` may be used in the left-most component of the hostname to indicate "any subdomain" under the domain specified to its right.
 
-For both the `urn:oasis:names:tc:xacml:2.0:data-type:ipAddress` and `urn:oasis:names:tc:xacml:2.0:data-type:dnsName` data-types, the port or port range syntax SHALL be
+For both the `urn:oasis:names:tc:xacml:2.0:data-type:ipAddress` and 
+<!-- Newline added to fit on PDF page -->
+`urn:oasis:names:tc:xacml:2.0:data-type:dnsName` data-types, the port or port range syntax SHALL be
 
 ```
 portrange = portnumber | `-`portnumber | portnumber`-`[portnumber]
@@ -3865,51 +3890,51 @@ Note that in each case an implementation is conformant as long as it produces th
 
 The following functions are the equality functions for the various primitive types. Each function for a particular data-type follows a specified standard convention for that data-type.
 
-urn:oasis:names:tc:xacml:1.0:function:string-equal
+`urn:oasis:names:tc:xacml:1.0:function:string-equal`
 
-  : This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#string` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. The function SHALL return `True` if and only if the value of both of its arguments are of equal length and each string is determined to be equal. Otherwise, it SHALL return `False`. The comparison SHALL use Unicode codepoint collation, as defined for the identifier http://www.w3.org/2005/xpath-functions/collation/codepoint by [XF].
+: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#string` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. The function SHALL return `True` if and only if the value of both of its arguments are of equal length and each string is determined to be equal. Otherwise, it SHALL return `False`. The comparison SHALL use Unicode codepoint collation, as defined for the identifier http://www.w3.org/2005/xpath-functions/collation/codepoint by [XF].
 
-urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case
+`urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case`
 
-  : This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#string` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. The result SHALL be `True` if and only if the two strings are equal as defined by urn:oasis:names:tc:xacml:1.0:function:string-equal after they have both been converted to lower case with urn:oasis:names:tc:xacml:1.0:function:string-normalize-to-lower-case.
+: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#string` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. The result SHALL be `True` if and only if the two strings are equal as defined by urn:oasis:names:tc:xacml:1.0:function:string-equal after they have both been converted to lower case with urn:oasis:names:tc:xacml:1.0:function:string-normalize-to-lower-case.
 
-urn:oasis:names:tc:xacml:1.0:function:boolean-equal
+`urn:oasis:names:tc:xacml:1.0:function:boolean-equal`
 
   : This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#boolean` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. The function SHALL return `True` if and only if the arguments are equal. Otherwise, it SHALL return `False`.
 
-urn:oasis:names:tc:xacml:1.0:function:integer-equal
+`urn:oasis:names:tc:xacml:1.0:function:integer-equal`
 
   : This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#integer` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. The function SHALL return `True` if and only if the two arguments represent the same number.
 
-urn:oasis:names:tc:xacml:1.0:function:double-equal
+`urn:oasis:names:tc:xacml:1.0:function:double-equal`
 
   : This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#double` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL perform its evaluation on doubles according to IEEE 754 [IEEE754].
 
-urn:oasis:names:tc:xacml:1.0:function:date-equal
+`urn:oasis:names:tc:xacml:1.0:function:date-equal`
 
   : This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#date` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL perform its evaluation according to the `op:date-equal` function [XF] Section 10.4.9.
 
-urn:oasis:names:tc:xacml:1.0:function:time-equal
+`urn:oasis:names:tc:xacml:1.0:function:time-equal`
 
   : This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#time` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL perform its evaluation according to the `op:time-equal` function [XF] Section 10.4.12.
 
-urn:oasis:names:tc:xacml:1.0:function:dateTime-equal
+`urn:oasis:names:tc:xacml:1.0:function:dateTime-equal`
 
   : This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#dateTime` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL perform its evaluation according to the `op:dateTime-equal` function [XF] Section 10.4.6.
 
-urn:oasis:names:tc:xacml:3.0:function:dayTimeDuration-equal
+`urn:oasis:names:tc:xacml:3.0:function:dayTimeDuration-equal`
 
   : This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#dayTimeDuration` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. This function shall perform its evaluation according to the `op:duration-equal` function [XF] Section 10.4.5. Note that the lexical representation of each argument MUST be converted to a value expressed in fractional seconds [XF] Section 10.3.2.
 
-urn:oasis:names:tc:xacml:3.0:function:yearMonthDuration-equal
+`urn:oasis:names:tc:xacml:3.0:function:yearMonthDuration-equal`
 
   : This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#yearMonthDuration` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. This function shall perform its evaluation according to the `op:duration-equal` function [XF] Section 10.4.5. Note that the lexical representation of each argument MUST be converted to a value expressed in fractional seconds [XF] Section 10.3.2.
 
-urn:oasis:names:tc:xacml:1.0:function:anyURI-equal
+`urn:oasis:names:tc:xacml:1.0:function:anyURI-equal`
 
   : This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#anyURI` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. The function SHALL convert the arguments to strings with urn:oasis:names:tc:xacml:3.0:function:string-from-anyURI and return `True` if and only if the values of the two arguments are equal on a codepoint-by-codepoint basis.
 
-urn:oasis:names:tc:xacml:1.0:function:x500Name-equal
+`urn:oasis:names:tc:xacml:1.0:function:x500Name-equal`
 
   : This function SHALL take two arguments of `urn:oasis:names:tc:xacml:1.0:data-type:x500Name` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if each Relative Distinguished Name (RDN) in the two arguments matches. Otherwise, it SHALL return `False`. Two RDNs shall be said to match if and only if the result of the following operations is `True` .
 
@@ -3919,7 +3944,7 @@ urn:oasis:names:tc:xacml:1.0:function:x500Name-equal
 
     3. Compare RDNs using the rules in IETF RFC 3280 `Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile`, Section 4.1.2.4 `Issuer`.
 
-urn:oasis:names:tc:xacml:1.0:function:rfc822Name-equal
+`urn:oasis:names:tc:xacml:1.0:function:rfc822Name-equal`
 
   : This function SHALL take two arguments of data-type `urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the two arguments are equal. Otherwise, it SHALL return `False`. An RFC822 name consists of a local-part followed by `@` followed by a domain-part. The local-part is case-sensitive, while the domain-part (which is usually a DNS host name) is not case-sensitive. Perform the following operations:
 
@@ -3927,11 +3952,11 @@ urn:oasis:names:tc:xacml:1.0:function:rfc822Name-equal
 
     2. Compare the expressions by applying the function `urn:oasis:names:tc:xacml:1.0:function:string-equal` to the normalized arguments.
 
-urn:oasis:names:tc:xacml:1.0:function:hexBinary-equal
+`urn:oasis:names:tc:xacml:1.0:function:hexBinary-equal`
 
   : This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#hexBinary` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if the octet sequences represented by the value of both arguments have equal length and are equal in a conjunctive, point-wise, comparison using the `urn:oasis:names:tc:xacml:1.0:function:integer-equal` function. Otherwise, it SHALL return `False`. The conversion from the string representation to an octet sequence SHALL be as specified in [XS] Section 3.2.15.
 
-urn:oasis:names:tc:xacml:1.0:function:base64Binary-equal
+`urn:oasis:names:tc:xacml:1.0:function:base64Binary-equal`
 
   : This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#base64Binary` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if the octet sequences represented by the value of both arguments have equal length and are equal in a conjunctive, point-wise, comparison using the `urn:oasis:names:tc:xacml:1.0:function:integer-equal` function. Otherwise, it SHALL return `False`. The conversion from the string representation to an octet sequence SHALL be as specified in [XS] Section 3.2.16.
 
@@ -3939,61 +3964,61 @@ urn:oasis:names:tc:xacml:1.0:function:base64Binary-equal
 
 All of the following functions SHALL take two arguments of the specified data-type, integer, or double, and SHALL return an element of integer or double data-type, respectively. However, the `add` and `multiply` functions MAY take more than two arguments. Each function evaluation operating on doubles SHALL proceed as specified by their logical counterparts in IEEE 754 [IEEE754]. For all of these functions, if any argument is `Indeterminate`, then the function SHALL evaluate to `Indeterminate`. In the case of the divide functions, if the divisor is zero, then the function SHALL evaluate to `Indeterminate`.
 
-urn:oasis:names:tc:xacml:1.0:function:integer-add
+`urn:oasis:names:tc:xacml:1.0:function:integer-add`
 
 : This function MUST accept two or more arguments.
 
-urn:oasis:names:tc:xacml:1.0:function:double-add
+`urn:oasis:names:tc:xacml:1.0:function:double-add`
 
 : This function MUST accept two or more arguments.
 
-urn:oasis:names:tc:xacml:1.0:function:integer-subtract
+`urn:oasis:names:tc:xacml:1.0:function:integer-subtract`
 
 : The result is the second argument subtracted from the first argument.
 
-urn:oasis:names:tc:xacml:1.0:function:double-subtract
+`urn:oasis:names:tc:xacml:1.0:function:double-subtract`
 
 : The result is the second argument subtracted from the first argument.
 
-urn:oasis:names:tc:xacml:1.0:function:integer-multiply
+`urn:oasis:names:tc:xacml:1.0:function:integer-multiply`
 
 : This function MUST accept two or more arguments.
 
-urn:oasis:names:tc:xacml:1.0:function:double-multiply
+`urn:oasis:names:tc:xacml:1.0:function:double-multiply`
 
 : This function MUST accept two or more arguments.
 
-urn:oasis:names:tc:xacml:1.0:function:integer-divide
+`urn:oasis:names:tc:xacml:1.0:function:integer-divide`
 
 : The result is the first argument divided by the second argument.
 
-urn:oasis:names:tc:xacml:1.0:function:double-divide
+`urn:oasis:names:tc:xacml:1.0:function:double-divide`
 
 : The result is the first argument divided by the second argument.
 
-urn:oasis:names:tc:xacml:1.0:function:integer-mod
+`urn:oasis:names:tc:xacml:1.0:function:integer-mod`
 
-: The result is remainder of the first argument divided by the second argument.
+: The result is the remainder of the first argument divided by the second argument.
 
 The following functions SHALL take a single argument of the specified data-type. The round and floor functions SHALL take a single argument of data-type `http://www.w3.org/2001/XMLSchema#double` and return a value of the data-type `http://www.w3.org/2001/XMLSchema#double`.
 
-urn:oasis:names:tc:xacml:1.0:function:integer-abs
+* `urn:oasis:names:tc:xacml:1.0:function:integer-abs`
 
-urn:oasis:names:tc:xacml:1.0:function:double-abs
+* `urn:oasis:names:tc:xacml:1.0:function:double-abs`
 
-urn:oasis:names:tc:xacml:1.0:function:round
+* `urn:oasis:names:tc:xacml:1.0:function:round`
 
-urn:oasis:names:tc:xacml:1.0:function:floor
+* `urn:oasis:names:tc:xacml:1.0:function:floor`
 
 ### E.3.3 String conversion functions
 
 The following functions convert between values of the data-type `http://www.w3.org/2001/XMLSchema#string` primitive types.
 
-urn:oasis:names:tc:xacml:1.0:function:string-normalize-space
+`urn:oasis:names:tc:xacml:1.0:function:string-normalize-space`
 
 : This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string` and SHALL normalize the value by stripping off all leading and trailing white space characters. The whitespace characters are defined in the metasymbol S (Production 3) of [XML].
 
-urn:oasis:names:tc:xacml:1.0:function:string-normalize-to-lower-case
+`urn:oasis:names:tc:xacml:1.0:function:string-normalize-to-lower-case`
 
 : This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string` and SHALL normalize the value by converting each upper case character to its lower case equivalent. Case mapping shall be done as specified for the fn:lower-case function in [XF] with no tailoring for particular languages or environments.
 
@@ -4001,31 +4026,32 @@ urn:oasis:names:tc:xacml:1.0:function:string-normalize-to-lower-case
 
 The following functions convert between the data-type `http://www.w3.org/2001/XMLSchema#integer` and` http://www.w3.org/2001/XMLSchema#double` primitive types.
 
-urn:oasis:names:tc:xacml:1.0:function:double-to-integer
+`urn:oasis:names:tc:xacml:1.0:function:double-to-integer`
 
 : This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#double` and SHALL truncate its numeric value to a whole number and return an element of data-type `http://www.w3.org/2001/XMLSchema#integer`.
 
-urn:oasis:names:tc:xacml:1.0:function:integer-to-double
+`urn:oasis:names:tc:xacml:1.0:function:integer-to-double`
 
-: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#integer` and SHALL promote its value to an element of data-type `http://www.w3.org/2001/XMLSchema#double` with the same numeric value. If the integer argument is outside the range which can be represented by a double, the result SHALL be Indeterminate, with the status code `urn:oasis:names:tc:xacml:1.0:status:processing-error`.
+: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#integer` and SHALL promote its value to an element of data-type `http://www.w3.org/2001/XMLSchema#double` with the same numeric value. If the integer argument is outside the range which can be represented by a double, the result SHALL be Indeterminate, with the status code <!-- Newline added to fit on PDF page -->
+: `urn:oasis:names:tc:xacml:1.0:status:processing-error`.
 
 ### E.3.5 Logical functions
 
 This section contains the specification for logical functions that operate on arguments of data-type `http://www.w3.org/2001/XMLSchema#boolean`.
 
-urn:oasis:names:tc:xacml:1.0:function:or
+`urn:oasis:names:tc:xacml:1.0:function:or`
 
 : This function SHALL return `False` if it has no arguments and SHALL return `True` if at least one of its arguments evaluates to `True`. The order of evaluation SHALL be from first argument to last. The evaluation SHALL stop with a result of `True` if any argument evaluates to `True`, leaving the rest of the arguments unevaluated.
 
-urn:oasis:names:tc:xacml:1.0:function:and
+`urn:oasis:names:tc:xacml:1.0:function:and`
 
 : This function SHALL return `True` if it has no arguments and SHALL return `False` if one of its arguments evaluates to `False`. The order of evaluation SHALL be from first argument to last. The evaluation SHALL stop with a result of `False` if any argument evaluates to `False`, leaving the rest of the arguments unevaluated.
 
-urn:oasis:names:tc:xacml:1.0:function:n-of
+`urn:oasis:names:tc:xacml:1.0:function:n-of`
 
 : The first argument to this function SHALL be of data-type http://www.w3.org/2001/XMLSchema#integer. The remaining arguments SHALL be of data-type http://www.w3.org/2001/XMLSchema#boolean. The first argument specifies the minimum number of the remaining arguments that MUST evaluate to `True` for the expression to be considered `True`. If the first argument is 0, the result SHALL be `True`. If the number of arguments after the first one is less than the value of the first argument, then the expression SHALL result in `Indeterminate`. The order of evaluation SHALL be: first evaluate the integer value, and then evaluate each subsequent argument. The evaluation SHALL stop and return `True` if the specified number of arguments evaluate to `True`. The evaluation of arguments SHALL stop if it is determined that evaluating the remaining arguments will not satisfy the requirement.
 
-urn:oasis:names:tc:xacml:1.0:function:not
+`urn:oasis:names:tc:xacml:1.0:function:not`
 
 : This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#boolean`. If the argument evaluates to `True`, then the result of the expression SHALL be `False`. If the argument evaluates to `False`, then the result of the expression SHALL be `True`.
 
@@ -4035,47 +4061,50 @@ urn:oasis:names:tc:xacml:1.0:function:not
 
 These functions form a minimal set for comparing two numbers, yielding a Boolean result. For doubles they SHALL comply with the rules governed by IEEE 754 [IEEE754].
 
-urn:oasis:names:tc:xacml:1.0:function:integer-greater-than
+* `urn:oasis:names:tc:xacml:1.0:function:integer-greater-than`
 
-urn:oasis:names:tc:xacml:1.0:function:integer-greater-than-or-equal
+* `urn:oasis:names:tc:xacml:1.0:function:integer-greater-than-or-equal`
 
-urn:oasis:names:tc:xacml:1.0:function:integer-less-than
+* `urn:oasis:names:tc:xacml:1.0:function:integer-less-than`
 
-urn:oasis:names:tc:xacml:1.0:function:integer-less-than-or-equal
+* `urn:oasis:names:tc:xacml:1.0:function:integer-less-than-or-equal`
 
-urn:oasis:names:tc:xacml:1.0:function:double-greater-than
+* `urn:oasis:names:tc:xacml:1.0:function:double-greater-than`
 
-urn:oasis:names:tc:xacml:1.0:function:double-greater-than-or-equal
+* `urn:oasis:names:tc:xacml:1.0:function:double-greater-than-or-equal`
 
-urn:oasis:names:tc:xacml:1.0:function:double-less-than
+* `urn:oasis:names:tc:xacml:1.0:function:double-less-than`
 
-urn:oasis:names:tc:xacml:1.0:function:double-less-than-or-equal
+* `urn:oasis:names:tc:xacml:1.0:function:double-less-than-or-equal`
 
 ### E.3.7 Date and time arithmetic functions
 
 These functions perform arithmetic operations with date and time.
 
-urn:oasis:names:tc:xacml:3.0:function:dateTime-add-dayTimeDuration
+`urn:oasis:names:tc:xacml:3.0:function:dateTime-add-dayTimeDuration`
 
-: This function SHALL take two arguments, the first SHALL be of data-type `http://www.w3.org/2001/XMLSchema#dateTime` and the second SHALL be of data-type `http://www.w3.org/2001/XMLSchema#dayTimeDuration`. It SHALL return a result of `http://www.w3.org/2001/XMLSchema#dateTime`. This function SHALL return the value by adding the second argument to the first argument according to the specification of adding durations to date and time [XS] Appendix E.
+: This function SHALL take two arguments, the first SHALL be of data-type <!-- Line break added for the previous line to fit on a PDF page -->
+: `http://www.w3.org/2001/XMLSchema#dateTime` and the second SHALL be of data-type <!-- Line break added for the previous line to fit on PDF page -->
+: `http://www.w3.org/2001/XMLSchema#dayTimeDuration`. It SHALL return a result of <!-- Line break added for the previous line to fit on a PDF page -->
+: `http://www.w3.org/2001/XMLSchema#dateTime`. This function SHALL return the value by adding the second argument to the first argument according to the specification of adding durations to date and time [XS] Appendix E.
 
-urn:oasis:names:tc:xacml:3.0:function:dateTime-add-yearMonthDuration
+`urn:oasis:names:tc:xacml:3.0:function:dateTime-add-yearMonthDuration`
 
 : This function SHALL take two arguments, the first SHALL be a `http://www.w3.org/2001/XMLSchema#dateTime` and the second SHALL be a `http://www.w3.org/2001/XMLSchema#yearMonthDuration`. It SHALL return a result of `http://www.w3.org/2001/XMLSchema#dateTime`. This function SHALL return the value by adding the second argument to the first argument according to the specification of adding durations to date and time [XS] Appendix E.
 
-urn:oasis:names:tc:xacml:3.0:function:dateTime-subtract-dayTimeDuration
+`urn:oasis:names:tc:xacml:3.0:function:dateTime-subtract-dayTimeDuration`
 
 : This function SHALL take two arguments, the first SHALL be a `http://www.w3.org/2001/XMLSchema#dateTime` and the second SHALL be a `http://www.w3.org/2001/XMLSchema#dayTimeDuration`. It SHALL return a result of `http://www.w3.org/2001/XMLSchema#dateTime`. If the second argument is a positive duration, then this function SHALL return the value by adding the corresponding negative duration, as per the specification [XS] Appendix E. If the second argument is a negative duration, then the result SHALL be as if the function `urn:oasis:names:tc:xacml:1.0:function:dateTime-add-dayTimeDuration` had been applied to the corresponding positive duration.
 
-urn:oasis:names:tc:xacml:3.0:function:dateTime-subtract-yearMonthDuration
+`urn:oasis:names:tc:xacml:3.0:function:dateTime-subtract-yearMonthDuration`
 
 : This function SHALL take two arguments, the first SHALL be a `http://www.w3.org/2001/XMLSchema#dateTime` and the second SHALL be a `http://www.w3.org/2001/XMLSchema#yearMonthDuration`. It SHALL return a result of `http://www.w3.org/2001/XMLSchema#dateTime`. If the second argument is a positive duration, then this function SHALL return the value by adding the corresponding negative duration, as per the specification [XS] Appendix E. If the second argument is a negative duration, then the result SHALL be as if the function `urn:oasis:names:tc:xacml:1.0:function:dateTime-add-yearMonthDuration` had been applied to the corresponding positive duration.
 
-urn:oasis:names:tc:xacml:3.0:function:date-add-yearMonthDuration
+`urn:oasis:names:tc:xacml:3.0:function:date-add-yearMonthDuration`
 
 : This function SHALL take two arguments, the first SHALL be a `http://www.w3.org/2001/XMLSchema#date` and the second SHALL be a `http://www.w3.org/2001/XMLSchema#yearMonthDuration`. It SHALL return a result of `http://www.w3.org/2001/XMLSchema#date`. This function SHALL return the value by adding the second argument to the first argument according to the specification of adding duration to date [XS] Appendix E.
 
-urn:oasis:names:tc:xacml:3.0:function:date-subtract-yearMonthDuration
+`urn:oasis:names:tc:xacml:3.0:function:date-subtract-yearMonthDuration`
 
 : This function SHALL take two arguments, the first SHALL be a `http://www.w3.org/2001/XMLSchema#date` and the second SHALL be a `http://www.w3.org/2001/XMLSchema#yearMonthDuration`. It SHALL return a result of `http://www.w3.org/2001/XMLSchema#date`. If the second argument is a positive duration, then this function SHALL return the value by adding the corresponding negative duration, as per the specification [XS] Appendix E. If the second argument is a negative duration, then the result SHALL be as if the function `urn:oasis:names:tc:xacml:1.0:function:date-add-yearMonthDuration` had been applied to the corresponding positive duration.
 
@@ -4083,81 +4112,82 @@ urn:oasis:names:tc:xacml:3.0:function:date-subtract-yearMonthDuration
 
 These functions perform comparison operations on two arguments of non-numerical types.
 
-urn:oasis:names:tc:xacml:1.0:function:string-greater-than
+`urn:oasis:names:tc:xacml:1.0:function:string-greater-than`
 
 : This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#string` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is lexicographically strictly greater than the second argument. Otherwise, it SHALL return `False`. The comparison SHALL use Unicode codepoint collation, as defined for the identifier `http://www.w3.org/2005/xpath-functions/collation/codepoint` by [XF].
 
-urn:oasis:names:tc:xacml:1.0:function:string-greater-than-or-equal
+`urn:oasis:names:tc:xacml:1.0:function:string-greater-than-or-equal`
 
 : This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#string` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is lexicographically greater than or equal to the second argument. Otherwise, it SHALL return `False`. The comparison SHALL use Unicode codepoint collation, as defined for the identifier `http://www.w3.org/2005/xpath-functions/collation/codepoint` by [XF].
 
-urn:oasis:names:tc:xacml:1.0:function:string-less-than
+`urn:oasis:names:tc:xacml:1.0:function:string-less-than`
 
 : This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#string` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only the first argument is lexigraphically strictly less than the second argument. Otherwise, it SHALL return `False`. The comparison SHALL use Unicode codepoint collation, as defined for the identifier `http://www.w3.org/2005/xpath-functions/collation/codepoint` by [XF].
 
-urn:oasis:names:tc:xacml:1.0:function:string-less-than-or-equal
+`urn:oasis:names:tc:xacml:1.0:function:string-less-than-or-equal`
 
 : This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#string` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only the first argument is lexigraphically less than or equal to the second argument. Otherwise, it SHALL return `False`. The comparison SHALL use Unicode codepoint collation, as defined for the identifier `http://www.w3.org/2005/xpath-functions/collation/codepoint` by [XF].
 
-urn:oasis:names:tc:xacml:1.0:function:time-greater-than
+`urn:oasis:names:tc:xacml:1.0:function:time-greater-than`
 
 : This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#time` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is greater than the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#time` [XS] Section 3.2.8. Otherwise, it SHALL return `False`. 
 > Note: it is illegal to compare a time that includes a time-zone value with one that does not. In such cases, the time-in-range function should be used.
 
-urn:oasis:names:tc:xacml:1.0:function:time-greater-than-or-equal
+`urn:oasis:names:tc:xacml:1.0:function:time-greater-than-or-equal`
 
 : This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#time` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is greater than or equal to the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#time` [XS] Section 3.2.8. Otherwise, it SHALL return `False`. 
 > Note: it is illegal to compare a time that includes a time-zone value with one that does not. In such cases, the time-in-range function should be used.
 
-urn:oasis:names:tc:xacml:1.0:function:time-less-than
+`urn:oasis:names:tc:xacml:1.0:function:time-less-than`
 
 : This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#time` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is less than the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#time` [XS] Section 3.2.8. Otherwise, it SHALL return `False`. 
 > Note: it is illegal to compare a time that includes a time-zone value with one that does not. In such cases, the time-in-range function should be used.
 
-urn:oasis:names:tc:xacml:1.0:function:time-less-than-or-equal
+`urn:oasis:names:tc:xacml:1.0:function:time-less-than-or-equal`
 
 : This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#time` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is less than or equal to the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#time` [XS] Section 3.2.8. Otherwise, it SHALL return `False`. 
 > Note: it is illegal to compare a time that includes a time-zone value with one that does not. In such cases, the time-in-range function should be used.
 
-urn:oasis:names:tc:xacml:2.0:function:time-in-range
+`urn:oasis:names:tc:xacml:2.0:function:time-in-range`
 
 : This function SHALL take three arguments of data-type `http://www.w3.org/2001/XMLSchema#time` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if the first argument falls in the range defined inclusively by the second and third arguments. Otherwise, it SHALL return `False`. Regardless of its value, the third argument SHALL be interpreted as a time that is equal to, or later than by less than twenty-four hours, the second argument. If no time zone is provided for the first argument, it SHALL use the default time zone at the context handler. If no time zone is provided for the second or third arguments, then they SHALL use the time zone from the first argument.
 
-urn:oasis:names:tc:xacml:1.0:function:dateTime-greater-than
+`urn:oasis:names:tc:xacml:1.0:function:dateTime-greater-than`
 
 : This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#dateTime` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is greater than the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#dateTime` by [XS] part 2, section 3.2.7. Otherwise, it SHALL return `False`. 
 > Note: if a dateTime value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [XS].
 
-urn:oasis:names:tc:xacml:1.0:function:dateTime-greater-than-or-equal
+`urn:oasis:names:tc:xacml:1.0:function:dateTime-greater-than-or-equal`
 
 : This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#dateTime` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is greater than or equal to the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#dateTime` by [XS] part 2, section 3.2.7. Otherwise, it SHALL return `False`. 
 > Note: if a dateTime value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [XS].
 
-urn:oasis:names:tc:xacml:1.0:function:dateTime-less-than
+`urn:oasis:names:tc:xacml:1.0:function:dateTime-less-than`
 
 : This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#dateTime` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is less than the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#dateTime` by [XS, part 2, section 3.2.7]. Otherwise, it SHALL return `False`. 
 > Note: if a dateTime value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [XS].
 
-urn:oasis:names:tc:xacml:1.0:function:dateTime-less-than-or-equal
+`urn:oasis:names:tc:xacml:1.0:function:dateTime-less-than-or-equal`
 
 : This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema# dateTime` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is less than or equal to the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#dateTime` by [XS] part 2, section 3.2.7. Otherwise, it SHALL return `False`. 
 > Note: if a dateTime value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [XS].
 
-urn:oasis:names:tc:xacml:1.0:function:date-greater-than
+`urn:oasis:names:tc:xacml:1.0:function:date-greater-than`
 
 : This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#date` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is greater than the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#date` by [XS] part 2, section 3.2.9. Otherwise, it SHALL return `False`. 
 > Note: if a date value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [XS].
 
-urn:oasis:names:tc:xacml:1.0:function:date-greater-than-or-equal
+`urn:oasis:names:tc:xacml:1.0:function:date-greater-than-or-equal`
 
 : This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#date` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is greater than or equal to the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#date` by [XS] part 2, section 3.2.9. Otherwise, it SHALL return `False`. 
 > Note: if a date value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [XS].
 
-urn:oasis:names:tc:xacml:1.0:function:date-less-than
+`urn:oasis:names:tc:xacml:1.0:function:date-less-than`
 
-: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#date` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is less than the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#date` by [XS] part 2, section 3.2.9. Otherwise, it SHALL return `False`. > Note: if a date value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [XS].
+: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#date` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is less than the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#date` by [XS] part 2, section 3.2.9. Otherwise, it SHALL return `False`. 
+> Note: if a date value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [XS].
 
-urn:oasis:names:tc:xacml:1.0:function:date-less-than-or-equal
+`urn:oasis:names:tc:xacml:1.0:function:date-less-than-or-equal`
 
 : This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#date` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is less than or equal to the second argument according to the order relation specified for `http://www.w3.org/2001/XMLSchema#date` by [XS] part 2, section 3.2.9. Otherwise, it SHALL return `False`. 
 > Note: if a date value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [XS].
@@ -4166,163 +4196,165 @@ urn:oasis:names:tc:xacml:1.0:function:date-less-than-or-equal
 
 The following functions operate on strings and convert to and from other data types.
 
-urn:oasis:names:tc:xacml:2.0:function:string-concatenate
+`urn:oasis:names:tc:xacml:2.0:function:string-concatenate`
 
 : This function SHALL take two or more arguments of data-type `http://www.w3.org/2001/XMLSchema#string` and SHALL return a `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the concatenation, in order, of the arguments.
 
-urn:oasis:names:tc:xacml:3.0:function:boolean-from-string
+`urn:oasis:names:tc:xacml:3.0:function:boolean-from-string`
 
-: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. The result SHALL be the string converted to a boolean. If the argument is not a valid lexical representation of a boolean, then the result SHALL be Indeterminate with status code urn:oasis:names:tc:xacml:1.0:status:syntax-error.
+: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. The result SHALL be the string converted to a boolean. If the argument is not a valid lexical representation of a boolean, then the result SHALL be Indeterminate with status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`.
 
-urn:oasis:names:tc:xacml:3.0:function:string-from-boolean
+`urn:oasis:names:tc:xacml:3.0:function:string-from-boolean`
 
 : This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#boolean`, and SHALL return an `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the boolean converted to a string in the canonical form specified in [XS].
 
-urn:oasis:names:tc:xacml:3.0:function:integer-from-string
+`urn:oasis:names:tc:xacml:3.0:function:integer-from-string`
 
-: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `http://www.w3.org/2001/XMLSchema#integer`. The result SHALL be the string converted to an integer. If the argument is not a valid lexical representation of an integer, then the result SHALL be Indeterminate with status code urn:oasis:names:tc:xacml:1.0:status:syntax-error.
+: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `http://www.w3.org/2001/XMLSchema#integer`. The result SHALL be the string converted to an integer. If the argument is not a valid lexical representation of an integer, then the result SHALL be Indeterminate with status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`.
 
-urn:oasis:names:tc:xacml:3.0:function:string-from-integer
+`urn:oasis:names:tc:xacml:3.0:function:string-from-integer`
 
 : This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#integer`, and SHALL return an `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the integer converted to a string in the canonical form specified in [XS].
 
-urn:oasis:names:tc:xacml:3.0:function:double-from-string
+`urn:oasis:names:tc:xacml:3.0:function:double-from-string`
 
-: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `http://www.w3.org/2001/XMLSchema#double`. The result SHALL be the string converted to a double. If the argument is not a valid lexical representation of a double, then the result SHALL be Indeterminate with status code urn:oasis:names:tc:xacml:1.0:status:syntax-error.
+: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `http://www.w3.org/2001/XMLSchema#double`. The result SHALL be the string converted to a double. If the argument is not a valid lexical representation of a double, then the result SHALL be Indeterminate with status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`.
 
-urn:oasis:names:tc:xacml:3.0:function:string-from-double
+`urn:oasis:names:tc:xacml:3.0:function:string-from-double`
 
 : This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#double`, and SHALL return an `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the double converted to a string in the canonical form specified in [XS].
 
-urn:oasis:names:tc:xacml:3.0:function:time-from-string
+`urn:oasis:names:tc:xacml:3.0:function:time-from-string`
 
-: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `http://www.w3.org/2001/XMLSchema#time`. The result SHALL be the string converted to a time. If the argument is not a valid lexical representation of a time, then the result SHALL be Indeterminate with status code urn:oasis:names:tc:xacml:1.0:status:syntax-error.
+: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `http://www.w3.org/2001/XMLSchema#time`. The result SHALL be the string converted to a time. If the argument is not a valid lexical representation of a time, then the result SHALL be Indeterminate with status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`.
 
-urn:oasis:names:tc:xacml:3.0:function:string-from-time
+`urn:oasis:names:tc:xacml:3.0:function:string-from-time`
 
 : This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#time`, and SHALL return an `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the time converted to a string in the canonical form specified in [XS].
 
-urn:oasis:names:tc:xacml:3.0:function:date-from-string
+`urn:oasis:names:tc:xacml:3.0:function:date-from-string`
 
-: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `http://www.w3.org/2001/XMLSchema#date`. The result SHALL be the string converted to a date. If the argument is not a valid lexical representation of a date, then the result SHALL be Indeterminate with status code urn:oasis:names:tc:xacml:1.0:status:syntax-error.
+: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `http://www.w3.org/2001/XMLSchema#date`. The result SHALL be the string converted to a date. If the argument is not a valid lexical representation of a date, then the result SHALL be Indeterminate with status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`.
 
-urn:oasis:names:tc:xacml:3.0:function:string-from-date
+`urn:oasis:names:tc:xacml:3.0:function:string-from-date`
 
 : This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#date`, and SHALL return an `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the date converted to a string in the canonical form specified in [XS].
 
-urn:oasis:names:tc:xacml:3.0:function:dateTime-from-string
+`urn:oasis:names:tc:xacml:3.0:function:dateTime-from-string`
 
-: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `http://www.w3.org/2001/XMLSchema#dateTime`. The result SHALL be the string converted to a dateTime. If the argument is not a valid lexical representation of a dateTime, then the result SHALL be Indeterminate with status code urn:oasis:names:tc:xacml:1.0:status:syntax-error.
+: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `http://www.w3.org/2001/XMLSchema#dateTime`. The result SHALL be the string converted to a dateTime. If the argument is not a valid lexical representation of a dateTime, then the result SHALL be Indeterminate with status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`.
 
-urn:oasis:names:tc:xacml:3.0:function:string-from-dateTime
+`urn:oasis:names:tc:xacml:3.0:function:string-from-dateTime`
 
 : This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#dateTime`, and SHALL return an `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the dateTime converted to a string in the canonical form specified in [XS].
 
-urn:oasis:names:tc:xacml:3.0:function:anyURI-from-string
+`urn:oasis:names:tc:xacml:3.0:function:anyURI-from-string`
 
-: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return a `http://www.w3.org/2001/XMLSchema#anyURI`. The result SHALL be the URI constructed by converting the argument to an URI. If the argument is not a valid lexical representation of a URI, then the result SHALL be Indeterminate with status code urn:oasis:names:tc:xacml:1.0:status:syntax-error.
+: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return a `http://www.w3.org/2001/XMLSchema#anyURI`. The result SHALL be the URI constructed by converting the argument to an URI. If the argument is not a valid lexical representation of a URI, then the result SHALL be Indeterminate with status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`.
 
-urn:oasis:names:tc:xacml:3.0:function:string-from-anyURI
+`urn:oasis:names:tc:xacml:3.0:function:string-from-anyURI`
 
 : This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#anyURI`, and SHALL return an `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the URI converted to a string in the form it was originally represented in XML form.
 
-urn:oasis:names:tc:xacml:3.0:function:dayTimeDuration-from-string
+`urn:oasis:names:tc:xacml:3.0:function:dayTimeDuration-from-string`
 
-: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `http://www.w3.org/2001/XMLSchema#dayTimeDuration `. The result SHALL be the string converted to a dayTimeDuration. If the argument is not a valid lexical representation of a dayTimeDuration, then the result SHALL be Indeterminate with status code urn:oasis:names:tc:xacml:1.0:status:syntax-error.
+: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `http://www.w3.org/2001/XMLSchema#dayTimeDuration `. The result SHALL be the string converted to a dayTimeDuration. If the argument is not a valid lexical representation of a dayTimeDuration, then the result SHALL be Indeterminate with status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`.
 
-urn:oasis:names:tc:xacml:3.0:function:string-from-dayTimeDuration
+`urn:oasis:names:tc:xacml:3.0:function:string-from-dayTimeDuration`
 
 : This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#dayTimeDuration`, and SHALL return an `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the dayTimeDuration converted to a string in the canonical form specified in [XPathFunc].
 
-urn:oasis:names:tc:xacml:3.0:function:yearMonthDuration-from-string
+`urn:oasis:names:tc:xacml:3.0:function:yearMonthDuration-from-string`
 
-: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `http://www.w3.org/2001/XMLSchema#yearMonthDuration`. The result SHALL be the string converted to a yearMonthDuration. If the argument is not a valid lexical representation of a yearMonthDuration, then the result SHALL be Indeterminate with status code urn:oasis:names:tc:xacml:1.0:status:syntax-error.
+: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `http://www.w3.org/2001/XMLSchema#yearMonthDuration`. The result SHALL be the string converted to a yearMonthDuration. If the argument is not a valid lexical representation of a yearMonthDuration, then the result SHALL be Indeterminate with status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`.
 
-urn:oasis:names:tc:xacml:3.0:function:string-from-yearMonthDuration
+`urn:oasis:names:tc:xacml:3.0:function:string-from-yearMonthDuration`
 
 : This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#yearMonthDuration`, and SHALL return an `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the yearMonthDuration converted to a string in the canonical form specified in [XPathFunc].
 
-urn:oasis:names:tc:xacml:3.0:function:x500Name-from-string
+`urn:oasis:names:tc:xacml:3.0:function:x500Name-from-string`
 
-: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `urn:oasis:names:tc:xacml:1.0:data-type:x500Name`. The result SHALL be the string converted to an x500Name. If the argument is not a valid lexical representation of a X500Name, then the result SHALL be Indeterminate with status code urn:oasis:names:tc:xacml:1.0:status:syntax-error.
+: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `urn:oasis:names:tc:xacml:1.0:data-type:x500Name`. The result SHALL be the string converted to an x500Name. If the argument is not a valid lexical representation of a X500Name, then the result SHALL be Indeterminate with status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`.
 
-urn:oasis:names:tc:xacml:3.0:function:string-from-x500Name
+`urn:oasis:names:tc:xacml:3.0:function:string-from-x500Name`
 
 : This function SHALL take one argument of data-type `urn:oasis:names:tc:xacml:1.0:data-type:x500Name`, and SHALL return an `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the x500Name converted to a string in the form it was originally represented in XML form..
 
-urn:oasis:names:tc:xacml:3.0:function:rfc822Name-from-string
+`urn:oasis:names:tc:xacml:3.0:function:rfc822Name-from-string`
 
-: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name`. The result SHALL be the string converted to an rfc822Name. If the argument is not a valid lexical representation of an rfc822Name, then the result SHALL be Indeterminate with status code urn:oasis:names:tc:xacml:1.0:status:syntax-error.
+: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name`. The result SHALL be the string converted to an rfc822Name. If the argument is not a valid lexical representation of an rfc822Name, then the result SHALL be Indeterminate with status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`.
 
-urn:oasis:names:tc:xacml:3.0:function:string-from-rfc822Name
+`urn:oasis:names:tc:xacml:3.0:function:string-from-rfc822Name`
 
 : This function SHALL take one argument of data-type `urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name`, and SHALL return an `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the rfc822Name converted to a string in the form it was originally represented in XML form.
 
-urn:oasis:names:tc:xacml:3.0:function:ipAddress-from-string
+`urn:oasis:names:tc:xacml:3.0:function:ipAddress-from-string`
 
-: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `urn:oasis:names:tc:xacml:2.0:data-type:ipAddress`. The result SHALL be the string converted to an ipAddress. If the argument is not a valid lexical representation of an ipAddress, then the result SHALL be Indeterminate with status code urn:oasis:names:tc:xacml:1.0:status:syntax-error.
+: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `urn:oasis:names:tc:xacml:2.0:data-type:ipAddress`. The result SHALL be the string converted to an ipAddress. If the argument is not a valid lexical representation of an ipAddress, then the result SHALL be Indeterminate with status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`.
 
-urn:oasis:names:tc:xacml:3.0:function:string-from-ipAddress
+`urn:oasis:names:tc:xacml:3.0:function:string-from-ipAddress`
 
 : This function SHALL take one argument of data-type `urn:oasis:names:tc:xacml:2.0:data-type:ipAddress`, and SHALL return an `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the ipAddress converted to a string in the form it was originally represented in XML form.
 
-urn:oasis:names:tc:xacml:3.0:function:dnsName-from-string
+`urn:oasis:names:tc:xacml:3.0:function:dnsName-from-string`
 
-: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `urn:oasis:names:tc:xacml:2.0:data-type:dnsName`. The result SHALL be the string converted to a dnsName. If the argument is not a valid lexical representation of a dnsName, then the result SHALL be Indeterminate with status code urn:oasis:names:tc:xacml:1.0:status:syntax-error.
+: This function SHALL take one argument of data-type `http://www.w3.org/2001/XMLSchema#string`, and SHALL return an `urn:oasis:names:tc:xacml:2.0:data-type:dnsName`. The result SHALL be the string converted to a dnsName. If the argument is not a valid lexical representation of a dnsName, then the result SHALL be Indeterminate with status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`.
 
-urn:oasis:names:tc:xacml:3.0:function:string-from-dnsName
+`urn:oasis:names:tc:xacml:3.0:function:string-from-dnsName`
 
 : This function SHALL take one argument of data-type `urn:oasis:names:tc:xacml:2.0:data-type:dnsName`, and SHALL return an `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the dnsName converted to a string in the form it was originally represented in XML form.
 
-urn:oasis:names:tc:xacml:3.0:function:string-starts-with
+`urn:oasis:names:tc:xacml:3.0:function:string-starts-with`
 
-: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#string` and SHALL return a `http://www.w3.org/2001/XMLSchema#boolean`. The result SHALL be true if the second string begins with the first string, and false otherwise. Equality testing SHALL be done as defined for urn:oasis:names:tc:xacml:1.0:function:string-equal.
+: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#string` and SHALL return a `http://www.w3.org/2001/XMLSchema#boolean`. The result SHALL be true if the second string begins with the first string, and false otherwise. Equality testing SHALL be done as defined for `urn:oasis:names:tc:xacml:1.0:function:string-equal`.
 
-urn:oasis:names:tc:xacml:3.0:function:anyURI-starts-with
+`urn:oasis:names:tc:xacml:3.0:function:anyURI-starts-with`
 
-: This function SHALL take a first argument of data-type`http://www.w3.org/2001/XMLSchema#string` and an a second argument of data-type `http://www.w3.org/2001/XMLSchema#anyURI` and SHALL return a `http://www.w3.org/2001/XMLSchema#boolean`. The result SHALL be true if the URI converted to a string with urn:oasis:names:tc:xacml:3.0:function:string-from-anyURI begins with the string, and false otherwise. Equality testing SHALL be done as defined for urn:oasis:names:tc:xacml:1.0:function:string-equal.
+: This function SHALL take a first argument of data-type`http://www.w3.org/2001/XMLSchema#string` and an a second argument of data-type `http://www.w3.org/2001/XMLSchema#anyURI` and SHALL return a `http://www.w3.org/2001/XMLSchema#boolean`. The result SHALL be true if the URI converted to a string with `urn:oasis:names:tc:xacml:3.0:function:string-from-anyURI` begins with the string, and false otherwise. Equality testing SHALL be done as defined for `urn:oasis:names:tc:xacml:1.0:function:string-equal`.
 
-urn:oasis:names:tc:xacml:3.0:function:string-ends-with
+`urn:oasis:names:tc:xacml:3.0:function:string-ends-with`
 
-: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#string` and SHALL return a `http://www.w3.org/2001/XMLSchema#boolean`. The result SHALL be true if the second string ends with the first string, and false otherwise. Equality testing SHALL be done as defined for urn:oasis:names:tc:xacml:1.0:function:string-equal.
+: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#string` and SHALL return a `http://www.w3.org/2001/XMLSchema#boolean`. The result SHALL be true if the second string ends with the first string, and false otherwise. Equality testing SHALL be done as defined for `urn:oasis:names:tc:xacml:1.0:function:string-equal`.
 
-urn:oasis:names:tc:xacml:3.0:function:anyURI-ends-with
+`urn:oasis:names:tc:xacml:3.0:function:anyURI-ends-with`
 
-: This function SHALL take a first argument of data-type `http://www.w3.org/2001/XMLSchema#string` and an a second argument of data-type `http://www.w3.org/2001/XMLSchema#anyURI` and SHALL return a `http://www.w3.org/2001/XMLSchema#boolean`. The result SHALL be true if the URI converted to a string with urn:oasis:names:tc:xacml:3.0:function:string-from-anyURI ends with the string, and false otherwise. Equality testing SHALL be done as defined for urn:oasis:names:tc:xacml:1.0:function:string-equal.
+: This function SHALL take a first argument of data-type `http://www.w3.org/2001/XMLSchema#string` and an a second argument of data-type `http://www.w3.org/2001/XMLSchema#anyURI` and SHALL return a `http://www.w3.org/2001/XMLSchema#boolean`. The result SHALL be true if the URI converted to a string with `urn:oasis:names:tc:xacml:3.0:function:string-from-anyURI` ends with the string, and false otherwise. Equality testing SHALL be done as defined for `urn:oasis:names:tc:xacml:1.0:function:string-equal`.
 
-urn:oasis:names:tc:xacml:3.0:function:string-contains
+`urn:oasis:names:tc:xacml:3.0:function:string-contains`
 
-: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#string` and SHALL return a `http://www.w3.org/2001/XMLSchema#boolean`. The result SHALL be true if the second string contains the first string, and false otherwise. Equality testing SHALL be done as defined for urn:oasis:names:tc:xacml:1.0:function:string-equal.
+: This function SHALL take two arguments of data-type `http://www.w3.org/2001/XMLSchema#string` and SHALL return a `http://www.w3.org/2001/XMLSchema#boolean`. The result SHALL be true if the second string contains the first string, and false otherwise. Equality testing SHALL be done as defined for `urn:oasis:names:tc:xacml:1.0:function:string-equal`.
 
-urn:oasis:names:tc:xacml:3.0:function:anyURI-contains
+`urn:oasis:names:tc:xacml:3.0:function:anyURI-contains`
 
-: This function SHALL take a first argument of data-type `http://www.w3.org/2001/XMLSchema#string` and an a second argument of data-type `http://www.w3.org/2001/XMLSchema#anyURI` and SHALL return a `http://www.w3.org/2001/XMLSchema#boolean`. The result SHALL be true if the URI converted to a string with urn:oasis:names:tc:xacml:3.0:function:string-from-anyURI contains the string, and false otherwise. Equality testing SHALL be done as defined for urn:oasis:names:tc:xacml:1.0:function:string-equal.
+: This function SHALL take a first argument of data-type `http://www.w3.org/2001/XMLSchema#string` and an a second argument of data-type `http://www.w3.org/2001/XMLSchema#anyURI` and SHALL return a `http://www.w3.org/2001/XMLSchema#boolean`. The result SHALL be true if the URI converted to a string with `urn:oasis:names:tc:xacml:3.0:function:string-from-anyURI` contains the string, and false otherwise. Equality testing SHALL be done as defined for `urn:oasis:names:tc:xacml:1.0:function:string-equal`.
 
-urn:oasis:names:tc:xacml:3.0:function:string-substring
+`urn:oasis:names:tc:xacml:3.0:function:string-substring`
 
-: This function SHALL take a first argument of data-type `http://www.w3.org/2001/XMLSchema#string` and a second and a third argument of type `http://www.w3.org/2001/XMLSchema#integer` and SHALL return a `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the substring of the first argument beginning at the position given by the second argument and ending at the position before the position given by the third argument. The first character of the string has position zero. The negative integer value -1 given for the third arguments indicates the end of the string. If the second or third arguments are out of bounds, then the function MUST evaluate to Indeterminate with a status code of urn:oasis:names:tc:xacml:1.0:status:processing-error.
+: This function SHALL take a first argument of data-type `http://www.w3.org/2001/XMLSchema#string` and a second and a third argument of type `http://www.w3.org/2001/XMLSchema#integer` and SHALL return a `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the substring of the first argument beginning at the position given by the second argument and ending at the position before the position given by the third argument. The first character of the string has position zero. The negative integer value -1 given for the third arguments indicates the end of the string. If the second or third arguments are out of bounds, then the function MUST evaluate to Indeterminate with a status code of `urn:oasis:names:tc:xacml:1.0:status:processing-error`.
 
-urn:oasis:names:tc:xacml:3.0:function:anyURI-substring
+`urn:oasis:names:tc:xacml:3.0:function:anyURI-substring`
 
-: This function SHALL take a first argument of data-type `http://www.w3.org/2001/XMLSchema#anyURI` and a second and a third argument of type `http://www.w3.org/2001/XMLSchema#integer` and SHALL return a `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the substring of the first argument converted to a string with urn:oasis:names:tc:xacml:3.0:function:string-from-anyURI beginning at the position given by the second argument and ending at the position before the position given by the third argument. The first character of the URI converted to a string has position zero. The negative integer value -1 given for the third arguments indicates the end of the string. If the second or third arguments are out of bounds, then the function MUST evaluate to Indeterminate with a status code of urn:oasis:names:tc:xacml:1.0:status:processing-error. If the resulting substring is not syntactically a valid URI, then the function MUST evaluate to Indeterminate with a status code of urn:oasis:names:tc:xacml:1.0:status:processing-error.
+: This function SHALL take a first argument of data-type `http://www.w3.org/2001/XMLSchema#anyURI` and a second and a third argument of type `http://www.w3.org/2001/XMLSchema#integer` and SHALL return a `http://www.w3.org/2001/XMLSchema#string`. The result SHALL be the substring of the first argument converted to a string with `urn:oasis:names:tc:xacml:3.0:function:string-from-anyURI` beginning at the position given by the second argument and ending at the position before the position given by the third argument. The first character of the URI converted to a string has position zero. The negative integer value -1 given for the third arguments indicates the end of the string. If the second or third arguments are out of bounds, then the function MUST evaluate to Indeterminate with a status code of `urn:oasis:names:tc:xacml:1.0:status:processing-error`. If the resulting substring is not syntactically a valid URI, then the function MUST evaluate to Indeterminate with a status code of `urn:oasis:names:tc:xacml:1.0:status:processing-error`.
 
 ### E.3.10 Bag functions
 
 These functions operate on a **_bag_** of `type` values, where type is one of the primitive data-types, and x.x is a version of XACML where the function has been defined. Some additional conditions defined for each function below SHALL cause the expression to evaluate to `Indeterminate`.
 
-urn:oasis:names:tc:xacml:x.x:function:type-one-and-only
+`urn:oasis:names:tc:xacml:x.x:function:type-one-and-only`
 
 : This function SHALL take a **_bag_** of `type` values as an argument and SHALL return a value of `type`. It SHALL return the only value in the **_bag_**. If the **_bag_** does not have one and only one value, then the expression SHALL evaluate to `Indeterminate`.
 
-urn:oasis:names:tc:xacml:x.x:function:type-bag-size
+`urn:oasis:names:tc:xacml:x.x:function:type-bag-size`
 
-: This function SHALL take a **_bag_** of `type` values as an argument and SHALL return an `http://www.w3.org/2001/XMLSchema#integer` indicating the number of values in the **_bag_**.
+: This function SHALL take a **_bag_** of `type` values as an argument and SHALL return an <!-- Line break added for the previous line to fit on a PDF page -->
+: `http://www.w3.org/2001/XMLSchema#integer` indicating the number of values in the **_bag_**.
 
-urn:oasis:names:tc:xacml:x.x:function:type-is-in
+`urn:oasis:names:tc:xacml:x.x:function:type-is-in`
 
-: This function SHALL take an argument of `type` as the first argument and a **_bag_** of `type` values as the second argument and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. The function SHALL evaluate to `True` if and only if the first argument matches by the `urn:oasis:names:tc:xacml:x.x:function:type-equal` any value in the **_bag_**. Otherwise, it SHALL return `False`.
+: This function SHALL take an argument of `type` as the first argument and a **_bag_** of `type` values as the second argument and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. The function SHALL evaluate to `True` if and only if the first argument matches by the <!-- Line break added for the previous line to fit on a PDF page -->
+: `urn:oasis:names:tc:xacml:x.x:function:type-equal` any value in the **_bag_**. Otherwise, it SHALL return `False`.
 
-urn:oasis:names:tc:xacml:x.x:function:type-bag
+`urn:oasis:names:tc:xacml:x.x:function:type-bag`
 
 : This function SHALL take any number of arguments of `type` and return a **_bag_** of `type` values containing the values of the arguments. An application of this function to zero arguments SHALL produce an empty **_bag_** of the specified data-type.
 
@@ -4330,223 +4362,275 @@ urn:oasis:names:tc:xacml:x.x:function:type-bag
 
 These functions operate on **_bags_** mimicking sets by eliminating duplicate elements from a **_bag_**.
 
-urn:oasis:names:tc:xacml:x.x:function:type-intersection
+`urn:oasis:names:tc:xacml:x.x:function:type-intersection`
 
 : This function SHALL take two arguments that are both a **_bag_** of `type` values. It SHALL return a **_bag_** of `type` values such that it contains only elements that are common between the two **_bags_**, which is determined by `urn:oasis:names:tc:xacml:x.x:function:type-equal`. No duplicates, as determined by `urn:oasis:names:tc:xacml:x.x:function:type-equal`, SHALL exist in the result.
 
-urn:oasis:names:tc:xacml:x.x:function:type-at-least-one-member-of
+`urn:oasis:names:tc:xacml:x.x:function:type-at-least-one-member-of`
 
 : This function SHALL take two arguments that are both a **_bag_** of `type` values. It SHALL return a `http://www.w3.org/2001/XMLSchema#boolean`. The function SHALL evaluate to `True` if and only if at least one element of the first argument is contained in the second argument as determined by `urn:oasis:names:tc:xacml:x.x:function:type-is-in`.
 
-urn:oasis:names:tc:xacml:x.x:function:type-union
+`urn:oasis:names:tc:xacml:x.x:function:type-union`
 
 : This function SHALL take two or more arguments that are both a **_bag_** of `type` values. The expression SHALL return a **_bag_** of `type` such that it contains all elements of all the argument **_bags_**. No duplicates, as determined by `urn:oasis:names:tc:xacml:x.x:function:type-equal`, SHALL exist in the result.
 
-urn:oasis:names:tc:xacml:x.x:function:type-subset
+`urn:oasis:names:tc:xacml:x.x:function:type-subset`
 
 : This function SHALL take two arguments that are both a **_bag_** of `type` values. It SHALL return a `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `True` if and only if the first argument is a subset of the second argument. Each argument SHALL be considered to have had its duplicates removed, as determined by `urn:oasis:names:tc:xacml:x.x:function:type-equal`, before the subset calculation.
 
-urn:oasis:names:tc:xacml:x.x:function:type-set-equals
+`urn:oasis:names:tc:xacml:x.x:function:type-set-equals`
 
-: This function SHALL take two arguments that are both a **_bag_** of `type` values. It SHALL return a `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return the result of applying `urn:oasis:names:tc:xacml:1.0:function:and` to the application of `urn:oasis:names:tc:xacml:x.x:function:type-subset` to the first and second arguments and the application of `urn:oasis:names:tc:xacml:x.x:function:type-subset` to the second and first arguments.
+: This function SHALL take two arguments that are both a **_bag_** of `type` values. It SHALL return a `http://www.w3.org/2001/XMLSchema#boolean`. It SHALL return the result of applying `urn:oasis:names:tc:xacml:1.0:function:and` to the application of 
+<!-- Line break added for the previous line to fit on a PDF page -->
+: `urn:oasis:names:tc:xacml:x.x:function:type-subset` to the first and second arguments and the application of `urn:oasis:names:tc:xacml:x.x:function:type-subset` to the second and first arguments.
 
 ### E.3.12 Higher-order bag functions
 
 This section describes functions in XACML that perform operations on bags such that functions may be applied to the bags in general.
 
-urn:oasis:names:tc:xacml:3.0:function:any-of
+* `urn:oasis:names:tc:xacml:3.0:function:any-of`
 
-: This function applies a Boolean function between specific primitive values and a bag of values, and SHALL return `True` if and only if the predicate is `True` for at least one element of the bag.
+  This function applies a Boolean function between specific primitive values and a bag of values, and SHALL return `True` if and only if the predicate is `True` for at least one element of the bag.
 
-: This function SHALL take n+1 arguments, where n is one or greater. The first argument SHALL be an `<Function>` element that names a Boolean function that takes n arguments of primitive types. Under the remaining n arguments, n-1 parameters SHALL be values of primitive data-types and one SHALL be a bag of a primitive data-type. The expression SHALL be evaluated as if the function named in the `<Function>` argument were applied to the n-1 non-bag arguments and each element of the bag argument and the results are combined with `urn:oasis:names:tc:xacml:1.0:function:or`.
+  This function SHALL take n+1 arguments, where n is one or greater. The first argument SHALL be an `<Function>` element that names a Boolean function that takes n arguments of primitive types. Under the remaining n arguments, n-1 parameters SHALL be values of primitive data-types and one SHALL be a bag of a primitive data-type. The expression SHALL be evaluated as if the function named in the `<Function>` argument were applied to the n-1 non-bag arguments and each element of the bag argument and the results are combined with `urn:oasis:names:tc:xacml:1.0:function:or`.
 
-: For example, the following expression SHALL return `True` because the first argument is equal to at least one of the elements of the bag:
+  For example, the following expression SHALL return `True` because the first argument is equal to at least one of the elements of the bag:
 
-```xml
-    <Apply FunctionId="urn:oasis:names:tc:xacml:3.0:function:any-of">
-       <Function FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal"/>
-       <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Paul</AttributeValue>
-       <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
-          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">John</AttributeValue>
-          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Paul</AttributeValue>
-          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">George</AttributeValue>
-          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Ringo</AttributeValue>
-       </Apply>
+  ```xml
+  <Apply FunctionId="urn:oasis:names:tc:xacml:3.0:function:any-of">
+    <Function FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal"/>
+    <AttributeValue 
+      DataType="http://www.w3.org/2001/XMLSchema#string">Paul</AttributeValue>
+    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
+      <AttributeValue 
+        DataType="http://www.w3.org/2001/XMLSchema#string">John</AttributeValue>
+      <AttributeValue 
+        DataType="http://www.w3.org/2001/XMLSchema#string">Paul</AttributeValue>
+      <AttributeValue 
+        DataType="http://www.w3.org/2001/XMLSchema#string">George</AttributeValue>
+      <AttributeValue 
+        DataType="http://www.w3.org/2001/XMLSchema#string">Ringo</AttributeValue>
     </Apply>
-```
+  </Apply>
+  ```
 
-urn:oasis:names:tc:xacml:3.0:function:all-of
+* `urn:oasis:names:tc:xacml:3.0:function:all-of`
 
-: This function applies a Boolean function between a specific primitive value and a bag of values, and returns `True` if and only if the predicate is `True` for every element of the bag.
+  This function applies a Boolean function between a specific primitive value and a bag of values, and returns `True` if and only if the predicate is `True` for every element of the bag.
 
-: This function SHALL take n+1 arguments, where n is one or greater. The first argument SHALL be a `<Function>` element that names a Boolean function that takes n arguments of primitive types. Under the remaining n arguments, n-1 parameters SHALL be values of primitive data-types and one SHALL be a bag of a primitive data-type. The expression SHALL be evaluated as if the function named in the `<Function>` argument were applied to the n-1 non-bag arguments and each element of the bag argument and the results are combined with `urn:oasis:names:tc:xacml:1.0:function:and`.
+  This function SHALL take n+1 arguments, where n is one or greater. The first argument SHALL be a `<Function>` element that names a Boolean function that takes n arguments of primitive types. Under the remaining n arguments, n-1 parameters SHALL be values of primitive data-types and one SHALL be a bag of a primitive data-type. The expression SHALL be evaluated as if the function named in the `<Function>` argument were applied to the n-1 non-bag arguments and each element of the bag argument and the results are combined with `urn:oasis:names:tc:xacml:1.0:function:and`.
 
-: For example, the following expression SHALL evaluate to `True` because the first argument (10) is greater than all of the elements of the bag (9,3,4 and 2):
+  For example, the following expression SHALL evaluate to `True` because the first argument (10) is greater than all of the elements of the bag (9,3,4 and 2):
 
-```xml
-    <Apply FunctionId="urn:oasis:names:tc:xacml:3.0:function:all-of">
-       <Function FunctionId="urn:oasis:names:tc:xacml:2.0:function:integer-greater-than"/>
-       <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">10</AttributeValue>
-       <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-bag">
-          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">9</AttributeValue>
-          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">3</AttributeValue>
-          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">4</AttributeValue>
-          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">2</AttributeValue>
-       </Apply>
+  ```xml
+  <Apply FunctionId="urn:oasis:names:tc:xacml:3.0:function:all-of">
+    <Function FunctionId="urn:oasis:names:tc:xacml:2.0:function:integer-greater-than"/>
+    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">10</AttributeValue>
+    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-bag">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">9</AttributeValue>
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">3</AttributeValue>
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">4</AttributeValue>
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">2</AttributeValue>
     </Apply>
-```
+  </Apply>
+  ```
 
-urn:oasis:names:tc:xacml:3.0:function:any-of-any
+* `urn:oasis:names:tc:xacml:3.0:function:any-of-any`
 
-: This function applies a Boolean function on each tuple from the cross product on all bags arguments, and returns `True` if and only if the predicate is `True` for at least one inside-function call.
+  This function applies a Boolean function on each tuple from the cross product on all bags arguments, and returns `True` if and only if the predicate is `True` for at least one inside-function call.
 
-: This function SHALL take n+1 arguments, where n is one or greater. The first argument SHALL be an `<Function>` element that names a Boolean function that takes n arguments. The remaining arguments are either primitive data types or bags of primitive types. The expression SHALL be evaluated as if the function named in the `<Function>` argument was applied between every tuple of the cross product on all bags and the primitive values, and the results were combined using `urn:oasis:names:tc:xacml:1.0:function:or`. The semantics are that the result of the expression SHALL be `True` if and only if the applied predicate is `True` for at least one function call on the tuples from the bags and primitive values.
+  This function SHALL take n+1 arguments, where n is one or greater. The first argument SHALL be an `<Function>` element that names a Boolean function that takes n arguments. The remaining arguments are either primitive data types or bags of primitive types. The expression SHALL be evaluated as if the function named in the `<Function>` argument was applied between every tuple of the cross product on all bags and the primitive values, and the results were combined using `urn:oasis:names:tc:xacml:1.0:function:or`. The semantics are that the result of the expression SHALL be `True` if and only if the applied predicate is `True` for at least one function call on the tuples from the bags and primitive values.
 
-: For example, the following expression SHALL evaluate to `True` because at least one of the elements of the first bag, namely `Ringo`, is equal to at least one of the elements of the second bag:
+  For example, the following expression SHALL evaluate to `True` because at least one of the elements of the first bag, namely `Ringo`, is equal to at least one of the elements of the second bag:
 
-```xml
-    <Apply FunctionId="urn:oasis:names:tc:xacml:3.0:function:any-of-any">
-       <Function FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal"/>
-       <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
-          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Ringo</AttributeValue>
-          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Mary</AttributeValue>
-       </Apply>
-       <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
-          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">John</AttributeValue>
-          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Paul</AttributeValue>
-          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">George</AttributeValue>
-          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Ringo</AttributeValue>
-       </Apply>
+  ```xml
+  <Apply FunctionId="urn:oasis:names:tc:xacml:3.0:function:any-of-any">
+    <Function FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal"/>
+    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Ringo</AttributeValue>
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Mary</AttributeValue>
     </Apply>
-```
-
-urn:oasis:names:tc:xacml:1.0:function:all-of-any
-
-: This function applies a Boolean function between the elements of two bags. The expression SHALL be `True` if and only if the supplied predicate is `True` between each element of the first bag and any element of the second bag.
-
-: This function SHALL take three arguments. The first argument SHALL be an `<Function>` element that names a Boolean function that takes two arguments of primitive types. The second argument SHALL be a bag of a primitive data-type. The third argument SHALL be a bag of a primitive data-type. The expression SHALL be evaluated as if the `urn:oasis:names:tc:xacml:3.0:function:any-of` function had been applied to each value of the first bag and the whole of the second bag using the supplied xacml:Function, and the results were then combined using `urn:oasis:names:tc:xacml:1.0:function:and`.
-
-: For example, the following expression SHALL evaluate to `True` because each of the elements of the first bag is greater than at least one of the elements of the second bag:
-
-```xml
-    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:all-of-any">
-       <Function FunctionId="urn:oasis:names:tc:xacml:2.0:function:integer-greater-than"/>
-       <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-bag">
-          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">10</AttributeValue>
-          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">20</AttributeValue>
-       </Apply>
-       <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-bag">
-          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">1</AttributeValue>
-          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">3</AttributeValue>
-          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">5</AttributeValue>
-          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">19</AttributeValue>
-       </Apply>
+    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">John</AttributeValue>
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Paul</AttributeValue>
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">George</AttributeValue>
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Ringo</AttributeValue>
     </Apply>
-```
+  </Apply>
+  ```
 
-urn:oasis:names:tc:xacml:1.0:function:any-of-all
+* `urn:oasis:names:tc:xacml:1.0:function:all-of-any`
 
-: This function applies a Boolean function between the elements of two bags. The expression SHALL be `True` if and only if the supplied predicate is `True` between each element of the second bag and any element of the first bag.
+  This function applies a Boolean function between the elements of two bags. The expression SHALL be `True` if and only if the supplied predicate is `True` between each element of the first bag and any element of the second bag.
 
-: This function SHALL take three arguments. The first argument SHALL be an `<Function>` element that names a Boolean function that takes two arguments of primitive types. The second argument SHALL be a bag of a primitive data-type. The third argument SHALL be a bag of a primitive data-type. The expression SHALL be evaluated as if the `urn:oasis:names:tc:xacml:3.0:function:any-of` function had been applied to each value of the second bag and the whole of the first bag using the supplied xacml:Function, and the results were then combined using `urn:oasis:names:tc:xacml:1.0:function:and`.
+  This function SHALL take three arguments. The first argument SHALL be an `<Function>` element that names a Boolean function that takes two arguments of primitive types. The second argument SHALL be a bag of a primitive data-type. The third argument SHALL be a bag of a primitive data-type. The expression SHALL be evaluated as if the `urn:oasis:names:tc:xacml:3.0:function:any-of` function had been applied to each value of the first bag and the whole of the second bag using the supplied xacml:Function, and the results were then combined using `urn:oasis:names:tc:xacml:1.0:function:and`.
 
-: For example, the following expression SHALL evaluate to `True` because, for all of the values in the second bag, there is a value in the first bag that is greater:
+  For example, the following expression SHALL evaluate to `True` because each of the elements of the first bag is greater than at least one of the elements of the second bag:
 
-```xml
+  ```xml
+  <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:all-of-any">
+    <Function FunctionId="urn:oasis:names:tc:xacml:2.0:function:integer-greater-than"/>
+    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-bag">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">10</AttributeValue>
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">20</AttributeValue>
+    </Apply>
+    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-bag">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">1</AttributeValue>
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">3</AttributeValue>
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">5</AttributeValue>
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">19</AttributeValue>
+    </Apply>
+  </Apply>
+  ```
+
+* `urn:oasis:names:tc:xacml:1.0:function:any-of-all`
+
+  This function applies a Boolean function between the elements of two bags. The expression SHALL be `True` if and only if the supplied predicate is `True` between each element of the second bag and any element of the first bag.
+
+  This function SHALL take three arguments. The first argument SHALL be an `<Function>` element that names a Boolean function that takes two arguments of primitive types. The second argument SHALL be a bag of a primitive data-type. The third argument SHALL be a bag of a primitive data-type. The expression SHALL be evaluated as if the `urn:oasis:names:tc:xacml:3.0:function:any-of` function had been applied to each value of the second bag and the whole of the first bag using the supplied xacml:Function, and the results were then combined using `urn:oasis:names:tc:xacml:1.0:function:and`.
+
+  For example, the following expression SHALL evaluate to `True` because, for all of the values in the second bag, there is a value in the first bag that is greater:
+
+  ```xml
+  <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:any-of-all">
+    <Function FunctionId="urn:oasis:names:tc:xacml:2.0:function:integer-greater-than"/>
     <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:fu`nction:integer-bag">
-          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">3</AttributeValue>
-          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">5</AttributeValue>
-       </Apply>
-       <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-bag">
-          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">1</AttributeValue>
-          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">2</AttributeValue>
-          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">3</AttributeValue>
-          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">4</AttributeValue>
-       </Apply>
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">3</AttributeValue>
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">5</AttributeValue>
     </Apply>
-```
-
-urn:oasis:names:tc:xacml:1.0:function:all-of-all
-
-: This function applies a Boolean function between the elements of two bags. The expression SHALL be `True` if and only if the supplied predicate is `True` between each and every element of the first bag collectively against all the elements of the second bag.
-
-: This function SHALL take three arguments. The first argument SHALL be an `<Function>` element that names a Boolean function that takes two arguments of primitive types. The second argument SHALL be a bag of a primitive data-type. The third argument SHALL be a bag of a primitive data-type. The expression is evaluated as if the function named in the `<Function>` element were applied between every element of the second argument and every element of the third argument and the results were combined using `urn:oasis:names:tc:xacml:1.0:function:and`. The semantics are that the result of the expression is `True` if and only if the applied predicate is `True` for all elements of the first bag compared to all the elements of the second bag.
-
-: For example, the following expression SHALL evaluate to `True` because all elements of the first bag, `5` and `6`, are each greater than all of the integer values `1`, `2`, `3`, `4` of the second bag:
-
-```xml
-    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:all-of-all">
-       <Function FunctionId="urn:oasis:names:tc:xacml:2.0:function:integer-greater-than"/>
-       <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-bag">
-          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">6</AttributeValue>
-          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">5</AttributeValue>
-       </Apply>
-       <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-bag">
-          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">1</AttributeValue>
-          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">2</AttributeValue>
-          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">3</AttributeValue>
-          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">4</AttributeValue>
-       </Apply>
+    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-bag">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">1</AttributeValue>
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">2</AttributeValue>
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">3</AttributeValue>
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">4</AttributeValue>
     </Apply>
-```
+  </Apply>
+  ```
 
-urn:oasis:names:tc:xacml:3.0:function:map
+* `urn:oasis:names:tc:xacml:1.0:function:all-of-all`
 
-: This function converts a bag of values to another bag of values.
+  This function applies a Boolean function between the elements of two bags. The expression SHALL be `True` if and only if the supplied predicate is `True` between each and every element of the first bag collectively against all the elements of the second bag.
 
-: This function SHALL take n+1 arguments, where n is one or greater. The first argument SHALL be a `<Function>` element naming a function that takes a n arguments of a primitive data-type and returns a value of a primitive data-type Under the remaining n arguments, n-1 parameters SHALL be values of primitive data-types and one SHALL be a bag of a primitive data-type. The expression SHALL be evaluated as if the function named in the `<Function>` argument were applied to the n-1 non-bag arguments and each element of the bag argument and resulting in a bag of the converted value. The result SHALL be a bag of the primitive data-type that is returned by the function named in the `<xacml:Function>` element.
+  This function SHALL take three arguments. The first argument SHALL be an `<Function>` element that names a Boolean function that takes two arguments of primitive types. The second argument SHALL be a bag of a primitive data-type. The third argument SHALL be a bag of a primitive data-type. The expression is evaluated as if the function named in the `<Function>` element were applied between every element of the second argument and every element of the third argument and the results were combined using `urn:oasis:names:tc:xacml:1.0:function:and`. The semantics are that the result of the expression is `True` if and only if the applied predicate is `True` for all elements of the first bag compared to all the elements of the second bag.
 
-: For example, the following expression, evaluates to a bag containing `hello` and `world!`.
+  For example, the following expression SHALL evaluate to `True` because all elements of the first bag, `5` and `6`, are each greater than all of the integer values `1`, `2`, `3`, `4` of the second bag:
 
-```xml
-    <Apply FunctionId="urn:oasis:names:tc:xacml:3.0:function:map">
-       <Function FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-normalize-to-lower-case">
-       <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
-          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Hello</AttributeValue>
-          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">World!</AttributeValue>
-       </Apply>
+  ```xml
+  <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:all-of-all">
+    <Function FunctionId="urn:oasis:names:tc:xacml:2.0:function:integer-greater-than"/>
+    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-bag">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">6</AttributeValue>
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">5</AttributeValue>
     </Apply>
-```
+    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-bag">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">1</AttributeValue>
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">2</AttributeValue>
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">3</AttributeValue>
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">4</AttributeValue>
+    </Apply>
+  </Apply>
+  ```
+
+* `urn:oasis:names:tc:xacml:3.0:function:map`
+
+  This function converts a bag of values to another bag of values.
+
+  This function SHALL take n+1 arguments, where n is one or greater. The first argument SHALL be a `<Function>` element naming a function that takes a n arguments of a primitive data-type and returns a value of a primitive data-type Under the remaining n arguments, n-1 parameters SHALL be values of primitive data-types and one SHALL be a bag of a primitive data-type. The expression SHALL be evaluated as if the function named in the `<Function>` argument were applied to the n-1 non-bag arguments and each element of the bag argument and resulting in a bag of the converted value. The result SHALL be a bag of the primitive data-type that is returned by the function named in the `<xacml:Function>` element.
+
+  For example, the following expression, evaluates to a bag containing `hello` and `world!`.
+
+  ```xml
+  <Apply FunctionId="urn:oasis:names:tc:xacml:3.0:function:map">
+    <Function FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-normalize-to-lower-case">
+    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Hello</AttributeValue>
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">World!</AttributeValue>
+    </Apply>
+  </Apply>
+  ```
 
 ### E.3.13 Regular-expression-based functions
 
-These functions operate on various types using regular expressions and evaluate to `http://www.w3.org/2001/XMLSchema#boolean`.
+These functions operate on various types using regular expressions and evaluate to 
+<!-- Line break added for the previous line to fit on a PDF page -->
+`http://www.w3.org/2001/XMLSchema#boolean`.
 
-urn:oasis:names:tc:xacml:1.0:function:string-regexp-match
+* `urn:oasis:names:tc:xacml:1.0:function:string-regexp-match`
 
-: This function decides a regular expression match. It SHALL take two arguments of `http://www.w3.org/2001/XMLSchema#string` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. The first argument SHALL be a regular expression and the second argument SHALL be a general string. The function specification SHALL be that of the `xf:matches` function with the arguments reversed [XF] Section 7.6.2.
+  This function decides a regular expression match. It SHALL take two arguments of 
+  <!-- Line break added for the previous line to fit on a PDF page -->
+  `http://www.w3.org/2001/XMLSchema#string` and SHALL return an 
+  `http://www.w3.org/2001/XMLSchema#boolean`. The first argument SHALL be a regular expression and the second argument SHALL be a general string. The function specification SHALL be that of the `xf:matches` function with the arguments reversed [XF] Section 7.6.2.
 
-urn:oasis:names:tc:xacml:2.0:function:anyURI-regexp-match
+* `urn:oasis:names:tc:xacml:2.0:function:anyURI-regexp-match`
 
-: This function decides a regular expression match. It SHALL take two arguments; the first is of type `http://www.w3.org/2001/XMLSchema#string` and the second is of type `http://www.w3.org/2001/XMLSchema#anyURI`. It SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. The first argument SHALL be a regular expression and the second argument SHALL be a URI. The function SHALL convert the second argument to type `http://www.w3.org/2001/XMLSchema#string` with urn:oasis:names:tc:xacml:3.0:function:string-from-anyURI, then apply `urn:oasis:names:tc:xacml:1.0:function:string-regexp-match`.
+  This function decides a regular expression match. It SHALL take two arguments; the first is of type `http://www.w3.org/2001/XMLSchema#string` and the second is of type 
+  <!-- Line break added for the previous line to fit on a PDF page -->
+  `http://www.w3.org/2001/XMLSchema#anyURI`. It SHALL return an
+  <!-- Line break added for the previous line to fit on a PDF page -->
+  `http://www.w3.org/2001/XMLSchema#boolean`. The first argument SHALL be a regular expression and the second argument SHALL be a URI. The function SHALL convert the second argument to type `http://www.w3.org/2001/XMLSchema#string` with 
+  <!-- Line break added for the previous line to fit on a PDF page -->
+  `urn:oasis:names:tc:xacml:3.0:function:string-from-anyURI`, then apply
+  <!-- Line break added for the previous line to fit on a PDF page -->
+  `urn:oasis:names:tc:xacml:1.0:function:string-regexp-match`.
 
-urn:oasis:names:tc:xacml:2.0:function:ipAddress-regexp-match
+* `urn:oasis:names:tc:xacml:2.0:function:ipAddress-regexp-match`
 
-: This function decides a regular expression match. It SHALL take two arguments; the first is of type `http://www.w3.org/2001/XMLSchema#string` and the second is of type `urn:oasis:names:tc:xacml:2.0:data-type:ipAddress`. It SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. The first argument SHALL be a regular expression and the second argument SHALL be an IPv4 or IPv6 address. The function SHALL convert the second argument to type `http://www.w3.org/2001/XMLSchema#string` with urn:oasis:names:tc:xacml:3.0:function:string-from-ipAddress, then apply `urn:oasis:names:tc:xacml:1.0:function:string-regexp-match`.
+  This function decides a regular expression match. It SHALL take two arguments; the first is of type `http://www.w3.org/2001/XMLSchema#string` and the second is of type 
+  <!-- Line break added for the previous line to fit on a PDF page -->
+  `urn:oasis:names:tc:xacml:2.0:data-type:ipAddress`. It SHALL return an 
+  <!-- Line break added for the previous line to fit on a PDF page -->
+  `http://www.w3.org/2001/XMLSchema#boolean`. The first argument SHALL be a regular expression and the second argument SHALL be an IPv4 or IPv6 address. The function SHALL convert the second argument to type `http://www.w3.org/2001/XMLSchema#string` with 
+  <!-- Line break added for the previous line to fit on a PDF page -->
+  `urn:oasis:names:tc:xacml:3.0:function:string-from-ipAddress`, then apply 
+  <!-- Line break added for the previous line to fit on a PDF page -->
+  `urn:oasis:names:tc:xacml:1.0:function:string-regexp-match`.
 
-urn:oasis:names:tc:xacml:2.0:function:dnsName-regexp-match
+* `urn:oasis:names:tc:xacml:2.0:function:dnsName-regexp-match`
 
-: This function decides a regular expression match. It SHALL take two arguments; the first is of type `http://www.w3.org/2001/XMLSchema#string` and the second is of type `urn:oasis:names:tc:xacml:2.0:data-type:dnsName`. It SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. The first argument SHALL be a regular expression and the second argument SHALL be a DNS name. The function SHALL convert the second argument to type `http://www.w3.org/2001/XMLSchema#string` with urn:oasis:names:tc:xacml:3.0:function:string-from-dnsName, then apply `urn:oasis:names:tc:xacml:1.0:function:string-regexp-match`.
+  This function decides a regular expression match. It SHALL take two arguments; the first is of type `http://www.w3.org/2001/XMLSchema#string` and the second is of type 
+  <!-- Line break added for the previous line to fit on a PDF page -->
+  `urn:oasis:names:tc:xacml:2.0:data-type:dnsName`. It SHALL return an 
+  <!-- Line break added for the previous line to fit on a PDF page -->
+  `http://www.w3.org/2001/XMLSchema#boolean`. The first argument SHALL be a regular expression and the second argument SHALL be a DNS name. The function SHALL convert the second argument to type `http://www.w3.org/2001/XMLSchema#string` with `urn:oasis:names:tc:xacml:3.0:function:string-from-dnsName`, then apply 
+  <!-- Line break added for the previous line to fit on a PDF page -->
+  `urn:oasis:names:tc:xacml:1.0:function:string-regexp-match`.
 
-urn:oasis:names:tc:xacml:2.0:function:rfc822Name-regexp-match
+* `urn:oasis:names:tc:xacml:2.0:function:rfc822Name-regexp-match`
 
-: This function decides a regular expression match. It SHALL take two arguments; the first is of type `http://www.w3.org/2001/XMLSchema#string` and the second is of type `urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name`. It SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. The first argument SHALL be a regular expression and the second argument SHALL be an RFC 822 name. The function SHALL convert the second argument to type `http://www.w3.org/2001/XMLSchema#string` with urn:oasis:names:tc:xacml:3.0:function:string-from-rfc822Name, then apply `urn:oasis:names:tc:xacml:1.0:function:string-regexp-match`.
+  This function decides a regular expression match. It SHALL take two arguments; the first is of type `http://www.w3.org/2001/XMLSchema#string` and the second is of type 
+  <!-- Line break added for the previous line to fit on a PDF page -->
+  `urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name`. It SHALL return an 
+  <!-- Line break added for the previous line to fit on a PDF page -->
+  `http://www.w3.org/2001/XMLSchema#boolean`. The first argument SHALL be a regular expression and the second argument SHALL be an RFC 822 name. The function SHALL convert the second argument to type `http://www.w3.org/2001/XMLSchema#string` with 
+  <!-- Line break added for the previous line to fit on a PDF page -->
+  `urn:oasis:names:tc:xacml:3.0:function:string-from-rfc822Name`, then apply 
+  <!-- Line break added for the previous line to fit on a PDF page -->
+  `urn:oasis:names:tc:xacml:1.0:function:string-regexp-match`.
 
-urn:oasis:names:tc:xacml:2.0:function:x500Name-regexp-match
+* `urn:oasis:names:tc:xacml:2.0:function:x500Name-regexp-match`
 
-: This function decides a regular expression match. It SHALL take two arguments; the first is of type `http://www.w3.org/2001/XMLSchema#string` and the second is of type `urn:oasis:names:tc:xacml:1.0:data-type:x500Name`. It SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. The first argument SHALL be a regular expression and the second argument SHALL be an X.500 directory name. The function SHALL convert the second argument to type `http://www.w3.org/2001/XMLSchema#string` with urn:oasis:names:tc:xacml:3.0:function:string-from-x500Name, then apply `urn:oasis:names:tc:xacml:1.0:function:string-regexp-match`.
+  This function decides a regular expression match. It SHALL take two arguments; the first is of type `http://www.w3.org/2001/XMLSchema#string` and the second is of type 
+  <!-- Line break added for the previous line to fit on a PDF page -->
+  `urn:oasis:names:tc:xacml:1.0:data-type:x500Name`. It SHALL return an 
+  <!-- Line break added for the previous line to fit on a PDF page -->
+  `http://www.w3.org/2001/XMLSchema#boolean`. The first argument SHALL be a regular expression and the second argument SHALL be an X.500 directory name. The function SHALL convert the second argument to type `http://www.w3.org/2001/XMLSchema#string` with 
+  <!-- Line break added for the previous line to fit on a PDF page -->
+  `urn:oasis:names:tc:xacml:3.0:function:string-from-x500Name`, then apply 
+  <!-- Line break added for the previous line to fit on a PDF page -->
+  `urn:oasis:names:tc:xacml:1.0:function:string-regexp-match`.
 
 ### E.3.14 Special match functions
 
 These functions operate on various types and evaluate to `http://www.w3.org/2001/XMLSchema#boolean` based on the specified standard matching algorithm.
 
-urn:oasis:names:tc:xacml:1.0:function:x500Name-match
+`urn:oasis:names:tc:xacml:1.0:function:x500Name-match`
 
-: This function shall take two arguments of `urn:oasis:names:tc:xacml:1.0:data-type:x500Name` and shall return an `http://www.w3.org/2001/XMLSchema#boolean`. It shall return `True` if and only if the first argument matches some terminal sequence of RDNs from the second argument when compared using x500Name-equal.
+: This function shall take two arguments of `urn:oasis:names:tc:xacml:1.0:data-type:x500Name` and shall return an `http://www.w3.org/2001/XMLSchema#boolean`. It shall return `True` if and only if the first argument matches some terminal sequence of RDNs from the second argument when compared using `x500Name-equal`.
 
 : As an example (non-normative), if the first argument is `O=Medico Corp,C=US` and the second argument is `cn=John Smith,o=Medico Corp, c=US`, then the function will return `True`.
 
-urn:oasis:names:tc:xacml:1.0:function:rfc822Name-match
+`urn:oasis:names:tc:xacml:1.0:function:rfc822Name-match`
 
 : This function SHALL take two arguments, the first is of data-type `http://www.w3.org/2001/XMLSchema#string` and the second is of data-type `urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name` and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. This function SHALL evaluate to `True` if the first argument matches the second argument according to the following specification.
 
@@ -4564,15 +4648,15 @@ urn:oasis:names:tc:xacml:1.0:function:rfc822Name-match
 
 This section specifies functions that take XPath expressions for arguments. An XPath expression evaluates to a node-set, which is a set of XML nodes that match the expression. A node or node-set is not in the formal data-type system of XACML. All comparison or other operations on node-sets are performed in isolation of the particular function specified. The context nodes and namespace mappings of the XPath expressions are defined by the XPath data-type, see [Appendix E.2.5](#e25-xpath-expression). The following functions are defined:
 
-urn:oasis:names:tc:xacml:3.0:function:xpath-node-count
+`urn:oasis:names:tc:xacml:3.0:function:xpath-node-count`
 
 : This function SHALL take an `urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression` as an argument and evaluates to an `http://www.w3.org/2001/XMLSchema#integer`. The value returned from the function SHALL be the count of the nodes within the node-set that match the given XPath expression. If the `<Content>` element of the category to which the XPath expression applies to is not present in the request, this function SHALL return a value of zero.
 
-urn:oasis:names:tc:xacml:3.0:function:xpath-node-equal
+`urn:oasis:names:tc:xacml:3.0:function:xpath-node-equal`
 
 : This function SHALL take two `urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression` arguments and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. The function SHALL return `True` if any of the XML nodes in the node-set matched by the first argument equals any of the XML nodes in the node-set matched by the second argument. Two nodes are considered equal if they have the same identity. If the `<Content>` element of the category to which either XPath expression applies to is not present in the request, this function SHALL return a value of `False`.
 
-urn:oasis:names:tc:xacml:3.0:function:xpath-node-match
+`urn:oasis:names:tc:xacml:3.0:function:xpath-node-match`
 
 : This function SHALL take two `urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression` arguments and SHALL return an `http://www.w3.org/2001/XMLSchema#boolean`. This function SHALL evaluate to `True` if one of the following two conditions is satisfied: (1) Any of the XML nodes in the node-set matched by the first argument is equal to any of the XML nodes in the node-set matched by the second argument; (2) any node below any of the XML nodes in the node-set matched by the first argument is equal to any of the XML nodes in the node-set matched by the second argument. Two nodes are considered equal if they have the same identity. If the `<Content>` element of the category to which either XPath expression applies to is not present in the request, this function SHALL return a value of `False`.
 
@@ -4580,9 +4664,10 @@ urn:oasis:names:tc:xacml:3.0:function:xpath-node-match
 
 ### E.3.16 Other functions
 
-urn:oasis:names:tc:xacml:3.0:function:access-permitted
+`urn:oasis:names:tc:xacml:3.0:function:access-permitted`
 
-: This function SHALL take an `http://www.w3.org/2001/XMLSchema#anyURI` and an `http://www.w3.org/2001/XMLSchema#string` as arguments. The first argument SHALL be interpreted as an **_attribute_** category. The second argument SHALL be interpreted as the XML content of an `<Attributes>` element with `Category` equal to the first argument. The function evaluates to an `http://www.w3.org/2001/XMLSchema#boolean`. This function SHALL return `True` if and only if the **_policy_** evaluation described below returns the value of `Permit`.
+: This function SHALL take an `http://www.w3.org/2001/XMLSchema#anyURI` and an <!-- Line break added for the previous line to fit on a PDF page -->
+: `http://www.w3.org/2001/XMLSchema#string` as arguments. The first argument SHALL be interpreted as an **_attribute_** category. The second argument SHALL be interpreted as the XML content of an `<Attributes>` element with `Category` equal to the first argument. The function evaluates to an `http://www.w3.org/2001/XMLSchema#boolean`. This function SHALL return `True` if and only if the **_policy_** evaluation described below returns the value of `Permit`.
 
 : The following evaluation is described as if the **_context_** is actually instantiated, but it is only required that an equivalent result be obtained.
 
@@ -4604,75 +4689,75 @@ The following functions, data types and algorithms have been defined by previous
 
 The following xpath based functions have been replaced with equivalent functions which use the new urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression datatype instead of strings.
 
-urn:oasis:names:tc:xacml:1.0:function:xpath-node-count
+`urn:oasis:names:tc:xacml:1.0:function:xpath-node-count`
 
 : Replaced with urn:oasis:names:tc:xacml:3.0:function:xpath-node-count
 
-urn:oasis:names:tc:xacml:1.0:function:xpath-node-equal
+`urn:oasis:names:tc:xacml:1.0:function:xpath-node-equal`
 
 : Replaced with urn:oasis:names:tc:xacml:3.0:function:xpath-node-equal
 
-urn:oasis:names:tc:xacml:1.0:function:xpath-node-match
+`urn:oasis:names:tc:xacml:1.0:function:xpath-node-match`
 
 : Replaced with urn:oasis:names:tc:xacml:3.0:function:xpath-node-match
 
 The following URI and string concatenation function has been replaced with a string to URI conversion function, which allows the use of the general string functions with URI through string conversion.
 
-urn:oasis:names:tc:xacml:2.0:function:uri-string-concatenate
+`urn:oasis:names:tc:xacml:2.0:function:uri-string-concatenate`
 
 : Replaced by urn:oasis:names:tc:xacml:3.0:function:string-from-anyURI
 
 The following identifiers have been replaced with official identifiers defined by W3C.
 
-http://www.w3.org/TR/2002/WD-xquery-operators-20020816#dayTimeDuration
+`http://www.w3.org/TR/2002/WD-xquery-operators-20020816#dayTimeDuration`
 
 : Replaced with http://www.w3.org/2001/XMLSchema#dayTimeDuration
 
-http://www.w3.org/TR/2002/WD-xquery-operators-20020816#yearMonthDuration
+`http://www.w3.org/TR/2002/WD-xquery-operators-20020816#yearMonthDuration`
 
 : Replaced with http://www.w3.org/2001/XMLSchema#yearMonthDuration
 
 The following functions have been replaced with functions which use the updated dayTimeDuration and yearMonthDuration data types.
 
-urn:oasis:names:tc:xacml:1.0:function:dayTimeDuration-equal
+`urn:oasis:names:tc:xacml:1.0:function:dayTimeDuration-equal`
 
 : Replaced with urn:oasis:names:tc:xacml:3.0:function:dayTimeDuration-equal
 
-urn:oasis:names:tc:xacml:1.0:function:yearMonthDuration-equal
+`urn:oasis:names:tc:xacml:1.0:function:yearMonthDuration-equal`
 
 : Replaced with urn:oasis:names:tc:xacml:3.0:function:yearMonthDuration-equal
 
-urn:oasis:names:tc:xacml:1.0:function:dateTime-add-dayTimeDuration
+`urn:oasis:names:tc:xacml:1.0:function:dateTime-add-dayTimeDuration`
 
 : Replaced with urn:oasis:names:tc:xacml:3.0:function:dateTime-add-dayTimeDuration
 
-urn:oasis:names:tc:xacml:1.0:function:dateTime-add-yearMonthDuration
+`urn:oasis:names:tc:xacml:1.0:function:dateTime-add-yearMonthDuration`
 
 : Replaced with urn:oasis:names:tc:xacml:3.0:function:dateTime-add-yearMonthDuration
 
-urn:oasis:names:tc:xacml:1.0:function:dateTime-subtract-dayTimeDuration
+`urn:oasis:names:tc:xacml:1.0:function:dateTime-subtract-dayTimeDuration`
 
 : Replaced with urn:oasis:names:tc:xacml:3.0:function:dateTime-subtract-dayTimeDuration
 
-urn:oasis:names:tc:xacml:1.0:function:dateTime-subtract-yearMonthDuration
+`urn:oasis:names:tc:xacml:1.0:function:dateTime-subtract-yearMonthDuration`
 
 : Replaced with urn:oasis:names:tc:xacml:3.0:function:dateTime-subtract-yearMonthDuration
 
-urn:oasis:names:tc:xacml:1.0:function:date-add-yearMonthDuration
+`urn:oasis:names:tc:xacml:1.0:function:date-add-yearMonthDuration`
 
 : Replaced with urn:oasis:names:tc:xacml:3.0:function:date-add-yearMonthDuration
 
-urn:oasis:names:tc:xacml:1.0:function:date-subtract-yearMonthDuration
+`urn:oasis:names:tc:xacml:1.0:function:date-subtract-yearMonthDuration`
 
 : Replaced with urn:oasis:names:tc:xacml:3.0:function:date-subtract-yearMonthDuration
 
 The following attribute identifiers have been replaced with new identifiers.
 
-urn:oasis:names:tc:xacml:1.0:subject:authn-locality:ip-address
+`urn:oasis:names:tc:xacml:1.0:subject:authn-locality:ip-address`
 
 : Replaced with urn:oasis:names:tc:xacml:3.0:subject:authn-locality:ip-address
 
-urn:oasis:names:tc:xacml:1.0:subject:authn-locality:dns-name
+`urn:oasis:names:tc:xacml:1.0:subject:authn-locality:dns-name`
 
 : Replaced with urn:oasis:names:tc:xacml:3.0:subject:authn-locality:dns-name
 
@@ -4724,45 +4809,45 @@ This identifier indicates a system entity associated with the computer that init
 
 ## F.3 Data-types
 
-The following identifiers indicate data-types that are defined in [Appendix E.2](#e2-data-types).
+The following identifiers indicate data-types that are defined in [Appendix E.2](#e2-data-types):
 
-`urn:oasis:names:tc:xacml:1.0:data-type:x500Name`
+* `urn:oasis:names:tc:xacml:1.0:data-type:x500Name`
 
-`urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name`
+* `urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name`
 
-`urn:oasis:names:tc:xacml:2.0:data-type:ipAddress`
+* `urn:oasis:names:tc:xacml:2.0:data-type:ipAddress`
 
-`urn:oasis:names:tc:xacml:2.0:data-type:dnsName`
+* `urn:oasis:names:tc:xacml:2.0:data-type:dnsName`
 
-`urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression`
+* `urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression`.
 
-The following data-type identifiers are defined by XML Schema [XS].
+The following data-type identifiers are defined by XML Schema [XS]:
 
-`http://www.w3.org/2001/XMLSchema#string`
+* `http://www.w3.org/2001/XMLSchema#string`
 
-`http://www.w3.org/2001/XMLSchema#boolean`
+* `http://www.w3.org/2001/XMLSchema#boolean`
 
-`http://www.w3.org/2001/XMLSchema#integer`
+* `http://www.w3.org/2001/XMLSchema#integer`
 
-`http://www.w3.org/2001/XMLSchema#double`
+* `http://www.w3.org/2001/XMLSchema#double`
 
-`http://www.w3.org/2001/XMLSchema#time`
+* `http://www.w3.org/2001/XMLSchema#time`
 
-`http://www.w3.org/2001/XMLSchema#date`
+* `http://www.w3.org/2001/XMLSchema#date`
 
-`http://www.w3.org/2001/XMLSchema#dateTime`
+* `http://www.w3.org/2001/XMLSchema#dateTime`
 
-`http://www.w3.org/2001/XMLSchema#anyURI`
+* `http://www.w3.org/2001/XMLSchema#anyURI`
 
-`http://www.w3.org/2001/XMLSchema#hexBinary`
+* `http://www.w3.org/2001/XMLSchema#hexBinary`
 
-`http://www.w3.org/2001/XMLSchema#base64Binary`
+* `http://www.w3.org/2001/XMLSchema#base64Binary`.
 
-The following data-type identifiers correspond to the dayTimeDuration and yearMonthDuration data-types defined in [XF] Sections 10.3.2 and 10.3.1, respectively.
+The following data-type identifiers correspond to the dayTimeDuration and yearMonthDuration data-types defined in [XF] Sections 10.3.2 and 10.3.1, respectively:
 
-`http://www.w3.org/2001/XMLSchema#dayTimeDuration`
+* `http://www.w3.org/2001/XMLSchema#dayTimeDuration`
 
-`http://www.w3.org/2001/XMLSchema#yearMonthDuration`
+* `http://www.w3.org/2001/XMLSchema#yearMonthDuration`.
 
 ## F.4 Subject attributes
 
@@ -4818,7 +4903,9 @@ Where a suitable attribute is already defined in LDAP [LDAP-1], [LDAP-2], the XA
 
 ## F.5 Resource attributes
 
-These identifiers indicate **_attributes_** of the **_resource_**. When used, it is RECOMMENDED they appear within the `<Attributes>` element of the request **_context_** with `Category` `urn:oasis:names:tc:xacml:3.0:attribute-category:resource`.
+These identifiers indicate **_attributes_** of the **_resource_**. When used, it is RECOMMENDED they appear within the `<Attributes>` element of the request **_context_** with `Category` 
+<!-- Line break added for the previous line to fit on a PDF page -->
+`urn:oasis:names:tc:xacml:3.0:attribute-category:resource`.
 
 This **_attribute_** identifies the **_resource_** to which **_access_** is requested.
 
