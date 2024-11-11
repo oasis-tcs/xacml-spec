@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Copyright OASIS Open 2024. All Rights Reserved. -->
-<xs:schema xmlns:xacml="urn:oasis:names:tc:xacml:4.0:core:schema" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xs:schema xmlns:xacml="urn:oasis:names:tc:xacml:4.0:core:schema" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:oasis:names:tc:xacml:4.0:core:schema" elementFormDefault="qualified" attributeFormDefault="unqualified">
 
 	<xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="http://www.w3.org/2001/xml.xsd"/>
 
@@ -46,13 +46,21 @@
 			<xs:element ref="xacml:Obligations" minOccurs="0"/>
 			<xs:element ref="xacml:AssociatedAdvice" minOccurs="0"/>
 			<xs:element ref="xacml:Attributes" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element ref="xacml:PolicyIdentifierList" minOccurs="0"/>
+			<!-- Issue #16 PoliyIdentifierList removed and replaced with list of ApplicablePolicyReferences -->
+			<xs:element ref="xacml:ApplicablePolicyReference" minOccurs="0" maxOccurs="unbounded" />
 		</xs:sequence>
 	</xs:complexType>
 
-	<xs:element name="PolicyIdentifierList" type="xacml:PolicyIdentifierListType"/>
-	<xs:complexType name="PolicyIdentifierListType">
-		<xs:element ref="xacml:PolicyIdReference" minOccurs="0" maxOccurs="unbounded">
+	<!-- Issue #16: PolicyIdentifierList removed, replaced in ResultType with ref to new ApplicablePolicyReference below (with maxOccurs="unbounded") -->
+	<!-- Policy reference for Result's list of applicable policies -->
+	<xs:element name="ApplicablePolicyReference" type="xacml:ExactMatchIdReferenceType"/>
+	<!-- New IdReferenceType extension with fixed Version, to be used in Result (ApplicablePolicyReference), as opposed to PatternMatchIdReferenceType which uses Version pattern matching. -->
+	<xs:complexType name="ExactMatchIdReferenceType">
+			<xs:complexContent>
+				<xs:extension base="xacml:IdReferenceType">
+					<xs:attribute name="Version" type="xacml:VersionType" use="required"/>
+				</xs:extension>
+			</xs:complexContent>
 	</xs:complexType>
 
 	<xs:element name="Decision" type="xacml:DecisionType"/>
@@ -272,7 +280,32 @@
 		</xs:complexContent>
 	</xs:complexType>
 
-	<xs:element name="PolicyIdReference" type="xacml:IdReferenceType"/>
+	<!-- Issue #16: old PolicyIdReference Type changed to new PatternMatchIdReferenceType and element name renamed to PolicyPatternMatchReference, to be used in a SAML XACMLPolicyQuery. 
+	 See new PolicyReference element below for policy references used in Policies -->
+	<xs:element name="PolicyPatternMatchReference" type="xacml:PatternMatchIdReferenceType"/>
+	<!-- Issue #16: New IdReferenceType extension with Version pattern matching, to be used in Policies (PolicyReference) and XACMLPolicyQuery (PolicyIdReference). Same as old PolicyIdReferenceType except the Id is now an XML attribute, cf. IdReferenceType change down below. -->
+	<xs:complexType name="PatternMatchIdReferenceType">
+		<xs:complexContent>
+			<xs:extension base="xacml:IdReferenceType">
+				<xs:attribute name="Version" type="xacml:VersionMatchType" use="optional"/>
+				<xs:attribute name="EarliestVersion" type="xacml:VersionMatchType" use="optional"/>
+				<xs:attribute name="LatestVersion" type="xacml:VersionMatchType" use="optional"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<!-- Issue #16: Policy reference to be used inside Policies, takes optional arguments for parameterized policies -->
+	<xs:element name="PolicyReference" type="xacml:PolicyReferenceType"/>
+	<xs:complexType name="PolicyReferenceType">
+		<xs:complexContent>
+			<xs:extension base="xacml:PatternMatchIdReferenceType">
+				<xs:sequence>
+				<!-- Optional argument(s) to the referenced policy (parameterized policy) -->
+				<xs:element ref="xacml:Expression" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 
 	<xs:element name="PolicyDefaults" type="xacml:DefaultsType"/>
 	<xs:complexType name="DefaultsType">
@@ -285,14 +318,9 @@
 
 	<xs:element name="XPathVersion" type="xs:anyURI"/>
 
-	<xs:complexType name="IdReferenceType">
-		<xs:simpleContent>
-			<xs:extension base="xs:anyURI">
-				<xs:attribute name="Version" type="xacml:VersionMatchType" use="optional"/>
-				<xs:attribute name="EarliestVersion" type="xacml:VersionMatchType" use="optional"/>
-				<xs:attribute name="LatestVersion" type="xacml:VersionMatchType" use="optional"/>
-			</xs:extension>
-		</xs:simpleContent>
+	<!-- Issue #16: IdReferenceType URI changed to an XML attribute to allow extensions with optional attributes and arguments (ExactMatchIdReferenceType, PatternMatchIdReferenceType, PolicyIdReferenceType, PolicyReferenceType)  -->
+	<xs:complexType name="IdReferenceType" abstract="true">
+        <xs:attribute name="Id" type="xs:anyURI" use="required" />
 	</xs:complexType>
 
 	<xs:simpleType name="VersionType">
@@ -316,7 +344,8 @@
 			<xs:element ref="xacml:Target" minOccurs="0"/>
 			<xs:choice minOccurs="0" maxOccurs="unbounded">
 				<xs:element ref="xacml:Policy"/>
-				<xs:element ref="xacml:PolicyIdReference"/>
+				<!-- Issue #11 and #16: PolicyIdReference replaced with new PolicyReference -->
+				<xs:element ref="xacml:PolicyReference"/>
 				<xs:element ref="xacml:CombinerParameters"/>
 				<xs:element ref="xacml:PolicyCombinerParameters"/>
 				<xs:element ref="xacml:RuleCombinerParameters"/>
