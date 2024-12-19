@@ -2724,7 +2724,7 @@ A **_rule_** has a value that can be calculated by evaluating the **_rule_**'s *
 
 ###### Table 4 Rule truth table
 
-| Condition | **_Rule_** Value |
+| **_Condition_** | **_Rule_** Value |
 | :--- | :--- |
 | `True` | **_Effect_** |
 | `False` | `NotApplicable` |
@@ -2732,35 +2732,31 @@ A **_rule_** has a value that can be calculated by evaluating the **_rule_**'s *
 
 ## 7.12 Policy evaluation
 
-The value of a **_policy_** SHALL be determined only by its contents, considered in relation to the contents of the request **_context_**. A **_policy_**'s value SHALL be determined by evaluation of the **_policy_**'s **_target_** and, according to the specified **_combining algorithm_**, **_policies_** and **_rules_**.
+The value of a **_policy_** SHALL be determined only by its contents, considered in relation to the contents of the request **_context_**. A **_policy_**'s value SHALL be determined by evaluation of the **_policy_**'s **_target_** and evaluation of the specified **_combining algorithm_** on the contained **_policies_** and **_rules_**.
 
 The **_policy_** truth table is shown in Table 5.
 
 ###### Table 5 Policy truth table
 
-| **_Target_** | Child **_Policy_** and **_Rule_** Values | **_Policy_** Value |
+| **_Target_** | **_Combining Algorithm_** Value | **_Policy_** Value |
 | :--- | :--- | :--- |
-| `Match` | Don't care | Specified by the **_combining algorithm_** |
+| `Match` | `NotApplicable`  | `NotApplicable`  |
+| `Match` | `Permit` | `Permit` |
+| `Match` | `Deny` | `Deny` |
+| `Match` | `Indeterminate` | `Indeterminate{DP}` |
+| `Match` | `Indeterminate{DP}` | `Indeterminate{DP}` |
+| `Match`| `Indeterminate{P}` | `Indeterminate{P}` |
+| `Match`| `Indeterminate{D}` | `Indeterminate{D}` |
 | `No-match` | Don't care | `NotApplicable` |
-| `Indeterminate` | See [Table 6](#table-6-the-value-of-a-policy-when-the-target-is-indeterminate) | See [Table 6](#table-6-the-value-of-a-policy-when-the-target-is-indeterminate) |
+| `Indeterminate` | `NotApplicable`  | `NotApplicable`  |
+| `Indeterminate` | `Permit` | `Indeterminate{P}` |
+| `Indeterminate` | `Deny` | `Indeterminate{D}` |
+| `Indeterminate` | `Indeterminate` | `Indeterminate{DP}` |
+| `Indeterminate` | `Indeterminate{DP}` | `Indeterminate{DP}` |
+| `Indeterminate`| `Indeterminate{P}` | `Indeterminate{P}` |
+| `Indeterminate`| `Indeterminate{D}` | `Indeterminate{D}` |
 
 Note that none of the **_combining algorithms_** defined by XACML 4.0 take parameters. However, non-standard **_combining algorithms_** MAY take parameters. In such a case, the values of these parameters associated with the **_policies_** and **_rules_**, MUST be taken into account when evaluating the **_policy_**. The parameters and their types should be defined in the specification of the **_combining algorithm_**. If the implementation supports combiner parameters and if combiner parameters are present in a **_policy_**, then the parameter values MUST be supplied to the **_combining algorithm_** implementation.
-
-## 7.14 Policy value for Indeterminate Target
-
-If the **_target_** of a **_policy_** evaluates to `Indeterminate`, the value of the **_policy_** as a whole is determined by the value of the **_combining algorithm_** according to Table 6.
-
-###### Table 6 The value of a policy when the target is `Indeterminate`
-
-| **_Combining algorithm_** Value | **_Policy_** Value |
-| :--- | :--- |
-| `NotApplicable` | `NotApplicable` |
-| `Permit` | `Indeterminate{P}` |
-| `Deny` | `Indeterminate{D}` |
-| `Indeterminate` | `Indeterminate{DP}` |
-| `Indeterminate{DP}` | `Indeterminate{DP}` |
-| `Indeterminate{P}` | `Indeterminate{P}` |
-| `Indeterminate{D}` | `Indeterminate{D}` |
 
 ## 7.15 PolicyIdReference evaluation
 
