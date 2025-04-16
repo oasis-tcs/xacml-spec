@@ -999,7 +999,7 @@ The `<AdviceExpressions>` element contains a set of **_advice_** expressions tha
       <xs:element ref="xacml:Target" minOccurs="0"/>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
          <xs:element ref="xacml:Policy"/>
-         <xs:element ref="xacml:PolicyIdReference"/>
+         <xs:element ref="xacml:PolicyReference"/>
          <xs:element ref="xacml:CombinerParameters"/>
          <xs:element ref="xacml:PolicyCombinerParameters"/>
 		 <xs:element ref="xacml:RuleCombinerParameters"/>
@@ -1058,9 +1058,9 @@ The `<Policy>` element contains the following attributes and elements:
 
 : A **_policy_** that is included in this **_policy_**. **_Policies_** whose `<Target>` elements match the **_decision request_** MUST be considered. **_Policies_** whose `<Target>` elements do not match the **_decision request_** SHALL be ignored.
 
-`<PolicyIdReference>` [Any Number]
+`<PolicyReference>` [Any Number]
 
-: A reference to a **_policy_** that MUST be included in this **_policy_**. If the `<PolicyIdReference>` is a URL, then it MAY be resolvable. **_Policies_** whose `<Target>` elements match the **_decision request_** MUST be considered. **_Policies_** whose `<Target>` elements do not match the **_decision request_** SHALL be ignored.
+: A reference to a **_policy_** that MUST be included in this **_policy_**. If the `Id` attribute of the `<PolicyReference>` element is a URL, then it MAY be resolvable. **_Policies_** whose `<Target>` elements match the **_decision request_** MUST be considered. **_Policies_** whose `<Target>` elements do not match the **_decision request_** SHALL be ignored.
 
 `<VariableDefinition>` [Any Number]
 
@@ -1187,30 +1187,51 @@ The `<Target>` element identifies the set of **_decision requests_** that the pa
 
 The `<Target>` element is of `BooleanExpressionType` complex type. Evaluation of the `<Target>` element is described in [Section 7.7](#77-target-evaluation).
 
-## 5.11 Element \<PolicyIdReference>
+## 5.11 Element \<PolicyReference>
 
-The `<PolicyIdReference>` element SHALL be used to reference a `<Policy>` element by id. If `<PolicyIdReference>` is a URL, then it MAY be resolvable to the `<Policy>` element. However, the mechanism for resolving a **_policy_** reference to the corresponding **_policy_** is outside the scope of this specification.
+The `<PolicyReference>` element is used to reference a **_policy_** by identifier and version.
 
 ```xml
-<xs:element name="PolicyIdReference" type="xacml:IdReferenceType"/>
-<xs:complexType name="IdReferenceType">
-   <xs:simpleContent>
-      <xs:extension base="xs:anyURI">
-         <xs:attribute name="xacml:Version" type="xacml:VersionMatchType" use="optional"/>
-         <xs:attribute name="xacml:EarliestVersion" type="xacml:VersionMatchType" use="optional"/>
-         <xs:attribute name="xacml:LatestVersion" type="xacml:VersionMatchType" use="optional"/>
-       </xs:extension>
-   </xs:simpleContent>
+<xs:element name="PolicyReference" type="xacml:PolicyReferenceType"/>
+
+<xs:complexType name="PolicyReferenceType">
+   <xs:complexContent>
+      <xs:extension base="xacml:PatternMatchIdReferenceType">
+         <xs:sequence>
+            <xs:element ref="xacml:Expression" minOccurs="0" maxOccurs="unbounded"/>
+         </xs:sequence>
+      </xs:extension>
+   </xs:complexContent>
+</xs:complexType>
+
+<xs:complexType name="PatternMatchIdReferenceType">
+   <xs:complexContent>
+      <xs:extension base="xacml:IdReferenceType">
+         <xs:attribute name="Version" type="xacml:VersionMatchType" use="optional"/>
+         <xs:attribute name="EarliestVersion" type="xacml:VersionMatchType" use="optional"/>
+         <xs:attribute name="LatestVersion" type="xacml:VersionMatchType" use="optional"/>
+      </xs:extension>
+   </xs:complexContent>
+</xs:complexType>
+
+<xs:complexType name="IdReferenceType" abstract="true">
+   <xs:attribute name="Id" type="xs:anyURI" use="required"/>
 </xs:complexType>
 ```
 
-Element `<PolicyIdReference>` is of `xacml:IdReferenceType` complex type.
+The `<PolicyReference>` element is of `xacml:PolicyReferenceType` complex type.
 
-`IdReferenceType` extends the `xs:anyURI` type with the following attributes:
+The `PolicyReferenceType` type extends the `PatternMatchIdReferenceType` type with the following elements:
+
+`<Expression>` [Any Number]
+
+: Arguments for a parameterized **_policy_**.
+
+The `PatternMatchIdReferenceType` type extends the `IdReferenceType` type with the following attributes:
 
 `Version` [Optional]
 
-: Specifies a matching expression for the version of the **_policy_** referenced.
+: Specifies a matching expression for an acceptable version of the **_policy_** referenced.
 
 `EarliestVersion` [Optional]
 
@@ -1220,7 +1241,13 @@ Element `<PolicyIdReference>` is of `xacml:IdReferenceType` complex type.
 
 : Specifies a matching expression for the latest acceptable version of the **_policy_** referenced.
 
-The matching operation is defined in [Section 5.13](#513-simple-type-versionmatchtype). Any combination of these attributes MAY be present in a `<PolicyIdReference>`. The referenced **_policy_** MUST match all expressions. If none of these attributes is present, then any version of the **_policy_** is acceptable. In the case that more than one matching version can be obtained, then the most recent one SHOULD be used.
+The matching operation is defined in [Section 5.13](#513-simple-type-versionmatchtype). Any combination of these attributes MAY be present in a `PatternMatchIdReference` instance. The referenced **_policy_** MUST match all expressions. If none of these attributes is present, then any version of the **_policy_** is acceptable. In the case that more than one matching version can be obtained, then the most recent one SHOULD be used.
+
+The `IdReferenceType` type contains the following attribute:
+
+`Id` [Required]
+
+: A URI being the `PolicyId` of the referenced **_policy_**. If the URI is a URL, then it MAY be resolvable to the **_policy_**. However, the mechanism for resolving a **_policy_** reference to the corresponding **_policy_** is outside the scope of this specification.
 
 ## 5.12 Simple type VersionType
 
@@ -2130,7 +2157,7 @@ The `<Result>` element represents an **_authorization decision_** result. It MAY
       <xs:element ref="xacml:Obligations" minOccurs="0"/>
       <xs:element ref="xacml:AssociatedAdvice" minOccurs="0"/>
       <xs:element ref="xacml:Attributes" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element ref="xacml:PolicyIdentifierList" minOccurs="0"/>
+      <xs:element ref="xacml:ApplicablePolicyReference" minOccurs="0" maxOccurs="unbounded" />
    </xs:sequence>
 </xs:complexType>
 ```
@@ -2159,28 +2186,32 @@ The `<Result>` element contains the following attributes and elements:
 
 : A list of **_attributes_** that were part of the request. The choice of which **_attributes_** are included here is made with the `IncludeInResult` attribute of the `<Attribute>` elements of the request. See [Section 5.46](#546-element-attribute).
 
-`<PolicyIdentifierList>` [Optional]
+`<ApplicablePolicyReference>` [Optional]
 
-: If the `ReturnPolicyIdList` attribute in the `<Request>` is true (see [Section 5.42](#542-element-request)), a **_PDP_** that implements this optional feature MUST return a list which includes the identifiers of all **_policies_** which were found to be fully applicable, whether or not the `<Effect>` (after rule combining) was the same or different from the `<Decision>`. The list MAY include the identifiers of other policies which are currently in force, as long as no policies required for the decision are omitted. A **_PDP_** MAY satisfy this requirement by including all policies currently in force, or by including all policies which were evaluated in making the decision, or by including all policies which did not evaluate to `NotApplicable`, or by any other algorithm which does not omit any policies which contributed to the decision. However, a decision which returns `NotApplicable` MUST return an empty list.
+: If the `ReturnPolicyIdList` attribute in the `<Request>` is true (see [Section 5.42](#542-element-request)), a **_PDP_** that implements this optional feature MUST return a list which includes the identifiers of all **_policies_** which were found to be fully applicable, whether or not the `<Effect>` (after rule combining) was the same or different from the `<Decision>`. The list is unordered. The list MAY include the identifiers of other policies which are currently in force, as long as no policies required for the decision are omitted. A **_PDP_** MAY satisfy this requirement by including all policies currently in force, or by including all policies which were evaluated in making the decision, or by including all policies which did not evaluate to `NotApplicable`, or by any other algorithm which does not omit any policies which contributed to the decision. However, a decision which returns `NotApplicable` MUST return an empty list.
 
-## 5.49 Element \<PolicyIdentifierList>
+## 5.49 Element \<ApplicablePolicyReference>
 
-The `<PolicyIdentifierList>` element contains a list of **_policy_** identifiers of **_policies_** that have been applicable to a request. The list is unordered.
+The `<ApplicablePolicyReference>` element contains the **_policy_** identifier of a **_policy_** that has been applicable to a request.
 
 ```xml
-<xs:element name="PolicyIdentifierList" type="xacml:PolicyIdentifierListType"/>
-<xs:complexType name="PolicyIdentifierListType">
-   <xs:element ref="xacml:PolicyIdReference" minOccurs="0" maxOccurs="unbounded"/>
+<xs:element name="ApplicablePolicyReference" type="xacml:ExactMatchIdReferenceType"/>
+<xs:complexType name="ExactMatchIdReferenceType">
+   <xs:complexContent>
+      <xs:extension base="xacml:IdReferenceType">
+         <xs:attribute name="Version" type="xacml:VersionType" use="required"/>
+      </xs:extension>
+   </xs:complexContent>
 </xs:complexType>
 ```
 
-The `<PolicyIdentifierList>` element is of `PolicyIdentifierListType` complex type.
+The `<ApplicablePolicyReference>` element is of `ExactMatchIdReferenceType` complex type.
 
-The `<PolicyIdentifierList>` element contains the following elements.
+The `ExactMatchIdReferenceType` type extends the `IdReferenceType` type with the following attribute:
 
-`<PolicyIdReference>` [Any number]
+`<Version>` [Required]
 
-: The identifier and version of a **_policy_** that was applicable to the request. See [Section 5.11](#511-element-policyidreference). The `<PolicyIdReference>` element MUST use the `Version` attribute to specify the version and MUST NOT use the `LatestVersion` or `EarliestVersion` attributes.
+: The version of a **_policy_** that was applicable to the request. See [Section 5.11](#511-element-policyreference).
 
 ## 5.50 Element \<MultiRequests>
 
