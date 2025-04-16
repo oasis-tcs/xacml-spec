@@ -178,7 +178,7 @@ XACML 4.0 differs from XACML 3.0 in the following ways:
 
 **Access control**
 
-:    Controlling **_access_** in accordance with a **_policy_**.
+: Controlling **_access_** in accordance with a **_policy_**.
 
 **Action**
 
@@ -1254,7 +1254,7 @@ A version match is `.`-separated, like a version string. A number represents a d
 
 The `<CombinerParameters>` element conveys parameters for a **_combining algorithm_**.
 
-If multiple `<CombinerParameters>` elements occur within the same **_policy_**, they SHALL be considered equal to one `<CombinerParameters>` element containing the concatenation of all the sequences of `<CombinerParameters>` contained in all the aforementioned `<CombinerParameters>` elements, such that the order of occurrence of the `<CombinerParameters>` elements is preserved in the concatenation of the `<CombinerParameter>` elements.
+If multiple `<CombinerParameters>` elements occur within the same **_policy_**, they SHALL be considered equal to one `<CombinerParameters>` element containing the concatenation of all the sequences of `<CombinerParameter>` elements contained in all the aforementioned `<CombinerParameters>` elements, such that the order of occurrence of the `<CombinerParameters>` elements is preserved in the concatenation of the `<CombinerParameter>` elements.
 
 Note that none of the **_combining algorithms_** specified in XACML 4.0 is parameterized.
 
@@ -1309,7 +1309,7 @@ Support for the `<CombinerParameter>` element is optional.
 
 The `<RuleCombinerParameters>` element conveys parameters associated with a particular **_rule_** within a policy for a **_combining algorithm_**.
 
-Each `<RuleCombinerParameters>` element MUST be associated with a **_rule_** contained within the same **_policy_**. If multiple `<RuleCombinerParameters>` elements reference the same **_rule_**, they SHALL be considered equal to one `<RuleCombinerParameters>` element containing the concatenation of all the sequences of `<CombinerParameters>` contained in all the aforementioned `<RuleCombinerParameters>` elements, such that the order of occurrence of the `<RuleCombinerParameters>` elements is preserved in the concatenation of the `<CombinerParameter>` elements.
+Each `<RuleCombinerParameters>` element MUST be associated with a **_rule_** contained within the same **_policy_**. If multiple `<RuleCombinerParameters>` elements reference the same **_rule_**, they SHALL be considered equal to one `<RuleCombinerParameters>` element containing the concatenation of all the sequences of `<CombinerParameter>` elements contained in all the aforementioned `<RuleCombinerParameters>` elements, such that the order of occurrence of the `<RuleCombinerParameters>` elements is preserved in the concatenation of the `<CombinerParameter>` elements.
 
 Note that none of the **_combining algorithms_** specified in XACML 4.0 is parameterized.
 
@@ -1336,7 +1336,7 @@ Support for the `<RuleCombinerParameters>` element is optional, only if support 
 
 The `<PolicyCombinerParameters>` element conveys parameters associated with a particular contained **_policy_** for a **_combining algorithm_**.
 
-Each `<PolicyCombinerParameters>` element MUST be associated with a **_policy_** contained within the same enclosing **_policy_**. If multiple `<PolicyCombinerParameters>` elements reference the same **_policy_**, they SHALL be considered equal to one `<PolicyCombinerParameters>` element containing the concatenation of all the sequences of `<CombinerParameters>` contained in all the aforementioned `<PolicyCombinerParameters>` elements, such that the order of occurrence of the `<PolicyCombinerParameters>` elements is preserved in the concatenation of the `<CombinerParameter>` elements.
+Each `<PolicyCombinerParameters>` element MUST be associated with a **_policy_** contained within the same enclosing **_policy_**. If multiple `<PolicyCombinerParameters>` elements reference the same **_policy_**, they SHALL be considered equal to one `<PolicyCombinerParameters>` element containing the concatenation of all the sequences of `<CombinerParameter>` elements contained in all the aforementioned `<PolicyCombinerParameters>` elements, such that the order of occurrence of the `<PolicyCombinerParameters>` elements is preserved in the concatenation of the `<CombinerParameter>` elements.
 
 Note that none of the **_combining algorithms_** specified in XACML 4.0 is parameterized.
 
@@ -1387,7 +1387,7 @@ The `<Rule>` element contains the following attributes and elements:
 
 `RuleId` [Required]
 
-: A string identifying this **_rule_**.
+: A string identifying this **_rule_**. It is the responsibility of the **_PAP_** to ensure that no two **_rules** in the same **_policy_** have the same identifier.
 
 `Effect` [Required]
 
@@ -1926,7 +1926,7 @@ The `<AttributeAssignmentExpression>` element contains the following attributes:
 
 `<Expression>` [Required]
 
-: The expression which evaluates to a constant **_attribute_** value or a bag of zero or more attribute values. See [Section 5.25](#525-element-expression).
+: The expression which evaluates to a constant **_attribute_** value or a bag of zero or more **_attribute_** values. See [Section 5.25](#525-element-expression).
 
 `AttributeId` [Required]
 
