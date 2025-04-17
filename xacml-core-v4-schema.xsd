@@ -43,8 +43,7 @@
 		<xs:sequence>
 			<xs:element ref="xacml:Decision"/>
 			<xs:element ref="xacml:Status" minOccurs="0"/>
-			<xs:element ref="xacml:Obligations" minOccurs="0"/>
-			<xs:element ref="xacml:AssociatedAdvice" minOccurs="0"/>
+			<xs:element ref="xacml:Notice" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element ref="xacml:Attributes" minOccurs="0" maxOccurs="unbounded"/>
 			<!-- Issue #16 PoliyIdentifierList removed and replaced with list of ApplicablePolicyReferences -->
 			<xs:element ref="xacml:ApplicablePolicyReference" minOccurs="0" maxOccurs="unbounded" />
@@ -148,35 +147,14 @@
 	<xs:complexType name="AttributesReferenceType">
 		<xs:attribute name="ReferenceId" type="xs:IDREF" use="required"/>
 	</xs:complexType>
-	
-	<xs:element name="Obligations" type="xacml:ObligationsType"/>
-	<xs:complexType name="ObligationsType">
-		<xs:sequence>
-			<xs:element ref="xacml:Obligation" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
 
-	<xs:element name="AssociatedAdvice" type="xacml:AssociatedAdviceType"/>
-	<xs:complexType name="AssociatedAdviceType">
-		<xs:sequence>
-			<xs:element ref="xacml:Advice" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:element name="Obligation" type="xacml:ObligationType"/>
-	<xs:complexType name="ObligationType">
+	<xs:element name="Notice" type="xacml:NoticeType"/>
+	<xs:complexType name="NoticeType">
 		<xs:sequence>
 			<xs:element ref="xacml:AttributeAssignment" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
-		<xs:attribute name="ObligationId" type="xs:anyURI" use="required"/>
-	</xs:complexType>
-
-	<xs:element name="Advice" type="xacml:AdviceType"/>
-	<xs:complexType name="AdviceType">
-		<xs:sequence>
-			<xs:element ref="xacml:AttributeAssignment" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-		<xs:attribute name="AdviceId" type="xs:anyURI" use="required"/>
+		<xs:attribute name="Id" type="xs:anyURI" use="required"/>
+		<xs:attribute name="IsObligation" type="xs:boolean" use="optional" default="false"/>
 	</xs:complexType>
 
 	<xs:element name="AttributeAssignment" type="xacml:AttributeAssignmentType"/>
@@ -190,36 +168,14 @@
 		</xs:complexContent>
 	</xs:complexType>
 
-	<xs:element name="ObligationExpressions" type="xacml:ObligationExpressionsType"/>
-	<xs:complexType name="ObligationExpressionsType">
+	<xs:element name="NoticeExpression" type="xacml:NoticeExpressionType"/>
+	<xs:complexType name="NoticeExpressionType">
 		<xs:sequence>
-			<xs:element ref="xacml:ObligationExpression" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:element name="AdviceExpressions" type="xacml:AdviceExpressionsType"/>
-	<xs:complexType name="AdviceExpressionsType">
-		<xs:sequence>
-			<xs:element ref="xacml:AdviceExpression" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:element name="ObligationExpression" type="xacml:ObligationExpressionType"/>
-	<xs:complexType name="ObligationExpressionType">
-		<xs:sequence>
+            <xs:element ref="xacml:Condition" minOccurs="0"/>
 			<xs:element ref="xacml:AttributeAssignmentExpression" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
-		<xs:attribute name="ObligationId" type="xs:anyURI" use="required"/>
-		<xs:attribute name="FulfillOn" type="xacml:EffectType" use="required"/>
-	</xs:complexType>
-
-	<xs:element name="AdviceExpression" type="xacml:AdviceExpressionType"/>
-	<xs:complexType name="AdviceExpressionType">
-		<xs:sequence>
-			<xs:element ref="xacml:AttributeAssignmentExpression" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-		<xs:attribute name="AdviceId" type="xs:anyURI" use="required"/>
-		<xs:attribute name="AppliesTo" type="xacml:EffectType" use="required"/>
+		<xs:attribute name="Id" type="xs:anyURI" use="required"/>
+		<xs:attribute name="AppliesTo" type="xacml:EffectType" use="optional"/>
 	</xs:complexType>
 
 	<xs:element name="AttributeAssignmentExpression" type="xacml:AttributeAssignmentExpressionType"/>
@@ -352,8 +308,7 @@
 				<xs:element ref="xacml:VariableDefinition"/>
 				<xs:element ref="xacml:Rule"/>
 			</xs:choice>
-			<xs:element ref="xacml:ObligationExpressions" minOccurs="0"/>
-			<xs:element ref="xacml:AdviceExpressions" minOccurs="0"/>
+			<xs:element ref="xacml:NoticeExpression" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="PolicyId" type="xs:anyURI" use="required"/>
 		<xs:attribute name="Version" type="xacml:VersionType" use="required"/>
@@ -368,8 +323,7 @@
 		<xs:sequence>
 			<xs:element ref="xacml:Description" minOccurs="0"/>
 			<xs:element ref="xacml:Condition" minOccurs="0"/>
-			<xs:element ref="xacml:ObligationExpressions" minOccurs="0"/>
-			<xs:element ref="xacml:AdviceExpressions" minOccurs="0"/>
+			<xs:element ref="xacml:NoticeExpression" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="RuleId" type="xs:string" use="required"/>
 		<xs:attribute name="Effect" type="xacml:EffectType" use="required"/>
