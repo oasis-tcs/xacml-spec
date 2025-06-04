@@ -12,6 +12,9 @@ TC's <a href="https://www.oasis-open.org/committees/comments/index.php?wg_abbrev
 
 **Use of Contributions**.  As with all OASIS Technical Committee assets, content placed into this GitHub repository is visible and publicly accessible.  Subject to applicable <a href="https://github.com/oasis-tcs/xacml-spec/blob/master/LICENSE.md">licensing</a> rules, the repository content may be re-used freely, including the creation and publication of derivative works.
 
+Certain Issues of this repository may have been designated to receive public comments on some of the TC's work, are subject only to our OASIS Feedback License, and contain a distinct LICENSE.md file imposing that license.  Please check the LICENSE.md file for the relevant Issue, if a separate one is posted there, before using or contributing to that Issue.
+
+
 **Cloning and forking**. May users clone and fork this repository?  Yes. This GitHub repository may be forked or cloned for use by any party. 
 
 Please see the <a href="https://github.com/oasis-tcs/xacml-spec/blob/master/README.md">README</a> for general description of this repository, and the <a href="https://github.com/oasis-tcs/xacml-spec/blob/master/LICENSE.md">LICENSE</a> file for licensing.
