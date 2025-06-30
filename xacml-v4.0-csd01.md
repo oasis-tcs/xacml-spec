@@ -1756,6 +1756,7 @@ The `<NoticeExpression>` element evaluates to a **_notice_** and SHALL contain a
       <xs:element ref="xacml:AttributeAssignmentExpression" minOccurs="0" maxOccurs="unbounded"/>
    </xs:sequence>
    <xs:attribute name="Id" type="xs:anyURI" use="required"/>
+   <xs:attribute name="IsObligation" type="xs:boolean" use="optional"/>
    <xs:attribute name="AppliesTo" type="xacml:EffectType" use="optional"/>
 </xs:complexType>
 ```
@@ -1767,6 +1768,10 @@ The `<NoticeExpression>` element contains the following elements and attributes:
 `Id` [Required]
 
 : An identifier for the **_notice_** that the **_PEP_** associates with particular processing requirements or informational content.
+
+`IsObligation` [Optional]
+
+: The setting for the `IsObligation` attribute of the **_notice_**. If `IsObligation` is present then the `IsObligation` attribute of the **_notice_** is set to the same value; otherwise, the `IsObligation` attribute is omitted from the **_notice_**.
 
 `AppliesTo` [Optional]
 
