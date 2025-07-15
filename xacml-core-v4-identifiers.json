@@ -16,18 +16,18 @@
 		{ "Name":"dnsName", "Value":"urn:oasis:names:tc:xacml:2.0:data-type:dnsName" },
 		{ "Name":"xpathExpression", "Value":"urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression".
 		{ "Name":"entity", "Value":"urn:oasis:names:tc:xacml:3.0:data-type:entity" },
-		{ "Name":"string", "Value":"http://www.w3.org/2001/XMLSchema#string" },
-		{ "Name":"boolean", "Value":"http://www.w3.org/2001/XMLSchema#boolean" },
-		{ "Name":"integer", "Value":"http://www.w3.org/2001/XMLSchema#integer" },
-		{ "Name":"double", "Value":"http://www.w3.org/2001/XMLSchema#double" },
-		{ "Name":"time", "Value":"http://www.w3.org/2001/XMLSchema#time" },
-		{ "Name":"date", "Value":"http://www.w3.org/2001/XMLSchema#date" },
-		{ "Name":"dateTime", "Value":"http://www.w3.org/2001/XMLSchema#dateTime" },
-		{ "Name":"anyURI", "Value":"http://www.w3.org/2001/XMLSchema#anyURI" },
-		{ "Name":"hexBinary", "Value":"http://www.w3.org/2001/XMLSchema#hexBinary" },
-		{ "Name":"base64Binary", "Value":"http://www.w3.org/2001/XMLSchema#base64Binary" },
-		{ "Name":"dayTimeDuration", "Value":"http://www.w3.org/2001/XMLSchema#dayTimeDuration" },
-		{ "Name":"yearMonthDuration", "Value":"http://www.w3.org/2001/XMLSchema#yearMonthDuration" },
+		{ "Name":"string", "Value":"https://www.w3.org/2001/XMLSchema#string" },
+		{ "Name":"boolean", "Value":"https://www.w3.org/2001/XMLSchema#boolean" },
+		{ "Name":"integer", "Value":"https://www.w3.org/2001/XMLSchema#integer" },
+		{ "Name":"double", "Value":"https://www.w3.org/2001/XMLSchema#double" },
+		{ "Name":"time", "Value":"https://www.w3.org/2001/XMLSchema#time" },
+		{ "Name":"date", "Value":"https://www.w3.org/2001/XMLSchema#date" },
+		{ "Name":"dateTime", "Value":"https://www.w3.org/2001/XMLSchema#dateTime" },
+		{ "Name":"anyURI", "Value":"https://www.w3.org/2001/XMLSchema#anyURI" },
+		{ "Name":"hexBinary", "Value":"https://www.w3.org/2001/XMLSchema#hexBinary" },
+		{ "Name":"base64Binary", "Value":"https://www.w3.org/2001/XMLSchema#base64Binary" },
+		{ "Name":"dayTimeDuration", "Value":"https://www.w3.org/2001/XMLSchema#dayTimeDuration" },
+		{ "Name":"yearMonthDuration", "Value":"https://www.w3.org/2001/XMLSchema#yearMonthDuration" },
 
 		{ "Name":"subject-id", "Value":"urn:oasis:names:tc:xacml:1.0:subject:subject-id" },
 		{ "Name":"subject-id-qualifier", "Value":"urn:oasis:names:tc:xacml:1.0:subject:subject-id-qualifier" },
@@ -317,7 +317,7 @@
 		{ "Name":"rfc822Name-set-equals", "Value":"urn:oasis:names:tc:xacml:1.0:function:rfc822Name-set-equals" },
 		{ "Name":"access-permitted", "Value":"urn:oasis:names:tc:xacml:3.0:function:access-permitted" },
 
-		{ "Name":"xpath10", "Value":"http://www.w3.org/TR/1999/REC-xpath-19991116" },
-		{ "Name":"xpath20", "Value":"http://www.w3.org/TR/2007/REC-xpath20-20070123" }
+		{ "Name":"xpath10", "Value":"https://www.w3.org/TR/1999/REC-xpath-19991116/" },
+		{ "Name":"xpath20", "Value":"https://www.w3.org/TR/2007/REC-xpath20-20070123/" }
 	]
 }
