@@ -1254,7 +1254,7 @@ The `<XPathVersion>` element SHALL specify the version of the XPath specificatio
 
 The URI for the XPath 1.0 specification is `https://www.w3.org/TR/1999/REC-xpath-19991116/`.
 
-The URI for the XPath 2.0 specification is `https://www.w3.org/TR/2007/REC-xpath20-20070123/`.
+The URI for the XPath 2.0 specification is `https://www.w3.org/TR/xpath20/`.
 
 The `<XPathVersion>` element is REQUIRED if the XACML enclosing **_policy_** contains `<AttributeSelector>` elements or XPath-based functions.
 
@@ -2426,7 +2426,7 @@ If the **_PDP_** includes `<AttributeValue>` elements in the `<MissingAttributeD
 
 The XPath 2.0 specification leaves a number of aspects of behavior implementation defined. This section defines how XPath 2.0 SHALL behave when hosted in XACML.
 
-`https://www.w3.org/TR/2007/REC-xpath20-20070123/#id-impl-defined-items` defines the following items:
+`https://www.w3.org/TR/xpath20/#id-impl-defined-items` defines the following items:
 
 1. The version of Unicode that is used to construct expressions.
 
