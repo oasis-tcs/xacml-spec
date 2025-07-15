@@ -20,18 +20,18 @@
 	<ShortIdentifier Name="dnsName" Value="urn:oasis:names:tc:xacml:2.0:data-type:dnsName"/>
 	<ShortIdentifier Name="xpathExpression" Value="urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression".
 	<ShortIdentifier Name="entity" Value="urn:oasis:names:tc:xacml:3.0:data-type:entity"/>
-	<ShortIdentifier Name="string" Value="http://www.w3.org/2001/XMLSchema#string"/>
-	<ShortIdentifier Name="boolean" Value="http://www.w3.org/2001/XMLSchema#boolean"/>
-	<ShortIdentifier Name="integer" Value="http://www.w3.org/2001/XMLSchema#integer"/>
-	<ShortIdentifier Name="double" Value="http://www.w3.org/2001/XMLSchema#double"/>
-	<ShortIdentifier Name="time" Value="http://www.w3.org/2001/XMLSchema#time"/>
-	<ShortIdentifier Name="date" Value="http://www.w3.org/2001/XMLSchema#date"/>
-	<ShortIdentifier Name="dateTime" Value="http://www.w3.org/2001/XMLSchema#dateTime"/>
-	<ShortIdentifier Name="anyURI" Value="http://www.w3.org/2001/XMLSchema#anyURI"/>
-	<ShortIdentifier Name="hexBinary" Value="http://www.w3.org/2001/XMLSchema#hexBinary"/>
-	<ShortIdentifier Name="base64Binary" Value="http://www.w3.org/2001/XMLSchema#base64Binary"/>
-	<ShortIdentifier Name="dayTimeDuration" Value="http://www.w3.org/2001/XMLSchema#dayTimeDuration"/>
-	<ShortIdentifier Name="yearMonthDuration" Value="http://www.w3.org/2001/XMLSchema#yearMonthDuration"/>
+	<ShortIdentifier Name="string" Value="https://www.w3.org/2001/XMLSchema#string"/>
+	<ShortIdentifier Name="boolean" Value="https://www.w3.org/2001/XMLSchema#boolean"/>
+	<ShortIdentifier Name="integer" Value="https://www.w3.org/2001/XMLSchema#integer"/>
+	<ShortIdentifier Name="double" Value="https://www.w3.org/2001/XMLSchema#double"/>
+	<ShortIdentifier Name="time" Value="https://www.w3.org/2001/XMLSchema#time"/>
+	<ShortIdentifier Name="date" Value="https://www.w3.org/2001/XMLSchema#date"/>
+	<ShortIdentifier Name="dateTime" Value="https://www.w3.org/2001/XMLSchema#dateTime"/>
+	<ShortIdentifier Name="anyURI" Value="https://www.w3.org/2001/XMLSchema#anyURI"/>
+	<ShortIdentifier Name="hexBinary" Value="https://www.w3.org/2001/XMLSchema#hexBinary"/>
+	<ShortIdentifier Name="base64Binary" Value="https://www.w3.org/2001/XMLSchema#base64Binary"/>
+	<ShortIdentifier Name="dayTimeDuration" Value="https://www.w3.org/2001/XMLSchema#dayTimeDuration"/>
+	<ShortIdentifier Name="yearMonthDuration" Value="https://www.w3.org/2001/XMLSchema#yearMonthDuration"/>
 
 	<!-- Subject Attributes -->
 
@@ -337,7 +337,7 @@
 
 	<!-- XPath Versions -->
 
-	<ShortIdentifier Name="xpath10" Value="http://www.w3.org/TR/1999/REC-xpath-19991116"/>
-	<ShortIdentifier Name="xpath20" Value="http://www.w3.org/TR/2007/REC-xpath20-20070123"/>
+	<ShortIdentifier Name="xpath10" Value="https://www.w3.org/TR/1999/REC-xpath-19991116/"/>
+	<ShortIdentifier Name="xpath20" Value="https://www.w3.org/TR/2007/REC-xpath20-20070123/"/>
 
 </xacml:SIDCollection>
