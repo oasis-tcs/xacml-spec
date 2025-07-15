@@ -46,6 +46,8 @@ Cyril Dangerville (cyril.dangerville@thalesgroup.com), [THALES](https://www.thal
 
 This document is one component of a Work Product that also includes:
 * XML schema:  https://docs.oasis-open.org/xacml/xacml/v4.0/csd01/schema/xacml-core-v4-schema-wd-01.xsd.
+* Short identifiers: xacml-core-v4-identifiers.xml
+* Short identifiers: xacml-core-v4-identifiers.json
 * `(Note: Any normative computer language definitions that are part of the Work Product, such as XML instances, schemas and Java(TM) code, including fragments of such, must be (a) well formed and valid, (b) provided in separate plain text files, (c) referenced from the Work Product; and (d) where any definition in these separate files disagrees with the definition found in the specification, the definition in the separate file prevails. Remove this note before submitting for publication.)`
 
 #### Related work:
@@ -165,6 +167,8 @@ XACML 4.0 differs from XACML 3.0 in the following ways:
 * The `<Target>` element has been removed from `RuleType`.
 
 * **_Obligations_** and **_advice_** no longer have distinct element definitions. Instead they now share the common `<Notice>` element definition. The difference between **_obligations_** and **_advice_** is indicated by an `IsObligation` XML attribute.
+
+* Users are able to define **_short identifiers_** to use in place of URIs to refer to XACML definitions. A predefined collection of **_short identifiers_** for standard-defined URIs is also provided.
 
 ## 1.2 Glossary
 
@@ -299,6 +303,14 @@ XACML 4.0 differs from XACML 3.0 in the following ways:
 
 : An **_effect_**, a **_condition_** and (optionally) a list of **_notice_** expressions. A component of a **_policy_**.
 
+**Short Identifier**
+
+: A simple alias name that stands for a URI or a part thereof.
+
+**SID**
+
+: An abbreviation of **_short identifier_**.
+
 **Subject**
 
 : An actor whose **_attributes_** may be referenced by a **_predicate_**.
@@ -405,11 +417,9 @@ XACML defines a number of **_combining algorithms_** that can be identified by a
 
 * Deny-overrides (Ordered and Unordered),
 
-* Permit-overrides (Ordered and Unordered),
+* Permit-overrides (Ordered and Unordered) and
 
-* First-applicable and
-
-* Only-one-applicable.
+* First-applicable
 
 In the case of the Deny-overrides algorithm, if a single `<Rule>` or `<Policy>` element is encountered that evaluates to `Deny`, then, regardless of the evaluation result of the other `<Rule>` or `<Policy>` elements in the **_applicable policy_**, the combined result is `Deny`.
 
@@ -795,7 +805,7 @@ digraph Fig1 {
 
 Typical categories of **_attributes_** in the **_context_** are the **_subject_**, **_resource_**, **_action_** and **_environment_**, but users may define their own categories as needed. See [Appendix F.2](#f2-attribute-categories) for suggested **_attribute_** categories.
 
-See [Section 7.3.5](#735-attribute-retrieval) for a more detailed discussion of the request **_context_**.
+See [Section 7.4.5](#745-attribute-retrieval) for a more detailed discussion of the request **_context_**.
 
 ## 3.3 Policy language model
 
@@ -961,7 +971,104 @@ _Note: this section is referenced._
 
 # 5 Syntax (normative, with the exception of the schema fragments)
 
-## 5.1 Element \<Policy>
+## 5.1 Element \<SIDCollection>
+
+The `<SIDCollection>` element defines a collection of **_short identifiers_**. It contains its own definitions of **_short identifiers_** as well as references to other **_short identifier_** collections, which are imported (recursively) into this collection.
+
+```xml
+<xs:element name="SIDCollection" type="xacml:SIDCollectionType"/>
+<xs:complexType name="SIDCollectionType">
+   <xs:sequence>
+      <xs:element ref="xacml:SIDCollectionReference" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="xacml:ShortIdentifier" minOccurs="0" maxOccurs="unbounded"/>
+   </xs:sequence>
+   <xs:attribute name="SIDCollectionId" type="xs:anyURI" use="required"/>
+</xs:complexType>
+```
+
+The `<SIDCollection>` element is of `SIDCollectionType` complex type.
+
+The `<SIDCollection>` element contains the following attributes and elements:
+
+`SIDCollectionId` [Required]
+
+: The identifier for this **_short identifier_** collection. It is the responsibility of the **_PAP_** to ensure that no two **_short identifier_** collections visible to the **_PDP_** have the same identifier. This MAY be achieved by following a predefined URN or URI scheme. If the identifier is in the form of a URL, then it MAY be resolvable.
+
+`<SIDCollectionReference>` [Any Number]
+
+: A reference to another **_short identifier_** collection. The **_short identifiers_** of the referenced collection are included in this collection. This applies recursively to the collections referenced by a referenced collection. This collection SHALL NOT reference itself and SHALL NOT reference a collection that directly or indirectly references this collection.
+
+`<ShortIdentifier>` [Any Number]
+
+: A **_short identifier_** that is defined in this collection.
+
+A predefined collection of **_short identifiers_** for the URIs defined in this specification is provided as a convenience, in both XML (xacml-core-v4-identifiers.xml) and JSON (xacml-core-v4-identifiers.json) representations. Use of this collection is OPTIONAL.
+
+## 5.2 Element \<SIDCollectionReference>
+
+The `<SIDCollectionReference>` element is used to reference a **_short identifier_** collection by URI.
+
+```xml
+<xs:element name="SIDCollectionReference" type="xs:anyURI"/>
+```
+
+## 5.3 Element \<ShortIdentifier>
+
+The `<ShortIdentifier>` element defines a single **_short identifier_**. **_Attribute_** categories, **_attributes_**, data types, functions, **_combining algorithms_** and other artifacts in XACML are ultimately identified by URIs. A **_short identifier_** provides a simple alias name to use when composing and displaying policies and protocol messages instead of using the full URI.
+
+```xml
+<xs:element name="ShortIdentifier" type="xacml:ShortIdentifierType"/>
+<xs:complexType name="ShortIdentifierType">
+   <xs:attribute name="Name" type="xacml:ShortIdentifierNameType" use="required"/>
+   <xs:attribute name="Value" type="xs:string" use="required"/>
+</xs:complexType>
+
+<xs:simpleType name="ShortIdentifierNameType">
+   <xs:restriction base="xs:string">
+      <xs:pattern value="[A-Za-z][0-9A-Za-z]*(-[0-9A-Za-z]+)*"/>
+         <!-- The exact pattern is still open for discussion. -->
+   </xs:restriction>
+</xs:simpleType>
+
+```
+
+The `<ShortIdentifier>` element is of `ShortIdentifierType` complex type.
+
+The `<ShortIdentifier>` element contains the following attributes:
+
+`Name` [Required]
+
+: A simple alias name that stands for a URI or a part thereof.
+
+`Value` [Required]
+
+: The character string used to replace the simple alias name when a value of `IdentifierType` is evaluated to produce a complete URI; see [Section 7.3](#73-identifier-evaluation). The value MAY contain references to other **_short identifiers_** in the form of the **_short identifier_** name enclosed in curly brackets (i.e., `{` and `}`; U+007B and U+007D) with the following restrictions: the value SHALL NOT reference this **_short identifier_**, the value SHALL NOT reference a **_short identifier_** that directly or indirectly references this **_short identifier_**, and the referenced **_short identifier_** MUST be in the same **_short identifier_** collection (which includes sibling definitions and definitions included by references to other collections). The characters preceding, following or separating the **_short identifier_** references MUST be characters allowed in a URI, which means that the curly bracket characters are not permitted in the value other than to enclose a **_short identifier_** name.
+
+## 5.4 Simple type IdentifierType
+
+A value of the `IdentifierType` simple type refers to a specific **_attribute_** category, **_attribute_**, data type, function, **_notice_**, status code, **_combining algorithm_** or XPath version.
+
+```xml
+<xs:simpleType name="IdentifierType">
+   <xs:restriction base="xs:string">
+      <xs:pattern value="[^{}]*({[A-Za-z][0-9A-Za-z]*(-[0-9A-Za-z]+)*}[^{}]*)*"/>
+   </xs:restriction>
+</xs:simpleType>
+
+```
+
+A value of this simple type is either:
+* an absolute URI [[RFC2396](#rfc2396)],
+* the name of a **_short identifier_** or
+* a character string with one or more **_short identifier_** names enclosed by curly brackets (i.e., `{` and `}`; U+007B and U+007D) optionally preceded, followed and/or separated by other characters allowed in a URI.
+
+A **_short identifier_** name appearing in the second and third cases MUST be the name of a member of a **_short identifier_** collection referenced by the containing **_policy_**, request or response.
+
+Note that the three cases can be distinguished from each other syntactically in a valid, correctly formatted value. If the value contains curly brackets then the third case must apply since the curly bracket characters are not legal characters for an absolute URI or a **_short identifier_** name; otherwise, if the value matches the pattern for a **_short identifier_** name then the second case applies since an absolute URI begins with a scheme name and a colon character (i.e., `:`; U+003A) and the colon character is not a legal character for a **_short identifier_** name; otherwise, the value is an absolute URI.
+
+The conversion of a value of the `IdentifierType` simple type into an absolute URI is detailed in [Section 7.3](#73-identifier-evaluation).
+
+## 5.5 Element \<Policy>
 
 The `<Policy>` element is a top-level element in the XACML **_policy_** schema. `<Policy>` is an aggregation of **_rules_** and other **_policies_**. **_Policies_** MAY be included in an enclosing `<Policy>` element either directly using the `<Policy>` element or indirectly using the `<PolicyReference>` element.
 
@@ -983,6 +1090,7 @@ The `<NoticeExpression>` elements MUST be evaluated into **_notices_** by the **
 <xs:element name="Policy" type="xacml:PolicyType"/>
 <xs:complexType name="PolicyType">
    <xs:sequence>
+      <xs:element ref="xacml:SIDCollectionReference" minOccurs="0" maxOccurs="unbounded"/>
       <xs:element ref="xacml:Description" minOccurs="0"/>
       <xs:element ref="xacml:PolicyIssuer" minOccurs="0"/>
       <xs:element ref="xacml:PolicyDefaults" minOccurs="0"/>
@@ -1000,7 +1108,7 @@ The `<NoticeExpression>` elements MUST be evaluated into **_notices_** by the **
    </xs:sequence>
    <xs:attribute name="PolicyId" type="xs:anyURI" use="required"/>
    <xs:attribute name="Version" type="xacml:VersionType" use="required"/>
-   <xs:attribute name="CombiningAlgId" type="xs:anyURI" use="required"/>
+   <xs:attribute name="CombiningAlgId" type="xacml:IdentifierType" use="required"/>
    <xs:attribute name="MaxDelegationDepth" type="xs:integer" use="optional"/>
 </xs:complexType>
 ```
@@ -1024,6 +1132,10 @@ The `<Policy>` element contains the following attributes and elements:
 `MaxDelegationDepth` [Optional]
 
 : If present, limits the depth of delegation which is authorized by this **_policy_**. See the delegation profile [[XACMLAdmin](#xacmladmin)].
+
+`<SIDCollectionReference>` [Any Number]
+
+: A reference to a **_short identifier_** collection. The **_short identifiers_** used by the **_policy_** MUST be defined in the referenced collections.
 
 `<Description>` [Optional]
 
@@ -1075,7 +1187,7 @@ The `<Policy>` element contains the following attributes and elements:
 
 : Contains a sequence of `<CombinerParameter>` elements that are associated with a particular `<Rule>` element within the `<Policy>`. It is up to the specific **_combining algorithm_** to interpret them and adjust its behavior accordingly.
 
-## 5.2 Element \<Description>
+## 5.6 Element \<Description>
 
 The `<Description>` element contains a free-form description of the `<Policy>`, `<Rule>` or `<Apply>` element. The `<Description>` element is of `xs:string` simple type.
 
@@ -1083,7 +1195,7 @@ The `<Description>` element contains a free-form description of the `<Policy>`, 
 <xs:element name="Description" type="xs:string"/>
 ```
 
-## 5.3 Element \<PolicyIssuer>
+## 5.7 Element \<PolicyIssuer>
 
 The `<PolicyIssuer>` element contains **_attributes_** describing the **_issuer_** of the **_policy_**. The use of the `<PolicyIssuer>` element is defined in a separate administration profile [[XACMLAdmin](#xacmladmin)]. A **_PDP_** which does not implement the administration profile MUST report an error or return an Indeterminate result if it encounters this element.
 
@@ -1109,7 +1221,7 @@ The `<PolicyIssuer>` element contains the following elements:
 
 : An **_attribute_** of the **_issuer_**. See [Section 5.46](#546-element-attribute).
 
-## 5.4 Element \<PolicyDefaults>
+## 5.8 Element \<PolicyDefaults>
 
 The `<PolicyDefaults>` element SHALL specify default values that apply to the `<Policy>` element.
 
@@ -1132,12 +1244,12 @@ The `<PolicyDefaults>` element contains the following elements:
 
 : Default XPath version.
 
-## 5.5 Element \<XPathVersion>
+## 5.9 Element \<XPathVersion>
 
 The `<XPathVersion>` element SHALL specify the version of the XPath specification to be used by `<AttributeSelector>` elements and XPath-based functions in the **_policy_**.
 
 ```xml
-<xs:element name="XPathVersion" type="xs:anyURI"/>
+<xs:element name="XPathVersion" type="xacml:IdentifierType"/>
 ```
 
 The URI for the XPath 1.0 specification is `http://www.w3.org/TR/1999/REC-xpath-19991116`.
@@ -1146,7 +1258,7 @@ The URI for the XPath 2.0 specification is `http://www.w3.org/TR/2007/REC-xpath2
 
 The `<XPathVersion>` element is REQUIRED if the XACML enclosing **_policy_** contains `<AttributeSelector>` elements or XPath-based functions.
 
-## 5.6 Complex type BooleanExpressionType
+## 5.10 Complex type BooleanExpressionType
 
 The `BooleanExpressionType` complex type contains one `<Expression>` child element, with the restriction that the `<Expression>` return data-type MUST be `http://www.w3.org/2001/XMLSchema#boolean`.
 
@@ -1160,9 +1272,9 @@ The `BooleanExpressionType` complex type contains one `<Expression>` child eleme
 
 The `<Target>` and `<Condition>` elements are of this type.
 
-Expression evaluation is described in [Section 7.4](#74-expression-evaluation).
+Expression evaluation is described in [Section 7.5](#75-expression-evaluation).
 
-## 5.7 Element \<Target>
+## 5.11 Element \<Target>
 
 The `<Target>` element identifies the set of **_decision requests_** that the parent `<Policy>` element is intended to evaluate. If this element is omitted from the `<Policy>` element then the **_policy_** matches all **_decision requests_**.
 
@@ -1172,7 +1284,7 @@ The `<Target>` element identifies the set of **_decision requests_** that the pa
 
 The `<Target>` element is of `BooleanExpressionType` complex type. Evaluation of the `<Target>` element is described in [Section 7.7](#77-target-evaluation).
 
-## 5.11 Element \<PolicyReference>
+## 5.12 Element \<PolicyReference>
 
 The `<PolicyReference>` element is used to reference a **_policy_** by identifier and version.
 
@@ -1226,7 +1338,7 @@ The `PatternMatchIdReferenceType` type extends the `IdReferenceType` type with t
 
 : Specifies a matching expression for the latest acceptable version of the **_policy_** referenced.
 
-The matching operation is defined in [Section 5.13](#513-simple-type-versionmatchtype). Any combination of these attributes MAY be present in a `PatternMatchIdReference` instance. The referenced **_policy_** MUST match all expressions. If none of these attributes is present, then any version of the **_policy_** is acceptable. In the case that more than one matching version can be obtained, then the most recent one SHOULD be used.
+The matching operation is defined in [Section 5.14](#514-simple-type-versionmatchtype). Any combination of these attributes MAY be present in a `PatternMatchIdReference` instance. The referenced **_policy_** MUST match all expressions. If none of these attributes is present, then any version of the **_policy_** is acceptable. In the case that more than one matching version can be obtained, then the most recent one SHOULD be used.
 
 The `IdReferenceType` type contains the following attribute:
 
@@ -1234,7 +1346,7 @@ The `IdReferenceType` type contains the following attribute:
 
 : A URI being the `PolicyId` of the referenced **_policy_**. If the URI is a URL, then it MAY be resolvable to the **_policy_**. However, the mechanism for resolving a **_policy_** reference to the corresponding **_policy_** is outside the scope of this specification.
 
-## 5.12 Simple type VersionType
+## 5.13 Simple type VersionType
 
 Elements of this type SHALL contain the version number of the **_policy_**.
 
@@ -1248,9 +1360,9 @@ Elements of this type SHALL contain the version number of the **_policy_**.
 
 The version number is expressed as a sequence of decimal numbers, each separated by a period (.). `d+` represents a sequence of one or more decimal digits.
 
-## 5.13 Simple type VersionMatchType
+## 5.14 Simple type VersionMatchType
 
-Elements of this type SHALL contain a restricted regular expression matching a version number (see [Section 5.12](#512-simple-type-versiontype)). The expression SHALL match versions of a referenced **_policy_** that are acceptable for inclusion in the referencing **_policy_**.
+Elements of this type SHALL contain a restricted regular expression matching a version number (see [Section 5.13](#513-simple-type-versiontype)). The expression SHALL match versions of a referenced **_policy_** that are acceptable for inclusion in the referencing **_policy_**.
 
 ```xml
 <xs:simpleType name="VersionMatchType">
@@ -1512,7 +1624,7 @@ The `<Apply>` element denotes application of a function to its arguments, thus e
             <xs:element ref="xacml:Description" minOccurs="0"/>
             <xs:element ref="xacml:Expression" minOccurs="0" maxOccurs="unbounded"/>
          </xs:sequence>
-         <xs:attribute name="FunctionId" type="xs:anyURI" use="required"/>
+         <xs:attribute name="FunctionId" type="xacml:IdentifierType" use="required"/>
        </xs:extension>
    </xs:complexContent>
 </xs:complexType>
@@ -1543,7 +1655,7 @@ The `<Function>` element SHALL be used to name a function as an argument to the 
 <xs:complexType name="FunctionType">
    <xs:complexContent>
           <xs:extension base="xacml:ExpressionType">
-                <xs:attribute name="FunctionId" type="xs:anyURI" use="required"/>
+                <xs:attribute name="FunctionId" type="xacml:IdentifierType" use="required"/>
           </xs:extension>
    </xs:complexContent>
 </xs:complexType>
@@ -1561,7 +1673,7 @@ The `<Function>` element contains the following attribute:
 
 The `<AttributeDesignator>` element retrieves a **_bag_** of values for a **_named attribute_** from the request **_context_**. A **_named attribute_** SHALL be considered present if there is at least one **_attribute_** that matches the criteria set out below.
 
-The `<AttributeDesignator>` element SHALL return a **_bag_** containing all the **_attribute_** values that are matched by the **_named attribute_**. In the event that no matching **_attribute_** is present in the **_context_**, the `MustBePresent` attribute governs whether this element returns an empty **_bag_** or `Indeterminate`. See [Section 7.3.5](#735-attribute-retrieval).
+The `<AttributeDesignator>` element SHALL return a **_bag_** containing all the **_attribute_** values that are matched by the **_named attribute_**. In the event that no matching **_attribute_** is present in the **_context_**, the `MustBePresent` attribute governs whether this element returns an empty **_bag_** or `Indeterminate`. See [Section 7.4.5](#745-attribute-retrieval).
 
 The `<AttributeDesignator>` MAY appear in the `<Match>` element and MAY be passed to the `<Apply>` element as an argument.
 
@@ -1572,9 +1684,9 @@ The `<AttributeDesignator>` element is of the `AttributeDesignatorType` complex 
 <xs:complexType name="AttributeDesignatorType">
    <xs:complexContent>
       <xs:extension base="xacml:ExpressionType">
-         <xs:attribute name="Category" type="xs:anyURI" use="required"/>
-         <xs:attribute name="AttributeId" type="xs:anyURI" use="required"/>
-         <xs:attribute name="DataType" type="xs:anyURI" use="required"/>
+         <xs:attribute name="Category" type="xacml:IdentifierType" use="required"/>
+         <xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
+         <xs:attribute name="DataType" type="xacml:IdentifierType" use="required"/>
          <xs:attribute name="Issuer" type="xs:string" use="optional"/>
          <xs:attribute name="MustBePresent" type="xs:boolean" use="optional" default="false"/>
        </xs:extension>
@@ -1606,23 +1718,23 @@ The `<AttributeDesignatorType>` contains the following attributes:
 
 `MustBePresent` [Optional]
 
-: This attribute governs whether the element returns `Indeterminate` or an empty **_bag_** in the event the **_named attribute_** is absent from the request **_context_**. See [Section 7.3.5](#735-attribute-retrieval). Also see [Section 7.19.2](#7192-syntax-and-type-errors) and [Section 7.19.3](#7193-missing-attributes). If this attribute is omitted it is treated as being set to 'false'.
+: This attribute governs whether the element returns `Indeterminate` or an empty **_bag_** in the event the **_named attribute_** is absent from the request **_context_**. See [Section 7.4.5](#745-attribute-retrieval). Also see [Section 7.19.2](#7192-syntax-and-type-errors) and [Section 7.19.3](#7193-missing-attributes). If this attribute is omitted it is treated as being set to 'false'.
 
 ## 5.30 Element \<AttributeSelector>
 
 The `<AttributeSelector>` element produces a **_bag_** of unnamed and uncategorized **_attribute_** values. The values shall be constructed from the node(s) selected by applying the XPath expression given by the element's Path attribute to the XML content indicated by the element's Category attribute. Support for the `<AttributeSelector>` element is OPTIONAL.
 
-See [Section 7.3.7](#737-attributeselector-evaluation) for details of `<AttributeSelector>` evaluation.
+See [Section 7.4.7](#747-attributeselector-evaluation) for details of `<AttributeSelector>` evaluation.
 
 ```xml
 <xs:element name="AttributeSelector" type="xacml:AttributeSelectorType" substitutionGroup="xacml:Expression"/>
 <xs:complexType name="AttributeSelectorType">
    <xs:complexContent>
       <xs:extension base="xacml:ExpressionType">
-         <xs:attribute name="Category" type="xs:anyURI" use="required"/>
-         <xs:attribute name="ContextSelectorId" type="xs:anyURI" use="optional"/>
+         <xs:attribute name="Category" type="xacml:IdentifierType" use="required"/>
+         <xs:attribute name="ContextSelectorId" type="xacml:IdentifierType" use="optional"/>
          <xs:attribute name="Path" type="xs:string" use="required"/>
-         <xs:attribute name="DataType" type="xs:anyURI" use="required"/>
+         <xs:attribute name="DataType" type="xacml:IdentifierType" use="required"/>
          <xs:attribute name="MustBePresent" type="xs:boolean" use="optional" default="false"/>
        </xs:extension>
    </xs:complexContent>
@@ -1643,7 +1755,7 @@ The `<AttributeSelector>` element has the following attributes:
 
 `Path` [Required]
 
-: This attribute SHALL contain an XPath expression to be evaluated against the specified XML content. See [Section 7.3.7](#737-attributeselector-evaluation) for details of the XPath evaluation during `<AttributeSelector>` processing. The namespace context for the value of the Path attribute is given by the [in-scope namespaces] [[INFOSET](#infoset)] of the `<AttributeSelector>` element.
+: This attribute SHALL contain an XPath expression to be evaluated against the specified XML content. See [Section 7.4.7](#747-attributeselector-evaluation) for details of the XPath evaluation during `<AttributeSelector>` processing. The namespace context for the value of the Path attribute is given by the [in-scope namespaces] [[INFOSET](#infoset)] of the `<AttributeSelector>` element.
 
 `DataType` [Required]
 
@@ -1651,7 +1763,7 @@ The `<AttributeSelector>` element has the following attributes:
 
 `MustBePresent` [Optional]
 
-: This attribute governs whether the element returns `Indeterminate` or an empty **_bag_** in the event that the attributes category specified by the `Category` attribute does not exist in the request **_context_**, or the attributes category does exist but it does not have a `<Content>` child element, or the `<Content>` element does exist but the XPath expression selects no node. See [Section 7.3.5](#735-attribute-retrieval). Also see [Section 7.19.2](#7192-syntax-and-type-errors) and [Section 7.19.3](#7193-missing-attributes). If this attribute is omitted it is treated as being set to 'false'.
+: This attribute governs whether the element returns `Indeterminate` or an empty **_bag_** in the event that the attributes category specified by the `Category` attribute does not exist in the request **_context_**, or the attributes category does exist but it does not have a `<Content>` child element, or the `<Content>` element does exist but the XPath expression selects no node. See [Section 7.4.5](#745-attribute-retrieval). Also see [Section 7.19.2](#7192-syntax-and-type-errors) and [Section 7.19.3](#7193-missing-attributes). If this attribute is omitted it is treated as being set to 'false'.
 
 ## 5.31 Element \<AttributeValue>
 
@@ -1665,7 +1777,7 @@ The `<AttributeValue>` element SHALL contain a literal **_attribute_** value.
          <xs:sequence>
             <xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
          </xs:sequence>
-         <xs:attribute name="DataType" type="xs:anyURI" use="required"/>
+         <xs:attribute name="DataType" type="xacml:IdentifierType" use="required"/>
          <xs:anyAttribute namespace="##any" processContents="lax"/>
        </xs:extension>
    </xs:complexContent>
@@ -1690,7 +1802,7 @@ The `<Notice>` element SHALL contain an identifier for the **_notice_** and a li
    <xs:sequence>
       <xs:element ref="xacml:AttributeAssignment" minOccurs="0" maxOccurs="unbounded"/>
    </xs:sequence>
-   <xs:attribute name="Id" type="xs:anyURI" use="required"/>
+   <xs:attribute name="Id" type="xacml:IdentifierType" use="required"/>
    <xs:attribute name="IsObligation" type="xs:boolean" use="optional" default="false"/>
 </xs:complexType>
 ```
@@ -1720,8 +1832,8 @@ The `<AttributeAssignment>` element is used for including arguments in **_notice
 <xs:complexType name="AttributeAssignmentType" mixed="true">
    <xs:complexContent>
       <xs:extension base="xacml:AttributeValueType">
-         <xs:attribute name="AttributeId" type="xs:anyURI" use="required"/>
-         <xs:attribute name="Category" type="xs:anyURI" use="optional"/>
+         <xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
+         <xs:attribute name="Category" type="xacml:IdentifierType" use="optional"/>
          <xs:attribute name="Issuer" type="xs:string" use="optional"/>
       </xs:extension>
    </xs:complexContent>
@@ -1755,7 +1867,7 @@ The `<NoticeExpression>` element evaluates to a **_notice_** and SHALL contain a
       <xs:element ref="xacml:Condition" minOccurs="0"/>
       <xs:element ref="xacml:AttributeAssignmentExpression" minOccurs="0" maxOccurs="unbounded"/>
    </xs:sequence>
-   <xs:attribute name="Id" type="xs:anyURI" use="required"/>
+   <xs:attribute name="Id" type="xacml:IdentifierType" use="required"/>
    <xs:attribute name="IsObligation" type="xs:boolean" use="optional"/>
    <xs:attribute name="AppliesTo" type="xacml:EffectType" use="optional"/>
 </xs:complexType>
@@ -1795,8 +1907,8 @@ The `<AttributeAssignmentExpression>` element is used for including arguments in
    <xs:sequence>
       <xs:element ref="xacml:Expression"/>
    </xs:sequence>
-   <xs:attribute name="AttributeId" type="xs:anyURI" use="required"/>
-   <xs:attribute name="Category" type="xs:anyURI" use="optional"/>
+   <xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
+   <xs:attribute name="Category" type="xacml:IdentifierType" use="optional"/>
    <xs:attribute name="Issuer" type="xs:string" use="optional"/>
 </xs:complexType>
 ```
@@ -1829,6 +1941,7 @@ The `<Request>` element is an abstraction layer used by the **_policy_** languag
 <xs:element name="Request" type="xacml:RequestType"/>
 <xs:complexType name="RequestType">
    <xs:sequence>
+      <xs:element ref="xacml:SIDCollectionReference" minOccurs="0" maxOccurs="unbounded"/>
       <xs:element ref="xacml:RequestDefaults" minOccurs="0"/>
       <xs:element ref="xacml:Attributes" maxOccurs="unbounded"/>
       <xs:element ref="xacml:MultiRequests" minOccurs="0"/>
@@ -1849,6 +1962,10 @@ The `<Request>` element contains the following elements and attributes:
 `CombinedDecision` [Optional]
 
 : This attribute is used to request that the **_PDP_** combines multiple decisions into a single decision. The use of this attribute is specified in [[Multi](#multi)]. If the **_PDP_** does not implement the relevant functionality in [[Multi](#multi)], then the **_PDP_** must return an Indeterminate with a status code of urn:oasis:names:tc:xacml:1.0:status:processing-error if it receives a request with this attribute set to `true`. If this attribute is omitted it is treated as being set to `false`.
+
+`<SIDCollectionReference>` [Any Number]
+
+: A reference to a **_short identifier_** collection. The **_short identifiers_** used by the request MUST be defined in the referenced collections.
 
 `<RequestDefaults>` [Optional]
 
@@ -1898,7 +2015,7 @@ The `<Attributes>` element specifies **_attributes_** of a **_subject_**, **_res
       <xs:element ref="xacml:Content" minOccurs="0"/>
       <xs:element ref="xacml:Attribute" minOccurs="0" maxOccurs="unbounded"/>
    </xs:sequence>
-   <xs:attribute name="Category" type="xs:anyURI" use="required"/>
+   <xs:attribute name="Category" type="xacml:IdentifierType" use="required"/>
    <xs:attribute ref="xml:id" use="optional"/>
 </xs:complexType>
 ```
@@ -1950,7 +2067,7 @@ The `<Attribute>` element is the central abstraction of the request **_context_*
    <xs:sequence>
       <xs:element ref="xacml:AttributeValue" maxOccurs="unbounded"/>
    </xs:sequence>
-   <xs:attribute name="AttributeId" type="xs:anyURI" use="required"/>
+   <xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
    <xs:attribute name="Issuer" type="xs:string" use="optional"/>
    <xs:attribute name="IncludeInResult" type="xs:boolean" use="required"/>
 </xs:complexType>
@@ -1986,6 +2103,7 @@ The `<Response>` element encapsulates the **_authorization decision_** produced 
 <xs:element name="Response" type="xacml:ResponseType"/>
 <xs:complexType name="ResponseType">
    <xs:sequence>
+      <xs:element ref="xacml:SIDCollectionReference" minOccurs="0" maxOccurs="unbounded"/>
       <xs:element ref="xacml:Result" maxOccurs="unbounded"/>
    </xs:sequence>
 </xs:complexType>
@@ -1994,6 +2112,10 @@ The `<Response>` element encapsulates the **_authorization decision_** produced 
 The `<Response>` element is of `ResponseType` complex type.
 
 The `<Response>` element contains the following elements:
+
+`<SIDCollectionReference>` [Any Number]
+
+: A reference to a **_short identifier_** collection. The **_short identifiers_** used by the response MUST be defined in the referenced collections.
 
 `<Result>` [One to Many]
 
@@ -2060,7 +2182,7 @@ The `ExactMatchIdReferenceType` type extends the `IdReferenceType` type with the
 
 `<Version>` [Required]
 
-: The version of a **_policy_** that was applicable to the request. See [Section 5.11](#511-element-policyreference).
+: The version of a **_policy_** that was applicable to the request. See [Section 5.12](#512-element-policyreference).
 
 ## 5.50 Element \<MultiRequests>
 
@@ -2186,7 +2308,7 @@ The `<StatusCode>` element contains a major status code value and an optional re
    <xs:sequence>
       <xs:element ref="xacml:StatusCode" minOccurs="0"/>
    </xs:sequence>
-   <xs:attribute name="Value" type="xs:anyURI" use="required"/>
+   <xs:attribute name="Value" type="xacml:IdentifierType" use="required"/>
 </xs:complexType>
 ```
 
@@ -2265,9 +2387,9 @@ The `<MissingAttributeDetail>` element conveys information about **_attributes_*
    <xs:sequence>
       <xs:element ref="xacml:AttributeValue" minOccurs="0" maxOccurs="unbounded"/>
    </xs:sequence>
-   <xs:attribute name="Category" type="xs:anyURI" use="required"/>
-   <xs:attribute name="AttributeId" type="xs:anyURI" use="required"/>
-   <xs:attribute name="DataType" type="xs:anyURI" use="required"/>
+   <xs:attribute name="Category" type="xacml:IdentifierType" use="required"/>
+   <xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
+   <xs:attribute name="DataType" type="xacml:IdentifierType" use="required"/>
    <xs:attribute name="Issuer" type="xs:string" use="optional"/>
 </xs:complexType>
 ```
@@ -2450,11 +2572,41 @@ All other **_decisions_** SHALL result in the permission of **_access_**.
 
 : Note: other actions, e.g. consultation of additional **_PDPs_**, reformulation/resubmission of the **_decision request_**, etc., are not prohibited.
 
-## 7.3 Attribute evaluation
+## 7.3 Identifier evaluation
+
+Various XACML artifacts are uniquely identified by URI [[RFC2396](#rfc2396)]. This includes **_attribute_** categories, **_attributes_**, data types, functions, **_notices_**, status codes, **_combining algorithms_** and XPath versions. Values of the `IdentifierType` simple type are used to refer to such artifacts, possibly using **_short identifier_** names, which are not themselves URIs. Therefore an `IdentifierType` value containing **_short identifier_** names must undergo evaluation to convert the value to an absolute URI.
+
+The value of a **_short identifier_** may also contain **_short identifier_** names. The _expanded value_ of the **_short identifier_** is the value of the **_short identifier_** with any reference to another **_short identifier_** (including the curly brackets) replaced by the _expanded value_ of the referenced **_short identifier_** (thus the expansion is applied recursively).
+
+In the case where the `IdentifierType` value is already an absolute URI then the result of evaluation is that URI.
+
+In the case where the `IdentifierType` value is just a **_short identifier_** name then the result of evaluation is the _expanded value_ of that **_short identifier_**.
+
+In the case where the `IdentifierType` value contains curly brackets then the result of evaluation is the value with any reference to a **_short identifier_** replaced by the _expanded value_ of the referenced **_short identifier_**.
+
+The end result of evaluation MUST be an absolute URI.
+
+### 7.3.1 Identifier examples (non-normative)
+
+Given the following **_short identifier_** definitions:
+```
+<ShortIdentifier Name="xs" Value="http://www.w3.org/2001/XMLSchema#"/>
+<ShortIdentifier Name="string" Value="{xs}string"/>
+```
+
+these `IdentifierType` values are all equivalent and evaluate to the URI of the string data type:
+```
+"http://www.w3.org/2001/XMLSchema#string"
+"string"
+"{string}"
+"{xs}string"
+```
+
+## 7.4 Attribute evaluation
 
 **_Attributes_** are represented in the request **_context_** by the **_context handler_**, regardless of whether or not they appeared in the original **_decision request_**, and are referred to in the **_policy_** by attribute designators and attribute selectors. A **_named attribute_** is the term used for the criteria that the specific attribute designators use to refer to particular **_attributes_** in the `<Attributes>` elements of the request **_context_**.
 
-### 7.3.1 Structured attributes
+### 7.4.1 Structured attributes
 
 `<AttributeValue>` elements MAY contain an instance of a structured XML data-type, for example `<ds:KeyInfo>`. XACML 4.0 supports several ways for comparing the contents of such elements.
 
@@ -2472,7 +2624,7 @@ In general, this method will not be adequate unless the structured data-type is 
 
 3. The structured **_attribute_** MAY be made available in the `<Content>` element of the appropriate **_attribute_** category and an `<AttributeSelector>` element MAY be used to select any node in the structured data-type by means of an XPath expression. This node MAY then be compared using one of the XPath-based functions described in [Appendix E.3.15](#e315-xpath-based-functions). This method requires support by the **_PDP_** for the optional XPath expressions and XPath functions features.
 
-### 7.3.2 Attribute bags
+### 7.4.2 Attribute bags
 
 XACML defines implicit collections of its data-types. XACML refers to a collection of values that are of a single data-type as a **_bag_**. **_Bags_** of data-types are needed because selections of nodes from an XML **_resource_** or XACML request **_context_** may return more than one value.
 
@@ -2480,25 +2632,25 @@ The `<AttributeSelector>` element uses an XPath expression to specify the select
 
 The values in a **_bag_** are not ordered, and some of the values may be duplicates. There SHALL be no notion of a **_bag_** containing **_bags_**, or a **_bag_** containing values of differing types; i.e., a **_bag_** in XACML SHALL contain only values that are of the same data-type.
 
-### 7.3.3 Multivalued attributes
+### 7.4.3 Multivalued attributes
 
 If a single `<Attribute>` element in a request **_context_** contains multiple `<AttributeValue>` child elements, then the **_bag_** of values resulting from evaluation of the `<Attribute>` element MUST be identical to the **_bag_** of values that results from evaluating a **_context_** in which each `<AttributeValue>` element appears in a separate `<Attribute>` element, each carrying identical meta-data.
 
-### 7.3.4 Attribute Matching
+### 7.4.4 Attribute Matching
 
 A **_named attribute_** includes specific criteria with which to match **_attributes_** in the **_context_**. An **_attribute_** specifies a `Category`, `AttributeId` and `DataType`, and a **_named attribute_** also specifies the `Issuer`. A **_named attribute_** SHALL match an **_attribute_** if the values of their respective `Category`, `AttributeId`, `DataType` and optional `Issuer` attributes match. The `Category` of the **_named attribute_** MUST match, by **_identifier equality_**, the `Category` of the corresponding **_context_** **_attribute_**. The `AttributeId` of the **_named attribute_** MUST match, by **_identifier equality_**, the `AttributeId` of the corresponding **_context_** **_attribute_**. The `DataType` of the **_named attribute_** MUST match, by **_identifier equality_**, the `DataType` of the corresponding **_context_** **_attribute_**. If `Issuer` is supplied in the **_named attribute_**, then it MUST match, using the `urn:oasis:names:tc:xacml:1.0:function:string-equal` function, the `Issuer` of the corresponding **_context_** **_attribute_**. If `Issuer` is not supplied in the **_named attribute_**, then the matching of the **_context_** **_attribute_** to the **_named attribute_** SHALL be governed by `AttributeId` and `DataType` alone, regardless of the presence, absence, or actual value of `Issuer` in the corresponding **_context_** **_attribute_**. In the case of an attribute selector, the matching of the **_attribute_** to the **_named attribute_** SHALL be governed by the XPath expression and `DataType`.
 
-### 7.3.5 Attribute Retrieval
+### 7.4.5 Attribute Retrieval
 
 The **_PDP_** SHALL request the values of **_attributes_** in the request **_context_** from the **_context handler_**. The **_context handler_** MAY also add **_attributes_** to the request **_context_** without the **_PDP_** requesting them. The **_PDP_** SHALL reference the attributes as if they were in a physical request **_context_** document, but the **_context handler_** is responsible for obtaining and supplying the requested values by whatever means it deems appropriate, including by retrieving them from one or more **_Policy Information Points_**. The **_context handler_** SHALL return the values of **_attributes_** that match the attribute designator or attribute selector and form them into a **_bag_** of values with the specified data-type. If no **_attributes_** from the request **_context_** match, then the **_attribute_** SHALL be considered missing. If the **_attribute_** is missing, then `MustBePresent` governs whether the attribute designator or attribute selector returns an empty **_bag_** or an `Indeterminate` result. If `MustBePresent` is `False` (default value), then a missing **_attribute_** SHALL result in an empty **_bag_**. If `MustBePresent` is `True`, then a missing **_attribute_** SHALL result in `Indeterminate`. This `Indeterminate` result SHALL be handled in accordance with the specification of the encompassing expressions, **_rules_** and **_policies_**. If the result is `Indeterminate`, then the `AttributeId`, `DataType` and `Issuer` of the **_attribute_** MAY be listed in the **_authorization decision_** as described in [Section 7.17](#717-authorization-decision). However, a **_PDP_** MAY choose not to return such information for security reasons.
 
 Regardless of any dynamic modifications of the request **_context_** during **_policy_** evaluation, the **_PDP_** SHALL behave as if each **_bag_** of **_attribute_** values is fully populated in the **_context_** before it is first tested, and is thereafter immutable during evaluation. That is, every subsequent test of that **_attribute_** shall use the same **_bag_** of values that was initially tested.
 
-### 7.3.6 Environment Attributes
+### 7.4.6 Environment Attributes
 
 Standard **_environment_** **_attributes_** are listed in [Appendix F.7](#f7-environment-attributes). If a value for one of these **_attributes_** is supplied in the **_decision request_**, then the **_context handler_** SHALL use that value. Otherwise, the **_context handler_** SHALL supply a value. In the case of date and time **_attributes_**, the supplied value SHALL have the semantics of the "date and time that apply to the **_decision request_**".
 
-### 7.3.7 AttributeSelector evaluation
+### 7.4.7 AttributeSelector evaluation
 
 An `<AttributeSelector>` element will be evaluated according to the following processing model.
 
@@ -2532,8 +2684,7 @@ An `<AttributeSelector>` element will be evaluated according to the following pr
 &nbsp;
 : If an error occurs when converting the values returned by the XPath expression to the specified `DataType`, then the result of the `<AttributeSelector>` MUST be `Indeterminate`, with a status code `urn:oasis:names:tc:xacml:1.0:status:processing-error`
 
-
-## 7.4 Expression evaluation
+## 7.5 Expression evaluation
 
 XACML specifies expressions in terms of the elements listed below, of which the `<Apply>` and `<Condition>` elements recursively compose greater expressions. Valid expressions SHALL be type correct, which means that the types of each of the elements contained within `<Apply>` elements SHALL agree with the respective argument types of the function that is named by the FunctionId attribute. The resultant type of the `<Apply>` element SHALL be the resultant type of the function, which MAY be narrowed to a primitive data-type, or a **_bag_** of a primitive data-type, by type-unification. XACML defines an evaluation result of `Indeterminate`, which is said to be the result of an invalid expression, or an operational error occurring during the evaluation of the expression.
 
@@ -2546,7 +2697,7 @@ XACML defines these elements to be in the substitution group of the `<Expression
 * `<xacml:Function>`
 * `<xacml:VariableReference>`
 
-## 7.5 Arithmetic evaluation
+## 7.6 Arithmetic evaluation
 
 IEEE 754 [[IEEE754](#ieee754)] specifies how to evaluate arithmetic functions in a context, which specifies defaults for precision, rounding, etc. XACML SHALL use this specification for the evaluation of all integer and double functions relying on the Extended Default Context, enhanced with double precision:
 
@@ -2570,7 +2721,7 @@ The **_target_** value SHALL be `Match` if the `<Target>` element is absent or t
 | `False` | `No Match` |
 | `Indeterminate` | `Indeterminate` |
 
-## 7.8 VariableReference Evaluation
+## 7.8 VariableReference evaluation
 
 The `<VariableReference>` element references a single `<VariableDefinition>` element contained within the same `<Policy>` element. A `<VariableReference>` that does not reference a particular `<VariableDefinition>` element within the encompassing `<Policy>` element is called an undefined reference. **_Policies_** with undefined references are invalid.
 
@@ -2704,57 +2855,51 @@ it MUST NOT list the names and data-types of any **_attribute_** for which value
 
 XACML makes use of URIs and strings as identifiers. When such identifiers are compared for equality, the comparison MUST be done so that the identifiers are equal if they have the same length and the characters in the two identifiers are equal codepoint by codepoint.
 
-The following is a list of the identifiers which MUST use this definition of equality.
+Values of the `IdentifierType` simple type may use **_short identifiers_** as aliases for URIs. Where it is necessary to determine **_identifier equality_**, values of the `IdentifierType` simple type MUST first be evaluated according to [Section 7.3](#73-identifier-evaluation) and then the comparison SHALL be performed using the resulting URI. This applies to all instances of `IdentifierType`.
 
-The content of the element `<XPathVersion>`.
+This definition of equality MUST also be used by the following URI identifiers (that are not instances of `IdentifierType`):
 
-The XML attribute `Value` in the element `<StatusCode>`.
+* the XML attribute `PolicyId` in the element `<Policy>`,
 
-The XML attributes `Category`, `AttributeId`, `DataType` and `Issuer` in the element `<MissingAttributeDetail>`.
+* the XML attribute `PolicyIdRef` in the element `<PolicyCombinerParameters>` and
 
-The XML attribute `Category` in the element `<Attributes>`.
+* the XML attribute `Id` in the complex type `IdReferenceType`.
 
-The XML attributes `AttributeId` and `Issuer` in the element `<Attribute>`.
+The following is a list of the string identifiers that MUST use this definition of equality:
 
-The XML attribute `Id` in the element `<Notice>`.
+* the XML attribute `Issuer` in the element `<AttributeDesignator>`,
 
-The XML attributes `AttributeId` and `Category` in the element `<AttributeAssignment>`.
+* the XML attribute `Issuer` in the element `<MissingAttributeDetail>`,
 
-The XML attribute `Id` in the element `<NoticeExpression>`.
+* the XML attribute `Issuer` in the element `<Attribute>`,
 
-The XML attributes `AttributeId`, `Category` and `Issuer` in the element `<AttributeAssignmentExpression>`.
+* the XML attribute `Issuer` in the element `<AttributeAssignmentExpression>`,
 
-The XML attribute `ParameterName` in the element `<CombinerParameter>`.
+* the XML attribute `ParameterName` in the element `<CombinerParameter>`,
 
-The XML attribute `RuleIdRef` in the element `<RuleCombinerParameters>`.
+* the XML attribute `RuleId` in the element `<Rule>`,
 
-The XML attribute `PolicyIdRef` in the element `<PolicyCombinerParameters>`.
+* the XML attribute `RuleIdRef` in the element `<RuleCombinerParameters>`,
 
-The anyURI in the content of the complex type `IdReferenceType`.
+* the XML attribute `VariableId` in the element `<VariableDefinition>` and
 
-The XML attributes `PolicyId` and `CombiningAlgId` in the element `<Policy>`.
+* the XML attribute `VariableId` in the element `<VariableReference>`.
 
-The XML attribute `RuleId` in the element `<Rule>`.
-
-The XML attribute `MatchId` in the element `<Match>`.
-
-The XML attribute `VariableId` in the element `<VariableDefinition>`.
-
-The XML attribute `VariableId` in the element `<VariableReference>`.
-
-The XML attributes `Category`, `ContextSelectorId` and `DataType` in the element `<AttributeSelector>`.
-
-The XML attributes `Category`, `AttributeId`, `DataType` and `Issuer` in the element `<AttributeDesignator>`.
-
-The XML attribute `DataType` in the element `<AttributeValue>`.
-
-The XML attribute `FunctionId` in the element `<Function>`.
-
-The XML attribute `FunctionId` in the element `<Apply>`.
-
-It is RECOMMENDED that extensions to XACML use the same definition of identifier equality for similar identifiers.
+It is RECOMMENDED that extensions to XACML use the same definition of **_identifier equality_** for similar identifiers.
 
 It is RECOMMENDED that extensions which define identifiers do not define identifiers which could be easily misinterpreted by people as being subject to other kind of processing, such as URL character escaping, before matching.
+
+## 7.21 Short identifiers in responses
+
+The `<Response>` element may contain references to **_short identifier_** collections, and **_short identifiers_** from those collections may be used within the response. The PDP can freely choose what **_short identifier_** collections it uses in the response, if any. There are two cases that require special care.
+
+**_Attributes_** in the request that have the `IncludeInResult` XML attribute set to true are duplicated in the response. If those **_attributes_** contain **_short identifiers_** then those **_short identifiers_** are interpreted with respect to the **_short identifier_** collections referenced by the request, which may be different from the **_short identifier_** collections chosen by the PDP for the response.
+
+**_Notices_** in the response originate from **_notice_** expressions in policies. If those **_notice_** expressions contain **_short identifiers_** then those **_short identifiers_** are interpreted with respect to the **_short identifier_** collections referenced by the policies, which may also be different from the **_short identifier_** collections chosen by the PDP for the response.
+
+The PDP is responsible for ensuring that any **_short identifiers_** in the response reflect the correct URI when they are evaluated according to [Section 7.3](#73-identifier-evaluation) in the presence of the **_short identifier_** collections it has chosen. An implementation strategy for achieving this is for the PDP and context handler to evaluate any values of the `IdentifierType` simple type as they are encountered and store them in internal memory as absolute URIs. Then when the response is composed the absolute URIs can be replaced by appropriate **_short identifiers_** from the **_short identifier_** collections chosen by the PDP.
+
+If the PDP chooses the same **_short identifier_** collections referenced by the request then it has the advantage that they are collections known by the PEP and any attributes included in the result are more likely to have their original **_short identifiers_** restored.
 
 -------
 
@@ -2769,7 +2914,6 @@ The following XML attributes have values that are URIs. These may be extended by
 `AttributeId`, \
 `DataType`, \
 `FunctionId`, \
-`MatchId`, \
 `Id` (`<Notice>` and `<NoticeExpression>`), \
 `CombiningAlgId`, \
 `StatusCode`.
@@ -2778,7 +2922,7 @@ See [Section 5](#5-syntax-normative-with-the-exception-of-the-schema-fragments) 
 
 ## 8.2 Structured attributes
 
-`<AttributeValue>` elements MAY contain an instance of a structured XML data-type. [Section 7.3.1](#731-structured-attributes) describes a number of standard techniques to identify data items within such a structured **_attribute_**. Listed here are some additional techniques that require XACML extensions.
+`<AttributeValue>` elements MAY contain an instance of a structured XML data-type. [Section 7.4.1](#741-structured-attributes) describes a number of standard techniques to identify data items within such a structured **_attribute_**. Listed here are some additional techniques that require XACML extensions.
 
 1. For a given structured data-type, a community of XACML users MAY define new **_attribute_** identifiers for each leaf sub-element of the structured data-type that has a type conformant with one of the XACML-defined primitive data-types. Using these new **_attribute_** identifiers, the **_PEPs_** or **_context handlers_** used by that community of users can flatten instances of the structured data-type into a sequence of individual `<Attribute>` elements. Each such `<Attribute>` element can be compared using the XACML-defined functions. Using this method, the structured data-type itself never appears in an `<AttributeValue>` element.
 
@@ -3590,7 +3734,7 @@ There are many security considerations related to use of Unicode. An XACML imple
 
 ## B.4 Identifier equality
 
-[Section 7.20](#720-identifier-equality) defines the identifier equality operation for XACML. This definition of equality does not do any kind of canonicalization or escaping of characters. The identifiers defined in the XACML specification have been selected to not include any ambiguity regarding these aspects. It is RECOMMENDED that identifiers defined by extensions also do not introduce any identifiers which might be mistaken for being subject to processing, like for instance URL character encoding using `%`.
+[Section 7.20](#720-identifier-equality) defines the **_identifier equality_** operation for XACML. This definition of equality does not do any kind of canonicalization or escaping of characters. The identifiers defined in the XACML specification have been selected to not include any ambiguity regarding these aspects. It is RECOMMENDED that identifiers defined by extensions also do not introduce any identifiers which might be mistaken for being subject to processing, like for instance URL character encoding using `%`.
 
 -------
 
@@ -3639,6 +3783,9 @@ Cyril | Dangerville | THALES
 | | 2024-09-30 | Cyril Dangerville | Added support for definition lists. |
 | | 2024-10-22 | Steven Legg | Reformatted indented paragraphs. |
 | | | | Made MustBePresent, CombinedDecision and ReturnPolicyIdList XML attributes default false. |
+| | 2025-04-16 | Steven Legg | Restructured the type hierarchy for policy references. |
+| | 2025-04-17 | Steven Legg | Merged **_obligations_** and **_advice_** into **_notices_**. |
+| | 2025-07-15 | Steven Legg | Added support for **_short identifiers_**. |
 
 -------
 

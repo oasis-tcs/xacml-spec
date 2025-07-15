@@ -7,6 +7,7 @@
 	<xs:element name="Request" type="xacml:RequestType"/>
 	<xs:complexType name="RequestType">
 		<xs:sequence>
+			<xs:element ref="xacml:SIDCollectionReference" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element ref="xacml:RequestDefaults" minOccurs="0"/>
 			<xs:element ref="xacml:Attributes" maxOccurs="unbounded"/>
 			<xs:element ref="xacml:MultiRequests" minOccurs="0"/>
@@ -27,6 +28,7 @@
 	<xs:element name="Response" type="xacml:ResponseType"/>
 	<xs:complexType name="ResponseType">
 		<xs:sequence>
+			<xs:element ref="xacml:SIDCollectionReference" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element ref="xacml:Result" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
@@ -86,7 +88,7 @@
 		<xs:sequence>
 			<xs:element ref="xacml:StatusCode" minOccurs="0"/>
 		</xs:sequence>
-		<xs:attribute name="Value" type="xs:anyURI" use="required"/>
+		<xs:attribute name="Value" type="xacml:IdentifierType" use="required"/>
 	</xs:complexType>
 
 	<xs:element name="StatusMessage" type="xs:string"/>
@@ -103,9 +105,9 @@
 		<xs:sequence>
 			<xs:element ref="xacml:AttributeValue" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
-		<xs:attribute name="Category" type="xs:anyURI" use="required"/>
-		<xs:attribute name="AttributeId" type="xs:anyURI" use="required"/>
-		<xs:attribute name="DataType" type="xs:anyURI" use="required"/>
+		<xs:attribute name="Category" type="xacml:IdentifierType" use="required"/>
+		<xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
+		<xs:attribute name="DataType" type="xacml:IdentifierType" use="required"/>
 		<xs:attribute name="Issuer" type="xs:string" use="optional"/>
 	</xs:complexType>
 
@@ -115,7 +117,7 @@
 			<xs:element ref="xacml:Content" minOccurs="0"/>
 			<xs:element ref="xacml:Attribute" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
-		<xs:attribute name="Category" type="xs:anyURI" use="required"/>
+		<xs:attribute name="Category" type="xacml:IdentifierType" use="required"/>
 		<xs:attribute ref="xml:id" use="optional"/>
 	</xs:complexType>
 
@@ -124,7 +126,7 @@
 		<xs:sequence>
 			<xs:element ref="xacml:AttributeValue" maxOccurs="unbounded"/>
 		</xs:sequence>
-		<xs:attribute name="AttributeId" type="xs:anyURI" use="required"/>
+		<xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
 		<xs:attribute name="Issuer" type="xs:string" use="optional"/>
 		<xs:attribute name="IncludeInResult" type="xs:boolean" use="required"/>
 	</xs:complexType>
@@ -153,7 +155,7 @@
 		<xs:sequence>
 			<xs:element ref="xacml:AttributeAssignment" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
-		<xs:attribute name="Id" type="xs:anyURI" use="required"/>
+		<xs:attribute name="Id" type="xacml:IdentifierType" use="required"/>
 		<xs:attribute name="IsObligation" type="xs:boolean" use="optional" default="false"/>
 	</xs:complexType>
 
@@ -161,8 +163,8 @@
 	<xs:complexType name="AttributeAssignmentType" mixed="true">
 		<xs:complexContent mixed="true">
 			<xs:extension base="xacml:AttributeValueType">
-				<xs:attribute name="AttributeId" type="xs:anyURI" use="required"/>
-				<xs:attribute name="Category" type="xs:anyURI" use="optional"/>
+				<xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
+				<xs:attribute name="Category" type="xacml:IdentifierType" use="optional"/>
 				<xs:attribute name="Issuer" type="xs:string" use="optional"/>
 			</xs:extension>
 		</xs:complexContent>
@@ -174,7 +176,7 @@
             <xs:element ref="xacml:Condition" minOccurs="0"/>
 			<xs:element ref="xacml:AttributeAssignmentExpression" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
-		<xs:attribute name="Id" type="xs:anyURI" use="required"/>
+		<xs:attribute name="Id" type="xacml:IdentifierType" use="required"/>
 		<xs:attribute name="IsObligation" type="xs:boolean" use="optional"/>
 		<xs:attribute name="AppliesTo" type="xacml:EffectType" use="optional"/>
 	</xs:complexType>
@@ -184,8 +186,8 @@
 		<xs:sequence>
 			<xs:element ref="xacml:Expression"/>
 		</xs:sequence>
-		<xs:attribute name="AttributeId" type="xs:anyURI" use="required"/>
-		<xs:attribute name="Category" type="xs:anyURI" use="optional"/>
+		<xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
+		<xs:attribute name="Category" type="xacml:IdentifierType" use="optional"/>
 		<xs:attribute name="Issuer" type="xs:string" use="optional"/>
 	</xs:complexType>
 
@@ -273,7 +275,7 @@
 		</xs:sequence>
 	</xs:complexType>
 
-	<xs:element name="XPathVersion" type="xs:anyURI"/>
+	<xs:element name="XPathVersion" type="xacml:IdentifierType"/>
 
 	<!-- Issue #16: IdReferenceType URI changed to an XML attribute to allow extensions with optional attributes and arguments (ExactMatchIdReferenceType, PatternMatchIdReferenceType, PolicyIdReferenceType, PolicyReferenceType)  -->
 	<xs:complexType name="IdReferenceType" abstract="true">
@@ -295,6 +297,7 @@
 	<xs:element name="Policy" type="xacml:PolicyType"/>
 	<xs:complexType name="PolicyType">
 		<xs:sequence>
+			<xs:element ref="xacml:SIDCollectionReference" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element ref="xacml:Description" minOccurs="0"/>
 			<xs:element ref="xacml:PolicyIssuer" minOccurs="0"/>
 			<xs:element ref="xacml:PolicyDefaults" minOccurs="0"/>
@@ -313,7 +316,7 @@
 		</xs:sequence>
 		<xs:attribute name="PolicyId" type="xs:anyURI" use="required"/>
 		<xs:attribute name="Version" type="xacml:VersionType" use="required"/>
-		<xs:attribute name="CombiningAlgId" type="xs:anyURI" use="required"/>
+		<xs:attribute name="CombiningAlgId" type="xacml:IdentifierType" use="required"/>
 		<xs:attribute name="MaxDelegationDepth" type="xs:integer" use="optional"/>
 	</xs:complexType>
 
@@ -356,10 +359,10 @@
 	<xs:complexType name="AttributeSelectorType">
 		<xs:complexContent>
 			<xs:extension base="xacml:ExpressionType">
-				<xs:attribute name="Category" type="xs:anyURI" use="required"/>
-				<xs:attribute name="ContextSelectorId" type="xs:anyURI" use="optional"/>
+				<xs:attribute name="Category" type="xacml:IdentifierType" use="required"/>
+				<xs:attribute name="ContextSelectorId" type="xacml:IdentifierType" use="optional"/>
 				<xs:attribute name="Path" type="xs:string" use="required"/>
-				<xs:attribute name="DataType" type="xs:anyURI" use="required"/>
+				<xs:attribute name="DataType" type="xacml:IdentifierType" use="required"/>
 				<xs:attribute name="MustBePresent" type="xs:boolean" use="optional" default="false"/>
 			</xs:extension>
 		</xs:complexContent>
@@ -369,9 +372,9 @@
 	<xs:complexType name="AttributeDesignatorType">
 		<xs:complexContent>
 			<xs:extension base="xacml:ExpressionType">
-				<xs:attribute name="Category" type="xs:anyURI" use="required"/>
-				<xs:attribute name="AttributeId" type="xs:anyURI" use="required"/>
-				<xs:attribute name="DataType" type="xs:anyURI" use="required"/>
+				<xs:attribute name="Category" type="xacml:IdentifierType" use="required"/>
+				<xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
+				<xs:attribute name="DataType" type="xacml:IdentifierType" use="required"/>
 				<xs:attribute name="Issuer" type="xs:string" use="optional"/>
 				<xs:attribute name="MustBePresent" type="xs:boolean" use="optional" default="false"/>
 			</xs:extension>
@@ -385,7 +388,7 @@
 				<xs:sequence>
 					<xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
 				</xs:sequence>
-				<xs:attribute name="DataType" type="xs:anyURI" use="required"/>
+				<xs:attribute name="DataType" type="xacml:IdentifierType" use="required"/>
 				<xs:anyAttribute namespace="##any" processContents="lax"/>
 			</xs:extension>
 		</xs:complexContent>
@@ -395,7 +398,7 @@
 	<xs:complexType name="FunctionType">
 		<xs:complexContent>
 			<xs:extension base="xacml:ExpressionType">
-				<xs:attribute name="FunctionId" type="xs:anyURI" use="required"/>
+				<xs:attribute name="FunctionId" type="xacml:IdentifierType" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -415,9 +418,39 @@
 					<xs:element ref="xacml:Description" minOccurs="0"/>
 					<xs:element ref="xacml:Expression" minOccurs="0" maxOccurs="unbounded"/>
 				</xs:sequence>
-				<xs:attribute name="FunctionId" type="xs:anyURI" use="required"/>
+				<xs:attribute name="FunctionId" type="xacml:IdentifierType" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+
+	<xs:simpleType name="IdentifierType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[^{}]*({[A-Za-z][0-9A-Za-z]*(-[0-9A-Za-z]+)*}[^{}]*)*"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:element name="SIDCollection" type="xacml:SIDCollectionType"/>
+	<xs:complexType name="SIDCollectionType">
+		<xs:sequence>
+			<xs:element ref="xacml:SIDCollectionReference" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="xacml:ShortIdentifier" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="SIDCollectionId" type="xs:anyURI" use="required"/>
+	</xs:complexType>
+
+	<xs:element name="SIDCollectionReference" type="xs:anyURI"/>
+
+	<xs:element name="ShortIdentifier" type="xacml:ShortIdentifierType"/>
+	<xs:complexType name="ShortIdentifierType">
+		<xs:attribute name="Name" type="xacml:ShortIdentifierNameType" use="required"/>
+		<xs:attribute name="Value" type="xs:string" use="required"/>
+	</xs:complexType>
+
+	<xs:simpleType name="ShortIdentifierNameType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[A-Za-z][0-9A-Za-z]*(-[0-9A-Za-z]+)*"/>
+				<!-- The exact pattern is still open for discussion. -->
+		</xs:restriction>
+	</xs:simpleType>
 
 </xs:schema>
