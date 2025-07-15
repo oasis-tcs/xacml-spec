@@ -2470,7 +2470,7 @@ The XPath 2.0 specification leaves a number of aspects of behavior implementatio
 
     : An XPath error causes an XACML Indeterminate value in the element where the XPath error occurs. The StatusCode value SHALL be `urn:oasis:names:tc:xacml:1.0:status:processing-error`. Implementations MAY provide additional details about the error in the response or by some other means.
 
-`https://www.w3.org/TR/2007/REC-xpath-functions-20070123/#impl-def` defines the following items:
+`https://www.w3.org/TR/xpath-functions/#impl-def` defines the following items:
 
 1. The destination of the trace output is implementation-defined.
 
@@ -3538,7 +3538,7 @@ OASIS Committee Specification, Extensible access control markup language (XACML)
 
 ###### [XF]
 
-XQuery 1.0 and XPath 2.0 Functions and Operators, W3C Recommendation 23 January 2007, https://www.w3.org/TR/2007/REC-xpath-functions-20070123/
+XQuery 1.0 and XPath 2.0 Functions and Operators (Second Edition) W3C Recommendation 14 December 2010 (revised 13 April 2015), https://www.w3.org/TR/xquery-operators/
 
 ###### [XML]
 
@@ -3558,7 +3558,7 @@ XML Path Language (XPath), Version 1.0, W3C Recommendation 16 November 1999, htt
 
 ###### [XPathFunc]
 
-XQuery 1.0 and XPath 2.0 Functions and Operators (Second Edition), W3C Recommendation 14 December 2010, https://www.w3.org/TR/2010/REC-xpath-functions-20101214/
+XQuery 1.0 and XPath 2.0 Functions and Operators (Second Edition) W3C Recommendation 14 December 2010 (revised 13 April 2015),  https://www.w3.org/TR/xquery-operators/
 
 ###### [XSLT]
 
@@ -3568,7 +3568,7 @@ XSL Transformations (XSLT) Version 1.0, W3C Recommendation 16 November 1999, htt
 
 ###### [CM]
 
-Character model for the World Wide Web 1.0: Normalization, W3C Working Draft, 27 October 2005, https://www.w3.org/TR/2005/WD-charmod-norm-20051027/, World Wide Web Consortium.
+Character Model for the World Wide Web: String Matching W3C Working Group Note 11 August 2021, https://www.w3.org/TR/charmod-norm/, World Wide Web Consortium.
 
 ###### [Hinton94]
 
