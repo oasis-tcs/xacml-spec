@@ -301,6 +301,7 @@
 			<xs:element ref="xacml:Description" minOccurs="0"/>
 			<xs:element ref="xacml:PolicyIssuer" minOccurs="0"/>
 			<xs:element ref="xacml:PolicyDefaults" minOccurs="0"/>
+			<xs:element ref="xacml:VariableDefinition" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element ref="xacml:Target" minOccurs="0"/>
 			<xs:choice minOccurs="0" maxOccurs="unbounded">
 				<xs:element ref="xacml:Policy"/>
@@ -309,7 +310,6 @@
 				<xs:element ref="xacml:CombinerParameters"/>
 				<xs:element ref="xacml:PolicyCombinerParameters"/>
 				<xs:element ref="xacml:RuleCombinerParameters"/>
-				<xs:element ref="xacml:VariableDefinition"/>
 				<xs:element ref="xacml:Rule"/>
 			</xs:choice>
 			<xs:element ref="xacml:NoticeExpression" minOccurs="0" maxOccurs="unbounded"/>

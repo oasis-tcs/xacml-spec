@@ -935,37 +935,295 @@ When a **_PDP_** evaluates a **_policy_** containing **_notice_** expressions, i
 
 This section contains two examples of the use of XACML for illustrative purposes. The first example is a relatively simple one to illustrate the use of **_target_**, **_context_**, matching functions and **_subject attributes_**. The second example additionally illustrates the use of the **_combining algorithm_**, **_conditions_** and **_notices_**.
 
-<!-- TODO update the examples before finalizing the spec. -->
-
 ## 4.1 Example one
+
+_To be provided._
 
 ### 4.1.1 Example policy
 
+_To be provided._
+
 ### 4.1.2 Example request context
 
+_To be provided._
+
 ### 4.1.3 Example response context
+
+_To be provided._
 
 ## 4.2 Example two
 
 ### 4.2.1 Example medical record instance
 
+_To be provided._
+
 ### 4.2.2 Example request context
+
+_To be provided._
 
 ### 4.2.3 Example plain-language rules
 
-### 4.2.4 Example XACML rule instances
+The following plain-language rules are to be enforced.
 
-#### 4.2.4.1 Rule 1
+Rule 1:
 
-#### 4.2.4.2 Rule 2
+: A person, identified by his or her patient number, may read any record for which he or she is the designated patient.
 
-#### 4.2.4.3 Rule 3
+Rule 2:
+
+: A person may read any record for which he or she is the designated parent or guardian, and for which the patient is under 16 years of age.
+
+Rule 3:
+
+: A physician may write to any medical element for which he or she is the designated primary care physician, provided an email is sent to the patient.
+
+Rule 4:
+
+: An administrator shall not be permitted to read or write to medical elements of a patient record.
+
+These **_rules_** may be written by different **_PAPs_** operating independently, or by a single **_PAP_**.
+
+### 4.2.4 Example short identifier collection
+
+Policy writers are able to define collections of simple aliases, i.e., **_short identifier_** names, to use in place of URIs. A collection with the identifier `urn:oasis:names:tc:xacml:4.0:core:identifiers` is defined by XACML for the various identifiers assigned by this specification. However, a deployment will usually have need for additional identifiers, especially for locally-defined **_attributes_**, so it is usually desirable to define a collection of additional **_short identifiers_** to use in the deployment.
+
+The following **_short identifier_** collection, in both the XML and JSON representations, defines **_short identifiers_** for the additional **_attributes_** in this example and also imports the standardized collection.
+
+```
+<SIDCollection xmlns="urn:oasis:names:tc:xacml:4.0:core:schema"
+  SIDCollectionId="urn:oasis:names:tc:xacml:4.0:example:identifiers"/>
+
+  <!-- Include the standard short identifiers. -->
+  <SIDCollectionReference>urn:oasis:names:tc:xacml:4.0:core:identifiers</SIDCollectionReference>
+
+  <!-- These are the short identifiers specific to the deployment. -->
+
+  <!-- Attributes -->
+  <ShortIdentifier Name="patient-number" Value="urn:oasis:names:tc:xacml:4.0:example:attribute:patient-number"/>
+  <ShortIdentifier Name="collection" Value="urn:oasis:names:tc:xacml:4.0:example:attribute:collection"/>
+
+</SIDCollection>
+```
+
+```
+{
+  "SIDCollectionId":"urn:oasis:names:tc:xacml:4.0:example:identifiers",
+  "SIDCollectionReference":["urn:oasis:names:tc:xacml:4.0:core:identifiers"],
+  "ShortIdentifier":[
+    { "Name":"patient-number", Value="urn:oasis:names:tc:xacml:4.0:example:attribute:patient-number" },
+    { "Name":"collection", Value="urn:oasis:names:tc:xacml:4.0:example:attribute:collection" }
+  ]
+}
+```
+
+### 4.2.5 Example XACML rule instances
+
+#### 4.2.5.1 Rule 1
+
+Rule 1 illustrates a **_policy_** with a simple **_rule_** containing a `<Condition>` element. It also illustrates the use of the `<VariableDefinition>` element to define an expression that may be used throughout the **_policy_**. The following XACML **_policy_**, respectively in XML and JSON, contains a **_rule_** instance expressing Rule 1 (the numbers in square brackets on the left-hand side are for referencing purposes and are not part of the **_policy_** in either representation):
+
+```
+[01] <?xml version="1.0" encoding="UTF-8"?>
+[02] <Policy
+[03]   xmlns="urn:oasis:names:tc:xacml:4.0:core:schema"
+[04]   PolicyId="urn:oasis:names:tc:xacml:4.0:example:policyid:1"
+[05]   CombiningAlgId="deny-overrides"
+[06]   Version="1.0">
+[07]   <SIDCollectionReference>urn:oasis:names:tc:xacml:4.0:example:identifiers</SIDCollectionReference>
+[08]   <VariableDefinition VariableId="17590034">
+[11]     <Apply FunctionId="string-equal">
+[14]       <Apply FunctionId="string-one-and-only">
+[17]         <AttributeDesignator
+[18]           Category="access-subject"
+[19]           AttributeId="patient-number"
+[20]           DataType="string"/>
+[23]       </Apply>
+[25]       <Apply FunctionId="string-one-and-only">
+[28]         <AttributeDesignator
+[29]           Category="resource"
+[30]           AttributeId="patient-number"
+[31]           DataType="string"/>
+[34]       </Apply>
+[36]     </Apply>
+[38]   </VariableDefinition>
+[41]   <Rule RuleId="Rule 1" Effect="Permit">
+[44]     <Description>A person may read any medical record in the http://www.med.example.com/springfield-hospital collection for which he or she is the designated patient.</Description>
+[45]     <Condition>
+[46]       <Apply FunctionId="and">
+[49]         <Apply FunctionId="any-of">
+[52]           <Function FunctionId="anyURI-equal"/>
+[56]           <AttributeValue DataType="anyURI"
+[58]             >http://www.med.example.com/springfield-hospital</AttributeValue>
+[61]           <AttributeDesignator
+[62]             Category="resource"
+[63]             AttributeId="collection"
+[64]             DataType="anyURI"/>
+[67]         </Apply>
+[69]         <Apply FunctionId="any-of">
+[72]           <Function FunctionId="string-equal"/>
+[76]           <AttributeValue DataType="string">read</AttributeValue>
+[81]           <AttributeDesignator
+[82]             Category="action"
+[83]             AttributeId="action-id"
+[84]             DataType="string"/>
+[87]         </Apply>
+[89]         <VariableReference VariableId="17590034"/>
+[93]       </Apply>
+[94]     </Condition>
+[95]   </Rule>
+[97] </Policy>
+```
+
+```
+[02] {
+[04]   "PolicyId":"urn:oasis:names:tc:xacml:4.0:example:policyid:1",
+[05]   "CombiningAlgId":"deny-overrides",
+[06]   "Version":"1.0",
+[07]   "SIDCollectionReference":["urn:oasis:names:tc:xacml:4.0:example:shorties"],
+[08]   "VariableDefinition":[{
+[09]     "VariableId":"17590034",
+[10]     "Expression":{
+[11]       "Apply":{
+[12]         "FunctionId":"string-equal",
+[13]         "Argument":[{
+[14]           "Apply":{
+[15]             "FunctionId":"string-one-and-only",
+[16]             "Argument":[{
+[17]               "AttributeDesignator":{
+[18]                 "Category":"access-subject",
+[19]                 "AttributeId":"patient-number",
+[20]                 "DataType":"string"
+[21]               }
+[22]             }]
+[23]           }
+[24]         },{
+[25]           "Apply":{
+[26]             "FunctionId":"string-one-and-only",
+[27]             "Argument":[{
+[28]               "AttributeDesignator":{
+[29]                 "Category":"resource",
+[30]                 "AttributeId":"patient-number",
+[31]                 "DataType":"string"
+[32]               }
+[33]             }]
+[34]           }
+[35]         }]
+[36]       }
+[37]     }]
+[38]   }],
+[39]   "ToBeCombined":[{
+[41]     "Rule":{
+[42]       "RuleId":"Rule 1",
+[43]       "Effect":"Permit",
+[44]       "Description":"A person may read any medical record in the http://www.med.example.com/springfield-hospital collection for which he or she is the designated patient",
+[45]       "Condition":{
+[46]         "Apply":{
+[47]           "FunctionId":"and",
+[48]           "Argument":[{
+[49]             "Apply":{
+[50]               "FunctionId":"any-of",
+[51]               "Argument":[{
+[52]                 "Function":{
+[54]                   "FunctionId":"anyURI-equal"
+[54]                 }
+[55]               },{
+[56]                 "TypedValue":{
+[57]                   "DataType":"anyURI",
+[58]                   "Value":"http://www.med.example.com/springfield-hospital"
+[59]                 }
+[60]               },{
+[61]                 "AttributeDesignator":{
+[62]                   "Category":"resource",
+[63]                   "AttributeId":"collection",
+[64]                   "DataType":"anyURI"
+[65]                 }
+[66]               }]
+[67]             }
+[68]           },{
+[69]             "Apply":{
+[70]               "FunctionId":"any-of",
+[71]               "Argument":[{
+[72]                 "Function":{
+[73]                   "FunctionId":"string-equal"
+[74]                 }
+[75]               },{
+[76]                 "TypedValue":{
+[77]                   "DataType":"string",
+[78]                   "Value":"read"
+[79]                 }
+[80]               },{
+[81]                 "AttributeDesignator":{
+[82]                   "Category":"action",
+[83]                   "AttributeId":"action-id",
+[84]                   "DataType":"string"
+[85]                 }
+[86]               }]
+[87]             }
+[88]           },{
+[89]             "VariableReference":{
+[90]               "VariableId":"17590034"
+[91]             }
+[92]           }]
+[93]         }
+[94]       }
+[95]     }
+[96]   }]
+[97] }
+```
+
+[07] A reference to a **_short identifier_** collection imported into the **_policy_**. The names of the **_short identifiers_** in the collection are available to use in this **_policy_**.
+
+[08] - [38] A variable definition. It defines an expression that evaluates the truth of the statement: the patient-number **_subject attribute_** is equal to the patient-number **_attribute_** in the **_resource_**.
+
+[11] - [12] The `FunctionId` component names the function to be used for comparison. In this case, the function is nominated with the **_short identifier_** `string-equal`, which evaluates to `urn:oasis:names:tc:xacml:1.0:function:string-equal` using the imported **_short identifier_** collection. This function takes two arguments of type `http://www.w3.org/2001/XMLSchema#string`.
+
+[17] - [21] An attribute designator that selects a **_bag_** of values for the patient-number **_subject attribute_** in the request **_context_**.
+
+[18] The `Category` component names the category from which the desired **_attribute_** will be obtained. In this case, the category is nominated with the **_short identifier_** `access-subject`, which evaluates to `urn:oasis:names:tc:xacml:1.0:subject-category:access-subject` using the imported **_short identifier_** collection.
+
+[19] The `AttributeId` component nominates the patient-number **_attribute_** with the **_short identifier_** `patient-number`, which evaluates to `urn:oasis:names:tc:xacml:3.0:example:attribute:patient-number` using the imported **_short identifier_** collection.
+
+[20] The `DataType` component specifies the data type of the **_attribute_**. In this case, the data type is nominated with the **_short identifier_** `string`, which evaluates to `https://www.w3.org/2001/XMLSchema#string` using the imported **_short identifier_** collection.
+
+[14] - [15] The attribute designator returns a **_bag_** of **_attribute_** values but the `urn:oasis:names:tc:xacml:1.0:function:string-equal` function takes arguments that are single **_attribute_** values. The `FunctionId` component here names a function to convert the **_bag_** of values to a single value. The function is nominated with the **_short identifier_** `string-one-and-only`, which evaluates to `urn:oasis:names:tc:xacml:1.0:function:string-one-and-only` using the imported **_short identifier_** collection. This function generates an `Indeterminate` result if its argument is not a **_bag_** with exactly one value.
+
+[28] - [32] An attribute designator that selects a **_bag_** of values for the patient-number **_resource attribute_** in the request **_context_**. This attribute designator differs from the previous one in that it selects the **_attribute_** from the **_resource_** category, `urn:oasis:names:tc:xacml:3.0:attribute-category:resource`, nominated with the **_short identifier_** `resource`.
+
+[25] - [26] The result of the second attribute designator must also be converted to a single value for comparison.
+
+[41] - [43] The beginning of a **_rule_** definition. The `RuleId` component assigns a string identifier for the **_rule_**. The `Effect` component specifies the value the **_rule_** emits when it evaluates to `True`.
+
+[44] A free form description of the rule.
+
+[45] - [94] A **_condition_**, which must evaluate to `True` for the **_rule_** to be applicable.
+
+[46] - [93] The expression for the **_condition_**.
+
+[46] - [47] The expression for the **_condition_** is a conjunction of three terms. The `FunctionId` component specifies a conjunction using the `urn:oasis:names:tc:xacml:1.0:function:and` function nominated with the **_short identifier_** `and`.
+
+[49] - [57] The first term is a function.
+
+[49] - [50] The `FunctionId` component specifies the `urn:oasis:names:tc:xacml:3.0:function:any-of` function using the **_short identifier_** `any-of`. This function compares a **_attribute_** value to each of the **_attribute_** values in a **_bag_** according to a matching function that is specified in the first argument. The **_bag_** of values can be either the second or third argument. In this case it is the third argument. The function evaluates to `True` if any value from the **_bag_** matches the second argument according to the matching function.
+
+[52] - [54] The first argument: the matching function. The `FunctionId` component specifies that the matching function is `urn:oasis:names:tc:xacml:1.0:function:anyURI-equal` using the **_short identifier_** `anyURI-equal`.
+
+[56] - [59] The second argument: an **_attribute_** value. It is a literal URI to be matched, specifically `http://www.med.example.com/springfield-hospital`. The `DataType` component indicates that the data type of the value is `https://www.w3.org/2001/XMLSchema#anyURI` using the **_short identifier_** `anyURI`.
+
+[61] - [65] The third argument: the **_bag_** of values. It is an attribute designator that selects a **_bag_** of `https://www.w3.org/2001/XMLSchema#anyURI` values from the `urn:oasis:names:tc:xacml:4.0:example:attribute:collection` (**_short identifier_** `collection`) **_attribute_** in the `urn:oasis:names:tc:xacml:3.0:attribute-category:resource` category.
+
+[69] - [87] The second term is another instance of the `urn:oasis:names:tc:xacml:3.0:function:any-of`. The matching function is `urn:oasis:names:tc:xacml:1.0:function:string-equal`. The second argument is the literal value `read` of the `https://www.w3.org/2001/XMLSchema#string` data type. The third argument is an attribute designator that selects a **_bag_** of `https://www.w3.org/2001/XMLSchema#string` values from the `urn:oasis:names:tc:xacml:1.0:action:action-id` **_attribute_** in the `urn:oasis:names:tc:xacml:3.0:attribute-category:action` category.
+
+[89] - [91] The third term is a reference to a variable definition defined elsewhere in the **_policy_**.
+
+#### 4.2.5.2 Rule 2
+
+#### 4.2.5.3 Rule 3
 
 _Note: this section is referenced._
 
-#### 4.2.4.4 Rule 4
+#### 4.2.5.4 Rule 4
 
-#### 4.2.4.5 Example policy with nested policies
+#### 4.2.5.5 Example policy with nested policies
 
 -------
 
@@ -1094,6 +1352,7 @@ The `<NoticeExpression>` elements MUST be evaluated into **_notices_** by the **
       <xs:element ref="xacml:Description" minOccurs="0"/>
       <xs:element ref="xacml:PolicyIssuer" minOccurs="0"/>
       <xs:element ref="xacml:PolicyDefaults" minOccurs="0"/>
+      <xs:element ref="xacml:VariableDefinition" minOccurs="0" maxOccurs="unbounded"/>
       <xs:element ref="xacml:Target" minOccurs="0"/>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
          <xs:element ref="xacml:Policy"/>
@@ -1101,7 +1360,6 @@ The `<NoticeExpression>` elements MUST be evaluated into **_notices_** by the **
          <xs:element ref="xacml:CombinerParameters"/>
          <xs:element ref="xacml:PolicyCombinerParameters"/>
 		 <xs:element ref="xacml:RuleCombinerParameters"/>
-         <xs:element ref="xacml:VariableDefinition"/>
          <xs:element ref="xacml:Rule"/>
       </xs:choice>
       <xs:element ref="xacml:NoticeExpression" minOccurs="0" maxOccurs="unbounded"/>
@@ -1825,7 +2083,7 @@ The `<Notice>` element contains the following elements and attributes:
 
 ## 5.36 Element \<AttributeAssignment>
 
-The `<AttributeAssignment>` element is used for including arguments in **_notice_** expressions. It SHALL contain an `AttributeId` and the corresponding **_attribute_** value, by extending the `AttributeValueType` type definition. The `<AttributeAssignment>` element MAY be used in any way that is consistent with the schema syntax, which is a sequence of `<xs:any>` elements. The value specified SHALL be understood by the **_PEP_**, but it is not further specified by XACML. See [Section 7.18](#718-notices). [Section 4.2.4.3](#4243-rule-3) provides a number of examples of **_attribute_** assignments included in **_notices_**.
+The `<AttributeAssignment>` element is used for including arguments in **_notice_** expressions. It SHALL contain an `AttributeId` and the corresponding **_attribute_** value, by extending the `AttributeValueType` type definition. The `<AttributeAssignment>` element MAY be used in any way that is consistent with the schema syntax, which is a sequence of `<xs:any>` elements. The value specified SHALL be understood by the **_PEP_**, but it is not further specified by XACML. See [Section 7.18](#718-notices). [Section 4.2.5.3](#4253-rule-3) provides a number of examples of **_attribute_** assignments included in **_notices_**.
 
 ```xml
 <xs:element name="AttributeAssignment" type="xacml:AttributeAssignmentType"/>
@@ -1899,7 +2157,7 @@ The `<NoticeExpression>` element contains the following elements and attributes:
 
 ## 5.41 Element \<AttributeAssignmentExpression>
 
-The `<AttributeAssignmentExpression>` element is used for including arguments in **_notices_**. It SHALL contain an `AttributeId` and an expression which SHALL by evaluated into the corresponding **_attribute_** value. The value specified SHALL be understood by the **_PEP_**, but it is not further specified by XACML. See [Section 7.18](#718-notices). [Section 4.2.4.3](#4243-rule-3) provides a number of examples of attribute assignment expressions included in **_notice_** expressions.
+The `<AttributeAssignmentExpression>` element is used for including arguments in **_notices_**. It SHALL contain an `AttributeId` and an expression which SHALL by evaluated into the corresponding **_attribute_** value. The value specified SHALL be understood by the **_PEP_**, but it is not further specified by XACML. See [Section 7.18](#718-notices). [Section 4.2.5.3](#4253-rule-3) provides a number of examples of attribute assignment expressions included in **_notice_** expressions.
 
 ```xml
 <xs:element name="AttributeAssignmentExpression" type="xacml:AttributeAssignmentExpressionType"/>
@@ -3786,6 +4044,7 @@ Cyril | Dangerville | THALES
 | | 2025-04-16 | Steven Legg | Restructured the type hierarchy for policy references. |
 | | 2025-04-17 | Steven Legg | Merged **_obligations_** and **_advice_** into **_notices_**. |
 | | 2025-07-15 | Steven Legg | Added support for **_short identifiers_**. |
+| | 2025-07-23 | Steven Legg | Added example two showing **_short identifiers_**. |
 
 -------
 
