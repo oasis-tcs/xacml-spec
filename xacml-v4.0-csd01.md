@@ -350,7 +350,7 @@ Conventional XML namespace prefixes are used throughout the listings in this spe
 
 * The prefix `xs:` stands for the W3C XML Schema namespace [[XS](#xs)].
 
-* The prefix `xf:` stands for the XQuery 1.0 and XPath 2.0 Function and Operators specification namespace [[XF](#xf)].
+* The prefix `xf:` stands for the XPath and XQuery Functions and Operators 3.1 specification namespace [[XF](#xf)].
 
 * The prefix `xml:` stands for the XML namespace https://www.w3.org/XML/1998/namespace.
 
@@ -471,7 +471,7 @@ Relationship operators (equality and comparison) are also defined for a number o
 
 Also noteworthy are the operators over Boolean data-types, which permit the logical combination of **_predicates_** in a **_rule_**. For example, a **_rule_** may contain the statement that **_access_** may be permitted during business hours AND from a terminal on business premises.
 
-The XACML method of representing functions borrows from MathML [[MathML](#mathml)] and from the XQuery 1.0 and XPath 2.0 Functions and Operators specification [[XF](#xf)].
+The XACML method of representing functions borrows from MathML [[MathML](#mathml)] and from the XPath and XQuery Functions and Operators 3.1 specification [[XF](#xf)].
 
 ## 2.9 Policy distribution
 
@@ -3796,7 +3796,7 @@ OASIS Committee Specification, Extensible access control markup language (XACML)
 
 ###### [XF]
 
-XQuery 1.0 and XPath 2.0 Functions and Operators (Second Edition) W3C Recommendation 14 December 2010 (revised 13 April 2015), https://www.w3.org/TR/xquery-operators/
+W3C XQuery, XPath, and XSLT Functions and Operators Namespace Document (XPath and XQuery Functions and Operators 3.1) 21 March 2017, https://www.w3.org/2005/xpath-functions/
 
 ###### [XML]
 
@@ -3812,11 +3812,11 @@ XML Schema, parts 1 and 2. Available at: https://www.w3.org/TR/xmlschema-1/ and 
 
 ###### [XPath]
 
-XML Path Language (XPath), Version 1.0, W3C Recommendation 16 November 1999, https://www.w3.org/TR/xpath/
+XML Path Language (XPath) 3.1, W3C Recommendation 21 March 2017, https://www.w3.org/TR/xpath-31/
 
 ###### [XPathFunc]
 
-XQuery 1.0 and XPath 2.0 Functions and Operators (Second Edition) W3C Recommendation 14 December 2010 (revised 13 April 2015),  https://www.w3.org/TR/xquery-operators/
+W3C XQuery, XPath, and XSLT Functions and Operators Namespace Document (XPath and XQuery Functions and Operators 3.1) 21 March 2017, https://www.w3.org/2005/xpath-functions/
 
 ###### [XSLT]
 
