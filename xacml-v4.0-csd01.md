@@ -46,8 +46,8 @@ Cyril Dangerville (cyril.dangerville@thalesgroup.com), [THALES](https://www.thal
 
 This document is one component of a Work Product that also includes:
 * XML schema:  https://docs.https:xacml/xacml/v4.0/csd01/schema/xacml-core-v4-schema-wd-01.xsd.
-* Short identifiers: xacml-core-v4-identifiers.xml
-* Short identifiers: xacml-core-v4-identifiers.json
+* Short identifier set: xacml-core-v4-identifiers.xml
+* Short identifier set: xacml-core-v4-identifiers.json
 * `(Note: Any normative computer language definitions that are part of the Work Product, such as XML instances, schemas and Java(TM) code, including fragments of such, must be (a) well formed and valid, (b) provided in separate plain text files, (c) referenced from the Work Product; and (d) where any definition in these separate files disagrees with the definition found in the specification, the definition in the separate file prevails. Remove this note before submitting for publication.)`
 
 #### Related work:
@@ -168,7 +168,7 @@ XACML 4.0 differs from XACML 3.0 in the following ways:
 
 * **_Obligations_** and **_advice_** no longer have distinct element definitions. Instead they now share the common `<Notice>` element definition. The difference between **_obligations_** and **_advice_** is indicated by an `IsObligation` XML attribute.
 
-* Users are able to define **_short identifiers_** to use in place of URIs to refer to XACML definitions. A predefined collection of **_short identifiers_** for standard-defined URIs is also provided.
+* Users are able to define **_short identifiers_**, which provide simple alias names to use in place of absolute URIs to refer to XACML definitions. A predefined set of **_short identifiers_** for standard-defined URIs is also provided.
 
 ## 1.2 Glossary
 
@@ -303,13 +303,9 @@ XACML 4.0 differs from XACML 3.0 in the following ways:
 
 : An **_effect_**, a **_condition_** and (optionally) a list of **_notice_** expressions. A component of a **_policy_**.
 
-**Short Identifier**
+**Short identifier**
 
-: A simple alias name that stands for a URI or a part thereof.
-
-**SID**
-
-: An abbreviation of **_short identifier_**.
+: A binding of a simple alias name to a URI or a part thereof.
 
 **Subject**
 
@@ -983,33 +979,33 @@ Rule 4:
 
 These **_rules_** may be written by different **_PAPs_** operating independently, or by a single **_PAP_**.
 
-### 4.2.4 Example short identifier collection
+### 4.2.4 Example short identifier set
 
-Policy writers are able to define collections of simple aliases, i.e., **_short identifier_** names, to use in place of URIs. A collection with the identifier `urn:oasis:names:tc:xacml:4.0:core:identifiers` is defined by XACML for the various identifiers assigned by this specification. However, a deployment will usually have need for additional identifiers, especially for locally-defined **_attributes_**, so it is usually desirable to define a collection of additional **_short identifiers_** to use in the deployment.
+Policy writers are able to define sets of **_short identifiers_** to provide simple alias names to use in place of URIs. A set with the identifier `urn:oasis:names:tc:xacml:4.0:core:identifiers` is defined by XACML for the various identifiers assigned by this specification. However, a deployment will usually have need for additional identifiers, especially for locally-defined **_attributes_**, so it is usually desirable to define a set of additional **_short identifiers_** to use in the deployment.
 
-The following **_short identifier_** collection, in both the XML and JSON representations, defines **_short identifiers_** for the additional **_attributes_** in this example and also imports the standardized collection.
+The following **_short identifier_** set, in both the XML and JSON representations, defines **_short identifiers_** for the additional **_attributes_** in this example and also imports the standardized set.
 
 ```
-<SIDCollection xmlns="urn:oasis:names:tc:xacml:4.0:core:schema"
-  SIDCollectionId="urn:oasis:names:tc:xacml:4.0:example:identifiers"/>
+<ShortIdSet xmlns="urn:oasis:names:tc:xacml:4.0:core:schema"
+  ShortIdSetId="urn:oasis:names:tc:xacml:4.0:example:identifiers"/>
 
-  <!-- Include the standard short identifiers. -->
-  <SIDCollectionReference>urn:oasis:names:tc:xacml:4.0:core:identifiers</SIDCollectionReference>
+  <!-- Include the short identifiers for standard URIs. -->
+  <ShortIdSetReference>urn:oasis:names:tc:xacml:4.0:core:identifiers</ShortIdSetReference>
 
   <!-- These are the short identifiers specific to the deployment. -->
 
   <!-- Attributes -->
-  <ShortIdentifier Name="patient-number" Value="urn:oasis:names:tc:xacml:4.0:example:attribute:patient-number"/>
-  <ShortIdentifier Name="collection" Value="urn:oasis:names:tc:xacml:4.0:example:attribute:collection"/>
+  <ShortId Name="patient-number" Value="urn:oasis:names:tc:xacml:4.0:example:attribute:patient-number"/>
+  <ShortId Name="collection" Value="urn:oasis:names:tc:xacml:4.0:example:attribute:collection"/>
 
-</SIDCollection>
+</ShortIdSet>
 ```
 
 ```
 {
-  "SIDCollectionId":"urn:oasis:names:tc:xacml:4.0:example:identifiers",
-  "SIDCollectionReference":["urn:oasis:names:tc:xacml:4.0:core:identifiers"],
-  "ShortIdentifier":[
+  "ShortIdSetId":"urn:oasis:names:tc:xacml:4.0:example:identifiers",
+  "ShortIdSetReference":["urn:oasis:names:tc:xacml:4.0:core:identifiers"],
+  "ShortId":[
     { "Name":"patient-number", Value="urn:oasis:names:tc:xacml:4.0:example:attribute:patient-number" },
     { "Name":"collection", Value="urn:oasis:names:tc:xacml:4.0:example:attribute:collection" }
   ]
@@ -1029,7 +1025,7 @@ Rule 1 illustrates a **_policy_** with a simple **_rule_** containing a `<Condit
 [04]   PolicyId="urn:oasis:names:tc:xacml:4.0:example:policyid:1"
 [05]   CombiningAlgId="deny-overrides"
 [06]   Version="1.0">
-[07]   <SIDCollectionReference>urn:oasis:names:tc:xacml:4.0:example:identifiers</SIDCollectionReference>
+[07]   <ShortIdSetReference>urn:oasis:names:tc:xacml:4.0:example:identifiers</ShortIdSetReference>
 [08]   <VariableDefinition VariableId="17590034">
 [11]     <Apply FunctionId="string-equal">
 [14]       <Apply FunctionId="string-one-and-only">
@@ -1079,7 +1075,7 @@ Rule 1 illustrates a **_policy_** with a simple **_rule_** containing a `<Condit
 [04]   "PolicyId":"urn:oasis:names:tc:xacml:4.0:example:policyid:1",
 [05]   "CombiningAlgId":"deny-overrides",
 [06]   "Version":"1.0",
-[07]   "SIDCollectionReference":["urn:oasis:names:tc:xacml:4.0:example:shorties"],
+[07]   "ShortIdSetReference":["urn:oasis:names:tc:xacml:4.0:example:identifiers"],
 [08]   "VariableDefinition":[{
 [09]     "VariableId":"17590034",
 [10]     "Expression":{
@@ -1171,23 +1167,23 @@ Rule 1 illustrates a **_policy_** with a simple **_rule_** containing a `<Condit
 [97] }
 ```
 
-[07] A reference to a **_short identifier_** collection imported into the **_policy_**. The names of the **_short identifiers_** in the collection are available to use in this **_policy_**.
+[07] A reference to a **_short identifier_** set imported into the **_policy_**. The names of the **_short identifiers_** in the set are available to use in this **_policy_**.
 
 [08] - [38] A variable definition. It defines an expression that evaluates the truth of the statement: the patient-number **_subject attribute_** is equal to the patient-number **_attribute_** in the **_resource_**.
 
-[11] - [12] The `FunctionId` component names the function to be used for comparison. In this case, the function is nominated with the **_short identifier_** `string-equal`, which evaluates to `urn:oasis:names:tc:xacml:1.0:function:string-equal` using the imported **_short identifier_** collection. This function takes two arguments of type `http://www.w3.org/2001/XMLSchema#string`.
+[11] - [12] The `FunctionId` component names the function to be used for comparison. In this case, the function is nominated with the **_short identifier_** name `string-equal`, which evaluates to `urn:oasis:names:tc:xacml:1.0:function:string-equal` using the imported **_short identifier_** set. This function takes two arguments of type `http://www.w3.org/2001/XMLSchema#string`.
 
 [17] - [21] An attribute designator that selects a **_bag_** of values for the patient-number **_subject attribute_** in the request **_context_**.
 
-[18] The `Category` component names the category from which the desired **_attribute_** will be obtained. In this case, the category is nominated with the **_short identifier_** `access-subject`, which evaluates to `urn:oasis:names:tc:xacml:1.0:subject-category:access-subject` using the imported **_short identifier_** collection.
+[18] The `Category` component names the category from which the desired **_attribute_** will be obtained. In this case, the category is nominated with the **_short identifier_** name `access-subject`, which evaluates to `urn:oasis:names:tc:xacml:1.0:subject-category:access-subject` using the imported **_short identifier_** set.
 
-[19] The `AttributeId` component nominates the patient-number **_attribute_** with the **_short identifier_** `patient-number`, which evaluates to `urn:oasis:names:tc:xacml:3.0:example:attribute:patient-number` using the imported **_short identifier_** collection.
+[19] The `AttributeId` component nominates the patient-number **_attribute_** with the **_short identifier_** name `patient-number`, which evaluates to `urn:oasis:names:tc:xacml:3.0:example:attribute:patient-number` using the imported **_short identifier_** set.
 
-[20] The `DataType` component specifies the data type of the **_attribute_**. In this case, the data type is nominated with the **_short identifier_** `string`, which evaluates to `https://www.w3.org/2001/XMLSchema#string` using the imported **_short identifier_** collection.
+[20] The `DataType` component specifies the data type of the **_attribute_**. In this case, the data type is nominated with the **_short identifier_** name `string`, which evaluates to `https://www.w3.org/2001/XMLSchema#string` using the imported **_short identifier_** set.
 
-[14] - [15] The attribute designator returns a **_bag_** of **_attribute_** values but the `urn:oasis:names:tc:xacml:1.0:function:string-equal` function takes arguments that are single **_attribute_** values. The `FunctionId` component here names a function to convert the **_bag_** of values to a single value. The function is nominated with the **_short identifier_** `string-one-and-only`, which evaluates to `urn:oasis:names:tc:xacml:1.0:function:string-one-and-only` using the imported **_short identifier_** collection. This function generates an `Indeterminate` result if its argument is not a **_bag_** with exactly one value.
+[14] - [15] The attribute designator returns a **_bag_** of **_attribute_** values but the `urn:oasis:names:tc:xacml:1.0:function:string-equal` function takes arguments that are single **_attribute_** values. The `FunctionId` component here names a function to convert the **_bag_** of values to a single value. The function is nominated with the **_short identifier_** name `string-one-and-only`, which evaluates to `urn:oasis:names:tc:xacml:1.0:function:string-one-and-only` using the imported **_short identifier_** set. This function generates an `Indeterminate` result if its argument is not a **_bag_** with exactly one value.
 
-[28] - [32] An attribute designator that selects a **_bag_** of values for the patient-number **_resource attribute_** in the request **_context_**. This attribute designator differs from the previous one in that it selects the **_attribute_** from the **_resource_** category, `urn:oasis:names:tc:xacml:3.0:attribute-category:resource`, nominated with the **_short identifier_** `resource`.
+[28] - [32] An attribute designator that selects a **_bag_** of values for the patient-number **_resource attribute_** in the request **_context_**. This attribute designator differs from the previous one in that it selects the **_attribute_** from the **_resource_** category, `urn:oasis:names:tc:xacml:3.0:attribute-category:resource`, nominated with the **_short identifier_** name `resource`.
 
 [25] - [26] The result of the second attribute designator must also be converted to a single value for comparison.
 
@@ -1199,17 +1195,17 @@ Rule 1 illustrates a **_policy_** with a simple **_rule_** containing a `<Condit
 
 [46] - [93] The expression for the **_condition_**.
 
-[46] - [47] The expression for the **_condition_** is a conjunction of three terms. The `FunctionId` component specifies a conjunction using the `urn:oasis:names:tc:xacml:1.0:function:and` function nominated with the **_short identifier_** `and`.
+[46] - [47] The expression for the **_condition_** is a conjunction of three terms. The `FunctionId` component specifies a conjunction using the `urn:oasis:names:tc:xacml:1.0:function:and` function nominated with the **_short identifier_** name `and`.
 
 [49] - [57] The first term is a function.
 
-[49] - [50] The `FunctionId` component specifies the `urn:oasis:names:tc:xacml:3.0:function:any-of` function using the **_short identifier_** `any-of`. This function compares a **_attribute_** value to each of the **_attribute_** values in a **_bag_** according to a matching function that is specified in the first argument. The **_bag_** of values can be either the second or third argument. In this case it is the third argument. The function evaluates to `True` if any value from the **_bag_** matches the second argument according to the matching function.
+[49] - [50] The `FunctionId` component specifies the `urn:oasis:names:tc:xacml:3.0:function:any-of` function using the **_short identifier_** name `any-of`. This function compares a **_attribute_** value to each of the **_attribute_** values in a **_bag_** according to a matching function that is specified in the first argument. The **_bag_** of values can be either the second or third argument. In this case it is the third argument. The function evaluates to `True` if any value from the **_bag_** matches the second argument according to the matching function.
 
-[52] - [54] The first argument: the matching function. The `FunctionId` component specifies that the matching function is `urn:oasis:names:tc:xacml:1.0:function:anyURI-equal` using the **_short identifier_** `anyURI-equal`.
+[52] - [54] The first argument: the matching function. The `FunctionId` component specifies that the matching function is `urn:oasis:names:tc:xacml:1.0:function:anyURI-equal` using the **_short identifier_** name `anyURI-equal`.
 
-[56] - [59] The second argument: an **_attribute_** value. It is a literal URI to be matched, specifically `http://www.med.example.com/springfield-hospital`. The `DataType` component indicates that the data type of the value is `https://www.w3.org/2001/XMLSchema#anyURI` using the **_short identifier_** `anyURI`.
+[56] - [59] The second argument: an **_attribute_** value. It is a literal URI to be matched, specifically `http://www.med.example.com/springfield-hospital`. The `DataType` component indicates that the data type of the value is `https://www.w3.org/2001/XMLSchema#anyURI` using the **_short identifier_** name `anyURI`.
 
-[61] - [65] The third argument: the **_bag_** of values. It is an attribute designator that selects a **_bag_** of `https://www.w3.org/2001/XMLSchema#anyURI` values from the `urn:oasis:names:tc:xacml:4.0:example:attribute:collection` (**_short identifier_** `collection`) **_attribute_** in the `urn:oasis:names:tc:xacml:3.0:attribute-category:resource` category.
+[61] - [65] The third argument: the **_bag_** of values. It is an attribute designator that selects a **_bag_** of `https://www.w3.org/2001/XMLSchema#anyURI` values from the `urn:oasis:names:tc:xacml:4.0:example:attribute:collection` (**_short identifier_** name `collection`) **_attribute_** in the `urn:oasis:names:tc:xacml:3.0:attribute-category:resource` category.
 
 [69] - [87] The second term is another instance of the `urn:oasis:names:tc:xacml:3.0:function:any-of`. The matching function is `urn:oasis:names:tc:xacml:1.0:function:string-equal`. The second argument is the literal value `read` of the `https://www.w3.org/2001/XMLSchema#string` data type. The third argument is an attribute designator that selects a **_bag_** of `https://www.w3.org/2001/XMLSchema#string` values from the `urn:oasis:names:tc:xacml:1.0:action:action-id` **_attribute_** in the `urn:oasis:names:tc:xacml:3.0:attribute-category:action` category.
 
@@ -1229,59 +1225,59 @@ _Note: this section is referenced._
 
 # 5 Syntax (normative, with the exception of the schema fragments)
 
-## 5.1 Element \<SIDCollection>
+## 5.1 Element \<ShortIdSet>
 
-The `<SIDCollection>` element defines a collection of **_short identifiers_**. It contains its own definitions of **_short identifiers_** as well as references to other **_short identifier_** collections, which are imported (recursively) into this collection.
+The `<ShortIdSet>` element defines a set of **_short identifiers_**. It contains its own **_short identifiers_** as well as references to other **_short identifier_** sets, which are imported (recursively) into this set.
 
 ```xml
-<xs:element name="SIDCollection" type="xacml:SIDCollectionType"/>
-<xs:complexType name="SIDCollectionType">
+<xs:element name="ShortIdSet" type="xacml:ShortIdSetType"/>
+<xs:complexType name="ShortIdSetType">
    <xs:sequence>
-      <xs:element ref="xacml:SIDCollectionReference" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element ref="xacml:ShortIdentifier" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="xacml:ShortIdSetReference" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="xacml:ShortId" minOccurs="0" maxOccurs="unbounded"/>
    </xs:sequence>
-   <xs:attribute name="SIDCollectionId" type="xs:anyURI" use="required"/>
+   <xs:attribute name="ShortIdSetId" type="xs:anyURI" use="required"/>
 </xs:complexType>
 ```
 
-The `<SIDCollection>` element is of `SIDCollectionType` complex type.
+The `<ShortIdSet>` element is of `ShortIdSetType` complex type.
 
-The `<SIDCollection>` element contains the following attributes and elements:
+The `<ShortIdSet>` element contains the following attributes and elements:
 
-`SIDCollectionId` [Required]
+`ShortIdSetId` [Required]
 
-: The identifier for this **_short identifier_** collection. It is the responsibility of the **_PAP_** to ensure that no two **_short identifier_** collections visible to the **_PDP_** have the same identifier. This MAY be achieved by following a predefined URN or URI scheme. If the identifier is in the form of a URL, then it MAY be resolvable.
+: The identifier for this **_short identifier_** set. It is the responsibility of the **_PAP_** to ensure that no two **_short identifier_** sets visible to the **_PDP_** have the same identifier. This MAY be achieved by following a predefined URN or URI scheme. If the identifier is in the form of a URL, then it MAY be resolvable.
 
-`<SIDCollectionReference>` [Any Number]
+`<ShortIdSetReference>` [Any Number]
 
-: A reference to another **_short identifier_** collection. The **_short identifiers_** of the referenced collection are included in this collection. This applies recursively to the collections referenced by a referenced collection. This collection SHALL NOT reference itself and SHALL NOT reference a collection that directly or indirectly references this collection.
+: A reference to another **_short identifier_** set. The **_short identifiers_** of the referenced set are included in this set. This applies recursively to the sets referenced by a referenced set. This set SHALL NOT reference itself and SHALL NOT reference a set that directly or indirectly references this set.
 
-`<ShortIdentifier>` [Any Number]
+`<ShortId>` [Any Number]
 
-: A **_short identifier_** that is defined in this collection.
+: A **_short identifier_** that is defined in this set.
 
-A predefined collection of **_short identifiers_** for the URIs defined in this specification is provided as a convenience, in both XML (xacml-core-v4-identifiers.xml) and JSON (xacml-core-v4-identifiers.json) representations. Use of this collection is OPTIONAL.
+A predefined set of **_short identifiers_** for the URIs defined in this specification is provided as a convenience, in both XML (xacml-core-v4-identifiers.xml) and JSON (xacml-core-v4-identifiers.json) representations. Use of this set is OPTIONAL.
 
-## 5.2 Element \<SIDCollectionReference>
+## 5.2 Element \<ShortIdSetReference>
 
-The `<SIDCollectionReference>` element is used to reference a **_short identifier_** collection by URI.
+The `<ShortIdSetReference>` element is used to reference a **_short identifier_** set by URI.
 
 ```xml
-<xs:element name="SIDCollectionReference" type="xs:anyURI"/>
+<xs:element name="ShortIdSetReference" type="xs:anyURI"/>
 ```
 
-## 5.3 Element \<ShortIdentifier>
+## 5.3 Element \<ShortId>
 
-The `<ShortIdentifier>` element defines a single **_short identifier_**. **_Attribute_** categories, **_attributes_**, data types, functions, **_combining algorithms_** and other artifacts in XACML are ultimately identified by URIs. A **_short identifier_** provides a simple alias name to use when composing and displaying policies and protocol messages instead of using the full URI.
+The `<ShortId>` element defines a single **_short identifier_**. **_Attribute_** categories, **_attributes_**, data types, functions, **_combining algorithms_** and other artifacts in XACML are ultimately identified by URIs. A **_short identifier_** provides a simple alias name to use when composing and displaying policies and protocol messages instead of using the full URI.
 
 ```xml
-<xs:element name="ShortIdentifier" type="xacml:ShortIdentifierType"/>
-<xs:complexType name="ShortIdentifierType">
-   <xs:attribute name="Name" type="xacml:ShortIdentifierNameType" use="required"/>
+<xs:element name="ShortId" type="xacml:ShortIdType"/>
+<xs:complexType name="ShortIdType">
+   <xs:attribute name="Name" type="xacml:ShortIdNameType" use="required"/>
    <xs:attribute name="Value" type="xs:string" use="required"/>
 </xs:complexType>
 
-<xs:simpleType name="ShortIdentifierNameType">
+<xs:simpleType name="ShortIdNameType">
    <xs:restriction base="xs:string">
       <xs:pattern value="[A-Za-z][0-9A-Za-z]*(-[0-9A-Za-z]+)*"/>
          <!-- The exact pattern is still open for discussion. -->
@@ -1290,9 +1286,9 @@ The `<ShortIdentifier>` element defines a single **_short identifier_**. **_Attr
 
 ```
 
-The `<ShortIdentifier>` element is of `ShortIdentifierType` complex type.
+The `<ShortId>` element is of `ShortIdType` complex type.
 
-The `<ShortIdentifier>` element contains the following attributes:
+The `<ShortId>` element contains the following attributes:
 
 `Name` [Required]
 
@@ -1300,7 +1296,7 @@ The `<ShortIdentifier>` element contains the following attributes:
 
 `Value` [Required]
 
-: The character string used to replace the simple alias name when a value of `IdentifierType` is evaluated to produce a complete URI; see [Section 7.3](#73-identifier-evaluation). The value MAY contain references to other **_short identifiers_** in the form of the **_short identifier_** name enclosed in curly brackets (i.e., `{` and `}`; U+007B and U+007D) with the following restrictions: the value SHALL NOT reference this **_short identifier_**, the value SHALL NOT reference a **_short identifier_** that directly or indirectly references this **_short identifier_**, and the referenced **_short identifier_** MUST be in the same **_short identifier_** collection (which includes sibling definitions and definitions included by references to other collections). The characters preceding, following or separating the **_short identifier_** references MUST be characters allowed in a URI, which means that the curly bracket characters are not permitted in the value other than to enclose a **_short identifier_** name.
+: The character string used to replace the simple alias name when a value of `IdentifierType` is evaluated to produce a complete URI; see [Section 7.3](#73-identifier-evaluation). The value MAY contain references to other **_short identifiers_** in the form of the **_short identifier_** name enclosed in curly brackets (i.e., `{` and `}`; U+007B and U+007D) with the following restrictions: the value SHALL NOT reference this **_short identifier_**, the value SHALL NOT reference a **_short identifier_** that directly or indirectly references this **_short identifier_**, and the referenced **_short identifier_** MUST be in the same **_short identifier_** set (which includes sibling definitions and definitions included by references to other sets). The characters preceding, following or separating the **_short identifier_** references MUST be characters allowed in a URI, which means that the curly bracket characters are not permitted in the value other than to enclose a **_short identifier_** name.
 
 ## 5.4 Simple type IdentifierType
 
@@ -1320,7 +1316,7 @@ A value of this simple type is either:
 * the name of a **_short identifier_** or
 * a character string with one or more **_short identifier_** names enclosed by curly brackets (i.e., `{` and `}`; U+007B and U+007D) optionally preceded, followed and/or separated by other characters allowed in a URI.
 
-A **_short identifier_** name appearing in the second and third cases MUST be the name of a member of a **_short identifier_** collection referenced by the containing **_policy_**, request or response.
+A **_short identifier_** name appearing in the second and third cases MUST be the name of a member of a **_short identifier_** set referenced by the containing **_policy_**, request or response.
 
 Note that the three cases can be distinguished from each other syntactically in a valid, correctly formatted value. If the value contains curly brackets then the third case must apply since the curly bracket characters are not legal characters for an absolute URI or a **_short identifier_** name; otherwise, if the value matches the pattern for a **_short identifier_** name then the second case applies since an absolute URI begins with a scheme name and a colon character (i.e., `:`; U+003A) and the colon character is not a legal character for a **_short identifier_** name; otherwise, the value is an absolute URI.
 
@@ -1348,7 +1344,7 @@ The `<NoticeExpression>` elements MUST be evaluated into **_notices_** by the **
 <xs:element name="Policy" type="xacml:PolicyType"/>
 <xs:complexType name="PolicyType">
    <xs:sequence>
-      <xs:element ref="xacml:SIDCollectionReference" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="xacml:ShortIdSetReference" minOccurs="0" maxOccurs="unbounded"/>
       <xs:element ref="xacml:Description" minOccurs="0"/>
       <xs:element ref="xacml:PolicyIssuer" minOccurs="0"/>
       <xs:element ref="xacml:PolicyDefaults" minOccurs="0"/>
@@ -1391,9 +1387,9 @@ The `<Policy>` element contains the following attributes and elements:
 
 : If present, limits the depth of delegation which is authorized by this **_policy_**. See the delegation profile [[XACMLAdmin](#xacmladmin)].
 
-`<SIDCollectionReference>` [Any Number]
+`<ShortIdSetReference>` [Any Number]
 
-: A reference to a **_short identifier_** collection. The **_short identifiers_** used by the **_policy_** MUST be defined in the referenced collections.
+: A reference to a **_short identifier_** set. The **_short identifiers_** used by the **_policy_** MUST be defined in the referenced sets.
 
 `<Description>` [Optional]
 
@@ -2199,7 +2195,7 @@ The `<Request>` element is an abstraction layer used by the **_policy_** languag
 <xs:element name="Request" type="xacml:RequestType"/>
 <xs:complexType name="RequestType">
    <xs:sequence>
-      <xs:element ref="xacml:SIDCollectionReference" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="xacml:ShortIdSetReference" minOccurs="0" maxOccurs="unbounded"/>
       <xs:element ref="xacml:RequestDefaults" minOccurs="0"/>
       <xs:element ref="xacml:Attributes" maxOccurs="unbounded"/>
       <xs:element ref="xacml:MultiRequests" minOccurs="0"/>
@@ -2221,9 +2217,9 @@ The `<Request>` element contains the following elements and attributes:
 
 : This attribute is used to request that the **_PDP_** combines multiple decisions into a single decision. The use of this attribute is specified in [[Multi](#multi)]. If the **_PDP_** does not implement the relevant functionality in [[Multi](#multi)], then the **_PDP_** must return an Indeterminate with a status code of urn:oasis:names:tc:xacml:1.0:status:processing-error if it receives a request with this attribute set to `true`. If this attribute is omitted it is treated as being set to `false`.
 
-`<SIDCollectionReference>` [Any Number]
+`<ShortIdSetReference>` [Any Number]
 
-: A reference to a **_short identifier_** collection. The **_short identifiers_** used by the request MUST be defined in the referenced collections.
+: A reference to a **_short identifier_** set. The **_short identifiers_** used by the request MUST be defined in the referenced sets.
 
 `<RequestDefaults>` [Optional]
 
@@ -2361,7 +2357,7 @@ The `<Response>` element encapsulates the **_authorization decision_** produced 
 <xs:element name="Response" type="xacml:ResponseType"/>
 <xs:complexType name="ResponseType">
    <xs:sequence>
-      <xs:element ref="xacml:SIDCollectionReference" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="xacml:ShortIdSetReference" minOccurs="0" maxOccurs="unbounded"/>
       <xs:element ref="xacml:Result" maxOccurs="unbounded"/>
    </xs:sequence>
 </xs:complexType>
@@ -2371,9 +2367,9 @@ The `<Response>` element is of `ResponseType` complex type.
 
 The `<Response>` element contains the following elements:
 
-`<SIDCollectionReference>` [Any Number]
+`<ShortIdSetReference>` [Any Number]
 
-: A reference to a **_short identifier_** collection. The **_short identifiers_** used by the response MUST be defined in the referenced collections.
+: A reference to a **_short identifier_** set. The **_short identifiers_** used by the response MUST be defined in the referenced sets.
 
 `<Result>` [One to Many]
 
@@ -2846,10 +2842,10 @@ The end result of evaluation MUST be an absolute URI.
 
 ### 7.3.1 Identifier examples (non-normative)
 
-Given the following **_short identifier_** definitions:
+Given the following **_short identifiers_**:
 ```
-<ShortIdentifier Name="xs" Value="https://www.w3.org/2001/XMLSchema#"/>
-<ShortIdentifier Name="string" Value="{xs}string"/>
+<ShortId Name="xs" Value="https://www.w3.org/2001/XMLSchema#"/>
+<ShortId Name="string" Value="{xs}string"/>
 ```
 
 these `IdentifierType` values are all equivalent and evaluate to the URI of the string data type:
@@ -3113,7 +3109,7 @@ it MUST NOT list the names and data-types of any **_attribute_** for which value
 
 XACML makes use of URIs and strings as identifiers. When such identifiers are compared for equality, the comparison MUST be done so that the identifiers are equal if they have the same length and the characters in the two identifiers are equal codepoint by codepoint.
 
-Values of the `IdentifierType` simple type may use **_short identifiers_** as aliases for URIs. Where it is necessary to determine **_identifier equality_**, values of the `IdentifierType` simple type MUST first be evaluated according to [Section 7.3](#73-identifier-evaluation) and then the comparison SHALL be performed using the resulting URI. This applies to all instances of `IdentifierType`.
+Values of the `IdentifierType` simple type may use **_short identifiers_** names as aliases for URIs. Where it is necessary to determine **_identifier equality_**, values of the `IdentifierType` simple type MUST first be evaluated according to [Section 7.3](#73-identifier-evaluation) and then the comparison SHALL be performed using the resulting URI. This applies to all instances of `IdentifierType`.
 
 This definition of equality MUST also be used by the following URI identifiers (that are not instances of `IdentifierType`):
 
@@ -3149,15 +3145,15 @@ It is RECOMMENDED that extensions which define identifiers do not define identif
 
 ## 7.21 Short identifiers in responses
 
-The `<Response>` element may contain references to **_short identifier_** collections, and **_short identifiers_** from those collections may be used within the response. The PDP can freely choose what **_short identifier_** collections it uses in the response, if any. There are two cases that require special care.
+The `<Response>` element may contain references to **_short identifier_** sets, and **_short identifier_** names from those sets may be used within the response. The PDP can freely choose what **_short identifier_** sets it uses in the response, if any. There are two cases that require special care.
 
-**_Attributes_** in the request that have the `IncludeInResult` XML attribute set to true are duplicated in the response. If those **_attributes_** contain **_short identifiers_** then those **_short identifiers_** are interpreted with respect to the **_short identifier_** collections referenced by the request, which may be different from the **_short identifier_** collections chosen by the PDP for the response.
+**_Attributes_** in the request that have the `IncludeInResult` XML attribute set to true are duplicated in the response. If those **_attributes_** contain **_short identifier_** names then those **_short identifier_** names are interpreted with respect to the **_short identifier_** sets referenced by the request, which may be different from the **_short identifier_** sets chosen by the PDP for the response.
 
-**_Notices_** in the response originate from **_notice_** expressions in policies. If those **_notice_** expressions contain **_short identifiers_** then those **_short identifiers_** are interpreted with respect to the **_short identifier_** collections referenced by the policies, which may also be different from the **_short identifier_** collections chosen by the PDP for the response.
+**_Notices_** in the response originate from **_notice_** expressions in policies. If those **_notice_** expressions contain **_short identifier_** names then those **_short identifier_** names are interpreted with respect to the **_short identifier_** sets referenced by the policies, which may also be different from the **_short identifier_** sets chosen by the PDP for the response.
 
-The PDP is responsible for ensuring that any **_short identifiers_** in the response reflect the correct URI when they are evaluated according to [Section 7.3](#73-identifier-evaluation) in the presence of the **_short identifier_** collections it has chosen. An implementation strategy for achieving this is for the PDP and context handler to evaluate any values of the `IdentifierType` simple type as they are encountered and store them in internal memory as absolute URIs. Then when the response is composed the absolute URIs can be replaced by appropriate **_short identifiers_** from the **_short identifier_** collections chosen by the PDP.
+The PDP is responsible for ensuring that any **_short identifier_** names in the response reflect the correct URI when they are evaluated according to [Section 7.3](#73-identifier-evaluation) in the presence of the **_short identifier_** sets it has chosen. An implementation strategy for achieving this is for the PDP and context handler to evaluate any values of the `IdentifierType` simple type as they are encountered and store them in internal memory as absolute URIs. Then when the response is composed the absolute URIs can be replaced by appropriate **_short identifier_** names from the **_short identifier_** sets chosen by the PDP.
 
-If the PDP chooses the same **_short identifier_** collections referenced by the request then it has the advantage that they are collections known by the PEP and any attributes included in the result are more likely to have their original **_short identifiers_** restored.
+If the PDP chooses the same **_short identifier_** sets referenced by the request then it has the advantage that they are sets known by the PEP and any attributes included in the result are more likely to have their original **_short identifier_** names restored.
 
 -------
 
@@ -4045,6 +4041,9 @@ Cyril | Dangerville | THALES
 | | 2025-04-17 | Steven Legg | Merged **_obligations_** and **_advice_** into **_notices_**. |
 | | 2025-07-15 | Steven Legg | Added support for **_short identifiers_**. |
 | | 2025-07-23 | Steven Legg | Added example two showing **_short identifiers_**. |
+| | 2025-07-25 | Steven Legg | Grouping **_short identifiers_** in sets rather than collections. |
+| | | | Replaced ShortIdentifier with ShortId. |
+| | | | Replaced SIDCollection with ShortIdSet. |
 
 -------
 

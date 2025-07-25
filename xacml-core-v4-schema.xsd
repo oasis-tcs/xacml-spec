@@ -7,7 +7,7 @@
 	<xs:element name="Request" type="xacml:RequestType"/>
 	<xs:complexType name="RequestType">
 		<xs:sequence>
-			<xs:element ref="xacml:SIDCollectionReference" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="xacml:ShortIdSetReference" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element ref="xacml:RequestDefaults" minOccurs="0"/>
 			<xs:element ref="xacml:Attributes" maxOccurs="unbounded"/>
 			<xs:element ref="xacml:MultiRequests" minOccurs="0"/>
@@ -28,7 +28,7 @@
 	<xs:element name="Response" type="xacml:ResponseType"/>
 	<xs:complexType name="ResponseType">
 		<xs:sequence>
-			<xs:element ref="xacml:SIDCollectionReference" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="xacml:ShortIdSetReference" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element ref="xacml:Result" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
@@ -297,7 +297,7 @@
 	<xs:element name="Policy" type="xacml:PolicyType"/>
 	<xs:complexType name="PolicyType">
 		<xs:sequence>
-			<xs:element ref="xacml:SIDCollectionReference" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="xacml:ShortIdSetReference" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element ref="xacml:Description" minOccurs="0"/>
 			<xs:element ref="xacml:PolicyIssuer" minOccurs="0"/>
 			<xs:element ref="xacml:PolicyDefaults" minOccurs="0"/>
@@ -429,24 +429,24 @@
 		</xs:restriction>
 	</xs:simpleType>
 
-	<xs:element name="SIDCollection" type="xacml:SIDCollectionType"/>
-	<xs:complexType name="SIDCollectionType">
+	<xs:element name="ShortIdSet" type="xacml:ShortIdSetType"/>
+	<xs:complexType name="ShortIdSetType">
 		<xs:sequence>
-			<xs:element ref="xacml:SIDCollectionReference" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element ref="xacml:ShortIdentifier" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="xacml:ShortIdSetReference" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="xacml:ShortId" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
-		<xs:attribute name="SIDCollectionId" type="xs:anyURI" use="required"/>
+		<xs:attribute name="ShortIdSetId" type="xs:anyURI" use="required"/>
 	</xs:complexType>
 
-	<xs:element name="SIDCollectionReference" type="xs:anyURI"/>
+	<xs:element name="ShortIdSetReference" type="xs:anyURI"/>
 
-	<xs:element name="ShortIdentifier" type="xacml:ShortIdentifierType"/>
-	<xs:complexType name="ShortIdentifierType">
-		<xs:attribute name="Name" type="xacml:ShortIdentifierNameType" use="required"/>
+	<xs:element name="ShortId" type="xacml:ShortIdType"/>
+	<xs:complexType name="ShortIdType">
+		<xs:attribute name="Name" type="xacml:ShortIdNameType" use="required"/>
 		<xs:attribute name="Value" type="xs:string" use="required"/>
 	</xs:complexType>
 
-	<xs:simpleType name="ShortIdentifierNameType">
+	<xs:simpleType name="ShortIdNameType">
 		<xs:restriction base="xs:string">
 			<xs:pattern value="[A-Za-z][0-9A-Za-z]*(-[0-9A-Za-z]+)*"/>
 				<!-- The exact pattern is still open for discussion. -->
