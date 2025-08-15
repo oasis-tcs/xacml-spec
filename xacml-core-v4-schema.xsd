@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Copyright OASIS Open 2024. All Rights Reserved. -->
-<xs:schema xmlns:xacml="urn:oasis:names:tc:xacml:4.0:core:schema" xmlns:xs="https://www.w3.org/2001/XMLSchema" targetNamespace="urn:oasis:names:tc:xacml:4.0:core:schema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xs:schema xmlns:xacml="urn:oasis:names:tc:xacml:4.0:core:schema" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:oasis:names:tc:xacml:4.0:core:schema" elementFormDefault="qualified" attributeFormDefault="unqualified">
 
-	<xs:import namespace="https://www.w3.org/XML/1998/namespace" schemaLocation="https://www.w3.org/2001/xml.xsd"/>
+	<xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="https://www.w3.org/2001/xml.xsd"/>
 
 	<xs:element name="Request" type="xacml:RequestType"/>
 	<xs:complexType name="RequestType">
@@ -425,7 +425,7 @@
 
 	<xs:simpleType name="IdentifierType">
 		<xs:restriction base="xs:string">
-			<xs:pattern value="[^{}]*({[A-Za-z][0-9A-Za-z]*(-[0-9A-Za-z]+)*}[^{}]*)*"/>
+			<xs:pattern value="[^{}]*(\{[A-Za-z][0-9A-Za-z]*(-[0-9A-Za-z]+)*\}[^{}]*)*"/>
 		</xs:restriction>
 	</xs:simpleType>
 
