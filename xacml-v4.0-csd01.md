@@ -1307,7 +1307,7 @@ The value of the `Value` attribute SHALL be either one of the following:
 
   * the value SHALL NOT reference a **_short identifier_** that directly or indirectly references this **_short identifier_** and
 
-  * the referenced **_short identifier_** MUST either precede this **_short identifier_** in the same **_short identifier_** set or be defined in one of the **_short identifier_** sets referenced by the containing **_short identifier_** set.
+  * the referenced **_short identifiers_** MUST either precede this **_short identifier_** in the same **_short identifier_** set or be defined in one of the **_short identifier_** sets referenced by the containing **_short identifier_** set.
 
 The name of the **_short identifier_** MUST NOT be the same as the name of any other **_short identifier_** in the same **_short identifier_** set or the same as the name of any other **_short identifier_** defined in one of the **_short identifier_** sets referenced by the containing **_short identifier_** set.
 
