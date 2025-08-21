@@ -1250,7 +1250,7 @@ The `<ShortIdSet>` element contains the following attributes and elements:
 
 `<ShortIdSetReference>` [Any Number]
 
-: A reference to another **_short identifier_** set. The **_short identifiers_** of the referenced set are included in this set. This applies recursively to the sets referenced by a referenced set. This set SHALL NOT reference itself and SHALL NOT reference a set that directly or indirectly references this set.
+: A reference to another **_short identifier_** set. The **_short identifiers_** of the referenced set are included in this set. This applies recursively to the sets referenced by a referenced set. This set SHALL NOT reference itself and SHALL NOT reference a set that directly or indirectly references this set. This set SHALL NOT directly or indirectly reference any other set more than once.
 
 `<ShortId>` [Any Number]
 
@@ -1296,7 +1296,20 @@ The `<ShortId>` element contains the following attributes:
 
 `Value` [Required]
 
-: The character string used to replace the simple alias name when a value of `IdentifierType` is evaluated to produce a complete URI; see [Section 7.3](#73-identifier-evaluation). The value MAY contain references to other **_short identifiers_** in the form of the **_short identifier_** name enclosed in curly brackets (i.e., `{` and `}`; U+007B and U+007D) with the following restrictions: the value SHALL NOT reference this **_short identifier_**, the value SHALL NOT reference a **_short identifier_** that directly or indirectly references this **_short identifier_**, and the referenced **_short identifier_** MUST be in the same **_short identifier_** set (which includes sibling definitions and definitions included by references to other sets). The characters preceding, following or separating the **_short identifier_** references MUST be characters allowed in a URI, which means that the curly bracket characters are not permitted in the value other than to enclose a **_short identifier_** name.
+: The character string used to replace the simple alias name when a value of `IdentifierType` is evaluated to produce a complete URI; see [Section 7.3](#73-identifier-evaluation).
+
+The value of the `Value` attribute SHALL be either one of the following:
+* a character string with only characters allowed in a URI [RFC3986] (curly brackets are not allowed) or
+
+* a character string with one or more references to other **_short identifiers_** in the form of the **_short identifier_** name enclosed in curly brackets (i.e., `{` and `}`; U+007B and U+007D) optionally preceded, followed and/or separated by other characters allowed in a URI (this excludes curly brackets, which means that the curly bracket characters are not permitted in the value other than to enclose a **_short identifier_** name). In addition, the following restrictions apply:
+
+  * the value SHALL NOT reference this **_short identifier_** (i.e., shall not contain any `{s}` where `s` matches the value of the `Name` attribute),
+
+  * the value SHALL NOT reference a **_short identifier_** that directly or indirectly references this **_short identifier_** and
+
+  * the referenced **_short identifier_** MUST either precede this **_short identifier_** in the same **_short identifier_** set or be defined in one of the **_short identifier_** sets referenced by the containing **_short identifier_** set.
+
+The name of the **_short identifier_** MUST NOT be the same as the name of any other **_short identifier_** in the same **_short identifier_** set or the same as the name of any other **_short identifier_** defined in one of the **_short identifier_** sets referenced by the containing **_short identifier_** set.
 
 ## 5.4 Simple type IdentifierType
 
@@ -1389,7 +1402,7 @@ The `<Policy>` element contains the following attributes and elements:
 
 `<ShortIdSetReference>` [Any Number]
 
-: A reference to a **_short identifier_** set. The **_short identifiers_** used by the **_policy_** MUST be defined in the referenced sets.
+: A reference to a **_short identifier_** set. The **_short identifiers_** used by the **_policy_** MUST be defined in the referenced sets or in any further sets referenced by the referenced sets (recursively). The policy set SHALL NOT directly or indirectly reference any **_short identifier_** set more than once.
 
 `<Description>` [Optional]
 
@@ -2855,6 +2868,16 @@ these `IdentifierType` values are all equivalent and evaluate to the URI of the 
 "{string}"
 "{xs}string"
 ```
+
+### 7.3.2 Short identifier set usage (non-normative)
+
+The predefined **_short identifier_** set is not expected to contain **_short identifier_** definitions for all the identifiers an implementation or a deployment of that implementation will be using. In particular, a deployment is likely to have a number of custom XACML attributes holding information specific to that deployment. Deployments may be part of a community of interest making use of common attributes and categories. Implementations may take advantage of the extension points in XACML to define proprietary functions and data types, and may define custom categories and custom attributes that are appropriate for their user base. One aim of this specification is give implementors and users the ability to define their own **_short identifiers_** to use in these cases. Future XACML extensions may also provide additional, predefined **_short identifier_** sets for any identifiers they introduce.
+
+Ideally, all the **_short identifiers_** that a deployment intends to use would be available to a policy or a request by referencing a _single_ **_short identifier_** set. Because a **_short identifier_** set cannot validly be included directly or indirectly more than once, specifications and implementations should avoid creating **_short identifier_** sets that reference **_short identifier_** sets outside of their purview and instead leave deployments to create the single **_short identifier_** set that references all the sets that are relevant to it.
+
+**_Short identifier_** names are not globally unique, so implementations should not hard-wire specific **_short identifiers_** or **_short identifier_** sets so that users have the flexibility to compose and use alternative **_short identifier_** sets to work around any name clashes that arise from attempting to incorporate sets from various independant sources.
+
+The predefined **_short identifier_** set is not required to be used but its use is recommended to promote a common understanding of identifiers between deployments. For this reason, the use of alternative names should be minimized, and preferably allowed _in addition to_ the predefined set. Users should not exclude the standard set and assign any **_short identifier_** names from that set to different URIs.
 
 ## 7.4 Attribute evaluation
 
