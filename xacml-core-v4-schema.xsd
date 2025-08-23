@@ -108,7 +108,7 @@
 		<xs:attribute name="Category" type="xacml:IdentifierType" use="required"/>
 		<xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
 		<xs:attribute name="DataType" type="xacml:IdentifierType" use="required"/>
-		<xs:attribute name="Issuer" type="xs:string" use="optional"/>
+		<xs:attribute name="Issuer" type="xs:Name" use="optional"/>
 	</xs:complexType>
 
 	<xs:element name="Attributes" type="xacml:AttributesType"/>
@@ -127,7 +127,7 @@
 			<xs:element ref="xacml:AttributeValue" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
-		<xs:attribute name="Issuer" type="xs:string" use="optional"/>
+		<xs:attribute name="Issuer" type="xs:Name" use="optional"/>
 		<xs:attribute name="IncludeInResult" type="xs:boolean" use="required"/>
 	</xs:complexType>
 
@@ -165,7 +165,7 @@
 			<xs:extension base="xacml:AttributeValueType">
 				<xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
 				<xs:attribute name="Category" type="xacml:IdentifierType" use="optional"/>
-				<xs:attribute name="Issuer" type="xs:string" use="optional"/>
+				<xs:attribute name="Issuer" type="xs:Name" use="optional"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -188,7 +188,7 @@
 		</xs:sequence>
 		<xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
 		<xs:attribute name="Category" type="xacml:IdentifierType" use="optional"/>
-		<xs:attribute name="Issuer" type="xs:string" use="optional"/>
+		<xs:attribute name="Issuer" type="xs:Name" use="optional"/>
 	</xs:complexType>
 
 	<xs:simpleType name="EffectType">
@@ -375,7 +375,7 @@
 				<xs:attribute name="Category" type="xacml:IdentifierType" use="required"/>
 				<xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
 				<xs:attribute name="DataType" type="xacml:IdentifierType" use="required"/>
-				<xs:attribute name="Issuer" type="xs:string" use="optional"/>
+				<xs:attribute name="Issuer" type="xs:Name" use="optional"/>
 				<xs:attribute name="MustBePresent" type="xs:boolean" use="optional" default="false"/>
 			</xs:extension>
 		</xs:complexContent>
