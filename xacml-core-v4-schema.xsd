@@ -290,7 +290,7 @@
 
 	<xs:simpleType name="VersionMatchType">
 		<xs:restriction base="xs:string">
-			<xs:pattern value="((\d+|\*)\.)*(\d+|\*|\+)"/>
+			<xs:pattern value="(0|[1-9]\d*|\*)(\.(0|[1-9]\d*|\*|\+)){0,3}"/>
 		</xs:restriction>
 	</xs:simpleType>
 
