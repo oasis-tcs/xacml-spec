@@ -429,7 +429,12 @@
 		</xs:restriction>
 	</xs:simpleType>
 
-	<xs:element name="ShortIdSet" type="xacml:ShortIdSetType"/>
+	<xs:element name="ShortIdSet" type="xacml:ShortIdSetType">
+		<xs:unique name="shortIdNameIsUnique">
+			<xs:selector xpath="xacml:ShortId"/>
+			<xs:field xpath="@Name"/>
+		</xs:unique>
+	</xs:element>
 	<xs:complexType name="ShortIdSetType">
 		<xs:sequence>
 			<xs:element ref="xacml:ShortIdSetReference" minOccurs="0" maxOccurs="unbounded"/>
@@ -443,13 +448,33 @@
 	<xs:element name="ShortId" type="xacml:ShortIdType"/>
 	<xs:complexType name="ShortIdType">
 		<xs:attribute name="Name" type="xacml:ShortIdNameType" use="required"/>
-		<xs:attribute name="Value" type="xs:string" use="required"/>
+		<xs:attribute name="Value" type="xacml:ShortIdValueType" use="required"/>
 	</xs:complexType>
 
 	<xs:simpleType name="ShortIdNameType">
 		<xs:restriction base="xs:string">
 			<xs:pattern value="[A-Za-z][0-9A-Za-z]*(-[0-9A-Za-z]+)*"/>
 				<!-- The exact pattern is still open for discussion. -->
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="ShortIdValueType">
+		<xs:restriction base="xs:string">
+			<xs:annotation>
+				<xs:documentation xml:lang="en">
+					ShortId Value type. Such value is an alternating sequence of URI characters and {ShortId}s (short identifier names enclosed in curly braces) (reminder: the curly brace is not a valid URI character), so the pattern is:
+					^uc*(\{s\}uc*)*$
+					where:
+					- s is the pattern for a ShortId name, copied from the ShortIdNameType definition (which excludes curly braces):
+					[A-Za-z][0-9A-Za-z]*(-[0-9A-Za-z]+)*
+					- uc is the pattern for a valid URI character based on RFC 3986 (cf. the ABNF definition of 'URI' in Appendix A), which excludes curly braces:
+					[!#-;=?-\[\]_a-z~]
+					the minLength=1 restriction prevents the empty string, i.e. there is at least one uc or {s}.
+					An XSD pattern is matched against the entire string, so the ^ and $ anchors are omitted.
+				</xs:documentation>
+			</xs:annotation>
+			<xs:pattern value="[!#-;=?-\[\]_a-z~]*(\{[A-Za-z][0-9A-Za-z]*(-[0-9A-Za-z]+)*\}[!#-;=?-\[\]_a-z~]*)*"/>
+			<xs:minLength value="1" />
 		</xs:restriction>
 	</xs:simpleType>
 
