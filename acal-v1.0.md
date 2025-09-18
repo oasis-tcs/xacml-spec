@@ -113,14 +113,14 @@ Table I
 This is a Sample of a Table Title
 
 
-| Name | \#1 | \#2 | \#3 | \#4 | \#5 |
-| :---: | :---: | :---: | :---: | :---: | :---: |
-| **AB** | 3 | 3 | 6 | 11 | 9 |
-| **BC** | 7 | 7 | 4 | 12 | 9 |
-| **CD** | 10 | 3 | 3 | 9 | 7 |
-| **DE** | 3 | 7 | 10 | 5 | 6 |
-| **DF** | 7 | 1 | 12 | 1 | 3 |
-| **ZZ** | 5 | 12 | 11 | 9 | 8 |
+|  Name  | \#1 | \#2 | \#3 | \#4 | \#5 |
+|:------:|:---:|:---:|:---:|:---:|:---:|
+| **AB** |  3  |  3  |  6  | 11  |  9  |
+| **BC** |  7  |  7  |  4  | 12  |  9  |
+| **CD** | 10  |  3  |  3  |  9  |  7  |
+| **DE** |  3  |  7  | 10  |  5  |  6  |
+| **DF** |  7  |  1  | 12  |  1  |  3  |
+| **ZZ** |  5  | 12  | 11  |  9  |  8  |
 
 
 **Table I:** This table contains information about x and y and z.
@@ -446,7 +446,7 @@ A rule contains a Boolean expression that can be evaluated in isolation, but tha
 
 A policy contains a set of rules and/or other policies and a specified procedure for combining the results of their evaluation. It is the basic unit of policy used by the PDP, and so it is intended to form the basis of an authorization decision. It is also the standard means for combining separate policies into a single combined policy.
 
-Hinton et al [[Hinton](#hinton)] discuss the question of the compatibility of separate policies applicable to the same decision request.
+Hinton et al [[Hinton94](#hinton94)] discuss the question of the compatibility of separate policies applicable to the same decision request.
 
 ## 4.3 Combining Algorithms
 
@@ -1060,8 +1060,8 @@ The following short identifier set, in both the XML and JSON representations, de
   "ShortIdSetId":"urn:oasis:names:tc:xacml:4.0:example:identifiers",
   "ShortIdSetReference":["urn:oasis:names:tc:xacml:4.0:core:identifiers"],
   "ShortId":[
-    { "Name":"patient-number", Value="urn:oasis:names:tc:xacml:4.0:example:attribute:patient-number" },
-    { "Name":"collection", Value="urn:oasis:names:tc:xacml:4.0:example:attribute:collection" }
+    { "Name":"patient-number", "Value":"urn:oasis:names:tc:xacml:4.0:example:attribute:patient-number" },
+    { "Name":"collection", "Value":"urn:oasis:names:tc:xacml:4.0:example:attribute:collection" }
   ]
 }
 ```
@@ -1567,7 +1567,7 @@ A `DefaultsType` object specifies default values that apply to the enclosing `Po
 <xs:complexType name="DefaultsType">
    <xs:sequence>
       <xs:choice>
-         <xs:element ref="xacml:XPathVersion">
+         <xs:element ref="xacml:XPathVersion" />
       </xs:choice>
    </xs:sequence>
 </xs:complexType>
@@ -5039,7 +5039,7 @@ Examples in this section are presented in both the XML and JSON representations 
 
   ```xml
   <Apply FunctionId="map">
-    <Function FunctionId="string-normalize-to-lower-case">
+    <Function FunctionId="string-normalize-to-lower-case" />
     <Apply FunctionId="string-bag">
       <AttributeValue DataType="string">Hello</AttributeValue>
       <AttributeValue DataType="string">World!</AttributeValue>
