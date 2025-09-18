@@ -1140,7 +1140,7 @@ Rule 1 illustrates a policy with a simple rule containing a condition. It also i
 [15]             "FunctionId":"string-one-and-only",
 [16]             "Argument":[{
 [17]               "AttributeDesignator":{
-[18]                 "Category":"access-subject",
+[18]                 "CategoryId":"access-subject",
 [19]                 "AttributeId":"patient-number",
 [20]                 "DataType":"string"
 [21]               }
@@ -1151,7 +1151,7 @@ Rule 1 illustrates a policy with a simple rule containing a condition. It also i
 [26]             "FunctionId":"string-one-and-only",
 [27]             "Argument":[{
 [28]               "AttributeDesignator":{
-[29]                 "Category":"resource",
+[29]                 "CategoryId":"resource",
 [30]                 "AttributeId":"patient-number",
 [31]                 "DataType":"string"
 [32]               }
@@ -1183,7 +1183,7 @@ Rule 1 illustrates a policy with a simple rule containing a condition. It also i
 [59]                 }
 [60]               },{
 [61]                 "AttributeDesignator":{
-[62]                   "Category":"resource",
+[62]                   "CategoryId":"resource",
 [63]                   "AttributeId":"collection",
 [64]                   "DataType":"anyURI"
 [65]                 }
@@ -1203,7 +1203,7 @@ Rule 1 illustrates a policy with a simple rule containing a condition. It also i
 [79]                 }
 [80]               },{
 [81]                 "AttributeDesignator":{
-[82]                   "Category":"action",
+[82]                   "CategoryId":"action",
 [83]                   "AttributeId":"action-id",
 [84]                   "DataType":"string"
 [85]                 }
@@ -1229,7 +1229,7 @@ Rule 1 illustrates a policy with a simple rule containing a condition. It also i
 
 [17] - [21] An attribute designator that selects a bag of values for the patient-number subject attribute in the request context.
 
-[18] The `Category` component names the category from which the desired attribute will be obtained. In this case, the category is nominated with the short identifier name `access-subject`, which evaluates to `urn:oasis:names:tc:xacml:1.0:subject-category:access-subject` using the imported short identifier set.
+[18] The `CategoryId` component names the category from which the desired attribute will be obtained. In this case, the category is nominated with the short identifier name `access-subject`, which evaluates to `urn:oasis:names:tc:xacml:1.0:subject-category:access-subject` using the imported short identifier set.
 
 [19] The `AttributeId` component nominates the patient-number attribute with the short identifier name `patient-number`, which evaluates to `urn:oasis:names:tc:xacml:3.0:example:attribute:patient-number` using the imported short identifier set.
 
@@ -1567,7 +1567,7 @@ A `DefaultsType` object specifies default values that apply to the enclosing `Po
 <xs:complexType name="DefaultsType">
    <xs:sequence>
       <xs:choice>
-         <xs:element ref="xacml:XPathVersion" />
+         <xs:element ref="xacml:XPathVersion"/>
       </xs:choice>
    </xs:sequence>
 </xs:complexType>
@@ -1967,7 +1967,7 @@ Evaluation of an `AttributeDesignatorType` object SHALL return a bag containing 
 <xs:complexType name="AttributeDesignatorType">
    <xs:complexContent>
       <xs:extension base="xacml:ExpressionType">
-         <xs:attribute name="Category" type="xacml:IdentifierType" use="required"/>
+         <xs:attribute name="CategoryId" type="xacml:IdentifierType" use="required"/>
          <xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
          <xs:attribute name="DataType" type="xacml:IdentifierType" use="required"/>
          <xs:attribute name="Issuer" type="xs:string" use="optional"/>
@@ -1977,15 +1977,15 @@ Evaluation of an `AttributeDesignatorType` object SHALL return a bag containing 
 </xs:complexType>
 ```
 
-A named attribute SHALL match an attribute if the values of their respective `Category`, `AttributeId`, `DataType` and `Issuer` properties match. The attribute designator's `Category` MUST match, by identifier equality, the `Category` property of the `AttributesType` object in which the attribute is present. The attribute designator's `AttributeId` property MUST match, by identifier equality, the `AttributeId` property of the attribute. The attribute designator's `DataType` property MUST match, by identifier equality, the `DataType` property of the same attribute.
+A named attribute SHALL match an attribute if the values of their respective `CategoryId`, `AttributeId`, `DataType` and `Issuer` properties match. The attribute designator's `CategoryId` MUST match, by identifier equality, the `CategoryId` property of the `RequestCategoryType` object in which the attribute is present. The attribute designator's `AttributeId` property MUST match, by identifier equality, the `AttributeId` property of the attribute. The attribute designator's `DataType` property MUST match, by identifier equality, the `DataType` property of the same attribute.
 
 If the `Issuer` property is present in the attribute designator, then it MUST match, using the `urn:oasis:names:tc:xacml:1.0:function:string-equal` function, the `Issuer` property of the same attribute. If the `Issuer` property is not present in the attribute designator, then the matching of the attribute to the named attribute SHALL be governed by `AttributeId` and `DataType` properties alone.
 
 An `AttributeDesignatorType` object contains the following properties:
 
-`Category` [Required]
+`CategoryId` [Required]
 
-: An `IdentifierType` value specifying the `Category` of a matching ACAL attribute.
+: An `IdentifierType` value specifying the `CategoryId` of a matching ACAL attribute.
 
 `AttributeId` [Required]
 
@@ -2005,7 +2005,7 @@ An `AttributeDesignatorType` object contains the following properties:
 
 ## 7.30 AttributeSelectorType
 
-An `AttributeDesignatorType` object is a kind of expression that defines an attribute selector. An attribute selector produces a bag of unnamed and uncategorized ACAL attribute values. The values shall be constructed from the node(s) selected by applying the XPath expression given by the attribute selector's `Path` property to the XML content indicated by the attribute selector's `Category` property. Support for attribute selectors is OPTIONAL.
+An `AttributeDesignatorType` object is a kind of expression that defines an attribute selector. An attribute selector produces a bag of unnamed and uncategorized ACAL attribute values. The values shall be constructed from the node(s) selected by applying the XPath expression given by the attribute selector's `Path` property to the XML content indicated by the attribute selector's `CategoryId` property. Support for attribute selectors is OPTIONAL.
 
 See [Section 9.4.7](#947-attributeselector-evaluation) for details of attribute selector evaluation.
 
@@ -2014,7 +2014,7 @@ See [Section 9.4.7](#947-attributeselector-evaluation) for details of attribute 
 <xs:complexType name="AttributeSelectorType">
    <xs:complexContent>
       <xs:extension base="xacml:ExpressionType">
-         <xs:attribute name="Category" type="xacml:IdentifierType" use="required"/>
+         <xs:attribute name="CategoryId" type="xacml:IdentifierType" use="required"/>
          <xs:attribute name="ContextSelectorId" type="xacml:IdentifierType" use="optional"/>
          <xs:attribute name="Path" type="xs:string" use="required"/>
          <xs:attribute name="DataType" type="xacml:IdentifierType" use="required"/>
@@ -2026,13 +2026,13 @@ See [Section 9.4.7](#947-attributeselector-evaluation) for details of attribute 
 
 An `AttributeSelectorType` object has the following properties:
 
-`Category` [Required]
+`CategoryId` [Required]
 
 : An `IdentifierType` value specifying the attribute category of the `Content` property containing the XML from which nodes will be selected. It also indicates the attribute category containing the ACAL attribute nominated by the `ContextSelectorId` property, if the object includes a `ContextSelectorId` property.
 
 `ContextSelectorId` [Optional]
 
-: An `IdentifierType` value specifying an ACAL attribute (by its `AttributeId`) in the request context in the category given by the `Category` property. The referenced attribute MUST have data type `urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression`, and its attribute value must select a single node in the `Content` property. The `XPathCategory` property of the referenced ACAL attribute MUST be equal to the `Category` property of the attribute selector.
+: An `IdentifierType` value specifying an ACAL attribute (by its `AttributeId`) in the request context in the category given by the `CategoryId` property. The referenced attribute MUST have data type `urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression`, and its attribute value must select a single node in the `Content` property. The `XPathCategory` property of the referenced ACAL attribute MUST be equal to the `CategoryId` property of the attribute selector.
 
 `Path` [Required]
 
@@ -2046,7 +2046,7 @@ An `AttributeSelectorType` object has the following properties:
 
 `MustBePresent` [Optional, Default false]
 
-: A `Boolean` value that governs whether the attribute selector returns `Indeterminate` or an empty bag in the event that the attributes category specified by the `Category` property does not exist in the request context, or the attributes category does exist but it does not have a `Content` property, or the `Content` property does exist but the XPath expression selects no node. See [Section 9.4.5](#945-attribute-retrieval). Also see [Section 9.19.2](#9192-syntax-and-type-errors) and [Section 9.19.3](#9193-missing-attributes). If this property is omitted it is treated as being set to `false`.
+: A `Boolean` value that governs whether the attribute selector returns `Indeterminate` or an empty bag in the event that the attribute category specified by the `CategoryId` property does not exist in the request context, or the attribute category does exist but it does not have a `Content` property, or the `Content` property does exist but the XPath expression selects no node. See [Section 9.4.5](#945-attribute-retrieval). Also see [Section 9.19.2](#9192-syntax-and-type-errors) and [Section 9.19.3](#9193-missing-attributes). If this property is omitted it is treated as being set to `false`.
 
 ## 7.31 AttributeValueType
 
@@ -2139,7 +2139,7 @@ The attribute specified SHALL be understood by the PEP, but it is not further sp
    <xs:complexContent>
       <xs:extension base="xacml:AttributeValueType">
          <xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
-         <xs:attribute name="Category" type="xacml:IdentifierType" use="optional"/>
+         <xs:attribute name="CategoryId" type="xacml:IdentifierType" use="optional"/>
          <xs:attribute name="Issuer" type="xs:string" use="optional"/>
       </xs:extension>
    </xs:complexContent>
@@ -2152,9 +2152,9 @@ An `AttributeAssignmentType` object contains the following properties:
 
 : An `IdentifierType` value specifying the identifier of the attribute.
 
-`Category` [Optional]
+`CategoryId` [Optional]
 
-: An `IdentifierType` value specifying the category of the attribute. If this property is absent, the attribute has no category. The PEP SHALL interpret the significance and meaning of any `Category` property. Non-normative note: an expected use of the category is to disambiguate attributes that are relayed from the request.
+: An `IdentifierType` value specifying the category of the attribute. If this property is absent, the attribute has no category. The PEP SHALL interpret the significance and meaning of any `CategoryId` property. Non-normative note: an expected use of the category is to disambiguate attributes that are relayed from the request.
 
 `Issuer` [Optional]
 
@@ -2162,7 +2162,7 @@ An `AttributeAssignmentType` object contains the following properties:
 
 ## 7.39 NoticeExpressionType
 
-A `NoticeExpressionType` object defines a notice expression that is ptentially evaluated into a notice. A notice expression contains an identifier for the notice and a set of expressions that form arguments of the notice. The `AppliesTo` property indicates the effect for which this notice is eligible to be provided to the PEP. If the `AppliesTo` property is absent then this notice is eligible to be provided to the PEP if the effect is either `Permit` or `Deny`. See [Section 9.18](#918-notices) for a description of how the list of notices to be returned by the PDP is determined.
+A `NoticeExpressionType` object defines a notice expression that is potentially evaluated into a notice. A notice expression contains an identifier for the notice and a set of expressions that form arguments of the notice. The `AppliesTo` property indicates the effect for which this notice is eligible to be provided to the PEP. If the `AppliesTo` property is absent then this notice is eligible to be provided to the PEP if the effect is either `Permit` or `Deny`. See [Section 9.18](#918-notices) for a description of how the list of notices to be returned by the PDP is determined.
 
 ```xml
 <xs:element name="NoticeExpression" type="xacml:NoticeExpressionType"/>
@@ -2196,7 +2196,7 @@ A `NoticeExpressionType` object contains the following properties:
 : A `BooleanExpressionType` object holding an expression that must be satisfied for this notice to be provided to the PEP. An absent condition is treated as unconditionally satisfied. Evaluation of the `Condition` property is described in [Section 9.9](#99-condition-evaluation).
 
 `AttributeAssignmentExpression` [Any Number]
- 
+
 : A sequence of `AttributeAssignmentExpressionType` objects, each specifying a notice argument in the form of an expression. The expressions SHALL be evaluated by the PDP to constant `AttributeValueType` objects or bags, which shall be the attribute assignments in the notice returned to the PEP. If an `AttributeAssignmentExpressionType` object evaluates to an atomic attribute value, then there MUST be one resulting `AttributeAssignmentType` object which MUST contain this single attribute value. If the `AttributeAssignmentExpressionType` object evaluates to a bag, then there MUST be a resulting `AttributeAssignmentType` object for each of the values in the bag. If the bag is empty, there shall be no `AttributeAssignmentType` objects from this `AttributeAssignmentExpressionType` object. The values of the notice arguments SHALL be interpreted by the PEP.
 
 ## 7.41 AttributeAssignmentExpressionType
@@ -2210,7 +2210,7 @@ An `AttributeAssignmentExpressionType` object is used to include an argument in 
       <xs:element ref="xacml:Expression"/>
    </xs:sequence>
    <xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
-   <xs:attribute name="Category" type="xacml:IdentifierType" use="optional"/>
+   <xs:attribute name="CategoryId" type="xacml:IdentifierType" use="optional"/>
    <xs:attribute name="Issuer" type="xs:string" use="optional"/>
 </xs:complexType>
 ```
@@ -2225,9 +2225,9 @@ An `AttributeAssignmentExpressionType` object contains the following properties:
 
 : An `IdentifierType` value specifying the identifier of the attribute. The value of the `AttributeId` property in the resulting `AttributeAssignmentType` object MUST be equal to this value.
 
-`Category` [Optional]
+`CategoryId` [Optional]
 
-: An `IdentifierType` value specifying the category of the attribute. If this property is missing, the attribute has no category. The value of the `Category` property in the resulting `AttributeAssignmentType` object MUST be equal to this value.
+: An `IdentifierType` value specifying the category of the attribute. If this property is missing, the attribute has no category. The value of the `CategoryId` property in the resulting `AttributeAssignmentType` object MUST be equal to this value.
 
 `Issuer` [Optional]
 
@@ -2243,7 +2243,7 @@ The `RequestType` object type is an abstraction layer used by the policy languag
    <xs:sequence>
       <xs:element ref="xacml:ShortIdSetReference" minOccurs="0" maxOccurs="unbounded"/>
       <xs:element ref="xacml:RequestDefaults" minOccurs="0"/>
-      <xs:element ref="xacml:Attributes" maxOccurs="unbounded"/>
+      <xs:element ref="xacml:RequestCategory" maxOccurs="unbounded"/>
       <xs:element ref="xacml:MultiRequests" minOccurs="0"/>
    </xs:sequence>
    <xs:attribute name="ReturnPolicyIdList" type="xs:boolean" use="optional" default="false"/>
@@ -2269,13 +2269,13 @@ A `RequestType` object contains the following properties:
 
 : A `RequestDefaultsType` object containing default values for the request, such as the XPath version. See [Section 7.43](#743-requestdefaultstype). The `RequestDefaults` property is REQUIRED if the request contains values of the `urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression` data type.
 
-`Attributes` [One to Many]
+`RequestCategory` [One to Many]
 
-: A sequence of `AttributesType` objects, each containing a sequence of `AttributeType` objects associated with an attribute category of the request context. Different `AttributesType` objects with different category identifiers are used to represent information about the subject, resource, action, environment or other categories of the access request. There may be multiple `AttributesType` objects with the same `Category` property if the PDP implements the multiple decision profile, see [[Multi](#multi)]. Under other conditions, it is a syntax error if there are multiple `AttributesTypes` objects with the same `Category` (see [Section 9.19.2](#9192-syntax-and-type-errors) for error codes).
+: A sequence of `RequestCategoryType` objects, each containing a sequence of `RequestAttributeType` objects associated with an attribute category of the request context. Different `RequestCategoryType` objects with different category identifiers are used to represent information about the subject, resource, action, environment or other categories of the access request. There may be multiple `RequestCategoryType` objects with the same `CategoryId` property value if the PDP implements the multiple decision profile, see [[Multi](#multi)]. Under other conditions, it is a syntax error if there are multiple `RequestCategoryType` objects with the same `CategoryId` (see [Section 9.19.2](#9192-syntax-and-type-errors) for error codes).
 
 `MultiRequests` [Optional]
 
-: A `MultiRequestsType` object listing multiple request contexts using references to the `AttributesTypes` objects. Implementation of this property is optional. The semantics of this property are defined in [[Multi](#multi)]. If the implementation does not implement this property, it MUST return an `Indeterminate` result if it encounters this property. See [Section 7.50](#750-multirequeststype).
+: A `MultiRequestsType` object listing multiple request contexts using references to the `RequestCategoryType` objects. Implementation of this property is optional. The semantics of this property are defined in [[Multi](#multi)]. If the implementation does not implement this property, it MUST return an `Indeterminate` result if it encounters this property. See [Section 7.50](#750-multirequeststype).
 
 ## 7.43 RequestDefaultsType
 
@@ -2298,39 +2298,39 @@ A `RequestDefaultsType` object contains the following properties:
 
 : An `IdentifierType` value specifying the XPath version for XPath expressions occurring in the request as values of the `urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression` data type.
 
-## 7.44 AttributesType
+## 7.44 RequestCategoryType
 
-An `AttributesType` object specifies ACAL attributes of a subject, resource, action, environment or another category using a sequence of `AttributeType` objects.
+A `RequestCategoryType` object specifies ACAL attributes of a subject, resource, action, environment or another category using a sequence of `RequestAttributeType` objects.
 
 ```xml
-<xs:element name="Attributes" type="xacml:AttributesType"/>
-<xs:complexType name="AttributesType">
+<xs:element name="RequestCategory" type="xacml:RequestCategoryType"/>
+<xs:complexType name="RequestCategoryType">
    <xs:sequence>
       <xs:element ref="xacml:Content" minOccurs="0"/>
-      <xs:element ref="xacml:Attribute" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="xacml:RequestAttribute" minOccurs="0" maxOccurs="unbounded"/>
    </xs:sequence>
-   <xs:attribute name="Category" type="xacml:IdentifierType" use="required"/>
-   <xs:attribute ref="xml:id" use="optional"/>
+   <xs:attribute name="CategoryId" type="xacml:IdentifierType" use="required"/>
+   <xs:attribute name="Id" type="xs:ID" use="optional"/>
 </xs:complexType>
 ```
 
-An `AttributesType` object contains the following properties:
+A `RequestCategoryType` object contains the following properties:
 
-`Category` [Required]
+`CategoryId` [Required]
 
-: An `IdentifierType` value indicating which attribute category the contained attributes belong to. The `Category` property is used to differentiate between attributes of subject, resource, action, environment or other categories.
+: An `IdentifierType` value indicating which attribute category the contained attributes belong to, and it is used to differentiate between attributes of subject, resource, action, environment or other categories.
 
 `Id` [Optional]
 
-: A unique `String` identifier for this `AttributesType` object. See [[XMLid](#xmlid)]. It is primarily intended to be referenced in multiple requests. See [[Multi](#multi)].
+: A unique `String` identifier for this `RequestCategoryType` object, similar to [[XMLid](#xmlid)]. It is primarily intended to be referenced in multiple requests. See [[Multi](#multi)].
 
 `Content` [Optional]
 
 : A `ContentType` object specifying additional sources of attributes in free-form XML document format which can be referenced using attribute selectors.
 
-`Attribute` [Any Number]
+`RequestAttribute` [Any Number]
 
-: A sequence of `AttributeType` objects associated with the attributes category of the request.
+: A sequence of `RequestAttributeType` objects associated with the attribute category of the request.
 
 ## 7.45 ContentType
 
@@ -2349,39 +2349,26 @@ A `ContentType` object has exactly one arbitrary type child element.
 
 _This needs to be aligned with the way the JSON profile handles the Content member of a category._
 
-## 7.46 AttributeType
+## 7.46 RequestAttributeType
 
-The `AttributeType` object type is the central abstraction of the request context. An `AttributeType` object contains attribute meta-data and one or more attribute values. The attribute meta-data comprises the attribute identifier and the attribute issuer. Attribute designators in the policy MAY refer to attributes by means of this meta-data.
+A `RequestAttributeType` object describes an ACAL attribute in the request context.
 
 ```xml
-<xs:element name="Attribute" type="xacml:AttributeType"/>
-<xs:complexType name="AttributeType">
-   <xs:sequence>
-      <xs:element ref="xacml:AttributeValue" maxOccurs="unbounded"/>
-   </xs:sequence>
-   <xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
-   <xs:attribute name="Issuer" type="xs:string" use="optional"/>
-   <xs:attribute name="IncludeInResult" type="xs:boolean" use="required"/>
+<xs:element name="RequestAttribute" type="xacml:RequestAttributeType"/>
+<xs:complexType name="RequestAttributeType">
+   <xs:complexContent mixed="false">
+      <xs:extension base="xacml:AttributeType">
+         <xs:attribute name="IncludeInResult" type="xs:boolean" use="required"/>
+      </xs:extension>
+   </xs:complexContent>
 </xs:complexType>
 ```
 
-An `AttributeType` object contains the following properties:
-
-`AttributeId` [Required]
-
-: An `IdentifierType` value identifying the attribute. A number of identifiers are reserved by ACAL to denote commonly used attributes. See [Annex D](#annex-d-acal-identifiers).
-
-`Issuer` [Optional]
-
-: A `String` value specifying the issuer of the attribute. For example, this attribute value may be an `x500Name` that binds to a public key, or it may be some other identifier exchanged out-of-band by issuing and relying parties.
+The `RequestAttributeType` object type extends the `AttributeType` object type with the following property:
 
 `IncludeInResult` [Optional, Default false]
 
-: A `Boolean` value that governs whether this attribute is included in the result. This is useful to correlate requests with their responses in the case of multiple requests. If this property is omitted it is treated as being set to `false`.
-
-`AttributeValue` [One to Many]
-
-: A sequence of AttributeValueType objects, each denoting an ACAL attribute value. Each attribute value MAY have contents that are empty, occur once or occur multiple times.
+: A `Boolean` value that governs whether this ACAL attribute is included in the result. This is useful to correlate requests with their responses in the case of multiple requests. If this property is omitted it is treated as being set to `false`. Note that ACAL attributes appear in the result as `AttributeType` objects.
 
 ## 7.47 ResponseType
 
@@ -2414,13 +2401,14 @@ A `ResponseType` object contains the following properties:
 A `ResultType` object represents an authorization decision result. It MAY include a list of notices. If the PEP does not understand or cannot fulfill an obligation notice, then the action of the PEP is determined by its bias, see [Section 9.2](#92-policy-enforcement-point). Any advice notices MAY be safely ignored by the PEP.
 
 ```xml
+<xs:element name="Result" type="xacml:ResultType"/>
 <xs:complexType name="ResultType">
    <xs:sequence>
       <xs:element ref="xacml:Decision"/>
       <xs:element ref="xacml:Status" minOccurs="0"/>
-	  <xs:element ref="xacml:Notice" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element ref="xacml:Attributes" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element ref="xacml:ApplicablePolicyReference" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element ref="xacml:Notice" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="xacml:Category" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="xacml:ApplicablePolicyReference" minOccurs="0" maxOccurs="unbounded"/>
    </xs:sequence>
 </xs:complexType>
 ```
@@ -2439,9 +2427,9 @@ A `ResultType` object contains the following properties:
 
 : A sequence of `NoticeType` objects, each a notice to be interpreted by the PEP. See [Section 7.34](#734-noticetype). If the PEP does not understand or cannot fulfill an obligation notice, then the action of the PEP is determined by its bias, see [Section 9.2](#92-policy-enforcement-point). If the PEP does not understand an advice notice, the PEP may safely ignore the notice. See [Section 9.18](#918-notices) for a description of how the list of notices to be returned by the PDP is determined.
 
-`Attributes` [Optional]
+`Category` [Optional]
 
-: A sequence of `AttributesType` objects, each an attribute category containing an attribute that was part of the request. The choice of which attributes are included here is made with the `IncludeInResult` property of the `AttributeType` objects of the request. See [Section 7.46](#746-attributetype).
+: A sequence of `CategoryType` objects, each an attribute category containing attributes that were part of the request. The choice of which attributes are included here is made with the `IncludeInResult` property of the `RequestAttributeType` objects of the request. See [Section 7.59](#759-attributetype).
 
 `ApplicablePolicyReference` [Optional]
 
@@ -2470,7 +2458,7 @@ The `ExactMatchIdReferenceType` object type extends the `IdReferenceType` object
 
 ## 7.50 MultiRequestsType
 
-A `MultiRequestsType` object contains a list of requests by reference to `AttributesType` objects in the enclosing `RequestType` object. The `MultiRequests` property is of `MultiRequestsType` object type. The semantics of this property are defined in [[Multi](#multi)]. Support for this property is optional. If an implementation does not support this property, but receives it, the implementation MUST generate an `Indeterminate` response.
+A `MultiRequestsType` object contains a list of requests by reference to `RequestCategoryType` objects in the enclosing `RequestType` object. The `MultiRequests` property is of `MultiRequestsType` object type. The semantics of this property are defined in [[Multi](#multi)]. Support for this property is optional. If an implementation does not support this property, but receives it, the implementation MUST generate an `Indeterminate` response.
 
 ```xml
 <xs:element name="MultiRequests" type="xacml:MultiRequestsType"/>
@@ -2485,11 +2473,11 @@ A `MultiRequestsType` object contains the following properties.
 
 `RequestReference` [one to many]
 
-: A sequence of `RequestReferenceType` objects, each defining a request instance by reference to `AttributesType` objects in the enclosing `RequestType` object. See [Section 7.51](#751-requestreferencetype).
+: A sequence of `RequestReferenceType` objects, each defining a request instance by reference to `RequestCategoryType` objects in the enclosing `RequestType` object. See [Section 7.51](#751-requestreferencetype).
 
 ## 7.51 RequestReferenceType
 
-A `RequestReferenceType` object defines an instance of a request in terms of references to `AttributesType` objects. The semantics of this object type are defined in [[Multi](#multi)]. Support for this object type is optional.
+A `RequestReferenceType` object defines an instance of a request in terms of references to `RequestCategoryType` objects. The semantics of this object type are defined in [[Multi](#multi)]. Support for this object type is optional.
 
 ```xml
 <xs:element name="RequestReference" type="xacml:RequestReference "/>
@@ -2504,16 +2492,16 @@ A `RequestReferenceType` object contains the following properties.
 
 `AttributesReference` [one to many]
 
-: A sequence of `AttributesReferenceType` objects, each a reference to an `AttributesType` object in the enclosing `RequestType` object. See [Section 7.52](#752-attributesreferencetype).
+: A sequence of `AttributesReferenceType` objects, each a reference to a `RequestCategoryType` object in the enclosing `RequestType` object. See [Section 7.52](#752-attributesreferencetype).
 
 ## 7.52 AttributesReferenceType
 
-An `AttributesReferenceType` object makes a reference to an `AttributesType` object. The meaning of this object is defined in [[Multi](#multi)]. Support for this object is optional.
+An `AttributesReferenceType` object makes a reference to a `RequestCategoryType` object. The meaning of this object is defined in [[Multi](#multi)]. Support for this object is optional.
 
 ```xml
 <xs:element name="AttributesReference" type="xacml:AttributesReference"/>
 <xs:complexType name="AttributesReferenceType">
-   <xs:attribute name="ReferenceId" type="xs:IDREF" use="required" />
+   <xs:attribute name="ReferenceId" type="xs:IDREF" use="required"/>
 </xs:complexType>
 ```
 
@@ -2521,7 +2509,7 @@ An `AttributesReferenceType` object contains the following properties.
 
 `ReferenceId` [required]
 
-: A `String` value referencing an `AttributesType` object in the enclosing `RequestType` object by the value of its `Id` property.
+: A `String` value referencing a `RequestCategoryType` object in the enclosing `RequestType` object by the value of its `Id` property.
 
 ## 7.53 DecisionType
 
@@ -2653,7 +2641,7 @@ A `MissingAttributeDetailType` object conveys information about attributes requi
    <xs:sequence>
       <xs:element ref="xacml:AttributeValue" minOccurs="0" maxOccurs="unbounded"/>
    </xs:sequence>
-   <xs:attribute name="Category" type="xacml:IdentifierType" use="required"/>
+   <xs:attribute name="CategoryId" type="xacml:IdentifierType" use="required"/>
    <xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
    <xs:attribute name="DataType" type="xacml:IdentifierType" use="required"/>
    <xs:attribute name="Issuer" type="xs:string" use="optional"/>
@@ -2666,7 +2654,7 @@ A `MissingAttributeDetailType` object contains the following properties:
 
 : An `AttributeValueType` object specifying the required value of the missing attribute.
 
-`Category` [Required]
+`CategoryId` [Required]
 
 : An `IdentifierType` value indicating the category of the missing attribute.
 
@@ -2683,6 +2671,67 @@ A `MissingAttributeDetailType` object contains the following properties:
 : A `String` value, which if supplied, specifies the required `Issuer` of the missing attribute.
 
 If the PDP includes `AttributeValueType` objects in the `MissingAttributeDetailType` object, then this indicates the acceptable values for that attribute. If no `AttributeValueType` objects are included, then the 1MissingAttributeDetailType` object indicates the names of attributes that the PDP failed to resolve during its evaluation. The list of attributes may be partial or complete. There is no guarantee by the PDP that supplying the missing values or attributes will be sufficient to satisfy the policy.
+
+## 7.59 AttributeType
+
+_This definition should appear earlier._
+
+An `AttributeType` object contains attribute meta-data and one or more attribute values. The attribute meta-data comprises the attribute identifier and the attribute issuer. Attribute designators in a policy MAY refer to attributes by means of this meta-data.
+
+```xml
+<xs:element name="Attribute" type="xacml:AttributeType"/>
+<xs:complexType name="AttributeType">
+   <xs:sequence>
+      <xs:element ref="xacml:AttributeValue" maxOccurs="unbounded"/>
+   </xs:sequence>
+   <xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
+   <xs:attribute name="Issuer" type="xs:string" use="optional"/>
+   <xs:attribute name="IncludeInResult" type="xs:boolean" use="required"/>
+</xs:complexType>
+```
+
+An `AttributeType` object contains the following properties:
+
+`AttributeId` [Required]
+
+: An `IdentifierType` value identifying the attribute. A number of identifiers are reserved by ACAL to denote commonly used attributes. See [Annex D](#annex-d-acal-identifiers).
+
+`Issuer` [Optional]
+
+: A `String` value specifying the issuer of the attribute. For example, this attribute value may be an `x500Name` that binds to a public key, or it may be some other identifier exchanged out-of-band by issuing and relying parties.
+
+`AttributeValue` [One to Many]
+
+: A sequence of AttributeValueType objects, each denoting an ACAL attribute value. Each attribute value MAY have contents that are empty, occur once or occur multiple times.
+
+## 7.60 CategoryType
+
+A `CategoryType` object contains a sequence of `AttributeType` objects reflecting `RequestAttributeType` objects in a given attribute category from the request that had their `IncludeInResult` properties set to `true`. The `CategoryType` objects only appear in a result.
+
+```xml
+<xs:element name="CategoryId" type="xacml:CategoryType"/>
+<xs:complexType name="CategoryType">
+   <xs:sequence>
+      <xs:element ref="xacml:Attribute" minOccurs="1" maxOccurs="unbounded"/>
+   </xs:sequence>
+   <xs:attribute name="CategoryId" type="xacml:IdentifierType" use="required"/>
+   <xs:attribute name="Id" type="xs:ID" use="optional"/>
+</xs:complexType>
+```
+
+A `CategoryType` object contains the following properties:
+
+`CategoryId` [Required]
+
+: An `IdentifierType` value indicating which attribute category the contained attributes belong to.
+
+`Id` [Optional]
+
+: A `String` identifier matching the `Id` property of the corresponding `RequestCategoryType` object in the request from which the reflected attributes are obtained.
+
+`Attribute` [Any Number]
+
+: A sequence of `AttributeType` objects representing `RequestAttributeType` objects from the same attribute category in the request.
 
 
 ---
@@ -2890,7 +2939,7 @@ The predefined short identifier set is not required to be used but its use is re
 
 ## 9.4 Attribute Evaluation
 
-Attributes are represented in the request context by the context handler, regardless of whether or not they appeared in the original decision request, and are referred to in the policy by attribute designators and attribute selectors. A named attribute is the term used for the criteria that the specific attribute designators use to refer to particular attributes in the `AttributesType` objects of the request context.
+Attributes are represented in the request context by the context handler, regardless of whether or not they appeared in the original decision request, and are referred to in the policy by attribute designators and attribute selectors. A named attribute is the term used for the criteria that the specific attribute designators use to refer to particular attributes in the `RequestCategoryType` objects of the request context.
 
 ### 9.4.1 Structured Attributes
 
@@ -2924,7 +2973,7 @@ If a single attribute in a request context contains multiple attribute values, t
 
 ### 9.4.4 Attribute Matching
 
-A named attribute includes specific criteria with which to match attributes in the context. An attribute specifies a `Category`, `AttributeId` and `DataType`, and a named attribute also specifies the `Issuer`. A named attribute SHALL match an attribute if the values of their respective `Category`, `AttributeId`, `DataType` and optional `Issuer` properties match. The `Category` property of the named attribute MUST match, by identifier equality, the `Category` property of the corresponding context attribute. The `AttributeId` property of the named attribute MUST match, by identifier equality, the `AttributeId` property of the corresponding context attribute. The `DataType` property of the named attribute MUST match, by identifier equality, the `DataType` property of the corresponding context attribute. If the `Issuer` property is supplied in the named attribute, then it MUST match, using the `urn:oasis:names:tc:xacml:1.0:function:string-equal` function, the `Issuer` property of the corresponding context attribute. If the `Issuer` property is not supplied in the named attribute, then the matching of the context attribute to the named attribute SHALL be governed by the `AttributeId` and `DataType` properties alone, regardless of the presence, absence, or actual value of `Issuer` property in the corresponding context attribute. In the case of an attribute selector, the matching of the attribute to the named attribute SHALL be governed by the XPath expression and `DataType` property.
+A named attribute includes specific criteria with which to match attributes in the context. An attribute specifies a `CategoryId`, `AttributeId` and `DataType`, and a named attribute also specifies the `Issuer`. A named attribute SHALL match an attribute if the values of their respective `CategoryId`, `AttributeId`, `DataType` and optional `Issuer` properties match. The `CategoryId` property of the named attribute MUST match, by identifier equality, the `CategoryId` property of the corresponding context attribute. The `AttributeId` property of the named attribute MUST match, by identifier equality, the `AttributeId` property of the corresponding context attribute. The `DataType` property of the named attribute MUST match, by identifier equality, the `DataType` property of the corresponding context attribute. If the `Issuer` property is supplied in the named attribute, then it MUST match, using the `urn:oasis:names:tc:xacml:1.0:function:string-equal` function, the `Issuer` property of the corresponding context attribute. If the `Issuer` property is not supplied in the named attribute, then the matching of the context attribute to the named attribute SHALL be governed by the `AttributeId` and `DataType` properties alone, regardless of the presence, absence, or actual value of `Issuer` property in the corresponding context attribute. In the case of an attribute selector, the matching of the attribute to the named attribute SHALL be governed by the XPath expression and `DataType` property.
 
 ### 9.4.5 Attribute Retrieval
 
@@ -2942,9 +2991,9 @@ An `AttributeSelectorType` object will be evaluated according to the following p
 
 : Note: It is not necessary for an implementation to actually follow these steps. It is only necessary to produce results identical to those that would be produced by following these steps.
 
-1. If the attributes category given by the `Category` property is not found or does not have a `Content` property, then the return value is either `Indeterminate` or an empty bag as determined by the `MustBePresent` property; otherwise, construct an XML data structure suitable for xpath processing from the `Content` property in the attributes category given by the `Category` property. The data structure shall be constructed so that the document node of this structure contains a single document element which corresponds to the single child element of the `Content` property. The constructed data structure shall be equivalent to one that would result from parsing a stand-alone XML document consisting of the contents of the `Content` property (including any comment and processing-instruction markup). Namespace declarations from the `<Content>` element and its ancestor elements for namespace prefixes that are "visibly utilized", as defined by [[exc-c14n](#exc-c14n)], within the contents MUST be present. Namespace declarations from the `<Content>` element or its ancestor elements for namespace prefixes that are not "visibly utilized" MAY be present. The data structure must meet the requirements of the applicable XPath version.
+1. If the attribute category given by the `CategoryId` property is not found or does not have a `Content` property, then the return value is either `Indeterminate` or an empty bag as determined by the `MustBePresent` property; otherwise, construct an XML data structure suitable for xpath processing from the `Content` property in the attribute category given by the `CategoryId` property. The data structure shall be constructed so that the document node of this structure contains a single document element which corresponds to the single child element of the `Content` property. The constructed data structure shall be equivalent to one that would result from parsing a stand-alone XML document consisting of the contents of the `Content` property (including any comment and processing-instruction markup). Namespace declarations from the `<Content>` element and its ancestor elements for namespace prefixes that are "visibly utilized", as defined by [[exc-c14n](#exc-c14n)], within the contents MUST be present. Namespace declarations from the `<Content>` element or its ancestor elements for namespace prefixes that are not "visibly utilized" MAY be present. The data structure must meet the requirements of the applicable XPath version.
 
-2. Select a context node for XPath processing from this data structure. If there is a `ContextSelectorId` property, the context node shall be the node selected by applying the XPath expression given in the attribute value of the designated attribute (in the attributes category given by the `<AttributeSelector>` `Category` property). It shall be an error if this evaluation returns no node or more than one node, in which case the return value MUST be an `Indeterminate` with a status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`. If there is no `ContextSelectorId`, the document node of the data structure shall be the context node.
+2. Select a context node for XPath processing from this data structure. If there is a `ContextSelectorId` property, the context node shall be the node selected by applying the XPath expression given in the attribute value of the designated attribute (in the attribute category given by the `<AttributeSelector>` `CategoryId` property). It shall be an error if this evaluation returns no node or more than one node, in which case the return value MUST be an `Indeterminate` with a status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`. If there is no `ContextSelectorId`, the document node of the data structure shall be the context node.
 
 3. Evaluate the XPath expression given in the `Path` property against the XML data structure, using the context node selected in the previous step. It shall be an error if this evaluation returns anything other than a sequence of nodes (possibly empty), in which case the attribute selector MUST return `Indeterminate` with a status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`. If the evaluation returns an empty sequence of nodes, then the return value is either `Indeterminate` or an empty bag as determined by the `MustBePresent` property.
 
@@ -3198,7 +3247,7 @@ This section describes the points within the ACAL model and schema where extensi
 ## 10.1 Extensible Properties
 
 The following `IdentifierType` properties have values that evaluate to URIs. They may be extended by the creation of new URIs associated with new semantics. \
-`Category`, \
+`CategoryId`, \
 `AttributeId`, \
 `DataType`, \
 `FunctionId`, \
@@ -3430,11 +3479,11 @@ The implementation MUST support the object types that are marked `M`.
 | AttributeAssignmentType | M |
 | AttributeAssignmentExpressionType | M |
 | AttributeDesignatorType | M |
-| AttributesType | M |
 | AttributeSelectorType | O |
 | AttributesReferenceType | O |
 | AttributeValueType | M |
 | BooleanExpressionType | M |
+| CategoryType | M |
 | CombinerParameterType | O |
 | CombinerParametersType | O |
 | ContentType | O |
@@ -3452,6 +3501,7 @@ The implementation MUST support the object types that are marked `M`.
 | PolicyIdentifierListType | O |
 | PolicyReferenceType | M |
 | PolicyIssuerType | O |
+| RequestCategoryType | M |
 | RequestType | M |
 | RequestDefaultsType | O |
 | RequestReferenceType | O |
@@ -5039,7 +5089,7 @@ Examples in this section are presented in both the XML and JSON representations 
 
   ```xml
   <Apply FunctionId="map">
-    <Function FunctionId="string-normalize-to-lower-case" />
+    <Function FunctionId="string-normalize-to-lower-case"/>
     <Apply FunctionId="string-bag">
       <AttributeValue DataType="string">Hello</AttributeValue>
       <AttributeValue DataType="string">World!</AttributeValue>
@@ -5184,11 +5234,11 @@ This section specifies functions that take XPath expressions for arguments. An X
 _This function should be redesigned to take a value of the entity data type as the second argument. An entity value already has the structure of an attribute category in the same representation (XML, JSON or YAML), including a `Content` property to hold arbitrary XML or JSON._ 
 
 : This function SHALL take an `https://www.w3.org/2001/XMLSchema#anyURI` and an <!-- Line break added for the previous line to fit on a PDF page -->
-: `https://www.w3.org/2001/XMLSchema#string` as arguments. The first argument SHALL be interpreted as an attribute category. The second argument SHALL be interpreted as the XML content of an `AttributesType` object with `Category` property equal to the first argument. The function evaluates to an `https://www.w3.org/2001/XMLSchema#boolean`. This function SHALL return `true` if and only if the policy evaluation described below returns the value of `Permit`.
+: `https://www.w3.org/2001/XMLSchema#string` as arguments. The first argument SHALL be interpreted as an attribute category. The second argument SHALL be interpreted as the XML content of a `RequestCategoryType` object with `CategoryId` property equal to the first argument. The function evaluates to an `https://www.w3.org/2001/XMLSchema#boolean`. This function SHALL return `true` if and only if the policy evaluation described below returns the value of `Permit`.
 
 : The following evaluation is described as if the context is actually instantiated, but it is only required that an equivalent result be obtained.
 
-: The function SHALL construct a new context, by copying all the information from the current context, omitting any `AttributesType` object with `Category` property equal to the first argument. The second function argument SHALL be added to the context as the content of an `AttributesType` object with `Category` property equal to the first argument.
+: The function SHALL construct a new context, by copying all the information from the current context, omitting any `RequestCategoryType` object with `CategoryId` property equal to the first argument. The second function argument SHALL be added to the context as the content of a `RequestCategoryType` object with `CategoryId` property equal to the first argument.
 
 : The function SHALL invoke a complete policy evaluation using the newly constructed context. This evaluation SHALL be completely isolated from the evaluation which invoked the function, but shall use all current policies and combining algorithms, including any per request policies.
 
@@ -5370,9 +5420,9 @@ The following data type identifiers correspond to the dayTimeDuration and yearMo
 
 ## D.4 Subject Attributes
 
-These identifiers indicate attributes of a subject. When used, it is RECOMMENDED that they appear within an `AttributesType` object of the request context with a subject category (see [Annex D.2](#d2-attribute-categories)).
+These identifiers indicate attributes of a subject. When used, it is RECOMMENDED that they appear within a `RequestCategoryType` object of the request context with a subject category (see [Annex D.2](#d2-attribute-categories)).
 
-At most one of each of these attributes is associated with each subject. Each attribute associated with authentication included within a single `AttributesType` object relates to the same authentication event.
+At most one of each of these attributes is associated with each subject. Each attribute associated with authentication included within a single `RequestCategoryType` object relates to the same authentication event.
 
 This identifier indicates the name of the subject.
 
@@ -5422,7 +5472,7 @@ Short identifiers can be used to improve readability. For example `title` could 
 
 ## D.5 Resource Attributes
 
-These identifiers indicate attributes of the resource. When used, it is RECOMMENDED they appear within the `AttributesType` object of the request context with the `Category` property that evaluates to 
+These identifiers indicate attributes of the resource. When used, it is RECOMMENDED they appear within the `RequestCategoryType` object of the request context with the `CategoryId` property that evaluates to
 <!-- Line break added for the previous line to fit on a PDF page -->
 `urn:oasis:names:tc:xacml:3.0:attribute-category:resource`.
 
@@ -5436,7 +5486,7 @@ This attribute identifies the namespace of the top element(s) of the contents of
 
 ## D.6 Action Attributes
 
-These identifiers indicate attributes of the action being requested. When used, it is RECOMMENDED they appear within the `AttributesType` object of the request context with the `Category` property that evaluates to `urn:oasis:names:tc:xacml:3.0:attribute-category:action`.
+These identifiers indicate attributes of the action being requested. When used, it is RECOMMENDED they appear within the `RequestCategoryType` object of the request context with the `CategoryId` property that evaluates to `urn:oasis:names:tc:xacml:3.0:attribute-category:action`.
 
 This attribute identifies the action for which access is requested.
 
@@ -5452,7 +5502,7 @@ This attribute identifies the namespace in which the action-id attribute is defi
 
 ## D.7 Environment Attributes
 
-These identifiers indicate attributes of the environment within which the decision request is to be evaluated. When used in the decision request, it is RECOMMENDED they appear in the `AttributesType` object of the request context with the `Category` property that evaluates to `urn:oasis:names:tc:xacml:3.0:attribute-category:environment`.
+These identifiers indicate attributes of the environment within which the decision request is to be evaluated. When used in the decision request, it is RECOMMENDED they appear in the `RequestCategoryType` object of the request context with the `CategoryId` property that evaluates to `urn:oasis:names:tc:xacml:3.0:attribute-category:environment`.
 
 This identifier indicates the current time at the context handler. In practice it is the time at which the request context was created. For this reason, if these identifiers appear in multiple places within a policy, then the same value SHALL be assigned to each occurrence in the evaluation procedure, regardless of how much time elapses between the processing of the occurrences.
 
@@ -5961,6 +6011,12 @@ ACAL 1.0 is a successor to XACML 3.0. ACAL 1.0 differs from XACML 3.0 in the fol
 - Obligations and advice no longer have distinct syntactic representations. Instead they now share the common `NoticeType` object type. The difference between obligations and advice is indicated by an `IsObligation` property.
 
 - Users are able to define short identifiers, which provide simple alias names to use in place of absolute URIs to refer to ACAL definitions. A predefined set of short identifiers for standard-defined URIs is also provided.
+
+- Different types are now used to represent ACAL attributes in a request versus a response. ACAL attributes in the result don't have the `IncludeInResult` property since it is only meaningful in the request. Attributes in the request are `RequestAttributeType` objects and attributes in the response are `AttributeType` objects. `RequestAttributeType` is derived from `AttributeType`.
+
+- Different types are now used to represent attribute categories in a request versus a response. Categories in the result don't have the `Content` property since there is no mechanism to request their inclusion. Attribute categories in the request are `RequestCategoryType` objects and attributes in the response are `CategoryType` objects. These types supercede the XML Schema `AttributesType` complex type.
+
+- The `xml:id` attribute for an attribute category is replaced by a generic 'Id' property so that all ACAL representation formats are on an equal footing.
 
 
 ## Revision History

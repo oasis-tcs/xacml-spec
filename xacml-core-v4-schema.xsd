@@ -49,8 +49,8 @@
 			<xs:element ref="xacml:Notice" minOccurs="0" maxOccurs="unbounded"/>
 			<!-- Change to XACML 3.0 (issue #18): Attributes element replaced with new Category element which is the same but without Content or IncludeInResult attributes -->
 			<xs:element ref="xacml:Category" minOccurs="0" maxOccurs="unbounded"/>
-			<!-- Change to XACML 3.0 (Issue #16): PoliyIdentifierList removed and replaced with list of ApplicablePolicyReferences -->
-			<xs:element ref="xacml:ApplicablePolicyReference" minOccurs="0" maxOccurs="unbounded" />
+			<!-- Change to XACML 3.0 (Issue #16): PolicyIdentifierList removed and replaced with list of ApplicablePolicyReferences -->
+			<xs:element ref="xacml:ApplicablePolicyReference" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
 
@@ -62,7 +62,7 @@
 	       <xs:element ref="xacml:Attribute" minOccurs="1" maxOccurs="unbounded"/>
 	  </xs:sequence>
       <!-- Change to XACML 3.0 (issue #18): Category renamed to CategoryId (not to have the same name as the element's, and not to be confused with the 'Id' attribute)-->
-      <xs:attribute name="CategoryId" type="xs:anyURI" use="required"/>
+      <xs:attribute name="CategoryId" type="xacml:IdentifierType" use="required"/>
       <!-- Change to XACML 3.0 (issue #18): 'xml:id' replaced with 'Id' attribute to be consistently named in all XACML 4.0 / ACAL representation formats including JSON. -->
 	  <xs:attribute name="Id" type="xs:ID" use="optional"/>
 	</xs:complexType>
@@ -120,7 +120,7 @@
 		<xs:sequence>
 			<xs:element ref="xacml:AttributeValue" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
-		<xs:attribute name="Category" type="xacml:IdentifierType" use="required"/>
+		<xs:attribute name="CategoryId" type="xacml:IdentifierType" use="required"/>
 		<xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
 		<xs:attribute name="DataType" type="xacml:IdentifierType" use="required"/>
 		<xs:attribute name="Issuer" type="xs:Name" use="optional"/>
@@ -192,7 +192,7 @@
 		<xs:complexContent mixed="true">
 			<xs:extension base="xacml:AttributeValueType">
 				<xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
-				<xs:attribute name="Category" type="xacml:IdentifierType" use="optional"/>
+				<xs:attribute name="CategoryId" type="xacml:IdentifierType" use="optional"/>
 				<xs:attribute name="Issuer" type="xs:Name" use="optional"/>
 			</xs:extension>
 		</xs:complexContent>
@@ -215,7 +215,7 @@
 			<xs:element ref="xacml:Expression"/>
 		</xs:sequence>
 		<xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
-		<xs:attribute name="Category" type="xacml:IdentifierType" use="optional"/>
+		<xs:attribute name="CategoryId" type="xacml:IdentifierType" use="optional"/>
 		<xs:attribute name="Issuer" type="xs:Name" use="optional"/>
 	</xs:complexType>
 
@@ -267,7 +267,7 @@
 		</xs:complexContent>
 	</xs:complexType>
 
-	<!-- Issue #16: old PolicyIdReference Type changed to new PatternMatchIdReferenceType and element name renamed to PolicyPatternMatchReference, to be used in a SAML XACMLPolicyQuery. 
+	<!-- Issue #16: old PolicyIdReference Type changed to new PatternMatchIdReferenceType and element name renamed to PolicyPatternMatchReference, to be used in a SAML XACMLPolicyQuery.
 	 See new PolicyReference element below for policy references used in Policies -->
 	<xs:element name="PolicyPatternMatchReference" type="xacml:PatternMatchIdReferenceType"/>
 	<!-- Issue #16: New IdReferenceType extension with Version pattern matching, to be used in Policies (PolicyReference) and XACMLPolicyQuery (PolicyIdReference). Same as old PolicyIdReferenceType except the Id is now an XML attribute, cf. IdReferenceType change down below. -->
@@ -307,7 +307,7 @@
 
 	<!-- Issue #16: IdReferenceType URI changed to an XML attribute to allow extensions with optional attributes and arguments (ExactMatchIdReferenceType, PatternMatchIdReferenceType, PolicyIdReferenceType, PolicyReferenceType)  -->
 	<xs:complexType name="IdReferenceType" abstract="true">
-        <xs:attribute name="Id" type="xs:anyURI" use="required" />
+        <xs:attribute name="Id" type="xs:anyURI" use="required"/>
 	</xs:complexType>
 
 	<xs:simpleType name="VersionType">
@@ -387,7 +387,7 @@
 	<xs:complexType name="AttributeSelectorType">
 		<xs:complexContent>
 			<xs:extension base="xacml:ExpressionType">
-				<xs:attribute name="Category" type="xacml:IdentifierType" use="required"/>
+				<xs:attribute name="CategoryId" type="xacml:IdentifierType" use="required"/>
 				<xs:attribute name="ContextSelectorId" type="xacml:IdentifierType" use="optional"/>
 				<xs:attribute name="Path" type="xs:string" use="required"/>
 				<xs:attribute name="DataType" type="xacml:IdentifierType" use="required"/>
@@ -400,7 +400,7 @@
 	<xs:complexType name="AttributeDesignatorType">
 		<xs:complexContent>
 			<xs:extension base="xacml:ExpressionType">
-				<xs:attribute name="Category" type="xacml:IdentifierType" use="required"/>
+				<xs:attribute name="CategoryId" type="xacml:IdentifierType" use="required"/>
 				<xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
 				<xs:attribute name="DataType" type="xacml:IdentifierType" use="required"/>
 				<xs:attribute name="Issuer" type="xs:Name" use="optional"/>
@@ -502,7 +502,7 @@
 				</xs:documentation>
 			</xs:annotation>
 			<xs:pattern value="[!#-;=?-\[\]_a-z~]*(\{[A-Za-z][0-9A-Za-z]*(-[0-9A-Za-z]+)*\}[!#-;=?-\[\]_a-z~]*)*"/>
-			<xs:minLength value="1" />
+			<xs:minLength value="1"/>
 		</xs:restriction>
 	</xs:simpleType>
 
