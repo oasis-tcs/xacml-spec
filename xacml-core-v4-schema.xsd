@@ -9,7 +9,8 @@
 		<xs:sequence>
 			<xs:element ref="xacml:ShortIdSetReference" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element ref="xacml:RequestDefaults" minOccurs="0"/>
-			<xs:element ref="xacml:Attributes" maxOccurs="unbounded"/>
+			<!-- Change to XACML 3.0 (issue #18): Attributes renamed to RequestCategory, since the Attributes in the Result have been renamed similarly to 'Category' element but 'Category', unlike this 'RequestCategory', does not have Content or IncludeInResults -->
+			<xs:element ref="xacml:RequestCategory" maxOccurs="unbounded"/>
 			<xs:element ref="xacml:MultiRequests" minOccurs="0"/>
 		</xs:sequence>
 		<xs:attribute name="ReturnPolicyIdList" type="xs:boolean" use="optional" default="false"/>
@@ -46,10 +47,24 @@
 			<xs:element ref="xacml:Decision"/>
 			<xs:element ref="xacml:Status" minOccurs="0"/>
 			<xs:element ref="xacml:Notice" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element ref="xacml:Attributes" minOccurs="0" maxOccurs="unbounded"/>
-			<!-- Issue #16 PoliyIdentifierList removed and replaced with list of ApplicablePolicyReferences -->
+			<!-- Change to XACML 3.0 (issue #18): Attributes element replaced with new Category element which is the same but without Content or IncludeInResult attributes -->
+			<xs:element ref="xacml:Category" minOccurs="0" maxOccurs="unbounded"/>
+			<!-- Change to XACML 3.0 (Issue #16): PoliyIdentifierList removed and replaced with list of ApplicablePolicyReferences -->
 			<xs:element ref="xacml:ApplicablePolicyReference" minOccurs="0" maxOccurs="unbounded" />
 		</xs:sequence>
+	</xs:complexType>
+
+	<!-- Change to XACML 3.0 (issue #18): new Category element, that is the same as former Attributes and similar to new RequestCategory but to be used only in Result and most importantly does not have Content and IncludeInResult attributes.
+   		This is a Category of Attributes from the Request (which had IncludeInResult=true) to be included in the corresponding Result. -->
+	<xs:element name="Category" type="xacml:CategoryType"/>
+	<xs:complexType name="CategoryType">
+	  <xs:sequence>
+	       <xs:element ref="xacml:Attribute" minOccurs="1" maxOccurs="unbounded"/>
+	  </xs:sequence>
+      <!-- Change to XACML 3.0 (issue #18): Category renamed to CategoryId (not to have the same name as the element's, and not to be confused with the 'Id' attribute)-->
+      <xs:attribute name="CategoryId" type="xs:anyURI" use="required"/>
+      <!-- Change to XACML 3.0 (issue #18): 'xml:id' replaced with 'Id' attribute to be consistently named in all XACML 4.0 / ACAL representation formats including JSON. -->
+	  <xs:attribute name="Id" type="xs:ID" use="optional"/>
 	</xs:complexType>
 
 	<!-- Issue #16: PolicyIdentifierList removed, replaced in ResultType with ref to new ApplicablePolicyReference below (with maxOccurs="unbounded") -->
@@ -111,14 +126,18 @@
 		<xs:attribute name="Issuer" type="xs:Name" use="optional"/>
 	</xs:complexType>
 
-	<xs:element name="Attributes" type="xacml:AttributesType"/>
-	<xs:complexType name="AttributesType">
+	<!-- Change to XACML 3.0 (issue #18): Attributes renamed to RequestCategory, only to be used in a Request (with IncludeInResult) -->
+	<xs:element name="RequestCategory" type="xacml:RequestCategoryType"/>
+	<xs:complexType name="RequestCategoryType">
 		<xs:sequence>
 			<xs:element ref="xacml:Content" minOccurs="0"/>
-			<xs:element ref="xacml:Attribute" minOccurs="0" maxOccurs="unbounded"/>
+			<!-- Change to XACML 3.0 (issue #18): Attribute replaced with RequestAttribute which has 'IncludeInResult' whereas Attribute (used in Result) does not. -->
+			<xs:element ref="xacml:RequestAttribute" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
-		<xs:attribute name="Category" type="xacml:IdentifierType" use="required"/>
-		<xs:attribute ref="xml:id" use="optional"/>
+		<!-- Change to XACML 3.0 (issue #18): Category renamed to CategoryId (not to have the same name as the element, and not to be confused with the 'Id' attribute) -->
+		<xs:attribute name="CategoryId" type="xacml:IdentifierType" use="required"/>
+		<!-- Change to XACML 3.0 (issue #18): 'xml:id' replaced with 'Id' attribute to be consistently named in all XACML 4.0 / ACAL representation formats including JSON. -->
+		<xs:attribute name="Id" type="xs:ID" use="optional"/>
 	</xs:complexType>
 
 	<xs:element name="Attribute" type="xacml:AttributeType"/>
@@ -128,7 +147,16 @@
 		</xs:sequence>
 		<xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
 		<xs:attribute name="Issuer" type="xs:Name" use="optional"/>
-		<xs:attribute name="IncludeInResult" type="xs:boolean" use="required"/>
+	</xs:complexType>
+
+	<!-- Change to XACML 3.0 (issue #18): new RequestAttribute element, similar to Attribute but with extra IncludeInResult attribute to indicate whether to include it in the Result, to be used only in the Request. -->
+	<xs:element name="RequestAttribute" type="xacml:RequestAttributeType"/>
+	<xs:complexType name="RequestAttributeType">
+		<xs:complexContent mixed="false">
+			<xs:extension base="xacml:AttributeType">
+				<xs:attribute name="IncludeInResult" type="xs:boolean" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 
 	<xs:element name="MultiRequests" type="xacml:MultiRequestsType"/>

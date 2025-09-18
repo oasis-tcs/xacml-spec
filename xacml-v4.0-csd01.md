@@ -170,6 +170,13 @@ XACML 4.0 differs from XACML 3.0 in the following ways:
 
 * Users are able to define **_short identifiers_**, which provide simple alias names to use in place of absolute URIs to refer to XACML definitions. A predefined set of **_short identifiers_** for standard-defined URIs is also provided.
 
+* `Attribute` elements in the `Result` no longer have the `IncludeInResult` attribute since it is only used in the `Request`. To differentiate from the `Attribute` elements in the `Request`, these are renamed to `RequestAttribute`. 
+
+* As a result of the previous change, the definition of the `Attributes` element in the `Request` does not apply to `Result` anymore. The `Attributes` element in `Request` (resp. `Result`) becomes `RequestCategory` (resp. `Category`), and contains the new `RequestAttribute` elements with 
+  `IncludeInResult` (resp. `Attribute` without `IncludeInResult`). 
+
+* `xml:id` attribute is renamed to 'Id' to have the same XML-agnostic name in all XACML 4.0 / ACAL representation formats including JSON. 
+
 ## 1.2 Glossary
 
 <!-- Optional section with suggested subsections -->
@@ -405,7 +412,7 @@ XACML defines two top-level **_policy_** elements: `<Rule>` and `<Policy>`. The 
 
 The `<Policy>` element contains a set of `<Rule>` or other `<Policy>` elements and a specified procedure for combining the results of their evaluation. It is the basic unit of **_policy_** used by the **_PDP_**, and so it is intended to form the basis of an **_authorization decision_**. It is also the standard means for combining separate **_policies_** into a single combined **_policy_**.
 
-Hinton et al [[Hinton](#hinton)] discuss the question of the compatibility of separate **_policies_** applicable to the same **_decision request_**.
+Hinton et al [[Hinton94](#hinton94)] discuss the question of the compatibility of separate **_policies_** applicable to the same **_decision request_**.
 
 ## 2.3 Combining algorithms
 
@@ -1497,7 +1504,7 @@ The `<PolicyDefaults>` element SHALL specify default values that apply to the `<
 <xs:complexType name="DefaultsType">
    <xs:sequence>
       <xs:choice>
-         <xs:element ref="xacml:XPathVersion">
+         <xs:element ref="xacml:XPathVersion" />
       </xs:choice>
    </xs:sequence>
 </xs:complexType>
@@ -2210,7 +2217,7 @@ The `<Request>` element is an abstraction layer used by the **_policy_** languag
    <xs:sequence>
       <xs:element ref="xacml:ShortIdSetReference" minOccurs="0" maxOccurs="unbounded"/>
       <xs:element ref="xacml:RequestDefaults" minOccurs="0"/>
-      <xs:element ref="xacml:Attributes" maxOccurs="unbounded"/>
+      <xs:element ref="xacml:RequestCategory" maxOccurs="unbounded"/>
       <xs:element ref="xacml:MultiRequests" minOccurs="0"/>
    </xs:sequence>
    <xs:attribute name="ReturnPolicyIdList" type="xs:boolean" use="optional" default="false"/>
@@ -2271,39 +2278,39 @@ The `<RequestDefaults>` element contains the following elements:
 
 : Default XPath version for XPath expressions occurring in the request.
 
-## 5.44 Element \<Attributes>
+## 5.44 Element \<RequestCategory>
 
-The `<Attributes>` element specifies **_attributes_** of a **_subject_**, **_resource_**, **_action_**, **_environment_** or another category by listing a sequence of `<Attribute>` elements associated with the category.
+The `<RequestCategory>` element specifies **_attributes_** of a **_subject_**, **_resource_**, **_action_**, **_environment_** or another category by listing a sequence of `<RequestAttribute>` elements associated with the category.
 
 ```xml
-<xs:element name="Attributes" type="xacml:AttributesType"/>
-<xs:complexType name="AttributesType">
-   <xs:sequence>
-      <xs:element ref="xacml:Content" minOccurs="0"/>
-      <xs:element ref="xacml:Attribute" minOccurs="0" maxOccurs="unbounded"/>
-   </xs:sequence>
-   <xs:attribute name="Category" type="xacml:IdentifierType" use="required"/>
-   <xs:attribute ref="xml:id" use="optional"/>
+<xs:element name="RequestCategory" type="xacml:RequestCategoryType"/>
+<xs:complexType name="RequestCategoryType">
+  <xs:sequence>
+    <xs:element ref="xacml:Content" minOccurs="0"/>
+    <xs:element ref="xacml:RequestAttribute" minOccurs="0" maxOccurs="unbounded"/>
+  </xs:sequence>
+  <xs:attribute name="CategoryId" type="xacml:IdentifierType" use="required"/>
+  <xs:attribute name="Id" type="xs:ID" use="optional"/>
 </xs:complexType>
 ```
 
-The `<Attributes>` element is of `AttributesType` complex type.
+The `<RequestCategory>` element is of `RequestCategoryType` complex type.
 
-The `<Attributes>` element contains the following elements and attributes:
+The `<RequestCategory>` element contains the following elements and attributes:
 
-`Category` [Required]
+`CategoryId` [Required]
 
-: This attribute indicates which **_attribute_** category the contained **_attributes_** belong to. The `Category` attribute is used to differentiate between **_attributes_** of **_subject_**, **_resource_**, **_action_**, **_environment_** or other categories.
+: This attribute identifies the **_attribute_** category the contained **_attributes_** belong to, and it is used to differentiate between **_attributes_** of **_subject_**, **_resource_**, **_action_**, **_environment_** or other categories.
 
-`xml:id` [Optional]
+`Id` [Optional]
 
-: This attribute provides a unique identifier for this `<Attributes>` element. See [[XMLid](#xmlid)]. It is primarily intended to be referenced in multiple requests. See [[Multi](#Multi)].
+: This attribute provides a unique identifier for this `<RequestCategory>` element, similar to [[XMLid](#xmlid)]. It is primarily intended to be referenced in multiple requests. See [[Multi](#Multi)].
 
 `<Content>` [Optional]
 
 : Specifies additional sources of **_attributes_** in free form XML document format which can be referenced using `<AttributeSelector>` elements.
 
-`<Attribute>` [Any Number]
+`<RequestAttribute>` [Any Number]
 
 : A sequence of **_attributes_** that apply to the category of the request.
 
@@ -2326,7 +2333,8 @@ The `<Content>` element has exactly one arbitrary type child element.
 
 ## 5.46 Element \<Attribute>
 
-The `<Attribute>` element is the central abstraction of the request **_context_**. It contains **_attribute_** meta-data and one or more **_attribute_** values. The **_attribute_** meta-data comprises the **_attribute_** identifier and the **_attribute_** issuer. `<AttributeDesignator>` elements in the **_policy_** MAY refer to **_attributes_** by means of this meta-data.
+The `<Attribute>` element is the central abstraction of the request **_context_**. It contains **_attribute_** meta-data and one or more **_attribute_** values. The **_attribute_** meta-data comprises the **_attribute_** identifier and the **_attribute_** issuer. `<AttributeDesignator>` elements 
+in the **_policy_** MAY refer to **_attributes_** by means of this meta-data. It may be used as is in the correlated attributes of a `Result`, whereas in a `Request`, the `RequestAttribute` element (based on this `Attribute` definition) described later is used.
 
 ```xml
 <xs:element name="Attribute" type="xacml:AttributeType"/>
@@ -2393,14 +2401,15 @@ The `<Response>` element contains the following elements:
 The `<Result>` element represents an **_authorization decision_** result. It MAY include a list of **_notices_**. If the **_PEP_** does not understand or cannot fulfill an **_obligation_** **_notice_**, then the action of the **_PEP_** is determined by its bias, see [Section 7.2](#72-policy-enforcement-point). Any **_advice_** **_notices_** MAY be safely ignored by the **_PEP_**.
 
 ```xml
+<xs:element name="Result" type="xacml:ResultType"/>
 <xs:complexType name="ResultType">
-   <xs:sequence>
-      <xs:element ref="xacml:Decision"/>
-      <xs:element ref="xacml:Status" minOccurs="0"/>
-	  <xs:element ref="xacml:Notice" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element ref="xacml:Attributes" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element ref="xacml:ApplicablePolicyReference" minOccurs="0" maxOccurs="unbounded" />
-   </xs:sequence>
+  <xs:sequence>
+    <xs:element ref="xacml:Decision"/>
+    <xs:element ref="xacml:Status" minOccurs="0"/>
+    <xs:element ref="xacml:Notice" minOccurs="0" maxOccurs="unbounded"/>
+    <xs:element ref="xacml:Category" minOccurs="0" maxOccurs="unbounded"/>
+    <xs:element ref="xacml:ApplicablePolicyReference" minOccurs="0" maxOccurs="unbounded" />
+  </xs:sequence>
 </xs:complexType>
 ```
 
@@ -2420,9 +2429,10 @@ The `<Result>` element contains the following attributes and elements:
 
 : A list of **_notices_** to be interpreted by the **_PEP_**. See [Section 5.34](#534-element-notice). If the **_PEP_** does not understand or cannot fulfill an **_obligation_** **_notice_**, then the action of the **_PEP_** is determined by its bias, see [Section 7.2](#72-policy-enforcement-point). If the **_PEP_** does not understand an **_advice_** **_notice_**, the **_PEP_** may safely ignore the **_notice_**. See [Section 7.18](#718-notices) for a description of how the list of **_notices_** to be returned by the **_PDP_** is determined.
 
-`<Attributes>` [Optional]
+`<Category>` [Optional]
 
-: A list of **_attributes_** that were part of the request. The choice of which **_attributes_** are included here is made with the `IncludeInResult` attribute of the `<Attribute>` elements of the request. See [Section 5.46](#546-element-attribute).
+: A list of **_attributes_** - of a given category - that were part of the request. The choice of which **_attributes_** are included here is made with the `IncludeInResult` attribute of the `<RequestAttribute>` elements of the request. See [Section 5.59]
+(#546-element-attribute).
 
 `<ApplicablePolicyReference>` [Optional]
 
@@ -2686,6 +2696,52 @@ The `<MissingAttributeDetal>` element contains the following attributes and elem
 : This attribute, if supplied, SHALL specify the required `Issuer` of the missing **_attribute_**.
 
 If the **_PDP_** includes `<AttributeValue>` elements in the `<MissingAttributeDetail>` element, then this indicates the acceptable values for that **_attribute_**. If no `<AttributeValue>` elements are included, then this indicates the names of **_attributes_** that the **_PDP_** failed to resolve during its evaluation. The list of **_attributes_** may be partial or complete. There is no guarantee by the **_PDP_** that supplying the missing values or **_attributes_** will be sufficient to satisfy the **_policy_**.
+
+## 5.59 Element \<RequestAttribute>
+
+The `<RequestAttribute>` element extends the `<Attribute>` definition with an extra `IncludeInResult` attribute and occurs only in the Request.
+
+```xml
+<xs:element name="RequestAttribute" type="xacml:RequestAttributeType"/>
+<xs:complexType name="RequestAttributeType">
+  <xs:complexContent mixed="false">
+    <xs:extension base="xacml:AttributeType">
+      <xs:attribute name="IncludeInResult" type="xs:boolean" use="required"/>
+    </xs:extension>
+  </xs:complexContent>
+</xs:complexType>
+```
+
+The `<RequestAttribute>` element is of `RequestAttributeType` complex type.
+
+The `<RequestAttribute>` element contains the same attributes and elements as `<Attribute>`, plus the following one:
+
+`IncludeInResult` [Default: false]
+
+: Whether to include this **_attribute_** in the result. This is useful to correlate requests with their responses in case of multiple requests.
+
+## 5.44 Element \<Category>
+
+The `<Category>` element specifies in a `Result` the set of **_attributes_** in a given category from the request, that must be included in the corresponding `Result` when `IncludeInResult` is true for the corresponding `RequestAttribute` in the Request. 
+
+```xml
+<xs:element name="Category" type="xacml:CategoryType"/>
+<xs:complexType name="CategoryType">
+  <xs:sequence>
+    <xs:element ref="xacml:Attribute" minOccurs="1" maxOccurs="unbounded"/>
+  </xs:sequence>
+  <xs:attribute name="CategoryId" type="xs:anyURI" use="required"/>
+  <xs:attribute name="Id" type="xs:ID" use="optional"/>
+</xs:complexType>
+```
+
+The `<Category>` element is of `CategoryType` complex type.
+
+The `<Category>` element contains the same `CategoryId` and `Id` attribute as `<RequestCategory>` and the following elements:
+
+`<Attribute>` [Any Number]
+
+: A sequence of **_attributes_** that apply to this category and required to be included in the request according to the `IncludeInResult` attribute.
 
 -------
 
@@ -3360,25 +3416,25 @@ The implementation MUST use the **_attributes_** associated with the following i
 
 The implementation MUST support the data-types associated with the following identifiers marked `M`.
 
-| Data-type | M/O |
-| :--- | :--- |
-https://www.w3.org/2001/XMLSchema#string | M |
-https://www.w3.org/2001/XMLSchema#boolean | M |
-https://www.w3.org/2001/XMLSchema#integer | M |
-https://www.w3.org/2001/XMLSchema#double | M |
-https://www.w3.org/2001/XMLSchema#time | M |
-https://www.w3.org/2001/XMLSchema#date | M |
-https://www.w3.org/2001/XMLSchema#dateTime | M |
-https://www.w3.org/2001/XMLSchema#dayTimeDuration | M |
-https://www.w3.org/2001/XMLSchema#yearMonthDuration | M |
-https://www.w3.org/2001/XMLSchema#anyURI | M |
-https://www.w3.org/2001/XMLSchema#hexBinary | M |
-https://www.w3.org/2001/XMLSchema#base64Binary | M |
-| urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name | M |
-| urn:oasis:names:tc:xacml:1.0:data-type:x500Name | M |
+| Data-type                                              | M/O |
+|:-------------------------------------------------------| :--- |
+| https://www.w3.org/2001/XMLSchema#string               | M |
+| https://www.w3.org/2001/XMLSchema#boolean              | M |
+| https://www.w3.org/2001/XMLSchema#integer             | M |
+| https://www.w3.org/2001/XMLSchema#double               | M |
+| https://www.w3.org/2001/XMLSchema#time                 | M |
+| https://www.w3.org/2001/XMLSchema#date                 | M |
+| https://www.w3.org/2001/XMLSchema#dateTime             | M |
+| https://www.w3.org/2001/XMLSchema#dayTimeDuration      | M |
+| https://www.w3.org/2001/XMLSchema#yearMonthDuration    | M |
+| https://www.w3.org/2001/XMLSchema#anyURI               | M |
+| https://www.w3.org/2001/XMLSchema#hexBinary            | M |
+| https://www.w3.org/2001/XMLSchema#base64Binary         | M |
+| urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name      | M |
+| urn:oasis:names:tc:xacml:1.0:data-type:x500Name        | M |
 | urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression | O |
-| urn:oasis:names:tc:xacml:2.0:data-type:ipAddress | M |
-| urn:oasis:names:tc:xacml:2.0:data-type:dnsName | M |
+| urn:oasis:names:tc:xacml:2.0:data-type:ipAddress       | M |
+| urn:oasis:names:tc:xacml:2.0:data-type:dnsName         | M |
 
 ### 10.2.8 Functions
 
@@ -4039,11 +4095,11 @@ The following individuals have participated in the creation of this specificatio
 **XACML TC Members:**
 
 | First Name | Last Name | Company |
-| :--- | :--- | :--- |
-Hal | Lochhart | Individual
-Bill | Parducci | Individual
-Steven | Legg | ViewDS Identity Solutions
-Cyril | Dangerville | THALES
+|:-----------| :--- | :--- |
+| Hal        | Lochhart | Individual|
+| Bill       | Parducci | Individual|
+| Steven     | Legg | ViewDS Identity Solutions|
+| Cyril      | Dangerville | THALES|
 
 -------
 
@@ -4845,7 +4901,7 @@ This section describes functions in XACML that perform operations on **_bags_** 
 
   ```xml
   <Apply FunctionId="urn:oasis:names:tc:xacml:3.0:function:map">
-    <Function FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-normalize-to-lower-case">
+    <Function FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-normalize-to-lower-case" />
     <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
       <AttributeValue DataType="https://www.w3.org/2001/XMLSchema#string">Hello</AttributeValue>
       <AttributeValue DataType="https://www.w3.org/2001/XMLSchema#string">World!</AttributeValue>
