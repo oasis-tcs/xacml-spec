@@ -217,6 +217,7 @@
 	<xs:element name="AttributeAssignmentExpression" type="xacml:AttributeAssignmentExpressionType"/>
 	<xs:complexType name="AttributeAssignmentExpressionType">
 		<xs:sequence>
+			<!-- Change to XACML 3.0: Expression element replaced with TypedExpression (to exclude untyped Expressions like Value). -->
 			<!-- Whatever Expression used here must have a clearly identifiable Datatype (Value is not allowed for instance). -->
 			<xs:element ref="xacml:TypedExpression"/>
 		</xs:sequence>
@@ -376,6 +377,7 @@
 	<xs:element name="VariableDefinition" type="xacml:VariableDefinitionType"/>
 	<xs:complexType name="VariableDefinitionType">
 		<xs:sequence>
+			<!-- Change to XACML 3.0: Expression element replaced with TypedExpression (to exclude untyped Expressions like Value). -->
 			<!-- Whatever Expression used here must have a clearly identifiable Datatype (Value is not allowed for instance). E.g. Value is not allowed. -->
 			<xs:element ref="xacml:TypedExpression" />
 		</xs:sequence>
@@ -395,6 +397,7 @@
 		</xs:complexContent>
 	</xs:complexType>
 
+	<!-- Change to XACML 3.0: VariableReference re-assigned to TypedExpression substitutionGroup (which is included in the Expression one, but excludes untyped Expressions like Value). -->
 	<xs:element name="VariableReference" type="xacml:VariableReferenceType" substitutionGroup="xacml:TypedExpression"/>
 	<xs:complexType name="VariableReferenceType">
 		<xs:complexContent>
@@ -404,6 +407,7 @@
 		</xs:complexContent>
 	</xs:complexType>
 
+	<!-- Change to XACML 3.0: AttributeSelector re-assigned to TypedExpression substitutionGroup (which is included in the Expression one, but excludes untyped Expressions like Value). -->
 	<xs:element name="AttributeSelector" type="xacml:AttributeSelectorType" substitutionGroup="xacml:TypedExpression"/>
 	<xs:complexType name="AttributeSelectorType">
 		<xs:complexContent>
@@ -418,6 +422,7 @@
 		</xs:complexContent>
 	</xs:complexType>
 
+	<!-- Change to XACML 3.0: AttributeDesignator re-assigned to TypedExpression substitutionGroup (which is included in the Expression one, but excludes untyped Expressions like Value). -->
 	<xs:element name="AttributeDesignator" type="xacml:AttributeDesignatorType" substitutionGroup="xacml:TypedExpression"/>
 	<xs:complexType name="AttributeDesignatorType">
 		<xs:complexContent>
@@ -465,6 +470,7 @@
 		</xs:complexContent>
 	</xs:complexType>
 
+	<!-- Change to XACML 3.0: Function re-assigned to TypedExpression substitutionGroup (which is included in the Expression one, but excludes untyped Expressions like Value). -->
 	<xs:element name="Function" type="xacml:FunctionType" substitutionGroup="xacml:TypedExpression"/>
 	<xs:complexType name="FunctionType">
 		<xs:complexContent>
@@ -481,6 +487,7 @@
 		</xs:sequence>
 	</xs:complexType>
 
+	<!-- Change to XACML 3.0: Apply re-assigned to TypedExpression substitutionGroup (which is included in the Expression one, but excludes untyped Expressions like Value). -->
 	<xs:element name="Apply" type="xacml:ApplyType" substitutionGroup="xacml:TypedExpression"/>
 	<xs:complexType name="ApplyType">
 		<xs:complexContent>
