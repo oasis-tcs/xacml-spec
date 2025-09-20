@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright OASIS Open 2024. All Rights Reserved. -->
+<!-- Copyright OASIS Open 2025. All Rights Reserved. -->
 <xs:schema xmlns:xacml="urn:oasis:names:tc:xacml:4.0:core:schema" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:oasis:names:tc:xacml:4.0:core:schema" elementFormDefault="qualified" attributeFormDefault="unqualified">
 
 	<xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="https://www.w3.org/2001/xml.xsd"/>
@@ -118,9 +118,11 @@
 	<xs:element name="MissingAttributeDetail" type="xacml:MissingAttributeDetailType"/>
 	<xs:complexType name="MissingAttributeDetailType">
 		<xs:sequence>
-			<xs:element ref="xacml:AttributeValue" minOccurs="0" maxOccurs="unbounded"/>
+			<!-- Change to XACML 3.0 (issue #18): AttributeValue replaced with (untyped) Value -->
+			<xs:element ref="xacml:Value" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
-		<xs:attribute name="CategoryId" type="xacml:IdentifierType" use="required"/>
+        <!-- Change to XACML 3.0 (issue #18): Category attribute renamed to CategoryId, to be consistent with new Category element's CategoryId-->
+        <xs:attribute name="CategoryId" type="xacml:IdentifierType" use="required"/>
 		<xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
 		<xs:attribute name="DataType" type="xacml:IdentifierType" use="required"/>
 		<xs:attribute name="Issuer" type="xs:Name" use="optional"/>
@@ -143,10 +145,13 @@
 	<xs:element name="Attribute" type="xacml:AttributeType"/>
 	<xs:complexType name="AttributeType">
 		<xs:sequence>
-			<xs:element ref="xacml:AttributeValue" maxOccurs="unbounded"/>
+			<!-- Change to XACML 3.0 (issue #46): AttributeValue renamed to Value (not Attribute-specific anymore) -->
+			<xs:element ref="xacml:Value" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
 		<xs:attribute name="Issuer" type="xs:Name" use="optional"/>
+		<!-- Change to XACML 3.0 (issue #46): new Datatype attribute taken from former AttributeValue and which applies to all Values of this attribute -->
+		<xs:attribute name="DataType" type="xacml:IdentifierType" use="optional" default="http://www.w3.org/2001/XMLSchema#string"/>
 	</xs:complexType>
 
 	<!-- Change to XACML 3.0 (issue #18): new RequestAttribute element, similar to Attribute but with extra IncludeInResult attribute to indicate whether to include it in the Result, to be used only in the Request. -->
@@ -169,12 +174,12 @@
 	<xs:element name="RequestReference" type="xacml:RequestReferenceType"/>
 	<xs:complexType name="RequestReferenceType">
 		<xs:sequence>
-			<xs:element ref="xacml:AttributesReference" maxOccurs="unbounded"/>
+			<xs:element ref="xacml:RequestCategoryReference" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
 	
-	<xs:element name="AttributesReference" type="xacml:AttributesReferenceType"/>
-	<xs:complexType name="AttributesReferenceType">
+	<xs:element name="RequestCategoryReference" type="xacml:RequestCategoryReferenceType"/>
+	<xs:complexType name="RequestCategoryReferenceType">
 		<xs:attribute name="ReferenceId" type="xs:IDREF" use="required"/>
 	</xs:complexType>
 
@@ -188,12 +193,12 @@
 	</xs:complexType>
 
 	<xs:element name="AttributeAssignment" type="xacml:AttributeAssignmentType"/>
-	<xs:complexType name="AttributeAssignmentType" mixed="true">
-		<xs:complexContent mixed="true">
-			<xs:extension base="xacml:AttributeValueType">
-				<xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
+	<xs:complexType name="AttributeAssignmentType">
+		<xs:complexContent>
+			<!-- Change to XACML 3.0 (issues #46 and #47): AttributeAssignment changed from single-valued to multi-valued, therefore becomes de facto an extension of AttributeType with an extra CategoryId -->
+			<xs:extension base="xacml:AttributeType">
+				<!-- Change to XACML 3.0 (issue #46): Category renamed to CategoryId, to be consistent with new CategoryType's CategoryId -->
 				<xs:attribute name="CategoryId" type="xacml:IdentifierType" use="optional"/>
-				<xs:attribute name="Issuer" type="xs:Name" use="optional"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -212,10 +217,12 @@
 	<xs:element name="AttributeAssignmentExpression" type="xacml:AttributeAssignmentExpressionType"/>
 	<xs:complexType name="AttributeAssignmentExpressionType">
 		<xs:sequence>
-			<xs:element ref="xacml:Expression"/>
+			<!-- Whatever Expression used here must have a clearly identifiable Datatype (Value is not allowed for instance). -->
+			<xs:element ref="xacml:TypedExpression"/>
 		</xs:sequence>
 		<xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
-		<xs:attribute name="CategoryId" type="xacml:IdentifierType" use="optional"/>
+        <!-- Change to XACML 3.0 (issue #18): Category attribute renamed to CategoryId, to be consistent with new Category element's CategoryId-->
+        <xs:attribute name="CategoryId" type="xacml:IdentifierType" use="optional"/>
 		<xs:attribute name="Issuer" type="xs:Name" use="optional"/>
 	</xs:complexType>
 
@@ -244,9 +251,12 @@
 	<xs:element name="CombinerParameter" type="xacml:CombinerParameterType"/>
 	<xs:complexType name="CombinerParameterType">
 		<xs:sequence>
-			<xs:element ref="xacml:AttributeValue"/>
+			<!-- Change to XACML 3.0 (issue #46): AttributeValue replaced with Value. -->
+			<xs:element ref="xacml:Value"/>
 		</xs:sequence>
 		<xs:attribute name="ParameterName" type="xs:string" use="required"/>
+		<!-- Change to XACML 3.0 (issue #46): new Datatype attribute which applies to all Values of this parameter -->
+		<xs:attribute name="DataType" type="xacml:IdentifierType" use="optional" default="http://www.w3.org/2001/XMLSchema#string"/>
 	</xs:complexType>
 
 	<xs:element name="RuleCombinerParameters" type="xacml:RuleCombinerParametersType"/>
@@ -366,7 +376,8 @@
 	<xs:element name="VariableDefinition" type="xacml:VariableDefinitionType"/>
 	<xs:complexType name="VariableDefinitionType">
 		<xs:sequence>
-			<xs:element ref="xacml:Expression"/>
+			<!-- Whatever Expression used here must have a clearly identifiable Datatype (Value is not allowed for instance). E.g. Value is not allowed. -->
+			<xs:element ref="xacml:TypedExpression" />
 		</xs:sequence>
 		<xs:attribute name="VariableId" type="xs:string" use="required"/>
 	</xs:complexType>
@@ -374,19 +385,30 @@
 	<xs:element name="Expression" type="xacml:ExpressionType" abstract="true"/>
 	<xs:complexType name="ExpressionType" abstract="true"/>
 
-	<xs:element name="VariableReference" type="xacml:VariableReferenceType" substitutionGroup="xacml:Expression"/>
+	<!-- Change to XACML 3.0 (issue #46): new kind of Expression - TypedExpression - which is simply any Expression (assumed to have a defined type or the type can be inferred from the context) except the untyped Value.
+	Typically, since (untyped) Value is now another kind of Expression, this is to make sure the Expression in a VariableDefinition or AttributeAssignmentExpression cannot be a (untyped) Value but a TypedExpression.
+	-->
+	<xs:element name="TypedExpression" type="xacml:TypedExpressionType" abstract="true" substitutionGroup="xacml:Expression"/>
+	<xs:complexType name="TypedExpressionType" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="xacml:ExpressionType" />
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:element name="VariableReference" type="xacml:VariableReferenceType" substitutionGroup="xacml:TypedExpression"/>
 	<xs:complexType name="VariableReferenceType">
 		<xs:complexContent>
-			<xs:extension base="xacml:ExpressionType">
+			<xs:extension base="xacml:TypedExpressionType">
 				<xs:attribute name="VariableId" type="xs:string" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 
-	<xs:element name="AttributeSelector" type="xacml:AttributeSelectorType" substitutionGroup="xacml:Expression"/>
+	<xs:element name="AttributeSelector" type="xacml:AttributeSelectorType" substitutionGroup="xacml:TypedExpression"/>
 	<xs:complexType name="AttributeSelectorType">
 		<xs:complexContent>
-			<xs:extension base="xacml:ExpressionType">
+			<xs:extension base="xacml:TypedExpressionType">
+				<!-- Change to XACML 3.0 (issue #18): Category attribute renamed to CategoryId, to be consistent with new Category element's CategoryId-->
 				<xs:attribute name="CategoryId" type="xacml:IdentifierType" use="required"/>
 				<xs:attribute name="ContextSelectorId" type="xacml:IdentifierType" use="optional"/>
 				<xs:attribute name="Path" type="xs:string" use="required"/>
@@ -396,36 +418,57 @@
 		</xs:complexContent>
 	</xs:complexType>
 
-	<xs:element name="AttributeDesignator" type="xacml:AttributeDesignatorType" substitutionGroup="xacml:Expression"/>
+	<xs:element name="AttributeDesignator" type="xacml:AttributeDesignatorType" substitutionGroup="xacml:TypedExpression"/>
 	<xs:complexType name="AttributeDesignatorType">
 		<xs:complexContent>
-			<xs:extension base="xacml:ExpressionType">
+			<xs:extension base="xacml:TypedExpressionType">
+				<!-- Change to XACML 3.0 (issue #18): Category attribute renamed to CategoryId, to be consistent with new Category element's CategoryId-->
 				<xs:attribute name="CategoryId" type="xacml:IdentifierType" use="required"/>
 				<xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
-				<xs:attribute name="DataType" type="xacml:IdentifierType" use="required"/>
+				<xs:attribute name="DataType" type="xacml:IdentifierType" use="optional" default="http://www.w3.org/2001/XMLSchema#string"/>
 				<xs:attribute name="Issuer" type="xs:Name" use="optional"/>
 				<xs:attribute name="MustBePresent" type="xs:boolean" use="optional" default="false"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 
-	<xs:element name="AttributeValue" type="xacml:AttributeValueType" substitutionGroup="xacml:Expression"/>
-	<xs:complexType name="AttributeValueType" mixed="true">
+	<!-- Change to XACML 3.0 (issue #46): DataType attribute moved from AttributeValue to AttributeType and AttributeValue element/type replaced with more generic (not Attribute-specific) Value that represents an untyped value, and TypedValue.
+	This simplifies the language as they are many cases where the datatype can be inferred from the context, e.g. the parent element such as the Attribute in the new definition.
+	 Therefore, the DataType attribute in values can be omitted.
+	This is similar to a common feature called "Type inference" in modern programming languages, although here it is much more basic.-->
+	<!-- Value: Untyped value (no DataType attribute). See TypedValue for typed values. -->
+	<xs:element name="Value" type="xacml:ValueType" substitutionGroup="xacml:Expression"/>
+	<!-- Making ValueType final prevents any extension trying to add back the DataType attribute. -->
+	<xs:complexType name="ValueType" mixed="true" final="#all">
 		<xs:complexContent mixed="true">
 			<xs:extension base="xacml:ExpressionType">
 				<xs:sequence>
 					<xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
 				</xs:sequence>
-				<xs:attribute name="DataType" type="xacml:IdentifierType" use="required"/>
-				<xs:anyAttribute namespace="##any" processContents="lax"/>
+				<!-- Can't have namespace="##any" here because that would allow the XACML DataType attribute which is reserved for TypedValue. -->
+				<xs:anyAttribute  namespace="##other" processContents="lax" />
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 
-	<xs:element name="Function" type="xacml:FunctionType" substitutionGroup="xacml:Expression"/>
+	<!-- Change to XACML 3.0 (issue #46): new TypedValue element/type which is for values (formerly AttributeValue) with a defined datatype (that cannot be inferred from the context), as opposed to Value which is untyped (used in Attribute for instance). -->
+	<xs:element name="TypedValue" type="xacml:TypedValueType" substitutionGroup="xacml:TypedExpression"/>
+	<xs:complexType name="TypedValueType" mixed="true" final="#all">
+		<xs:complexContent mixed="true">
+			<xs:extension base="xacml:TypedExpressionType">
+				<xs:sequence>
+					<xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+				<xs:attribute name="DataType" type="xacml:IdentifierType" use="required" />
+				<xs:anyAttribute namespace="##other" processContents="lax" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:element name="Function" type="xacml:FunctionType" substitutionGroup="xacml:TypedExpression"/>
 	<xs:complexType name="FunctionType">
 		<xs:complexContent>
-			<xs:extension base="xacml:ExpressionType">
+			<xs:extension base="xacml:TypedExpressionType">
 				<xs:attribute name="FunctionId" type="xacml:IdentifierType" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
@@ -438,12 +481,13 @@
 		</xs:sequence>
 	</xs:complexType>
 
-	<xs:element name="Apply" type="xacml:ApplyType" substitutionGroup="xacml:Expression"/>
+	<xs:element name="Apply" type="xacml:ApplyType" substitutionGroup="xacml:TypedExpression"/>
 	<xs:complexType name="ApplyType">
 		<xs:complexContent>
-			<xs:extension base="xacml:ExpressionType">
+			<xs:extension base="xacml:TypedExpressionType">
 				<xs:sequence>
 					<xs:element ref="xacml:Description" minOccurs="0"/>
+					<!-- The datatype of each function argument here must be known from the function's definition (function signature), OR it must be explicitly specified by - or inferable from - the Expression (passed as argument) itself.  -->
 					<xs:element ref="xacml:Expression" minOccurs="0" maxOccurs="unbounded"/>
 				</xs:sequence>
 				<xs:attribute name="FunctionId" type="xacml:IdentifierType" use="required"/>
