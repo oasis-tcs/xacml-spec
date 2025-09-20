@@ -170,12 +170,56 @@ XACML 4.0 differs from XACML 3.0 in the following ways:
 
 * Users are able to define **_short identifiers_**, which provide simple alias names to use in place of absolute URIs to refer to XACML definitions. A predefined set of **_short identifiers_** for standard-defined URIs is also provided.
 
-* `Attribute` elements in the `Result` no longer have the `IncludeInResult` attribute since it is only used in the `Request`. To differentiate from the `Attribute` elements in the `Request`, these are renamed to `RequestAttribute`. 
+* `Request` element:
+   * `ReturnPolicyIdList`: changed to be optional with `false` as default value, to simplify Requests in the general case, and align with the JSON Profile.
+   * `CombinedDecision`: changed to be optional with `false` as default value, to simplify Requests when not using the Multiple Decision Profile, and align with the JSON Profile.
 
-* As a result of the previous change, the definition of the `Attributes` element in the `Request` does not apply to `Result` anymore. The `Attributes` element in `Request` (resp. `Result`) becomes `RequestCategory` (resp. `Category`), and contains the new `RequestAttribute` elements with 
-  `IncludeInResult` (resp. `Attribute` without `IncludeInResult`). 
+* `Attribute` element: 
+   * Has a new `DataType` attribute, to have a common data-type for all the attribute values. In XACML 3.0, defining the data-type for each `AttributeValue` individually led to the risk of mixing different datatypes in the same attribute. We consider this bad practice. If different data-types are to be used, one should simply split in different attributes.
+   * As a result of the previous change, the child `AttributeValue` elements are replaced with `Value` elements.
+   * Fixing the issue that the `IncludeInResult` attribute does not make sense in `Result` element, the `IncludeInResult` is removed from `Attribute` elements which are now only used in a `Result`, whereas in the `Request`, it is replaced with new `RequestAttribute` elements, which are the same as former `Attribute` elements with `IncludeInResult`.
 
-* `xml:id` attribute is renamed to 'Id' to have the same XML-agnostic name in all XACML 4.0 / ACAL representation formats including JSON. 
+* `AttributeValue` element: replaced with new `Value` and `TypedValue` elements (see the end of the section). `AttributeValue` was used in several places unrelated to attributes, e.g. VariableDefinition, CombinerParameter. Therefore, a more generic name was needed. Also as part of the previous change to `Attribute` element , it appeared there are places where a value does not need to specify its DataType (`Value`) because it is already defined/deduced from the context, and other places where the DataType must be defined (`TypedValue`).
+
+* `Attributes` element: removed/replaced as a result of the previous change regarding `IncludeInResult`. `Attributes` element as defined in the `Request` does not apply to `Result` anymore, and therefore the `Attributes` elements in `Request` (resp. `Result`) are replaced with new `RequestCategory` (resp. `Category`) elements, which contains the new `RequestAttribute` elements with `IncludeInResult` (resp. `Attribute` without `IncludeInResult`) mentioned previously, and the `Category` attribute renamed to `CategoryId` since the element itself is now called `Category`/`RequestCategory`.
+
+* `AttributesReference` element: renamed to `RequestCategoryReference`, to be consistent with `Attributes` element being replaced with `RequestCategory` (see previous change)
+
+* `AttributeAssignmentExpression` element:
+   * `Category` attribute renamed to `CategoryId`, to be consistent with `CategoryId` attribute in new `RequestCategory` and `Category` elements.
+
+* `AttributeAssignment` element:
+   * `Category` attribute renamed to `CategoryId`, to be consistent with `CategoryId` attribute in new `RequestCategory` and `Category` elements.
+   * Changed from single-valued to multi-valued.
+
+* `AttributeSelector` element:
+   * `Category` attribute renamed to `CategoryId`, to be consistent with `CategoryId` attribute in new `RequestCategory` and `Category` elements.
+   * `DataType` attribute changed to be optional, with `http://www.w3.org/2001/XMLSchema#string` as default, to simplify the element declaration in most cases.
+   * `MustBePresent`: changed to be optional with `false` as default value, to simplify the element declaration in most cases..
+
+* `AttributeDesignator` element: 
+  * `Category` attribute renamed to `CategoryId`, to be consistent with `CategoryId` attribute in new `RequestCategory` and `Category` elements.
+  * `DataType` attribute changed to be optional, with `http://www.w3.org/2001/XMLSchema#string` as default, to simplify the element declaration in most cases..
+  * `MustBePresent`: changed to be optional with `false` as default value, to simplify the element declaration in most cases..
+
+* `MissingAttributeDetail` element: 
+   * The child `AttributeValue` element replaced with new `Value` element (untyped value), since the DataType is already defined as an attribute of the `MissingAttributeDetail` element.
+   * `Category` attribute renamed to `CategoryId`, to be consistent with `CategoryId` attribute in new `RequestCategory` and `Category` elements.
+
+* `CombinerParameter` element:
+   * Has a new `DataType` attribute defined exactly like the new one in the `Attribute` element mentioned earlier. The reason for this change is the same as for the `Attribute` element. 
+   * As a result of the previous change, the child `AttributeValue` elements are replaced with `Value` elements.
+
+* `xml:id` attribute is renamed to 'Id' to have the same XML-agnostic name in all XACML 4.0 / ACAL representation formats including the new JSON/YAML representations.
+
+New elements:
+
+* `Category` (mandatory): new element replacing `Attributes` in `Result` element.
+* `RequestAttribute`: replaces `Attribute` but only in the `Request`.
+* `RequestCategory` (mandatory): new element replacing `Attributes` in `Request` element.
+* `RequestCategoryReference` (optional): replaces `AttributesReference`.
+* `TypedValue` (mandatory): replaces `AttributeValue` when, as opposed to `Value` below, the DataType must be explicitly defined.
+* `Value` (mandatory): replaces `AttributeValue` when the data-type may be omitted because it can be deduced unambiguously from the definition of the parent or an ancestor element (basic form of *type inference* which is a common feature in modern programming languages). This is part of the previous changes regarding the new `DataType` attribute in `Attribute` and `CombinerParameter` elements. `Value` is also a new type of `Expression`. Using `Value` instead of `TypedValue` (or former `AttributeValue`) simplifies any expression where the value data-type is obvious, or more generally inferable.
 
 ## 1.2 Glossary
 
@@ -1025,6 +1069,8 @@ The following **_short identifier_** set, in both the XML and JSON representatio
 
 Rule 1 illustrates a **_policy_** with a simple **_rule_** containing a `<Condition>` element. It also illustrates the use of the `<VariableDefinition>` element to define an expression that may be used throughout the **_policy_**. The following XACML **_policy_**, respectively in XML and JSON, contains a **_rule_** instance expressing Rule 1 (the numbers in square brackets on the left-hand side are for referencing purposes and are not part of the **_policy_** in either representation):
 
+**TODO: redo the line numbering below**
+
 ```
 [01] <?xml version="1.0" encoding="UTF-8"?>
 [02] <Policy
@@ -1037,13 +1083,13 @@ Rule 1 illustrates a **_policy_** with a simple **_rule_** containing a `<Condit
 [11]     <Apply FunctionId="string-equal">
 [14]       <Apply FunctionId="string-one-and-only">
 [17]         <AttributeDesignator
-[18]           Category="access-subject"
+[18]           CategoryId="access-subject"
 [19]           AttributeId="patient-number"
 [20]           DataType="string"/>
 [23]       </Apply>
 [25]       <Apply FunctionId="string-one-and-only">
 [28]         <AttributeDesignator
-[29]           Category="resource"
+[29]           CategoryId="resource"
 [30]           AttributeId="patient-number"
 [31]           DataType="string"/>
 [34]       </Apply>
@@ -1055,18 +1101,17 @@ Rule 1 illustrates a **_policy_** with a simple **_rule_** containing a `<Condit
 [46]       <Apply FunctionId="and">
 [49]         <Apply FunctionId="any-of">
 [52]           <Function FunctionId="anyURI-equal"/>
-[56]           <AttributeValue DataType="anyURI"
-[58]             >http://www.med.example.com/springfield-hospital</AttributeValue>
+[56]           <Value>http://www.med.example.com/springfield-hospital</Value>
 [61]           <AttributeDesignator
-[62]             Category="resource"
+[62]             CategoryId="resource"
 [63]             AttributeId="collection"
 [64]             DataType="anyURI"/>
 [67]         </Apply>
 [69]         <Apply FunctionId="any-of">
 [72]           <Function FunctionId="string-equal"/>
-[76]           <AttributeValue DataType="string">read</AttributeValue>
+[76]           <Value>read</Value>
 [81]           <AttributeDesignator
-[82]             Category="action"
+[82]             CategoryId="action"
 [83]             AttributeId="action-id"
 [84]             DataType="string"/>
 [87]         </Apply>
@@ -1093,7 +1138,7 @@ Rule 1 illustrates a **_policy_** with a simple **_rule_** containing a `<Condit
 [15]             "FunctionId":"string-one-and-only",
 [16]             "Argument":[{
 [17]               "AttributeDesignator":{
-[18]                 "Category":"access-subject",
+[18]                 "CategoryId":"access-subject",
 [19]                 "AttributeId":"patient-number",
 [20]                 "DataType":"string"
 [21]               }
@@ -1104,7 +1149,7 @@ Rule 1 illustrates a **_policy_** with a simple **_rule_** containing a `<Condit
 [26]             "FunctionId":"string-one-and-only",
 [27]             "Argument":[{
 [28]               "AttributeDesignator":{
-[29]                 "Category":"resource",
+[29]                 "CategoryId":"resource",
 [30]                 "AttributeId":"patient-number",
 [31]                 "DataType":"string"
 [32]               }
@@ -1130,13 +1175,11 @@ Rule 1 illustrates a **_policy_** with a simple **_rule_** containing a `<Condit
 [54]                   "FunctionId":"anyURI-equal"
 [54]                 }
 [55]               },{
-[56]                 "TypedValue":{
-[57]                   "DataType":"anyURI",
 [58]                   "Value":"http://www.med.example.com/springfield-hospital"
 [59]                 }
 [60]               },{
 [61]                 "AttributeDesignator":{
-[62]                   "Category":"resource",
+[62]                   "CategoryId":"resource",
 [63]                   "AttributeId":"collection",
 [64]                   "DataType":"anyURI"
 [65]                 }
@@ -1150,13 +1193,11 @@ Rule 1 illustrates a **_policy_** with a simple **_rule_** containing a `<Condit
 [73]                   "FunctionId":"string-equal"
 [74]                 }
 [75]               },{
-[76]                 "TypedValue":{
-[77]                   "DataType":"string",
 [78]                   "Value":"read"
 [79]                 }
 [80]               },{
 [81]                 "AttributeDesignator":{
-[82]                   "Category":"action",
+[82]                   "CategoryId":"action",
 [83]                   "AttributeId":"action-id",
 [84]                   "DataType":"string"
 [85]                 }
@@ -1210,23 +1251,31 @@ Rule 1 illustrates a **_policy_** with a simple **_rule_** containing a `<Condit
 
 [52] - [54] The first argument: the matching function. The `FunctionId` component specifies that the matching function is `urn:oasis:names:tc:xacml:1.0:function:anyURI-equal` using the **_short identifier_** name `anyURI-equal`.
 
-[56] - [59] The second argument: an **_attribute_** value. It is a literal URI to be matched, specifically `http://www.med.example.com/springfield-hospital`. The `DataType` component indicates that the data type of the value is `https://www.w3.org/2001/XMLSchema#anyURI` using the **_short identifier_** name `anyURI`.
+[56] - [59] The second argument: the literal URI to be matched, specifically `http://www.med.example.com/springfield-hospital`. The `DataType` can be omitted in this case because the definition of the function already specifies it is `https://www.w3.org/2001/XMLSchema#anyURI`.
 
 [61] - [65] The third argument: the **_bag_** of values. It is an attribute designator that selects a **_bag_** of `https://www.w3.org/2001/XMLSchema#anyURI` values from the `urn:oasis:names:tc:xacml:4.0:example:attribute:collection` (**_short identifier_** name `collection`) **_attribute_** in the `urn:oasis:names:tc:xacml:3.0:attribute-category:resource` category.
 
-[69] - [87] The second term is another instance of the `urn:oasis:names:tc:xacml:3.0:function:any-of`. The matching function is `urn:oasis:names:tc:xacml:1.0:function:string-equal`. The second argument is the literal value `read` of the `https://www.w3.org/2001/XMLSchema#string` data type. The third argument is an attribute designator that selects a **_bag_** of `https://www.w3.org/2001/XMLSchema#string` values from the `urn:oasis:names:tc:xacml:1.0:action:action-id` **_attribute_** in the `urn:oasis:names:tc:xacml:3.0:attribute-category:action` category.
+[69] - [87] The second term is another instance of the `urn:oasis:names:tc:xacml:3.0:function:any-of`. The matching function is `urn:oasis:names:tc:xacml:1.0:function:string-equal`. The second argument is the literal value `read` of the `https://www.w3.org/2001/XMLSchema#string` data type infered from the definition of the matching function. The third argument is an attribute designator that selects a **_bag_** of `https://www.w3.org/2001/XMLSchema#string` values from the `urn:oasis:names:tc:xacml:1.0:action:action-id` **_attribute_** in the `urn:oasis:names:tc:xacml:3.0:attribute-category:action` category.
 
 [89] - [91] The third term is a reference to a variable definition defined elsewhere in the **_policy_**.
 
 #### 4.2.5.2 Rule 2
 
+**TODO**
+
 #### 4.2.5.3 Rule 3
+
+**TODO**
 
 _Note: this section is referenced._
 
 #### 4.2.5.4 Rule 4
 
+**TODO**
+
 #### 4.2.5.5 Example policy with nested policies
+
+**TODO**
 
 -------
 
@@ -1683,9 +1732,10 @@ The `<CombinerParameter>` element conveys a single parameter for a **_combining 
 <xs:element name="CombinerParameter" type="xacml:CombinerParameterType"/>
 <xs:complexType name="CombinerParameterType">
    <xs:sequence>
-      <xs:element ref="xacml:AttributeValue"/>
+      <xs:element ref="xacml:Value"/>
    </xs:sequence>
    <xs:attribute name="ParameterName" type="xs:string" use="required"/>
+   <xs:attribute name="DataType" type="xacml:IdentifierType" use="optional" default="http://www.w3.org/2001/XMLSchema#string"/>
 </xs:complexType>
 ```
 
@@ -1697,7 +1747,13 @@ The `<CombinerParameter>` element contains the following attributes:
 
 : The identifier of the parameter.
 
-`<AttributeValue>` [Required]
+`DataType` [Optional]
+
+: The DataType of each `<Value>` element in this parameter, set to `http://www.w3.org/2001/XMLSchema#string` by default.
+
+The `<CombinerParameter>` element contains the following elements:
+
+`<Value>` [Required]
 
 : The value of the parameter.
 
@@ -1823,7 +1879,7 @@ The `<VariableDefinition>` element SHALL be used to define a value that can be r
 <xs:element name="VariableDefinition" type="xacml:VariableDefinitionType"/>
 <xs:complexType name="VariableDefinitionType">
    <xs:sequence>
-      <xs:element ref="xacml:Expression"/>
+      <xs:element ref="xacml:TypedExpression"/>
    </xs:sequence>
    <xs:attribute name="VariableId" type="xs:string" use="required"/>
 </xs:complexType>
@@ -1831,9 +1887,9 @@ The `<VariableDefinition>` element SHALL be used to define a value that can be r
 
 The `<VariableDefinition>` element is of `VariableDefinitionType` complex type. The `<VariableDefinition>` element has the following elements and attributes:
 
-`<Expression>` [Required]
+`<TypedExpression>` [Required]
 
-: Any element of `ExpressionType` complex type.
+: Any element in the `TypedExpression` substitution group.
 
 `VariableId` [Required]
 
@@ -1844,10 +1900,10 @@ The `<VariableDefinition>` element is of `VariableDefinitionType` complex type. 
 The `<VariableReference>` element is used to reference a value defined within the same encompassing `<Policy>` element. The `<VariableReference>` element SHALL refer to the `<VariableDefinition>` element by **_identifier equality_** on the value of their respective `VariableId` attributes. One and only one `<VariableDefinition>` MUST exist within the same encompassing `<Policy>` element to which the `<VariableReference>` refers. There MAY be zero or more `<VariableReference>` elements that refer to the same `<VariableDefinition>` element.
 
 ```xml
-<xs:element name="VariableReference" type="xacml:VariableReferenceType" substitutionGroup="xacml:Expression"/>
+<xs:element name="VariableReference" type="xacml:VariableReferenceType" substitutionGroup="xacml:TypedExpression"/>
 <xs:complexType name="VariableReferenceType">
    <xs:complexContent>
-      <xs:extension base="xacml:ExpressionType">
+      <xs:extension base="xacml:TypedExpressionType">
          <xs:attribute name="VariableId" type="xs:string" use="required"/>
       </xs:extension>
    </xs:complexContent>
@@ -1873,7 +1929,7 @@ The `<Expression>` element is not used directly in a **_policy_**. The `<Express
 
 The following elements are in the `<Expression>` element substitution group:
 
-`<Apply>`, `<AttributeSelector>`, `<AttributeValue>`, `<Function>`, `<VariableReference>` and `<AttributeDesignator>`.
+`<Value>`, and any element in the `<TypedExpression>` element substitution group defined in section 5.46.
 
 ## 5.26 Element \<Condition>
 
@@ -1890,10 +1946,10 @@ The `<Condition>` element is of `BooleanExpressionType` complex type. Evaluation
 The `<Apply>` element denotes application of a function to its arguments, thus encoding a function call. The `<Apply>` element can be applied to any combination of the members of the `<Expression>` element substitution group. See [Section 5.25](#525-element-expression).
 
 ```xml
-<xs:element name="Apply" type="xacml:ApplyType" substitutionGroup="xacml:Expression"/>
+<xs:element name="Apply" type="xacml:ApplyType" substitutionGroup="xacml:TypedExpression"/>
 <xs:complexType name="ApplyType">
    <xs:complexContent>
-      <xs:extension base="xacml:ExpressionType">
+      <xs:extension base="xacml:TypedExpressionType">
          <xs:sequence>
             <xs:element ref="xacml:Description" minOccurs="0"/>
             <xs:element ref="xacml:Expression" minOccurs="0" maxOccurs="unbounded"/>
@@ -1925,10 +1981,10 @@ The `<Apply>` element contains the following attributes and elements:
 The `<Function>` element SHALL be used to name a function as an argument to the function defined by the parent `<Apply>` element.
 
 ```xml
-<xs:element name="Function" type="xacml:FunctionType" substitutionGroup="xacml:Expression"/>
+<xs:element name="Function" type="xacml:FunctionType" substitutionGroup="xacml:TypedExpression"/>
 <xs:complexType name="FunctionType">
    <xs:complexContent>
-          <xs:extension base="xacml:ExpressionType">
+          <xs:extension base="xacml:TypedExpressionType">
                 <xs:attribute name="FunctionId" type="xacml:IdentifierType" use="required"/>
           </xs:extension>
    </xs:complexContent>
@@ -1954,13 +2010,13 @@ The `<AttributeDesignator>` MAY appear in the `<Match>` element and MAY be passe
 The `<AttributeDesignator>` element is of the `AttributeDesignatorType` complex type.
 
 ```xml
-<xs:element name="AttributeDesignator" type="xacml:AttributeDesignatorType" substitutionGroup="xacml:Expression"/>
+<xs:element name="AttributeDesignator" type="xacml:AttributeDesignatorType" substitutionGroup="xacml:TypedExpression"/>
 <xs:complexType name="AttributeDesignatorType">
    <xs:complexContent>
-      <xs:extension base="xacml:ExpressionType">
-         <xs:attribute name="Category" type="xacml:IdentifierType" use="required"/>
+      <xs:extension base="xacml:TypedExpressionType">
+         <xs:attribute name="CategoryId" type="xacml:IdentifierType" use="required"/>
          <xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
-         <xs:attribute name="DataType" type="xacml:IdentifierType" use="required"/>
+         <xs:attribute name="DataType" type="xacml:IdentifierType" use="optional" default="http://www.w3.org/2001/XMLSchema#string"/>
          <xs:attribute name="Issuer" type="xs:string" use="optional"/>
          <xs:attribute name="MustBePresent" type="xs:boolean" use="optional" default="false"/>
        </xs:extension>
@@ -1968,13 +2024,13 @@ The `<AttributeDesignator>` element is of the `AttributeDesignatorType` complex 
 </xs:complexType>
 ```
 
-A **_named attribute_** SHALL match an **_attribute_** if the values of their respective `Category`, `AttributeId`, `DataType` and `Issuer` attributes match. The attribute designator's `Category` MUST match, by **_identifier equality_**, the `Category` of the `<Attributes>` element in which the **_attribute_** is present. The attribute designator's `AttributeId` MUST match, by **_identifier equality_**, the `AttributeId` of the **_attribute_**. The attribute designator's `DataType` MUST match, by **_identifier equality_**, the `DataType` of the same **_attribute_**.
+A **_named attribute_** SHALL match an **_attribute_** if the values of their respective `CategoryId`, `AttributeId`, `DataType` and `Issuer` attributes match. The attribute designator's `CategoryId` MUST match, by **_identifier equality_**, the `CategoryId` of the `<RequestCategory>` element in which the **_attribute_** is present. The attribute designator's `AttributeId` MUST match, by **_identifier equality_**, the `AttributeId` of the **_attribute_**. The attribute designator's `DataType` MUST match, by **_identifier equality_**, the `DataType` of the same **_attribute_**.
 
 If the `Issuer` attribute is present in the attribute designator, then it MUST match, using the `urn:oasis:names:tc:xacml:1.0:function:string-equal` function, the `Issuer` of the same **_attribute_**. If the `Issuer` is not present in the attribute designator, then the matching of the **_attribute_** to the **_named attribute_** SHALL be governed by `AttributeId` and `DataType` attributes alone.
 
 The `<AttributeDesignatorType>` contains the following attributes:
 
-`Category` [Required]
+`CategoryId` [Required]
 
 : This attribute SHALL specify the Category with which to match the **_attribute_**.
 
@@ -1982,9 +2038,9 @@ The `<AttributeDesignatorType>` contains the following attributes:
 
 : This attribute SHALL specify the AttributeId with which to match the **_attribute_**.
 
-`DataType` [Required]
+`DataType` [Optional]
 
-: The **_bag_** returned by the `<AttributeDesignator>` element SHALL contain values of this data-type.
+: The **_bag_** returned by the `<AttributeDesignator>` element SHALL contain values of this data-type. Default value: `http://www.w3.org/2001/XMLSchema#string`.
 
 `Issuer` [Optional]
 
@@ -2001,14 +2057,14 @@ The `<AttributeSelector>` element produces a **_bag_** of unnamed and uncategori
 See [Section 7.4.7](#747-attributeselector-evaluation) for details of `<AttributeSelector>` evaluation.
 
 ```xml
-<xs:element name="AttributeSelector" type="xacml:AttributeSelectorType" substitutionGroup="xacml:Expression"/>
+<xs:element name="AttributeSelector" type="xacml:AttributeSelectorType" substitutionGroup="xacml:TypedExpression"/>
 <xs:complexType name="AttributeSelectorType">
    <xs:complexContent>
-      <xs:extension base="xacml:ExpressionType">
-         <xs:attribute name="Category" type="xacml:IdentifierType" use="required"/>
+      <xs:extension base="xacml:TypedExpressionType">
+         <xs:attribute name="CategoryId" type="xacml:IdentifierType" use="required"/>
          <xs:attribute name="ContextSelectorId" type="xacml:IdentifierType" use="optional"/>
          <xs:attribute name="Path" type="xs:string" use="required"/>
-         <xs:attribute name="DataType" type="xacml:IdentifierType" use="required"/>
+         <xs:attribute name="DataType" type="xacml:IdentifierType" use="optional" default="http://www.w3.org/2001/XMLSchema#string"/>
          <xs:attribute name="MustBePresent" type="xs:boolean" use="optional" default="false"/>
        </xs:extension>
    </xs:complexContent>
@@ -2019,48 +2075,48 @@ The `<AttributeSelector>` element is of `AttributeSelectorType` complex type.
 
 The `<AttributeSelector>` element has the following attributes:
 
-`Category` [Required]
+`CategoryId` [Required]
 
 : This attribute SHALL specify the **_attributes_** category of the `<Content>` element containing the XML from which nodes will be selected. It also indicates the **_attributes_** category containing the applicable `ContextSelectorId` attribute, if the element includes a `ContextSelectorId` XML attribute.
 
 `ContextSelectorId` [Optional]
 
-: This attribute refers to the **_attribute_** (by its `AttributeId`) in the request **_context_** in the category given by the `Category` attribute. The referenced **_attribute_** MUST have data type urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression, and must select a single node in the `<Content>` element. The `XPathCategory` attribute of the referenced **_attribute_** MUST be equal to the `Category` attribute of the attribute selector.
+: This attribute refers to the **_attribute_** (by its `AttributeId`) in the request **_context_** in the category given by the `CategoryId` attribute. The referenced **_attribute_** MUST have data type urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression, and must select a single node in the `<Content>` element. The `XPathCategoryId` attribute of the referenced **_attribute_** MUST be equal to the `CategoryId` attribute of the attribute selector.
 
 `Path` [Required]
 
 : This attribute SHALL contain an XPath expression to be evaluated against the specified XML content. See [Section 7.4.7](#747-attributeselector-evaluation) for details of the XPath evaluation during `<AttributeSelector>` processing. The namespace context for the value of the Path attribute is given by the [in-scope namespaces] [[INFOSET](#infoset)] of the `<AttributeSelector>` element.
 
-`DataType` [Required]
+`DataType` [Optional]
 
-: The attribute specifies the datatype of the values returned from the evaluation of this `<AttributeSelector>` element.
+: The attribute specifies the datatype of the values returned from the evaluation of this `<AttributeSelector>` element, set to `http://www.w3.org/2001/XMLSchema#string` by default..
 
 `MustBePresent` [Optional]
 
-: This attribute governs whether the element returns `Indeterminate` or an empty **_bag_** in the event that the attributes category specified by the `Category` attribute does not exist in the request **_context_**, or the attributes category does exist but it does not have a `<Content>` child element, or the `<Content>` element does exist but the XPath expression selects no node. See [Section 7.4.5](#745-attribute-retrieval). Also see [Section 7.19.2](#7192-syntax-and-type-errors) and [Section 7.19.3](#7193-missing-attributes). If this attribute is omitted it is treated as being set to 'false'.
+: This attribute governs whether the element returns `Indeterminate` or an empty **_bag_** in the event that the attributes category specified by the `CategoryId` attribute does not exist in the request **_context_**, or the attributes category does exist but it does not have a `<Content>` child element, or the `<Content>` element does exist but the XPath expression selects no node. See [Section 7.4.5](#745-attribute-retrieval). Also see [Section 7.19.2](#7192-syntax-and-type-errors) and [Section 7.19.3](#7193-missing-attributes). If this attribute is omitted it is treated as being set to 'false'.
 
-## 5.31 Element \<AttributeValue>
+## 5.31 Element \<TypedValue>
 
-The `<AttributeValue>` element SHALL contain a literal **_attribute_** value.
+The `<TypedValue>` element SHALL contain a literal value with a defined data-type.
 
 ```xml
-<xs:element name="AttributeValue" type="xacml:AttributeValueType" substitutionGroup="xacml:Expression"/>
-<xs:complexType name="AttributeValueType" mixed="true">
+<xs:element name="TypedValue" type="xacml:TypedValueType" substitutionGroup="xacml:TypedExpression"/>
+<xs:complexType name="TypedValueType" mixed="true">
    <xs:complexContent mixed="true">
-      <xs:extension base="xacml:ExpressionType">
+      <xs:extension base="xacml:TypedExpressionType">
          <xs:sequence>
             <xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
          </xs:sequence>
          <xs:attribute name="DataType" type="xacml:IdentifierType" use="required"/>
-         <xs:anyAttribute namespace="##any" processContents="lax"/>
+         <xs:anyAttribute namespace="##other" processContents="lax"/>
        </xs:extension>
    </xs:complexContent>
 </xs:complexType>
 ```
 
-The `<AttributeValue>` element is of `AttributeValueType` complex type.
+The `<TypedValue>` element is of `TypedValueType` complex type.
 
-The `<AttributeValue>` element has the following attributes:
+The `<TypedValue>` element has the following attributes:
 
 `DataType` [Required]
 
@@ -2099,16 +2155,14 @@ The `<Notice>` element contains the following elements and attributes:
 
 ## 5.36 Element \<AttributeAssignment>
 
-The `<AttributeAssignment>` element is used for including arguments in **_notice_** expressions. It SHALL contain an `AttributeId` and the corresponding **_attribute_** value, by extending the `AttributeValueType` type definition. The `<AttributeAssignment>` element MAY be used in any way that is consistent with the schema syntax, which is a sequence of `<xs:any>` elements. The value specified SHALL be understood by the **_PEP_**, but it is not further specified by XACML. See [Section 7.18](#718-notices). [Section 4.2.5.3](#4253-rule-3) provides a number of examples of **_attribute_** assignments included in **_notices_**.
+The `<AttributeAssignment>` element is used for including arguments in **_notice_** expressions. It SHALL contain an `AttributeId`, `DataType` and the corresponding **_attribute_** value, by extending the `AttributeType` type definition. Each attribute value specified SHALL be understood by the **_PEP_**, but it is not further specified by XACML. See [Section 7.18](#718-notices). [Section 4.2.5.3](#4253-rule-3) provides a number of examples of **_attribute_** assignments included in **_notices_**.
 
 ```xml
 <xs:element name="AttributeAssignment" type="xacml:AttributeAssignmentType"/>
-<xs:complexType name="AttributeAssignmentType" mixed="true">
+<xs:complexType name="AttributeAssignmentType">
    <xs:complexContent>
-      <xs:extension base="xacml:AttributeValueType">
-         <xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
-         <xs:attribute name="Category" type="xacml:IdentifierType" use="optional"/>
-         <xs:attribute name="Issuer" type="xs:string" use="optional"/>
+      <xs:extension base="xacml:AttributeType">
+         <xs:attribute name="CategoryId" type="xacml:IdentifierType" use="optional"/>
       </xs:extension>
    </xs:complexContent>
 </xs:complexType>
@@ -2116,19 +2170,11 @@ The `<AttributeAssignment>` element is used for including arguments in **_notice
 
 The `<AttributeAssignment>` element is of `AttributeAssignmentType` complex type.
 
-The `<AttributeAssignment>` element contains the following attributes:
+The `<AttributeAssignment>` element extends the `<AttributeType>` with the following attribute:
 
-`AttributeId` [Required]
+`CategoryId` [Optional]
 
-: The **_attribute_** Identifier.
-
-`Category` [Optional]
-
-: An optional category of the **_attribute_**. If this attribute is missing, the **_attribute_** has no category. The **_PEP_** SHALL interpret the significance and meaning of any `Category` attribute. Non-normative note: an expected use of the category is to disambiguate **_attributes_** that are relayed from the request.
-
-`Issuer` [Optional]
-
-: An optional issuer of the **_attribute_**. If this attribute is missing, the **_attribute_** has no issuer. The **_PEP_** SHALL interpret the significance and meaning of any `Issuer` attribute. Non-normative note: an expected use of the issuer is to disambiguate **_attributes_** that are relayed from the request.
+: An optional category of the **_attribute_**. If this attribute is missing, the **_attribute_** has no category. The **_PEP_** SHALL interpret the significance and meaning of any `CategoryId` attribute. Non-normative note: an expected use of the category is to disambiguate **_attributes_** that are relayed from the request.
 
 ## 5.39 Element \<NoticeExpression>
 
@@ -2169,7 +2215,7 @@ The `<NoticeExpression>` element contains the following elements and attributes:
 
 `<AttributeAssignmentExpression>` [Any Number]
 
-: **_Notice_** arguments in the form of expressions. The expressions SHALL be evaluated by the PDP to constant `<AttributeValue>` elements or **_bags_**, which shall be the attribute assignments in the `<Notice>` returned to the PEP. If an `<AttributeAssignmentExpression>` evaluates to an atomic **_attribute_** value, then there MUST be one resulting `<AttributeAssignment>` which MUST contain this single **_attribute_** value. If the `<AttributeAssignmentExpression>` evaluates to a **_bag_**, then there MUST be a resulting `<AttributeAssignment>` for each of the values in the **_bag_**. If the **_bag_** is empty, there shall be no `<AttributeAssignment>` from this `<AttributeAssignmentExpression>`. The values of the **_notice_** arguments SHALL be interpreted by the **_PEP_**.
+: **_Notice_** arguments in the form of expressions. The expressions SHALL be evaluated by the PDP to constant `<AttributeAssignment>` elements, which shall be the attribute assignments in the `<Notice>` returned to the PEP. If the `<AttributeAssignmentExpression>` evaluates to an empty **_bag_** (of attribute values), there shall be no `<AttributeAssignment>` from this `<AttributeAssignmentExpression>`. The values of the **_notice_** arguments SHALL be interpreted by the **_PEP_**.
 
 ## 5.41 Element \<AttributeAssignmentExpression>
 
@@ -2179,10 +2225,10 @@ The `<AttributeAssignmentExpression>` element is used for including arguments in
 <xs:element name="AttributeAssignmentExpression" type="xacml:AttributeAssignmentExpressionType"/>
 <xs:complexType name="AttributeAssignmentExpressionType">
    <xs:sequence>
-      <xs:element ref="xacml:Expression"/>
+      <xs:element ref="xacml:TypedExpression"/>
    </xs:sequence>
    <xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
-   <xs:attribute name="Category" type="xacml:IdentifierType" use="optional"/>
+   <xs:attribute name="CategoryId" type="xacml:IdentifierType" use="optional"/>
    <xs:attribute name="Issuer" type="xs:string" use="optional"/>
 </xs:complexType>
 ```
@@ -2199,9 +2245,9 @@ The `<AttributeAssignmentExpression>` element contains the following attributes:
 
 : The **_attribute_** identifier. The value of the AttributeId attribute in the resulting `<AttributeAssignment>` element MUST be equal to this value.
 
-`Category` [Optional]
+`CategoryId` [Optional]
 
-: An optional category of the **_attribute_**. If this attribute is missing, the **_attribute_** has no category. The value of the `Category` attribute in the resulting `<AttributeAssignment>` element MUST be equal to this value.
+: An optional category of the **_attribute_**. If this attribute is missing, the **_attribute_** has no category. The value of the `CategoryId` attribute in the resulting `<AttributeAssignment>` element MUST be equal to this value.
 
 `Issuer` [Optional]
 
@@ -2245,15 +2291,15 @@ The `<Request>` element contains the following elements and attributes:
 
 : Contains default values for the request, such as XPath version. See [Section 5.43](#543-element-requestdefaults).
 
-`<Attributes>` [One to Many]
+`<RequestCategory>` [One to Many]
 
-: Specifies information about **_attributes_** of the request **_context_** by listing a sequence of `<Attribute>` elements associated with an **_attribute_** category. One or more `<Attributes>` elements are allowed. Different `<Attributes>` elements with different categories are used to represent information about the **_subject_**, **_resource_**, **_action_**, **_environment_** or other categories of the **_access_** request.
+: Specifies information about **_attributes_** of the request **_context_** by listing a sequence of `<Attribute>` elements associated with an **_attribute_** category. One or more `<RequestCategory>` elements are allowed. Different `<RequestCategory>` elements with different categories are used to represent information about the **_subject_**, **_resource_**, **_action_**, **_environment_** or other categories of the **_access_** request.
 
-: The `<Request>` element contains `<Attributes>` elements. There may be multiple `<Attributes>` elements with the same `Category` attribute if the **_PDP_** implements the multiple decision profile, see [[Multi](#Multi)]. Under other conditions, it is a syntax error if there are multiple `<Attributes>` elements with the same `Category` (see [Section 7.19.2](#7192-syntax-and-type-errors) for error codes).
+: The `<Request>` element contains `<RequestCategory>` elements. There may be multiple `<RequestCategory>` elements with the same `CategoryId` attribute if the **_PDP_** implements the multiple decision profile, see [[Multi](#Multi)]. Under other conditions, it is a syntax error if there are multiple `<RequestCategory>` elements with the same `CategoryId` (see [Section 7.19.2](#7192-syntax-and-type-errors) for error codes).
 
 `<MultiRequests>` [Optional]
 
-: Lists multiple **_request contexts_** by references to the `<Attributes>` elements. Implementation of this element is optional. The semantics of this element is defined in [[Multi](#multi)]. If the implementation does not implement this element, it MUST return an Indeterminate result if it encounters this element. See [Section 5.50](#550-element-multirequests).
+: Lists multiple **_request contexts_** by references to the `<RequestCategory>` elements. Implementation of this element is optional. The semantics of this element is defined in [[Multi](#multi)]. If the implementation does not implement this element, it MUST return an Indeterminate result if it encounters this element. See [Section 5.50](#550-element-multirequests).
 
 ## 5.43 Element \<RequestDefaults>
 
@@ -2340,11 +2386,11 @@ in the **_policy_** MAY refer to **_attributes_** by means of this meta-data. It
 <xs:element name="Attribute" type="xacml:AttributeType"/>
 <xs:complexType name="AttributeType">
    <xs:sequence>
-      <xs:element ref="xacml:AttributeValue" maxOccurs="unbounded"/>
+      <xs:element ref="xacml:Value" maxOccurs="unbounded"/>
    </xs:sequence>
    <xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
    <xs:attribute name="Issuer" type="xs:string" use="optional"/>
-   <xs:attribute name="IncludeInResult" type="xs:boolean" use="required"/>
+   <xs:attribute name="DataType" type="xacml:IdentifierType" use="optional" default="http://www.w3.org/2001/XMLSchema#string"/>
 </xs:complexType>
 ```
 
@@ -2360,11 +2406,11 @@ The `<Attribute>` element contains the following attributes and elements:
 
 : The **_attribute_** issuer. For example, this attribute value MAY be an `x500Name` that binds to a public key, or it may be some other identifier exchanged out-of-band by issuing and relying parties.
 
-`IncludeInResult` [Default: false]
+`DataType` [Optional]
 
-: Whether to include this **_attribute_** in the result. This is useful to correlate requests with their responses in case of multiple requests.
+: The data-type of the value(s) of the **_attribute_**, set to `http://www.w3.org/2001/XMLSchema#string` by default.
 
-`<AttributeValue>` [One to Many]
+`<Value>` [One to Many]
 
 : One or more **_attribute_** values. Each **_attribute_** value MAY have contents that are empty, occur once or occur multiple times.
 
@@ -2463,7 +2509,7 @@ The `ExactMatchIdReferenceType` type extends the `IdReferenceType` type with the
 
 ## 5.50 Element \<MultiRequests>
 
-The `<MultiRequests>` element contains a list of requests by reference to `<Attributes>` elements in the enclosing `<Request>` element. The semantics of this element are defined in [[Multi](#Multi)]. Support for this element is optional. If an implementation does not support this element, but receives it, the implementation MUST generate an `Indeterminate` response.
+The `<MultiRequests>` element contains a list of requests by reference to `<RequestCategory>` elements in the enclosing `<Request>` element. The semantics of this element are defined in [[Multi](#Multi)]. Support for this element is optional. If an implementation does not support this element, but receives it, the implementation MUST generate an `Indeterminate` response.
 
 ```xml
 <xs:element name="MultiRequests" type="xacml:MultiRequestsType"/>
@@ -2478,43 +2524,43 @@ The `<MultiRequests>` element contains the following elements.
 
 `<RequestReference>` [one to many]
 
-: Defines a request instance by reference to `<Attributes>` elements in the enclosing `<Request>` element. See [Section 5.51](#551-element-requestreference).
+: Defines a request instance by reference to `<RequestCategory>` elements in the enclosing `<Request>` element. See [Section 5.51](#551-element-requestreference).
 
 ## 5.51 Element \<RequestReference>
 
-The `<RequestReference>` element defines an instance of a request in terms of references to `<Attributes>` elements. The semantics of this element are defined in [[Multi](#Multi)]. Support for this element is optional.
+The `<RequestReference>` element defines an instance of a request in terms of references to `<RequestCategory>` elements. The semantics of this element are defined in [[Multi](#Multi)]. Support for this element is optional.
 
 ```xml
-<xs:element name="RequestReference" type="xacml:RequestReference "/>
+<xs:element name="RequestReference" type="xacml:RequestReferenceType"/>
 <xs:complexType name="RequestReferenceType">
    <xs:sequence>
-      <xs:element ref="xacml:AttributesReference" maxOccurs="unbounded"/>
+      <xs:element ref="xacml:RequestCategoryReference" maxOccurs="unbounded"/>
    </xs:sequence>
 </xs:complexType>
 ```
 
-The `<RequestReference>` element contains the following elements.
+The `<RequestReference>` element contains the following elements:
 
-`<AttributesReference>` [one to many]
+`<RequestCategoryReference>` [one to many]
 
-: A reference to an `<Attributes>` element in the enclosing `<Request>` element. See [Section 5.52](#552-element-attributesreference).
+: A reference to a `<RequestCategory>` element in the enclosing `<Request>` element. See [Section 5.52](#552-element-requestcategoryreference).
 
-## 5.52 Element \<AttributesReference>
+## 5.52 Element \<RequestCategoryReference>
 
-The `<AttributesReference>` element makes a reference to an `<Attributes>` element. The meaning of this element is defined in [[Multi](#Multi)]. Support for this element is optional.
+The `<RequestCategoryReference>` element makes a reference to a `<RequestCategory>` element. The meaning of this element is defined in [[Multi](#Multi)]. Support for this element is optional.
 
 ```xml
-<xs:element name="AttributesReference" type="xacml:AttributesReference"/>
-<xs:complexType name="AttributesReferenceType">
+<xs:element name="RequestCategoryReference" type="xacml:RequestCategoryReferenceType"/>
+<xs:complexType name="RequestCategoryReferenceType">
    <xs:attribute name="ReferenceId" type="xs:IDREF" use="required" />
 </xs:complexType>
 ```
 
-The `<AttributesReference>` element contains the following attributes.
+The `<RequestCategoryReference>` element contains the following attributes:
 
 `ReferenceId` [required]
 
-: A reference to the `xml:id` attribute of an `<Attributes>` element in the enclosing `<Request>` element.
+: A reference to the `Id` attribute of an `<RequestCategory>` element in the enclosing `<Request>` element.
 
 ## 5.53 Element \<Decision>
 
@@ -2662,9 +2708,9 @@ The `<MissingAttributeDetail>` element conveys information about **_attributes_*
 <xs:element name="MissingAttributeDetail" type="xacml:MissingAttributeDetailType"/>
 <xs:complexType name="MissingAttributeDetailType">
    <xs:sequence>
-      <xs:element ref="xacml:AttributeValue" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="xacml:Value" minOccurs="0" maxOccurs="unbounded"/>
    </xs:sequence>
-   <xs:attribute name="Category" type="xacml:IdentifierType" use="required"/>
+   <xs:attribute name="CategoryId" type="xacml:IdentifierType" use="required"/>
    <xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
    <xs:attribute name="DataType" type="xacml:IdentifierType" use="required"/>
    <xs:attribute name="Issuer" type="xs:string" use="optional"/>
@@ -2675,11 +2721,11 @@ The `<MissingAttributeDetail>` element is of `MissingAttributeDetailType` comple
 
 The `<MissingAttributeDetal>` element contains the following attributes and elements:
 
-`<AttributeValue>` [Optional]
+`<Value>` [Optional]
 
 : The required value of the missing **_attribute_**.
 
-`Category` [Required]
+`CategoryId` [Required]
 
 : The category identifier of the missing **_attribute_**.
 
@@ -2695,7 +2741,7 @@ The `<MissingAttributeDetal>` element contains the following attributes and elem
 
 : This attribute, if supplied, SHALL specify the required `Issuer` of the missing **_attribute_**.
 
-If the **_PDP_** includes `<AttributeValue>` elements in the `<MissingAttributeDetail>` element, then this indicates the acceptable values for that **_attribute_**. If no `<AttributeValue>` elements are included, then this indicates the names of **_attributes_** that the **_PDP_** failed to resolve during its evaluation. The list of **_attributes_** may be partial or complete. There is no guarantee by the **_PDP_** that supplying the missing values or **_attributes_** will be sufficient to satisfy the **_policy_**.
+If the **_PDP_** includes `<Value>` elements in the `<MissingAttributeDetail>` element, then this indicates the acceptable values for that **_attribute_**. If no `<Value>` elements are included, then this indicates the names of **_attributes_** that the **_PDP_** failed to resolve during its evaluation. The list of **_attributes_** may be partial or complete. There is no guarantee by the **_PDP_** that supplying the missing values or **_attributes_** will be sufficient to satisfy the **_policy_**.
 
 ## 5.59 Element \<RequestAttribute>
 
@@ -2722,7 +2768,7 @@ The `<RequestAttribute>` element contains the same attributes and elements as `<
 
 ## 5.44 Element \<Category>
 
-The `<Category>` element specifies in a `Result` the set of **_attributes_** in a given category from the request, that must be included in the corresponding `Result` when `IncludeInResult` is true for the corresponding `RequestAttribute` in the Request. 
+A `<Category>` element specifies in a `Result` the set of **_named attributes_** that were copied from the `<RequestCategory>` element with a given `CategoryId` in the `Request` if and only if their `IncludeInResult` attribute was set to `true`. 
 
 ```xml
 <xs:element name="Category" type="xacml:CategoryType"/>
@@ -2730,7 +2776,7 @@ The `<Category>` element specifies in a `Result` the set of **_attributes_** in 
   <xs:sequence>
     <xs:element ref="xacml:Attribute" minOccurs="1" maxOccurs="unbounded"/>
   </xs:sequence>
-  <xs:attribute name="CategoryId" type="xs:anyURI" use="required"/>
+  <xs:attribute name="CategoryId" type="xacml:IdentifierType" use="required"/>
   <xs:attribute name="Id" type="xs:ID" use="optional"/>
 </xs:complexType>
 ```
@@ -2742,6 +2788,45 @@ The `<Category>` element contains the same `CategoryId` and `Id` attribute as `<
 `<Attribute>` [Any Number]
 
 : A sequence of **_attributes_** that apply to this category and required to be included in the request according to the `IncludeInResult` attribute.
+
+## 5.45 Element \<Value>
+
+The `<Value>` element SHALL contain a literal untyped value, i.e. without a defined data-type. This element is used typically when the data-type is already infered from the context where this Value is used (*type inference*).
+
+```xml
+<xs:element name="Value" type="xacml:ValueType" substitutionGroup="xacml:Expression"/>
+<xs:complexType name="ValueType" mixed="true" final="#all">
+   <xs:complexContent mixed="true">
+      <xs:extension base="xacml:ExpressionType">
+         <xs:sequence>
+            <xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+         </xs:sequence>
+         <xs:anyAttribute  namespace="##other" processContents="lax" />
+      </xs:extension>
+   </xs:complexContent>
+</xs:complexType>
+```
+
+The `<Value>` element is of `ValueType` complex type which is the same as `TypedValueType` *except* it does not have and cannot have the `DataType` attribute.
+
+## 5.46 Element \<TypedExpression>
+
+The `<TypedExpression>` element is not used directly in a **_policy_**. The `<TypedExpression>` element signifies that an element that extends the `TypedExpressionType` and is a member of the `<TypedExpression>` element substitution group SHALL appear in its place. Any element in that substitution group is also in `<Expression>` substitution group and `TypedExpressionType` extends `ExpressionType`.
+
+```xml
+<xs:element name="TypedExpression" type="xacml:TypedExpressionType" abstract="true" substitutionGroup="xacml:Expression"/>
+<xs:complexType name="TypedExpressionType" abstract="true">
+   <xs:complexContent>
+      <xs:extension base="xacml:ExpressionType" />
+   </xs:complexContent>
+</xs:complexType>
+```
+
+The following elements are in the `<TypedExpression>` element substitution group:
+
+`<Apply>`, `<AttributeSelector>`, `<Function>`, `<TypedValue>`, `<VariableReference>` and `<AttributeDesignator>`.
+
+Therefore, among the elements in the `Expression` substitution group defined in section 5.25, only the `<Value>` (untyped value) element is excluded.
 
 -------
 
@@ -2937,18 +3022,18 @@ The predefined **_short identifier_** set is not required to be used but its use
 
 ## 7.4 Attribute evaluation
 
-**_Attributes_** are represented in the request **_context_** by the **_context handler_**, regardless of whether or not they appeared in the original **_decision request_**, and are referred to in the **_policy_** by attribute designators and attribute selectors. A **_named attribute_** is the term used for the criteria that the specific attribute designators use to refer to particular **_attributes_** in the `<Attributes>` elements of the request **_context_**.
+**_Attributes_** are represented in the request **_context_** by the **_context handler_**, regardless of whether or not they appeared in the original **_decision request_**, and are referred to in the **_policy_** by attribute designators and attribute selectors. A **_named attribute_** is the term used for the criteria that the specific attribute designators use to refer to particular **_attributes_** in the `<RequestCategory>` elements of the request **_context_**.
 
 ### 7.4.1 Structured attributes
 
-`<AttributeValue>` elements MAY contain an instance of a structured XML data-type, for example `<ds:KeyInfo>`. XACML 4.0 supports several ways for comparing the contents of such elements.
+`<Value>` and `<TypedValue>` elements MAY contain an instance of a structured XML data-type, for example `<ds:KeyInfo>`. XACML 4.0 supports several ways for comparing the contents of such elements.
 
 1. In some cases, such elements MAY be compared using one of the XACML string functions, such as `string-regexp-match`, described below. This requires that the element be given the data-type `https://www.w3.org/2001/XMLSchema#string`. For example, a structured data-type that is actually a `ds:KeyInfo/KeyName` would appear in the **_context_** as:
 
 ```xml
-    <AttributeValue DataType="https://www.w3.org/2001/XMLSchema#string">
+    <TypedValue DataType="https://www.w3.org/2001/XMLSchema#string">
        &lt;ds:KeyName&gt;jhibbert-key&lt;/ds:KeyName&gt;
-    </AttributeValue>
+    </TypedValue>
 ```
 
 In general, this method will not be adequate unless the structured data-type is quite simple.
@@ -2967,11 +3052,11 @@ The values in a **_bag_** are not ordered, and some of the values may be duplica
 
 ### 7.4.3 Multivalued attributes
 
-If a single `<Attribute>` element in a request **_context_** contains multiple `<AttributeValue>` child elements, then the **_bag_** of values resulting from evaluation of the `<Attribute>` element MUST be identical to the **_bag_** of values that results from evaluating a **_context_** in which each `<AttributeValue>` element appears in a separate `<Attribute>` element, each carrying identical meta-data.
+If a single `<Attribute>` element in a request **_context_** contains multiple `<Value>` child elements, then the **_bag_** of values resulting from the evaluation of the `<Attribute>` element MUST be identical to the **_bag_** of values that results from evaluating a **_context_** in which each `<Value>` element appears in a separate `<Attribute>` element, each carrying identical meta-data.
 
 ### 7.4.4 Attribute Matching
 
-A **_named attribute_** includes specific criteria with which to match **_attributes_** in the **_context_**. An **_attribute_** specifies a `Category`, `AttributeId` and `DataType`, and a **_named attribute_** also specifies the `Issuer`. A **_named attribute_** SHALL match an **_attribute_** if the values of their respective `Category`, `AttributeId`, `DataType` and optional `Issuer` attributes match. The `Category` of the **_named attribute_** MUST match, by **_identifier equality_**, the `Category` of the corresponding **_context_** **_attribute_**. The `AttributeId` of the **_named attribute_** MUST match, by **_identifier equality_**, the `AttributeId` of the corresponding **_context_** **_attribute_**. The `DataType` of the **_named attribute_** MUST match, by **_identifier equality_**, the `DataType` of the corresponding **_context_** **_attribute_**. If `Issuer` is supplied in the **_named attribute_**, then it MUST match, using the `urn:oasis:names:tc:xacml:1.0:function:string-equal` function, the `Issuer` of the corresponding **_context_** **_attribute_**. If `Issuer` is not supplied in the **_named attribute_**, then the matching of the **_context_** **_attribute_** to the **_named attribute_** SHALL be governed by `AttributeId` and `DataType` alone, regardless of the presence, absence, or actual value of `Issuer` in the corresponding **_context_** **_attribute_**. In the case of an attribute selector, the matching of the **_attribute_** to the **_named attribute_** SHALL be governed by the XPath expression and `DataType`.
+A **_named attribute_** includes specific criteria with which to match **_attributes_** in the **_context_**. An **_attribute_** specifies a `CategoryId`, `AttributeId` and `DataType`, and a **_named attribute_** also specifies the `Issuer`. A **_named attribute_** SHALL match an **_attribute_** if the values of their respective `CategoryId`, `AttributeId`, `DataType` and optional `Issuer` attributes match. The `CategoryId` of the **_named attribute_** MUST match, by **_identifier equality_**, the `CategoryId` of the corresponding **_context_** **_attribute_**. The `AttributeId` of the **_named attribute_** MUST match, by **_identifier equality_**, the `AttributeId` of the corresponding **_context_** **_attribute_**. The `DataType` of the **_named attribute_** MUST match, by **_identifier equality_**, the `DataType` of the corresponding **_context_** **_attribute_**. If `Issuer` is supplied in the **_named attribute_**, then it MUST match, using the `urn:oasis:names:tc:xacml:1.0:function:string-equal` function, the `Issuer` of the corresponding **_context_** **_attribute_**. If `Issuer` is not supplied in the **_named attribute_**, then the matching of the **_context_** **_attribute_** to the **_named attribute_** SHALL be governed by `AttributeId` and `DataType` alone, regardless of the presence, absence, or actual value of `Issuer` in the corresponding **_context_** **_attribute_**. In the case of an attribute selector, the matching of the **_attribute_** to the **_named attribute_** SHALL be governed by the XPath expression and `DataType`.
 
 ### 7.4.5 Attribute Retrieval
 
@@ -2989,9 +3074,9 @@ An `<AttributeSelector>` element will be evaluated according to the following pr
 
 : Note: It is not necessary for an implementation to actually follow these steps. It is only necessary to produce results identical to those that would be produced by following these steps.
 
-1. If the **_attributes_** category given by the `Category` attribute is not found or does not have a `<Content>` child element, then the return value is either `Indeterminate` or an empty **_bag_** as determined by the `MustBePresent` attribute; otherwise, construct an XML data structure suitable for xpath processing from the `<Content>` element in the **_attributes_** category given by the Category attribute. The data structure shall be constructed so that the document node of this structure contains a single document element which corresponds to the single child element of the `<Content>` element. The constructed data structure shall be equivalent to one that would result from parsing a stand-alone XML document consisting of the contents of the `<Content>` element (including any comment and processing-instruction markup). Namespace declarations from the `<Content>` element and its ancestor elements for namespace prefixes that are "visibly utilized", as defined by [[exc-c14n](#exc-c14n)], within the contents MUST be present. Namespace declarations from the `<Content>` element or its ancestor elements for namespace prefixes that are not "visibly utilized" MAY be present. The data structure must meet the requirements of the applicable XPath version.
+1. If the **_attributes_** category given by the `CategoryId` attribute is not found or does not have a `<Content>` child element, then the return value is either `Indeterminate` or an empty **_bag_** as determined by the `MustBePresent` attribute; otherwise, construct an XML data structure suitable for xpath processing from the `<Content>` element in the **_attributes_** category given by the Category attribute. The data structure shall be constructed so that the document node of this structure contains a single document element which corresponds to the single child element of the `<Content>` element. The constructed data structure shall be equivalent to one that would result from parsing a stand-alone XML document consisting of the contents of the `<Content>` element (including any comment and processing-instruction markup). Namespace declarations from the `<Content>` element and its ancestor elements for namespace prefixes that are "visibly utilized", as defined by [[exc-c14n](#exc-c14n)], within the contents MUST be present. Namespace declarations from the `<Content>` element or its ancestor elements for namespace prefixes that are not "visibly utilized" MAY be present. The data structure must meet the requirements of the applicable XPath version.
 
-2. Select a context node for XPath processing from this data structure. If there is a `ContextSelectorId` attribute, the context node shall be the node selected by applying the XPath expression given in the **_attribute_** value of the designated **_attribute_** (in the **_attributes_** category given by the `<AttributeSelector>` `Category` attribute). It shall be an error if this evaluation returns no node or more than one node, in which case the return value MUST be an `Indeterminate` with a status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`. If there is no `ContextSelectorId`, the document node of the data structure shall be the context node.
+2. Select a context node for XPath processing from this data structure. If there is a `ContextSelectorId` attribute, the context node shall be the node selected by applying the XPath expression given in the **_attribute_** value of the designated **_attribute_** (in the **_attributes_** category given by the `<AttributeSelector>` `CategoryId` attribute). It shall be an error if this evaluation returns no node or more than one node, in which case the return value MUST be an `Indeterminate` with a status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`. If there is no `ContextSelectorId`, the document node of the data structure shall be the context node.
 
 3. Evaluate the XPath expression given in the `Path` attribute against the xml data structure, using the context node selected in the previous step. It shall be an error if this evaluation returns anything other than a sequence of nodes (possibly empty), in which case the `<AttributeSelector>` MUST return `Indeterminate` with a status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`. If the evaluation returns an empty sequence of nodes, then the return value is either `Indeterminate` or an empty **_bag_** as determined by the `MustBePresent` attribute.
 
@@ -3023,7 +3108,8 @@ XACML specifies expressions in terms of the elements listed below, of which the 
 
 XACML defines these elements to be in the substitution group of the `<Expression>` element:
 
-* `<xacml:AttributeValue>`
+* `<xacml:Value>`
+* `<xacml:TypedValue>`
 * `<xacml:AttributeDesignator>`
 * `<xacml:AttributeSelector>`
 * `<xacml:Apply>`
@@ -3243,7 +3329,7 @@ This section describes the points within the XACML model and schema where extens
 ## 8.1 Extensible XML attribute types
 
 The following XML attributes have values that are URIs. These may be extended by the creation of new URIs associated with new semantics for these attributes. \
-`Category`, \
+`CategoryId`, \
 `AttributeId`, \
 `DataType`, \
 `FunctionId`, \
@@ -3255,9 +3341,9 @@ See [Section 5](#5-syntax-normative-with-the-exception-of-the-schema-fragments) 
 
 ## 8.2 Structured attributes
 
-`<AttributeValue>` elements MAY contain an instance of a structured XML data-type. [Section 7.4.1](#741-structured-attributes) describes a number of standard techniques to identify data items within such a structured **_attribute_**. Listed here are some additional techniques that require XACML extensions.
+`<Value>` and `<TypedValue>` elements MAY contain an instance of a structured XML data-type. [Section 7.4.1](#741-structured-attributes) describes a number of standard techniques to identify data items within such a structured **_attribute_**. Listed here are some additional techniques that require XACML extensions.
 
-1. For a given structured data-type, a community of XACML users MAY define new **_attribute_** identifiers for each leaf sub-element of the structured data-type that has a type conformant with one of the XACML-defined primitive data-types. Using these new **_attribute_** identifiers, the **_PEPs_** or **_context handlers_** used by that community of users can flatten instances of the structured data-type into a sequence of individual `<Attribute>` elements. Each such `<Attribute>` element can be compared using the XACML-defined functions. Using this method, the structured data-type itself never appears in an `<AttributeValue>` element.
+1. For a given structured data-type, a community of XACML users MAY define new **_attribute_** identifiers for each leaf sub-element of the structured data-type that has a type conformant with one of the XACML-defined primitive data-types. Using these new **_attribute_** identifiers, the **_PEPs_** or **_context handlers_** used by that community of users can flatten instances of the structured data-type into a sequence of individual `<Attribute>` elements. Each such `<Attribute>` element can be compared using the XACML-defined functions. Using this method, the structured data-type itself never appears in an `<Value>` element.
 
 2. A community of XACML users MAY define a new function that can be used to compare a value of the structured data-type against some other value. This method may only be used by **_PDPs_** that support the new function.
 
@@ -3290,10 +3376,8 @@ The implementation MUST support those schema elements that are marked `M`.
 | xacml:AttributeAssignment | M |
 | xacml:AttributeAssignmentExpression | M |
 | xacml:AttributeDesignator | M |
-| xacml:Attributes | M |
 | xacml:AttributeSelector | O |
-| xacml:AttributesReference | O |
-| xacml:AttributeValue | M |
+| xacml:Category | M |
 | xacml:CombinerParameter | O |
 | xacml:CombinerParameters | O |
 | xacml:Condition | M |
@@ -3313,6 +3397,8 @@ The implementation MUST support those schema elements that are marked `M`.
 | xacml:PolicyReference | M |
 | xacml:PolicyIssuer | O |
 | xacml:Request | M |
+| xacml:RequestCategory | M |
+| xacml:RequestCategoryReference | O |
 | xacml:RequestDefaults | O |
 | xacml:RequestReference | O |
 | xacml:Response | M |
@@ -3324,6 +3410,9 @@ The implementation MUST support those schema elements that are marked `M`.
 | xacml:StatusDetail | O |
 | xacml:StatusMessage | O |
 | xacml:Target | M |
+| xacml:TypedExpression | M |
+| xacml:TypedValue | M |
+| xacml:Value | M |
 | xacml:VariableDefinition | M |
 | xacml:VariableReference | M |
 | xacml:XPathVersion | O |
@@ -4230,7 +4319,7 @@ where `portnumber` is a decimal port number. If the port number is of the form `
 
 ### E.2.5 XPath expression
 
-The `urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression` primitive type represents an XPath expression over the XML in a `<Content>` element. The syntax is defined by the XPath W3C recommendation. The content of this data type also includes the context in which namespaces prefixes in the expression are resolved, which distinguishes it from a plain string and the XACML **_attribute_** category of the `<Content>` element to which it applies. When the value is encoded in an `<AttributeValue>` element, the namespace context is given by the [in-scope namespaces] (see [INFOSET]) of the `<AttributeValue>` element, and an XML attribute called XPathCategory gives the category of the `<Content>` element where the expression applies.
+The `urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression` primitive type represents an XPath expression over the XML in a `<Content>` element. The syntax is defined by the XPath W3C recommendation. The content of this data type also includes the context in which namespaces prefixes in the expression are resolved, which distinguishes it from a plain string and the XACML **_attribute_** category of the `<Content>` element to which it applies. When the value is encoded in an `<Value>` or `<TypedValue>` element, the namespace context is given by the [in-scope namespaces] (see [INFOSET]) of the `<Value>` or `<TypedValue>` element, and an XML attribute called XPathCategory gives the category of the `<Content>` element where the expression applies.
 
 The XPath expression MUST be evaluated in a context which is equivalent of a stand alone XML document with the only child of the `<Content>` element as the document element. The context node of the XPath expression is the document node of this stand alone document. Namespace declarations from the `<Content>` element and its ancestor elements for namespace prefixes that are "visibly utilized", as defined by [[exc-c14n](#exc-c14n)], within the contents MUST be present. Namespace declarations from the `<Content>` element or its ancestor elements for namespace prefixes that are not "visibly utilized" MAY be present.
 
@@ -4741,17 +4830,12 @@ This section describes functions in XACML that perform operations on **_bags_** 
   ```xml
   <Apply FunctionId="urn:oasis:names:tc:xacml:3.0:function:any-of">
     <Function FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal"/>
-    <AttributeValue 
-      DataType="https://www.w3.org/2001/XMLSchema#string">Paul</AttributeValue>
+    <Value>Paul</Value>
     <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
-      <AttributeValue 
-        DataType="https://www.w3.org/2001/XMLSchema#string">John</AttributeValue>
-      <AttributeValue 
-        DataType="https://www.w3.org/2001/XMLSchema#string">Paul</AttributeValue>
-      <AttributeValue 
-        DataType="https://www.w3.org/2001/XMLSchema#string">George</AttributeValue>
-      <AttributeValue 
-        DataType="https://www.w3.org/2001/XMLSchema#string">Ringo</AttributeValue>
+      <Value>John</Value>
+      <Value>Paul</Value>
+      <Value>George</Value>
+      <Value>Ringo</Value>
     </Apply>
   </Apply>
   ```
@@ -4770,12 +4854,12 @@ This section describes functions in XACML that perform operations on **_bags_** 
   ```xml
   <Apply FunctionId="urn:oasis:names:tc:xacml:3.0:function:all-of">
     <Function FunctionId="urn:oasis:names:tc:xacml:2.0:function:integer-greater-than"/>
-    <AttributeValue DataType="https://www.w3.org/2001/XMLSchema#integer">10</AttributeValue>
+    <Value>10</Value>
     <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-bag">
-      <AttributeValue DataType="https://www.w3.org/2001/XMLSchema#integer">9</AttributeValue>
-      <AttributeValue DataType="https://www.w3.org/2001/XMLSchema#integer">3</AttributeValue>
-      <AttributeValue DataType="https://www.w3.org/2001/XMLSchema#integer">4</AttributeValue>
-      <AttributeValue DataType="https://www.w3.org/2001/XMLSchema#integer">2</AttributeValue>
+      <Value>9</Value>
+      <Value>3</Value>
+      <Value>4</Value>
+      <Value>2</Value>
     </Apply>
   </Apply>
   ```
@@ -4795,14 +4879,14 @@ This section describes functions in XACML that perform operations on **_bags_** 
   <Apply FunctionId="urn:oasis:names:tc:xacml:3.0:function:any-of-any">
     <Function FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal"/>
     <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
-      <AttributeValue DataType="https://www.w3.org/2001/XMLSchema#string">Ringo</AttributeValue>
-      <AttributeValue DataType="https://www.w3.org/2001/XMLSchema#string">Mary</AttributeValue>
+      <Value>Ringo</Value>
+      <Value>Mary</Value>
     </Apply>
     <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
-      <AttributeValue DataType="https://www.w3.org/2001/XMLSchema#string">John</AttributeValue>
-      <AttributeValue DataType="https://www.w3.org/2001/XMLSchema#string">Paul</AttributeValue>
-      <AttributeValue DataType="https://www.w3.org/2001/XMLSchema#string">George</AttributeValue>
-      <AttributeValue DataType="https://www.w3.org/2001/XMLSchema#string">Ringo</AttributeValue>
+      <Value>John</Value>
+      <Value>Paul</Value>
+      <Value>George</Value>
+      <Value>Ringo</Value>
     </Apply>
   </Apply>
   ```
@@ -4822,14 +4906,14 @@ This section describes functions in XACML that perform operations on **_bags_** 
   <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:all-of-any">
     <Function FunctionId="urn:oasis:names:tc:xacml:2.0:function:integer-greater-than"/>
     <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-bag">
-      <AttributeValue DataType="https://www.w3.org/2001/XMLSchema#integer">10</AttributeValue>
-      <AttributeValue DataType="https://www.w3.org/2001/XMLSchema#integer">20</AttributeValue>
+      <Value>10</Value>
+      <Value>20</Value>
     </Apply>
     <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-bag">
-      <AttributeValue DataType="https://www.w3.org/2001/XMLSchema#integer">1</AttributeValue>
-      <AttributeValue DataType="https://www.w3.org/2001/XMLSchema#integer">3</AttributeValue>
-      <AttributeValue DataType="https://www.w3.org/2001/XMLSchema#integer">5</AttributeValue>
-      <AttributeValue DataType="https://www.w3.org/2001/XMLSchema#integer">19</AttributeValue>
+      <Value>1</Value>
+      <Value>3</Value>
+      <Value>5</Value>
+      <Value>19</Value>
     </Apply>
   </Apply>
   ```
@@ -4849,14 +4933,14 @@ This section describes functions in XACML that perform operations on **_bags_** 
   <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:any-of-all">
     <Function FunctionId="urn:oasis:names:tc:xacml:2.0:function:integer-greater-than"/>
     <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:fu`nction:integer-bag">
-      <AttributeValue DataType="https://www.w3.org/2001/XMLSchema#integer">3</AttributeValue>
-      <AttributeValue DataType="https://www.w3.org/2001/XMLSchema#integer">5</AttributeValue>
+      <Value>3</Value>
+      <Value>5</Value>
     </Apply>
     <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-bag">
-      <AttributeValue DataType="https://www.w3.org/2001/XMLSchema#integer">1</AttributeValue>
-      <AttributeValue DataType="https://www.w3.org/2001/XMLSchema#integer">2</AttributeValue>
-      <AttributeValue DataType="https://www.w3.org/2001/XMLSchema#integer">3</AttributeValue>
-      <AttributeValue DataType="https://www.w3.org/2001/XMLSchema#integer">4</AttributeValue>
+      <Value>1</Value>
+      <Value>2</Value>
+      <Value>3</Value>
+      <Value>4</Value>
     </Apply>
   </Apply>
   ```
@@ -4876,14 +4960,14 @@ This section describes functions in XACML that perform operations on **_bags_** 
   <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:all-of-all">
     <Function FunctionId="urn:oasis:names:tc:xacml:2.0:function:integer-greater-than"/>
     <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-bag">
-      <AttributeValue DataType="https://www.w3.org/2001/XMLSchema#integer">6</AttributeValue>
-      <AttributeValue DataType="https://www.w3.org/2001/XMLSchema#integer">5</AttributeValue>
+      <Value>6</Value>
+      <Value>5</Value>
     </Apply>
     <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-bag">
-      <AttributeValue DataType="https://www.w3.org/2001/XMLSchema#integer">1</AttributeValue>
-      <AttributeValue DataType="https://www.w3.org/2001/XMLSchema#integer">2</AttributeValue>
-      <AttributeValue DataType="https://www.w3.org/2001/XMLSchema#integer">3</AttributeValue>
-      <AttributeValue DataType="https://www.w3.org/2001/XMLSchema#integer">4</AttributeValue>
+      <Value>1</Value>
+      <Value>2</Value>
+      <Value>3</Value>
+      <Value>4</Value>
     </Apply>
   </Apply>
   ```
@@ -4903,8 +4987,8 @@ This section describes functions in XACML that perform operations on **_bags_** 
   <Apply FunctionId="urn:oasis:names:tc:xacml:3.0:function:map">
     <Function FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-normalize-to-lower-case" />
     <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag">
-      <AttributeValue DataType="https://www.w3.org/2001/XMLSchema#string">Hello</AttributeValue>
-      <AttributeValue DataType="https://www.w3.org/2001/XMLSchema#string">World!</AttributeValue>
+      <Value>Hello</Value>
+      <Value>World!</Value>
     </Apply>
   </Apply>
   ```
@@ -5028,11 +5112,11 @@ This section specifies functions that take XPath expressions for arguments. An X
 `urn:oasis:names:tc:xacml:3.0:function:access-permitted`
 
 : This function SHALL take an `https://www.w3.org/2001/XMLSchema#anyURI` and an <!-- Line break added for the previous line to fit on a PDF page -->
-: `https://www.w3.org/2001/XMLSchema#string` as arguments. The first argument SHALL be interpreted as an **_attribute_** category. The second argument SHALL be interpreted as the XML content of an `<Attributes>` element with `Category` equal to the first argument. The function evaluates to an `https://www.w3.org/2001/XMLSchema#boolean`. This function SHALL return `True` if and only if the **_policy_** evaluation described below returns the value of `Permit`.
+: `https://www.w3.org/2001/XMLSchema#string` as arguments. The first argument SHALL be interpreted as an **_attribute_** category. The second argument SHALL be interpreted as the XML content of an `<RequestCategory>` element with `CategoryId` equal to the first argument. The function evaluates to an `https://www.w3.org/2001/XMLSchema#boolean`. This function SHALL return `True` if and only if the **_policy_** evaluation described below returns the value of `Permit`.
 
 : The following evaluation is described as if the **_context_** is actually instantiated, but it is only required that an equivalent result be obtained.
 
-: The function SHALL construct a new **_context_**, by copying all the information from the current **_context_**, omitting any `<Attributes>` element with `Category` equal to the first argument. The second function argument SHALL be added to the **_context_** as the content of an `<Attributes>` element with `Category` equal to the first argument.
+: The function SHALL construct a new **_context_**, by copying all the information from the current **_context_**, omitting any `<RequestCategory>` element with `CategoryId` equal to the first argument. The second function argument SHALL be added to the **_context_** as the content of an `<RequestCategory>` element with `CategoryId` equal to the first argument.
 
 : The function SHALL invoke a complete **_policy_** evaluation using the newly constructed **_context_**. This evaluation SHALL be completely isolated from the evaluation which invoked the function, but shall use all current **_policies_** and **_combining algorithms_**, including any per request **_policies_**.
 
@@ -5212,9 +5296,9 @@ The following data-type identifiers correspond to the dayTimeDuration and yearMo
 
 ## F.4 Subject attributes
 
-These identifiers indicate **_attributes_** of a **_subject_**. When used, it is RECOMMENDED that they appear within an `<Attributes>` element of the request **_context_** with a **_subject_** category (see [Appendix F.2](#f2-attribute-categories)).
+These identifiers indicate **_attributes_** of a **_subject_**. When used, it is RECOMMENDED that they appear within an `<RequestCategory>` element of the request **_context_** with a **_subject_** category (see [Appendix F.2](#f2-attribute-categories)).
 
-At most one of each of these **_attributes_** is associated with each **_subject_**. Each **_attribute_** associated with authentication included within a single `<Attributes>` element relates to the same authentication event.
+At most one of each of these **_attributes_** is associated with each **_subject_**. Each **_attribute_** associated with authentication included within a single `<RequestCategory>` element relates to the same authentication event.
 
 This identifier indicates the name of the **_subject_**.
 
@@ -5264,7 +5348,7 @@ Where a suitable attribute is already defined in LDAP [LDAP-1], [LDAP-2], the XA
 
 ## F.5 Resource attributes
 
-These identifiers indicate **_attributes_** of the **_resource_**. When used, it is RECOMMENDED they appear within the `<Attributes>` element of the request **_context_** with `Category` 
+These identifiers indicate **_attributes_** of the **_resource_**. When used, it is RECOMMENDED they appear within the `<RequestCategory>` element of the request **_context_** with `CategoryId` 
 <!-- Line break added for the previous line to fit on a PDF page -->
 `urn:oasis:names:tc:xacml:3.0:attribute-category:resource`.
 
@@ -5278,7 +5362,7 @@ This **_attribute_** identifies the namespace of the top element(s) of the conte
 
 ## F.6 Action attributes
 
-These identifiers indicate **_attributes_** of the **_action_** being requested. When used, it is RECOMMENDED they appear within the `<Attributes>` element of the request **_context_** with `Category` `urn:oasis:names:tc:xacml:3.0:attribute-category:action`.
+These identifiers indicate **_attributes_** of the **_action_** being requested. When used, it is RECOMMENDED they appear within the `<RequestCategory>` element of the request **_context_** with `CategoryId` `urn:oasis:names:tc:xacml:3.0:attribute-category:action`.
 
 This **_attribute_** identifies the **_action_** for which **_access_** is requested.
 
@@ -5294,7 +5378,7 @@ This **_attribute_** identifies the namespace in which the action-id **_attribut
 
 ## F.7 Environment attributes
 
-These identifiers indicate **_attributes_** of the **_environment_** within which the **_decision request_** is to be evaluated. When used in the **_decision request_**, it is RECOMMENDED they appear in the `<Attributes>` element of the request **_context_** with `Category` `urn:oasis:names:tc:xacml:3.0:attribute-category:environment`.
+These identifiers indicate **_attributes_** of the **_environment_** within which the **_decision request_** is to be evaluated. When used in the **_decision request_**, it is RECOMMENDED they appear in the `<RequestCategory>` element of the request **_context_** with `CategoryId` `urn:oasis:names:tc:xacml:3.0:attribute-category:environment`.
 
 This identifier indicates the current time at the **_context handler_**. In practice it is the time at which the request **_context_** was created. For this reason, if these identifiers appear in multiple places within a `<Policy>`, then the same value SHALL be assigned to each occurrence in the evaluation procedure, regardless of how much time elapses between the processing of the occurrences.
 
