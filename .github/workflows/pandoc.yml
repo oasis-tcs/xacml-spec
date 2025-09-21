@@ -2,9 +2,9 @@
 name: Run pandoc and deploy generated content to Pages
 
 on:
-  # Runs on pushes targeting the default branch
+  # Runs on pushes targeting the acal branch
   push:
-    branches: ["xacml-4.0-core-spec"]
+    branches: ["acal"]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -32,7 +32,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: xacml-4.0-core-spec
+          ref: acal
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: List files in the repository
