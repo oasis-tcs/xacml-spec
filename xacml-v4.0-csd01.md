@@ -195,7 +195,8 @@ XACML 4.0 differs from XACML 3.0 in the following ways:
 * `AttributeSelector` element:
    * `Category` attribute renamed to `CategoryId`, to be consistent with `CategoryId` attribute in new `RequestCategory` and `Category` elements.
    * `DataType` attribute changed to be optional, with `http://www.w3.org/2001/XMLSchema#string` as default, to simplify the element declaration in most cases.
-   * `MustBePresent`: changed to be optional with `false` as default value, to simplify the element declaration in most cases..
+   * `MustBePresent`: changed to be optional with `false` as default value, to simplify the element declaration in most cases.
+   * `Path` attribute, i.e. the XPath expression, can use *XACML* variables from `VariableDefinition` elements as XPath variables.
 
 * `AttributeDesignator` element: 
   * `Category` attribute renamed to `CategoryId`, to be consistent with `CategoryId` attribute in new `RequestCategory` and `Category` elements.
@@ -2085,7 +2086,18 @@ The `<AttributeSelector>` element has the following attributes:
 
 `Path` [Required]
 
-: This attribute SHALL contain an XPath expression to be evaluated against the specified XML content. See [Section 7.4.7](#747-attributeselector-evaluation) for details of the XPath evaluation during `<AttributeSelector>` processing. The namespace context for the value of the Path attribute is given by the [in-scope namespaces] [[INFOSET](#infoset)] of the `<AttributeSelector>` element.
+: This attribute SHALL contain an XPath expression to be evaluated against the specified XML content. 
+
+: This XPath expression may reference one or more XPath variables, in which case each XPath variable's value(s) is taken(s) from the corresponding so-called *XACML variable*, i.e. the variable defined by a `<VariableDefinition>` with a `VariableId` matching the XPath variable name, in the scope of this element. Only XPath variables of primitive atomic type or array of primitive atomic type are allowed in this XPath expression; in the first case (respectively the second case), the corresponding XACML variable must return a single value (respectively a bag) of a primitive datatype that is convertible to that XPath atomic type. How to do this conversion is described in step 4 of [Section 7.4.7](#747-attributeselector-evaluation).
+
+: For example, in the following `<AttributeSelector>`:
+
+   ```xml
+   <AttributeSelector Path="if ($classif_name = 'SECRET') then 3 else if ($classif_name = 'CONFIDENTIAL') then 2 else if ($classif_name = 'RESTRICTED ') then 1 else 0" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" DataType="http://www.w3.org/2001/XMLSchema#integer" MustBePresent="true" />
+   ```
+   the XPath expression references the XPath variable `classif_name`, which requires a `<VariableDefinition VariableId="classif_name">EXP</VariableDefinition>` to be defined in the enclosing `Policy`, where `EXP` is any Expression of type `http://www.w3.org/2001/XMLSchema#string`.
+
+: If no such variable is found (in the current scope) or the datatype is incompatible (XACML-to-XPath type conversion is not possible), the XPath expression and therefore this `Path` attribute must be considered invalid and a syntax error returned (status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`). See [Section 7.4.7](#747-attributeselector-evaluation) for details of the XPath evaluation during `<AttributeSelector>` processing. The namespace context for the value of the Path attribute is given by the [in-scope namespaces] [[INFOSET](#infoset)] of the `<AttributeSelector>` element.
 
 `DataType` [Optional]
 
@@ -3078,7 +3090,10 @@ An `<AttributeSelector>` element will be evaluated according to the following pr
 
 2. Select a context node for XPath processing from this data structure. If there is a `ContextSelectorId` attribute, the context node shall be the node selected by applying the XPath expression given in the **_attribute_** value of the designated **_attribute_** (in the **_attributes_** category given by the `<AttributeSelector>` `CategoryId` attribute). It shall be an error if this evaluation returns no node or more than one node, in which case the return value MUST be an `Indeterminate` with a status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`. If there is no `ContextSelectorId`, the document node of the data structure shall be the context node.
 
-3. Evaluate the XPath expression given in the `Path` attribute against the xml data structure, using the context node selected in the previous step. It shall be an error if this evaluation returns anything other than a sequence of nodes (possibly empty), in which case the `<AttributeSelector>` MUST return `Indeterminate` with a status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`. If the evaluation returns an empty sequence of nodes, then the return value is either `Indeterminate` or an empty **_bag_** as determined by the `MustBePresent` attribute.
+3. Evaluate the XPath expression given in the `Path` attribute against the xml data structure, using the context node selected in the previous step, and for each XPath variable referenced in the XPath expression (if there is any), using the *XACML* variable (defined by a `<VariableDefinition>`) 
+   with a `VariableId` matching the XPath variable name in the current scope as the XPath variable in the evaluation context. It shall be an error if an XPath variable referenced in the XPath expression does not correspond to any *XACML* variable in scope or the corresponding variable does not 
+   have a compatible datatype (not convertible to the XPath datatype as defined below) or if 
+   this XPath evaluation returns anything other than a sequence of nodes (possibly empty), in which cases the `<AttributeSelector>` MUST return `Indeterminate` with a status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`. If the evaluation returns an empty sequence of nodes, then the return value is either `Indeterminate` or an empty **_bag_** as determined by the `MustBePresent` attribute.
 
 4. If the data type is a primitive data type, convert the text value of each selected node to the desired data type, as specified in the `DataType` attribute. Each value shall be constructed using the appropriate constructor function from [[XF](#xf)] Section 5 listed below, corresponding to the specified data type:
 
@@ -3109,12 +3124,13 @@ XACML specifies expressions in terms of the elements listed below, of which the 
 XACML defines these elements to be in the substitution group of the `<Expression>` element:
 
 * `<xacml:Value>`
-* `<xacml:TypedValue>`
-* `<xacml:AttributeDesignator>`
-* `<xacml:AttributeSelector>`
-* `<xacml:Apply>`
-* `<xacml:Function>`
-* `<xacml:VariableReference>`
+* Elements in `<TypedExpression>` substitution group:
+  * `<xacml:TypedValue>`
+  * `<xacml:AttributeDesignator>`
+  * `<xacml:AttributeSelector>`
+  * `<xacml:Apply>`
+  * `<xacml:Function>`
+  * `<xacml:VariableReference>`
 
 ## 7.6 Arithmetic evaluation
 
@@ -4319,7 +4335,7 @@ where `portnumber` is a decimal port number. If the port number is of the form `
 
 ### E.2.5 XPath expression
 
-The `urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression` primitive type represents an XPath expression over the XML in a `<Content>` element. The syntax is defined by the XPath W3C recommendation. The content of this data type also includes the context in which namespaces prefixes in the expression are resolved, which distinguishes it from a plain string and the XACML **_attribute_** category of the `<Content>` element to which it applies. When the value is encoded in an `<Value>` or `<TypedValue>` element, the namespace context is given by the [in-scope namespaces] (see [INFOSET]) of the `<Value>` or `<TypedValue>` element, and an XML attribute called XPathCategory gives the category of the `<Content>` element where the expression applies.
+The `urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression` primitive type represents an XPath expression over the XML in a `<Content>` element. The syntax is defined by the XPath W3C recommendation. The content of this data type also includes the context in which namespaces prefixes in the expression are resolved, which distinguishes it from a plain string and the XACML **_attribute_** category of the `<Content>` element to which it applies. When the value is encoded in an `<Value>` (resp. `<TypedValue>`) element, the namespace context is given by the [in-scope namespaces] (see [INFOSET]) of the `<Value>` (resp. `<TypedValue>`) element, and an XML attribute called XPathCategory gives the category of the `<Content>` element where the expression applies.
 
 The XPath expression MUST be evaluated in a context which is equivalent of a stand alone XML document with the only child of the `<Content>` element as the document element. The context node of the XPath expression is the document node of this stand alone document. Namespace declarations from the `<Content>` element and its ancestor elements for namespace prefixes that are "visibly utilized", as defined by [[exc-c14n](#exc-c14n)], within the contents MUST be present. Namespace declarations from the `<Content>` element or its ancestor elements for namespace prefixes that are not "visibly utilized" MAY be present.
 
