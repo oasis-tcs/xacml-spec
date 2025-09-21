@@ -2190,7 +2190,10 @@ The `<AttributeAssignment>` element extends the `<AttributeType>` with the follo
 
 ## 5.39 Element \<NoticeExpression>
 
-The `<NoticeExpression>` element evaluates to a **_notice_** and SHALL contain an identifier for the **_notice_** and a set of expressions that form arguments of the **_notice_**. The `AppliesTo` attribute indicates the **_effect_** for which this **_notice_** is eligible to be provided to the **_PEP_**. If the `AppliesTo` attribute is absent then this **_notice_** is eligible to be provided to the **_PEP_** if the **_effect_** is either `Permit` or `Deny`.
+The `<NoticeExpression>` element evaluates to a `<Notice>` element ( [Section 5.34](#534-element-notice) ) and SHALL contain an identifier for the **_notice_** and a set of expressions that form arguments of the **_notice_**. The `AppliesTo` attribute indicates the **_effect_** for which this 
+**_notice_** is eligible to be provided to 
+the 
+**_PEP_**. If the `AppliesTo` attribute is absent then this **_notice_** is eligible to be provided to the **_PEP_** if the **_effect_** is either `Permit` or `Deny`.
 
 ```xml
 <xs:element name="NoticeExpression" type="xacml:NoticeExpressionType"/>
@@ -2215,7 +2218,8 @@ The `<NoticeExpression>` element contains the following elements and attributes:
 
 `IsObligation` [Optional]
 
-: The setting for the `IsObligation` attribute of the **_notice_**. If `IsObligation` is present then the `IsObligation` attribute of the **_notice_** is set to the same value; otherwise, the `IsObligation` attribute is omitted from the **_notice_**.
+: The setting for the `IsObligation` attribute of the **_notice_**. If `IsObligation` is present then the `IsObligation` attribute of the **_notice_** is set to the same value; otherwise, the `IsObligation` attribute is omitted from the **_notice_**, in which case the default value of `<Notice>`'s 
+`IsObligation` (defined in [Section 5.34](#534-element-notice) ) applies.
 
 `AppliesTo` [Optional]
 
@@ -2231,7 +2235,11 @@ The `<NoticeExpression>` element contains the following elements and attributes:
 
 ## 5.41 Element \<AttributeAssignmentExpression>
 
-The `<AttributeAssignmentExpression>` element is used for including arguments in **_notices_**. It SHALL contain an `AttributeId` and an expression which SHALL by evaluated into the corresponding **_attribute_** value. The value specified SHALL be understood by the **_PEP_**, but it is not further specified by XACML. See [Section 7.18](#718-notices). [Section 4.2.5.3](#4253-rule-3) provides a number of examples of attribute assignment expressions included in **_notice_** expressions.
+The `<AttributeAssignmentExpression>` element evaluates to `<AttributeAssignment>` elements which are used for including arguments in **_notices_**. It SHALL contain an `AttributeId` and an expression which SHALL by evaluated into the corresponding **_attribute_** value. The value specified 
+SHALL be 
+understood by 
+the **_PEP_**, but 
+it is not further specified by XACML. See [Section 7.18](#718-notices). [Section 4.2.5.3](#4253-rule-3) provides a number of examples of attribute assignment expressions included in **_notice_** expressions.
 
 ```xml
 <xs:element name="AttributeAssignmentExpression" type="xacml:AttributeAssignmentExpressionType"/>

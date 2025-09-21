@@ -211,6 +211,7 @@
 		</xs:sequence>
 		<xs:attribute name="Id" type="xacml:IdentifierType" use="required"/>
 		<xs:attribute name="IsObligation" type="xs:boolean" use="optional"/>
+		<!-- Undefined AppliesTo means it applies to both Permit and Deny -->
 		<xs:attribute name="AppliesTo" type="xacml:EffectType" use="optional"/>
 	</xs:complexType>
 
