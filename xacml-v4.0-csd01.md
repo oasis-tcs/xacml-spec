@@ -1677,7 +1677,7 @@ Elements of this type SHALL contain the version number of the **_policy_**.
 ```xml
 <xs:simpleType name="VersionType">
    <xs:restriction base="xs:string">
-      <xs:pattern value="(\d+\.)*\d+"/>
+     <xs:pattern value="(0|[1-9]\d*)(\.(0|[1-9]\d*)){0,3}"/>
    </xs:restriction>
 </xs:simpleType>
 ```
@@ -1691,7 +1691,7 @@ Elements of this type SHALL contain a restricted regular expression matching a v
 ```xml
 <xs:simpleType name="VersionMatchType">
    <xs:restriction base="xs:string">
-      <xs:pattern value="((\d+|\*)\.)*(\d+|\*|\+)"/>
+     <xs:pattern value="(0|[1-9]\d*|\*)(\.(0|[1-9]\d*|\*|\+)){0,3}"/>
    </xs:restriction>
 </xs:simpleType>
 ```
@@ -2018,7 +2018,7 @@ The `<AttributeDesignator>` element is of the `AttributeDesignatorType` complex 
          <xs:attribute name="CategoryId" type="xacml:IdentifierType" use="required"/>
          <xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
          <xs:attribute name="DataType" type="xacml:IdentifierType" use="optional" default="http://www.w3.org/2001/XMLSchema#string"/>
-         <xs:attribute name="Issuer" type="xs:string" use="optional"/>
+         <xs:attribute name="Issuer" type="xs:Name" use="optional"/>
          <xs:attribute name="MustBePresent" type="xs:boolean" use="optional" default="false"/>
        </xs:extension>
    </xs:complexContent>
@@ -2249,7 +2249,7 @@ it is not further specified by XACML. See [Section 7.18](#718-notices). [Section
    </xs:sequence>
    <xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
    <xs:attribute name="CategoryId" type="xacml:IdentifierType" use="optional"/>
-   <xs:attribute name="Issuer" type="xs:string" use="optional"/>
+   <xs:attribute name="Issuer" type="xs:Name" use="optional"/>
 </xs:complexType>
 ```
 
@@ -2409,7 +2409,7 @@ in the **_policy_** MAY refer to **_attributes_** by means of this meta-data. It
       <xs:element ref="xacml:Value" maxOccurs="unbounded"/>
    </xs:sequence>
    <xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
-   <xs:attribute name="Issuer" type="xs:string" use="optional"/>
+   <xs:attribute name="Issuer" type="xs:Name" use="optional"/>
    <xs:attribute name="DataType" type="xacml:IdentifierType" use="optional" default="http://www.w3.org/2001/XMLSchema#string"/>
 </xs:complexType>
 ```
@@ -2733,7 +2733,7 @@ The `<MissingAttributeDetail>` element conveys information about **_attributes_*
    <xs:attribute name="CategoryId" type="xacml:IdentifierType" use="required"/>
    <xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
    <xs:attribute name="DataType" type="xacml:IdentifierType" use="required"/>
-   <xs:attribute name="Issuer" type="xs:string" use="optional"/>
+   <xs:attribute name="Issuer" type="xs:Name" use="optional"/>
 </xs:complexType>
 ```
 
@@ -3393,53 +3393,57 @@ The implementation MUST follow [Section 5](#5-syntax-normative-with-the-exceptio
 
 The implementation MUST support those schema elements that are marked `M`.
 
-| Element name | M/O |
-| :--- | :--- |
-| xacml:Apply | M |
-| xacml:Attribute | M |
-| xacml:AttributeAssignment | M |
-| xacml:AttributeAssignmentExpression | M |
-| xacml:AttributeDesignator | M |
-| xacml:AttributeSelector | O |
-| xacml:Category | M |
-| xacml:CombinerParameter | O |
-| xacml:CombinerParameters | O |
-| xacml:Condition | M |
-| xacml:Content | O |
-| xacml:Decision | M |
-| xacml:Description | M |
-| xacml:Expression | M |
-| xacml:Function | M |
-| xacml:MissingAttributeDetail | M |
-| xacml:MultiRequests | O |
-| xacml:Notice | M |
-| xacml:NoticeExpression | M |
-| xacml:Policy | M |
-| xacml:PolicyCombinerParameters | O |
-| xacml:PolicyDefaults | O |
-| xacml:PolicyIdentifierList | O |
-| xacml:PolicyReference | M |
-| xacml:PolicyIssuer | O |
-| xacml:Request | M |
-| xacml:RequestCategory | M |
-| xacml:RequestCategoryReference | O |
-| xacml:RequestDefaults | O |
-| xacml:RequestReference | O |
-| xacml:Response | M |
-| xacml:Result | M |
-| xacml:Rule | M |
-| xacml:RuleCombinerParameters | O |
-| xacml:Status | M |
-| xacml:StatusCode | M |
-| xacml:StatusDetail | O |
-| xacml:StatusMessage | O |
-| xacml:Target | M |
-| xacml:TypedExpression | M |
-| xacml:TypedValue | M |
-| xacml:Value | M |
-| xacml:VariableDefinition | M |
-| xacml:VariableReference | M |
-| xacml:XPathVersion | O |
+| Element name                        | M/O |
+|:------------------------------------|:----|
+| xacml:Apply                         | M   |
+| xacml:ApplicablePolicyReference     | O   |
+| xacml:Attribute                     | M   |
+| xacml:AttributeAssignment           | M   |
+| xacml:AttributeAssignmentExpression | M   |
+| xacml:AttributeDesignator           | M   |
+| xacml:AttributeSelector             | O   |
+| xacml:Category                      | M   |
+| xacml:CombinerParameter             | O   |
+| xacml:CombinerParameters            | O   |
+| xacml:Condition                     | M   |
+| xacml:Content                       | O   |
+| xacml:Decision                      | M   |
+| xacml:Description                   | M   |
+| xacml:Expression                    | M   |
+| xacml:Function                      | M   |
+| xacml:MissingAttributeDetail        | M   |
+| xacml:MultiRequests                 | O   |
+| xacml:Notice                        | M   |
+| xacml:NoticeExpression              | M   |
+| xacml:Policy                        | M   |
+| xacml:PolicyCombinerParameters      | O   |
+| xacml:PolicyDefaults                | O   |
+| xacml:PolicyReference               | M   |
+| xacml:PolicyIssuer                  | O   |
+| xacml:Request                       | M   |
+| xacml:RequestAttribute              | M   |
+| xacml:RequestCategory               | M   |
+| xacml:RequestCategoryReference      | O   |
+| xacml:RequestDefaults               | O   |
+| xacml:RequestReference              | O   |
+| xacml:Response                      | M   |
+| xacml:Result                        | M   |
+| xacml:Rule                          | M   |
+| xacml:RuleCombinerParameters        | O   |
+| xacml:ShortId                       | O   |
+| xacml:ShortIdSet                    | O   |
+| xacml:ShortIdSetReference           | O   |
+| xacml:Status                        | M   |
+| xacml:StatusCode                    | M   |
+| xacml:StatusDetail                  | O   |
+| xacml:StatusMessage                 | O   |
+| xacml:Target                        | M   |
+| xacml:TypedExpression               | M   |
+| xacml:TypedValue                    | M   |
+| xacml:Value                         | M   |
+| xacml:VariableDefinition            | M   |
+| xacml:VariableReference             | M   |
+| xacml:XPathVersion                  | O   |
 
 ### 10.2.2 Identifier Prefixes
 
