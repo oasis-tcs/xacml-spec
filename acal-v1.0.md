@@ -2127,38 +2127,26 @@ A `NoticeType` object contains the following properties:
 
 ## 7.36 AttributeAssignmentType
 
-An `AttributeAssignmentType` object is used in a notice expression to include an attribute in a notice. The `AttributeAssignmentType` object type extends the `AttributeValueType` definition by adding an `AttributeId` property.
-
-_This type will be redefined to enable a bag of values._
+An `AttributeAssignmentType` object is used in a notice expression to include an attribute in a notice. The `AttributeAssignmentType` object type extends the `AttributeType` definition by adding a `CategoryId` property.
 
 The attribute specified SHALL be understood by the PEP, but it is not further specified by ACAL. See [Section 9.18](#918-notices). [Section 6.2.5.3](#6253-rule-3) provides a number of examples of attribute assignments included in notices.
 
 ```xml
 <xs:element name="AttributeAssignment" type="xacml:AttributeAssignmentType"/>
-<xs:complexType name="AttributeAssignmentType" mixed="true">
+<xs:complexType name="AttributeAssignmentType">
    <xs:complexContent>
-      <xs:extension base="xacml:AttributeValueType">
-         <xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
+      <xs:extension base="xacml:AttributeType">
          <xs:attribute name="CategoryId" type="xacml:IdentifierType" use="optional"/>
-         <xs:attribute name="Issuer" type="xs:string" use="optional"/>
       </xs:extension>
    </xs:complexContent>
 </xs:complexType>
 ```
 
-An `AttributeAssignmentType` object contains the following properties:
-
-`AttributeId` [Required]
-
-: An `IdentifierType` value specifying the identifier of the attribute.
+The `AttributeAssignmentType` object type extends the `AttributeType` object type with the following property:
 
 `CategoryId` [Optional]
 
 : An `IdentifierType` value specifying the category of the attribute. If this property is absent, the attribute has no category. The PEP SHALL interpret the significance and meaning of any `CategoryId` property. Non-normative note: an expected use of the category is to disambiguate attributes that are relayed from the request.
-
-`Issuer` [Optional]
-
-: A `String` value specifying the issuer of the attribute. If this property is absent, the attribute has no issuer. The PEP SHALL interpret the significance and meaning of any `Issuer` property. Non-normative note: an expected use of the issuer is to disambiguate attributes that are relayed from the request.
 
 ## 7.39 NoticeExpressionType
 
@@ -2483,29 +2471,29 @@ A `RequestReferenceType` object defines an instance of a request in terms of ref
 <xs:element name="RequestReference" type="xacml:RequestReference "/>
 <xs:complexType name="RequestReferenceType">
    <xs:sequence>
-      <xs:element ref="xacml:AttributesReference" maxOccurs="unbounded"/>
+      <xs:element ref="xacml:RequestCategoryReference" maxOccurs="unbounded"/>
    </xs:sequence>
 </xs:complexType>
 ```
 
 A `RequestReferenceType` object contains the following properties.
 
-`AttributesReference` [one to many]
+`RequestCategoryReference` [one to many]
 
-: A sequence of `AttributesReferenceType` objects, each a reference to a `RequestCategoryType` object in the enclosing `RequestType` object. See [Section 7.52](#752-attributesreferencetype).
+: A sequence of RequestCategoryReferenceType` objects, each a reference to a `RequestCategoryType` object in the enclosing `RequestType` object. See [Section 7.52](#752-requestcategoryreferencetype).
 
-## 7.52 AttributesReferenceType
+## 7.52 RequestCategoryReferenceType
 
-An `AttributesReferenceType` object makes a reference to a `RequestCategoryType` object. The meaning of this object is defined in [[Multi](#multi)]. Support for this object is optional.
+A `RequestCategoryReferenceType` object makes a reference to a `RequestCategoryType` object. The meaning of this object is defined in [[Multi](#multi)]. Support for this object is optional.
 
 ```xml
-<xs:element name="AttributesReference" type="xacml:AttributesReference"/>
-<xs:complexType name="AttributesReferenceType">
+<xs:element name="RequestCategoryReference" type="xacml:RequestCategoryReferenceType"/>
+<xs:complexType name="RequestCategoryReferenceType">
    <xs:attribute name="ReferenceId" type="xs:IDREF" use="required"/>
 </xs:complexType>
 ```
 
-An `AttributesReferenceType` object contains the following properties.
+A `RequestCategoryReferenceType` object contains the following properties.
 
 `ReferenceId` [required]
 
@@ -3573,7 +3561,7 @@ The implementation MUST support the attributes associated with the following ide
 
 ### 12.2.6 Attributes
 
-The implementation MUST use the attributes associated with the following identifiers in the way ACAL has defined. This requirement pertains primarily to implementations of a PAP or PEP that uses ACAL, since the semantics of the attributes are transparent to the PDP.
+The implementation MUST use the attributes or attribute categories associated with the following identifiers in the way ACAL has defined. This requirement pertains primarily to implementations of a PAP or PEP that uses ACAL, since the semantics of the attributes are transparent to the PDP.
 
 | Identifier | M/O |
 | :--- | :--- |
