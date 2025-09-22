@@ -1,0 +1,599 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright OASIS Open 2025. All Rights Reserved. -->
+<xs:schema xmlns:xacml="urn:oasis:names:tc:xacml:4.0:core:schema" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:oasis:names:tc:xacml:4.0:core:schema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+	<xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="https://www.w3.org/2001/xml.xsd"/>
+
+	<xs:element name="Request" type="xacml:RequestType"/>
+	<xs:complexType name="RequestType">
+		<xs:sequence>
+			<!-- Change to XACML 3.0 (issue #48): introduction of Short Identifiers (aliases for long attribute/category/datatype/combining algorithm/function/notice identifier URIs) -->
+			<xs:element ref="xacml:ShortIdSetReference" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="xacml:RequestDefaults" minOccurs="0"/>
+			<!-- Change to XACML 3.0 (issue #18): Attributes renamed to RequestCategory, since the Attributes in the Result have been renamed similarly to 'Category' element but 'Category', unlike this 'RequestCategory', does not have Content or IncludeInResults -->
+			<xs:element ref="xacml:RequestCategory" maxOccurs="unbounded"/>
+			<xs:element ref="xacml:MultiRequests" minOccurs="0"/>
+		</xs:sequence>
+		<!-- Change to XACML 3.0 (issue #26): ReturnPolicyIdList changed to optional with default false -->
+		<xs:attribute name="ReturnPolicyIdList" type="xs:boolean" use="optional" default="false"/>
+		<!-- Change to XACML 3.0 (issue #27): CombinedDecision changed to optional with default false -->
+		<xs:attribute name="CombinedDecision" type="xs:boolean" use="optional" default="false"/>
+	</xs:complexType>
+
+	<xs:element name="RequestDefaults" type="xacml:RequestDefaultsType"/>
+	<xs:complexType name="RequestDefaultsType">
+		<xs:sequence>
+			<xs:choice>
+				<xs:element ref="xacml:XPathVersion"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="Response" type="xacml:ResponseType"/>
+	<xs:complexType name="ResponseType">
+		<xs:sequence>
+			<!-- Change to XACML 3.0 (issue #48): introduction of Short Identifiers (aliases for long attribute/category/datatype/function/combining algorithm identifier URIs) -->
+			<xs:element ref="xacml:ShortIdSetReference" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="xacml:Result" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="Content" type="xacml:ContentType"/>
+	<xs:complexType name="ContentType" mixed="true">
+		<xs:sequence>
+			<xs:any namespace="##any" processContents="lax"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="Result" type="xacml:ResultType"/>
+	<xs:complexType name="ResultType">
+		<xs:sequence>
+			<xs:element ref="xacml:Decision"/>
+			<xs:element ref="xacml:Status" minOccurs="0"/>
+			<!-- Change to XACML 3.0 (issue #6): Merged Obligation/Advice(Expression) into Notice(Expression) -->
+			<xs:element ref="xacml:Notice" minOccurs="0" maxOccurs="unbounded"/>
+			<!-- Change to XACML 3.0 (issue #18): Attributes element replaced with new Category element which is the same but without Content or IncludeInResult attributes -->
+			<xs:element ref="xacml:Category" minOccurs="0" maxOccurs="unbounded"/>
+			<!-- Change to XACML 3.0 (Issue #16): PolicyIdentifierList removed and replaced with list of ApplicablePolicyReferences -->
+			<xs:element ref="xacml:ApplicablePolicyReference" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- Change to XACML 3.0 (issue #18): new Category element, that is the same as former Attributes and similar to new RequestCategory but to be used only in Result and most importantly does not have Content and IncludeInResult attributes.
+   		This is a Category of Attributes from the Request (which had IncludeInResult=true) to be included in the corresponding Result. -->
+	<xs:element name="Category" type="xacml:CategoryType"/>
+	<xs:complexType name="CategoryType">
+	  <xs:sequence>
+	       <xs:element ref="xacml:Attribute" minOccurs="1" maxOccurs="unbounded"/>
+	  </xs:sequence>
+      <!-- Change to XACML 3.0 (issue #18): Category renamed to CategoryId (not to have the same name as the element's, and not to be confused with the 'Id' attribute)-->
+	  <!-- Change to XACML 3.0 (issue #48): CategoryId type changed to IdentifierType for supporting Short Identifiers -->
+      <xs:attribute name="CategoryId" type="xacml:IdentifierType" use="required"/>
+      <!-- Change to XACML 3.0 (issue #18): 'xml:id' replaced with 'Id' attribute to be consistently named in all XACML 4.0 / ACAL representation formats including JSON. -->
+	  <xs:attribute name="Id" type="xs:ID" use="optional"/>
+	</xs:complexType>
+
+	<!-- Issue #16: PolicyIdentifierList removed, replaced in ResultType with ref to new ApplicablePolicyReference below (with maxOccurs="unbounded") -->
+	<!-- Policy reference for Result's list of applicable policies -->
+	<xs:element name="ApplicablePolicyReference" type="xacml:ExactMatchIdReferenceType"/>
+	<!-- New IdReferenceType extension with fixed Version, to be used in Result (ApplicablePolicyReference), as opposed to PatternMatchIdReferenceType which uses Version pattern matching. -->
+	<xs:complexType name="ExactMatchIdReferenceType">
+			<xs:complexContent>
+				<xs:extension base="xacml:IdReferenceType">
+					<xs:attribute name="Version" type="xacml:VersionType" use="required"/>
+				</xs:extension>
+			</xs:complexContent>
+	</xs:complexType>
+
+	<xs:element name="Decision" type="xacml:DecisionType"/>
+	<xs:simpleType name="DecisionType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Permit"/>
+			<xs:enumeration value="Deny"/>
+			<xs:enumeration value="Indeterminate"/>
+			<xs:enumeration value="NotApplicable"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:element name="Status" type="xacml:StatusType"/>
+	<xs:complexType name="StatusType">
+		<xs:sequence>
+			<xs:element ref="xacml:StatusCode"/>
+			<xs:element ref="xacml:StatusMessage" minOccurs="0"/>
+			<xs:element ref="xacml:StatusDetail" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="StatusCode" type="xacml:StatusCodeType"/>
+	<xs:complexType name="StatusCodeType">
+		<xs:sequence>
+			<xs:element ref="xacml:StatusCode" minOccurs="0"/>
+		</xs:sequence>
+		<!-- Change to XACML 3.0 (issue #48): Value type changed to IdentifierType for supporting Short Identifiers -->
+		<xs:attribute name="Value" type="xacml:IdentifierType" use="required"/>
+	</xs:complexType>
+
+	<xs:element name="StatusMessage" type="xs:string"/>
+
+	<xs:element name="StatusDetail" type="xacml:StatusDetailType"/>
+	<xs:complexType name="StatusDetailType">
+		<xs:sequence>
+			<xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="MissingAttributeDetail" type="xacml:MissingAttributeDetailType"/>
+	<xs:complexType name="MissingAttributeDetailType">
+		<xs:sequence>
+			<!-- Change to XACML 3.0 (issue #18): AttributeValue replaced with (untyped) Value -->
+			<xs:element ref="xacml:Value" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+        <!-- Change to XACML 3.0 (issue #18): Category attribute renamed to CategoryId, to be consistent with new Category element's CategoryId-->
+		<!-- Change to XACML 3.0 (issue #48): CategoryId/AttibuteId/Datatype types changed to IdentifierType for supporting Short Identifiers -->
+        <xs:attribute name="CategoryId" type="xacml:IdentifierType" use="required"/>
+		<xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
+		<xs:attribute name="DataType" type="xacml:IdentifierType" use="required"/>
+		<!-- Change to XACML 3.0 (issue #44): Issuer type changed to xs:Name -->
+		<xs:attribute name="Issuer" type="xs:Name" use="optional"/>
+	</xs:complexType>
+
+	<!-- Change to XACML 3.0 (issue #18): Attributes renamed to RequestCategory, only to be used in a Request (with IncludeInResult) -->
+	<xs:element name="RequestCategory" type="xacml:RequestCategoryType"/>
+	<xs:complexType name="RequestCategoryType">
+		<xs:sequence>
+			<xs:element ref="xacml:Content" minOccurs="0"/>
+			<!-- Change to XACML 3.0 (issue #18): Attribute replaced with RequestAttribute which has 'IncludeInResult' whereas Attribute (used in Result) does not. -->
+			<xs:element ref="xacml:RequestAttribute" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<!-- Change to XACML 3.0 (issue #18): Category renamed to CategoryId (not to have the same name as the element, and not to be confused with the 'Id' attribute) -->
+		<!-- Change to XACML 3.0 (issue #48): CategoryId type changed to IdentifierType for supporting Short Identifiers -->
+		<xs:attribute name="CategoryId" type="xacml:IdentifierType" use="required"/>
+		<!-- Change to XACML 3.0 (issue #18): 'xml:id' replaced with 'Id' attribute to be consistently named in all XACML 4.0 / ACAL representation formats including JSON. -->
+		<xs:attribute name="Id" type="xs:ID" use="optional"/>
+	</xs:complexType>
+
+	<xs:element name="Attribute" type="xacml:AttributeType"/>
+	<xs:complexType name="AttributeType">
+		<xs:sequence>
+			<!-- Change to XACML 3.0 (issue #46): AttributeValue renamed to Value (not Attribute-specific anymore) -->
+			<xs:element ref="xacml:Value" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<!-- Change to XACML 3.0 (issue #48): AttibuteId type changed to IdentifierType for supporting Short Identifiers -->
+		<xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
+		<!-- Change to XACML 3.0 (issue #44): Issuer type changed to xs:Name -->
+		<xs:attribute name="Issuer" type="xs:Name" use="optional"/>
+		<!-- Change to XACML 3.0 (issue #46): new Datatype attribute taken from former AttributeValue and which applies to all Values of this attribute -->
+		<xs:attribute name="DataType" type="xacml:IdentifierType" use="optional" default="http://www.w3.org/2001/XMLSchema#string"/>
+	</xs:complexType>
+
+	<!-- Change to XACML 3.0 (issue #18): new RequestAttribute element, similar to Attribute but with extra IncludeInResult attribute to indicate whether to include it in the Result, to be used only in the Request. -->
+	<xs:element name="RequestAttribute" type="xacml:RequestAttributeType"/>
+	<xs:complexType name="RequestAttributeType">
+		<xs:complexContent mixed="false">
+			<xs:extension base="xacml:AttributeType">
+				<xs:attribute name="IncludeInResult" type="xs:boolean" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:element name="MultiRequests" type="xacml:MultiRequestsType"/>
+	<xs:complexType name="MultiRequestsType">
+		<xs:sequence>
+			<xs:element ref="xacml:RequestReference" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="RequestReference" type="xacml:RequestReferenceType"/>
+	<xs:complexType name="RequestReferenceType">
+		<xs:sequence>
+			<!-- Change to XACML 3.0 (issue #18): Attributes renamed to RequestCategory in the Request, therefore AttributesReference renamed to RequestCategoryReference for consistency -->
+			<xs:element ref="xacml:RequestCategoryReference" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- Change to XACML 3.0 (issue #18): Attributes renamed to RequestCategory in the Request, therefore AttributesReference renamed to RequestCategoryReference for consistency -->
+	<xs:element name="RequestCategoryReference" type="xacml:RequestCategoryReferenceType"/>
+	<xs:complexType name="RequestCategoryReferenceType">
+		<xs:attribute name="ReferenceId" type="xs:IDREF" use="required"/>
+	</xs:complexType>
+
+	<!-- Change to XACML 3.0 (issue #6): Merged Obligation/Advice(Expression) into Notice(Expression) -->
+	<xs:element name="Notice" type="xacml:NoticeType"/>
+	<xs:complexType name="NoticeType">
+		<xs:sequence>
+			<xs:element ref="xacml:AttributeAssignment" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<!-- Change to XACML 3.0 (issue #48): Id attribute type set to IdentifierType for supporting Short Identifiers -->
+		<xs:attribute name="Id" type="xacml:IdentifierType" use="required"/>
+		<xs:attribute name="IsObligation" type="xs:boolean" use="optional" default="false"/>
+	</xs:complexType>
+
+	<xs:element name="AttributeAssignment" type="xacml:AttributeAssignmentType"/>
+	<xs:complexType name="AttributeAssignmentType">
+		<xs:complexContent>
+			<!-- Change to XACML 3.0 (issues #46 and #47): AttributeAssignment changed from single-valued to multi-valued, therefore becomes de facto an extension of AttributeType with an extra CategoryId -->
+			<xs:extension base="xacml:AttributeType">
+				<!-- Change to XACML 3.0 (issue #46): Category renamed to CategoryId, to be consistent with new CategoryType's CategoryId -->
+				<xs:attribute name="CategoryId" type="xacml:IdentifierType" use="optional"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<!-- Change to XACML 3.0 (issue #6): Merged Obligation/Advice(Expression) into Notice(Expression) -->
+	<xs:element name="NoticeExpression" type="xacml:NoticeExpressionType"/>
+	<xs:complexType name="NoticeExpressionType">
+		<xs:sequence>
+            <xs:element ref="xacml:Condition" minOccurs="0"/>
+			<xs:element ref="xacml:AttributeAssignmentExpression" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<!-- Change to XACML 3.0 (issue #48): Id attribute type changed to IdentifierType for supporting Short Identifiers -->
+		<xs:attribute name="Id" type="xacml:IdentifierType" use="required"/>
+		<xs:attribute name="IsObligation" type="xs:boolean" use="optional"/>
+		<!-- Undefined AppliesTo means it applies to both Permit and Deny -->
+		<xs:attribute name="AppliesTo" type="xacml:EffectType" use="optional"/>
+	</xs:complexType>
+
+	<xs:element name="AttributeAssignmentExpression" type="xacml:AttributeAssignmentExpressionType"/>
+	<xs:complexType name="AttributeAssignmentExpressionType">
+		<xs:sequence>
+			<!-- Change to XACML 3.0: Expression element replaced with TypedExpression (to exclude untyped Expressions like Value). -->
+			<!-- Whatever Expression used here must have a clearly identifiable Datatype (Value is not allowed for instance). -->
+			<xs:element ref="xacml:TypedExpression"/>
+		</xs:sequence>
+		<!-- Change to XACML 3.0 (issue #48): AttributeId / CategoryId attribute types changed to IdentifierType for supporting Short Identifiers -->
+		<xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
+        <!-- Change to XACML 3.0 (issue #18): Category attribute renamed to CategoryId, to be consistent with new Category element's CategoryId-->
+        <xs:attribute name="CategoryId" type="xacml:IdentifierType" use="optional"/>
+		<!-- Change to XACML 3.0 (issue #44): Issuer type changed to xs:Name -->
+		<xs:attribute name="Issuer" type="xs:Name" use="optional"/>
+	</xs:complexType>
+
+	<xs:simpleType name="EffectType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Permit"/>
+			<xs:enumeration value="Deny"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:element name="PolicyIssuer" type="xacml:PolicyIssuerType"/>
+	<xs:complexType name="PolicyIssuerType">
+		<xs:sequence>
+			<xs:element ref="xacml:Content" minOccurs="0"/>
+			<xs:element ref="xacml:Attribute" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="CombinerParameters" type="xacml:CombinerParametersType"/>
+	<xs:complexType name="CombinerParametersType">
+		<xs:sequence>
+			<xs:element ref="xacml:CombinerParameter" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="CombinerParameter" type="xacml:CombinerParameterType"/>
+	<xs:complexType name="CombinerParameterType">
+		<xs:sequence>
+			<!-- Change to XACML 3.0 (issue #46): AttributeValue replaced with Value. -->
+			<xs:element ref="xacml:Value"/>
+		</xs:sequence>
+		<xs:attribute name="ParameterName" type="xs:string" use="required"/>
+		<!-- Change to XACML 3.0 (issue #46): new Datatype attribute which applies to all Values of this parameter -->
+		<xs:attribute name="DataType" type="xacml:IdentifierType" use="optional" default="http://www.w3.org/2001/XMLSchema#string"/>
+	</xs:complexType>
+
+	<xs:element name="RuleCombinerParameters" type="xacml:RuleCombinerParametersType"/>
+	<xs:complexType name="RuleCombinerParametersType">
+		<xs:complexContent>
+			<xs:extension base="xacml:CombinerParametersType">
+				<xs:attribute name="RuleIdRef" type="xs:string" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:element name="PolicyCombinerParameters" type="xacml:PolicyCombinerParametersType"/>
+	<xs:complexType name="PolicyCombinerParametersType">
+		<xs:complexContent>
+			<xs:extension base="xacml:CombinerParametersType">
+				<xs:attribute name="PolicyIdRef" type="xs:anyURI" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<!-- Change to XACML 3.0 - Issue #16: old PolicyIdReference Type changed to new PatternMatchIdReferenceType and element name renamed to PolicyPatternMatchReference, which is used only in a SAML XACMLPolicyQuery of the SAML Profile of XACML.
+	 See new PolicyReference element below for policy references used in Policies -->
+	<xs:element name="PolicyPatternMatchReference" type="xacml:PatternMatchIdReferenceType"/>
+	<!-- Change to XACML 3.0 - Issue #16: New IdReferenceType extension with Version pattern matching, to be used in Policies (PolicyReference) and XACMLPolicyQuery (PolicyIdReference). Same as old PolicyIdReferenceType except the Id is now an XML attribute, cf. IdReferenceType change down below.-->
+	<xs:complexType name="PatternMatchIdReferenceType">
+		<xs:complexContent>
+			<xs:extension base="xacml:IdReferenceType">
+				<xs:attribute name="Version" type="xacml:VersionMatchType" use="optional"/>
+				<xs:attribute name="EarliestVersion" type="xacml:VersionMatchType" use="optional"/>
+				<xs:attribute name="LatestVersion" type="xacml:VersionMatchType" use="optional"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<!-- Issue #16: Policy reference to be used inside Policies, takes optional arguments for parameterized policies -->
+	<xs:element name="PolicyReference" type="xacml:PolicyReferenceType"/>
+	<xs:complexType name="PolicyReferenceType">
+		<xs:complexContent>
+			<xs:extension base="xacml:PatternMatchIdReferenceType">
+				<xs:sequence>
+				<!-- Optional argument(s) to the referenced policy (parameterized policy) -->
+				<xs:element ref="xacml:Expression" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:element name="PolicyDefaults" type="xacml:DefaultsType"/>
+	<xs:complexType name="DefaultsType">
+		<xs:sequence>
+			<xs:choice>
+				<xs:element ref="xacml:XPathVersion"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- Change to XACML 3.0 (issue #48): XPathVersion type changed to IdentifierType for supporting Short Identifiers -->
+	<xs:element name="XPathVersion" type="xacml:IdentifierType"/>
+
+	<!-- Issue #16: IdReferenceType URI changed to an XML attribute to allow extensions with optional attributes and arguments (ExactMatchIdReferenceType, PatternMatchIdReferenceType, PolicyIdReferenceType, PolicyReferenceType)  -->
+	<xs:complexType name="IdReferenceType" abstract="true">
+        <xs:attribute name="Id" type="xs:anyURI" use="required"/>
+	</xs:complexType>
+
+	<!-- Change to XACML 3.0 (issue #41): VersionType pattern fixed to forbid meaningless version identifiers that were previously allowed (e.g. with multiple leading / trailing zeros), and to get closer to Semantic Versioning -->
+	<xs:simpleType name="VersionType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="(0|[1-9]\d*)(\.(0|[1-9]\d*)){0,3}"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- Change to XACML 3.0 (issue #43): VersionMatchType pattern changed to be consistent with change to VersionType pattern (issue #41). -->
+	<xs:simpleType name="VersionMatchType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="(0|[1-9]\d*|\*)(\.(0|[1-9]\d*|\*|\+)){0,3}"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:element name="Policy" type="xacml:PolicyType"/>
+	<xs:complexType name="PolicyType">
+		<xs:sequence>
+			<!-- Change to XACML 3.0 (issue #48): introduction of Short Identifiers (aliases for long attribute/category/datatype/function/combining algorithm identifier URIs) -->
+			<xs:element ref="xacml:ShortIdSetReference" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="xacml:Description" minOccurs="0"/>
+			<xs:element ref="xacml:PolicyIssuer" minOccurs="0"/>
+			<xs:element ref="xacml:PolicyDefaults" minOccurs="0"/>
+			<!-- Change to XACML 3.0 (issue #11): VariableDefinition elements moved before the Target to allow using these variables in the Target condition  -->
+			<xs:element ref="xacml:VariableDefinition" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="xacml:Target" minOccurs="0"/>
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="xacml:Policy"/>
+				<!-- Issue #11 and #16: PolicyIdReference replaced with new PolicyReference -->
+				<xs:element ref="xacml:PolicyReference"/>
+				<xs:element ref="xacml:CombinerParameters"/>
+				<xs:element ref="xacml:PolicyCombinerParameters"/>
+				<xs:element ref="xacml:RuleCombinerParameters"/>
+				<xs:element ref="xacml:Rule"/>
+			</xs:choice>
+			<!-- Change to XACML 3.0 (issue #6): Merged Obligation/Advice(Expression) into Notice(Expression) -->
+			<xs:element ref="xacml:NoticeExpression" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="PolicyId" type="xs:anyURI" use="required"/>
+		<xs:attribute name="Version" type="xacml:VersionType" use="required"/>
+		<!-- Change to XACML 3.0 (issue #48): CombiningAlgId attribute type changed to IdentifierType for supporting Short Identifiers -->
+		<xs:attribute name="CombiningAlgId" type="xacml:IdentifierType" use="required"/>
+		<xs:attribute name="MaxDelegationDepth" type="xs:integer" use="optional"/>
+	</xs:complexType>
+
+	<xs:element name="Description" type="xs:string"/>
+
+	<xs:element name="Rule" type="xacml:RuleType"/>
+	<xs:complexType name="RuleType">
+		<xs:sequence>
+			<xs:element ref="xacml:Description" minOccurs="0"/>
+			<xs:element ref="xacml:Condition" minOccurs="0"/>
+			<!-- Change to XACML 3.0 (issue #6): Merged Obligation/Advice(Expression) into Notice(Expression) -->
+			<xs:element ref="xacml:NoticeExpression" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="RuleId" type="xs:string" use="required"/>
+		<xs:attribute name="Effect" type="xacml:EffectType" use="required"/>
+	</xs:complexType>
+
+	<xs:element name="Target" type="xacml:BooleanExpressionType"/>
+
+	<xs:element name="VariableDefinition" type="xacml:VariableDefinitionType"/>
+	<xs:complexType name="VariableDefinitionType">
+		<xs:sequence>
+			<!-- Change to XACML 3.0: Expression element replaced with TypedExpression (to exclude untyped Expressions like Value). -->
+			<!-- Whatever Expression used here must have a clearly identifiable Datatype (Value is not allowed for instance). -->
+			<xs:element ref="xacml:TypedExpression" />
+		</xs:sequence>
+		<xs:attribute name="VariableId" type="xs:string" use="required"/>
+	</xs:complexType>
+
+	<xs:element name="Expression" type="xacml:ExpressionType" abstract="true"/>
+	<xs:complexType name="ExpressionType" abstract="true"/>
+
+	<!-- Change to XACML 3.0 (issue #46): new kind of Expression - TypedExpression - which is simply any Expression (assumed to have a defined type or the type can be inferred from the context) except the untyped Value.
+	Typically, since (untyped) Value is now another kind of Expression, this is to make sure the Expression in a VariableDefinition or AttributeAssignmentExpression cannot be a (untyped) Value but a TypedExpression.
+	-->
+	<xs:element name="TypedExpression" type="xacml:TypedExpressionType" abstract="true" substitutionGroup="xacml:Expression"/>
+	<xs:complexType name="TypedExpressionType" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="xacml:ExpressionType" />
+		</xs:complexContent>
+	</xs:complexType>
+
+	<!-- Change to XACML 3.0: VariableReference re-assigned to TypedExpression substitutionGroup (which is included in the Expression one, but excludes untyped Expressions like Value). -->
+	<xs:element name="VariableReference" type="xacml:VariableReferenceType" substitutionGroup="xacml:TypedExpression"/>
+	<xs:complexType name="VariableReferenceType">
+		<xs:complexContent>
+			<xs:extension base="xacml:TypedExpressionType">
+				<xs:attribute name="VariableId" type="xs:string" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<!-- Change to XACML 3.0: AttributeSelector re-assigned to TypedExpression substitutionGroup (which is included in the Expression one, but excludes untyped Expressions like Value). -->
+	<xs:element name="AttributeSelector" type="xacml:AttributeSelectorType" substitutionGroup="xacml:TypedExpression"/>
+	<xs:complexType name="AttributeSelectorType">
+		<xs:complexContent>
+			<xs:extension base="xacml:TypedExpressionType">
+				<!-- Change to XACML 3.0 (issue #18): Category attribute renamed to CategoryId, to be consistent with new Category element's CategoryId-->
+				<!-- Change to XACML 3.0 (issue #48): CategoryId attribute type changed to IdentifierType for supporting Short Identifiers -->
+				<xs:attribute name="CategoryId" type="xacml:IdentifierType" use="required"/>
+				<xs:attribute name="ContextSelectorId" type="xacml:IdentifierType" use="optional"/>
+				<xs:attribute name="Path" type="xs:string" use="required"/>
+				<!-- Change to XACML 3.0 (issue #48): DataType attribute type changed to IdentifierType for supporting Short Identifiers -->
+				<xs:attribute name="DataType" type="xacml:IdentifierType" use="required"/>
+				<!-- Change to XACML 3.0 (issue #20): MustBePresent changed to optional with default false -->
+				<xs:attribute name="MustBePresent" type="xs:boolean" use="optional" default="false"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<!-- Change to XACML 3.0: AttributeDesignator re-assigned to TypedExpression substitutionGroup (which is included in the Expression one, but excludes untyped Expressions like Value). -->
+	<xs:element name="AttributeDesignator" type="xacml:AttributeDesignatorType" substitutionGroup="xacml:TypedExpression"/>
+	<xs:complexType name="AttributeDesignatorType">
+		<xs:complexContent>
+			<xs:extension base="xacml:TypedExpressionType">
+				<!-- Change to XACML 3.0 (issue #18): Category attribute renamed to CategoryId, to be consistent with new Category element's CategoryId-->
+				<!-- Change to XACML 3.0 (issue #48): CategoryId / AttributeId / DataType attribute types changed to IdentifierType for supporting Short Identifiers -->
+				<xs:attribute name="CategoryId" type="xacml:IdentifierType" use="required"/>
+				<xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
+				<xs:attribute name="DataType" type="xacml:IdentifierType" use="optional" default="http://www.w3.org/2001/XMLSchema#string"/>
+				<!-- Change to XACML 3.0 (issue #44): Issuer type changed to xs:Name -->
+				<xs:attribute name="Issuer" type="xs:Name" use="optional"/>
+				<!-- Change to XACML 3.0 (issue #20): MustBePresent changed to optional with default false -->
+				<xs:attribute name="MustBePresent" type="xs:boolean" use="optional" default="false"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<!-- Change to XACML 3.0 (issue #46): DataType attribute moved from AttributeValue to AttributeType and AttributeValue element/type replaced with more generic (not Attribute-specific) Value that represents an untyped value, and TypedValue.
+	This simplifies the language as they are many cases where the datatype can be inferred from the context, e.g. the parent element such as the Attribute in the new definition.
+	 Therefore, the DataType attribute in values can be omitted.
+	This is similar to a common feature called "Type inference" in modern programming languages, although here it is much more basic.-->
+	<!-- Value: Untyped value (no DataType attribute). See TypedValue for typed values. -->
+	<xs:element name="Value" type="xacml:ValueType" substitutionGroup="xacml:Expression"/>
+	<!-- Making ValueType final prevents any extension trying to add back the DataType attribute. -->
+	<xs:complexType name="ValueType" mixed="true" final="#all">
+		<xs:complexContent mixed="true">
+			<xs:extension base="xacml:ExpressionType">
+				<xs:sequence>
+					<xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+				<!-- Can't have namespace="##any" here because that would allow the XACML DataType attribute which is reserved for TypedValue. -->
+				<xs:anyAttribute  namespace="##other" processContents="lax" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<!-- Change to XACML 3.0 (issue #46): new TypedValue element/type which is for values (formerly AttributeValue) with a defined datatype (that cannot be inferred from the context), as opposed to Value which is untyped (used in Attribute for instance). -->
+	<xs:element name="TypedValue" type="xacml:TypedValueType" substitutionGroup="xacml:TypedExpression"/>
+	<xs:complexType name="TypedValueType" mixed="true" final="#all">
+		<xs:complexContent mixed="true">
+			<xs:extension base="xacml:TypedExpressionType">
+				<xs:sequence>
+					<xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+				<xs:attribute name="DataType" type="xacml:IdentifierType" use="required" />
+				<xs:anyAttribute namespace="##other" processContents="lax" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<!-- Change to XACML 3.0: Function re-assigned to TypedExpression substitutionGroup (which is included in the Expression one, but excludes untyped Expressions like Value). -->
+	<xs:element name="Function" type="xacml:FunctionType" substitutionGroup="xacml:TypedExpression"/>
+	<xs:complexType name="FunctionType">
+		<xs:complexContent>
+			<xs:extension base="xacml:TypedExpressionType">
+				<!-- Change to XACML 3.0 (issue #48): FunctionId attribute type changed to IdentifierType for supporting Short Identifiers -->
+				<xs:attribute name="FunctionId" type="xacml:IdentifierType" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:element name="Condition" type="xacml:BooleanExpressionType"/>
+	<xs:complexType name="BooleanExpressionType">
+		<xs:sequence>
+			<xs:element ref="xacml:Expression"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- Change to XACML 3.0: Apply re-assigned to TypedExpression substitutionGroup (which is included in the Expression one, but excludes untyped Expressions like Value). -->
+	<xs:element name="Apply" type="xacml:ApplyType" substitutionGroup="xacml:TypedExpression"/>
+	<xs:complexType name="ApplyType">
+		<xs:complexContent>
+			<xs:extension base="xacml:TypedExpressionType">
+				<xs:sequence>
+					<xs:element ref="xacml:Description" minOccurs="0"/>
+					<!-- The datatype of each function argument here must be known from the function's definition (function signature), OR it must be explicitly specified by - or inferable from - the Expression (passed as argument) itself.  -->
+					<xs:element ref="xacml:Expression" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+				<!-- Change to XACML 3.0 (issue #48): FunctionId attribute type changed to IdentifierType for supporting Short Identifiers -->
+				<xs:attribute name="FunctionId" type="xacml:IdentifierType" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<!-- Change to XACML 3.0 (issue #48): New IdentifierType for supporting both Short Identifiers and normal URIs as attribute/category/datatype/function/notice/status code/combinining algorithm identifiers -->
+	<xs:simpleType name="IdentifierType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[^{}]*(\{[A-Za-z][0-9A-Za-z]*(-[0-9A-Za-z]+)*\}[^{}]*)*"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- Change to XACML 3.0 (issue #48): introduction of Short Identifiers (aliases for long attribute/category/datatype/function/combining algorithm identifier URIs) -->
+	<xs:element name="ShortIdSet" type="xacml:ShortIdSetType">
+		<xs:unique name="shortIdNameIsUnique">
+			<xs:selector xpath="xacml:ShortId"/>
+			<xs:field xpath="@Name"/>
+		</xs:unique>
+	</xs:element>
+	<xs:complexType name="ShortIdSetType">
+		<xs:sequence>
+			<xs:element ref="xacml:ShortIdSetReference" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="xacml:ShortId" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="ShortIdSetId" type="xs:anyURI" use="required"/>
+	</xs:complexType>
+
+	<xs:element name="ShortIdSetReference" type="xs:anyURI"/>
+
+	<xs:element name="ShortId" type="xacml:ShortIdType"/>
+	<xs:complexType name="ShortIdType">
+		<xs:attribute name="Name" type="xacml:ShortIdNameType" use="required"/>
+		<xs:attribute name="Value" type="xacml:ShortIdValueType" use="required"/>
+	</xs:complexType>
+
+	<xs:simpleType name="ShortIdNameType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[A-Za-z][0-9A-Za-z]*(-[0-9A-Za-z]+)*"/>
+				<!-- The exact pattern is still open for discussion. -->
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="ShortIdValueType">
+		<xs:restriction base="xs:string">
+			<xs:annotation>
+				<xs:documentation xml:lang="en">
+					ShortId Value type. Such value is an alternating sequence of URI characters and {ShortId}s (short identifier names enclosed in curly braces) (reminder: the curly brace is not a valid URI character), so the pattern is:
+					^uc*(\{s\}uc*)*$
+					where:
+					- s is the pattern for a ShortId name, copied from the ShortIdNameType definition (which excludes curly braces):
+					[A-Za-z][0-9A-Za-z]*(-[0-9A-Za-z]+)*
+					- uc is the pattern for a valid URI character based on RFC 3986 (cf. the ABNF definition of 'URI' in Appendix A), which excludes curly braces:
+					[!#-;=?-\[\]_a-z~]
+					the minLength=1 restriction prevents the empty string, i.e. there is at least one uc or {s}.
+					An XSD pattern is matched against the entire string, so the ^ and $ anchors are omitted.
+				</xs:documentation>
+			</xs:annotation>
+			<xs:pattern value="[!#-;=?-\[\]_a-z~]*(\{[A-Za-z][0-9A-Za-z]*(-[0-9A-Za-z]+)*\}[!#-;=?-\[\]_a-z~]*)*"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+</xs:schema>
