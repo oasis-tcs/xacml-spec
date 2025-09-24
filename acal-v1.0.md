@@ -2674,7 +2674,6 @@ An `AttributeType` object contains attribute meta-data and one or more attribute
    </xs:sequence>
    <xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
    <xs:attribute name="Issuer" type="xs:string" use="optional"/>
-   <xs:attribute name="IncludeInResult" type="xs:boolean" use="required"/>
 </xs:complexType>
 ```
 
@@ -2697,7 +2696,7 @@ An `AttributeType` object contains the following properties:
 A `CategoryType` object contains a sequence of `AttributeType` objects reflecting `RequestAttributeType` objects in a given attribute category from the request that had their `IncludeInResult` properties set to `true`. The `CategoryType` objects only appear in a result.
 
 ```xml
-<xs:element name="CategoryId" type="xacml:CategoryType"/>
+<xs:element name="Category" type="xacml:CategoryType"/>
 <xs:complexType name="CategoryType">
    <xs:sequence>
       <xs:element ref="xacml:Attribute" minOccurs="1" maxOccurs="unbounded"/>
