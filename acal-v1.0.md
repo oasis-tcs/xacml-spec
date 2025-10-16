@@ -1343,7 +1343,7 @@ A `ShortIdSetType` object contains the following properties:
 
 A predefined set of short identifiers for the URIs defined in this specification is provided as a convenience, in both XML (`xacml-core-v4-identifiers.xml`) and JSON (`xacml-core-v4-identifiers.json`) representations. Use of this set is OPTIONAL.
 
-## 7.4 ShortIdType
+## 7.3 ShortIdType
 
 A `ShortIdType` object defines a single short identifier. Attribute categories, attributes, data types, functions, combining algorithms and other artifacts in ACAL are ultimately identified by URIs. A short identifier provides a simple alias name to use when composing and displaying policies and protocol messages instead of using the full URI.
 
@@ -1386,7 +1386,7 @@ The value of the `Value` property SHALL be either one of the following:
 
 The name of the short identifier MUST NOT be the same as the name of any other short identifier in the same short identifier set or the same as the name of any other short identifier defined in one of the short identifier sets referenced by the containing short identifier set.
 
-## 7.5 IdentifierType
+## 7.4 IdentifierType
 
 A value of the `IdentifierType` simple type refers to a specific attribute category, attribute, data type, function, notice, status code, combining algorithm or XPath version.
 
@@ -1406,11 +1406,11 @@ A value of this simple type is either:
 
 A short identifier name appearing in the second and third cases MUST be the name of a member of a short identifier set referenced by the containing policy, request or response.
 
-Note that the three cases can be distinguished from each other syntactically in a valid, correctly formatted value. If the value contains curly brackets then the third case must apply since the curly bracket characters are not legal characters for an absolute URI or a short identifier name; otherwise, if the value matches the pattern for a short identifier name then the second case applies since an absolute URI begins with a scheme name and a colon character (i.e., `:`; U+003A) and the colon character is not a legal character for a short identifier name; otherwise, the value is an absolute URI.
+Note that the three cases can be distinguished from each other syntactically in a valid, correctly formatted value. If the value contains curly brackets, then the third case must apply since the curly bracket characters are not legal characters for an absolute URI or a short identifier name; otherwise, if the value matches the pattern for a short identifier name, then the second case applies since an absolute URI begins with a scheme name and a colon character (i.e., `:`; U+003A) and the colon character is not a legal character for a short identifier name; otherwise, the value is an absolute URI.
 
 The conversion of a value of the `IdentifierType` simple type into an absolute URI is detailed in [Section 9.3](#93-identifier-evaluation).
 
-## 7.6 PolicyType
+## 7.5 PolicyType
 
 A `PolicyType` object describes a policy: an aggregation of rules and other policies. Policies MAY be included in an enclosing `PolicyType` object either directly using the `Policy` property or indirectly using the `PolicyReference` property.
 
@@ -1498,11 +1498,11 @@ A `PolicyType` object contains the following properties:
 
 `Target` [Optional]
 
-: A `BooleanExpressionType` object that determines the set of decision requests to which the parent policy is applicable. If this property is omitted from the `PolicyType` object then the policy applies to all decision requests. Evaluation of the `Target` property is described in [Section 9.7](#97-target-evaluation).
+: A `BooleanExpressionType` object that determines the set of decision requests to which the parent policy is applicable. If this property is omitted from the `PolicyType` object, then the policy applies to all decision requests. Evaluation of the `Target` property is described in [Section 9.7](#97-target-evaluation).
 
 `NoticeExpression` [Any Number]
 
-: A sequence of `NoticeExpressionType` objects to be evaluated into notices by the PDP. See [Section 7.39](#739-noticeexpressiontype). See [Section 9.18](#918-notices) for a description of how the notices to be returned by the PDP are determined.
+: A sequence of `NoticeExpressionType` objects to be evaluated into notices by the PDP. See [Section 7.33](#733-noticeexpressiontype). See [Section 9.18](#918-notices) for a description of how the notices to be returned by the PDP are determined.
 
 `CombinerInput` [Any Number]
 
@@ -1534,7 +1534,7 @@ Each `CombinerInputType` object contains exactly one of the following properties
 
 : A `CombinerParameterType` objects that is associated with a particular rule within the policy. It is up to the specific combining algorithm to interpret the parameters and adjust its behavior accordingly.
 
-## 7.7 PolicyIssuerType
+## 7.6 PolicyIssuerType
 
 A `PolicyIssuerType` object contains ACAL attributes describing the issuer of the policy. The use of the `PolicyIssuerType` object is defined in a separate administration profile [[XACMLAdmin](#xacmladmin)]. A PDP which does not implement the administration profile MUST report an error or return an `Indeterminate` result if it encounters this object.
 
@@ -1552,13 +1552,13 @@ A `PolicyIssuerType` object contains the following properties:
 
 `Content` [Optional]
 
-: Free form XML describing the issuer. See [Section 7.45](#745-contenttype).
+: Free form XML describing the issuer. See [Section 7.38](#738-contenttype).
 
 `Attribute` [Zero to many]
 
-: A sequence of `AttributeType` objects, each holding an ACAL attribute of the issuer. See [Section 7.46](#746-attributetype).
+: A sequence of `AttributeType` objects, each holding an ACAL attribute of the issuer. See [Section 7.39](#739-attributetype).
 
-## 7.8 DefaultsType
+## 7.7 DefaultsType
 
 A `DefaultsType` object specifies default values that apply to the enclosing `PolicyType` object.
 
@@ -1580,7 +1580,7 @@ A `DefaultsType` object contains the following property:
 
 : An `IdentifierType` value specifying the XPath version for XPath expressions occurring in the policy. XPath expressions are used by attribute selectors and as arguments to XPath-based functions.
 
-## 7.10 BooleanExpressionType
+## 7.8 BooleanExpressionType
 
 A `BooleanExpressionType` object contains one ACAL expression, with the restriction that the expression's return data type MUST be `https://www.w3.org/2001/XMLSchema#boolean`.
 
@@ -1596,7 +1596,7 @@ The `Target` and `Condition` properties are of this type.
 
 Expression evaluation is described in [Section 9.5](#95-expression-evaluation).
 
-## 7.12 PolicyReferenceType
+## 7.9 PolicyReferenceType
 
 A `PolicyReferenceType` object is used to reference a policy by identifier and version.
 
@@ -1648,7 +1648,7 @@ The `PatternMatchIdReferenceType` object type extends the `IdReferenceType` obje
 
 : Specifies a matching expression for the latest acceptable version of the policy referenced.
 
-The matching operation is defined in [Section 7.14](#714-versionmatchtype). Any combination of these properties MAY be present in a `PatternMatchIdReferenceType` object. The referenced policy MUST match all expressions. If none of these properties are present, then any version of the policy is acceptable. In the case that more than one matching version can be obtained, then the most recent one SHOULD be used.
+The matching operation is defined in [Section 7.11](#711-versionmatchtype). Any combination of these properties MAY be present in a `PatternMatchIdReferenceType` object. The referenced policy MUST match all expressions. If none of these properties are present, then any version of the policy is acceptable. In the case that more than one matching version can be obtained, then the most recent one SHOULD be used.
 
 The `IdReferenceType` object type contains the following property:
 
@@ -1656,7 +1656,7 @@ The `IdReferenceType` object type contains the following property:
 
 : A URI being the `PolicyId` of the referenced policy. If the URI is a URL, then it MAY be resolvable to the policy. However, the mechanism for resolving a policy reference to the corresponding policy is outside the scope of this specification.
 
-## 7.13 VersionType
+## 7.10 VersionType
 
 A value of this simple type specifies the version number of a policy.
 
@@ -1670,9 +1670,9 @@ A value of this simple type specifies the version number of a policy.
 
 The version number is expressed as a sequence of decimal numbers, each separated by a period (.). `d+` represents a sequence of one or more decimal digits.
 
-## 7.14 VersionMatchType
+## 7.11 VersionMatchType
 
-Properties of this type SHALL contain a restricted regular expression matching a version number (see [Section 7.13](#713-versiontype)). The expression SHALL match versions of a referenced policy that are acceptable for inclusion in the referencing policy.
+Properties of this type SHALL contain a restricted regular expression matching a version number (see [Section 7.10](#710-versiontype)). The expression SHALL match versions of a referenced policy that are acceptable for inclusion in the referencing policy.
 
 ```xml
 <xs:simpleType name="VersionMatchType">
@@ -1684,7 +1684,7 @@ Properties of this type SHALL contain a restricted regular expression matching a
 
 A version match is `.`-separated, like a version string. A number represents a direct numeric match. A `\*` means that any single number is valid. A `+` means that any number, and any subsequent numbers, are valid. In this manner, the following four patterns would all match the version string `1.2.3`: `1.2.3`, `1.\*.3`, `1.2.\*` and `1.+`.
 
-## 7.16 CombinerParametersType
+## 7.12 CombinerParametersType
 
 A `CombinerParametersType` object conveys parameters for a combining algorithm.
 
@@ -1705,11 +1705,11 @@ A `CombinerParametersType` object contains the following properties:
 
 `CombinerParameter` [Any Number]
 
-: A sequence of `CombinerParameterType` objects, each containing a single parameter for a combining algorithm. See [Section 7.17](#717-combinerparametertype).
+: A sequence of `CombinerParameterType` objects, each containing a single parameter for a combining algorithm. See [Section 7.13](#713-combinerparametertype).
 
 Support for `CombinerParametersType` is optional.
 
-## 7.17 CombinerParameterType
+## 7.13 CombinerParameterType
 
 A `CombinerParameterType` object conveys a single parameter for a combining algorithm.
 
@@ -1735,7 +1735,7 @@ A `CombinerParameterType` object contains the following properties:
 
 Support for `CombinerParameterType` is optional.
 
-## 7.18 RuleCombinerParametersType
+## 7.14 RuleCombinerParametersType
 
 A `RuleCombinerParametersType` object conveys combining algorithm parameters associated with a particular rule within a policy.
 
@@ -1762,7 +1762,7 @@ A `RuleCombinerParametersType` object contains the following property:
 
 Support for `RuleCombinerParametersType` is optional, only if support for combiner parameters is not implemented.
 
-## 7.19 PolicyCombinerParametersType
+## 7.15 PolicyCombinerParametersType
 
 A `PolicyCombinerParametersType` object conveys parameters associated with a particular contained policy for a combining algorithm.
 
@@ -1789,7 +1789,7 @@ A `PolicyCombinerParametersType` object contains the following property:
 
 Support for `PolicyCombinerParametersType` is optional, only if support for combiner parameters is not implemented.
 
-## 7.21 RuleType
+## 7.16 RuleType
 
 A `RuleType` object defines an individual rule in a policy. The main components of an object of this type are the `Condition`, `NoticeExpression` and `Effect` properties.
 
@@ -1828,9 +1828,9 @@ A `RuleType` object contains the following properties:
 
 `NoticeExpression` [Any Number]
 
-: A sequence of `NoticeExpressionType` objects, each defining a notice expression potentially evaluated into a notice by the PDP. See [Section 7.39](#739-noticeexpressiontype). See [Section 9.18](#918-notices) for a description of how the notices to be returned by the PDP shall be determined. See [Section 9.2](#92-policy-enforcement-point) about enforcement of obligation notices.
+: A sequence of `NoticeExpressionType` objects, each defining a notice expression potentially evaluated into a notice by the PDP. See [Section 7.33](#733-noticeexpressiontype). See [Section 9.18](#918-notices) for a description of how the notices to be returned by the PDP shall be determined. See [Section 9.2](#92-policy-enforcement-point) about enforcement of obligation notices.
 
-## 7.22 EffectType
+## 7.17 EffectType
 
 The `EffectType` simple type defines the values allowed for the `Effect` property of a `RuleType` object and for the `AppliesTo` property of the `NoticeExpressionType` objects; either `Permit` or `Deny`.
 
@@ -1843,7 +1843,7 @@ The `EffectType` simple type defines the values allowed for the `Effect` propert
 </xs:simpleType>
 ```
 
-## 7.23 VariableDefinitionType
+## 7.18 VariableDefinitionType
 
 A `VariableDefinitionType` object is used to define a value or a bag of values that MAY be referenced by one or more `VariableReference` properties within the same enclosing policy. The name supplied for its `VariableId` property SHALL NOT occur in the `VariableId` property of any other `VariableDefinitionType` object within the enclosing policy. A `VariableDefinitionType` object MAY contain undefined `VariableReferenceType` objects, but if it does, a corresponding `VariableDefinitionType` object MUST be defined later in the same sequence of `VariableDefinitionType` objects.
 
@@ -1867,7 +1867,7 @@ A `VariableDefinitionType` object has the following properties:
 
 : A `String` name for the variable definition.
 
-## 7.25 ExpressionType
+## 7.19 ExpressionType
 
 An `ExpressionType` object defines an ACAL expression. Expression evaluation is defined in [Section 9.5](#95-expression-evaluation).
 
@@ -1890,9 +1890,17 @@ An `ExpressionType` object contains exactly one of the following properties:
 
 : An `AttributeDesignatorType` object.
 
+`EntityAttributeDesignator`
+
+: An `EntityAttributeDesignatorType` object.
+
 `AttributeSelector`
 
 : An `AttributeSelectorType` object.
+
+`EntityAttributeSelector`
+
+: An `EntityAttributeSelectorType` object.
 
 `AttributeValue`
 
@@ -1902,7 +1910,23 @@ An `ExpressionType` object contains exactly one of the following properties:
 
 : A `VariableReferenceType` object.
 
-## 7.27 ApplyType
+`ForAny`
+
+: A `QuantifiedExpressionType` object specifying existential quantification.
+
+`ForAll`
+
+: A `QuantifiedExpressionType` object specifying universal quantification.
+
+`Select`
+
+: A `QuantifiedExpressionType` object specifying filtering of an input bag of values.
+
+`Map`
+
+: A `QuantifiedExpressionType` object specifying transformation of an input bag of values.
+
+## 7.20 ApplyType
 
 An `ApplyType` object is a kind of expression that denotes application of a function to its arguments, which are also expressions, thus encoding a function call.
 
@@ -1935,7 +1959,7 @@ An `ApplyType` object contains the following properties:
 
 : A sequence of `ExpressionType` objects, each defining an expression as an argument to the function.
 
-## 7.28 FunctionType
+## 7.21 FunctionType
 
 A `FunctionType` object is a kind of expression used to identify a function as an argument to the function defined by the argument's parent `ApplyType` object.
 
@@ -1956,65 +1980,113 @@ A `FunctionType` object contains the following property:
 
 : An `IdentifierType` value identifying a function.
 
-## 7.29 AttributeDesignatorType
+## 7.22 BaseAttributeDesignatorType
 
-An `AttributeDesignatorType` object is a kind of expression that defines an attribute designator. An attribute designator retrieves a bag of values for a named attribute from the request context. A named attribute SHALL be considered present if there is at least one attribute that matches the criteria set out below.
+The `BaseAttributeDesignatorType` object type is an abstract object type that specifies a named attribute for the retrieval of a bag of attribute values from a source of attributes. The object types derived from `BaseAttributeDesignatorType` determine the source of attributes: an `AttributeDesignatorType` object (an attribute designator) specifies a named attribute in the request context and an `EntityAttributeDesignatorType` object (an entity attribute designator) specifies a named attribute in either the request context or a value of the `urn:oasis:names:tc:xacml:3.0:data-type:entity` data type.
 
-Evaluation of an `AttributeDesignatorType` object SHALL return a bag containing all the ACAL attribute values that are matched by the named attribute. In the event that no matching attribute is present in the context, the `MustBePresent` property governs whether this evaluation returns an empty bag or `Indeterminate`. See [Section 9.4.5](#945-attribute-retrieval).
+Evaluation of an `AttributeDesignatorType` or `EntityAttributeDesignatorType` object returns a bag containing all the ACAL attribute values that are matched by the named attribute, or an error. In the event that no matching attribute is present in the source of attributes, the `MustBePresent` property governs whether this evaluation returns an empty bag or `Indeterminate`. See [Section 9.4.5](#945-attribute-retrieval).
 
-```xml
-<xs:element name="AttributeDesignator" type="xacml:AttributeDesignatorType" substitutionGroup="xacml:Expression"/>
-<xs:complexType name="AttributeDesignatorType">
+```
+<xs:complexType name="BaseAttributeDesignatorType" abstract="true">
    <xs:complexContent>
       <xs:extension base="xacml:ExpressionType">
-         <xs:attribute name="CategoryId" type="xacml:IdentifierType" use="required"/>
          <xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
          <xs:attribute name="DataType" type="xacml:IdentifierType" use="required"/>
          <xs:attribute name="Issuer" type="xs:string" use="optional"/>
          <xs:attribute name="MustBePresent" type="xs:boolean" use="optional" default="false"/>
-       </xs:extension>
+      </xs:extension>
    </xs:complexContent>
 </xs:complexType>
 ```
 
-A named attribute SHALL match an attribute if the values of their respective `CategoryId`, `AttributeId`, `DataType` and `Issuer` properties match. The attribute designator's `CategoryId` MUST match, by identifier equality, the `CategoryId` property of the `RequestCategoryType` object in which the attribute is present. The attribute designator's `AttributeId` property MUST match, by identifier equality, the `AttributeId` property of the attribute. The attribute designator's `DataType` property MUST match, by identifier equality, the `DataType` property of the same attribute.
-
-If the `Issuer` property is present in the attribute designator, then it MUST match, using the `urn:oasis:names:tc:xacml:1.0:function:string-equal` function, the `Issuer` property of the same attribute. If the `Issuer` property is not present in the attribute designator, then the matching of the attribute to the named attribute SHALL be governed by `AttributeId` and `DataType` properties alone.
-
-An `AttributeDesignatorType` object contains the following properties:
-
-`CategoryId` [Required]
-
-: An `IdentifierType` value specifying the `CategoryId` of a matching ACAL attribute.
+A `BaseAttributeDesignatorType` object contains the following properties:
 
 `AttributeId` [Required]
 
-: An `IdentifierType` value specifying the `AttributeId` of a matching ACAL attribute.
+: An `IdentifierType` value specifying the `AttributeId` of the named attribute.
 
 `DataType` [Required]
 
-: An `IdentifierType` value specifying the `DataType` of a matching ACAL attribute. The bag returned by the attribute designator SHALL contain values of this data type.
+: An `IdentifierType` value specifying the `DataType` of the named attribute. The bag returned by the designator SHALL contain values of this data type.
 
 `Issuer` [Optional]
 
-: A `String` value which, if supplied, specifies the `Issuer` of a matching ACAL attribute.
+: A `String` value which, if supplied, specifies the `Issuer` of the named attribute.
 
 `MustBePresent` [Optional, Default false]
 
-: A `Boolean` value that governs whether the attribute designator returns `Indeterminate` or an empty bag in the event the named attribute is absent from the request context. See [Section 9.4.5](#945-attribute-retrieval). Also see [Section 9.19.2](#9192-syntax-and-type-errors) and [Section 9.19.3](#9193-missing-attributes). If this property is omitted it is treated as being set to `false`.
+: A `Boolean` value that governs whether the designator returns `Indeterminate` or an empty bag in the event the named attribute is absent from the source of attributes. See [Section 9.4.5](#945-attribute-retrieval). Also see [Section 9.19.2](#9192-syntax-and-type-errors) and [Section 9.19.3](#9193-missing-attributes). If this property is omitted it is treated as being set to `false`.
 
-## 7.30 AttributeSelectorType
+A named attribute SHALL be considered present if there is at least one attribute in the source of attributes that matches the criteria set out below.
 
-An `AttributeDesignatorType` object is a kind of expression that defines an attribute selector. An attribute selector produces a bag of unnamed and uncategorized ACAL attribute values. The values shall be constructed from the node(s) selected by applying the XPath expression given by the attribute selector's `Path` property to the XML content indicated by the attribute selector's `CategoryId` property. Support for attribute selectors is OPTIONAL.
+A named attribute matches an attribute in the source of attributes if the values of their respective `AttributeId`, `DataType` and `Issuer` properties match. The attribute designator's `AttributeId` property MUST match, by identifier equality, the `AttributeId` property of the attribute. The attribute designator's `DataType` property MUST match, by identifier equality, the `DataType` property of the same attribute.
 
-See [Section 9.4.7](#947-attributeselector-evaluation) for details of attribute selector evaluation.
+If the `Issuer` property is present in the attribute designator, then it MUST match, using the `urn:oasis:names:tc:xacml:1.0:function:string-equal` function, the `Issuer` property of the same attribute. If the `Issuer` property is not present in the attribute designator, then the matching of the attribute to the named attribute SHALL be governed by `AttributeId` and `DataType` properties alone.
+
+## 7.23 AttributeDesignatorType
+
+An `AttributeDesignatorType` object is a kind of expression that defines an attribute designator. An attribute designator retrieves a bag of values for a named attribute from the request context.
+
+```
+<xs:complexType name="AttributeDesignatorType">
+   <xs:complexContent>
+      <xs:extension base="xacml:BaseAttributeDesignatorType">
+         <xs:attribute name="CategoryId" type="xacml:IdentifierType" use="required"/>
+      </xs:extension>
+   </xs:complexContent>
+</xs:complexType>
+
+```
+
+The `AttributeDesignatorType` object type extends the `BaseAttributeDesignatorType` object type with the following property:
+
+`CategoryId` [Required]
+
+: An `IdentifierType` value specifying an attribute category in the request context from which values of the named attribute are retrieved.
+
+The properties inherited from `BaseAttributeDesignatorType` specify the named attribute. The attribute designator retrieves values from attributes matching the named attribute that are present in the `RequestCategoryType` object having a `CategoryId` property that matches, by identifier equality, the `CategoryId` property of the attribute designator.
+
+## 7.24 EntityAttributeDesignatorType
+
+An `EntityAttributeDesignatorType` object is a kind of expression that defines an entity attribute designator. An entity attribute designator retrieves a bag of values for a named attribute from either the request context or a value of the `urn:oasis:names:tc:xacml:3.0:data-type:entity` data type.
 
 ```xml
-<xs:element name="AttributeSelector" type="xacml:AttributeSelectorType" substitutionGroup="xacml:Expression"/>
-<xs:complexType name="AttributeSelectorType">
+<xs:element name="EntityAttributeDesignator" type="xacml:EntityAttributeDesignatorType" substitutionGroup="xacml:Expression"/>
+<xs:complexType name="EntityAttributeDesignatorType">
+   <xs:complexContent>
+      <xs:extension base="xacml:BaseAttributeDesignatorType">
+         <xs:sequence>
+            <xs:element ref="xacml:Expression"/>
+         </xs:sequence>
+      </xs:extension>
+   </xs:complexContent>
+</xs:complexType>
+```
+
+The `EntityAttributeDesignatorType` object type extends the `BaseAttributeDesignatorType` object type with the following property:
+
+`Expression` [Required]
+
+: An `ExpressionType` object defining an expression that MUST evaluate to either a single value of the `urn:oasis:names:tc:xacml:3.0:data-type:entity` data type or a single value of the `https://www.w3.org/2001/XMLSchema#anyURI` data type.
+
+The properties inherited from `BaseAttributeDesignatorType` specify the named attribute.
+
+If the expression evaluates to a value of the `urn:oasis:names:tc:xacml:3.0:data-type:entity` data type, then the entity attribute designator retrieves values from attributes matching the named attribute that are present in the value of the expression.
+
+If the expression evaluates to a value of the `https://www.w3.org/2001/XMLSchema#anyURI` data type, then the entity attribute designator retrieves values from attributes matching the named attribute that are present in the `RequestCategoryType` object having a `CategoryId` property that matches, by identifier equality, the value of the expression. In this case the entity attribute designator emulates an attribute designator.
+
+## 7.25 BaseAttributeSelectorType
+
+The `BaseAttributeSelectorType` object type is an abstract object type that specifies an XPath expression for the production of a bag of ACAL attribute values from XML content. The object types derived from `BaseAttributeSelectorType` determine the source of the XML content: an `AttributeSelectorType` object (an attribute selector) specifies the `Content` property of an attribute category in the request context and an `EntityAttributeSelectorType` object (an entity attribute selector) specifies the `Content` property in either an attribute category in the request context or a value of the `urn:oasis:names:tc:xacml:3.0:data-type:entity` data type.
+
+Evaluation of an `AttributeSelectorType` or `EntityAttributeSelectorType` object returns a bag of unnamed and uncategorized ACAL attribute values, or an error. Support for attribute selectors and entity attribute selectors is OPTIONAL.
+
+See [Section 9.4.7](#947-selector-evaluation) for details of attribute selector and entity attribute selector evaluation.
+
+```xml
+<xs:complexType name="BaseAttributeSelectorType">
    <xs:complexContent>
       <xs:extension base="xacml:ExpressionType">
-         <xs:attribute name="CategoryId" type="xacml:IdentifierType" use="required"/>
          <xs:attribute name="ContextSelectorId" type="xacml:IdentifierType" use="optional"/>
          <xs:attribute name="Path" type="xs:string" use="required"/>
          <xs:attribute name="DataType" type="xacml:IdentifierType" use="required"/>
@@ -2024,31 +2096,79 @@ See [Section 9.4.7](#947-attributeselector-evaluation) for details of attribute 
 </xs:complexType>
 ```
 
-An `AttributeSelectorType` object has the following properties:
-
-`CategoryId` [Required]
-
-: An `IdentifierType` value specifying the attribute category of the `Content` property containing the XML from which nodes will be selected. It also indicates the attribute category containing the ACAL attribute nominated by the `ContextSelectorId` property, if the object includes a `ContextSelectorId` property.
+A `BaseAttributeSelectorType` object has the following properties:
 
 `ContextSelectorId` [Optional]
 
-: An `IdentifierType` value specifying an ACAL attribute (by its `AttributeId`) in the request context in the category given by the `CategoryId` property. The referenced attribute MUST have data type `urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression`, and its attribute value must select a single node in the `Content` property. The `XPathCategory` property of the referenced ACAL attribute MUST be equal to the `CategoryId` property of the attribute selector.
+: An `IdentifierType` value specifying an ACAL attribute (by its `AttributeId`) in the attribute category or `urn:oasis:names:tc:xacml:3.0:data-type:entity` value containing the XML content. The referenced attribute MUST have a single value of data type `urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression` and the XPath expression represented by that value must select a single node in the XML content. The `XPathCategory` property of the referenced ACAL attribute value SHALL be ignored.
 
 `Path` [Required]
 
-: A `String` value that contains an XPath expression to be evaluated against the specified XML content. See [Section 9.4.7](#947-attributeselector-evaluation) for details of the XPath evaluation during attribute selector processing. The namespace context for the value of the `Path` property is given by the [in-scope namespaces] [[INFOSET](#infoset)] of the `AttributeSelectorType` object.
+: A `String` value that contains an XPath expression to be evaluated against the specified XML content. See [Section 9.4.7](#947-selector-evaluation) for details of the XPath evaluation during attribute selector and entity attribute selector processing. The namespace context for the value of the `Path` property is given by the [in-scope namespaces] [[INFOSET](#infoset)] of the `BaseAttributeSelectorType` object.
 
   _The namespaces will need to be handled in a manner similar to how namespaces are handled in the JSON profile for values of the xpathexpression data type._
 
 `DataType` [Required]
 
-: An `IdentifierType` value specifying the data type of the values returned from the evaluation of this `AttributeSelectorType` object.
+: An `IdentifierType` value specifying the data type of the values returned from the evaluation of the attribute selector or entity attribute selector.
 
 `MustBePresent` [Optional, Default false]
 
-: A `Boolean` value that governs whether the attribute selector returns `Indeterminate` or an empty bag in the event that the attribute category specified by the `CategoryId` property does not exist in the request context, or the attribute category does exist but it does not have a `Content` property, or the `Content` property does exist but the XPath expression selects no node. See [Section 9.4.5](#945-attribute-retrieval). Also see [Section 9.19.2](#9192-syntax-and-type-errors) and [Section 9.19.3](#9193-missing-attributes). If this property is omitted it is treated as being set to `false`.
+: A `Boolean` value that governs whether the attribute selector or entity attribute selector returns `Indeterminate` or an empty bag in the event that the specified XML content does not exist, or the XML content does exist but the XPath expression selects no node. See [Section 9.4.5](#945-attribute-retrieval). Also see [Section 9.19.2](#9192-syntax-and-type-errors) and [Section 9.19.3](#9193-missing-attributes). If this property is omitted it is treated as being set to `false`.
 
-## 7.31 AttributeValueType
+## 7.26 AttributeSelectorType
+
+An `AttributeSelectorType` object is a kind of expression that defines an attribute selector. An attribute selector produces a bag of unnamed and uncategorized ACAL attribute values. The values shall be constructed from the node(s) selected by applying the XPath expression given by the attribute selector's `Path` property to the XML content indicated by the attribute selector's `CategoryId` property. Support for attribute selectors is OPTIONAL.
+
+See [Section 9.4.7](#947-selector-evaluation) for details of attribute selector evaluation.
+
+```xml
+<xs:element name="AttributeSelector" type="xacml:AttributeSelectorType" substitutionGroup="xacml:Expression"/>
+<xs:complexType name="AttributeSelectorType">
+   <xs:complexContent>
+      <xs:extension base="xacml:BaseAttributeSelectorType">
+         <xs:attribute name="CategoryId" type="xacml:IdentifierType" use="required"/>
+       </xs:extension>
+   </xs:complexContent>
+</xs:complexType>
+```
+
+The `AttributeSelectorType` object type extends the `BaseAttributeSelectorType` object type with the following property:
+
+`CategoryId` [Required]
+
+: An `IdentifierType` value specifying an attribute category in the request context. The `Content` property of that attribute categeory contains the XML from which nodes will be selected. The `CategoryId` property also indicates the attribute category containing the ACAL attribute nominated by the `ContextSelectorId` property, if the object includes a `ContextSelectorId` property.
+
+## 7.27 EntityAttributeSelectorType
+
+An `EntityAttributeSelectorType` object is a kind of expression that defines an entity attribute selector. An entity attribute selector produces a bag of unnamed and uncategorized ACAL attribute values. The values shall be constructed from the node(s) selected by applying the XPath expression given by the entity attribute selector's `Path` property to the XML content in the `Content` property in either an attribute category in the request context or a value of the `urn:oasis:names:tc:xacml:3.0:data-type:entity` data type. Support for entity attribute selectors is OPTIONAL.
+
+See [Section 9.4.7](#947-selector-evaluation) for details of entity attribute selector evaluation.
+
+```xml
+<xs:element name="EntityAttributeSelector" type="xacml:EntityAttributeSelectorType" substitutionGroup="xacml:Expression"/>
+<xs:complexType name="EntityAttributeSelectorType">
+   <xs:complexContent>
+      <xs:extension base="xacml:BaseAttributeSelectorType">
+         <xs:sequence>
+            <xs:element ref="xacml:Expression"/>
+         </xs:sequence>
+       </xs:extension>
+   </xs:complexContent>
+</xs:complexType>
+```
+
+The `EntityAttributeSelectorType` object type extends the `BaseAttributeSelectorType` object type with the following property:
+
+`Expression` [Required]
+
+: An `ExpressionType` object defining an expression that MUST evaluate to either a single value of the `urn:oasis:names:tc:xacml:3.0:data-type:entity` data type or a single value of the `https://www.w3.org/2001/XMLSchema#anyURI` data type.
+
+If the expression evaluates to a value of the `urn:oasis:names:tc:xacml:3.0:data-type:entity` data type, then the entity attribute selector applies the XPath expression given by the entity attribute selector's `Path` property to the XML content in the `Content` property of that value. The ACAL attribute nominated by the `ContextSelectorId` property, if any, is obtained from this same value.
+
+If the expression evaluates to a value of the `https://www.w3.org/2001/XMLSchema#anyURI` data type, then the entity attribute selector applies the XPath expression given by the entity attribute selector's `Path` property to the XML content in the `Content` property of the `RequestCategoryType` object having a `CategoryId` property that matches, by identifier equality, the value of the expression. In this case the entity attribute selector emulates an attribute selector. The ACAL attribute nominated by the `ContextSelectorId` property, if any, is obtained from this same object.
+
+## 7.28 AttributeValueType
 
 An `AttributeValueType` object is a kind of expression that contains a literal ACAL attribute value.
 
@@ -2073,7 +2193,7 @@ An `AttributeValueType` object has the following properties:
 
 : An `IdentifierType` value specifying the data type of the attribute value.
 
-## 7.32 VariableReferenceType
+## 7.29 VariableReferenceType
 
 A `VariableReferenceType` object is a kind of expression used to reference a value defined within the same enclosing `PolicyType` object. The `VariableReference` property SHALL refer to the `VariableDefinitionType` object by identifier equality on the value of their respective `VariableId` properties. One and only one `VariableDefinitionType` object MUST exist within the same encompassing `PolicyType` object to which the `VariableReference` property refers. Multiple `VariableDefinitionType` objects MAY refer to the same `VariableDefinitionType` object. A `VariableDefinitionType` object MAY have no references.
 
@@ -2094,7 +2214,105 @@ A `VariableReferenceType` object contains the following property:
 
 : The name used to refer to the value defined in a `VariableDefinitionType` object.
 
-## 7.34 NoticeType
+## 7.30 QuantifiedExpressionType
+
+A `QuantifiedExpressionType` object is a kind of expression that represents one of four kinds of quantified expression. The kind of quantified expression is determined by the name of the property that holds the object, either `ForAny`, `ForAll`, `Select` or `Map`. There are some common requirements for all four kinds of quantified expressions.
+
+```xml
+<xs:complexType name="QuantifiedExpressionType">
+  <xs:complexContent>
+    <xs:extension base="xacml:ExpressionType">
+      <xs:sequence>
+        <xs:element ref="xacml:Expression"/>
+        <xs:element ref="xacml:Expression"/>
+      </xs:sequence>
+      <xs:attribute name="VariableId" type="xs:string" use="required"/>
+    </xs:extension>
+  </xs:complexContent>
+</xs:complexType>
+```
+
+A `QuantifiedExpressionType` object contains the following properties:
+
+`VariableId` [Required]
+
+: A `String` value naming the quantified variable that will be used by the quantified expression. The quantified variable does not have a corresponding variable definition. A quantified expression SHALL NOT use the same `VariableId` as a variable definition of an enclosing `PolicyType` or `RuleType` object.
+
+`Domain` [Required]
+
+: An `ExpressionType` object defining an expression. This expression is called the domain. The domain SHALL be an expression that evaluates to a bag of values of the same data type, or `Indeterminate` in the case of an error. The bag MAY be empty.
+
+`Iterant` [Required]
+
+: An `ExpressionType` object defining an expression. This expression is called the iterant expression. The iterant expression SHALL be an expression that evaluates to a single value (for all but one kind of quantified expression the data type of that value is `http://www.w3.org/2001/XMLSchema#boolean`).
+
+Quantified expressions MAY be nested in either or both of the domain and the iterant expression. A nested quantified expression SHALL NOT use the same `VariableId` as an enclosing quantified expression.
+
+The evaluation of a quantified expression begins with the evaluation of the domain expression. The iterant expression is then evaluated once for each value from the domain with the quantified variable set to that value, except that evaluation of the quantified expression may terminate before considering all the values from the domain if the final result of the quantified expression has already been determined. The conditions for early termination are specified for each kind of quantified expression. The effect of the result of the iterant expression on the overall result of the quantified expression depends on the kind of quantified expression. Bags of values are unordered so there is no constraint on the order in which an implementation chooses to consider values from the domain.
+
+The value of the quantified variable, i.e., the particular value from the domain, MAY be referenced one or more times from within the iterant expression using a `VariableReferenceType` object. It is not an error if the quantified variable is not referenced at all. The quantified variable SHALL NOT be referenced from within the domain of the quantified expression to which it belongs. A quantified variable MAY be referenced from within the domain of another quantified expression nested within the iterant expression.
+
+### 7.30.1 ForAny Expression
+
+The ForAny quantified expression tests whether any value of a bag satisfies the iterant expression. It is represented by a `ForAny` property, which is of the `QuantifiedExpressionType` object type.
+
+```xml
+<xs:element name="ForAny" type="xacml:QuantifiedExpressionType"
+  substitutionGroup="xacml:Expression"/>
+```
+
+The iterant expression of a ForAny expression SHALL be an expression that evaluates to a value of the `http://www.w3.org/2001/XMLSchema#boolean` data type.
+
+The result of a ForAny expression SHALL be a value of the `http://www.w3.org/2001/XMLSchema#boolean` data type or `Indeterminate`.
+
+The ForAny expression evaluates to `true` if the iterant expression evaluates to `true` for any value from the domain; otherwise, the expression evaluates to `Indeterminate` if the iterant expression evaluates to `Indeterminate` for any value from the domain; otherwise, the expression evaluates to `false`. Note that the ForAny expression evaluates to `false` if the domain is an empty bag. Evaluation of the expression MAY terminate whenever the iterant expression evaluates to `true`.
+
+### 7.30.2 ForAll Expression
+
+The ForAll quantified expression tests whether all values of a bag satisfy the iterant expression. It is represented by the `ForAll` property, which is of the `QuantifiedExpressionType` object type.
+
+```xml
+<xs:element name="ForAll" type="xacml:QuantifiedExpressionType"
+  substitutionGroup="xacml:Expression"/>
+```
+
+The iterant expression of a ForAll expression SHALL be an expression that evaluates to a value of the `http://www.w3.org/2001/XMLSchema#boolean` data type.
+
+The result of a ForAll expression SHALL be a value of the `http://www.w3.org/2001/XMLSchema#boolean` data type or `Indeterminate`.
+
+The ForAll expression evaluates to `false` if the iterant expression evaluates to `false` for any value from the domain; otherwise, the expression evaluates to `Indeterminate` if the iterant expression evaluates to `Indeterminate` for any value from the domain; otherwise, the expression evaluates to `true`. Note that the ForAll expression evaluates to `true` if the domain is an empty bag. Evaluation of the expression MAY terminate whenever the iterant expression evaluates to `false`.
+
+### 7.30.3 Map Expression
+
+The Map quantified expression converts a bag of values to another bag of values. It is represented by the `Map` property, which is of the `QuantifiedExpressionType` object type.
+
+```xml
+<xs:element name="Map" type="xacml:QuantifiedExpressionType"
+  substitutionGroup="xacml:Expression"/>
+```
+
+The iterant expression of a Map expression SHALL be an expression that evaluates to a single value (not necessarily of the same data type as the values in the domain).
+
+The result of the Map expression SHALL be a bag of values of the same data type as the iterant expression or `Indeterminate`.
+
+If the iterant expression evaluates to `Indeterminate` for any value from the domain, then the result of the Map expression is `Indeterminate`; otherwise, the result bag contains the values resulting from the evaluation of the iterant expression for each value from the domain. The Map expression evaluates to an empty bag if the domain is an empty bag. Evaluation of the Map expression MAY terminate whenever the iterant expression evaluates to `Indeterminate`.
+
+### 7.30.4 Select Expression
+
+The Select quantified expression returns a bag containing the values from the domain that satisfy the iterant expression. That is, the result is a subset of, or equal to, the domain. The Select expression is represented by the `Select` property, which is of the `QuantifiedExpressionType` object type.
+
+```xml
+<xs:element name="Select" type="xacml:QuantifiedExpressionType"
+  substitutionGroup="xacml:Expression"/>
+```
+
+The iterant expression of a Select expression SHALL be an expression that evaluates to a value of the `http://www.w3.org/2001/XMLSchema#boolean` data type.
+
+The result of a Select expression SHALL be a bag of values of the same data type as the values from the domain or `Indeterminate`.
+
+If the iterant expression evaluates to `Indeterminate` for any value from the domain, then the result of the Select expression is `Indeterminate`; otherwise, the result bag contains each value from the domain for which the iterant expression evaluates to `true`. The Select expression evaluates to an empty bag if the domain is an empty bag. Evaluation of the Select expression MAY terminate whenever the iterant expression evaluates to `Indeterminate`.
+
+## 7.31 NoticeType
 
 A `NoticeType` object contains an identifier for a notice and a list of attribute assignments that form arguments of the notice.
 
@@ -2125,7 +2343,7 @@ A `NoticeType` object contains the following properties:
 
 : A sequence of `AttributeAssignmentType` objects, each an attribute assignment for forming the arguments of the notice.
 
-## 7.36 AttributeAssignmentType
+## 7.32 AttributeAssignmentType
 
 An `AttributeAssignmentType` object is used in a notice expression to include an attribute in a notice. The `AttributeAssignmentType` object type extends the `AttributeType` definition by adding a `CategoryId` property.
 
@@ -2148,9 +2366,9 @@ The `AttributeAssignmentType` object type extends the `AttributeType` object typ
 
 : An `IdentifierType` value specifying the category of the attribute. If this property is absent, the attribute has no category. The PEP SHALL interpret the significance and meaning of any `CategoryId` property. Non-normative note: an expected use of the category is to disambiguate attributes that are relayed from the request.
 
-## 7.39 NoticeExpressionType
+## 7.33 NoticeExpressionType
 
-A `NoticeExpressionType` object defines a notice expression that is potentially evaluated into a notice. A notice expression contains an identifier for the notice and a set of expressions that form arguments of the notice. The `AppliesTo` property indicates the effect for which this notice is eligible to be provided to the PEP. If the `AppliesTo` property is absent then this notice is eligible to be provided to the PEP if the effect is either `Permit` or `Deny`. See [Section 9.18](#918-notices) for a description of how the list of notices to be returned by the PDP is determined.
+A `NoticeExpressionType` object defines a notice expression that is potentially evaluated into a notice. A notice expression contains an identifier for the notice and a set of expressions that form arguments of the notice. The `AppliesTo` property indicates the effect for which this notice is eligible to be provided to the PEP. If the `AppliesTo` property is absent, then this notice is eligible to be provided to the PEP if the effect is either `Permit` or `Deny`. See [Section 9.18](#918-notices) for a description of how the list of notices to be returned by the PDP is determined.
 
 ```xml
 <xs:element name="NoticeExpression" type="xacml:NoticeExpressionType"/>
@@ -2173,7 +2391,7 @@ A `NoticeExpressionType` object contains the following properties:
 
 `IsObligation` [Optional]
 
-: A `Boolean` value that determines the setting for the `IsObligation` property of the notice. If `IsObligation` is present then the `IsObligation` property of the notice is set to the same value; otherwise, the `IsObligation` property is omitted from the notice.
+: A `Boolean` value that determines the setting for the `IsObligation` property of the notice. If `IsObligation` is present, then the `IsObligation` property of the notice is set to the same value; otherwise, the `IsObligation` property is omitted from the notice.
 
 `AppliesTo` [Optional]
 
@@ -2187,7 +2405,7 @@ A `NoticeExpressionType` object contains the following properties:
 
 : A sequence of `AttributeAssignmentExpressionType` objects, each specifying a notice argument in the form of an expression. The expressions SHALL be evaluated by the PDP to constant `AttributeValueType` objects or bags, which shall be the attribute assignments in the notice returned to the PEP. If an `AttributeAssignmentExpressionType` object evaluates to an atomic attribute value, then there MUST be one resulting `AttributeAssignmentType` object which MUST contain this single attribute value. If the `AttributeAssignmentExpressionType` object evaluates to a bag, then there MUST be a resulting `AttributeAssignmentType` object for each of the values in the bag. If the bag is empty, there shall be no `AttributeAssignmentType` objects from this `AttributeAssignmentExpressionType` object. The values of the notice arguments SHALL be interpreted by the PEP.
 
-## 7.41 AttributeAssignmentExpressionType
+## 7.34 AttributeAssignmentExpressionType
 
 An `AttributeAssignmentExpressionType` object is used to include an argument in a notice. It SHALL contain an `AttributeId` property and an expression which SHALL be evaluated into the corresponding attribute value. The value specified SHALL be understood by the PEP, but it is not further specified by ACAL. See [Section 9.18](#918-notices). [Section 6.2.5.3](#6253-rule-3) provides a number of examples of attribute assignment expressions included in notice expressions.
 
@@ -2207,7 +2425,7 @@ An `AttributeAssignmentExpressionType` object contains the following properties:
 
 `Expression` [Required]
 
-: An `ExpressionType` object defining an expression which evaluates to a constant attribute value or a bag of zero or more attribute values. See [Section 7.25](#725-expressiontype).
+: An `ExpressionType` object defining an expression which evaluates to a constant attribute value or a bag of zero or more attribute values. See [Section 7.19](#719-expressiontype).
 
 `AttributeId` [Required]
 
@@ -2221,7 +2439,7 @@ An `AttributeAssignmentExpressionType` object contains the following properties:
 
 : A `String` value specifying the issuer of the attribute. If this property is absent, the attribute has no issuer. The value of the `Issuer` property in the resulting `AttributeAssignmentType` object MUST be equal to this value.
 
-## 7.42 RequestType
+## 7.35 RequestType
 
 The `RequestType` object type is an abstraction layer used by the policy language. For simplicity of expression, this document describes policy evaluation in terms of operations on the context. However a conforming PDP is not required to actually instantiate the context in any particular syntactic form. But, any system conforming to the ACAL specification MUST produce exactly the same authorization decisions as if all the inputs had been transformed into the form of a `RequestType` object.
 
@@ -2255,7 +2473,7 @@ A `RequestType` object contains the following properties:
 
 `RequestDefaults` [Optional]
 
-: A `RequestDefaultsType` object containing default values for the request, such as the XPath version. See [Section 7.43](#743-requestdefaultstype). The `RequestDefaults` property is REQUIRED if the request contains values of the `urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression` data type.
+: A `RequestDefaultsType` object containing default values for the request, such as the XPath version. See [Section 7.36](#736-requestdefaultstype). The `RequestDefaults` property is REQUIRED if the request contains values of the `urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression` data type.
 
 `RequestCategory` [One to Many]
 
@@ -2263,9 +2481,9 @@ A `RequestType` object contains the following properties:
 
 `MultiRequests` [Optional]
 
-: A `MultiRequestsType` object listing multiple request contexts using references to the `RequestCategoryType` objects. Implementation of this property is optional. The semantics of this property are defined in [[Multi](#multi)]. If the implementation does not implement this property, it MUST return an `Indeterminate` result if it encounters this property. See [Section 7.50](#750-multirequeststype).
+: A `MultiRequestsType` object listing multiple request contexts using references to the `RequestCategoryType` objects. Implementation of this property is optional. The semantics of this property are defined in [[Multi](#multi)]. If the implementation does not implement this property, it MUST return an `Indeterminate` result if it encounters this property. See [Section 7.43](#743-multirequeststype).
 
-## 7.43 RequestDefaultsType
+## 7.36 RequestDefaultsType
 
 A `RequestDefaultsType` object specifies default values that apply to the parent `RequestType` object.
 
@@ -2286,7 +2504,7 @@ A `RequestDefaultsType` object contains the following properties:
 
 : An `IdentifierType` value specifying the XPath version for XPath expressions occurring in the request as values of the `urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression` data type.
 
-## 7.44 RequestCategoryType
+## 7.37 RequestCategoryType
 
 A `RequestCategoryType` object specifies ACAL attributes of a subject, resource, action, environment or another category using a sequence of `RequestAttributeType` objects.
 
@@ -2314,13 +2532,13 @@ A `RequestCategoryType` object contains the following properties:
 
 `Content` [Optional]
 
-: A `ContentType` object specifying additional sources of attributes in free-form XML document format which can be referenced using attribute selectors.
+: A `ContentType` object specifying additional sources of attributes in JSON or XML document format which can be referenced using attribute selectors and entity attribute selectors.
 
 `RequestAttribute` [Any Number]
 
 : A sequence of `RequestAttributeType` objects associated with the attribute category of the request.
 
-## 7.45 ContentType
+## 7.38 ContentType
 
 A `ContentType` object is a notional placeholder for additional attributes, typically the content of the resource.
 
@@ -2337,7 +2555,7 @@ A `ContentType` object has exactly one arbitrary type child element.
 
 _This needs to be aligned with the way the JSON profile handles the Content member of a category._
 
-## 7.46 RequestAttributeType
+## 7.39 RequestAttributeType
 
 A `RequestAttributeType` object describes an ACAL attribute in the request context.
 
@@ -2358,7 +2576,7 @@ The `RequestAttributeType` object type extends the `AttributeType` object type w
 
 : A `Boolean` value that governs whether this ACAL attribute is included in the result. This is useful to correlate requests with their responses in the case of multiple requests. If this property is omitted it is treated as being set to `false`. Note that ACAL attributes appear in the result as `AttributeType` objects.
 
-## 7.47 ResponseType
+## 7.40 ResponseType
 
 The `ResponseType` object type is an abstraction layer used by the policy language. Any proprietary system using the ACAL specification MUST transform an ACAL context `ResponseType` object into the form of its authorization decision.
 
@@ -2382,9 +2600,9 @@ A `ResponseType` object contains the following properties:
 
 `Result` [One to Many]
 
-: A sequence of `ResultType` objects, each an authorization decision result. See [Section 7.48](#748-resulttype).
+: A sequence of `ResultType` objects, each an authorization decision result. See [Section 7.41](#741-resulttype).
 
-## 7.48 ResultType
+## 7.41 ResultType
 
 A `ResultType` object represents an authorization decision result. It MAY include a list of notices. If the PEP does not understand or cannot fulfill an obligation notice, then the action of the PEP is determined by its bias, see [Section 9.2](#92-policy-enforcement-point). Any advice notices MAY be safely ignored by the PEP.
 
@@ -2413,17 +2631,17 @@ A `ResultType` object contains the following properties:
 
 `Notice` [any Number]
 
-: A sequence of `NoticeType` objects, each a notice to be interpreted by the PEP. See [Section 7.34](#734-noticetype). If the PEP does not understand or cannot fulfill an obligation notice, then the action of the PEP is determined by its bias, see [Section 9.2](#92-policy-enforcement-point). If the PEP does not understand an advice notice, the PEP may safely ignore the notice. See [Section 9.18](#918-notices) for a description of how the list of notices to be returned by the PDP is determined.
+: A sequence of `NoticeType` objects, each a notice to be interpreted by the PEP. See [Section 7.31](#731-noticetype). If the PEP does not understand or cannot fulfill an obligation notice, then the action of the PEP is determined by its bias, see [Section 9.2](#92-policy-enforcement-point). If the PEP does not understand an advice notice, the PEP may safely ignore the notice. See [Section 9.18](#918-notices) for a description of how the list of notices to be returned by the PDP is determined.
 
 `Category` [Optional]
 
-: A sequence of `CategoryType` objects, each an attribute category containing attributes that were part of the request. The choice of which attributes are included here is made with the `IncludeInResult` property of the `RequestAttributeType` objects of the request. See [Section 7.59](#759-attributetype).
+: A sequence of `CategoryType` objects, each an attribute category containing attributes that were part of the request. The choice of which attributes are included here is made with the `IncludeInResult` property of the `RequestAttributeType` objects of the request. See [Section 7.51](#751-attributetype).
 
 `ApplicablePolicyReference` [Optional]
 
-: A sequence of `ExactMatchIdReferenceType` objects. If the `ReturnPolicyIdList` property in the `RequestType` object is `true` (see [Section 7.42](#742-requesttype)), a PDP that implements this optional feature MUST return a sequence that includes the identifiers of all policies which were found to be fully applicable, whether or not the effect (after rule combining) was the same or different from the decision. The sequence is unordered. The sequence MAY include the identifiers of other policies that are currently in force, as long as no policies required for the decision are omitted. A PDP MAY satisfy this requirement by including all policies currently in force, or by including all policies which were evaluated in making the decision, or by including all policies which did not evaluate to `NotApplicable`, or by any other algorithm which does not omit any policies which contributed to the decision. However, a decision which returns `NotApplicable` MUST return an empty list.
+: A sequence of `ExactMatchIdReferenceType` objects. If the `ReturnPolicyIdList` property in the `RequestType` object is `true` (see [Section 7.35](#735-requesttype)), a PDP that implements this optional feature MUST return a sequence that includes the identifiers of all policies which were found to be fully applicable, whether or not the effect (after rule combining) was the same or different from the decision. The sequence is unordered. The sequence MAY include the identifiers of other policies that are currently in force, as long as no policies required for the decision are omitted. A PDP MAY satisfy this requirement by including all policies currently in force, or by including all policies which were evaluated in making the decision, or by including all policies which did not evaluate to `NotApplicable`, or by any other algorithm which does not omit any policies which contributed to the decision. However, a decision which returns `NotApplicable` MUST return an empty list.
 
-## 7.49 ExactMatchIdReferenceType
+## 7.42 ExactMatchIdReferenceType
 
 An `ExactMatchIdReferenceType` object contains the policy identifier of a policy that has been applicable to a request.
 
@@ -2442,9 +2660,9 @@ The `ExactMatchIdReferenceType` object type extends the `IdReferenceType` object
 
 `Version` [Required]
 
-: A `VersionType` value indicating the version of a policy that was applicable to the request. See [Section 7.12](#712-policyreferencetype).
+: A `VersionType` value indicating the version of a policy that was applicable to the request. See [Section 7.9](#79-policyreferencetype).
 
-## 7.50 MultiRequestsType
+## 7.43 MultiRequestsType
 
 A `MultiRequestsType` object contains a list of requests by reference to `RequestCategoryType` objects in the enclosing `RequestType` object. The `MultiRequests` property is of `MultiRequestsType` object type. The semantics of this property are defined in [[Multi](#multi)]. Support for this property is optional. If an implementation does not support this property, but receives it, the implementation MUST generate an `Indeterminate` response.
 
@@ -2461,9 +2679,9 @@ A `MultiRequestsType` object contains the following properties.
 
 `RequestReference` [one to many]
 
-: A sequence of `RequestReferenceType` objects, each defining a request instance by reference to `RequestCategoryType` objects in the enclosing `RequestType` object. See [Section 7.51](#751-requestreferencetype).
+: A sequence of `RequestReferenceType` objects, each defining a request instance by reference to `RequestCategoryType` objects in the enclosing `RequestType` object. See [Section 7.44](#744-requestreferencetype).
 
-## 7.51 RequestReferenceType
+## 7.44 RequestReferenceType
 
 A `RequestReferenceType` object defines an instance of a request in terms of references to `RequestCategoryType` objects. The semantics of this object type are defined in [[Multi](#multi)]. Support for this object type is optional.
 
@@ -2480,9 +2698,9 @@ A `RequestReferenceType` object contains the following properties.
 
 `RequestCategoryReference` [one to many]
 
-: A sequence of RequestCategoryReferenceType` objects, each a reference to a `RequestCategoryType` object in the enclosing `RequestType` object. See [Section 7.52](#752-requestcategoryreferencetype).
+: A sequence of RequestCategoryReferenceType` objects, each a reference to a `RequestCategoryType` object in the enclosing `RequestType` object. See [Section 7.45](#745-requestcategoryreferencetype).
 
-## 7.52 RequestCategoryReferenceType
+## 7.45 RequestCategoryReferenceType
 
 A `RequestCategoryReferenceType` object makes a reference to a `RequestCategoryType` object. The meaning of this object is defined in [[Multi](#multi)]. Support for this object is optional.
 
@@ -2499,7 +2717,7 @@ A `RequestCategoryReferenceType` object contains the following properties.
 
 : A `String` value referencing a `RequestCategoryType` object in the enclosing `RequestType` object by the value of its `Id` property.
 
-## 7.53 DecisionType
+## 7.46 DecisionType
 
 A `DecisionType` value indicates the result of policy evaluation.
 
@@ -2525,7 +2743,7 @@ The values of `DecisionType` have the following meanings:
 
 : `NotApplicable`: the PDP does not have any policy that applies to this decision request.
 
-## 7.54 StatusType
+## 7.47 StatusType
 
 A `StatusType` object represents the status of the authorization decision result.
 
@@ -2554,7 +2772,7 @@ A `StatusType` object contains the following properties:
 
 : A `StatusDetailType` object containing additional status information.
 
-## 7.55 StatusCodeType
+## 7.48 StatusCodeType
 
 A `StatusCodeType` object contains a major status code value and an optional recursive series of minor status codes.
 
@@ -2578,7 +2796,7 @@ A `StatusCodeType` object contains the following properties:
 
 : A sequence of `StatusCodeType` objects describing minor status codes. Each minor status code qualifies its parent status code.
 
-## 7.57 StatusDetailType
+## 7.49 StatusDetailType
 
 A `StatusDetailType` object qualifies its parent `StatusType` object with additional information.
 
@@ -2593,7 +2811,7 @@ A `StatusDetailType` object qualifies its parent `StatusType` object with additi
 
 A `StatusDetailType` object allows arbitrary XML content.
 
-Inclusion of a `StatusDetailType` object is optional. However, if a PDP returns one of the following ACAL-defined status code values then the following rules apply.
+Inclusion of a `StatusDetailType` object is optional. However, if a PDP returns one of the following ACAL-defined status code values, then the following rules apply.
 
 ```
 urn:oasis:names:tc:xacml:1.0:status:ok
@@ -2619,7 +2837,7 @@ urn:oasis:names:tc:xacml:1.0:status:processing-error
 
 A PDP MUST NOT return a `StatusDetailType` object in conjunction with the `processing-error` status value. This status code indicates an internal problem in the PDP. For security reasons, the PDP MAY choose to return no further information to the PEP. In the case of a divide-by-zero error or other computational error, the PDP MAY return a `StatusMessage` property describing the nature of the error.
 
-## 7.58 MissingAttributeDetailType
+## 7.50 MissingAttributeDetailType
 
 A `MissingAttributeDetailType` object conveys information about attributes required for policy evaluation that were missing from the request context.
 
@@ -2660,7 +2878,7 @@ A `MissingAttributeDetailType` object contains the following properties:
 
 If the PDP includes `AttributeValueType` objects in the `MissingAttributeDetailType` object, then this indicates the acceptable values for that attribute. If no `AttributeValueType` objects are included, then the 1MissingAttributeDetailType` object indicates the names of attributes that the PDP failed to resolve during its evaluation. The list of attributes may be partial or complete. There is no guarantee by the PDP that supplying the missing values or attributes will be sufficient to satisfy the policy.
 
-## 7.59 AttributeType
+## 7.51 AttributeType
 
 _This definition should appear earlier._
 
@@ -2691,7 +2909,7 @@ An `AttributeType` object contains the following properties:
 
 : A sequence of AttributeValueType objects, each denoting an ACAL attribute value. Each attribute value MAY have contents that are empty, occur once or occur multiple times.
 
-## 7.60 CategoryType
+## 7.52 CategoryType
 
 A `CategoryType` object contains a sequence of `AttributeType` objects reflecting `RequestAttributeType` objects in a given attribute category from the request that had their `IncludeInResult` properties set to `true`. The `CategoryType` objects only appear in a result.
 
@@ -2719,6 +2937,29 @@ A `CategoryType` object contains the following properties:
 `Attribute` [Any Number]
 
 : A sequence of `AttributeType` objects representing `RequestAttributeType` objects from the same attribute category in the request.
+
+## 7.53 EntityType
+
+The `EntityType` object class defines the structure of values of the `urn:oasis:names:tc:xacml:3.0:data-type:entity` data type. An `EntityType` object contains a sequence of `AttributeType` objects and/or syntax-specific content (i.e., XML or JSON). The `EntityType` object type is similar to the `RequestCategoryType` object type but omits the `CategoryId` property; values of the `urn:oasis:names:tc:xacml:3.0:data-type:entity` data type don't self-identify with any particular attribute category.
+
+```xml
+<xs:complexType name="EntityType">
+   <xs:sequence>
+      <xs:element ref="xacml:Content" minOccurs="0"/>
+      <xs:element ref="xacml:Attribute" minOccurs="0" maxOccurs="unbounded"/>
+   </xs:sequence>
+</xs:complexType>
+```
+
+An `EntityType` object contains the following properties:
+
+`Content` [Optional]
+
+: A `ContentType` object specifying additional sources of attributes in JSON or XML document format which can be referenced using entity attribute selectors.
+
+`Attribute` [Any Number]
+
+: A sequence of `AttributeType` objects.
 
 
 ---
@@ -2942,7 +3183,7 @@ Attributes are represented in the request context by the context handler, regard
 
 In general, this method will not be adequate unless the structured data type is quite simple.
 
-2. The structured attribute MAY be made available in the `Content` property of the appropriate attribute category and an attribute selector MAY be used to select the contents of a leaf sub-element of the structured data type by means of an XPath expression. That value MAY then be compared using one of the supported ACAL functions appropriate for its primitive data type. This method requires support by the PDP for the optional XPath expressions feature.
+2. The structured attribute MAY be made available in the `Content` property of the appropriate attribute category and an attribute selector MAY be used to select the contents of a leaf sub-element of the structured data type by means of an XPath expression. That value MAY then be compared using one of the supported ACAL functions appropriate for its data type. This method requires support by the PDP for the optional XPath expressions feature.
 
 3. The structured attribute MAY be made available in the `Content` property of the appropriate attribute category and an attribute selector MAY be used to select any node in the structured data type by means of an XPath expression. This node MAY then be compared using one of the XPath-based functions described in [Annex C.3.15](#c315-xpath-based-functions). This method requires support by the PDP for the optional XPath expressions and XPath functions features.
 
@@ -2972,52 +3213,103 @@ Regardless of any dynamic modifications of the request context during policy eva
 
 Standard environment attributes are listed in [Annex D.7](#d7-environment-attributes). If a value for one of these attributes is supplied in the decision request, then the context handler SHALL use that value. Otherwise, the context handler SHALL supply a value. In the case of date and time attributes, the supplied value SHALL have the semantics of the "date and time that apply to the decision request".
 
-### 9.4.7 AttributeSelector Evaluation
+### 9.4.7 Selector Evaluation
 
-An `AttributeSelectorType` object will be evaluated according to the following processing model.
+An `AttributeSelectorType` or `EntityAttributeSelector` object will be evaluated according to the following processing model.
 
-: Note: It is not necessary for an implementation to actually follow these steps. It is only necessary to produce results identical to those that would be produced by following these steps.
+: Note: It is not necessary for an implementation to exactly follow this model. It is only necessary to produce results identical to those that would be produced by following this model.
 
-1. If the attribute category given by the `CategoryId` property is not found or does not have a `Content` property, then the return value is either `Indeterminate` or an empty bag as determined by the `MustBePresent` property; otherwise, construct an XML data structure suitable for xpath processing from the `Content` property in the attribute category given by the `CategoryId` property. The data structure shall be constructed so that the document node of this structure contains a single document element which corresponds to the single child element of the `Content` property. The constructed data structure shall be equivalent to one that would result from parsing a stand-alone XML document consisting of the contents of the `Content` property (including any comment and processing-instruction markup). Namespace declarations from the `<Content>` element and its ancestor elements for namespace prefixes that are "visibly utilized", as defined by [[exc-c14n](#exc-c14n)], within the contents MUST be present. Namespace declarations from the `<Content>` element or its ancestor elements for namespace prefixes that are not "visibly utilized" MAY be present. The data structure must meet the requirements of the applicable XPath version.
+If the attribute category given by the `CategoryId` property of an `AttributeSelectorType` object is not found or does not have a `Content` property, then the return value is either `Indeterminate` or an empty bag as determined by the `MustBePresent` property.
 
-2. Select a context node for XPath processing from this data structure. If there is a `ContextSelectorId` property, the context node shall be the node selected by applying the XPath expression given in the attribute value of the designated attribute (in the attribute category given by the `<AttributeSelector>` `CategoryId` property). It shall be an error if this evaluation returns no node or more than one node, in which case the return value MUST be an `Indeterminate` with a status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`. If there is no `ContextSelectorId`, the document node of the data structure shall be the context node.
+If the `Expression` property of an `EntityAttributeSelectorType` object evaluates to a value of the `urn:oasis:names:tc:xacml:3.0:data-type:entity` data type and that value does not have a `Content` property, then the return value is either `Indeterminate` or an empty bag as determined by the `MustBePresent` property.
 
-3. Evaluate the XPath expression given in the `Path` property against the XML data structure, using the context node selected in the previous step. It shall be an error if this evaluation returns anything other than a sequence of nodes (possibly empty), in which case the attribute selector MUST return `Indeterminate` with a status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`. If the evaluation returns an empty sequence of nodes, then the return value is either `Indeterminate` or an empty bag as determined by the `MustBePresent` property.
+If the `Expression` property of an `EntityAttributeSelectorType` object evaluates to a value of the `https://www.w3.org/2001/XMLSchema#anyURI` data type and an attribute category with that value as its `CategoryId` is not found or does not have a `Content` property, then the return value is either `Indeterminate` or an empty bag as determined by the `MustBePresent` property.
 
-4. If the data type is a primitive data type, convert the text value of each selected node to the desired data type, as specified in the `DataType` property. Each value shall be constructed using the appropriate constructor function from [[XF](#xf)] Section 5 listed below, corresponding to the specified data type:
+If the relevanrelevant, then follow these steps:
+
+1. Construct an XML data structure suitable for xpath processing from the value of the `Content` property. The data structure shall be constructed so that the document node of this structure contains a single document element which corresponds to the single child element of the `Content` property. The constructed data structure shall be equivalent to one that would result from parsing a stand-alone XML document consisting of the contents of the `Content` property (including any comment and processing-instruction markup). Namespace declarations from the `<Content>` element and its ancestor elements for namespace prefixes that are "visibly utilized", as defined by [[exc-c14n](#exc-c14n)], within the contents MUST be present. Namespace declarations from the single child element or its ancestor elements for namespace prefixes that are not "visibly utilized" MAY be present. The data structure must meet the requirements of the applicable XPath version.
+
+2. Select a context node for XPath processing from this data structure. If there is a `ContextSelectorId` property, the context node shall be the node selected by applying the XPath expression given in the attribute value of the designated ACAL attribute. It shall be an error if this evaluation returns no node or more than one node, in which case the return value MUST be `Indeterminate` with status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`. If there is no `ContextSelectorId` property, then the document node of the data structure shall be the context node.
+
+3. Evaluate the XPath expression given in the `Path` property against the context node selected in the previous step.
+
+4. The result of step 3 is converted to a bag of values of the data type specified by the `DataType` property as follows:
 
 <span> </span>
-: `xs:string`
-: `xs:boolean`
-: `xs:integer()`
-: `xs:double()`
-: `xs:dateTime()`
-: `xs:date()`
-: `xs:time()`
-: `xs:hexBinary()`
-: `xs:base64Binary()`
-: `xs:anyURI()`
-: `xs:yearMonthDuration()`
-: `xs:dayTimeDuration()`
+: If the result is a Boolean and the specified data type is `http://www.w3.org/2001/XMLSchema#boolean`, then convert the result using the `xs:boolean()` constructor function from [[XF](#xf)] Section 5.
 
 &nbsp;
-: If the data type is not one of the primitive types listed above, then the return values shall be constructed from the nodeset in a manner specified by the particular data type extension specification. If the data type extension does not specify an appropriate contructor function, then the attribute selector MUST return `Indeterminate` with a status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`.
+: If the result is a string and the specified data type is `http://www.w3.org/2001/XMLSchema#string`, then convert the result using the `xs:string()` constructor function from [[XF](#xf)] Section 5.
 
 &nbsp;
-: If an error occurs when converting the values returned by the XPath expression to the specified data type, then the result of the attribute selector MUST be `Indeterminate`, with a status code `urn:oasis:names:tc:xacml:1.0:status:processing-error`
+: If the result is a number and the specified data type is `http://www.w3.org/2001/XMLSchema#double`, then convert the result using the `xs:double()` constructor function from [[XF](#xf)] Section 5.
+
+&nbsp;
+: If the result is a node-set and the specified data type is `http://www.w3.org/2001/XMLSchema#boolean`, then convert the string value of each node using the `xs:boolean()` constructor function from [[XF](#xf)] Section 5.
+
+&nbsp;
+: If the result is a node-set and the specified data type is `http://www.w3.org/2001/XMLSchema#string`, then convert the string value of each node using the `xs:string()` constructor function from [[XF](#xf)] Section 5.
+
+&nbsp;
+: If the result is a node-set and the specified data type is `http://www.w3.org/2001/XMLSchema#integer`, then convert the string value of each node using the `xs:integer()` constructor function from [[XF](#xf)] Section 5.
+
+&nbsp;
+: If the result is a node-set and the specified data type is `http://www.w3.org/2001/XMLSchema#double`, then convert the string value of each node using the `xs:double()` constructor function from [[XF](#xf)] Section 5.
+
+&nbsp;
+: If the result is a node-set and the specified data type is `http://www.w3.org/2001/XMLSchema#dateTime`, then convert the string value of each node using the `xs:dateTime()` constructor function from [[XF](#xf)] Section 5.
+
+&nbsp;
+: If the result is a node-set and the specified data type is `http://www.w3.org/2001/XMLSchema#date`, then convert the string value of each node using the `xs:date()` constructor function from [[XF](#xf)] Section 5.
+
+&nbsp;
+: If the result is a node-set and the specified data type is `http://www.w3.org/2001/XMLSchema#time`, then convert the string value of each node using the `xs:time()` constructor function from [[XF](#xf)] Section 5.
+
+&nbsp;
+: If the result is a node-set and the specified data type is `http://www.w3.org/2001/XMLSchema#hexBinary`, then convert the string value of each node using the `xs:hexBinary()` constructor function from [[XF](#xf)] Section 5.
+
+&nbsp;
+: If the result is a node-set and the specified data type is `http://www.w3.org/2001/XMLSchema#base64Binary`, then convert the string value of each node using the `xs:base64Binary()` constructor function from [[XF](#xf)] Section 5.
+
+&nbsp;
+: If the result is a node-set and the specified data type is `http://www.w3.org/2001/XMLSchema#anyURI`, then convert the string value of each node using the `xs:anyURI()` constructor function from [[XF](#xf)] Section 5.
+
+&nbsp;
+: If the result is a node-set and the specified data type is `http://www.w3.org/2001/XMLSchema#yearMonthDuration`, then convert the string value of each node using the `xs:yearMonthDuration()` constructor function from [[XF](#xf)] Section 5.
+
+&nbsp;
+: If the result is a node-set and the specified data type is `http://www.w3.org/2001/XMLSchema#dayTimeDuration`, then convert the string value of each node using the `xs:dayTimeDuration()` constructor function from [[XF](#xf)] Section 5.
+
+&nbsp;
+: If the result is a node-set and every node is an element node and the specified data type is `urn:oasis:names:tc:xacml:3.0:data-type:entity`, then convert each node to an `EntityType` object. Each object SHALL have a `Content` property and SHALL NOT have an `Attribute` property. The child element of the `Content` property SHALL be a copy of the element corresponding to the node, along with its entire content, plus whatever namespace declarations from ancestor elements as are required to define namespace prefixes used in the content. Namespace declarations from ancestor elements that are not visibly used in the content MAY be added.
+
+&nbsp;
+: If the data type is one of the types referred to above and the result of step 3 does not satisfy any of the cases, then the attribute selector MUST return `Indeterminate` with status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`.
+
+&nbsp;
+: If the data type is not one of the types referred to above, then the return values shall be constructed from the node-set in a manner specified by the particular data type extension specification. If the data type extension does not specify an appropriate constructor function, then the attribute selector MUST return `Indeterminate` with status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`.
+
+&nbsp;
+: If an error occurs when converting the values returned by the XPath expression to the specified data type, then the result of the attribute selector MUST be `Indeterminate`, with status code `urn:oasis:names:tc:xacml:1.0:status:processing-error`
+
+&nbsp;
+: If the result of step 3 is an empty node-set, then the return value is either `Indeterminate` with status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`, or an empty bag, as determined by the `MustBePresent` property.
 
 ## 9.5 Expression Evaluation
 
-ACAL specifies expressions in terms of the objects listed below, of which the `ApplyType` objects recursively compose greater expressions. Expressions SHALL be type correct, which means that the types of each of the objects contained within an `ApplyType` object SHALL agree with the respective argument types of the function that is named by the `FunctionId` property. The resultant type of the `ApplyType` object SHALL be the resultant type of the function, which MAY be narrowed to a primitive data type, or a bag of a primitive data type, by type-unification. ACAL defines an evaluation result of `Indeterminate`, which is said to be the result of an invalid expression, or an operational error occurring during the evaluation of the expression.
+ACAL specifies expressions in terms of objects of the object types listed below, of which the `ApplyType` objects recursively compose greater expressions. Expressions SHALL be type correct and satisfy cardinality requirements (i.e., single value versus bag). This means that the types of each of the objects contained within an `ApplyType` object SHALL agree with the respective argument types and cardinalities of the function that is named by the `FunctionId` property. The resultant type and cardinality of the `ApplyType` object SHALL be the resultant type and cardinality of the function. ACAL defines an evaluation result of `Indeterminate`, which is said to be the result of an invalid expression, or an operational error occurring during the evaluation of the expression.
 
 An ACAL expression is a choice between the following object types:
 
 * `AttributeValueType`
 * `AttributeDesignatorType`
+* `EntityAttributeDesignatorType`
 * `AttributeSelectorType`
+* `EntityAttributeSelectorType`
 * `ApplyType`
 * `FunctionType`
 * `VariableReferenceType`
+* `QuantifiedExpressionType`
 
 ## 9.6 Arithmetic Evaluation
 
@@ -3159,11 +3451,11 @@ If a policy that contains invalid static data types is evaluated by the ACAL PDP
 
 ### 9.19.3 Missing Attributes
 
-The absence of matching attributes in the request context for any of the attribute designators or attribute selectors that are found in the policy potentially results in the policy evaluating to `Indeterminate`, if the designator or selector has the `MustBePresent` property set to `true`, as described in [Section 7.29](#729-attributedesignatortype) and [Section 7.30](#730-attributeselectortype) and potentially results in a `Decision` property containing the `Indeterminate` value. In this case, if a status code is supplied, then the value
+The absence of matching attributes in the request context for any of the attribute designators or attribute selectors that are found in the policy potentially results in the policy evaluating to `Indeterminate`, if the designator or selector has the `MustBePresent` property set to `true`, as described in [Section 7.22](#722-baseattributedesignatortype) and [Section 7.25](#725-baseattributeselectortype) and potentially results in a `Decision` property containing the `Indeterminate` value. In this case, if a status code is supplied, then the value
 
 `urn:oasis:names:tc:xacml:1.0:status:missing-attribute`
 
-SHALL be used, to indicate that more information is needed in order for a definitive decision to be rendered. In this case, the `StatusType` object MAY list the names and data types of any attributes that are needed by the PDP to refine its decision (see [Section 7.58](#758-missingattributedetailtype)). A PEP MAY resubmit a refined request context in response to a `Decision` property contents of `Indeterminate` with a status code of
+SHALL be used, to indicate that more information is needed in order for a definitive decision to be rendered. In this case, the `StatusType` object MAY list the names and data types of any attributes that are needed by the PDP to refine its decision (see [Section 7.50](#750-missingattributedetailtype)). A PEP MAY resubmit a refined request context in response to a `Decision` property contents of `Indeterminate` with a status code of
 
 `urn:oasis:names:tc:xacml:1.0:status:missing-attribute`
 
@@ -3215,13 +3507,13 @@ It is RECOMMENDED that extensions which define identifiers do not define identif
 
 A `ResponseType` object may contain references to short identifier sets, and short identifier names from those sets may be used within the response. The PDP can freely choose what short identifier sets it uses in the response, if any. There are two cases that require special care.
 
-ACAL attributes in the request that have the `IncludeInResult` property set to `true` are duplicated in the response. If those attributes contain short identifier names then those short identifier names are interpreted with respect to the short identifier sets referenced by the request, which may be different from the short identifier sets chosen by the PDP for the response.
+ACAL attributes in the request that have the `IncludeInResult` property set to `true` are duplicated in the response. If those attributes contain short identifier names, then those short identifier names are interpreted with respect to the short identifier sets referenced by the request, which may be different from the short identifier sets chosen by the PDP for the response.
 
-Notices in the response originate from notice expressions in policies. If those notice expressions contain short identifier names then those short identifier names are interpreted with respect to the short identifier sets referenced by the policies, which may also be different from the short identifier sets chosen by the PDP for the response.
+Notices in the response originate from notice expressions in policies. If those notice expressions contain short identifier names, then those short identifier names are interpreted with respect to the short identifier sets referenced by the policies, which may also be different from the short identifier sets chosen by the PDP for the response.
 
 The PDP is responsible for ensuring that any short identifier names in the response reflect the correct URI when they are evaluated according to [Section 9.3](#93-identifier-evaluation) in the presence of the short identifier sets it has chosen. An implementation strategy for achieving this is for the PDP and context handler to evaluate any `IdentifierType` values as they are encountered and store them in internal memory as absolute URIs. Then when the response is composed the absolute URIs can be replaced by appropriate short identifier names from the short identifier sets chosen by the PDP.
 
-If the PDP chooses the same short identifier sets referenced by the request then it has the advantage that they are sets known by the PEP and any attributes included in the result are more likely to have their original short identifier names restored.
+If the PDP chooses the same short identifier sets referenced by the request, then it has the advantage that they are sets known by the PEP and any attributes included in the result are more likely to have their original short identifier names restored.
 
 
 ---
@@ -3250,7 +3542,7 @@ _This section needs a major rewrite to de-emphasize XML and incorporate the enti
 
 An `AttributeValueType` object MAY contain an instance of a structured XML data type. [Section 9.4.1](#941-structured-attributes) describes a number of standard techniques to identify data items within such a structured attribute. Listed here are some additional techniques that require ACAL extensions.
 
-1. For a given structured data type, a community of ACAL users MAY define new attribute identifiers for each leaf sub-element of the structured data type that has a type conformant with one of the ACAL-defined primitive data types. Using these new attribute identifiers, the PEPs or context handlers used by that community of users can flatten instances of the structured data type into a sequence of individual `AttributeType` objects. Each such `AttributeType` object can be compared using the ACAL-defined functions. Using this method, the structured data type itself never appears in an `AttributeValueType` object.
+1. For a given structured data type, a community of ACAL users MAY define new attribute identifiers for each leaf sub-element of the structured data type that has a type conformant with one of the ACAL-defined data types. Using these new attribute identifiers, the PEPs or context handlers used by that community of users can flatten instances of the structured data type into a sequence of individual `AttributeType` objects. Each such `AttributeType` object can be compared using the ACAL-defined functions. Using this method, the structured data type itself never appears in an `AttributeValueType` object.
 
 2. A community of ACAL users MAY define a new function that can be used to compare a value of the structured data type against some other value. This method may only be used by PDPs that support the new function.
 
@@ -4171,11 +4463,11 @@ Sloman, M. Policy Driven Management for Distributed Systems. Journal of Network 
 
 This section specifies the data types and functions used in ACAL to create predicates for conditions and targets.
 
-This specification combines the various standards set forth by IEEE and ANSI for string representation of numeric values, as well as the evaluation of arithmetic functions. It describes the primitive data types and bags. The standard functions are named and their operational semantics are described.
+This specification combines the various standards set forth by IEEE and ANSI for string representation of numeric values, as well as the evaluation of arithmetic functions. The standard functions are named and their operational semantics are described.
 
 ## C.2 Data Types
 
-Although a syntactic representation of ACAL objects may represent all data types as strings, an ACAL PDP must operate on types of data that, while they have string representations, are not just strings. Types such as `Boolean`, `Integer`, and `Double` MUST be converted from their string representations to values that can be compared with values in their domain of discourse, such as numbers. The following primitive data types are specified for use with ACAL and have explicit data representations:
+Although a syntactic representation of ACAL objects may represent most data types as strings, an ACAL PDP must operate on types of data that, while they have string representations, are not just strings. Types such as `Boolean`, `Integer`, and `Double` MUST be converted from their string representations to values that can be compared with values in their domain of discourse, such as numbers. The following data types are specified for use with ACAL and have explicit data representations:
 
 * `https://www.w3.org/2001/XMLSchema#string`
 
@@ -4213,7 +4505,7 @@ Although a syntactic representation of ACAL objects may represent all data types
 
 For the sake of improved interoperability, it is RECOMMENDED that all time references be in UTC time.
 
-An ACAL PDP SHALL be capable of converting string representations into various primitive data types. For double values, implementations SHALL use the conversions described in [IEEE754].
+An ACAL PDP SHALL be capable of converting string representations into various data types. For double values, implementations SHALL use the conversions described in [IEEE754].
 
 ACAL defines four data types representing identifiers for subjects or resources; these are:
 
@@ -4227,17 +4519,21 @@ ACAL defines four data types representing identifiers for subjects or resources;
 
 These types appear in several standard applications, such as TLS/SSL and electronic mail.
 
+ACAL defines a data type for representing structured data:
+
+* `urn:oasis:names:tc:xacml:3.0:data-type:entity`
+
 ### C.2.1 X.500 Directory Name
 
-The `urn:oasis:names:tc:xacml:1.0:data-type:x500Name` primitive type represents an ITU-T Rec. X.520 Distinguished Name. The valid syntax for such a name is described in IETF RFC 2253 "Lightweight Directory Access Protocol (v3): UTF-8 String Representation of Distinguished Names".
+The `urn:oasis:names:tc:xacml:1.0:data-type:x500Name` data type represents an ITU-T Rec. X.520 Distinguished Name. The valid syntax for such a name is described in IETF RFC 2253 "Lightweight Directory Access Protocol (v3): UTF-8 String Representation of Distinguished Names".
 
 ### C.2.2 RFC 822 Name
 
-The `urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name` primitive type represents an electronic mail address. The valid syntax for such a name is described in IETF RFC 2821, Section 4.1.2, Command Argument Syntax, under the term "Mailbox".
+The `urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name` data type represents an electronic mail address. The valid syntax for such a name is described in IETF RFC 2821, Section 4.1.2, Command Argument Syntax, under the term "Mailbox".
 
 ### C.2.3 IP Address
 
-The `urn:oasis:names:tc:xacml:2.0:data-type:ipAddress` primitive type represents an IPv4 or IPv6 network address, with optional mask and optional port or port range. The syntax SHALL be:
+The `urn:oasis:names:tc:xacml:2.0:data-type:ipAddress` data type represents an IPv4 or IPv6 network address, with optional mask and optional port or port range. The syntax SHALL be:
 
 ```
 ipAddress = address [ `/` mask ] [ `:` [ portrange ] ]
@@ -4249,7 +4545,7 @@ For an IPv6 address, the address and mask are formatted in accordance with the s
 
 ### C.2.4 DNS Name
 
-The `urn:oasis:names:tc:xacml:2.0:data-type:dnsName` primitive type represents a Domain Name Service (DNS) host name, with optional port or port range. The syntax SHALL be:
+The `urn:oasis:names:tc:xacml:2.0:data-type:dnsName` data type represents a Domain Name Service (DNS) host name, with optional port or port range. The syntax SHALL be:
 
 ```
 dnsName = hostname [ `:` portrange ]
@@ -4271,9 +4567,13 @@ where `portnumber` is a decimal port number. If the port number is of the form `
 
 _This section needs to be aligned with the JSON profile's handling of values of the xpathExpression data type._
 
-The `urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression` primitive type represents an XPath expression over the XML in a `ContentType` object. The syntax is defined by the XPath W3C recommendation. The content of this data-type also includes the context in which namespaces prefixes in the expression are resolved, which distinguishes it from a plain string and the ACAL attribute category of the `ContentType` object to which it applies. When the value is encoded in an `AttributeValueType` onject, the namespace context is given by the [in-scope namespaces] (see [INFOSET]) of the `AttributeValueType` object, and an XML attribute called XPathCategory gives the category of the `ContentType` object where the expression applies.
+The `urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression` data type represents an XPath expression over the XML in a `ContentType` object. The syntax is defined by the XPath W3C recommendation. The content of this data-type also includes the context in which namespaces prefixes in the expression are resolved, which distinguishes it from a plain string and the ACAL attribute category of the `ContentType` object to which it applies. When the value is encoded in an `AttributeValueType` onject, the namespace context is given by the [in-scope namespaces] (see [INFOSET]) of the `AttributeValueType` object, and an XML attribute called XPathCategory gives the category of the `ContentType` object where the expression applies.
 
 The XPath expression MUST be evaluated in a context which is equivalent of a stand alone XML document with the only child of the `ContentType` object as the document element. The context node of the XPath expression is the document node of this stand alone document. Namespace declarations from the `ContentType` object and its ancestor elements for namespace prefixes that are "visibly utilized", as defined by [[exc-c14n](#exc-c14n)], within the contents MUST be present. Namespace declarations from the `<Content>` element or its ancestor elements for namespace prefixes that are not "visibly utilized" MAY be present.
+
+### C.2.6 Entity
+
+The `urn:oasis:names:tc:xacml:3.0:data-type:entity` data type is used to represent an entity nested within another entity. Values of this data type are objects of the `EntityType` object type [Section 7.53](#753-entitytype).
 
 ## C.3 Functions
 
@@ -4283,7 +4583,7 @@ Note that in each case an implementation is conformant as long as it produces th
 
 ### C.3.1 Equality Predicates
 
-The following functions are the equality functions for the various primitive types. Each function for a particular data type follows a specified standard convention for that data type.
+The following functions are the equality functions for the various data types. Each function for a particular data type follows a specified standard convention for that data type.
 
 `urn:oasis:names:tc:xacml:1.0:function:string-equal`
 
@@ -4407,7 +4707,7 @@ The following functions SHALL take a single argument of the specified data type.
 
 ### C.3.3 String Conversion Functions
 
-The following functions convert between values of the data type `https://www.w3.org/2001/XMLSchema#string` primitive type.
+The following functions convert between values of the data type `https://www.w3.org/2001/XMLSchema#string` data type.
 
 `urn:oasis:names:tc:xacml:1.0:function:string-normalize-space`
 
@@ -4419,7 +4719,7 @@ The following functions convert between values of the data type `https://www.w3.
 
 ### C.3.4 Numeric Data Type Conversion Functions
 
-The following functions convert between the data type `https://www.w3.org/2001/XMLSchema#integer` and` https://www.w3.org/2001/XMLSchema#double` primitive types.
+The following functions convert values between the `https://www.w3.org/2001/XMLSchema#integer` and` https://www.w3.org/2001/XMLSchema#double` data types.
 
 `urn:oasis:names:tc:xacml:1.0:function:double-to-integer`
 
@@ -4427,7 +4727,7 @@ The following functions convert between the data type `https://www.w3.org/2001/X
 
 `urn:oasis:names:tc:xacml:1.0:function:integer-to-double`
 
-: This function SHALL take one argument of data type `https://www.w3.org/2001/XMLSchema#integer` and SHALL promote its value to a value of data type `https://www.w3.org/2001/XMLSchema#double` with the same numeric value. If the integer argument is outside the range that can be represented by a double, the result SHALL be `Indeterminate,` with the status code <!-- Newline added to fit on PDF page -->
+: This function SHALL take one argument of data type `https://www.w3.org/2001/XMLSchema#integer` and SHALL promote its value to a value of data type `https://www.w3.org/2001/XMLSchema#double` with the same numeric value. If the integer argument is outside the range that can be represented by a double, the result SHALL be `Indeterminate,` with status code <!-- Newline added to fit on PDF page -->
 : `urn:oasis:names:tc:xacml:1.0:status:processing-error`.
 
 ### C.3.5 Logical Functions
@@ -4721,7 +5021,7 @@ The following functions operate on strings and convert to and from other data ty
 
 ### C.3.10 Bag Functions
 
-These functions operate on a bag of `type` values, where type is one of the primitive data types, and x.x is a version of XACML where the function has been defined. Some additional conditions defined for each function below SHALL cause the expression to evaluate to `Indeterminate` if not satisfied.
+These functions operate on a bag of `type` values, where `type` is one of the ACAL data types, and x.x is a version of XACML where the function has been defined. Some additional conditions defined for each function below SHALL cause the expression to evaluate to `Indeterminate` if not satisfied.
 
 `urn:oasis:names:tc:xacml:x.x:function:type-one-and-only`
 
@@ -4774,9 +5074,9 @@ Examples in this section are presented in both the XML and JSON representations 
 
 * `urn:oasis:names:tc:xacml:3.0:function:any-of`
 
-  This function applies a Boolean function between specific primitive values and a bag of values, and SHALL return `true` if and only if the function is `true` for at least one value in the bag.
+  This function applies a Boolean function between single values and a bag of values, and SHALL return `true` if and only if the function is `true` for at least one value in the bag.
 
-  This function SHALL take n+1 arguments, where n is one or greater. The first argument SHALL be a `FunctionType` object that names a Boolean function that takes n arguments of primitive types. Under the remaining n arguments, n-1 parameters SHALL be values of primitive data types and one SHALL be a bag of a primitive data type. The expression SHALL be evaluated as if the function named in the `FunctionType` object were applied to the n-1 non-bag arguments and each value in the bag argument and the results are combined with `urn:oasis:names:tc:xacml:1.0:function:or`.
+  This function SHALL take n+1 arguments, where n is one or greater. The first argument SHALL be a `FunctionType` object that names a Boolean function that takes n single value arguments. Under the remaining n arguments, n-1 arguments SHALL be single values and one SHALL be a bag of values. The expression SHALL be evaluated as if the function named in the `FunctionType` object were applied to the n-1 single value arguments and each value in the bag argument and the results are combined with `urn:oasis:names:tc:xacml:1.0:function:or`.
 
   For example, the following expression evaluates to `true`:
 
@@ -4817,9 +5117,9 @@ Examples in this section are presented in both the XML and JSON representations 
 
 * `urn:oasis:names:tc:xacml:3.0:function:all-of`
 
-  This function applies a Boolean function between a specific primitive value and a bag of values, and returns `true` if and only if the function is `true` for every value in the bag.
+  This function applies a Boolean function between single values and a bag of values, and returns `true` if and only if the function is `true` for every value in the bag.
 
-  This function SHALL take n+1 arguments, where n is one or greater. The first argument SHALL be a `FunctionType` object that names a Boolean function that takes n arguments of primitive types. Under the remaining n arguments, n-1 parameters SHALL be values of primitive data types and one SHALL be a bag of a primitive data type. The expression SHALL be evaluated as if the function named in the `FunctionType` object were applied to the n-1 non-bag arguments and each value of the bag argument and the results are combined with `urn:oasis:names:tc:xacml:1.0:function:and`.
+  This function SHALL take n+1 arguments, where n is one or greater. The first argument SHALL be a `FunctionType` object that names a Boolean function that takes n single value arguments. Under the remaining n arguments, n-1 arguments SHALL be single values and one SHALL be a bag of values. The expression SHALL be evaluated as if the function named in the `FunctionType` object were applied to the n-1 single-value arguments and each value of the bag argument and the results are combined with `urn:oasis:names:tc:xacml:1.0:function:and`.
 
   For example, the following expression evaluates to `true`:
 
@@ -4862,7 +5162,7 @@ Examples in this section are presented in both the XML and JSON representations 
 
   This function applies a Boolean function on each tuple from the cross product on all bag arguments, and returns `true` if and only if the function is `true` for at least one inside-function call.
 
-  This function SHALL take n+1 arguments, where n is one or greater. The first argument SHALL be an `FunctionType` object that names a Boolean function that takes n arguments. The remaining arguments are either primitive data types or bags of primitive types. The expression SHALL be evaluated as if the function named in the `FunctionType` object was applied between every tuple of the cross product on all bags and the primitive values, and the results were combined using `urn:oasis:names:tc:xacml:1.0:function:or`. The semantics are that the result of the expression SHALL be `true` if and only if the applied function is `true` for at least one function call on the tuples from the bags and primitive values.
+  This function SHALL take n+1 arguments, where n is one or greater. The first argument SHALL be an `FunctionType` object that names a Boolean function that takes n single-value arguments. The remaining arguments are either single values or bags of values. The expression SHALL be evaluated as if the function named in the `FunctionType` object was applied between every tuple of the cross product on all bags and single values, and the results were combined using `urn:oasis:names:tc:xacml:1.0:function:or`. The semantics are that the result of the expression SHALL be `true` if and only if the applied function is `true` for at least one function call on the tuples from the bags and single values.
 
   For example, the following expression evaluates to `true`:
 
@@ -4914,7 +5214,7 @@ Examples in this section are presented in both the XML and JSON representations 
 
   This function applies a Boolean function between the values of two bags. The expression SHALL be `true` if and only if the supplied function is `true` between each value of the first bag and any value of the second bag.
 
-  This function SHALL take three arguments. The first argument SHALL be a `FunctionType` object that names a Boolean function that takes two arguments of primitive types. The second argument SHALL be a bag of a primitive data type. The third argument SHALL be a bag of a primitive data type. The expression SHALL be evaluated as if the `urn:oasis:names:tc:xacml:3.0:function:any-of` function had been applied to each value of the first bag and the whole of the second bag using the supplied function, and the results were then combined using `urn:oasis:names:tc:xacml:1.0:function:and`.
+  This function SHALL take three arguments. The first argument SHALL be a `FunctionType` object that names a Boolean function that takes two single-value arguments. The second argument SHALL be a bag of values. The third argument SHALL be a bag of values. The expression SHALL be evaluated as if the `urn:oasis:names:tc:xacml:3.0:function:any-of` function had been applied to each value of the first bag and the whole of the second bag using the supplied function, and the results were then combined using `urn:oasis:names:tc:xacml:1.0:function:and`.
 
   For example, the following expression evaluates to `true`:
 
@@ -4966,7 +5266,7 @@ Examples in this section are presented in both the XML and JSON representations 
 
   This function applies a Boolean function between the values of two bags. The expression SHALL be `true` if and only if the supplied function is `true` between each value of the second bag and any value of the first bag.
 
-  This function SHALL take three arguments. The first argument SHALL be a `FunctionType` object that names a Boolean function that takes two arguments of primitive types. The second argument SHALL be a bag of a primitive data type. The third argument SHALL be a bag of a primitive data type. The expression SHALL be evaluated as if the `urn:oasis:names:tc:xacml:3.0:function:any-of` function had been applied to each value of the second bag and the whole of the first bag using the supplied function, and the results were then combined using `urn:oasis:names:tc:xacml:1.0:function:and`.
+  This function SHALL take three arguments. The first argument SHALL be a `FunctionType` object that names a Boolean function that takes two single-value arguments. The second argument SHALL be a bag of values. The third argument SHALL be a bag of values. The expression SHALL be evaluated as if the `urn:oasis:names:tc:xacml:3.0:function:any-of` function had been applied to each value of the second bag and the whole of the first bag using the supplied function, and the results were then combined using `urn:oasis:names:tc:xacml:1.0:function:and`.
 
   For example, the following expression evaluates to `true`:
 
@@ -5018,7 +5318,7 @@ Examples in this section are presented in both the XML and JSON representations 
 
   This function applies a Boolean function between the values of two bags. The expression SHALL be `true` if and only if the supplied function is `true` between each and every value of the first bag collectively against all the values of the second bag.
 
-  This function SHALL take three arguments. The first argument SHALL be an `FunctionType` object that names a Boolean function that takes two arguments of primitive types. The second argument SHALL be a bag of a primitive data type. The third argument SHALL be a bag of a primitive data type. The expression is evaluated as if the function named in the `FunctionType` object were applied between every value in the second argument and every value in the third argument and the results were combined using `urn:oasis:names:tc:xacml:1.0:function:and`. The semantics are that the result of the expression is `true` if and only if the applied function is `true` for all the values of the first bag compared to all the values of the second bag.
+  This function SHALL take three arguments. The first argument SHALL be an `FunctionType` object that names a Boolean function that takes two single-value arguments. The second argument SHALL be a bag of values. The third argument SHALL be a bag of values. The expression is evaluated as if the function named in the `FunctionType` object were applied between every value in the second argument and every value in the third argument and the results were combined using `urn:oasis:names:tc:xacml:1.0:function:and`. The semantics are that the result of the expression is `true` if and only if the applied function is `true` for all the values of the first bag compared to all the values of the second bag.
 
   For example, the following expression evaluates to `true`:
 
@@ -5070,7 +5370,7 @@ Examples in this section are presented in both the XML and JSON representations 
 
   This function converts a bag of values to another bag of values.
 
-  This function SHALL take n+1 arguments, where n is one or greater. The first argument SHALL be a `FunctionType` object naming a function that takes a n arguments of a primitive data type and returns a value of a primitive data type. Under the remaining n arguments, n-1 parameters SHALL be values of primitive data types and one SHALL be a bag of a primitive data type. The expression SHALL be evaluated as if the function named in the `FunctionType` object were applied to the n-1 non-bag arguments and each value in the bag argument and resulting in a bag of the converted value. The result SHALL be a bag of the primitive data type that is returned by the function named in the `FunctionType` object.
+  This function SHALL take n+1 arguments, where n is one or greater. The first argument SHALL be a `FunctionType` object naming a function that takes n single-value arguments and returns a single value. Under the remaining n arguments, n-1 arguments SHALL be single values and one SHALL be a bag of values. The expression SHALL be evaluated as if the function named in the `FunctionType` object were applied to the n-1 single-value arguments and each value in the bag argument and resulting in a bag of the converted values. The result SHALL be a bag of the data type that is returned by the function named in the `FunctionType` object.
 
   For example, the following expression,
 
@@ -5231,9 +5531,9 @@ _This function should be redesigned to take a value of the entity data type as t
 
 : The PDP SHALL detect any loop which may occur if successive evaluations invoke this function by counting the number of total invocations of any instance of this function during any single initial invocation of the PDP. If the total number of invocations exceeds the bound for such invocations, the initial invocation of this function evaluates to `Indeterminate` with a `urn:oasis:names:tc:xacml:1.0:status:processing-error` status code. Also, see the security considerations in [Section 11.1.8](#1118-denial-of-service).
 
-### C.3.17 Extension Functions and Primitive Types
+### C.3.17 Extension Functions and Data Types
 
-Functions and primitive types are specified by string identifiers allowing for the introduction of functions in addition to those specified by ACAL. This approach allows one to extend the ACAL module with special functions and special primitive data types.
+Functions and data types are specified by string identifiers allowing for the introduction of functions in addition to those specified by ACAL. This approach allows one to extend the ACAL module with special functions and special data types.
 
 In order to preserve the integrity of the ACAL evaluation strategy, the result of an extension function SHALL depend only on the values of its arguments. Global and hidden parameters SHALL NOT affect the evaluation of an expression. Functions SHALL NOT have side effects, as evaluation order cannot be guaranteed in a standard way.
 
@@ -5513,7 +5813,7 @@ This identifier indicates success.
 
 `urn:oasis:names:tc:xacml:1.0:status:ok`
 
-This identifier indicates that all the attributes necessary to make a policy decision were not available (see [Section 7.58](#758-missingattributedetailtype)).
+This identifier indicates that all the attributes necessary to make a policy decision were not available (see [Section 7.50](#750-missingattributedetailtype)).
 
 `urn:oasis:names:tc:xacml:1.0:status:missing-attribute`
 
