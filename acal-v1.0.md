@@ -927,9 +927,9 @@ Generally, the name of a node (other than a leaf node) in a structured name-form
 
 The question arises: how should a name that identifies a set of subjects or resources be interpreted by the PDP, whether it appears in a policy or a request context? Are they intended to represent just the node explicitly identified by the name, or are they intended to represent the entire sub-tree subordinate to that node?
 
-In the case of subjects, there is no real entity that corresponds to such a node. So, names of this type always refer to the set of subjects subordinate in the name structure to the identified node. Consequently, non-leaf subject names should not be used in equality functions, only in match functions, such as `urn:oasis:names:tc:xacml:1.0:function:rfc822Name-match` 
+In the case of subjects, there is no real entity that corresponds to such a node. So, names of this type always refer to the set of subjects subordinate in the name structure to the identified node. Consequently, non-leaf subject names should not be used in equality functions, only in match functions, such as `urn:oasis:names:tc:acal:1.0:function:rfc822Name-match`
 <!-- Newline to fit on PDF page -->
-instead of `urn:oasis:names:tc:xacml:1.0:function:rfc822Name-equal` (see [Annex C.3.14](#c314-special-match-functions)).
+instead of `urn:oasis:names:tc:acal:1.0:function:rfc822Name-equal` (see [Annex C.3.14](#c314-special-match-functions)).
 
 #### 5.3.1.2 Effect
 
@@ -1035,33 +1035,33 @@ These rules may be written by different PAPs operating independently, or by a si
 
 ### 6.2.4 Example Short Identifier Set
 
-Policy writers are able to define sets of short identifiers to provide simple alias names to use in place of URIs. A set with the identifier `urn:oasis:names:tc:xacml:4.0:core:identifiers` is defined by ACAL for the various identifiers assigned by this specification. However, a deployment will usually have need for additional identifiers, especially for locally-defined attributes, so it is usually desirable to define a set of additional short identifiers to use in the deployment.
+Policy writers are able to define sets of short identifiers to provide simple alias names to use in place of URIs. A set with the identifier `urn:oasis:names:tc:acal:1.0:core:identifiers` is defined by ACAL for the various identifiers assigned by this specification. However, a deployment will usually have need for additional identifiers, especially for locally-defined attributes, so it is usually desirable to define a set of additional short identifiers to use in the deployment.
 
 The following short identifier set, in both the XML and JSON representations, defines short identifiers for the additional attributes in this example and also imports the standardized set.
 
 ```xml
 <ShortIdSet xmlns="urn:oasis:names:tc:xacml:4.0:core:schema"
-  ShortIdSetId="urn:oasis:names:tc:xacml:4.0:example:identifiers"/>
+  ShortIdSetId="urn:oasis:names:tc:acal:1.0:example:identifiers"/>
 
   <!-- Include the short identifiers for standard URIs. -->
-  <ShortIdSetReference>urn:oasis:names:tc:xacml:4.0:core:identifiers</ShortIdSetReference>
+  <ShortIdSetReference>urn:oasis:names:tc:acal:1.0:core:identifiers</ShortIdSetReference>
 
   <!-- These are the short identifiers specific to the deployment. -->
 
   <!-- Attributes -->
-  <ShortId Name="patient-number" Value="urn:oasis:names:tc:xacml:4.0:example:attribute:patient-number"/>
-  <ShortId Name="collection" Value="urn:oasis:names:tc:xacml:4.0:example:attribute:collection"/>
+  <ShortId Name="patient-number" Value="urn:oasis:names:tc:acal:1.0:example:attribute:patient-number"/>
+  <ShortId Name="collection" Value="urn:oasis:names:tc:acal:1.0:example:attribute:collection"/>
 
 </ShortIdSet>
 ```
 
 ```json
 {
-  "ShortIdSetId":"urn:oasis:names:tc:xacml:4.0:example:identifiers",
-  "ShortIdSetReference":["urn:oasis:names:tc:xacml:4.0:core:identifiers"],
+  "ShortIdSetId":"urn:oasis:names:tc:acal:1.0:example:identifiers",
+  "ShortIdSetReference":["urn:oasis:names:tc:acal:1.0:core:identifiers"],
   "ShortId":[
-    { "Name":"patient-number", "Value":"urn:oasis:names:tc:xacml:4.0:example:attribute:patient-number" },
-    { "Name":"collection", "Value":"urn:oasis:names:tc:xacml:4.0:example:attribute:collection" }
+    { "Name":"patient-number", "Value":"urn:oasis:names:tc:acal:1.0:example:attribute:patient-number" },
+    { "Name":"collection", "Value":"urn:oasis:names:tc:acal:1.0:example:attribute:collection" }
   ]
 }
 ```
@@ -1076,10 +1076,10 @@ Rule 1 illustrates a policy with a simple rule containing a condition. It also i
 [01] <?xml version="1.0" encoding="UTF-8"?>
 [02] <Policy
 [03]   xmlns="urn:oasis:names:tc:xacml:4.0:core:schema"
-[04]   PolicyId="urn:oasis:names:tc:xacml:4.0:example:policyid:1"
+[04]   PolicyId="urn:oasis:names:tc:acal:1.0:example:policyid:1"
 [05]   CombiningAlgId="deny-overrides"
 [06]   Version="1.0">
-[07]   <ShortIdSetReference>urn:oasis:names:tc:xacml:4.0:example:identifiers</ShortIdSetReference>
+[07]   <ShortIdSetReference>urn:oasis:names:tc:acal:1.0:example:identifiers</ShortIdSetReference>
 [08]   <VariableDefinition VariableId="17590034">
 [11]     <Apply FunctionId="string-equal">
 [14]       <Apply FunctionId="string-one-and-only">
@@ -1126,10 +1126,10 @@ Rule 1 illustrates a policy with a simple rule containing a condition. It also i
 
 ```
 [02] {
-[04]   "PolicyId":"urn:oasis:names:tc:xacml:4.0:example:policyid:1",
+[04]   "PolicyId":"urn:oasis:names:tc:acal:1.0:example:policyid:1",
 [05]   "CombiningAlgId":"deny-overrides",
 [06]   "Version":"1.0",
-[07]   "ShortIdSetReference":["urn:oasis:names:tc:xacml:4.0:example:identifiers"],
+[07]   "ShortIdSetReference":["urn:oasis:names:tc:acal:1.0:example:identifiers"],
 [08]   "VariableDefinition":[{
 [09]     "VariableId":"17590034",
 [10]     "Expression":{
@@ -1225,19 +1225,19 @@ Rule 1 illustrates a policy with a simple rule containing a condition. It also i
 
 [08] - [38] A variable definition. It defines an expression that evaluates the truth of the statement: the patient-number subject attribute is equal to the patient-number attribute in the resource.
 
-[11] - [12] The `FunctionId` component names the function to be used for comparison. In this case, the function is nominated with the short identifier name `string-equal`, which evaluates to `urn:oasis:names:tc:xacml:1.0:function:string-equal` using the imported short identifier set. This function takes two arguments of type `http://www.w3.org/2001/XMLSchema#string`.
+[11] - [12] The `FunctionId` component names the function to be used for comparison. In this case, the function is nominated with the short identifier name `string-equal`, which evaluates to `urn:oasis:names:tc:acal:1.0:function:string-equal` using the imported short identifier set. This function takes two arguments of type `http://www.w3.org/2001/XMLSchema#string`.
 
 [17] - [21] An attribute designator that selects a bag of values for the patient-number subject attribute in the request context.
 
-[18] The `CategoryId` component names the category from which the desired attribute will be obtained. In this case, the category is nominated with the short identifier name `access-subject`, which evaluates to `urn:oasis:names:tc:xacml:1.0:subject-category:access-subject` using the imported short identifier set.
+[18] The `CategoryId` component names the category from which the desired attribute will be obtained. In this case, the category is nominated with the short identifier name `access-subject`, which evaluates to `urn:oasis:names:tc:acal:1.0:subject-category:access-subject` using the imported short identifier set.
 
-[19] The `AttributeId` component nominates the patient-number attribute with the short identifier name `patient-number`, which evaluates to `urn:oasis:names:tc:xacml:3.0:example:attribute:patient-number` using the imported short identifier set.
+[19] The `AttributeId` component nominates the patient-number attribute with the short identifier name `patient-number`, which evaluates to `urn:oasis:names:tc:acal:1.0:example:attribute:patient-number` using the imported short identifier set.
 
-[20] The `DataType` component specifies the data type of the attribute. In this case, the data type is nominated with the short identifier name `string`, which evaluates to `https://www.w3.org/2001/XMLSchema#string` using the imported short identifier set.
+[20] The `DataType` component specifies the data type of the attribute. In this case, the data type is nominated with the short identifier name `string`, which evaluates to `urn:oasis:names:tc:acal:1.0:data-type:string` using the imported short identifier set.
 
-[14] - [15] The attribute designator returns a bag of attribute values but the `urn:oasis:names:tc:xacml:1.0:function:string-equal` function takes arguments that are single attribute values. The `FunctionId` component here names a function to convert the bag of values to a single value. The function is nominated with the short identifier name `string-one-and-only`, which evaluates to `urn:oasis:names:tc:xacml:1.0:function:string-one-and-only` using the imported short identifier set. This function generates an `Indeterminate` result if its argument is not a bag with exactly one value.
+[14] - [15] The attribute designator returns a bag of attribute values but the `urn:oasis:names:tc:acal:1.0:function:string-equal` function takes arguments that are single attribute values. The `FunctionId` component here names a function to convert the bag of values to a single value. The function is nominated with the short identifier name `string-one-and-only`, which evaluates to `urn:oasis:names:tc:acal:1.0:function:string-one-and-only` using the imported short identifier set. This function generates an `Indeterminate` result if its argument is not a bag with exactly one value.
 
-[28] - [32] An attribute designator that selects a bag of values for the patient-number resource attribute in the request context. This attribute designator differs from the previous one in that it selects the attribute from the resource category, `urn:oasis:names:tc:xacml:3.0:attribute-category:resource`, nominated with the short identifier name `resource`.
+[28] - [32] An attribute designator that selects a bag of values for the patient-number resource attribute in the request context. This attribute designator differs from the previous one in that it selects the attribute from the resource category, `urn:oasis:names:tc:acal:1.0:attribute-category:resource`, nominated with the short identifier name `resource`.
 
 [25] - [26] The result of the second attribute designator must also be converted to a single value for comparison.
 
@@ -1249,19 +1249,19 @@ Rule 1 illustrates a policy with a simple rule containing a condition. It also i
 
 [46] - [93] The expression for the condition.
 
-[46] - [47] The expression for the condition is a conjunction of three terms. The `FunctionId` component specifies a conjunction using the `urn:oasis:names:tc:xacml:1.0:function:and` function nominated with the short identifier name `and`.
+[46] - [47] The expression for the condition is a conjunction of three terms. The `FunctionId` component specifies a conjunction using the `urn:oasis:names:tc:acal:1.0:function:and` function nominated with the short identifier name `and`.
 
 [49] - [57] The first term is a function.
 
-[49] - [50] The `FunctionId` component specifies the `urn:oasis:names:tc:xacml:3.0:function:any-of` function using the short identifier name `any-of`. This function compares a attribute value to each of the attribute values in a bag according to a matching function that is specified in the first argument. The bag of values can be either the second or third argument. In this case it is the third argument. The function evaluates to `true` if any value in the bag matches the second argument according to the matching function.
+[49] - [50] The `FunctionId` component specifies the `urn:oasis:names:tc:acal:1.0:function:any-of` function using the short identifier name `any-of`. This function compares a attribute value to each of the attribute values in a bag according to a matching function that is specified in the first argument. The bag of values can be either the second or third argument. In this case it is the third argument. The function evaluates to `true` if any value in the bag matches the second argument according to the matching function.
 
-[52] - [54] The first argument: the matching function. The `FunctionId` component specifies that the matching function is `urn:oasis:names:tc:xacml:1.0:function:anyURI-equal` using the short identifier name `anyURI-equal`.
+[52] - [54] The first argument: the matching function. The `FunctionId` component specifies that the matching function is `urn:oasis:names:tc:acal:1.0:function:anyURI-equal` using the short identifier name `anyURI-equal`.
 
-[56] - [59] The second argument: an attribute value. It is a literal URI to be matched, specifically `http://www.med.example.com/springfield-hospital`. The `DataType` component indicates that the data type of the value is `https://www.w3.org/2001/XMLSchema#anyURI` using the short identifier name `anyURI`.
+[56] - [59] The second argument: an attribute value. It is a literal URI to be matched, specifically `http://www.med.example.com/springfield-hospital`. The `DataType` component indicates that the data type of the value is `urn:oasis:names:tc:acal:1.0:data-type:anyURI` using the short identifier name `anyURI`.
 
-[61] - [65] The third argument: the bag of values. It is an attribute designator that selects a bag of `https://www.w3.org/2001/XMLSchema#anyURI` values from the `urn:oasis:names:tc:xacml:4.0:example:attribute:collection` (short identifier name `collection`) attribute in the `urn:oasis:names:tc:xacml:3.0:attribute-category:resource` category.
+[61] - [65] The third argument: the bag of values. It is an attribute designator that selects a bag of `urn:oasis:names:tc:acal:1.0:data-type:anyURI` values from the `urn:oasis:names:tc:acal:1.0:example:attribute:collection` (short identifier name `collection`) attribute in the `urn:oasis:names:tc:acal:1.0:attribute-category:resource` category.
 
-[69] - [87] The second term is another instance of the `urn:oasis:names:tc:xacml:3.0:function:any-of`. The matching function is `urn:oasis:names:tc:xacml:1.0:function:string-equal`. The second argument is the literal value `read` of the `https://www.w3.org/2001/XMLSchema#string` data type. The third argument is an attribute designator that selects a bag of `https://www.w3.org/2001/XMLSchema#string` values from the `urn:oasis:names:tc:xacml:1.0:action:action-id` attribute in the `urn:oasis:names:tc:xacml:3.0:attribute-category:action` category.
+[69] - [87] The second term is another instance of the `urn:oasis:names:tc:acal:1.0:function:any-of`. The matching function is `urn:oasis:names:tc:acal:1.0:function:string-equal`. The second argument is the literal value `read` of the `urn:oasis:names:tc:acal:1.0:data-type:string` data type. The third argument is an attribute designator that selects a bag of `urn:oasis:names:tc:acal:1.0:data-type:string` values from the `urn:oasis:names:tc:acal:1.0:action:action-id` attribute in the `urn:oasis:names:tc:acal:1.0:attribute-category:action` category.
 
 [89] - [91] The third term is a reference to a variable definition defined elsewhere in the policy.
 
@@ -1582,7 +1582,7 @@ A `DefaultsType` object contains the following property:
 
 ## 7.8 BooleanExpressionType
 
-A `BooleanExpressionType` object contains one ACAL expression, with the restriction that the expression's return data type MUST be `https://www.w3.org/2001/XMLSchema#boolean`.
+A `BooleanExpressionType` object contains one ACAL expression, with the restriction that the expression's return data type MUST be `urn:oasis:names:tc:acal:1.0:data-type:boolean`.
 
 ```xml
 <xs:complexType name="BooleanExpressionType">
@@ -1982,7 +1982,7 @@ A `FunctionType` object contains the following property:
 
 ## 7.22 BaseAttributeDesignatorType
 
-The `BaseAttributeDesignatorType` object type is an abstract object type that specifies a named attribute for the retrieval of a bag of attribute values from a source of attributes. The object types derived from `BaseAttributeDesignatorType` determine the source of attributes: an `AttributeDesignatorType` object (an attribute designator) specifies a named attribute in the request context and an `EntityAttributeDesignatorType` object (an entity attribute designator) specifies a named attribute in either the request context or a value of the `urn:oasis:names:tc:xacml:3.0:data-type:entity` data type.
+The `BaseAttributeDesignatorType` object type is an abstract object type that specifies a named attribute for the retrieval of a bag of attribute values from a source of attributes. The object types derived from `BaseAttributeDesignatorType` determine the source of attributes: an `AttributeDesignatorType` object (an attribute designator) specifies a named attribute in the request context and an `EntityAttributeDesignatorType` object (an entity attribute designator) specifies a named attribute in either the request context or a value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type.
 
 Evaluation of an `AttributeDesignatorType` or `EntityAttributeDesignatorType` object returns a bag containing all the ACAL attribute values that are matched by the named attribute, or an error. In the event that no matching attribute is present in the source of attributes, the `MustBePresent` property governs whether this evaluation returns an empty bag or `Indeterminate`. See [Section 9.4.5](#945-attribute-retrieval).
 
@@ -2021,13 +2021,14 @@ A named attribute SHALL be considered present if there is at least one attribute
 
 A named attribute matches an attribute in the source of attributes if the values of their respective `AttributeId`, `DataType` and `Issuer` properties match. The attribute designator's `AttributeId` property MUST match, by identifier equality, the `AttributeId` property of the attribute. The attribute designator's `DataType` property MUST match, by identifier equality, the `DataType` property of the same attribute.
 
-If the `Issuer` property is present in the attribute designator, then it MUST match, using the `urn:oasis:names:tc:xacml:1.0:function:string-equal` function, the `Issuer` property of the same attribute. If the `Issuer` property is not present in the attribute designator, then the matching of the attribute to the named attribute SHALL be governed by `AttributeId` and `DataType` properties alone.
+If the `Issuer` property is present in the attribute designator, then it MUST match, using the `urn:oasis:names:tc:acal:1.0:function:string-equal` function, the `Issuer` property of the same attribute. If the `Issuer` property is not present in the attribute designator, then the matching of the attribute to the named attribute SHALL be governed by `AttributeId` and `DataType` properties alone.
 
 ## 7.23 AttributeDesignatorType
 
 An `AttributeDesignatorType` object is a kind of expression that defines an attribute designator. An attribute designator retrieves a bag of values for a named attribute from the request context.
 
 ```
+<xs:element name="AttributeDesignator" type="xacml:AttributeDesignatorType" substitutionGroup="xacml:Expression"/>
 <xs:complexType name="AttributeDesignatorType">
    <xs:complexContent>
       <xs:extension base="xacml:BaseAttributeDesignatorType">
@@ -2048,7 +2049,7 @@ The properties inherited from `BaseAttributeDesignatorType` specify the named at
 
 ## 7.24 EntityAttributeDesignatorType
 
-An `EntityAttributeDesignatorType` object is a kind of expression that defines an entity attribute designator. An entity attribute designator retrieves a bag of values for a named attribute from either the request context or a value of the `urn:oasis:names:tc:xacml:3.0:data-type:entity` data type.
+An `EntityAttributeDesignatorType` object is a kind of expression that defines an entity attribute designator. An entity attribute designator retrieves a bag of values for a named attribute from either the request context or a value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type.
 
 ```xml
 <xs:element name="EntityAttributeDesignator" type="xacml:EntityAttributeDesignatorType" substitutionGroup="xacml:Expression"/>
@@ -2067,17 +2068,17 @@ The `EntityAttributeDesignatorType` object type extends the `BaseAttributeDesign
 
 `Expression` [Required]
 
-: An `ExpressionType` object defining an expression that MUST evaluate to either a single value of the `urn:oasis:names:tc:xacml:3.0:data-type:entity` data type or a single value of the `https://www.w3.org/2001/XMLSchema#anyURI` data type.
+: An `ExpressionType` object defining an expression that MUST evaluate to either a single value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type or a single value of the `urn:oasis:names:tc:acal:1.0:data-type:anyURI` data type.
 
 The properties inherited from `BaseAttributeDesignatorType` specify the named attribute.
 
-If the expression evaluates to a value of the `urn:oasis:names:tc:xacml:3.0:data-type:entity` data type, then the entity attribute designator retrieves values from attributes matching the named attribute that are present in the value of the expression.
+If the expression evaluates to a value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type, then the entity attribute designator retrieves values from attributes matching the named attribute that are present in the value of the expression.
 
-If the expression evaluates to a value of the `https://www.w3.org/2001/XMLSchema#anyURI` data type, then the entity attribute designator retrieves values from attributes matching the named attribute that are present in the `RequestCategoryType` object having a `CategoryId` property that matches, by identifier equality, the value of the expression. In this case the entity attribute designator emulates an attribute designator.
+If the expression evaluates to a value of the `urn:oasis:names:tc:acal:1.0:data-type:anyURI` data type, then the entity attribute designator retrieves values from attributes matching the named attribute that are present in the `RequestCategoryType` object having a `CategoryId` property that matches, by identifier equality, the value of the expression. In this case the entity attribute designator emulates an attribute designator.
 
 ## 7.25 BaseAttributeSelectorType
 
-The `BaseAttributeSelectorType` object type is an abstract object type that specifies an XPath expression for the production of a bag of ACAL attribute values from XML content. The object types derived from `BaseAttributeSelectorType` determine the source of the XML content: an `AttributeSelectorType` object (an attribute selector) specifies the `Content` property of an attribute category in the request context and an `EntityAttributeSelectorType` object (an entity attribute selector) specifies the `Content` property in either an attribute category in the request context or a value of the `urn:oasis:names:tc:xacml:3.0:data-type:entity` data type.
+The `BaseAttributeSelectorType` object type is an abstract object type that specifies an XPath expression for the production of a bag of ACAL attribute values from XML content. The object types derived from `BaseAttributeSelectorType` determine the source of the XML content: an `AttributeSelectorType` object (an attribute selector) specifies the `Content` property of an attribute category in the request context and an `EntityAttributeSelectorType` object (an entity attribute selector) specifies the `Content` property in either an attribute category in the request context or a value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type.
 
 Evaluation of an `AttributeSelectorType` or `EntityAttributeSelectorType` object returns a bag of unnamed and uncategorized ACAL attribute values, or an error. Support for attribute selectors and entity attribute selectors is OPTIONAL.
 
@@ -2100,7 +2101,7 @@ A `BaseAttributeSelectorType` object has the following properties:
 
 `ContextSelectorId` [Optional]
 
-: An `IdentifierType` value specifying an ACAL attribute (by its `AttributeId`) in the attribute category or `urn:oasis:names:tc:xacml:3.0:data-type:entity` value containing the XML content. The referenced attribute MUST have a single value of data type `urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression` and the XPath expression represented by that value must select a single node in the XML content. The `XPathCategory` property of the referenced ACAL attribute value SHALL be ignored.
+: An `IdentifierType` value specifying an ACAL attribute (by its `AttributeId`) in the attribute category or `urn:oasis:names:tc:acal:1.0:data-type:entity` value containing the XML content. The referenced attribute MUST have a single value of data type `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` and the XPath expression represented by that value must select a single node in the XML content. The `XPathCategory` property of the referenced ACAL attribute value SHALL be ignored.
 
 `Path` [Required]
 
@@ -2141,7 +2142,7 @@ The `AttributeSelectorType` object type extends the `BaseAttributeSelectorType` 
 
 ## 7.27 EntityAttributeSelectorType
 
-An `EntityAttributeSelectorType` object is a kind of expression that defines an entity attribute selector. An entity attribute selector produces a bag of unnamed and uncategorized ACAL attribute values. The values shall be constructed from the node(s) selected by applying the XPath expression given by the entity attribute selector's `Path` property to the XML content in the `Content` property in either an attribute category in the request context or a value of the `urn:oasis:names:tc:xacml:3.0:data-type:entity` data type. Support for entity attribute selectors is OPTIONAL.
+An `EntityAttributeSelectorType` object is a kind of expression that defines an entity attribute selector. An entity attribute selector produces a bag of unnamed and uncategorized ACAL attribute values. The values shall be constructed from the node(s) selected by applying the XPath expression given by the entity attribute selector's `Path` property to the XML content in the `Content` property in either an attribute category in the request context or a value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type. Support for entity attribute selectors is OPTIONAL.
 
 See [Section 9.4.7](#947-selector-evaluation) for details of entity attribute selector evaluation.
 
@@ -2162,11 +2163,11 @@ The `EntityAttributeSelectorType` object type extends the `BaseAttributeSelector
 
 `Expression` [Required]
 
-: An `ExpressionType` object defining an expression that MUST evaluate to either a single value of the `urn:oasis:names:tc:xacml:3.0:data-type:entity` data type or a single value of the `https://www.w3.org/2001/XMLSchema#anyURI` data type.
+: An `ExpressionType` object defining an expression that MUST evaluate to either a single value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type or a single value of the `urn:oasis:names:tc:acal:1.0:data-type:anyURI` data type.
 
-If the expression evaluates to a value of the `urn:oasis:names:tc:xacml:3.0:data-type:entity` data type, then the entity attribute selector applies the XPath expression given by the entity attribute selector's `Path` property to the XML content in the `Content` property of that value. The ACAL attribute nominated by the `ContextSelectorId` property, if any, is obtained from this same value.
+If the expression evaluates to a value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type, then the entity attribute selector applies the XPath expression given by the entity attribute selector's `Path` property to the XML content in the `Content` property of that value. The ACAL attribute nominated by the `ContextSelectorId` property, if any, is obtained from this same value.
 
-If the expression evaluates to a value of the `https://www.w3.org/2001/XMLSchema#anyURI` data type, then the entity attribute selector applies the XPath expression given by the entity attribute selector's `Path` property to the XML content in the `Content` property of the `RequestCategoryType` object having a `CategoryId` property that matches, by identifier equality, the value of the expression. In this case the entity attribute selector emulates an attribute selector. The ACAL attribute nominated by the `ContextSelectorId` property, if any, is obtained from this same object.
+If the expression evaluates to a value of the `urn:oasis:names:tc:acal:1.0:data-type:anyURI` data type, then the entity attribute selector applies the XPath expression given by the entity attribute selector's `Path` property to the XML content in the `Content` property of the `RequestCategoryType` object having a `CategoryId` property that matches, by identifier equality, the value of the expression. In this case the entity attribute selector emulates an attribute selector. The ACAL attribute nominated by the `ContextSelectorId` property, if any, is obtained from this same object.
 
 ## 7.28 AttributeValueType
 
@@ -2465,7 +2466,7 @@ A `RequestType` object contains the following properties:
 
 `CombinedDecision` [Optional]
 
-: A `Boolean` value that is used to request that the PDP combines multiple decisions into a single decision. The use of this property is specified in [[Multi](#multi)]. If the PDP does not implement the relevant functionality in [[Multi](#multi)], then the PDP must return an `Indeterminate` decision with a status code of `urn:oasis:names:tc:xacml:1.0:status:processing-error` if it receives a request with this property set to `true`. If this property is omitted it is treated as being set to `false`.
+: A `Boolean` value that is used to request that the PDP combines multiple decisions into a single decision. The use of this property is specified in [[Multi](#multi)]. If the PDP does not implement the relevant functionality in [[Multi](#multi)], then the PDP must return an `Indeterminate` decision with a status code of `urn:oasis:names:tc:acal:1.0:status:processing-error` if it receives a request with this property set to `true`. If this property is omitted it is treated as being set to `false`.
 
 `ShortIdSetReference` [Any Number]
 
@@ -2473,7 +2474,7 @@ A `RequestType` object contains the following properties:
 
 `RequestDefaults` [Optional]
 
-: A `RequestDefaultsType` object containing default values for the request, such as the XPath version. See [Section 7.36](#736-requestdefaultstype). The `RequestDefaults` property is REQUIRED if the request contains values of the `urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression` data type.
+: A `RequestDefaultsType` object containing default values for the request, such as the XPath version. See [Section 7.36](#736-requestdefaultstype). The `RequestDefaults` property is REQUIRED if the request contains values of the `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` data type.
 
 `RequestCategory` [One to Many]
 
@@ -2502,7 +2503,7 @@ A `RequestDefaultsType` object contains the following properties:
 
 `XPathVersion` [Optional]
 
-: An `IdentifierType` value specifying the XPath version for XPath expressions occurring in the request as values of the `urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression` data type.
+: An `IdentifierType` value specifying the XPath version for XPath expressions occurring in the request as values of the `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` data type.
 
 ## 7.37 RequestCategoryType
 
@@ -2814,25 +2815,25 @@ A `StatusDetailType` object allows arbitrary XML content.
 Inclusion of a `StatusDetailType` object is optional. However, if a PDP returns one of the following ACAL-defined status code values, then the following rules apply.
 
 ```
-urn:oasis:names:tc:xacml:1.0:status:ok
+urn:oasis:names:tc:acal:1.0:status:ok
 ```
 
 A PDP MUST NOT return a `StatusDetail` property in conjunction with the `ok` status value.
 
 ```
-urn:oasis:names:tc:xacml:1.0:status:missing-attribute
+urn:oasis:names:tc:acal:1.0:status:missing-attribute
 ```
 
 A PDP MAY choose not to return any `StatusDetailType` object or MAY choose to return a `StatusDetailType` object containing one or more `MissingAttributeDetailType` objects.
 
 ```
-urn:oasis:names:tc:xacml:1.0:status:syntax-error
+urn:oasis:names:tc:acal:1.0:status:syntax-error
 ```
 
 A PDP MUST NOT return a `StatusDetailType` object in conjunction with the `syntax-error` status value. A syntax error may represent either a problem with the policy being used or with the request context. The PDP MAY return a `StatusMessage` property describing the problem.
 
 ```
-urn:oasis:names:tc:xacml:1.0:status:processing-error
+urn:oasis:names:tc:acal:1.0:status:processing-error
 ```
 
 A PDP MUST NOT return a `StatusDetailType` object in conjunction with the `processing-error` status value. This status code indicates an internal problem in the PDP. For security reasons, the PDP MAY choose to return no further information to the PEP. In the case of a divide-by-zero error or other computational error, the PDP MAY return a `StatusMessage` property describing the nature of the error.
@@ -2940,7 +2941,7 @@ A `CategoryType` object contains the following properties:
 
 ## 7.53 EntityType
 
-The `EntityType` object class defines the structure of values of the `urn:oasis:names:tc:xacml:3.0:data-type:entity` data type. An `EntityType` object contains a sequence of `AttributeType` objects and/or syntax-specific content (i.e., XML or JSON). The `EntityType` object type is similar to the `RequestCategoryType` object type but omits the `CategoryId` property; values of the `urn:oasis:names:tc:xacml:3.0:data-type:entity` data type don't self-identify with any particular attribute category.
+The `EntityType` object class defines the structure of values of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type. An `EntityType` object contains a sequence of `AttributeType` objects and/or syntax-specific content (i.e., XML or JSON). The `EntityType` object type is similar to the `RequestCategoryType` object type but omits the `CategoryId` property; values of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type don't self-identify with any particular attribute category.
 
 ```xml
 <xs:complexType name="EntityType">
@@ -2997,7 +2998,7 @@ The XPath 2.0 specification leaves a number of aspects of behavior implementatio
 
 5. The method by which errors are reported to the external processing environment.
 
-    : An XPath error in the evaluation of an attribute selector causes the result to be `Indeterminate`. The status code SHALL be `urn:oasis:names:tc:xacml:1.0:status:processing-error`. Implementations MAY provide additional details about the error in the response or by some other means.
+    : An XPath error in the evaluation of an attribute selector causes the result to be `Indeterminate`. The status code SHALL be `urn:oasis:names:tc:acal:1.0:status:processing-error`. Implementations MAY provide additional details about the error in the response or by some other means.
 
 6. Whether the implementation is based on the rules of XML 1.0 or 1.1.
 
@@ -3019,7 +3020,7 @@ The XPath 2.0 specification leaves a number of aspects of behavior implementatio
 
 2. Some typed values in the data model are undefined. Attempting to access an undefined property is always an error. Behavior in these cases is implementation-defined and the host language is responsible for determining the result.
 
-    : An XPath error in the evaluation of an attribute selector causes the result to be `Indeterminate`. The status code SHALL be `urn:oasis:names:tc:xacml:1.0:status:processing-error`. Implementations MAY provide additional details about the error in the response or by some other means.
+    : An XPath error in the evaluation of an attribute selector causes the result to be `Indeterminate`. The status code SHALL be `urn:oasis:names:tc:acal:1.0:status:processing-error`. Implementations MAY provide additional details about the error in the response or by some other means.
 
 `https://www.w3.org/TR/xpath-functions/#impl-def` defines the following items:
 
@@ -3029,7 +3030,7 @@ The XPath 2.0 specification leaves a number of aspects of behavior implementatio
 
 2. For `xs:integer` operations, implementations that support limited-precision integer operations must either raise an error [err:FOAR0002] or provide an implementation-defined mechanism that allows users to choose between raising an error and returning a result that is modulo the largest representable integer value.
 
-    : ACAL leaves this implementation defined. If an implementation chooses to raise an error, the status code SHALL be `urn:oasis:names:tc:xacml:1.0:status:processing-error`. Implementations MAY provide additional details about the error in the response or by some other means.
+    : ACAL leaves this implementation defined. If an implementation chooses to raise an error, the status code SHALL be `urn:oasis:names:tc:acal:1.0:status:processing-error`. Implementations MAY provide additional details about the error in the response or by some other means.
 
 3. For `xs:decimal` values the number of digits of precision returned by the numeric operators is implementation-defined.
 
@@ -3143,13 +3144,13 @@ The end result of evaluation MUST be an absolute URI.
 
 Given the following short identifiers:
 ```xml
-<ShortId Name="xs" Value="https://www.w3.org/2001/XMLSchema#"/>
+<ShortId Name="xs" Value="urn:oasis:names:tc:acal:1.0:data-type:"/>
 <ShortId Name="string" Value="{xs}string"/>
 ```
 
 these `IdentifierType` values are all equivalent and evaluate to the URI of the string data type:
 ```
-"https://www.w3.org/2001/XMLSchema#string"
+"urn:oasis:names:tc:acal:1.0:data-type:string"
 "string"
 "{string}"
 "{xs}string"
@@ -3173,10 +3174,10 @@ Attributes are represented in the request context by the context handler, regard
 
 `AttributeValueType` objects MAY contain an instance of a structured XML data type, for example `<ds:KeyInfo>`. ACAL 1.0 supports several ways for comparing the contents of such elements.
 
-1. In some cases, such elements MAY be compared using one of the ACAL string functions, such as `string-regexp-match`, described below. This requires that the element be given the data type `https://www.w3.org/2001/XMLSchema#string`. For example, a structured data type that is actually a `ds:KeyInfo/KeyName` would appear in the context as:
+1. In some cases, such elements MAY be compared using one of the ACAL string functions, such as `string-regexp-match`, described below. This requires that the element be given the data type `urn:oasis:names:tc:acal:1.0:data-type:string`. For example, a structured data type that is actually a `ds:KeyInfo/KeyName` would appear in the context as:
 
 ```xml
-    <AttributeValue DataType="https://www.w3.org/2001/XMLSchema#string">
+    <AttributeValue DataType="urn:oasis:names:tc:acal:1.0:data-type:string">
        &lt;ds:KeyName&gt;jhibbert-key&lt;/ds:KeyName&gt;
     </AttributeValue>
 ```
@@ -3201,7 +3202,7 @@ If a single attribute in a request context contains multiple attribute values, t
 
 ### 9.4.4 Attribute Matching
 
-A named attribute includes specific criteria with which to match attributes in the context. An attribute specifies a `CategoryId`, `AttributeId` and `DataType`, and a named attribute also specifies the `Issuer`. A named attribute SHALL match an attribute if the values of their respective `CategoryId`, `AttributeId`, `DataType` and optional `Issuer` properties match. The `CategoryId` property of the named attribute MUST match, by identifier equality, the `CategoryId` property of the corresponding context attribute. The `AttributeId` property of the named attribute MUST match, by identifier equality, the `AttributeId` property of the corresponding context attribute. The `DataType` property of the named attribute MUST match, by identifier equality, the `DataType` property of the corresponding context attribute. If the `Issuer` property is supplied in the named attribute, then it MUST match, using the `urn:oasis:names:tc:xacml:1.0:function:string-equal` function, the `Issuer` property of the corresponding context attribute. If the `Issuer` property is not supplied in the named attribute, then the matching of the context attribute to the named attribute SHALL be governed by the `AttributeId` and `DataType` properties alone, regardless of the presence, absence, or actual value of `Issuer` property in the corresponding context attribute. In the case of an attribute selector, the matching of the attribute to the named attribute SHALL be governed by the XPath expression and `DataType` property.
+A named attribute includes specific criteria with which to match attributes in the context. An attribute specifies a `CategoryId`, `AttributeId` and `DataType`, and a named attribute also specifies the `Issuer`. A named attribute SHALL match an attribute if the values of their respective `CategoryId`, `AttributeId`, `DataType` and optional `Issuer` properties match. The `CategoryId` property of the named attribute MUST match, by identifier equality, the `CategoryId` property of the corresponding context attribute. The `AttributeId` property of the named attribute MUST match, by identifier equality, the `AttributeId` property of the corresponding context attribute. The `DataType` property of the named attribute MUST match, by identifier equality, the `DataType` property of the corresponding context attribute. If the `Issuer` property is supplied in the named attribute, then it MUST match, using the `urn:oasis:names:tc:acal:1.0:function:string-equal` function, the `Issuer` property of the corresponding context attribute. If the `Issuer` property is not supplied in the named attribute, then the matching of the context attribute to the named attribute SHALL be governed by the `AttributeId` and `DataType` properties alone, regardless of the presence, absence, or actual value of `Issuer` property in the corresponding context attribute. In the case of an attribute selector, the matching of the attribute to the named attribute SHALL be governed by the XPath expression and `DataType` property.
 
 ### 9.4.5 Attribute Retrieval
 
@@ -3221,15 +3222,15 @@ An `AttributeSelectorType` or `EntityAttributeSelector` object will be evaluated
 
 If the attribute category given by the `CategoryId` property of an `AttributeSelectorType` object is not found or does not have a `Content` property, then the return value is either `Indeterminate` or an empty bag as determined by the `MustBePresent` property.
 
-If the `Expression` property of an `EntityAttributeSelectorType` object evaluates to a value of the `urn:oasis:names:tc:xacml:3.0:data-type:entity` data type and that value does not have a `Content` property, then the return value is either `Indeterminate` or an empty bag as determined by the `MustBePresent` property.
+If the `Expression` property of an `EntityAttributeSelectorType` object evaluates to a value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type and that value does not have a `Content` property, then the return value is either `Indeterminate` or an empty bag as determined by the `MustBePresent` property.
 
-If the `Expression` property of an `EntityAttributeSelectorType` object evaluates to a value of the `https://www.w3.org/2001/XMLSchema#anyURI` data type and an attribute category with that value as its `CategoryId` is not found or does not have a `Content` property, then the return value is either `Indeterminate` or an empty bag as determined by the `MustBePresent` property.
+If the `Expression` property of an `EntityAttributeSelectorType` object evaluates to a value of the `urn:oasis:names:tc:acal:1.0:data-type:anyURI` data type and an attribute category with that value as its `CategoryId` is not found or does not have a `Content` property, then the return value is either `Indeterminate` or an empty bag as determined by the `MustBePresent` property.
 
 If the relevanrelevant, then follow these steps:
 
 1. Construct an XML data structure suitable for xpath processing from the value of the `Content` property. The data structure shall be constructed so that the document node of this structure contains a single document element which corresponds to the single child element of the `Content` property. The constructed data structure shall be equivalent to one that would result from parsing a stand-alone XML document consisting of the contents of the `Content` property (including any comment and processing-instruction markup). Namespace declarations from the `<Content>` element and its ancestor elements for namespace prefixes that are "visibly utilized", as defined by [[exc-c14n](#exc-c14n)], within the contents MUST be present. Namespace declarations from the single child element or its ancestor elements for namespace prefixes that are not "visibly utilized" MAY be present. The data structure must meet the requirements of the applicable XPath version.
 
-2. Select a context node for XPath processing from this data structure. If there is a `ContextSelectorId` property, the context node shall be the node selected by applying the XPath expression given in the attribute value of the designated ACAL attribute. It shall be an error if this evaluation returns no node or more than one node, in which case the return value MUST be `Indeterminate` with status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`. If there is no `ContextSelectorId` property, then the document node of the data structure shall be the context node.
+2. Select a context node for XPath processing from this data structure. If there is a `ContextSelectorId` property, the context node shall be the node selected by applying the XPath expression given in the attribute value of the designated ACAL attribute. It shall be an error if this evaluation returns no node or more than one node, in which case the return value MUST be `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`. If there is no `ContextSelectorId` property, then the document node of the data structure shall be the context node.
 
 3. Evaluate the XPath expression given in the `Path` property against the context node selected in the previous step.
 
@@ -3281,19 +3282,19 @@ If the relevanrelevant, then follow these steps:
 : If the result is a node-set and the specified data type is `http://www.w3.org/2001/XMLSchema#dayTimeDuration`, then convert the string value of each node using the `xs:dayTimeDuration()` constructor function from [[XF](#xf)] Section 5.
 
 &nbsp;
-: If the result is a node-set and every node is an element node and the specified data type is `urn:oasis:names:tc:xacml:3.0:data-type:entity`, then convert each node to an `EntityType` object. Each object SHALL have a `Content` property and SHALL NOT have an `Attribute` property. The child element of the `Content` property SHALL be a copy of the element corresponding to the node, along with its entire content, plus whatever namespace declarations from ancestor elements as are required to define namespace prefixes used in the content. Namespace declarations from ancestor elements that are not visibly used in the content MAY be added.
+: If the result is a node-set and every node is an element node and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:entity`, then convert each node to an `EntityType` object. Each object SHALL have a `Content` property and SHALL NOT have an `Attribute` property. The child element of the `Content` property SHALL be a copy of the element corresponding to the node, along with its entire content, plus whatever namespace declarations from ancestor elements as are required to define namespace prefixes used in the content. Namespace declarations from ancestor elements that are not visibly used in the content MAY be added.
 
 &nbsp;
-: If the data type is one of the types referred to above and the result of step 3 does not satisfy any of the cases, then the attribute selector MUST return `Indeterminate` with status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`.
+: If the data type is one of the types referred to above and the result of step 3 does not satisfy any of the cases, then the attribute selector MUST return `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`.
 
 &nbsp;
-: If the data type is not one of the types referred to above, then the return values shall be constructed from the node-set in a manner specified by the particular data type extension specification. If the data type extension does not specify an appropriate constructor function, then the attribute selector MUST return `Indeterminate` with status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`.
+: If the data type is not one of the types referred to above, then the return values shall be constructed from the node-set in a manner specified by the particular data type extension specification. If the data type extension does not specify an appropriate constructor function, then the attribute selector MUST return `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`.
 
 &nbsp;
-: If an error occurs when converting the values returned by the XPath expression to the specified data type, then the result of the attribute selector MUST be `Indeterminate`, with status code `urn:oasis:names:tc:xacml:1.0:status:processing-error`
+: If an error occurs when converting the values returned by the XPath expression to the specified data type, then the result of the attribute selector MUST be `Indeterminate`, with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`
 
 &nbsp;
-: If the result of step 3 is an empty node-set, then the return value is either `Indeterminate` with status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`, or an empty bag, as determined by the `MustBePresent` property.
+: If the result of step 3 is an empty node-set, then the return value is either `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`, or an empty bag, as determined by the `MustBePresent` property.
 
 ## 9.5 Expression Evaluation
 
@@ -3341,7 +3342,7 @@ A `VariableReferenceType` object references a single `VariableDefinitionType` ob
 
 In any place where a `VariableReferenceType` object occurs, it has the effect as if the text of the `ExpressionType` object defined in the `VariableDefinitionType` object replaces the `VariableReferenceType` object. Any evaluation scheme that preserves this semantic is acceptable. For instance, the expression in the `VariableDefinitionType` object may be evaluated to a particular value and cached for multiple references without consequence (i.e., the value of an `ExpressionType` object remains the same for the entire policy evaluation). This characteristic is one of the benefits of ACAL being a declarative language.
 
-A variable reference containing circular references is invalid. The PDP MUST detect circular references either at policy loading time or during runtime evaluation. If the PDP detects a circular reference during runtime the variable reference evaluates to `Indeterminate` with status code `urn:oasis:names:tc:xacml:1.0:status:processing-error`.
+A variable reference containing circular references is invalid. The PDP MUST detect circular references either at policy loading time or during runtime evaluation. If the PDP detects a circular reference during runtime the variable reference evaluates to `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`.
 
 ## 9.9 Condition Evaluation
 
@@ -3409,9 +3410,9 @@ A policy reference is evaluated by resolving the reference and evaluating the re
 
 If resolving the reference fails, the reference evaluates to `Indeterminate` with status code:
 <!--Newline to fit on PDF page -->
-`urn:oasis:names:tc:xacml:1.0:status:processing-error`.
+`urn:oasis:names:tc:acal:1.0:status:processing-error`.
 
-A policy reference containing circular references is invalid. The PDP MUST detect circular references either at policy loading time or during runtime evaluation. If the PDP detects a circular reference during runtime the reference evaluates to `Indeterminate` with status code `urn:oasis:names:tc:xacml:1.0:status:processing-error`.
+A policy reference containing circular references is invalid. The PDP MUST detect circular references either at policy loading time or during runtime evaluation. If the PDP detects a circular reference during runtime the reference evaluates to `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`.
 
 ## 9.16 Hierarchical Resources
 
@@ -3441,27 +3442,27 @@ ACAL specifies behavior for the PDP in the following situations.
 
 ### 9.19.1 Unsupported Functionality
 
-If the PDP attempts to evaluate a policy that contains an optional object type or function that the PDP does not support, then the PDP SHALL return a `DecisionType` value of `Indeterminate`. If a `StatusCodeType` object is also returned, then its Value property SHALL be `urn:oasis:names:tc:xacml:1.0:status:syntax-error` in the case of an unsupported object type, and `urn:oasis:names:tc:xacml:1.0:status:processing-error` in the case of an unsupported function.
+If the PDP attempts to evaluate a policy that contains an optional object type or function that the PDP does not support, then the PDP SHALL return a `DecisionType` value of `Indeterminate`. If a `StatusCodeType` object is also returned, then its Value property SHALL be `urn:oasis:names:tc:acal:1.0:status:syntax-error` in the case of an unsupported object type, and `urn:oasis:names:tc:acal:1.0:status:processing-error` in the case of an unsupported function.
 
 ### 9.19.2 Syntax and Type Errors
 
-If a policy that contains invalid syntax is evaluated by the ACAL PDP at the time a decision request is received, then the result of that policy SHALL be `Indeterminate` with a status code of `urn:oasis:names:tc:xacml:1.0:status:syntax-error`.
+If a policy that contains invalid syntax is evaluated by the ACAL PDP at the time a decision request is received, then the result of that policy SHALL be `Indeterminate` with a status code of `urn:oasis:names:tc:acal:1.0:status:syntax-error`.
 
-If a policy that contains invalid static data types is evaluated by the ACAL PDP at the time a decision request is received, then the result of that policy SHALL be `Indeterminate` with a status code of `urn:oasis:names:tc:xacml:1.0:status:processing-error`.
+If a policy that contains invalid static data types is evaluated by the ACAL PDP at the time a decision request is received, then the result of that policy SHALL be `Indeterminate` with a status code of `urn:oasis:names:tc:acal:1.0:status:processing-error`.
 
 ### 9.19.3 Missing Attributes
 
 The absence of matching attributes in the request context for any of the attribute designators or attribute selectors that are found in the policy potentially results in the policy evaluating to `Indeterminate`, if the designator or selector has the `MustBePresent` property set to `true`, as described in [Section 7.22](#722-baseattributedesignatortype) and [Section 7.25](#725-baseattributeselectortype) and potentially results in a `Decision` property containing the `Indeterminate` value. In this case, if a status code is supplied, then the value
 
-`urn:oasis:names:tc:xacml:1.0:status:missing-attribute`
+`urn:oasis:names:tc:acal:1.0:status:missing-attribute`
 
 SHALL be used, to indicate that more information is needed in order for a definitive decision to be rendered. In this case, the `StatusType` object MAY list the names and data types of any attributes that are needed by the PDP to refine its decision (see [Section 7.50](#750-missingattributedetailtype)). A PEP MAY resubmit a refined request context in response to a `Decision` property contents of `Indeterminate` with a status code of
 
-`urn:oasis:names:tc:xacml:1.0:status:missing-attribute`
+`urn:oasis:names:tc:acal:1.0:status:missing-attribute`
 
 by adding attribute values for the attribute names that were listed in the previous response. When the PDP returns a `Decision` property contents of `Indeterminate`, with a status code of
 
-`urn:oasis:names:tc:xacml:1.0:status:missing-attribute`,
+`urn:oasis:names:tc:acal:1.0:status:missing-attribute`,
 
 it MUST NOT list the names and data types of any attribute for which values were supplied in the original request. Note, this requirement forces the PDP to eventually return an authorization decision of `Permit`, `Deny`, or `Indeterminate` with some other status code, in response to successively-refined requests.
 
@@ -3634,7 +3635,7 @@ An example of a changing base group would be if there is a policy that everyone 
 
 A denial of service attack is one in which the adversary overloads an ACAL actor with excessive computations or network traffic such that legitimate users cannot access the services provided by the actor.
 
-The `urn:oasis:names:tc:xacml:3.0:function:access-permitted` function may lead to hard to predict behavior in the PDP. It is possible that the function is invoked during the recursive invocations of the PDP such that loops are formed. Such loops may in some cases lead to large numbers of requests to be generated before the PDP can detect the loop and abort evaluation. Such loops could cause a denial of service at the PDP, either because of a malicious policy or because of a mistake in a policy.
+The `urn:oasis:names:tc:acal:1.0:function:access-permitted` function may lead to hard to predict behavior in the PDP. It is possible that the function is invoked during the recursive invocations of the PDP such that loops are formed. Such loops may in some cases lead to large numbers of requests to be generated before the PDP can detect the loop and abort evaluation. Such loops could cause a denial of service at the PDP, either because of a malicious policy or because of a mistake in a policy.
 
 ## 11.2 Safeguards
 
@@ -3747,11 +3748,13 @@ This section lists those portions of the specification that MUST be included in 
 
 The implementation MUST follow [Section 7](#7-structures), [Section 8](#8-xpath-definitions), [Section 9](#9-functional-requirements), [Annex C](#annex-c-data-types-and-functions), [Annex D](#annex-d-acal-identifiers) and [Annex E](#annex-e-combining-algorithms) where they apply to implemented items in the following tables.
 
-### 12.2.1 Schema Elements
+Many of these items are associated with versions of XACML preceding ACAL but have been assigned new identifiers with the `urn:oasis:names:tc:acal:1.0:` prefix. The older XACML identifiers have been listed in the tables as deprecated identifiers. Implementations MUST support a new identifier defined in this specification but MAY recognize the corresponding deprecated identifier as equivalent. It is RECOMMENDED that these deprecated identifiers not be used in new policies and requests; they are planned to be removed in a subsequent version of ACAL. Note that some items appear to be from a preceding version of XACML but do not list the XACML identifier. This is because ACAL has redefined the item in some way that means it is no longer identical to the original definition in XACML, and so the identifiers can no longer be considered equivalent.
+
+### 12.2.1 Object Types
 
 The implementation MUST support the object types that are marked `M`.
 
-| Element name | M/O |
+| Object Type | M/O |
 | :--- | :--- |
 | ApplyType | M |
 | AttributeType | M |
@@ -3761,6 +3764,8 @@ The implementation MUST support the object types that are marked `M`.
 | AttributeSelectorType | O |
 | AttributesReferenceType | O |
 | AttributeValueType | M |
+| BaseAttributeDesignatorType | M |
+| BaseAttributeSelectorType | O |
 | BooleanExpressionType | M |
 | CategoryType | M |
 | CombinerParameterType | O |
@@ -3768,6 +3773,9 @@ The implementation MUST support the object types that are marked `M`.
 | ContentType | O |
 | DecisionType | M |
 | DescriptionType | M |
+| EntityAttributeDesignatorType | M |
+| EntityAttributeSelectorType | O |
+| EntityType | M |
 | ExpressionType | M |
 | FunctionType | M |
 | MissingAttributeDetailType | M |
@@ -3780,6 +3788,7 @@ The implementation MUST support the object types that are marked `M`.
 | PolicyIdentifierListType | O |
 | PolicyReferenceType | M |
 | PolicyIssuerType | O |
+| RequestAttributeType | M |
 | RequestCategoryType | M |
 | RequestType | M |
 | RequestDefaultsType | O |
@@ -3798,22 +3807,13 @@ The implementation MUST support the object types that are marked `M`.
 
 The following identifier prefixes are reserved by ACAL.
 
-| Element name |
+| Prefix |
 | :--- |
+| urn:oasis:names:tc:acal:1.0 |
 | urn:oasis:names:tc:xacml:4.0 |
 | urn:oasis:names:tc:xacml:3.0 |
 | urn:oasis:names:tc:xacml:2.0 |
-| urn:oasis:names:tc:xacml:2.0:conformance-test |
-| urn:oasis:names:tc:xacml:2.0:context |
-| urn:oasis:names:tc:xacml:2.0:example |
-| urn:oasis:names:tc:xacml:1.0:function |
-| urn:oasis:names:tc:xacml:2.0:function |
-| urn:oasis:names:tc:xacml:2.0:policy |
-| urn:oasis:names:tc:xacml:1.0:subject |
-| urn:oasis:names:tc:xacml:1.0:resource |
-| urn:oasis:names:tc:xacml:1.0:action |
-| urn:oasis:names:tc:xacml:1.0:environment |
-| urn:oasis:names:tc:xacml:1.0:status |
+| urn:oasis:names:tc:xacml:1.0 |
 
 ### 12.2.3 Algorithms
 
@@ -3821,399 +3821,353 @@ The implementation MUST include the combining algorithms associated with the fol
 
 | Algorithm | M/O |
 | :--- | :--- |
-| urn:oasis:names:tc:xacml:4.0:combining-algorithm:deny-overrides | M |
-| urn:oasis:names:tc:xacml:4.0:combining-algorithm:permit-overrides | M |
-| urn:oasis:names:tc:xacml:4.0:combining-algorithm:first-applicable | M |
-| urn:oasis:names:tc:xacml:4.0:combining-algorithm:ordered-deny-overrides | M |
-| urn:oasis:names:tc:xacml:4.0:combining-algorithm:ordered-permit-overrides | M |
-| urn:oasis:names:tc:xacml:4.0:combining-algorithm:deny-unless-permit | M |
-| urn:oasis:names:tc:xacml:4.0:combining-algorithm:permit-unless-deny | M |
+| urn:oasis:names:tc:acal:1.0:combining-algorithm:deny-overrides | M |
+| urn:oasis:names:tc:acal:1.0:combining-algorithm:permit-overrides | M |
+| urn:oasis:names:tc:acal:1.0:combining-algorithm:first-applicable | M |
+| urn:oasis:names:tc:acal:1.0:combining-algorithm:ordered-deny-overrides | M |
+| urn:oasis:names:tc:acal:1.0:combining-algorithm:ordered-permit-overrides | M |
+| urn:oasis:names:tc:acal:1.0:combining-algorithm:deny-unless-permit | M |
+| urn:oasis:names:tc:acal:1.0:combining-algorithm:permit-unless-deny | M |
 
 ### 12.2.4 Status Codes
 
 Implementation support for the `StatusCodeType` object is optional, but if the object is supported, then the following status codes must be supported and must be used in the way ACAL has specified.
 
-| Identifier | M/O |
-| :--- | :--- |
-| urn:oasis:names:tc:xacml:1.0:status:missing-attribute | M |
-| urn:oasis:names:tc:xacml:1.0:status:ok | M |
-| urn:oasis:names:tc:xacml:1.0:status:processing-error | M |
-| urn:oasis:names:tc:xacml:1.0:status:syntax-error | M |
+| Identifier | M/O | Deprecated Identifier |
+| :--- | :--- | :--- |
+| urn:oasis:names:tc:acal:1.0:status:missing-attribute | M | urn:oasis:names:tc:xacml:1.0:status:missing-attribute |
+| urn:oasis:names:tc:acal:1.0:status:ok | M | urn:oasis:names:tc:xacml:1.0:status:ok |
+| urn:oasis:names:tc:acal:1.0:status:processing-error | M | urn:oasis:names:tc:xacml:1.0:status:processing-error |
+| urn:oasis:names:tc:acal:1.0:status:syntax-error | M | urn:oasis:names:tc:xacml:1.0:status:syntax-error |
 
 ### 12.2.5 Environment Attributes
 
 The implementation MUST support the attributes associated with the following identifiers as specified by ACAL. If values for these attributes are not present in the decision request, then their values MUST be supplied by the context handler. So, unlike most other attributes, their semantics are not transparent to the PDP.
 
-| Identifier | M/O |
-| :--- | :--- |
-| urn:oasis:names:tc:xacml:1.0:environment:current-time | M |
-| urn:oasis:names:tc:xacml:1.0:environment:current-date | M |
-| urn:oasis:names:tc:xacml:1.0:environment:current-dateTime | M |
+| Identifier | M/O | Deprecated Identifier |
+| :--- | :--- | :--- |
+| urn:oasis:names:tc:acal:1.0:environment:current-time | M | urn:oasis:names:tc:xacml:1.0:environment:current-time |
+| urn:oasis:names:tc:acal:1.0:environment:current-date | M | urn:oasis:names:tc:xacml:1.0:environment:current-date |
+| urn:oasis:names:tc:acal:1.0:environment:current-dateTime | M | urn:oasis:names:tc:xacml:1.0:environment:current-dateTime |
 
-### 12.2.6 Attributes
+### 12.2.6 Attributes and Categories
 
 The implementation MUST use the attributes or attribute categories associated with the following identifiers in the way ACAL has defined. This requirement pertains primarily to implementations of a PAP or PEP that uses ACAL, since the semantics of the attributes are transparent to the PDP.
 
-| Identifier | M/O |
-| :--- | :--- |
-| urn:oasis:names:tc:xacml:1.0:subject:authn-locality:dns-name | O |
-| urn:oasis:names:tc:xacml:1.0:subject:authn-locality:ip-address | O |
-| urn:oasis:names:tc:xacml:1.0:subject:authentication-method | O |
-| urn:oasis:names:tc:xacml:1.0:subject:authentication-time | O |
-| urn:oasis:names:tc:xacml:1.0:subject:key-info | O |
-| urn:oasis:names:tc:xacml:1.0:subject:request-time | O |
-| urn:oasis:names:tc:xacml:1.0:subject:session-start-time | O |
-| urn:oasis:names:tc:xacml:1.0:subject:subject-id | O |
-| urn:oasis:names:tc:xacml:1.0:subject:subject-id-qualifier | O |
-| urn:oasis:names:tc:xacml:1.0:subject-category:access-subject | M |
-| urn:oasis:names:tc:xacml:1.0:subject-category:codebase | O |
-| urn:oasis:names:tc:xacml:1.0:subject-category:intermediary-subject | O |
-| urn:oasis:names:tc:xacml:1.0:subject-category:recipient-subject | O |
-| urn:oasis:names:tc:xacml:1.0:subject-category:requesting-machine | O |
-| urn:oasis:names:tc:xacml:1.0:resource:resource-location | O |
-| urn:oasis:names:tc:xacml:1.0:resource:resource-id | M |
-| urn:oasis:names:tc:xacml:1.0:resource:simple-file-name | O |
-| urn:oasis:names:tc:xacml:2.0:resource:target-namespace | O |
-| urn:oasis:names:tc:xacml:1.0:action:action-id | O |
-| urn:oasis:names:tc:xacml:1.0:action:action-namespace | O |
-| urn:oasis:names:tc:xacml:1.0:action:implied-action | O |
+| Identifier | M/O | Deprecated Identifier |
+| :--- | :--- | :--- |
+| urn:oasis:names:tc:acal:1.0:subject:authn-locality:dns-name | O | urn:oasis:names:tc:xacml:1.0:subject:authn-locality:dns-name |
+| urn:oasis:names:tc:acal:1.0:subject:authn-locality:ip-address | O | urn:oasis:names:tc:xacml:1.0:subject:authn-locality:ip-address |
+| urn:oasis:names:tc:acal:1.0:subject:authentication-method | O | urn:oasis:names:tc:xacml:1.0:subject:authentication-method |
+| urn:oasis:names:tc:acal:1.0:subject:authentication-time | O | urn:oasis:names:tc:xacml:1.0:subject:authentication-time |
+| urn:oasis:names:tc:acal:1.0:subject:key-info | O | urn:oasis:names:tc:xacml:1.0:subject:key-info |
+| urn:oasis:names:tc:acal:1.0:subject:request-time | O | urn:oasis:names:tc:xacml:1.0:subject:request-time |
+| urn:oasis:names:tc:acal:1.0:subject:session-start-time | O | urn:oasis:names:tc:xacml:1.0:subject:session-start-time |
+| urn:oasis:names:tc:acal:1.0:subject:subject-id | O | urn:oasis:names:tc:xacml:1.0:subject:subject-id |
+| urn:oasis:names:tc:acal:1.0:subject:subject-id-qualifier | O | urn:oasis:names:tc:xacml:1.0:subject:subject-id-qualifier |
+| urn:oasis:names:tc:acal:1.0:resource:resource-location | O | urn:oasis:names:tc:xacml:1.0:resource:resource-location |
+| urn:oasis:names:tc:acal:1.0:resource:resource-id | M | urn:oasis:names:tc:xacml:1.0:resource:resource-id |
+| urn:oasis:names:tc:acal:1.0:resource:simple-file-name | O | urn:oasis:names:tc:xacml:1.0:resource:simple-file-name |
+| urn:oasis:names:tc:acal:1.0:resource:target-namespace | O | urn:oasis:names:tc:xacml:2.0:resource:target-namespace |
+| urn:oasis:names:tc:xacml:1.0:action:action-id | O | urn:oasis:names:tc:xacml:1.0:action:action-id |
+| urn:oasis:names:tc:xacml:1.0:action:action-namespace | O | urn:oasis:names:tc:xacml:1.0:action:action-namespace |
+| urn:oasis:names:tc:xacml:1.0:action:implied-action | O | urn:oasis:names:tc:xacml:1.0:action:implied-action |
+
+| Identifier | M/O | Deprecated Identifier |
+| :--- | :--- | :--- |
+| urn:oasis:names:tc:acal:1.0:subject-category:access-subject | M | urn:oasis:names:tc:xacml:1.0:subject-category:access-subject |
+| urn:oasis:names:tc:acal:1.0:subject-category:codebase | O | urn:oasis:names:tc:xacml:1.0:subject-category:codebase |
+| urn:oasis:names:tc:acal:1.0:subject-category:intermediary-subject | O | urn:oasis:names:tc:xacml:1.0:subject-category:intermediary-subject |
+| urn:oasis:names:tc:acal:1.0:subject-category:recipient-subject | O | urn:oasis:names:tc:xacml:1.0:subject-category:recipient-subject |
+| urn:oasis:names:tc:acal:1.0:subject-category:requesting-machine | O | urn:oasis:names:tc:xacml:1.0:subject-category:requesting-machine |
 
 ### 12.2.7 Data Types
 
 The implementation MUST support the data types associated with the following identifiers marked `M`.
 
-| Data Type | M/O |
-| :--- | :--- |
-| https://www.w3.org/2001/XMLSchema#string | M |
-| https://www.w3.org/2001/XMLSchema#boolean | M |
-| https://www.w3.org/2001/XMLSchema#integer | M |
-| https://www.w3.org/2001/XMLSchema#double | M |
-| https://www.w3.org/2001/XMLSchema#time | M |
-| https://www.w3.org/2001/XMLSchema#date | M |
-| https://www.w3.org/2001/XMLSchema#dateTime | M |
-| https://www.w3.org/2001/XMLSchema#dayTimeDuration | M |
-| https://www.w3.org/2001/XMLSchema#yearMonthDuration | M |
-| https://www.w3.org/2001/XMLSchema#anyURI | M |
-| https://www.w3.org/2001/XMLSchema#hexBinary | M |
-| https://www.w3.org/2001/XMLSchema#base64Binary | M |
-| urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name | M |
-| urn:oasis:names:tc:xacml:1.0:data-type:x500Name | M |
-| urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression | O |
-| urn:oasis:names:tc:xacml:2.0:data-type:ipAddress | M |
-| urn:oasis:names:tc:xacml:2.0:data-type:dnsName | M |
+| Identifier | M/O | Deprecated Identifier |
+| :--- | :--- | :--- |
+| urn:oasis:names:tc:acal:1.0:data-type:string | M | https://www.w3.org/2001/XMLSchema#string |
+| urn:oasis:names:tc:acal:1.0:data-type:boolean | M | https://www.w3.org/2001/XMLSchema#boolean |
+| urn:oasis:names:tc:acal:1.0:data-type:integer | M | https://www.w3.org/2001/XMLSchema#integer |
+| urn:oasis:names:tc:acal:1.0:data-type:double | M | https://www.w3.org/2001/XMLSchema#double |
+| urn:oasis:names:tc:acal:1.0:data-type:time | M | https://www.w3.org/2001/XMLSchema#time |
+| urn:oasis:names:tc:acal:1.0:data-type:date | M | https://www.w3.org/2001/XMLSchema#date |
+| urn:oasis:names:tc:acal:1.0:data-type:dateTime | M | https://www.w3.org/2001/XMLSchema#dateTime |
+| urn:oasis:names:tc:acal:1.0:data-type:dayTimeDuration | M | https://www.w3.org/2001/XMLSchema#dayTimeDuration |
+| urn:oasis:names:tc:acal:1.0:data-type:yearMonthDuration | M | https://www.w3.org/2001/XMLSchema#yearMonthDuration |
+| urn:oasis:names:tc:acal:1.0:data-type:anyURI | M | https://www.w3.org/2001/XMLSchema#anyURI |
+| urn:oasis:names:tc:acal:1.0:data-type:hexBinary | M | https://www.w3.org/2001/XMLSchema#hexBinary |
+| urn:oasis:names:tc:acal:1.0:data-type:base64Binary | M | https://www.w3.org/2001/XMLSchema#base64Binary |
+| urn:oasis:names:tc:acal:1.0:data-type:rfc822Name | M | urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name |
+| urn:oasis:names:tc:acal:1.0:data-type:x500Name | M | urn:oasis:names:tc:xacml:1.0:data-type:x500Name |
+| urn:oasis:names:tc:acal:1.0:data-type:xpathExpression | O | urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression |
+| urn:oasis:names:tc:acal:1.0:data-type:ipAddress | M | urn:oasis:names:tc:xacml:2.0:data-type:ipAddress |
+| urn:oasis:names:tc:acal:1.0:data-type:dnsName | M | urn:oasis:names:tc:xacml:2.0:data-type:dnsName |
+| urn:oasis:names:tc:acal:1.0:data-type:entity | M | urn:oasis:names:tc:xacml:3.0:data-type:entity |
 
 ### 12.2.8 Functions
 
 The implementation MUST properly process those functions associated with the identifiers marked with an `M`.
 
-| Function | M/O |
-| :--- | :--- |
-| urn:oasis:names:tc:xacml:1.0:function:string-equal | M |
-| urn:oasis:names:tc:xacml:1.0:function:boolean-equal | M |
-| urn:oasis:names:tc:xacml:1.0:function:integer-equal | M |
-| urn:oasis:names:tc:xacml:1.0:function:double-equal | M |
-| urn:oasis:names:tc:xacml:1.0:function:date-equal | M |
-| urn:oasis:names:tc:xacml:1.0:function:time-equal | M |
-| urn:oasis:names:tc:xacml:1.0:function:dateTime-equal | M |
-| urn:oasis:names:tc:xacml:3.0:function:dayTimeDuration-equal | M |
-| urn:oasis:names:tc:xacml:3.0:function:yearMonthDuration-equal | M |
-| urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case | M |
-| urn:oasis:names:tc:xacml:1.0:function:anyURI-equal | M |
-| urn:oasis:names:tc:xacml:1.0:function:x500Name-equal | M |
-| urn:oasis:names:tc:xacml:1.0:function:rfc822Name-equal | M |
-| urn:oasis:names:tc:xacml:1.0:function:hexBinary-equal | M |
-| urn:oasis:names:tc:xacml:1.0:function:base64Binary-equal | M |
-| urn:oasis:names:tc:xacml:1.0:function:integer-add | M |
-| urn:oasis:names:tc:xacml:1.0:function:double-add | M |
-| urn:oasis:names:tc:xacml:1.0:function:integer-subtract | M |
-| urn:oasis:names:tc:xacml:1.0:function:double-subtract | M |
-| urn:oasis:names:tc:xacml:1.0:function:integer-multiply | M |
-| urn:oasis:names:tc:xacml:1.0:function:double-multiply | M |
-| urn:oasis:names:tc:xacml:1.0:function:integer-divide | M |
-| urn:oasis:names:tc:xacml:1.0:function:double-divide | M |
-| urn:oasis:names:tc:xacml:1.0:function:integer-mod | M |
-| urn:oasis:names:tc:xacml:1.0:function:integer-abs | M |
-| urn:oasis:names:tc:xacml:1.0:function:double-abs | M |
-| urn:oasis:names:tc:xacml:1.0:function:round | M |
-| urn:oasis:names:tc:xacml:1.0:function:floor | M |
-| urn:oasis:names:tc:xacml:1.0:function:string-normalize-space | M |
-| urn:oasis:names:tc:xacml:1.0:function:string-normalize-to-lower-case | M |
-| urn:oasis:names:tc:xacml:1.0:function:double-to-integer | M |
-| urn:oasis:names:tc:xacml:1.0:function:integer-to-double | M |
-| urn:oasis:names:tc:xacml:1.0:function:or | M |
-| urn:oasis:names:tc:xacml:1.0:function:and | M |
-| urn:oasis:names:tc:xacml:1.0:function:n-of | M |
-| urn:oasis:names:tc:xacml:1.0:function:not | M |
-| urn:oasis:names:tc:xacml:1.0:function:integer-greater-than | M |
-| urn:oasis:names:tc:xacml:1.0:function:integer-greater-than-or-equal | M |
-| urn:oasis:names:tc:xacml:1.0:function:integer-less-than | M |
-| urn:oasis:names:tc:xacml:1.0:function:integer-less-than-or-equal | M |
-| urn:oasis:names:tc:xacml:1.0:function:double-greater-than | M |
-| urn:oasis:names:tc:xacml:1.0:function:double-greater-than-or-equal | M |
-| urn:oasis:names:tc:xacml:1.0:function:double-less-than | M |
-| urn:oasis:names:tc:xacml:1.0:function:double-less-than-or-equal | M |
-| urn:oasis:names:tc:xacml:3.0:function:dateTime-add-dayTimeDuration | M |
-| urn:oasis:names:tc:xacml:3.0:function:dateTime-add-yearMonthDuration | M |
-| urn:oasis:names:tc:xacml:3.0:function:dateTime-subtract-dayTimeDuration | M |
-| urn:oasis:names:tc:xacml:3.0:function:dateTime-subtract-yearMonthDuration | M |
-| urn:oasis:names:tc:xacml:3.0:function:date-add-yearMonthDuration | M |
-| urn:oasis:names:tc:xacml:3.0:function:date-subtract-yearMonthDuration | M |
-| urn:oasis:names:tc:xacml:1.0:function:string-greater-than | M |
-| urn:oasis:names:tc:xacml:1.0:function:string-greater-than-or-equal | M |
-| urn:oasis:names:tc:xacml:1.0:function:string-less-than | M |
-| urn:oasis:names:tc:xacml:1.0:function:string-less-than-or-equal | M |
-| urn:oasis:names:tc:xacml:1.0:function:time-greater-than | M |
-| urn:oasis:names:tc:xacml:1.0:function:time-greater-than-or-equal | M |
-| urn:oasis:names:tc:xacml:1.0:function:time-less-than | M |
-| urn:oasis:names:tc:xacml:1.0:function:time-less-than-or-equal | M |
-| urn:oasis:names:tc:xacml:2.0:function:time-in-range | M |
-| urn:oasis:names:tc:xacml:1.0:function:dateTime-greater-than | M |
-| urn:oasis:names:tc:xacml:1.0:function:dateTime-greater-than-or-equal | M |
-| urn:oasis:names:tc:xacml:1.0:function:dateTime-less-than | M |
-| urn:oasis:names:tc:xacml:1.0:function:dateTime-less-than-or-equal | M |
-| urn:oasis:names:tc:xacml:1.0:function:date-greater-than | M |
-| urn:oasis:names:tc:xacml:1.0:function:date-greater-than-or-equal | M |
-| urn:oasis:names:tc:xacml:1.0:function:date-less-than | M |
-| urn:oasis:names:tc:xacml:1.0:function:date-less-than-or-equal | M |
-| urn:oasis:names:tc:xacml:1.0:function:string-one-and-only | M |
-| urn:oasis:names:tc:xacml:1.0:function:string-bag-size | M |
-| urn:oasis:names:tc:xacml:1.0:function:string-is-in | M |
-| urn:oasis:names:tc:xacml:1.0:function:string-bag | M |
-| urn:oasis:names:tc:xacml:1.0:function:boolean-one-and-only | M |
-| urn:oasis:names:tc:xacml:1.0:function:boolean-bag-size | M |
-| urn:oasis:names:tc:xacml:1.0:function:boolean-is-in | M |
-| urn:oasis:names:tc:xacml:1.0:function:boolean-bag | M |
-| urn:oasis:names:tc:xacml:1.0:function:integer-one-and-only | M |
-| urn:oasis:names:tc:xacml:1.0:function:integer-bag-size | M |
-| urn:oasis:names:tc:xacml:1.0:function:integer-is-in | M |
-| urn:oasis:names:tc:xacml:1.0:function:integer-bag | M |
-| urn:oasis:names:tc:xacml:1.0:function:double-one-and-only | M |
-| urn:oasis:names:tc:xacml:1.0:function:double-bag-size | M |
-| urn:oasis:names:tc:xacml:1.0:function:double-is-in | M |
-| urn:oasis:names:tc:xacml:1.0:function:double-bag | M |
-| urn:oasis:names:tc:xacml:1.0:function:time-one-and-only | M |
-| urn:oasis:names:tc:xacml:1.0:function:time-bag-size | M |
-| urn:oasis:names:tc:xacml:1.0:function:time-is-in | M |
-| urn:oasis:names:tc:xacml:1.0:function:time-bag | M |
-| urn:oasis:names:tc:xacml:1.0:function:date-one-and-only | M |
-| urn:oasis:names:tc:xacml:1.0:function:date-bag-size | M |
-| urn:oasis:names:tc:xacml:1.0:function:date-is-in | M |
-| urn:oasis:names:tc:xacml:1.0:function:date-bag | M |
-| urn:oasis:names:tc:xacml:1.0:function:dateTime-one-and-only | M |
-| urn:oasis:names:tc:xacml:1.0:function:dateTime-bag-size | M |
-| urn:oasis:names:tc:xacml:1.0:function:dateTime-is-in | M |
-| urn:oasis:names:tc:xacml:1.0:function:dateTime-bag | M |
-| urn:oasis:names:tc:xacml:1.0:function:anyURI-one-and-only | M |
-| urn:oasis:names:tc:xacml:1.0:function:anyURI-bag-size | M |
-| urn:oasis:names:tc:xacml:1.0:function:anyURI-is-in | M |
-| urn:oasis:names:tc:xacml:1.0:function:anyURI-bag | M |
-| urn:oasis:names:tc:xacml:1.0:function:hexBinary-one-and-only | M |
-| urn:oasis:names:tc:xacml:1.0:function:hexBinary-bag-size | M |
-| urn:oasis:names:tc:xacml:1.0:function:hexBinary-is-in | M |
-| urn:oasis:names:tc:xacml:1.0:function:hexBinary-bag | M |
-| urn:oasis:names:tc:xacml:1.0:function:base64Binary-one-and-only | M |
-| urn:oasis:names:tc:xacml:1.0:function:base64Binary-bag-size | M |
-| urn:oasis:names:tc:xacml:1.0:function:base64Binary-is-in | M |
-| urn:oasis:names:tc:xacml:1.0:function:base64Binary-bag | M |
-| urn:oasis:names:tc:xacml:3.0:function:dayTimeDuration-one-and-only | M |
-| urn:oasis:names:tc:xacml:3.0:function:dayTimeDuration-bag-size | M |
-| urn:oasis:names:tc:xacml:3.0:function:dayTimeDuration-is-in | M |
-| urn:oasis:names:tc:xacml:3.0:function:dayTimeDuration-bag | M |
-| urn:oasis:names:tc:xacml:3.0:function:yearMonthDuration-one-and-only | M |
-| urn:oasis:names:tc:xacml:3.0:function:yearMonthDuration-bag-size | M |
-| urn:oasis:names:tc:xacml:3.0:function:yearMonthDuration-is-in | M |
-| urn:oasis:names:tc:xacml:3.0:function:yearMonthDuration-bag | M |
-| urn:oasis:names:tc:xacml:1.0:function:x500Name-one-and-only | M |
-| urn:oasis:names:tc:xacml:1.0:function:x500Name-bag-size | M |
-| urn:oasis:names:tc:xacml:1.0:function:x500Name-is-in | M |
-| urn:oasis:names:tc:xacml:1.0:function:x500Name-bag | M |
-| urn:oasis:names:tc:xacml:1.0:function:rfc822Name-one-and-only | M |
-| urn:oasis:names:tc:xacml:1.0:function:rfc822Name-bag-size | M |
-| urn:oasis:names:tc:xacml:1.0:function:rfc822Name-is-in | M |
-| urn:oasis:names:tc:xacml:1.0:function:rfc822Name-bag | M |
-| urn:oasis:names:tc:xacml:2.0:function:ipAddress-one-and-only | M |
-| urn:oasis:names:tc:xacml:2.0:function:ipAddress-bag-size | M |
-| urn:oasis:names:tc:xacml:2.0:function:ipAddress-bag | M |
-| urn:oasis:names:tc:xacml:2.0:function:dnsName-one-and-only | M |
-| urn:oasis:names:tc:xacml:2.0:function:dnsName-bag-size | M |
-| urn:oasis:names:tc:xacml:2.0:function:dnsName-bag | M |
-| urn:oasis:names:tc:xacml:2.0:function:string-concatenate | M |
-| urn:oasis:names:tc:xacml:3.0:function:boolean-from-string | M |
-| urn:oasis:names:tc:xacml:3.0:function:string-from-boolean | M |
-| urn:oasis:names:tc:xacml:3.0:function:integer-from-string | M |
-| urn:oasis:names:tc:xacml:3.0:function:string-from-integer | M |
-| urn:oasis:names:tc:xacml:3.0:function:double-from-string | M |
-| urn:oasis:names:tc:xacml:3.0:function:string-from-double | M |
-| urn:oasis:names:tc:xacml:3.0:function:time-from-string | M |
-| urn:oasis:names:tc:xacml:3.0:function:string-from-time | M |
-| urn:oasis:names:tc:xacml:3.0:function:date-from-string | M |
-| urn:oasis:names:tc:xacml:3.0:function:string-from-date | M |
-| urn:oasis:names:tc:xacml:3.0:function:dateTime-from-string | M |
-| urn:oasis:names:tc:xacml:3.0:function:string-from-dateTime | M |
-| urn:oasis:names:tc:xacml:3.0:function:anyURI-from-string | M |
-| urn:oasis:names:tc:xacml:3.0:function:string-from-anyURI | M |
-| urn:oasis:names:tc:xacml:3.0:function:dayTimeDuration-from-string | M |
-| urn:oasis:names:tc:xacml:3.0:function:string-from-dayTimeDuration | M |
-| urn:oasis:names:tc:xacml:3.0:function:yearMonthDuration-from-string | M |
-| urn:oasis:names:tc:xacml:3.0:function:string-from-yearMonthDuration | M |
-| urn:oasis:names:tc:xacml:3.0:function:x500Name-from-string | M |
-| urn:oasis:names:tc:xacml:3.0:function:string-from-x500Name | M |
-| urn:oasis:names:tc:xacml:3.0:function:rfc822Name-from-string | M |
-| urn:oasis:names:tc:xacml:3.0:function:string-from-rfc822Name | M |
-| urn:oasis:names:tc:xacml:3.0:function:ipAddress-from-string | M |
-| urn:oasis:names:tc:xacml:3.0:function:string-from-ipAddress | M |
-| urn:oasis:names:tc:xacml:3.0:function:dnsName-from-string | M |
-| urn:oasis:names:tc:xacml:3.0:function:string-from-dnsName | M |
-| urn:oasis:names:tc:xacml:3.0:function:string-starts-with | M |
-| urn:oasis:names:tc:xacml:3.0:function:anyURI-starts-with | M |
-| urn:oasis:names:tc:xacml:3.0:function:string-ends-with | M |
-| urn:oasis:names:tc:xacml:3.0:function:anyURI-ends-with | M |
-| urn:oasis:names:tc:xacml:3.0:function:string-contains | M |
-| urn:oasis:names:tc:xacml:3.0:function:anyURI-contains | M |
-| urn:oasis:names:tc:xacml:3.0:function:string-substring | M |
-| urn:oasis:names:tc:xacml:3.0:function:anyURI-substring | M |
-| urn:oasis:names:tc:xacml:3.0:function:any-of | M |
-| urn:oasis:names:tc:xacml:3.0:function:all-of | M |
-| urn:oasis:names:tc:xacml:3.0:function:any-of-any | M |
-| urn:oasis:names:tc:xacml:1.0:function:all-of-any | M |
-| urn:oasis:names:tc:xacml:1.0:function:any-of-all | M |
-| urn:oasis:names:tc:xacml:1.0:function:all-of-all | M |
-| urn:oasis:names:tc:xacml:3.0:function:map | M |
-| urn:oasis:names:tc:xacml:1.0:function:x500Name-match | M |
-| urn:oasis:names:tc:xacml:1.0:function:rfc822Name-match | M |
-| urn:oasis:names:tc:xacml:1.0:function:string-regexp-match | M |
-| urn:oasis:names:tc:xacml:2.0:function:anyURI-regexp-match | M |
-| urn:oasis:names:tc:xacml:2.0:function:ipAddress-regexp-match | M |
-| urn:oasis:names:tc:xacml:2.0:function:dnsName-regexp-match | M |
-| urn:oasis:names:tc:xacml:2.0:function:rfc822Name-regexp-match | M |
-| urn:oasis:names:tc:xacml:2.0:function:x500Name-regexp-match | M |
-| urn:oasis:names:tc:xacml:3.0:function:xpath-node-count | O |
-| urn:oasis:names:tc:xacml:3.0:function:xpath-node-equal | O |
-| urn:oasis:names:tc:xacml:3.0:function:xpath-node-match | O |
-| urn:oasis:names:tc:xacml:1.0:function:string-intersection | M |
-| urn:oasis:names:tc:xacml:1.0:function:string-at-least-one-member-of | M |
-| urn:oasis:names:tc:xacml:1.0:function:string-union | M |
-| urn:oasis:names:tc:xacml:1.0:function:string-subset | M |
-| urn:oasis:names:tc:xacml:1.0:function:string-set-equals | M |
-| urn:oasis:names:tc:xacml:1.0:function:boolean-intersection | M |
-| urn:oasis:names:tc:xacml:1.0:function:boolean-at-least-one-member-of | M |
-| urn:oasis:names:tc:xacml:1.0:function:boolean-union | M |
-| urn:oasis:names:tc:xacml:1.0:function:boolean-subset | M |
-| urn:oasis:names:tc:xacml:1.0:function:boolean-set-equals | M |
-| urn:oasis:names:tc:xacml:1.0:function:integer-intersection | M |
-| urn:oasis:names:tc:xacml:1.0:function:integer-at-least-one-member-of | M |
-| urn:oasis:names:tc:xacml:1.0:function:integer-union | M |
-| urn:oasis:names:tc:xacml:1.0:function:integer-subset | M |
-| urn:oasis:names:tc:xacml:1.0:function:integer-set-equals | M |
-| urn:oasis:names:tc:xacml:1.0:function:double-intersection | M |
-| urn:oasis:names:tc:xacml:1.0:function:double-at-least-one-member-of | M |
-| urn:oasis:names:tc:xacml:1.0:function:double-union | M |
-| urn:oasis:names:tc:xacml:1.0:function:double-subset | M |
-| urn:oasis:names:tc:xacml:1.0:function:double-set-equals | M |
-| urn:oasis:names:tc:xacml:1.0:function:time-intersection | M |
-| urn:oasis:names:tc:xacml:1.0:function:time-at-least-one-member-of | M |
-| urn:oasis:names:tc:xacml:1.0:function:time-union | M |
-| urn:oasis:names:tc:xacml:1.0:function:time-subset | M |
-| urn:oasis:names:tc:xacml:1.0:function:time-set-equals | M |
-| urn:oasis:names:tc:xacml:1.0:function:date-intersection | M |
-| urn:oasis:names:tc:xacml:1.0:function:date-at-least-one-member-of | M |
-| urn:oasis:names:tc:xacml:1.0:function:date-union | M |
-| urn:oasis:names:tc:xacml:1.0:function:date-subset | M |
-| urn:oasis:names:tc:xacml:1.0:function:date-set-equals | M |
-| urn:oasis:names:tc:xacml:1.0:function:dateTime-intersection | M |
-| urn:oasis:names:tc:xacml:1.0:function:dateTime-at-least-one-member-of | M |
-| urn:oasis:names:tc:xacml:1.0:function:dateTime-union | M |
-| urn:oasis:names:tc:xacml:1.0:function:dateTime-subset | M |
-| urn:oasis:names:tc:xacml:1.0:function:dateTime-set-equals | M |
-| urn:oasis:names:tc:xacml:1.0:function:anyURI-intersection | M |
-| urn:oasis:names:tc:xacml:1.0:function:anyURI-at-least-one-member-of | M |
-| urn:oasis:names:tc:xacml:1.0:function:anyURI-union | M |
-| urn:oasis:names:tc:xacml:1.0:function:anyURI-subset | M |
-| urn:oasis:names:tc:xacml:1.0:function:anyURI-set-equals | M |
-| urn:oasis:names:tc:xacml:1.0:function:hexBinary-intersection | M |
-| urn:oasis:names:tc:xacml:1.0:function:hexBinary-at-least-one-member-of | M |
-| urn:oasis:names:tc:xacml:1.0:function:hexBinary-union | M |
-| urn:oasis:names:tc:xacml:1.0:function:hexBinary-subset | M |
-| urn:oasis:names:tc:xacml:1.0:function:hexBinary-set-equals | M |
-| urn:oasis:names:tc:xacml:1.0:function:base64Binary-intersection | M |
-| urn:oasis:names:tc:xacml:1.0:function:base64Binary-at-least-one-member-of | M |
-| urn:oasis:names:tc:xacml:1.0:function:base64Binary-union | M |
-| urn:oasis:names:tc:xacml:1.0:function:base64Binary-subset | M |
-| urn:oasis:names:tc:xacml:1.0:function:base64Binary-set-equals | M |
-| urn:oasis:names:tc:xacml:3.0:function:dayTimeDuration-intersection | M |
-| urn:oasis:names:tc:xacml:3.0:function:dayTimeDuration-at-least-one-member-of | M |
-| urn:oasis:names:tc:xacml:3.0:function:dayTimeDuration-union | M |
-| urn:oasis:names:tc:xacml:3.0:function:dayTimeDuration-subset | M |
-| urn:oasis:names:tc:xacml:3.0:function:dayTimeDuration-set-equals | M |
-| urn:oasis:names:tc:xacml:3.0:function:yearMonthDuration-intersection | M |
-| urn:oasis:names:tc:xacml:3.0:function:yearMonthDuration-at-least-one-member-of | M |
-| urn:oasis:names:tc:xacml:3.0:function:yearMonthDuration-union | M |
-| urn:oasis:names:tc:xacml:3.0:function:yearMonthDuration-subset | M |
-| urn:oasis:names:tc:xacml:3.0:function:yearMonthDuration-set-equals | M |
-| urn:oasis:names:tc:xacml:1.0:function:x500Name-intersection | M |
-| urn:oasis:names:tc:xacml:1.0:function:x500Name-at-least-one-member-of | M |
-| urn:oasis:names:tc:xacml:1.0:function:x500Name-union | M |
-| urn:oasis:names:tc:xacml:1.0:function:x500Name-subset | M |
-| urn:oasis:names:tc:xacml:1.0:function:x500Name-set-equals | M |
-| urn:oasis:names:tc:xacml:1.0:function:rfc822Name-intersection | M |
-| urn:oasis:names:tc:xacml:1.0:function:rfc822Name-at-least-one-member-of | M |
-| urn:oasis:names:tc:xacml:1.0:function:rfc822Name-union | M |
-| urn:oasis:names:tc:xacml:1.0:function:rfc822Name-subset | M |
-| urn:oasis:names:tc:xacml:1.0:function:rfc822Name-set-equals | M |
-| urn:oasis:names:tc:xacml:3.0:function:access-permitted | O |
-
-### 12.2.9 Identifiers Planned for Future Deprecation
-
-These identifiers are associated with versions of XACML preceding ACAL and newer alternatives exist in ACAL 1.0. They are planned to be deprecated at some unspecified point in the future. It is RECOMMENDED that these identifiers not be used in new policies and requests.
-
-The implementation MUST properly process those features associated with the identifiers marked with an `M`.
-
-| Function | M/O |
-| :--- | :--- |
-| urn:oasis:names:tc:xacml:1.0:function:xpath-node-count | O |
-| urn:oasis:names:tc:xacml:1.0:function:xpath-node-equal | O |
-| urn:oasis:names:tc:xacml:1.0:function:xpath-node-match | O |
-| urn:oasis:names:tc:xacml:2.0:function:uri-string-concatenate | M |
-| https://www.w3.org/TR/2002/WD-xquery-operators-20020816#dayTimeDuration | M |
-| https://www.w3.org/TR/2002/WD-xquery-operators-20020816#yearMonthDuration | M |
-| urn:oasis:names:tc:xacml:1.0:function:dayTimeDuration-equal | M |
-| urn:oasis:names:tc:xacml:1.0:function:yearMonthDuration-equal | M |
-| urn:oasis:names:tc:xacml:1.0:function:dateTime-add-dayTimeDuration | M |
-| urn:oasis:names:tc:xacml:1.0:function:dateTime-add-yearMonthDuration | M |
-| urn:oasis:names:tc:xacml:1.0:function:dateTime-subtract-dayTimeDuration | M |
-| urn:oasis:names:tc:xacml:1.0:function:dateTime-subtract-yearMonthDuration | M |
-| urn:oasis:names:tc:xacml:1.0:function:date-add-yearMonthDuration | M |
-| urn:oasis:names:tc:xacml:1.0:function:date-subtract-yearMonthDuration | M |
-| urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:deny-overrides | M |
-| urn:oasis:names:tc:xacml:1.0:policy-combining-algorithm:deny-overrides | M |
-| urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:permit-overrides | M |
-| urn:oasis:names:tc:xacml:1.0:policy-combining-algorithm:permit-overrides | M |
-| urn:oasis:names:tc:xacml:1.1:rule-combining-algorithm:ordered-deny-overrides | M |
-| urn:oasis:names:tc:xacml:1.1:policy-combining-algorithm:ordered-deny-overrides | M |
-| urn:oasis:names:tc:xacml:1.1:rule-combining-algorithm:ordered-permit-overrides | M |
-| urn:oasis:names:tc:xacml:1.1:policy-combining-algorithm:ordered-permit-overrides | M |
-| urn:oasis:names:tc:xacml:1.0:function:dayTimeDuration-intersection | M |
-| urn:oasis:names:tc:xacml:1.0:function:dayTimeDuration-at-least-one-member-of | M |
-| urn:oasis:names:tc:xacml:1.0:function:dayTimeDuration-union | M |
-| urn:oasis:names:tc:xacml:1.0:function:dayTimeDuration-subset | M |
-| urn:oasis:names:tc:xacml:1.0:function:dayTimeDuration-set-equals | M |
-| urn:oasis:names:tc:xacml:1.0:function:yearMonthDuration-intersection | M |
-| urn:oasis:names:tc:xacml:1.0:function:yearMonthDuration-at-least-one-member-of | M |
-| urn:oasis:names:tc:xacml:1.0:function:yearMonthDuration-union | M |
-| urn:oasis:names:tc:xacml:1.0:function:yearMonthDuration-subset | M |
-| urn:oasis:names:tc:xacml:1.0:function:yearMonthDuration-set-equals | M |
-| urn:oasis:names:tc:xacml:1.0:function:dayTimeDuration-one-and-only | M |
-| urn:oasis:names:tc:xacml:1.0:function:dayTimeDuration-bag-size | M |
-| urn:oasis:names:tc:xacml:1.0:function:dayTimeDuration-is-in | M |
-| urn:oasis:names:tc:xacml:1.0:function:dayTimeDuration-bag | M |
-| urn:oasis:names:tc:xacml:1.0:function:yearMonthDuration-one-and-only | M |
-| urn:oasis:names:tc:xacml:1.0:function:yearMonthDuration-bag-size | M |
-| urn:oasis:names:tc:xacml:1.0:function:yearMonthDuration-is-in | M |
-| urn:oasis:names:tc:xacml:1.0:function:yearMonthDuration-bag | M |
-| urn:oasis:names:tc:xacml:1.0:function:any-of | M |
-| urn:oasis:names:tc:xacml:1.0:function:all-of | M |
-| urn:oasis:names:tc:xacml:1.0:function:any-of-any | M |
-| urn:oasis:names:tc:xacml:1.0:function:map | M |
+| Function | M/O | Deprecated Identifier |
+| :--- | :--- | :--- |
+| urn:oasis:names:tc:acal:1.0:function:string-equal | M | urn:oasis:names:tc:xacml:1.0:function:string-equal |
+| urn:oasis:names:tc:acal:1.0:function:boolean-equal | M | urn:oasis:names:tc:xacml:1.0:function:boolean-equal |
+| urn:oasis:names:tc:acal:1.0:function:integer-equal | M | urn:oasis:names:tc:xacml:1.0:function:integer-equal |
+| urn:oasis:names:tc:acal:1.0:function:double-equal | M | urn:oasis:names:tc:xacml:1.0:function:double-equal |
+| urn:oasis:names:tc:acal:1.0:function:date-equal | M | urn:oasis:names:tc:xacml:1.0:function:date-equal |
+| urn:oasis:names:tc:acal:1.0:function:time-equal | M | urn:oasis:names:tc:xacml:1.0:function:time-equal |
+| urn:oasis:names:tc:acal:1.0:function:dateTime-equal | M | urn:oasis:names:tc:xacml:1.0:function:dateTime-equal |
+| urn:oasis:names:tc:acal:1.0:function:dayTimeDuration-equal | M | urn:oasis:names:tc:xacml:3.0:function:dayTimeDuration-equal |
+| urn:oasis:names:tc:acal:1.0:function:yearMonthDuration-equal | M | urn:oasis:names:tc:xacml:3.0:function:yearMonthDuration-equal |
+| urn:oasis:names:tc:acal:1.0:function:string-equal-ignore-case | M | urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case |
+| urn:oasis:names:tc:acal:1.0:function:anyURI-equal | M | urn:oasis:names:tc:xacml:1.0:function:anyURI-equal |
+| urn:oasis:names:tc:acal:1.0:function:x500Name-equal | M | urn:oasis:names:tc:xacml:1.0:function:x500Name-equal |
+| urn:oasis:names:tc:acal:1.0:function:rfc822Name-equal | M | urn:oasis:names:tc:xacml:1.0:function:rfc822Name-equal |
+| urn:oasis:names:tc:acal:1.0:function:hexBinary-equal | M | urn:oasis:names:tc:xacml:1.0:function:hexBinary-equal |
+| urn:oasis:names:tc:acal:1.0:function:base64Binary-equal | M | urn:oasis:names:tc:xacml:1.0:function:base64Binary-equal |
+| urn:oasis:names:tc:acal:1.0:function:integer-add | M | urn:oasis:names:tc:xacml:1.0:function:integer-add |
+| urn:oasis:names:tc:acal:1.0:function:double-add | M | urn:oasis:names:tc:xacml:1.0:function:double-add |
+| urn:oasis:names:tc:acal:1.0:function:integer-subtract | M | urn:oasis:names:tc:xacml:1.0:function:integer-subtract |
+| urn:oasis:names:tc:acal:1.0:function:double-subtract | M | urn:oasis:names:tc:xacml:1.0:function:double-subtract |
+| urn:oasis:names:tc:acal:1.0:function:integer-multiply | M | urn:oasis:names:tc:xacml:1.0:function:integer-multiply |
+| urn:oasis:names:tc:acal:1.0:function:double-multiply | M | urn:oasis:names:tc:xacml:1.0:function:double-multiply |
+| urn:oasis:names:tc:acal:1.0:function:integer-divide | M | urn:oasis:names:tc:xacml:1.0:function:integer-divide |
+| urn:oasis:names:tc:acal:1.0:function:double-divide | M | urn:oasis:names:tc:xacml:1.0:function:double-divide |
+| urn:oasis:names:tc:acal:1.0:function:integer-mod | M | urn:oasis:names:tc:xacml:1.0:function:integer-mod |
+| urn:oasis:names:tc:acal:1.0:function:integer-abs | M | urn:oasis:names:tc:xacml:1.0:function:integer-abs |
+| urn:oasis:names:tc:acal:1.0:function:double-abs | M | urn:oasis:names:tc:xacml:1.0:function:double-abs |
+| urn:oasis:names:tc:acal:1.0:function:round | M | urn:oasis:names:tc:xacml:1.0:function:round |
+| urn:oasis:names:tc:acal:1.0:function:floor | M | urn:oasis:names:tc:xacml:1.0:function:floor |
+| urn:oasis:names:tc:acal:1.0:function:string-normalize-space | M | urn:oasis:names:tc:xacml:1.0:function:string-normalize-space |
+| urn:oasis:names:tc:acal:1.0:function:string-normalize-to-lower-case | M | urn:oasis:names:tc:xacml:1.0:function:string-normalize-to-lower-case |
+| urn:oasis:names:tc:acal:1.0:function:double-to-integer | M | urn:oasis:names:tc:xacml:1.0:function:double-to-integer |
+| urn:oasis:names:tc:acal:1.0:function:integer-to-double | M | urn:oasis:names:tc:xacml:1.0:function:integer-to-double |
+| urn:oasis:names:tc:acal:1.0:function:or | M | urn:oasis:names:tc:xacml:1.0:function:or |
+| urn:oasis:names:tc:acal:1.0:function:and | M | urn:oasis:names:tc:xacml:1.0:function:and |
+| urn:oasis:names:tc:acal:1.0:function:n-of | M | urn:oasis:names:tc:xacml:1.0:function:n-of |
+| urn:oasis:names:tc:acal:1.0:function:not | M | urn:oasis:names:tc:xacml:1.0:function:not |
+| urn:oasis:names:tc:acal:1.0:function:integer-greater-than | M | urn:oasis:names:tc:xacml:1.0:function:integer-greater-than |
+| urn:oasis:names:tc:acal:1.0:function:integer-greater-than-or-equal | M | urn:oasis:names:tc:xacml:1.0:function:integer-greater-than-or-equal |
+| urn:oasis:names:tc:acal:1.0:function:integer-less-than | M | urn:oasis:names:tc:xacml:1.0:function:integer-less-than |
+| urn:oasis:names:tc:acal:1.0:function:integer-less-than-or-equal | M | urn:oasis:names:tc:xacml:1.0:function:integer-less-than-or-equal |
+| urn:oasis:names:tc:acal:1.0:function:double-greater-than | M | urn:oasis:names:tc:xacml:1.0:function:double-greater-than |
+| urn:oasis:names:tc:acal:1.0:function:double-greater-than-or-equal | M | urn:oasis:names:tc:xacml:1.0:function:double-greater-than-or-equal |
+| urn:oasis:names:tc:acal:1.0:function:double-less-than | M | urn:oasis:names:tc:xacml:1.0:function:double-less-than |
+| urn:oasis:names:tc:acal:1.0:function:double-less-than-or-equal | M | urn:oasis:names:tc:xacml:1.0:function:double-less-than-or-equal |
+| urn:oasis:names:tc:acal:1.0:function:dateTime-add-dayTimeDuration | M | urn:oasis:names:tc:xacml:3.0:function:dateTime-add-dayTimeDuration |
+| urn:oasis:names:tc:acal:1.0:function:dateTime-add-yearMonthDuration | M | urn:oasis:names:tc:xacml:3.0:function:dateTime-add-yearMonthDuration |
+| urn:oasis:names:tc:acal:1.0:function:dateTime-subtract-dayTimeDuration | M | urn:oasis:names:tc:xacml:3.0:function:dateTime-subtract-dayTimeDuration |
+| urn:oasis:names:tc:acal:1.0:function:dateTime-subtract-yearMonthDuration | M | urn:oasis:names:tc:xacml:3.0:function:dateTime-subtract-yearMonthDuration |
+| urn:oasis:names:tc:acal:1.0:function:date-add-yearMonthDuration | M | urn:oasis:names:tc:xacml:3.0:function:date-add-yearMonthDuration |
+| urn:oasis:names:tc:acal:1.0:function:date-subtract-yearMonthDuration | M | urn:oasis:names:tc:xacml:3.0:function:date-subtract-yearMonthDuration |
+| urn:oasis:names:tc:acal:1.0:function:string-greater-than | M | urn:oasis:names:tc:xacml:1.0:function:string-greater-than |
+| urn:oasis:names:tc:acal:1.0:function:string-greater-than-or-equal | M | urn:oasis:names:tc:xacml:1.0:function:string-greater-than-or-equal |
+| urn:oasis:names:tc:acal:1.0:function:string-less-than | M | urn:oasis:names:tc:xacml:1.0:function:string-less-than |
+| urn:oasis:names:tc:acal:1.0:function:string-less-than-or-equal | M | urn:oasis:names:tc:xacml:1.0:function:string-less-than-or-equal |
+| urn:oasis:names:tc:acal:1.0:function:time-greater-than | M | urn:oasis:names:tc:xacml:1.0:function:time-greater-than |
+| urn:oasis:names:tc:acal:1.0:function:time-greater-than-or-equal | M | urn:oasis:names:tc:xacml:1.0:function:time-greater-than-or-equal |
+| urn:oasis:names:tc:acal:1.0:function:time-less-than | M | urn:oasis:names:tc:xacml:1.0:function:time-less-than |
+| urn:oasis:names:tc:acal:1.0:function:time-less-than-or-equal | M | urn:oasis:names:tc:xacml:1.0:function:time-less-than-or-equal |
+| urn:oasis:names:tc:acal:1.0:function:time-in-range | M | urn:oasis:names:tc:xacml:2.0:function:time-in-range |
+| urn:oasis:names:tc:acal:1.0:function:dateTime-greater-than | M | urn:oasis:names:tc:xacml:1.0:function:dateTime-greater-than |
+| urn:oasis:names:tc:acal:1.0:function:dateTime-greater-than-or-equal | M | urn:oasis:names:tc:xacml:1.0:function:dateTime-greater-than-or-equal |
+| urn:oasis:names:tc:acal:1.0:function:dateTime-less-than | M | urn:oasis:names:tc:xacml:1.0:function:dateTime-less-than |
+| urn:oasis:names:tc:acal:1.0:function:dateTime-less-than-or-equal | M | urn:oasis:names:tc:xacml:1.0:function:dateTime-less-than-or-equal |
+| urn:oasis:names:tc:acal:1.0:function:date-greater-than | M | urn:oasis:names:tc:xacml:1.0:function:date-greater-than |
+| urn:oasis:names:tc:acal:1.0:function:date-greater-than-or-equal | M | urn:oasis:names:tc:xacml:1.0:function:date-greater-than-or-equal |
+| urn:oasis:names:tc:acal:1.0:function:date-less-than | M | urn:oasis:names:tc:xacml:1.0:function:date-less-than |
+| urn:oasis:names:tc:acal:1.0:function:date-less-than-or-equal | M | urn:oasis:names:tc:xacml:1.0:function:date-less-than-or-equal |
+| urn:oasis:names:tc:acal:1.0:function:string-one-and-only | M | urn:oasis:names:tc:xacml:1.0:function:string-one-and-only |
+| urn:oasis:names:tc:acal:1.0:function:string-bag-size | M | urn:oasis:names:tc:xacml:1.0:function:string-bag-size |
+| urn:oasis:names:tc:acal:1.0:function:string-is-in | M | urn:oasis:names:tc:xacml:1.0:function:string-is-in |
+| urn:oasis:names:tc:acal:1.0:function:string-bag | M | urn:oasis:names:tc:xacml:1.0:function:string-bag |
+| urn:oasis:names:tc:acal:1.0:function:boolean-one-and-only | M | urn:oasis:names:tc:xacml:1.0:function:boolean-one-and-only |
+| urn:oasis:names:tc:acal:1.0:function:boolean-bag-size | M | urn:oasis:names:tc:xacml:1.0:function:boolean-bag-size |
+| urn:oasis:names:tc:acal:1.0:function:boolean-is-in | M | urn:oasis:names:tc:xacml:1.0:function:boolean-is-in |
+| urn:oasis:names:tc:acal:1.0:function:boolean-bag | M | urn:oasis:names:tc:xacml:1.0:function:boolean-bag |
+| urn:oasis:names:tc:acal:1.0:function:integer-one-and-only | M | urn:oasis:names:tc:xacml:1.0:function:integer-one-and-only |
+| urn:oasis:names:tc:acal:1.0:function:integer-bag-size | M | urn:oasis:names:tc:xacml:1.0:function:integer-bag-size |
+| urn:oasis:names:tc:acal:1.0:function:integer-is-in | M | urn:oasis:names:tc:xacml:1.0:function:integer-is-in |
+| urn:oasis:names:tc:acal:1.0:function:integer-bag | M | urn:oasis:names:tc:xacml:1.0:function:integer-bag |
+| urn:oasis:names:tc:acal:1.0:function:double-one-and-only | M | urn:oasis:names:tc:xacml:1.0:function:double-one-and-only |
+| urn:oasis:names:tc:acal:1.0:function:double-bag-size | M | urn:oasis:names:tc:xacml:1.0:function:double-bag-size |
+| urn:oasis:names:tc:acal:1.0:function:double-is-in | M | urn:oasis:names:tc:xacml:1.0:function:double-is-in |
+| urn:oasis:names:tc:acal:1.0:function:double-bag | M | urn:oasis:names:tc:xacml:1.0:function:double-bag |
+| urn:oasis:names:tc:acal:1.0:function:time-one-and-only | M | urn:oasis:names:tc:xacml:1.0:function:time-one-and-only |
+| urn:oasis:names:tc:acal:1.0:function:time-bag-size | M | urn:oasis:names:tc:xacml:1.0:function:time-bag-size |
+| urn:oasis:names:tc:acal:1.0:function:time-is-in | M | urn:oasis:names:tc:xacml:1.0:function:time-is-in |
+| urn:oasis:names:tc:acal:1.0:function:time-bag | M | urn:oasis:names:tc:xacml:1.0:function:time-bag |
+| urn:oasis:names:tc:acal:1.0:function:date-one-and-only | M | urn:oasis:names:tc:xacml:1.0:function:date-one-and-only |
+| urn:oasis:names:tc:acal:1.0:function:date-bag-size | M | urn:oasis:names:tc:xacml:1.0:function:date-bag-size |
+| urn:oasis:names:tc:acal:1.0:function:date-is-in | M | urn:oasis:names:tc:xacml:1.0:function:date-is-in |
+| urn:oasis:names:tc:acal:1.0:function:date-bag | M | urn:oasis:names:tc:xacml:1.0:function:date-bag |
+| urn:oasis:names:tc:acal:1.0:function:dateTime-one-and-only | M | urn:oasis:names:tc:xacml:1.0:function:dateTime-one-and-only |
+| urn:oasis:names:tc:acal:1.0:function:dateTime-bag-size | M | urn:oasis:names:tc:xacml:1.0:function:dateTime-bag-size |
+| urn:oasis:names:tc:acal:1.0:function:dateTime-is-in | M | urn:oasis:names:tc:xacml:1.0:function:dateTime-is-in |
+| urn:oasis:names:tc:acal:1.0:function:dateTime-bag | M | urn:oasis:names:tc:xacml:1.0:function:dateTime-bag |
+| urn:oasis:names:tc:acal:1.0:function:anyURI-one-and-only | M | urn:oasis:names:tc:xacml:1.0:function:anyURI-one-and-only |
+| urn:oasis:names:tc:acal:1.0:function:anyURI-bag-size | M | urn:oasis:names:tc:xacml:1.0:function:anyURI-bag-size |
+| urn:oasis:names:tc:acal:1.0:function:anyURI-is-in | M | urn:oasis:names:tc:xacml:1.0:function:anyURI-is-in |
+| urn:oasis:names:tc:acal:1.0:function:anyURI-bag | M | urn:oasis:names:tc:xacml:1.0:function:anyURI-bag |
+| urn:oasis:names:tc:acal:1.0:function:hexBinary-one-and-only | M | urn:oasis:names:tc:xacml:1.0:function:hexBinary-one-and-only |
+| urn:oasis:names:tc:acal:1.0:function:hexBinary-bag-size | M | urn:oasis:names:tc:xacml:1.0:function:hexBinary-bag-size |
+| urn:oasis:names:tc:acal:1.0:function:hexBinary-is-in | M | urn:oasis:names:tc:xacml:1.0:function:hexBinary-is-in |
+| urn:oasis:names:tc:acal:1.0:function:hexBinary-bag | M | urn:oasis:names:tc:xacml:1.0:function:hexBinary-bag |
+| urn:oasis:names:tc:acal:1.0:function:base64Binary-one-and-only | M | urn:oasis:names:tc:xacml:1.0:function:base64Binary-one-and-only |
+| urn:oasis:names:tc:acal:1.0:function:base64Binary-bag-size | M | urn:oasis:names:tc:xacml:1.0:function:base64Binary-bag-size |
+| urn:oasis:names:tc:xacml:1.0:function:base64Binary-is-in | M | urn:oasis:names:tc:xacml:1.0:function:base64Binary-is-in |
+| urn:oasis:names:tc:acal:1.0:function:base64Binary-bag | M | urn:oasis:names:tc:xacml:1.0:function:base64Binary-bag |
+| urn:oasis:names:tc:acal:1.0:function:dayTimeDuration-one-and-only | M | urn:oasis:names:tc:xacml:3.0:function:dayTimeDuration-one-and-only |
+| urn:oasis:names:tc:acal:1.0:function:dayTimeDuration-bag-size | M | urn:oasis:names:tc:xacml:3.0:function:dayTimeDuration-bag-size |
+| urn:oasis:names:tc:acal:1.0:function:dayTimeDuration-is-in | M | urn:oasis:names:tc:xacml:3.0:function:dayTimeDuration-is-in |
+| urn:oasis:names:tc:acal:1.0:function:dayTimeDuration-bag | M | urn:oasis:names:tc:xacml:3.0:function:dayTimeDuration-bag |
+| urn:oasis:names:tc:acal:1.0:function:yearMonthDuration-one-and-only | M | urn:oasis:names:tc:xacml:3.0:function:yearMonthDuration-one-and-only |
+| urn:oasis:names:tc:acal:1.0:function:yearMonthDuration-bag-size | M | urn:oasis:names:tc:xacml:3.0:function:yearMonthDuration-bag-size |
+| urn:oasis:names:tc:acal:1.0:function:yearMonthDuration-is-in | M | urn:oasis:names:tc:xacml:3.0:function:yearMonthDuration-is-in |
+| urn:oasis:names:tc:acal:1.0:function:yearMonthDuration-bag | M | urn:oasis:names:tc:xacml:3.0:function:yearMonthDuration-bag |
+| urn:oasis:names:tc:acal:1.0:function:x500Name-one-and-only | M | urn:oasis:names:tc:xacml:1.0:function:x500Name-one-and-only |
+| urn:oasis:names:tc:acal:1.0:function:x500Name-bag-size | M | urn:oasis:names:tc:xacml:1.0:function:x500Name-bag-size |
+| urn:oasis:names:tc:acal:1.0:function:x500Name-is-in | M | urn:oasis:names:tc:xacml:1.0:function:x500Name-is-in |
+| urn:oasis:names:tc:acal:1.0:function:x500Name-bag | M | urn:oasis:names:tc:xacml:1.0:function:x500Name-bag |
+| urn:oasis:names:tc:acal:1.0:function:rfc822Name-one-and-only | M | urn:oasis:names:tc:xacml:1.0:function:rfc822Name-one-and-only |
+| urn:oasis:names:tc:acal:1.0:function:rfc822Name-bag-size | M | urn:oasis:names:tc:xacml:1.0:function:rfc822Name-bag-size |
+| urn:oasis:names:tc:acal:1.0:function:rfc822Name-is-in | M | urn:oasis:names:tc:xacml:1.0:function:rfc822Name-is-in |
+| urn:oasis:names:tc:acal:1.0:function:rfc822Name-bag | M | urn:oasis:names:tc:xacml:1.0:function:rfc822Name-bag |
+| urn:oasis:names:tc:acal:1.0:function:ipAddress-one-and-only | M | urn:oasis:names:tc:xacml:2.0:function:ipAddress-one-and-only |
+| urn:oasis:names:tc:acal:1.0:function:ipAddress-bag-size | M | urn:oasis:names:tc:xacml:2.0:function:ipAddress-bag-size |
+| urn:oasis:names:tc:acal:1.0:function:ipAddress-bag | M | urn:oasis:names:tc:xacml:2.0:function:ipAddress-bag |
+| urn:oasis:names:tc:acal:1.0:function:dnsName-one-and-only | M | urn:oasis:names:tc:xacml:2.0:function:dnsName-one-and-only |
+| urn:oasis:names:tc:acal:1.0:function:dnsName-bag-size | M | urn:oasis:names:tc:xacml:2.0:function:dnsName-bag-size |
+| urn:oasis:names:tc:acal:1.0:function:dnsName-bag | M | urn:oasis:names:tc:xacml:2.0:function:dnsName-bag |
+| urn:oasis:names:tc:acal:1.0:function:entity-one-and-only | M | urn:oasis:names:tc:xacml:3.0:function:entity-one-and-only |
+| urn:oasis:names:tc:acal:1.0:function:entity-bag-size | M | urn:oasis:names:tc:xacml:3.0:function:entity-bag-size |
+| urn:oasis:names:tc:acal:1.0:function:entity-bag | M | urn:oasis:names:tc:xacml:3.0:function:entity-bag |
+| urn:oasis:names:tc:acal:1.0:function:string-concatenate | M | urn:oasis:names:tc:xacml:2.0:function:string-concatenate |
+| urn:oasis:names:tc:acal:1.0:function:boolean-from-string | M | urn:oasis:names:tc:xacml:3.0:function:boolean-from-string |
+| urn:oasis:names:tc:acal:1.0:function:string-from-boolean | M | urn:oasis:names:tc:xacml:3.0:function:string-from-boolean |
+| urn:oasis:names:tc:acal:1.0:function:integer-from-string | M | urn:oasis:names:tc:xacml:3.0:function:integer-from-string |
+| urn:oasis:names:tc:acal:1.0:function:string-from-integer | M | urn:oasis:names:tc:xacml:3.0:function:string-from-integer |
+| urn:oasis:names:tc:acal:1.0:function:double-from-string | M | urn:oasis:names:tc:xacml:3.0:function:double-from-string |
+| urn:oasis:names:tc:acal:1.0:function:string-from-double | M | urn:oasis:names:tc:xacml:3.0:function:string-from-double |
+| urn:oasis:names:tc:acal:1.0:function:time-from-string | M | urn:oasis:names:tc:xacml:3.0:function:time-from-string |
+| urn:oasis:names:tc:acal:1.0:function:string-from-time | M | urn:oasis:names:tc:xacml:3.0:function:string-from-time |
+| urn:oasis:names:tc:acal:1.0:function:date-from-string | M | urn:oasis:names:tc:xacml:3.0:function:date-from-string |
+| urn:oasis:names:tc:acal:1.0:function:string-from-date | M | urn:oasis:names:tc:xacml:3.0:function:string-from-date |
+| urn:oasis:names:tc:acal:1.0:function:dateTime-from-string | M | urn:oasis:names:tc:xacml:3.0:function:dateTime-from-string |
+| urn:oasis:names:tc:acal:1.0:function:string-from-dateTime | M | urn:oasis:names:tc:xacml:3.0:function:string-from-dateTime |
+| urn:oasis:names:tc:acal:1.0:function:anyURI-from-string | M | urn:oasis:names:tc:xacml:3.0:function:anyURI-from-string |
+| urn:oasis:names:tc:acal:1.0:function:string-from-anyURI | M | urn:oasis:names:tc:xacml:3.0:function:string-from-anyURI |
+| urn:oasis:names:tc:acal:1.0:function:dayTimeDuration-from-string | M | urn:oasis:names:tc:xacml:3.0:function:dayTimeDuration-from-string |
+| urn:oasis:names:tc:acal:1.0:function:string-from-dayTimeDuration | M | urn:oasis:names:tc:xacml:3.0:function:string-from-dayTimeDuration |
+| urn:oasis:names:tc:acal:1.0:function:yearMonthDuration-from-string | M | urn:oasis:names:tc:xacml:3.0:function:yearMonthDuration-from-string |
+| urn:oasis:names:tc:acal:1.0:function:string-from-yearMonthDuration | M | urn:oasis:names:tc:xacml:3.0:function:string-from-yearMonthDuration |
+| urn:oasis:names:tc:acal:1.0:function:x500Name-from-string | M | urn:oasis:names:tc:xacml:3.0:function:x500Name-from-string |
+| urn:oasis:names:tc:acal:1.0:function:string-from-x500Name | M | urn:oasis:names:tc:xacml:3.0:function:string-from-x500Name |
+| urn:oasis:names:tc:acal:1.0:function:rfc822Name-from-string | M | urn:oasis:names:tc:xacml:3.0:function:rfc822Name-from-string |
+| urn:oasis:names:tc:acal:1.0:function:string-from-rfc822Name | M | urn:oasis:names:tc:xacml:3.0:function:string-from-rfc822Name |
+| urn:oasis:names:tc:acal:1.0:function:ipAddress-from-string | M | urn:oasis:names:tc:xacml:3.0:function:ipAddress-from-string |
+| urn:oasis:names:tc:acal:1.0:function:string-from-ipAddress | M | urn:oasis:names:tc:xacml:3.0:function:string-from-ipAddress |
+| urn:oasis:names:tc:acal:1.0:function:dnsName-from-string | M | urn:oasis:names:tc:xacml:3.0:function:dnsName-from-string |
+| urn:oasis:names:tc:acal:1.0:function:string-from-dnsName | M | urn:oasis:names:tc:xacml:3.0:function:string-from-dnsName |
+| urn:oasis:names:tc:acal:1.0:function:string-starts-with | M | urn:oasis:names:tc:xacml:3.0:function:string-starts-with |
+| urn:oasis:names:tc:acal:1.0:function:anyURI-starts-with | M | urn:oasis:names:tc:xacml:3.0:function:anyURI-starts-with |
+| urn:oasis:names:tc:acal:1.0:function:string-ends-with | M | urn:oasis:names:tc:xacml:3.0:function:string-ends-with |
+| urn:oasis:names:tc:acal:1.0:function:anyURI-ends-with | M | urn:oasis:names:tc:xacml:3.0:function:anyURI-ends-with |
+| urn:oasis:names:tc:acal:1.0:function:string-contains | M | urn:oasis:names:tc:xacml:3.0:function:string-contains |
+| urn:oasis:names:tc:acal:1.0:function:anyURI-contains | M | urn:oasis:names:tc:xacml:3.0:function:anyURI-contains |
+| urn:oasis:names:tc:acal:1.0:function:string-substring | M | urn:oasis:names:tc:xacml:3.0:function:string-substring |
+| urn:oasis:names:tc:acal:1.0:function:anyURI-substring | M | urn:oasis:names:tc:xacml:3.0:function:anyURI-substring |
+| urn:oasis:names:tc:acal:1.0:function:any-of | M | urn:oasis:names:tc:xacml:3.0:function:any-of |
+| urn:oasis:names:tc:acal:1.0:function:all-of | M | urn:oasis:names:tc:xacml:3.0:function:all-of |
+| urn:oasis:names:tc:acal:1.0:function:any-of-any | M | urn:oasis:names:tc:xacml:3.0:function:any-of-any |
+| urn:oasis:names:tc:acal:1.0:function:all-of-any | M | urn:oasis:names:tc:xacml:1.0:function:all-of-any |
+| urn:oasis:names:tc:acal:1.0:function:any-of-all | M | urn:oasis:names:tc:xacml:1.0:function:any-of-all |
+| urn:oasis:names:tc:acal:1.0:function:all-of-all | M | urn:oasis:names:tc:xacml:1.0:function:all-of-all |
+| urn:oasis:names:tc:acal:1.0:function:map | M | urn:oasis:names:tc:xacml:3.0:function:map |
+| urn:oasis:names:tc:acal:1.0:function:x500Name-match | M | urn:oasis:names:tc:xacml:1.0:function:x500Name-match |
+| urn:oasis:names:tc:acal:1.0:function:rfc822Name-match | M | urn:oasis:names:tc:xacml:1.0:function:rfc822Name-match |
+| urn:oasis:names:tc:acal:1.0:function:string-regexp-match | M | urn:oasis:names:tc:xacml:1.0:function:string-regexp-match |
+| urn:oasis:names:tc:acal:1.0:function:anyURI-regexp-match | M | urn:oasis:names:tc:xacml:2.0:function:anyURI-regexp-match |
+| urn:oasis:names:tc:acal:1.0:function:ipAddress-regexp-match | M | urn:oasis:names:tc:xacml:2.0:function:ipAddress-regexp-match |
+| urn:oasis:names:tc:acal:1.0:function:dnsName-regexp-match | M | urn:oasis:names:tc:xacml:2.0:function:dnsName-regexp-match |
+| urn:oasis:names:tc:acal:1.0:function:rfc822Name-regexp-match | M | urn:oasis:names:tc:xacml:2.0:function:rfc822Name-regexp-match |
+| urn:oasis:names:tc:acal:1.0:function:x500Name-regexp-match | M | urn:oasis:names:tc:xacml:2.0:function:x500Name-regexp-match |
+| urn:oasis:names:tc:acal:1.0:function:xpath-node-count | O | urn:oasis:names:tc:xacml:3.0:function:xpath-node-count |
+| urn:oasis:names:tc:acal:1.0:function:xpath-node-equal | O | urn:oasis:names:tc:xacml:3.0:function:xpath-node-equal |
+| urn:oasis:names:tc:acal:1.0:function:xpath-node-match | O | urn:oasis:names:tc:xacml:3.0:function:xpath-node-match |
+| urn:oasis:names:tc:acal:1.0:function:string-intersection | M | urn:oasis:names:tc:xacml:1.0:function:string-intersection |
+| urn:oasis:names:tc:acal:1.0:function:string-at-least-one-member-of | M | urn:oasis:names:tc:xacml:1.0:function:string-at-least-one-member-of |
+| urn:oasis:names:tc:acal:1.0:function:string-union | M | urn:oasis:names:tc:xacml:1.0:function:string-union |
+| urn:oasis:names:tc:acal:1.0:function:string-subset | M | urn:oasis:names:tc:xacml:1.0:function:string-subset |
+| urn:oasis:names:tc:acal:1.0:function:string-set-equals | M | urn:oasis:names:tc:xacml:1.0:function:string-set-equals |
+| urn:oasis:names:tc:acal:1.0:function:boolean-intersection | M | urn:oasis:names:tc:xacml:1.0:function:boolean-intersection |
+| urn:oasis:names:tc:acal:1.0:function:boolean-at-least-one-member-of | M | urn:oasis:names:tc:xacml:1.0:function:boolean-at-least-one-member-of |
+| urn:oasis:names:tc:acal:1.0:function:boolean-union | M | urn:oasis:names:tc:xacml:1.0:function:boolean-union |
+| urn:oasis:names:tc:acal:1.0:function:boolean-subset | M | urn:oasis:names:tc:xacml:1.0:function:boolean-subset |
+| urn:oasis:names:tc:acal:1.0:function:boolean-set-equals | M | urn:oasis:names:tc:xacml:1.0:function:boolean-set-equals |
+| urn:oasis:names:tc:acal:1.0:function:integer-intersection | M | urn:oasis:names:tc:xacml:1.0:function:integer-intersection |
+| urn:oasis:names:tc:acal:1.0:function:integer-at-least-one-member-of | M | urn:oasis:names:tc:xacml:1.0:function:integer-at-least-one-member-of |
+| urn:oasis:names:tc:acal:1.0:function:integer-union | M | urn:oasis:names:tc:xacml:1.0:function:integer-union |
+| urn:oasis:names:tc:acal:1.0:function:integer-subset | M | urn:oasis:names:tc:xacml:1.0:function:integer-subset |
+| urn:oasis:names:tc:acal:1.0:function:integer-set-equals | M | urn:oasis:names:tc:xacml:1.0:function:integer-set-equals |
+| urn:oasis:names:tc:acal:1.0:function:double-intersection | M | urn:oasis:names:tc:xacml:1.0:function:double-intersection |
+| urn:oasis:names:tc:acal:1.0:function:double-at-least-one-member-of | M | urn:oasis:names:tc:xacml:1.0:function:double-at-least-one-member-of |
+| urn:oasis:names:tc:acal:1.0:function:double-union | M | urn:oasis:names:tc:xacml:1.0:function:double-union |
+| urn:oasis:names:tc:acal:1.0:function:double-subset | M | urn:oasis:names:tc:xacml:1.0:function:double-subset |
+| urn:oasis:names:tc:acal:1.0:function:double-set-equals | M | urn:oasis:names:tc:xacml:1.0:function:double-set-equals |
+| urn:oasis:names:tc:acal:1.0:function:time-intersection | M | urn:oasis:names:tc:xacml:1.0:function:time-intersection |
+| urn:oasis:names:tc:acal:1.0:function:time-at-least-one-member-of | M | urn:oasis:names:tc:xacml:1.0:function:time-at-least-one-member-of |
+| urn:oasis:names:tc:acal:1.0:function:time-union | M | urn:oasis:names:tc:xacml:1.0:function:time-union |
+| urn:oasis:names:tc:acal:1.0:function:time-subset | M | urn:oasis:names:tc:xacml:1.0:function:time-subset |
+| urn:oasis:names:tc:acal:1.0:function:time-set-equals | M | urn:oasis:names:tc:xacml:1.0:function:time-set-equals |
+| urn:oasis:names:tc:acal:1.0:function:date-intersection | M | urn:oasis:names:tc:xacml:1.0:function:date-intersection |
+| urn:oasis:names:tc:acal:1.0:function:date-at-least-one-member-of | M | urn:oasis:names:tc:xacml:1.0:function:date-at-least-one-member-of |
+| urn:oasis:names:tc:acal:1.0:function:date-union | M | urn:oasis:names:tc:xacml:1.0:function:date-union |
+| urn:oasis:names:tc:acal:1.0:function:date-subset | M | urn:oasis:names:tc:xacml:1.0:function:date-subset |
+| urn:oasis:names:tc:acal:1.0:function:date-set-equals | M | urn:oasis:names:tc:xacml:1.0:function:date-set-equals |
+| urn:oasis:names:tc:acal:1.0:function:dateTime-intersection | M | urn:oasis:names:tc:xacml:1.0:function:dateTime-intersection |
+| urn:oasis:names:tc:acal:1.0:function:dateTime-at-least-one-member-of | M | urn:oasis:names:tc:xacml:1.0:function:dateTime-at-least-one-member-of |
+| urn:oasis:names:tc:acal:1.0:function:dateTime-union | M | urn:oasis:names:tc:xacml:1.0:function:dateTime-union |
+| urn:oasis:names:tc:acal:1.0:function:dateTime-subset | M | urn:oasis:names:tc:xacml:1.0:function:dateTime-subset |
+| urn:oasis:names:tc:acal:1.0:function:dateTime-set-equals | M | urn:oasis:names:tc:xacml:1.0:function:dateTime-set-equals |
+| urn:oasis:names:tc:acal:1.0:function:anyURI-intersection | M | urn:oasis:names:tc:xacml:1.0:function:anyURI-intersection |
+| urn:oasis:names:tc:acal:1.0:function:anyURI-at-least-one-member-of | M | urn:oasis:names:tc:xacml:1.0:function:anyURI-at-least-one-member-of |
+| urn:oasis:names:tc:acal:1.0:function:anyURI-union | M | urn:oasis:names:tc:xacml:1.0:function:anyURI-union |
+| urn:oasis:names:tc:acal:1.0:function:anyURI-subset | M | urn:oasis:names:tc:xacml:1.0:function:anyURI-subset |
+| urn:oasis:names:tc:acal:1.0:function:anyURI-set-equals | M | urn:oasis:names:tc:xacml:1.0:function:anyURI-set-equals |
+| urn:oasis:names:tc:acal:1.0:function:hexBinary-intersection | M | urn:oasis:names:tc:xacml:1.0:function:hexBinary-intersection |
+| urn:oasis:names:tc:acal:1.0:function:hexBinary-at-least-one-member-of | M | urn:oasis:names:tc:xacml:1.0:function:hexBinary-at-least-one-member-of |
+| urn:oasis:names:tc:acal:1.0:function:hexBinary-union | M | urn:oasis:names:tc:xacml:1.0:function:hexBinary-union |
+| urn:oasis:names:tc:acal:1.0:function:hexBinary-subset | M | urn:oasis:names:tc:xacml:1.0:function:hexBinary-subset |
+| urn:oasis:names:tc:acal:1.0:function:hexBinary-set-equals | M | urn:oasis:names:tc:xacml:1.0:function:hexBinary-set-equals |
+| urn:oasis:names:tc:acal:1.0:function:base64Binary-intersection | M | urn:oasis:names:tc:xacml:1.0:function:base64Binary-intersection |
+| urn:oasis:names:tc:acal:1.0:function:base64Binary-at-least-one-member-of | M | urn:oasis:names:tc:xacml:1.0:function:base64Binary-at-least-one-member-of |
+| urn:oasis:names:tc:acal:1.0:function:base64Binary-union | M | urn:oasis:names:tc:xacml:1.0:function:base64Binary-union |
+| urn:oasis:names:tc:acal:1.0:function:base64Binary-subset | M | urn:oasis:names:tc:xacml:1.0:function:base64Binary-subset |
+| urn:oasis:names:tc:acal:1.0:function:base64Binary-set-equals | M | urn:oasis:names:tc:xacml:1.0:function:base64Binary-set-equals |
+| urn:oasis:names:tc:acal:1.0:function:dayTimeDuration-intersection | M | urn:oasis:names:tc:xacml:3.0:function:dayTimeDuration-intersection |
+| urn:oasis:names:tc:acal:1.0:function:dayTimeDuration-at-least-one-member-of | M | urn:oasis:names:tc:xacml:3.0:function:dayTimeDuration-at-least-one-member-of |
+| urn:oasis:names:tc:acal:1.0:function:dayTimeDuration-union | M | urn:oasis:names:tc:xacml:3.0:function:dayTimeDuration-union |
+| urn:oasis:names:tc:acal:1.0:function:dayTimeDuration-subset | M | urn:oasis:names:tc:xacml:3.0:function:dayTimeDuration-subset |
+| urn:oasis:names:tc:acal:1.0:function:dayTimeDuration-set-equals | M | urn:oasis:names:tc:xacml:3.0:function:dayTimeDuration-set-equals |
+| urn:oasis:names:tc:acal:1.0:function:yearMonthDuration-intersection | M | urn:oasis:names:tc:xacml:3.0:function:yearMonthDuration-intersection |
+| urn:oasis:names:tc:acal:1.0:function:yearMonthDuration-at-least-one-member-of | M | urn:oasis:names:tc:xacml:3.0:function:yearMonthDuration-at-least-one-member-of |
+| urn:oasis:names:tc:acal:1.0:function:yearMonthDuration-union | M | urn:oasis:names:tc:xacml:3.0:function:yearMonthDuration-union |
+| urn:oasis:names:tc:acal:1.0:function:yearMonthDuration-subset | M | urn:oasis:names:tc:xacml:3.0:function:yearMonthDuration-subset |
+| urn:oasis:names:tc:acal:1.0:function:yearMonthDuration-set-equals | M | urn:oasis:names:tc:xacml:3.0:function:yearMonthDuration-set-equals |
+| urn:oasis:names:tc:acal:1.0:function:x500Name-intersection | M | urn:oasis:names:tc:xacml:1.0:function:x500Name-intersection |
+| urn:oasis:names:tc:acal:1.0:function:x500Name-at-least-one-member-of | M | urn:oasis:names:tc:xacml:1.0:function:x500Name-at-least-one-member-of |
+| urn:oasis:names:tc:acal:1.0:function:x500Name-union | M | urn:oasis:names:tc:xacml:1.0:function:x500Name-union |
+| urn:oasis:names:tc:acal:1.0:function:x500Name-subset | M | urn:oasis:names:tc:xacml:1.0:function:x500Name-subset |
+| urn:oasis:names:tc:acal:1.0:function:x500Name-set-equals | M | urn:oasis:names:tc:xacml:1.0:function:x500Name-set-equals |
+| urn:oasis:names:tc:acal:1.0:function:rfc822Name-intersection | M | urn:oasis:names:tc:xacml:1.0:function:rfc822Name-intersection |
+| urn:oasis:names:tc:acal:1.0:function:rfc822Name-at-least-one-member-of | M | urn:oasis:names:tc:xacml:1.0:function:rfc822Name-at-least-one-member-of |
+| urn:oasis:names:tc:acal:1.0:function:rfc822Name-union | M | urn:oasis:names:tc:xacml:1.0:function:rfc822Name-union |
+| urn:oasis:names:tc:acal:1.0:function:rfc822Name-subset | M | urn:oasis:names:tc:xacml:1.0:function:rfc822Name-subset |
+| urn:oasis:names:tc:acal:1.0:function:rfc822Name-set-equals | M | urn:oasis:names:tc:xacml:1.0:function:rfc822Name-set-equals |
+| urn:oasis:names:tc:acal:1.0:function:access-permitted | O | urn:oasis:names:tc:xacml:3.0:function:access-permitted |
 
 
 ---
@@ -4469,39 +4423,39 @@ This specification combines the various standards set forth by IEEE and ANSI for
 
 Although a syntactic representation of ACAL objects may represent most data types as strings, an ACAL PDP must operate on types of data that, while they have string representations, are not just strings. Types such as `Boolean`, `Integer`, and `Double` MUST be converted from their string representations to values that can be compared with values in their domain of discourse, such as numbers. The following data types are specified for use with ACAL and have explicit data representations:
 
-* `https://www.w3.org/2001/XMLSchema#string`
+* `urn:oasis:names:tc:acal:1.0:data-type:string`
 
-* `https://www.w3.org/2001/XMLSchema#boolean`
+* `urn:oasis:names:tc:acal:1.0:data-type:boolean`
 
-* `https://www.w3.org/2001/XMLSchema#integer`
+* `urn:oasis:names:tc:acal:1.0:data-type:integer`
 
-* `https://www.w3.org/2001/XMLSchema#double`
+* `urn:oasis:names:tc:acal:1.0:data-type:double`
 
-* `https://www.w3.org/2001/XMLSchema#time`
+* `urn:oasis:names:tc:acal:1.0:data-type:time`
 
-* `https://www.w3.org/2001/XMLSchema#date`
+* `urn:oasis:names:tc:acal:1.0:data-type:date`
 
-* `https://www.w3.org/2001/XMLSchema#dateTime`
+* `urn:oasis:names:tc:acal:1.0:data-type:dateTime`
 
-* `https://www.w3.org/2001/XMLSchema#anyURI`
+* `urn:oasis:names:tc:acal:1.0:data-type:anyURI`
 
-* `https://www.w3.org/2001/XMLSchema#hexBinary`
+* `urn:oasis:names:tc:acal:1.0:data-type:hexBinary`
 
-* `https://www.w3.org/2001/XMLSchema#base64Binary`
+* `urn:oasis:names:tc:acal:1.0:data-type:base64Binary`
 
-* `https://www.w3.org/2001/XMLSchema#dayTimeDuration`
+* `urn:oasis:names:tc:acal:1.0:data-type:dayTimeDuration`
 
-* `https://www.w3.org/2001/XMLSchema#yearMonthDuration`
+* `urn:oasis:names:tc:acal:1.0:data-type:yearMonthDuration`
 
-* `urn:oasis:names:tc:xacml:1.0:data-type:x500Name`
+* `urn:oasis:names:tc:acal:1.0:data-type:x500Name`
 
-* `urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name`
+* `urn:oasis:names:tc:acal:1.0:data-type:rfc822Name`
 
-* `urn:oasis:names:tc:xacml:2.0:data-type:ipAddress`
+* `urn:oasis:names:tc:acal:1.0:data-type:ipAddress`
 
-* `urn:oasis:names:tc:xacml:2.0:data-type:dnsName`
+* `urn:oasis:names:tc:acal:1.0:data-type:dnsName`
 
-* `urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression`
+* `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression`
 
 For the sake of improved interoperability, it is RECOMMENDED that all time references be in UTC time.
 
@@ -4509,31 +4463,31 @@ An ACAL PDP SHALL be capable of converting string representations into various d
 
 ACAL defines four data types representing identifiers for subjects or resources; these are:
 
-* `urn:oasis:names:tc:xacml:1.0:data-type:x500Name`,
+* `urn:oasis:names:tc:acal:1.0:data-type:x500Name`,
 
-* `urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name`,
+* `urn:oasis:names:tc:acal:1.0:data-type:rfc822Name`,
 
-* `urn:oasis:names:tc:xacml:2.0:data-type:ipAddress` and
+* `urn:oasis:names:tc:acal:1.0:data-type:ipAddress` and
 
-* `urn:oasis:names:tc:xacml:2.0:data-type:dnsName`.
+* `urn:oasis:names:tc:acal:1.0:data-type:dnsName`.
 
 These types appear in several standard applications, such as TLS/SSL and electronic mail.
 
 ACAL defines a data type for representing structured data:
 
-* `urn:oasis:names:tc:xacml:3.0:data-type:entity`
+* `urn:oasis:names:tc:acal:1.0:data-type:entity`
 
 ### C.2.1 X.500 Directory Name
 
-The `urn:oasis:names:tc:xacml:1.0:data-type:x500Name` data type represents an ITU-T Rec. X.520 Distinguished Name. The valid syntax for such a name is described in IETF RFC 2253 "Lightweight Directory Access Protocol (v3): UTF-8 String Representation of Distinguished Names".
+The `urn:oasis:names:tc:acal:1.0:data-type:x500Name` data type represents an ITU-T Rec. X.520 Distinguished Name. The valid syntax for such a name is described in IETF RFC 2253 "Lightweight Directory Access Protocol (v3): UTF-8 String Representation of Distinguished Names".
 
 ### C.2.2 RFC 822 Name
 
-The `urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name` data type represents an electronic mail address. The valid syntax for such a name is described in IETF RFC 2821, Section 4.1.2, Command Argument Syntax, under the term "Mailbox".
+The `urn:oasis:names:tc:acal:1.0:data-type:rfc822Name` data type represents an electronic mail address. The valid syntax for such a name is described in IETF RFC 2821, Section 4.1.2, Command Argument Syntax, under the term "Mailbox".
 
 ### C.2.3 IP Address
 
-The `urn:oasis:names:tc:xacml:2.0:data-type:ipAddress` data type represents an IPv4 or IPv6 network address, with optional mask and optional port or port range. The syntax SHALL be:
+The `urn:oasis:names:tc:acal:1.0:data-type:ipAddress` data type represents an IPv4 or IPv6 network address, with optional mask and optional port or port range. The syntax SHALL be:
 
 ```
 ipAddress = address [ `/` mask ] [ `:` [ portrange ] ]
@@ -4545,7 +4499,7 @@ For an IPv6 address, the address and mask are formatted in accordance with the s
 
 ### C.2.4 DNS Name
 
-The `urn:oasis:names:tc:xacml:2.0:data-type:dnsName` data type represents a Domain Name Service (DNS) host name, with optional port or port range. The syntax SHALL be:
+The `urn:oasis:names:tc:acal:1.0:data-type:dnsName` data type represents a Domain Name Service (DNS) host name, with optional port or port range. The syntax SHALL be:
 
 ```
 dnsName = hostname [ `:` portrange ]
@@ -4553,9 +4507,9 @@ dnsName = hostname [ `:` portrange ]
 
 The hostname is formatted in accordance with IETF RFC 2396 "Uniform Resource Identifiers (URI): Generic Syntax", section 3.2, except that a wildcard `*` may be used in the left-most component of the hostname to indicate "any subdomain" under the domain specified to its right.
 
-For both the `urn:oasis:names:tc:xacml:2.0:data-type:ipAddress` and 
+For both the `urn:oasis:names:tc:acal:1.0:data-type:ipAddress` and
 <!-- Newline added to fit on PDF page -->
-`urn:oasis:names:tc:xacml:2.0:data-type:dnsName` data types, the port or port range syntax SHALL be
+`urn:oasis:names:tc:acal:1.0:data-type:dnsName` data types, the port or port range syntax SHALL be
 
 ```
 portrange = portnumber | `-`portnumber | portnumber`-`[portnumber]
@@ -4567,13 +4521,13 @@ where `portnumber` is a decimal port number. If the port number is of the form `
 
 _This section needs to be aligned with the JSON profile's handling of values of the xpathExpression data type._
 
-The `urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression` data type represents an XPath expression over the XML in a `ContentType` object. The syntax is defined by the XPath W3C recommendation. The content of this data-type also includes the context in which namespaces prefixes in the expression are resolved, which distinguishes it from a plain string and the ACAL attribute category of the `ContentType` object to which it applies. When the value is encoded in an `AttributeValueType` onject, the namespace context is given by the [in-scope namespaces] (see [INFOSET]) of the `AttributeValueType` object, and an XML attribute called XPathCategory gives the category of the `ContentType` object where the expression applies.
+The `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` data type represents an XPath expression over the XML in a `ContentType` object. The syntax is defined by the XPath W3C recommendation. The content of this data-type also includes the context in which namespaces prefixes in the expression are resolved, which distinguishes it from a plain string and the ACAL attribute category of the `ContentType` object to which it applies. When the value is encoded in an `AttributeValueType` object, the namespace context is given by the [in-scope namespaces] (see [INFOSET]) of the `AttributeValueType` object, and an XML attribute called XPathCategory gives the category of the `ContentType` object where the expression applies.
 
 The XPath expression MUST be evaluated in a context which is equivalent of a stand alone XML document with the only child of the `ContentType` object as the document element. The context node of the XPath expression is the document node of this stand alone document. Namespace declarations from the `ContentType` object and its ancestor elements for namespace prefixes that are "visibly utilized", as defined by [[exc-c14n](#exc-c14n)], within the contents MUST be present. Namespace declarations from the `<Content>` element or its ancestor elements for namespace prefixes that are not "visibly utilized" MAY be present.
 
 ### C.2.6 Entity
 
-The `urn:oasis:names:tc:xacml:3.0:data-type:entity` data type is used to represent an entity nested within another entity. Values of this data type are objects of the `EntityType` object type [Section 7.53](#753-entitytype).
+The `urn:oasis:names:tc:acal:1.0:data-type:entity` data type is used to represent an entity nested within another entity. Values of this data type are objects of the `EntityType` object type [Section 7.53](#753-entitytype).
 
 ## C.3 Functions
 
@@ -4585,53 +4539,53 @@ Note that in each case an implementation is conformant as long as it produces th
 
 The following functions are the equality functions for the various data types. Each function for a particular data type follows a specified standard convention for that data type.
 
-`urn:oasis:names:tc:xacml:1.0:function:string-equal`
+`urn:oasis:names:tc:acal:1.0:function:string-equal`
 
-: This function SHALL take two arguments of data type `https://www.w3.org/2001/XMLSchema#string` and SHALL return an `https://www.w3.org/2001/XMLSchema#boolean`. The function SHALL return `true` if and only if the value of both of its arguments are of equal length and each string is determined to be equal. Otherwise, it SHALL return `false`. The comparison SHALL use Unicode codepoint collation, as defined for the identifier `https://www.w3.org/2005/xpath-functions/collation/codepoint/` by [[XF](#xf)].
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:string` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The function SHALL return `true` if and only if the value of both of its arguments are of equal length and each string is determined to be equal. Otherwise, it SHALL return `false`. The comparison SHALL use Unicode codepoint collation, as defined for the identifier `https://www.w3.org/2005/xpath-functions/collation/codepoint/` by [[XF](#xf)].
 
-`urn:oasis:names:tc:xacml:3.0:function:string-equal-ignore-case`
+`urn:oasis:names:tc:acal:1.0:function:string-equal-ignore-case`
 
-: This function SHALL take two arguments of data type `https://www.w3.org/2001/XMLSchema#string` and SHALL return an `https://www.w3.org/2001/XMLSchema#boolean`. The result SHALL be `true` if and only if the two strings are equal as defined by `urn:oasis:names:tc:xacml:1.0:function:string-equal` after they have both been converted to lower case with `urn:oasis:names:tc:xacml:1.0:function:string-normalize-to-lower-case`.
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:string` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The result SHALL be `true` if and only if the two strings are equal as defined by `urn:oasis:names:tc:acal:1.0:function:string-equal` after they have both been converted to lower case with `urn:oasis:names:tc:acal:1.0:function:string-normalize-to-lower-case`.
 
-`urn:oasis:names:tc:xacml:1.0:function:boolean-equal`
+`urn:oasis:names:tc:acal:1.0:function:boolean-equal`
 
-  : This function SHALL take two arguments of data type `https://www.w3.org/2001/XMLSchema#boolean` and SHALL return an `https://www.w3.org/2001/XMLSchema#boolean`. The function SHALL return `true` if and only if the arguments are equal. Otherwise, it SHALL return `false`.
+  : This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:boolean` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The function SHALL return `true` if and only if the arguments are equal. Otherwise, it SHALL return `false`.
 
-`urn:oasis:names:tc:xacml:1.0:function:integer-equal`
+`urn:oasis:names:tc:acal:1.0:function:integer-equal`
 
-  : This function SHALL take two arguments of data type `https://www.w3.org/2001/XMLSchema#integer` and SHALL return an `https://www.w3.org/2001/XMLSchema#boolean`. The function SHALL return `true` if and only if the two arguments represent the same number.
+  : This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:integer` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The function SHALL return `true` if and only if the two arguments represent the same number.
 
-`urn:oasis:names:tc:xacml:1.0:function:double-equal`
+`urn:oasis:names:tc:acal:1.0:function:double-equal`
 
-  : This function SHALL take two arguments of data type `https://www.w3.org/2001/XMLSchema#double` and SHALL return an `https://www.w3.org/2001/XMLSchema#boolean`. It SHALL perform its evaluation on doubles according to IEEE 754 [IEEE754].
+  : This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:double` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL perform its evaluation on doubles according to IEEE 754 [IEEE754].
 
-`urn:oasis:names:tc:xacml:1.0:function:date-equal`
+`urn:oasis:names:tc:acal:1.0:function:date-equal`
 
-  : This function SHALL take two arguments of data type `https://www.w3.org/2001/XMLSchema#date` and SHALL return an `https://www.w3.org/2001/XMLSchema#boolean`. It SHALL perform its evaluation according to the `op:date-equal` function [[XF](#xf)] Section 10.4.9.
+  : This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:date` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL perform its evaluation according to the `op:date-equal` function [[XF](#xf)] Section 10.4.9.
 
-`urn:oasis:names:tc:xacml:1.0:function:time-equal`
+`urn:oasis:names:tc:acal:1.0:function:time-equal`
 
-  : This function SHALL take two arguments of data type `https://www.w3.org/2001/XMLSchema#time` and SHALL return an `https://www.w3.org/2001/XMLSchema#boolean`. It SHALL perform its evaluation according to the `op:time-equal` function [[XF](#xf)] Section 10.4.12.
+  : This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:time` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL perform its evaluation according to the `op:time-equal` function [[XF](#xf)] Section 10.4.12.
 
-`urn:oasis:names:tc:xacml:1.0:function:dateTime-equal`
+`urn:oasis:names:tc:acal:1.0:function:dateTime-equal`
 
-  : This function SHALL take two arguments of data type `https://www.w3.org/2001/XMLSchema#dateTime` and SHALL return an `https://www.w3.org/2001/XMLSchema#boolean`. It SHALL perform its evaluation according to the `op:dateTime-equal` function [[XF](#xf)] Section 10.4.6.
+  : This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:dateTime` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL perform its evaluation according to the `op:dateTime-equal` function [[XF](#xf)] Section 10.4.6.
 
-`urn:oasis:names:tc:xacml:3.0:function:dayTimeDuration-equal`
+`urn:oasis:names:tc:acal:1.0:function:dayTimeDuration-equal`
 
-  : This function SHALL take two arguments of data type `https://www.w3.org/2001/XMLSchema#dayTimeDuration` and SHALL return an `https://www.w3.org/2001/XMLSchema#boolean`. This function shall perform its evaluation according to the `op:duration-equal` function [[XF](#xf)] Section 10.4.5. Note that the lexical representation of each argument MUST be converted to a value expressed in fractional seconds [[XF](#xf)] Section 10.3.2.
+  : This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:dayTimeDuration` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. This function shall perform its evaluation according to the `op:duration-equal` function [[XF](#xf)] Section 10.4.5. Note that the lexical representation of each argument MUST be converted to a value expressed in fractional seconds [[XF](#xf)] Section 10.3.2.
 
-`urn:oasis:names:tc:xacml:3.0:function:yearMonthDuration-equal`
+`urn:oasis:names:tc:acal:1.0:function:yearMonthDuration-equal`
 
-  : This function SHALL take two arguments of data type `https://www.w3.org/2001/XMLSchema#yearMonthDuration` and SHALL return an `https://www.w3.org/2001/XMLSchema#boolean`. This function shall perform its evaluation according to the `op:duration-equal` function [[XF](#xf)] Section 10.4.5. Note that the lexical representation of each argument MUST be converted to a value expressed in fractional seconds [[XF](#xf)] Section 10.3.2.
+  : This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:yearMonthDuration` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. This function shall perform its evaluation according to the `op:duration-equal` function [[XF](#xf)] Section 10.4.5. Note that the lexical representation of each argument MUST be converted to a value expressed in fractional seconds [[XF](#xf)] Section 10.3.2.
 
-`urn:oasis:names:tc:xacml:1.0:function:anyURI-equal`
+`urn:oasis:names:tc:acal:1.0:function:anyURI-equal`
 
-  : This function SHALL take two arguments of data type `https://www.w3.org/2001/XMLSchema#anyURI` and SHALL return an `https://www.w3.org/2001/XMLSchema#boolean`. The function SHALL convert the arguments to strings with urn:oasis:names:tc:xacml:3.0:function:string-from-anyURI and return `true` if and only if the values of the two arguments are equal on a codepoint-by-codepoint basis.
+  : This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:anyURI` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The function SHALL convert the arguments to strings with urn:oasis:names:tc:acal:1.0:function:string-from-anyURI and return `true` if and only if the values of the two arguments are equal on a codepoint-by-codepoint basis.
 
-`urn:oasis:names:tc:xacml:1.0:function:x500Name-equal`
+`urn:oasis:names:tc:acal:1.0:function:x500Name-equal`
 
-  : This function SHALL take two arguments of `urn:oasis:names:tc:xacml:1.0:data-type:x500Name` and SHALL return an `https://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `true` if and only if each Relative Distinguished Name (RDN) in the two arguments matches. Otherwise, it SHALL return `false`. Two RDNs shall be said to match if and only if the result of the following operations is `true` .
+  : This function SHALL take two arguments of `urn:oasis:names:tc:acal:1.0:data-type:x500Name` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if each Relative Distinguished Name (RDN) in the two arguments matches. Otherwise, it SHALL return `false`. Two RDNs shall be said to match if and only if the result of the following operations is `true` .
 
     1. Normalize the two arguments according to IETF RFC 2253 `Lightweight Directory Access Protocol (v3): UTF-8 String Representation of Distinguished Names`.
 
@@ -4639,116 +4593,116 @@ The following functions are the equality functions for the various data types. E
 
     3. Compare RDNs using the rules in IETF RFC 3280 `Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile`, Section 4.1.2.4 `Issuer`.
 
-`urn:oasis:names:tc:xacml:1.0:function:rfc822Name-equal`
+`urn:oasis:names:tc:acal:1.0:function:rfc822Name-equal`
 
-  : This function SHALL take two arguments of data type `urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name` and SHALL return an `https://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `true` if and only if the two arguments are equal. Otherwise, it SHALL return `false`. An RFC822 name consists of a local-part followed by `@` followed by a domain-part. The local-part is case-sensitive, while the domain-part (which is usually a DNS host name) is not case-sensitive. Perform the following operations:
+  : This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:rfc822Name` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the two arguments are equal. Otherwise, it SHALL return `false`. An RFC822 name consists of a local-part followed by `@` followed by a domain-part. The local-part is case-sensitive, while the domain-part (which is usually a DNS host name) is not case-sensitive. Perform the following operations:
 
     1. Normalize the domain-part of each argument to lower case.
 
-    2. Compare the expressions by applying the function `urn:oasis:names:tc:xacml:1.0:function:string-equal` to the normalized arguments.
+    2. Compare the expressions by applying the function `urn:oasis:names:tc:acal:1.0:function:string-equal` to the normalized arguments.
 
-`urn:oasis:names:tc:xacml:1.0:function:hexBinary-equal`
+`urn:oasis:names:tc:acal:1.0:function:hexBinary-equal`
 
-  : This function SHALL take two arguments of data type `https://www.w3.org/2001/XMLSchema#hexBinary` and SHALL return an `https://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `true` if the octet sequences represented by the value of both arguments have equal length and are equal in a conjunctive, point-wise, comparison using the `urn:oasis:names:tc:xacml:1.0:function:integer-equal` function. Otherwise, it SHALL return `false`. The conversion from the string representation to an octet sequence SHALL be as specified in [[XS](#xs)] Section 3.2.15.
+  : This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:hexBinary` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if the octet sequences represented by the value of both arguments have equal length and are equal in a conjunctive, point-wise, comparison using the `urn:oasis:names:tc:acal:1.0:function:integer-equal` function. Otherwise, it SHALL return `false`. The conversion from the string representation to an octet sequence SHALL be as specified in [[XS](#xs)] Section 3.2.15.
 
-`urn:oasis:names:tc:xacml:1.0:function:base64Binary-equal`
+`urn:oasis:names:tc:acal:1.0:function:base64Binary-equal`
 
-  : This function SHALL take two arguments of data type `https://www.w3.org/2001/XMLSchema#base64Binary` and SHALL return an `https://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `true` if the octet sequences represented by the value of both arguments have equal length and are equal in a conjunctive, point-wise, comparison using the `urn:oasis:names:tc:xacml:1.0:function:integer-equal` function. Otherwise, it SHALL return `false`. The conversion from the string representation to an octet sequence SHALL be as specified in [[XS](#xs)] Section 3.2.16.
+  : This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:base64Binary` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if the octet sequences represented by the value of both arguments have equal length and are equal in a conjunctive, point-wise, comparison using the `urn:oasis:names:tc:acal:1.0:function:integer-equal` function. Otherwise, it SHALL return `false`. The conversion from the string representation to an octet sequence SHALL be as specified in [[XS](#xs)] Section 3.2.16.
 
 ### C.3.2 Arithmetic Functions
 
 All of the following functions SHALL take two arguments of the specified data type, integer, or double, and SHALL return a value of integer or double data type, respectively. However, the `add` and `multiply` functions MAY take more than two arguments. Each function evaluation operating on doubles SHALL proceed as specified by their logical counterparts in IEEE 754 [IEEE754]. For all of these functions, if any argument is `Indeterminate`, then the function SHALL evaluate to `Indeterminate`. In the case of the divide functions, if the divisor is zero, then the function SHALL evaluate to `Indeterminate`.
 
-`urn:oasis:names:tc:xacml:1.0:function:integer-add`
+`urn:oasis:names:tc:acal:1.0:function:integer-add`
 
 : This function MUST accept two or more arguments.
 
-`urn:oasis:names:tc:xacml:1.0:function:double-add`
+`urn:oasis:names:tc:acal:1.0:function:double-add`
 
 : This function MUST accept two or more arguments.
 
-`urn:oasis:names:tc:xacml:1.0:function:integer-subtract`
+`urn:oasis:names:tc:acal:1.0:function:integer-subtract`
 
 : The result is the second argument subtracted from the first argument.
 
-`urn:oasis:names:tc:xacml:1.0:function:double-subtract`
+`urn:oasis:names:tc:acal:1.0:function:double-subtract`
 
 : The result is the second argument subtracted from the first argument.
 
-`urn:oasis:names:tc:xacml:1.0:function:integer-multiply`
+`urn:oasis:names:tc:acal:1.0:function:integer-multiply`
 
 : This function MUST accept two or more arguments.
 
-`urn:oasis:names:tc:xacml:1.0:function:double-multiply`
+`urn:oasis:names:tc:acal:1.0:function:double-multiply`
 
 : This function MUST accept two or more arguments.
 
-`urn:oasis:names:tc:xacml:1.0:function:integer-divide`
+`urn:oasis:names:tc:acal:1.0:function:integer-divide`
 
 : The result is the first argument divided by the second argument.
 
-`urn:oasis:names:tc:xacml:1.0:function:double-divide`
+`urn:oasis:names:tc:acal:1.0:function:double-divide`
 
 : The result is the first argument divided by the second argument.
 
-`urn:oasis:names:tc:xacml:1.0:function:integer-mod`
+`urn:oasis:names:tc:acal:1.0:function:integer-mod`
 
 : The result is the remainder of the first argument divided by the second argument.
 
-The following functions SHALL take a single argument of the specified data type. The round and floor functions SHALL take a single argument of data type `https://www.w3.org/2001/XMLSchema#double` and return a value of the data type `https://www.w3.org/2001/XMLSchema#double`.
+The following functions SHALL take a single argument of the specified data type. The round and floor functions SHALL take a single argument of data type `urn:oasis:names:tc:acal:1.0:data-type:double` and return a value of the data type `urn:oasis:names:tc:acal:1.0:data-type:double`.
 
-* `urn:oasis:names:tc:xacml:1.0:function:integer-abs`
+* `urn:oasis:names:tc:acal:1.0:function:integer-abs`
 
-* `urn:oasis:names:tc:xacml:1.0:function:double-abs`
+* `urn:oasis:names:tc:acal:1.0:function:double-abs`
 
-* `urn:oasis:names:tc:xacml:1.0:function:round`
+* `urn:oasis:names:tc:acal:1.0:function:round`
 
-* `urn:oasis:names:tc:xacml:1.0:function:floor`
+* `urn:oasis:names:tc:acal:1.0:function:floor`
 
 ### C.3.3 String Conversion Functions
 
-The following functions convert between values of the data type `https://www.w3.org/2001/XMLSchema#string` data type.
+The following functions convert between values of the data type `urn:oasis:names:tc:acal:1.0:data-type:string` data type.
 
-`urn:oasis:names:tc:xacml:1.0:function:string-normalize-space`
+`urn:oasis:names:tc:acal:1.0:function:string-normalize-space`
 
-: This function SHALL take one argument of data type `https://www.w3.org/2001/XMLSchema#string` and SHALL normalize the value by stripping off all leading and trailing white space characters. The whitespace characters are defined in the metasymbol S (Production 3) of [XML].
+: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:string` and SHALL normalize the value by stripping off all leading and trailing white space characters. The whitespace characters are defined in the metasymbol S (Production 3) of [XML].
 
-`urn:oasis:names:tc:xacml:1.0:function:string-normalize-to-lower-case`
+`urn:oasis:names:tc:acal:1.0:function:string-normalize-to-lower-case`
 
-: This function SHALL take one argument of data type `https://www.w3.org/2001/XMLSchema#string` and SHALL normalize the value by converting each upper case character to its lower case equivalent. Case mapping shall be done as specified for the fn:lower-case function in [[XF](#xf)] with no tailoring for particular languages or environments.
+: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:string` and SHALL normalize the value by converting each upper case character to its lower case equivalent. Case mapping shall be done as specified for the fn:lower-case function in [[XF](#xf)] with no tailoring for particular languages or environments.
 
 ### C.3.4 Numeric Data Type Conversion Functions
 
-The following functions convert values between the `https://www.w3.org/2001/XMLSchema#integer` and` https://www.w3.org/2001/XMLSchema#double` data types.
+The following functions convert values between the `urn:oasis:names:tc:acal:1.0:data-type:integer` and` urn:oasis:names:tc:acal:1.0:data-type:double` data types.
 
-`urn:oasis:names:tc:xacml:1.0:function:double-to-integer`
+`urn:oasis:names:tc:acal:1.0:function:double-to-integer`
 
-: This function SHALL take one argument of data type `https://www.w3.org/2001/XMLSchema#double` and SHALL truncate its numeric value to a whole number and return a value of data type `https://www.w3.org/2001/XMLSchema#integer`.
+: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:double` and SHALL truncate its numeric value to a whole number and return a value of data type `urn:oasis:names:tc:acal:1.0:data-type:integer`.
 
-`urn:oasis:names:tc:xacml:1.0:function:integer-to-double`
+`urn:oasis:names:tc:acal:1.0:function:integer-to-double`
 
-: This function SHALL take one argument of data type `https://www.w3.org/2001/XMLSchema#integer` and SHALL promote its value to a value of data type `https://www.w3.org/2001/XMLSchema#double` with the same numeric value. If the integer argument is outside the range that can be represented by a double, the result SHALL be `Indeterminate,` with status code <!-- Newline added to fit on PDF page -->
-: `urn:oasis:names:tc:xacml:1.0:status:processing-error`.
+: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:integer` and SHALL promote its value to a value of data type `urn:oasis:names:tc:acal:1.0:data-type:double` with the same numeric value. If the integer argument is outside the range that can be represented by a double, the result SHALL be `Indeterminate,` with status code <!-- Newline added to fit on PDF page -->
+: `urn:oasis:names:tc:acal:1.0:status:processing-error`.
 
 ### C.3.5 Logical Functions
 
-This section contains the specification for logical functions that operate on arguments of data type `https://www.w3.org/2001/XMLSchema#boolean`.
+This section contains the specification for logical functions that operate on arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:boolean`.
 
-`urn:oasis:names:tc:xacml:1.0:function:or`
+`urn:oasis:names:tc:acal:1.0:function:or`
 
 : This function SHALL return `false` if it has no arguments and SHALL return `true` if at least one of its arguments evaluates to `true`. The order of evaluation SHALL be from first argument to last. The evaluation SHALL stop with a result of `true` if any argument evaluates to `true`, leaving the rest of the arguments unevaluated.
 
-`urn:oasis:names:tc:xacml:1.0:function:and`
+`urn:oasis:names:tc:acal:1.0:function:and`
 
 : This function SHALL return `true` if it has no arguments and SHALL return `false` if one of its arguments evaluates to `false`. The order of evaluation SHALL be from first argument to last. The evaluation SHALL stop with a result of `false` if any argument evaluates to `false`, leaving the rest of the arguments unevaluated.
 
-`urn:oasis:names:tc:xacml:1.0:function:n-of`
+`urn:oasis:names:tc:acal:1.0:function:n-of`
 
-: The first argument to this function SHALL be of data type `https://www.w3.org/2001/XMLSchema#integer`. The remaining arguments SHALL be of data type `https://www.w3.org/2001/XMLSchema#boolean`. The first argument specifies the minimum number of the remaining arguments that MUST evaluate to `true` for the expression to be considered `true`. If the first argument is 0, the result SHALL be `true`. If the number of arguments after the first one is less than the value of the first argument, then the expression SHALL result in `Indeterminate`. The order of evaluation SHALL be: first evaluate the integer value, and then evaluate each subsequent argument. The evaluation SHALL stop and return `true` if the specified number of arguments evaluate to `true`. The evaluation of arguments SHALL stop if it is determined that evaluating the remaining arguments will not satisfy the requirement.
+: The first argument to this function SHALL be of data type `urn:oasis:names:tc:acal:1.0:data-type:integer`. The remaining arguments SHALL be of data type `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The first argument specifies the minimum number of the remaining arguments that MUST evaluate to `true` for the expression to be considered `true`. If the first argument is 0, the result SHALL be `true`. If the number of arguments after the first one is less than the value of the first argument, then the expression SHALL result in `Indeterminate`. The order of evaluation SHALL be: first evaluate the integer value, and then evaluate each subsequent argument. The evaluation SHALL stop and return `true` if the specified number of arguments evaluate to `true`. The evaluation of arguments SHALL stop if it is determined that evaluating the remaining arguments will not satisfy the requirement.
 
-`urn:oasis:names:tc:xacml:1.0:function:not`
+`urn:oasis:names:tc:acal:1.0:function:not`
 
-: This function SHALL take one argument of data type `https://www.w3.org/2001/XMLSchema#boolean`. If the argument evaluates to `true`, then the result of the expression SHALL be `false`. If the argument evaluates to `false`, then the result of the expression SHALL be `true`.
+: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:boolean`. If the argument evaluates to `true`, then the result of the expression SHALL be `false`. If the argument evaluates to `false`, then the result of the expression SHALL be `true`.
 
 Note: When evaluating `and`, `or`, or `n-of`, it may not be necessary to attempt a full evaluation of each argument in order to determine whether the evaluation of the argument would result in `Indeterminate`. Analysis of the argument regarding the availability of its attributes, or other analysis regarding errors, such as "divide-by-zero", may render the argument error free. Such arguments occurring in the expression in a position after the evaluation is stated to stop need not be processed.
 
@@ -4756,288 +4710,288 @@ Note: When evaluating `and`, `or`, or `n-of`, it may not be necessary to attempt
 
 These functions form a minimal set for comparing two numbers, yielding a Boolean result. For doubles they SHALL comply with the rules governed by IEEE 754 [IEEE754].
 
-* `urn:oasis:names:tc:xacml:1.0:function:integer-greater-than`
+* `urn:oasis:names:tc:acal:1.0:function:integer-greater-than`
 
-* `urn:oasis:names:tc:xacml:1.0:function:integer-greater-than-or-equal`
+* `urn:oasis:names:tc:acal:1.0:function:integer-greater-than-or-equal`
 
-* `urn:oasis:names:tc:xacml:1.0:function:integer-less-than`
+* `urn:oasis:names:tc:acal:1.0:function:integer-less-than`
 
-* `urn:oasis:names:tc:xacml:1.0:function:integer-less-than-or-equal`
+* `urn:oasis:names:tc:acal:1.0:function:integer-less-than-or-equal`
 
-* `urn:oasis:names:tc:xacml:1.0:function:double-greater-than`
+* `urn:oasis:names:tc:acal:1.0:function:double-greater-than`
 
-* `urn:oasis:names:tc:xacml:1.0:function:double-greater-than-or-equal`
+* `urn:oasis:names:tc:acal:1.0:function:double-greater-than-or-equal`
 
-* `urn:oasis:names:tc:xacml:1.0:function:double-less-than`
+* `urn:oasis:names:tc:acal:1.0:function:double-less-than`
 
-* `urn:oasis:names:tc:xacml:1.0:function:double-less-than-or-equal`
+* `urn:oasis:names:tc:acal:1.0:function:double-less-than-or-equal`
 
 ### C.3.7 Date and Time Arithmetic Functions
 
 These functions perform arithmetic operations with date and time.
 
-`urn:oasis:names:tc:xacml:3.0:function:dateTime-add-dayTimeDuration`
+`urn:oasis:names:tc:acal:1.0:function:dateTime-add-dayTimeDuration`
 
 : This function SHALL take two arguments, the first SHALL be of data type <!-- Line break added for the previous line to fit on a PDF page -->
-: `https://www.w3.org/2001/XMLSchema#dateTime` and the second SHALL be of data type <!-- Line break added for the previous line to fit on PDF page -->
-: `https://www.w3.org/2001/XMLSchema#dayTimeDuration`. It SHALL return a result of <!-- Line break added for the previous line to fit on a PDF page -->
-: `https://www.w3.org/2001/XMLSchema#dateTime`. This function SHALL return the value by adding the second argument to the first argument according to the specification of adding durations to date and time [[XS](#xs)] Appendix E.
+: `urn:oasis:names:tc:acal:1.0:data-type:dateTime` and the second SHALL be of data type <!-- Line break added for the previous line to fit on PDF page -->
+: `urn:oasis:names:tc:acal:1.0:data-type:dayTimeDuration`. It SHALL return a result of <!-- Line break added for the previous line to fit on a PDF page -->
+: `urn:oasis:names:tc:acal:1.0:data-type:dateTime`. This function SHALL return the value by adding the second argument to the first argument according to the specification of adding durations to date and time [[XS](#xs)] Appendix E.
 
-`urn:oasis:names:tc:xacml:3.0:function:dateTime-add-yearMonthDuration`
+`urn:oasis:names:tc:acal:1.0:function:dateTime-add-yearMonthDuration`
 
-: This function SHALL take two arguments, the first SHALL be a `https://www.w3.org/2001/XMLSchema#dateTime` and the second SHALL be a `https://www.w3.org/2001/XMLSchema#yearMonthDuration`. It SHALL return a result of `https://www.w3.org/2001/XMLSchema#dateTime`. This function SHALL return the value by adding the second argument to the first argument according to the specification of adding durations to date and time [[XS](#xs)] Appendix E.
+: This function SHALL take two arguments, the first SHALL be a `urn:oasis:names:tc:acal:1.0:data-type:dateTime` and the second SHALL be a `urn:oasis:names:tc:acal:1.0:data-type:yearMonthDuration`. It SHALL return a result of `urn:oasis:names:tc:acal:1.0:data-type:dateTime`. This function SHALL return the value by adding the second argument to the first argument according to the specification of adding durations to date and time [[XS](#xs)] Appendix E.
 
-`urn:oasis:names:tc:xacml:3.0:function:dateTime-subtract-dayTimeDuration`
+`urn:oasis:names:tc:acal:1.0:function:dateTime-subtract-dayTimeDuration`
 
-: This function SHALL take two arguments, the first SHALL be a `https://www.w3.org/2001/XMLSchema#dateTime` and the second SHALL be a `https://www.w3.org/2001/XMLSchema#dayTimeDuration`. It SHALL return a result of `https://www.w3.org/2001/XMLSchema#dateTime`. If the second argument is a positive duration, then this function SHALL return the value by adding the corresponding negative duration, as per the specification [[XS](#xs)] Appendix E. If the second argument is a negative duration, then the result SHALL be as if the function `urn:oasis:names:tc:xacml:1.0:function:dateTime-add-dayTimeDuration` had been applied to the corresponding positive duration.
+: This function SHALL take two arguments, the first SHALL be a `urn:oasis:names:tc:acal:1.0:data-type:dateTime` and the second SHALL be a `urn:oasis:names:tc:acal:1.0:data-type:dayTimeDuration`. It SHALL return a result of `urn:oasis:names:tc:acal:1.0:data-type:dateTime`. If the second argument is a positive duration, then this function SHALL return the value by adding the corresponding negative duration, as per the specification [[XS](#xs)] Appendix E. If the second argument is a negative duration, then the result SHALL be as if the function `urn:oasis:names:tc:acal:1.0:function:dateTime-add-dayTimeDuration` had been applied to the corresponding positive duration.
 
-`urn:oasis:names:tc:xacml:3.0:function:dateTime-subtract-yearMonthDuration`
+`urn:oasis:names:tc:acal:1.0:function:dateTime-subtract-yearMonthDuration`
 
-: This function SHALL take two arguments, the first SHALL be a `https://www.w3.org/2001/XMLSchema#dateTime` and the second SHALL be a `https://www.w3.org/2001/XMLSchema#yearMonthDuration`. It SHALL return a result of `https://www.w3.org/2001/XMLSchema#dateTime`. If the second argument is a positive duration, then this function SHALL return the value by adding the corresponding negative duration, as per the specification [[XS](#xs)] Appendix E. If the second argument is a negative duration, then the result SHALL be as if the function `urn:oasis:names:tc:xacml:1.0:function:dateTime-add-yearMonthDuration` had been applied to the corresponding positive duration.
+: This function SHALL take two arguments, the first SHALL be a `urn:oasis:names:tc:acal:1.0:data-type:dateTime` and the second SHALL be a `urn:oasis:names:tc:acal:1.0:data-type:yearMonthDuration`. It SHALL return a result of `urn:oasis:names:tc:acal:1.0:data-type:dateTime`. If the second argument is a positive duration, then this function SHALL return the value by adding the corresponding negative duration, as per the specification [[XS](#xs)] Appendix E. If the second argument is a negative duration, then the result SHALL be as if the function `urn:oasis:names:tc:acal:1.0:function:dateTime-add-yearMonthDuration` had been applied to the corresponding positive duration.
 
-`urn:oasis:names:tc:xacml:3.0:function:date-add-yearMonthDuration`
+`urn:oasis:names:tc:acal:1.0:function:date-add-yearMonthDuration`
 
-: This function SHALL take two arguments, the first SHALL be a `https://www.w3.org/2001/XMLSchema#date` and the second SHALL be a `https://www.w3.org/2001/XMLSchema#yearMonthDuration`. It SHALL return a result of `https://www.w3.org/2001/XMLSchema#date`. This function SHALL return the value by adding the second argument to the first argument according to the specification of adding duration to date [[XS](#xs)] Appendix E.
+: This function SHALL take two arguments, the first SHALL be a `urn:oasis:names:tc:acal:1.0:data-type:date` and the second SHALL be a `urn:oasis:names:tc:acal:1.0:data-type:yearMonthDuration`. It SHALL return a result of `urn:oasis:names:tc:acal:1.0:data-type:date`. This function SHALL return the value by adding the second argument to the first argument according to the specification of adding duration to date [[XS](#xs)] Appendix E.
 
-`urn:oasis:names:tc:xacml:3.0:function:date-subtract-yearMonthDuration`
+`urn:oasis:names:tc:acal:1.0:function:date-subtract-yearMonthDuration`
 
-: This function SHALL take two arguments, the first SHALL be a `https://www.w3.org/2001/XMLSchema#date` and the second SHALL be a `https://www.w3.org/2001/XMLSchema#yearMonthDuration`. It SHALL return a result of `https://www.w3.org/2001/XMLSchema#date`. If the second argument is a positive duration, then this function SHALL return the value by adding the corresponding negative duration, as per the specification [[XS](#xs)] Appendix E. If the second argument is a negative duration, then the result SHALL be as if the function `urn:oasis:names:tc:xacml:1.0:function:date-add-yearMonthDuration` had been applied to the corresponding positive duration.
+: This function SHALL take two arguments, the first SHALL be a `urn:oasis:names:tc:acal:1.0:data-type:date` and the second SHALL be a `urn:oasis:names:tc:acal:1.0:data-type:yearMonthDuration`. It SHALL return a result of `urn:oasis:names:tc:acal:1.0:data-type:date`. If the second argument is a positive duration, then this function SHALL return the value by adding the corresponding negative duration, as per the specification [[XS](#xs)] Appendix E. If the second argument is a negative duration, then the result SHALL be as if the function `urn:oasis:names:tc:acal:1.0:function:date-add-yearMonthDuration` had been applied to the corresponding positive duration.
 
 ### C.3.8 Non-numeric Comparison Functions
 
 These functions perform comparison operations on two arguments of non-numerical types.
 
-`urn:oasis:names:tc:xacml:1.0:function:string-greater-than`
+`urn:oasis:names:tc:acal:1.0:function:string-greater-than`
 
-: This function SHALL take two arguments of data type `https://www.w3.org/2001/XMLSchema#string` and SHALL return an `https://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `true` if and only if the first argument is lexicographically strictly greater than the second argument. Otherwise, it SHALL return `false`. The comparison SHALL use Unicode codepoint collation, as defined for the identifier `https://www.w3.org/2005/xpath-functions/collation/codepoint/` by [[XF](#xf)].
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:string` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is lexicographically strictly greater than the second argument. Otherwise, it SHALL return `false`. The comparison SHALL use Unicode codepoint collation, as defined for the identifier `https://www.w3.org/2005/xpath-functions/collation/codepoint/` by [[XF](#xf)].
 
-`urn:oasis:names:tc:xacml:1.0:function:string-greater-than-or-equal`
+`urn:oasis:names:tc:acal:1.0:function:string-greater-than-or-equal`
 
-: This function SHALL take two arguments of data type `https://www.w3.org/2001/XMLSchema#string` and SHALL return an `https://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `true` if and only if the first argument is lexicographically greater than or equal to the second argument. Otherwise, it SHALL return `false`. The comparison SHALL use Unicode codepoint collation, as defined for the identifier `https://www.w3.org/2005/xpath-functions/collation/codepoint/` by [[XF](#xf)].
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:string` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is lexicographically greater than or equal to the second argument. Otherwise, it SHALL return `false`. The comparison SHALL use Unicode codepoint collation, as defined for the identifier `https://www.w3.org/2005/xpath-functions/collation/codepoint/` by [[XF](#xf)].
 
-`urn:oasis:names:tc:xacml:1.0:function:string-less-than`
+`urn:oasis:names:tc:acal:1.0:function:string-less-than`
 
-: This function SHALL take two arguments of data type `https://www.w3.org/2001/XMLSchema#string` and SHALL return an `https://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `true` if and only the first argument is lexigraphically strictly less than the second argument. Otherwise, it SHALL return `false`. The comparison SHALL use Unicode codepoint collation, as defined for the identifier `https://www.w3.org/2005/xpath-functions/collation/codepoint/` by [[XF](#xf)].
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:string` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only the first argument is lexigraphically strictly less than the second argument. Otherwise, it SHALL return `false`. The comparison SHALL use Unicode codepoint collation, as defined for the identifier `https://www.w3.org/2005/xpath-functions/collation/codepoint/` by [[XF](#xf)].
 
-`urn:oasis:names:tc:xacml:1.0:function:string-less-than-or-equal`
+`urn:oasis:names:tc:acal:1.0:function:string-less-than-or-equal`
 
-: This function SHALL take two arguments of data type `https://www.w3.org/2001/XMLSchema#string` and SHALL return an `https://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `true` if and only the first argument is lexigraphically less than or equal to the second argument. Otherwise, it SHALL return `false`. The comparison SHALL use Unicode codepoint collation, as defined for the identifier `https://www.w3.org/2005/xpath-functions/collation/codepoint/` by [[XF](#xf)].
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:string` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only the first argument is lexigraphically less than or equal to the second argument. Otherwise, it SHALL return `false`. The comparison SHALL use Unicode codepoint collation, as defined for the identifier `https://www.w3.org/2005/xpath-functions/collation/codepoint/` by [[XF](#xf)].
 
-`urn:oasis:names:tc:xacml:1.0:function:time-greater-than`
+`urn:oasis:names:tc:acal:1.0:function:time-greater-than`
 
-: This function SHALL take two arguments of data type `https://www.w3.org/2001/XMLSchema#time` and SHALL return an `https://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `true` if and only if the first argument is greater than the second argument according to the order relation specified for `https://www.w3.org/2001/XMLSchema#time` [[XS](#xs)] Section 3.2.8. Otherwise, it SHALL return `false`. Note: it is illegal to compare a time that includes a time-zone value with one that does not. In such cases, the `time-in-range` function should be used.
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:time` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is greater than the second argument according to the order relation specified for `urn:oasis:names:tc:acal:1.0:data-type:time` [[XS](#xs)] Section 3.2.8. Otherwise, it SHALL return `false`. Note: it is illegal to compare a time that includes a time-zone value with one that does not. In such cases, the `time-in-range` function should be used.
 
-`urn:oasis:names:tc:xacml:1.0:function:time-greater-than-or-equal`
+`urn:oasis:names:tc:acal:1.0:function:time-greater-than-or-equal`
 
-: This function SHALL take two arguments of data type `https://www.w3.org/2001/XMLSchema#time` and SHALL return an `https://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `true` if and only if the first argument is greater than or equal to the second argument according to the order relation specified for `https://www.w3.org/2001/XMLSchema#time` [[XS](#xs)] Section 3.2.8. Otherwise, it SHALL return `false`. Note: it is illegal to compare a time that includes a time-zone value with one that does not. In such cases, the `time-in-range` function should be used.
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:time` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is greater than or equal to the second argument according to the order relation specified for `urn:oasis:names:tc:acal:1.0:data-type:time` [[XS](#xs)] Section 3.2.8. Otherwise, it SHALL return `false`. Note: it is illegal to compare a time that includes a time-zone value with one that does not. In such cases, the `time-in-range` function should be used.
 
-`urn:oasis:names:tc:xacml:1.0:function:time-less-than`
+`urn:oasis:names:tc:acal:1.0:function:time-less-than`
 
-: This function SHALL take two arguments of data type `https://www.w3.org/2001/XMLSchema#time` and SHALL return an `https://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `true` if and only if the first argument is less than the second argument according to the order relation specified for `https://www.w3.org/2001/XMLSchema#time` [[XS](#xs)] Section 3.2.8. Otherwise, it SHALL return `false`. Note: it is illegal to compare a time that includes a time-zone value with one that does not. In such cases, the `time-in-range` function should be used.
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:time` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is less than the second argument according to the order relation specified for `urn:oasis:names:tc:acal:1.0:data-type:time` [[XS](#xs)] Section 3.2.8. Otherwise, it SHALL return `false`. Note: it is illegal to compare a time that includes a time-zone value with one that does not. In such cases, the `time-in-range` function should be used.
 
-`urn:oasis:names:tc:xacml:1.0:function:time-less-than-or-equal`
+`urn:oasis:names:tc:acal:1.0:function:time-less-than-or-equal`
 
-: This function SHALL take two arguments of data type `https://www.w3.org/2001/XMLSchema#time` and SHALL return an `https://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `true` if and only if the first argument is less than or equal to the second argument according to the order relation specified for `https://www.w3.org/2001/XMLSchema#time` [[XS](#xs)] Section 3.2.8. Otherwise, it SHALL return `false`. Note: it is illegal to compare a time that includes a time-zone value with one that does not. In such cases, the `time-in-range` function should be used.
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:time` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is less than or equal to the second argument according to the order relation specified for `urn:oasis:names:tc:acal:1.0:data-type:time` [[XS](#xs)] Section 3.2.8. Otherwise, it SHALL return `false`. Note: it is illegal to compare a time that includes a time-zone value with one that does not. In such cases, the `time-in-range` function should be used.
 
-`urn:oasis:names:tc:xacml:2.0:function:time-in-range`
+`urn:oasis:names:tc:acal:1.0:function:time-in-range`
 
-: This function SHALL take three arguments of data type `https://www.w3.org/2001/XMLSchema#time` and SHALL return an `https://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `true` if the first argument falls in the range defined inclusively by the second and third arguments. Otherwise, it SHALL return `false`. Regardless of its value, the third argument SHALL be interpreted as a time that is equal to, or later than by less than twenty-four hours, the second argument. If no time zone is provided for the first argument, it SHALL use the default time zone at the context handler. If no time zone is provided for the second or third arguments, then they SHALL use the time zone from the first argument.
+: This function SHALL take three arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:time` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if the first argument falls in the range defined inclusively by the second and third arguments. Otherwise, it SHALL return `false`. Regardless of its value, the third argument SHALL be interpreted as a time that is equal to, or later than by less than twenty-four hours, the second argument. If no time zone is provided for the first argument, it SHALL use the default time zone at the context handler. If no time zone is provided for the second or third arguments, then they SHALL use the time zone from the first argument.
 
-`urn:oasis:names:tc:xacml:1.0:function:dateTime-greater-than`
+`urn:oasis:names:tc:acal:1.0:function:dateTime-greater-than`
 
-: This function SHALL take two arguments of data type `https://www.w3.org/2001/XMLSchema#dateTime` and SHALL return an `https://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `true` if and only if the first argument is greater than the second argument according to the order relation specified for `https://www.w3.org/2001/XMLSchema#dateTime` by [[XS](#xs)] part 2, section 3.2.7. Otherwise, it SHALL return `false`. Note: if a dateTime value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [[XS](#xs)].
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:dateTime` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is greater than the second argument according to the order relation specified for `urn:oasis:names:tc:acal:1.0:data-type:dateTime` by [[XS](#xs)] part 2, section 3.2.7. Otherwise, it SHALL return `false`. Note: if a dateTime value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [[XS](#xs)].
 
-`urn:oasis:names:tc:xacml:1.0:function:dateTime-greater-than-or-equal`
+`urn:oasis:names:tc:acal:1.0:function:dateTime-greater-than-or-equal`
 
-: This function SHALL take two arguments of data type `https://www.w3.org/2001/XMLSchema#dateTime` and SHALL return an `https://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `true` if and only if the first argument is greater than or equal to the second argument according to the order relation specified for `https://www.w3.org/2001/XMLSchema#dateTime` by [[XS](#xs)] part 2, section 3.2.7. Otherwise, it SHALL return `false`. Note: if a dateTime value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [[XS](#xs)].
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:dateTime` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is greater than or equal to the second argument according to the order relation specified for `urn:oasis:names:tc:acal:1.0:data-type:dateTime` by [[XS](#xs)] part 2, section 3.2.7. Otherwise, it SHALL return `false`. Note: if a dateTime value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [[XS](#xs)].
 
-`urn:oasis:names:tc:xacml:1.0:function:dateTime-less-than`
+`urn:oasis:names:tc:acal:1.0:function:dateTime-less-than`
 
-: This function SHALL take two arguments of data type `https://www.w3.org/2001/XMLSchema#dateTime` and SHALL return an `https://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `true` if and only if the first argument is less than the second argument according to the order relation specified for `https://www.w3.org/2001/XMLSchema#dateTime` by [XS, part 2, section 3.2.7]. Otherwise, it SHALL return `false`. Note: if a dateTime value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [[XS](#xs)].
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:dateTime` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is less than the second argument according to the order relation specified for `urn:oasis:names:tc:acal:1.0:data-type:dateTime` by [XS, part 2, section 3.2.7]. Otherwise, it SHALL return `false`. Note: if a dateTime value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [[XS](#xs)].
 
-`urn:oasis:names:tc:xacml:1.0:function:dateTime-less-than-or-equal`
+`urn:oasis:names:tc:acal:1.0:function:dateTime-less-than-or-equal`
 
-: This function SHALL take two arguments of data type `https://www.w3.org/2001/XMLSchema# dateTime` and SHALL return an `https://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `true` if and only if the first argument is less than or equal to the second argument according to the order relation specified for `https://www.w3.org/2001/XMLSchema#dateTime` by [[XS](#xs)] part 2, section 3.2.7. Otherwise, it SHALL return `false`. Note: if a dateTime value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [[XS](#xs)].
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type: dateTime` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is less than or equal to the second argument according to the order relation specified for `urn:oasis:names:tc:acal:1.0:data-type:dateTime` by [[XS](#xs)] part 2, section 3.2.7. Otherwise, it SHALL return `false`. Note: if a dateTime value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [[XS](#xs)].
 
-`urn:oasis:names:tc:xacml:1.0:function:date-greater-than`
+`urn:oasis:names:tc:acal:1.0:function:date-greater-than`
 
-: This function SHALL take two arguments of data type `https://www.w3.org/2001/XMLSchema#date` and SHALL return an `https://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `true` if and only if the first argument is greater than the second argument according to the order relation specified for `https://www.w3.org/2001/XMLSchema#date` by [[XS](#xs)] part 2, section 3.2.9. Otherwise, it SHALL return `false`. Note: if a date value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [[XS](#xs)].
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:date` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is greater than the second argument according to the order relation specified for `urn:oasis:names:tc:acal:1.0:data-type:date` by [[XS](#xs)] part 2, section 3.2.9. Otherwise, it SHALL return `false`. Note: if a date value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [[XS](#xs)].
 
-`urn:oasis:names:tc:xacml:1.0:function:date-greater-than-or-equal`
+`urn:oasis:names:tc:acal:1.0:function:date-greater-than-or-equal`
 
-: This function SHALL take two arguments of data type `https://www.w3.org/2001/XMLSchema#date` and SHALL return an `https://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `true` if and only if the first argument is greater than or equal to the second argument according to the order relation specified for `https://www.w3.org/2001/XMLSchema#date` by [[XS](#xs)] part 2, section 3.2.9. Otherwise, it SHALL return `false`. Note: if a date value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [[XS](#xs)].
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:date` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is greater than or equal to the second argument according to the order relation specified for `urn:oasis:names:tc:acal:1.0:data-type:date` by [[XS](#xs)] part 2, section 3.2.9. Otherwise, it SHALL return `false`. Note: if a date value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [[XS](#xs)].
 
-`urn:oasis:names:tc:xacml:1.0:function:date-less-than`
+`urn:oasis:names:tc:acal:1.0:function:date-less-than`
 
-: This function SHALL take two arguments of data type `https://www.w3.org/2001/XMLSchema#date` and SHALL return an `https://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `true` if and only if the first argument is less than the second argument according to the order relation specified for `https://www.w3.org/2001/XMLSchema#date` by [[XS](#xs)] part 2, section 3.2.9. Otherwise, it SHALL return `false`. Note: if a date value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [[XS](#xs)].
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:date` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is less than the second argument according to the order relation specified for `urn:oasis:names:tc:acal:1.0:data-type:date` by [[XS](#xs)] part 2, section 3.2.9. Otherwise, it SHALL return `false`. Note: if a date value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [[XS](#xs)].
 
-`urn:oasis:names:tc:xacml:1.0:function:date-less-than-or-equal`
+`urn:oasis:names:tc:acal:1.0:function:date-less-than-or-equal`
 
-: This function SHALL take two arguments of data type `https://www.w3.org/2001/XMLSchema#date` and SHALL return an `https://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `true` if and only if the first argument is less than or equal to the second argument according to the order relation specified for `https://www.w3.org/2001/XMLSchema#date` by [[XS](#xs)] part 2, section 3.2.9. Otherwise, it SHALL return `false`. Note: if a date value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [[XS](#xs)].
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:date` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is less than or equal to the second argument according to the order relation specified for `urn:oasis:names:tc:acal:1.0:data-type:date` by [[XS](#xs)] part 2, section 3.2.9. Otherwise, it SHALL return `false`. Note: if a date value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [[XS](#xs)].
 
 ### C.3.9 String Functions
 
 The following functions operate on strings and convert to and from other data types.
 
-`urn:oasis:names:tc:xacml:2.0:function:string-concatenate`
+`urn:oasis:names:tc:acal:1.0:function:string-concatenate`
 
-: This function SHALL take two or more arguments of data type `https://www.w3.org/2001/XMLSchema#string` and SHALL return a `https://www.w3.org/2001/XMLSchema#string`. The result SHALL be the concatenation, in order, of the arguments.
+: This function SHALL take two or more arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:string` and SHALL return a `urn:oasis:names:tc:acal:1.0:data-type:string`. The result SHALL be the concatenation, in order, of the arguments.
 
-`urn:oasis:names:tc:xacml:3.0:function:boolean-from-string`
+`urn:oasis:names:tc:acal:1.0:function:boolean-from-string`
 
-: This function SHALL take one argument of data type `https://www.w3.org/2001/XMLSchema#string`, and SHALL return an `https://www.w3.org/2001/XMLSchema#boolean`. The result SHALL be the string converted to a Boolean. If the argument is not a valid lexical representation of a Boolean, then the result SHALL be `Indeterminate` with status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`.
+: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:string`, and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The result SHALL be the string converted to a Boolean. If the argument is not a valid lexical representation of a Boolean, then the result SHALL be `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`.
 
-`urn:oasis:names:tc:xacml:3.0:function:string-from-boolean`
+`urn:oasis:names:tc:acal:1.0:function:string-from-boolean`
 
-: This function SHALL take one argument of data type `https://www.w3.org/2001/XMLSchema#boolean`, and SHALL return an `https://www.w3.org/2001/XMLSchema#string`. The result SHALL be the Boolean converted to a string in the canonical form specified in [[XS](#xs)].
+: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:boolean`, and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:string`. The result SHALL be the Boolean converted to a string in the canonical form specified in [[XS](#xs)].
 
-`urn:oasis:names:tc:xacml:3.0:function:integer-from-string`
+`urn:oasis:names:tc:acal:1.0:function:integer-from-string`
 
-: This function SHALL take one argument of data type `https://www.w3.org/2001/XMLSchema#string`, and SHALL return an `https://www.w3.org/2001/XMLSchema#integer`. The result SHALL be the string converted to an integer. If the argument is not a valid lexical representation of an integer, then the result SHALL be `Indeterminate` with status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`.
+: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:string`, and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:integer`. The result SHALL be the string converted to an integer. If the argument is not a valid lexical representation of an integer, then the result SHALL be `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`.
 
-`urn:oasis:names:tc:xacml:3.0:function:string-from-integer`
+`urn:oasis:names:tc:acal:1.0:function:string-from-integer`
 
-: This function SHALL take one argument of data type `https://www.w3.org/2001/XMLSchema#integer`, and SHALL return an `https://www.w3.org/2001/XMLSchema#string`. The result SHALL be the integer converted to a string in the canonical form specified in [[XS](#xs)].
+: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:integer`, and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:string`. The result SHALL be the integer converted to a string in the canonical form specified in [[XS](#xs)].
 
-`urn:oasis:names:tc:xacml:3.0:function:double-from-string`
+`urn:oasis:names:tc:acal:1.0:function:double-from-string`
 
-: This function SHALL take one argument of data type `https://www.w3.org/2001/XMLSchema#string`, and SHALL return an `https://www.w3.org/2001/XMLSchema#double`. The result SHALL be the string converted to a double. If the argument is not a valid lexical representation of a double, then the result SHALL be `Indeterminate` with status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`.
+: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:string`, and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:double`. The result SHALL be the string converted to a double. If the argument is not a valid lexical representation of a double, then the result SHALL be `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`.
 
-`urn:oasis:names:tc:xacml:3.0:function:string-from-double`
+`urn:oasis:names:tc:acal:1.0:function:string-from-double`
 
-: This function SHALL take one argument of data type `https://www.w3.org/2001/XMLSchema#double`, and SHALL return an `https://www.w3.org/2001/XMLSchema#string`. The result SHALL be the double converted to a string in the canonical form specified in [[XS](#xs)].
+: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:double`, and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:string`. The result SHALL be the double converted to a string in the canonical form specified in [[XS](#xs)].
 
-`urn:oasis:names:tc:xacml:3.0:function:time-from-string`
+`urn:oasis:names:tc:acal:1.0:function:time-from-string`
 
-: This function SHALL take one argument of data type `https://www.w3.org/2001/XMLSchema#string`, and SHALL return an `https://www.w3.org/2001/XMLSchema#time`. The result SHALL be the string converted to a time. If the argument is not a valid lexical representation of a time, then the result SHALL be `Indeterminate` with status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`.
+: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:string`, and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:time`. The result SHALL be the string converted to a time. If the argument is not a valid lexical representation of a time, then the result SHALL be `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`.
 
-`urn:oasis:names:tc:xacml:3.0:function:string-from-time`
+`urn:oasis:names:tc:acal:1.0:function:string-from-time`
 
-: This function SHALL take one argument of data type `https://www.w3.org/2001/XMLSchema#time`, and SHALL return an `https://www.w3.org/2001/XMLSchema#string`. The result SHALL be the time converted to a string in the canonical form specified in [[XS](#xs)].
+: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:time`, and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:string`. The result SHALL be the time converted to a string in the canonical form specified in [[XS](#xs)].
 
-`urn:oasis:names:tc:xacml:3.0:function:date-from-string`
+`urn:oasis:names:tc:acal:1.0:function:date-from-string`
 
-: This function SHALL take one argument of data type `https://www.w3.org/2001/XMLSchema#string`, and SHALL return an `https://www.w3.org/2001/XMLSchema#date`. The result SHALL be the string converted to a date. If the argument is not a valid lexical representation of a date, then the result SHALL be `Indeterminate` with status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`.
+: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:string`, and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:date`. The result SHALL be the string converted to a date. If the argument is not a valid lexical representation of a date, then the result SHALL be `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`.
 
-`urn:oasis:names:tc:xacml:3.0:function:string-from-date`
+`urn:oasis:names:tc:acal:1.0:function:string-from-date`
 
-: This function SHALL take one argument of data type `https://www.w3.org/2001/XMLSchema#date`, and SHALL return an `https://www.w3.org/2001/XMLSchema#string`. The result SHALL be the date converted to a string in the canonical form specified in [[XS](#xs)].
+: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:date`, and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:string`. The result SHALL be the date converted to a string in the canonical form specified in [[XS](#xs)].
 
-`urn:oasis:names:tc:xacml:3.0:function:dateTime-from-string`
+`urn:oasis:names:tc:acal:1.0:function:dateTime-from-string`
 
-: This function SHALL take one argument of data type `https://www.w3.org/2001/XMLSchema#string`, and SHALL return an `https://www.w3.org/2001/XMLSchema#dateTime`. The result SHALL be the string converted to a dateTime. If the argument is not a valid lexical representation of a dateTime, then the result SHALL be `Indeterminate` with status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`.
+: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:string`, and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:dateTime`. The result SHALL be the string converted to a dateTime. If the argument is not a valid lexical representation of a dateTime, then the result SHALL be `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`.
 
-`urn:oasis:names:tc:xacml:3.0:function:string-from-dateTime`
+`urn:oasis:names:tc:acal:1.0:function:string-from-dateTime`
 
-: This function SHALL take one argument of data type `https://www.w3.org/2001/XMLSchema#dateTime`, and SHALL return an `https://www.w3.org/2001/XMLSchema#string`. The result SHALL be the dateTime converted to a string in the canonical form specified in [[XS](#xs)].
+: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:dateTime`, and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:string`. The result SHALL be the dateTime converted to a string in the canonical form specified in [[XS](#xs)].
 
-`urn:oasis:names:tc:xacml:3.0:function:anyURI-from-string`
+`urn:oasis:names:tc:acal:1.0:function:anyURI-from-string`
 
-: This function SHALL take one argument of data type `https://www.w3.org/2001/XMLSchema#string`, and SHALL return a `https://www.w3.org/2001/XMLSchema#anyURI`. The result SHALL be the URI constructed by converting the argument to a URI. If the argument is not a valid lexical representation of a URI, then the result SHALL be `Indeterminate` with status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`.
+: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:string`, and SHALL return a `urn:oasis:names:tc:acal:1.0:data-type:anyURI`. The result SHALL be the URI constructed by converting the argument to a URI. If the argument is not a valid lexical representation of a URI, then the result SHALL be `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`.
 
-`urn:oasis:names:tc:xacml:3.0:function:string-from-anyURI`
+`urn:oasis:names:tc:acal:1.0:function:string-from-anyURI`
 
-: This function SHALL take one argument of data type `https://www.w3.org/2001/XMLSchema#anyURI`, and SHALL return an `https://www.w3.org/2001/XMLSchema#string`. The result SHALL be the URI converted to a string in the form it was originally represented.
+: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:anyURI`, and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:string`. The result SHALL be the URI converted to a string in the form it was originally represented.
 
-`urn:oasis:names:tc:xacml:3.0:function:dayTimeDuration-from-string`
+`urn:oasis:names:tc:acal:1.0:function:dayTimeDuration-from-string`
 
-: This function SHALL take one argument of data type `https://www.w3.org/2001/XMLSchema#string`, and SHALL return an `https://www.w3.org/2001/XMLSchema#dayTimeDuration`. The result SHALL be the string converted to a dayTimeDuration. If the argument is not a valid lexical representation of a dayTimeDuration, then the result SHALL be `Indeterminate` with status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`.
+: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:string`, and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:dayTimeDuration`. The result SHALL be the string converted to a dayTimeDuration. If the argument is not a valid lexical representation of a dayTimeDuration, then the result SHALL be `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`.
 
-`urn:oasis:names:tc:xacml:3.0:function:string-from-dayTimeDuration`
+`urn:oasis:names:tc:acal:1.0:function:string-from-dayTimeDuration`
 
-: This function SHALL take one argument of data type `https://www.w3.org/2001/XMLSchema#dayTimeDuration`, and SHALL return an `https://www.w3.org/2001/XMLSchema#string`. The result SHALL be the dayTimeDuration converted to a string in the canonical form specified in [XPathFunc].
+: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:dayTimeDuration`, and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:string`. The result SHALL be the dayTimeDuration converted to a string in the canonical form specified in [XPathFunc].
 
-`urn:oasis:names:tc:xacml:3.0:function:yearMonthDuration-from-string`
+`urn:oasis:names:tc:acal:1.0:function:yearMonthDuration-from-string`
 
-: This function SHALL take one argument of data type `https://www.w3.org/2001/XMLSchema#string`, and SHALL return an `https://www.w3.org/2001/XMLSchema#yearMonthDuration`. The result SHALL be the string converted to a yearMonthDuration. If the argument is not a valid lexical representation of a yearMonthDuration, then the result SHALL be `Indeterminate` with status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`.
+: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:string`, and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:yearMonthDuration`. The result SHALL be the string converted to a yearMonthDuration. If the argument is not a valid lexical representation of a yearMonthDuration, then the result SHALL be `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`.
 
-`urn:oasis:names:tc:xacml:3.0:function:string-from-yearMonthDuration`
+`urn:oasis:names:tc:acal:1.0:function:string-from-yearMonthDuration`
 
-: This function SHALL take one argument of data type `https://www.w3.org/2001/XMLSchema#yearMonthDuration`, and SHALL return an `https://www.w3.org/2001/XMLSchema#string`. The result SHALL be the yearMonthDuration converted to a string in the canonical form specified in [XPathFunc].
+: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:yearMonthDuration`, and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:string`. The result SHALL be the yearMonthDuration converted to a string in the canonical form specified in [XPathFunc].
 
-`urn:oasis:names:tc:xacml:3.0:function:x500Name-from-string`
+`urn:oasis:names:tc:acal:1.0:function:x500Name-from-string`
 
-: This function SHALL take one argument of data type `https://www.w3.org/2001/XMLSchema#string`, and SHALL return an `urn:oasis:names:tc:xacml:1.0:data-type:x500Name`. The result SHALL be the string converted to an x500Name. If the argument is not a valid lexical representation of a X500Name, then the result SHALL be `Indeterminate` with status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`.
+: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:string`, and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:x500Name`. The result SHALL be the string converted to an x500Name. If the argument is not a valid lexical representation of a X500Name, then the result SHALL be `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`.
 
-`urn:oasis:names:tc:xacml:3.0:function:string-from-x500Name`
+`urn:oasis:names:tc:acal:1.0:function:string-from-x500Name`
 
-: This function SHALL take one argument of data type `urn:oasis:names:tc:xacml:1.0:data-type:x500Name`, and SHALL return an `https://www.w3.org/2001/XMLSchema#string`. The result SHALL be the x500Name converted to a string in the form it was originally represented.
+: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:x500Name`, and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:string`. The result SHALL be the x500Name converted to a string in the form it was originally represented.
 
-`urn:oasis:names:tc:xacml:3.0:function:rfc822Name-from-string`
+`urn:oasis:names:tc:acal:1.0:function:rfc822Name-from-string`
 
-: This function SHALL take one argument of data type `https://www.w3.org/2001/XMLSchema#string`, and SHALL return an `urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name`. The result SHALL be the string converted to an rfc822Name. If the argument is not a valid lexical representation of an rfc822Name, then the result SHALL be `Indeterminate` with status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`.
+: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:string`, and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:rfc822Name`. The result SHALL be the string converted to an rfc822Name. If the argument is not a valid lexical representation of an rfc822Name, then the result SHALL be `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`.
 
-`urn:oasis:names:tc:xacml:3.0:function:string-from-rfc822Name`
+`urn:oasis:names:tc:acal:1.0:function:string-from-rfc822Name`
 
-: This function SHALL take one argument of data type `urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name`, and SHALL return an `https://www.w3.org/2001/XMLSchema#string`. The result SHALL be the rfc822Name converted to a string in the form it was originally represented.
+: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:rfc822Name`, and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:string`. The result SHALL be the rfc822Name converted to a string in the form it was originally represented.
 
-`urn:oasis:names:tc:xacml:3.0:function:ipAddress-from-string`
+`urn:oasis:names:tc:acal:1.0:function:ipAddress-from-string`
 
-: This function SHALL take one argument of data type `https://www.w3.org/2001/XMLSchema#string`, and SHALL return an `urn:oasis:names:tc:xacml:2.0:data-type:ipAddress`. The result SHALL be the string converted to an ipAddress. If the argument is not a valid lexical representation of an ipAddress, then the result SHALL be `Indeterminate` with status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`.
+: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:string`, and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:ipAddress`. The result SHALL be the string converted to an ipAddress. If the argument is not a valid lexical representation of an ipAddress, then the result SHALL be `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`.
 
-`urn:oasis:names:tc:xacml:3.0:function:string-from-ipAddress`
+`urn:oasis:names:tc:acal:1.0:function:string-from-ipAddress`
 
-: This function SHALL take one argument of data type `urn:oasis:names:tc:xacml:2.0:data-type:ipAddress`, and SHALL return an `https://www.w3.org/2001/XMLSchema#string`. The result SHALL be the ipAddress converted to a string in the form it was originally represented.
+: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:ipAddress`, and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:string`. The result SHALL be the ipAddress converted to a string in the form it was originally represented.
 
-`urn:oasis:names:tc:xacml:3.0:function:dnsName-from-string`
+`urn:oasis:names:tc:acal:1.0:function:dnsName-from-string`
 
-: This function SHALL take one argument of data type `https://www.w3.org/2001/XMLSchema#string`, and SHALL return an `urn:oasis:names:tc:xacml:2.0:data-type:dnsName`. The result SHALL be the string converted to a dnsName. If the argument is not a valid lexical representation of a dnsName, then the result SHALL be `Indeterminate` with status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`.
+: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:string`, and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:dnsName`. The result SHALL be the string converted to a dnsName. If the argument is not a valid lexical representation of a dnsName, then the result SHALL be `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`.
 
-`urn:oasis:names:tc:xacml:3.0:function:string-from-dnsName`
+`urn:oasis:names:tc:acal:1.0:function:string-from-dnsName`
 
-: This function SHALL take one argument of data type `urn:oasis:names:tc:xacml:2.0:data-type:dnsName`, and SHALL return an `https://www.w3.org/2001/XMLSchema#string`. The result SHALL be the dnsName converted to a string in the form it was originally represented.
+: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:dnsName`, and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:string`. The result SHALL be the dnsName converted to a string in the form it was originally represented.
 
-`urn:oasis:names:tc:xacml:3.0:function:string-starts-with`
+`urn:oasis:names:tc:acal:1.0:function:string-starts-with`
 
-: This function SHALL take two arguments of data type `https://www.w3.org/2001/XMLSchema#string` and SHALL return a `https://www.w3.org/2001/XMLSchema#boolean`. The result SHALL be `true` if the second string begins with the first string, and `false` otherwise. Equality testing SHALL be done as defined for `urn:oasis:names:tc:xacml:1.0:function:string-equal`.
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:string` and SHALL return a `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The result SHALL be `true` if the second string begins with the first string, and `false` otherwise. Equality testing SHALL be done as defined for `urn:oasis:names:tc:acal:1.0:function:string-equal`.
 
-`urn:oasis:names:tc:xacml:3.0:function:anyURI-starts-with`
+`urn:oasis:names:tc:acal:1.0:function:anyURI-starts-with`
 
-: This function SHALL take a first argument of data type`https://www.w3.org/2001/XMLSchema#string` and an a second argument of data type `https://www.w3.org/2001/XMLSchema#anyURI` and SHALL return a `https://www.w3.org/2001/XMLSchema#boolean`. The result SHALL be `true` if the URI converted to a string with `urn:oasis:names:tc:xacml:3.0:function:string-from-anyURI` begins with the string, and `false` otherwise. Equality testing SHALL be done as defined for `urn:oasis:names:tc:xacml:1.0:function:string-equal`.
+: This function SHALL take a first argument of data type`urn:oasis:names:tc:acal:1.0:data-type:string` and an a second argument of data type `urn:oasis:names:tc:acal:1.0:data-type:anyURI` and SHALL return a `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The result SHALL be `true` if the URI converted to a string with `urn:oasis:names:tc:acal:1.0:function:string-from-anyURI` begins with the string, and `false` otherwise. Equality testing SHALL be done as defined for `urn:oasis:names:tc:acal:1.0:function:string-equal`.
 
-`urn:oasis:names:tc:xacml:3.0:function:string-ends-with`
+`urn:oasis:names:tc:acal:1.0:function:string-ends-with`
 
-: This function SHALL take two arguments of data type `https://www.w3.org/2001/XMLSchema#string` and SHALL return a `https://www.w3.org/2001/XMLSchema#boolean`. The result SHALL be `true` if the second string ends with the first string, and `false` otherwise. Equality testing SHALL be done as defined for `urn:oasis:names:tc:xacml:1.0:function:string-equal`.
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:string` and SHALL return a `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The result SHALL be `true` if the second string ends with the first string, and `false` otherwise. Equality testing SHALL be done as defined for `urn:oasis:names:tc:acal:1.0:function:string-equal`.
 
-`urn:oasis:names:tc:xacml:3.0:function:anyURI-ends-with`
+`urn:oasis:names:tc:acal:1.0:function:anyURI-ends-with`
 
-: This function SHALL take a first argument of data type `https://www.w3.org/2001/XMLSchema#string` and an a second argument of data type `https://www.w3.org/2001/XMLSchema#anyURI` and SHALL return a `https://www.w3.org/2001/XMLSchema#boolean`. The result SHALL be `true` if the URI converted to a string with `urn:oasis:names:tc:xacml:3.0:function:string-from-anyURI` ends with the string, and `false` otherwise. Equality testing SHALL be done as defined for `urn:oasis:names:tc:xacml:1.0:function:string-equal`.
+: This function SHALL take a first argument of data type `urn:oasis:names:tc:acal:1.0:data-type:string` and an a second argument of data type `urn:oasis:names:tc:acal:1.0:data-type:anyURI` and SHALL return a `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The result SHALL be `true` if the URI converted to a string with `urn:oasis:names:tc:acal:1.0:function:string-from-anyURI` ends with the string, and `false` otherwise. Equality testing SHALL be done as defined for `urn:oasis:names:tc:acal:1.0:function:string-equal`.
 
-`urn:oasis:names:tc:xacml:3.0:function:string-contains`
+`urn:oasis:names:tc:acal:1.0:function:string-contains`
 
-: This function SHALL take two arguments of data type `https://www.w3.org/2001/XMLSchema#string` and SHALL return a `https://www.w3.org/2001/XMLSchema#boolean`. The result SHALL be `true` if the second string contains the first string, and `false` otherwise. Equality testing SHALL be done as defined for `urn:oasis:names:tc:xacml:1.0:function:string-equal`.
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:string` and SHALL return a `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The result SHALL be `true` if the second string contains the first string, and `false` otherwise. Equality testing SHALL be done as defined for `urn:oasis:names:tc:acal:1.0:function:string-equal`.
 
-`urn:oasis:names:tc:xacml:3.0:function:anyURI-contains`
+`urn:oasis:names:tc:acal:1.0:function:anyURI-contains`
 
-: This function SHALL take a first argument of data type `https://www.w3.org/2001/XMLSchema#string` and an a second argument of data type `https://www.w3.org/2001/XMLSchema#anyURI` and SHALL return a `https://www.w3.org/2001/XMLSchema#boolean`. The result SHALL be `true` if the URI converted to a string with `urn:oasis:names:tc:xacml:3.0:function:string-from-anyURI` contains the string, and `false` otherwise. Equality testing SHALL be done as defined for `urn:oasis:names:tc:xacml:1.0:function:string-equal`.
+: This function SHALL take a first argument of data type `urn:oasis:names:tc:acal:1.0:data-type:string` and an a second argument of data type `urn:oasis:names:tc:acal:1.0:data-type:anyURI` and SHALL return a `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The result SHALL be `true` if the URI converted to a string with `urn:oasis:names:tc:acal:1.0:function:string-from-anyURI` contains the string, and `false` otherwise. Equality testing SHALL be done as defined for `urn:oasis:names:tc:acal:1.0:function:string-equal`.
 
-`urn:oasis:names:tc:xacml:3.0:function:string-substring`
+`urn:oasis:names:tc:acal:1.0:function:string-substring`
 
-: This function SHALL take a first argument of data type `https://www.w3.org/2001/XMLSchema#string` and a second and a third argument of type `https://www.w3.org/2001/XMLSchema#integer` and SHALL return a `https://www.w3.org/2001/XMLSchema#string`. The result SHALL be the substring of the first argument beginning at the position given by the second argument and ending at the position before the position given by the third argument. The first character of the string has position zero. The negative integer value -1 given for the third arguments indicates the end of the string. If the second or third arguments are out of bounds, then the function MUST evaluate to `Indeterminate` with a status code of `urn:oasis:names:tc:xacml:1.0:status:processing-error`.
+: This function SHALL take a first argument of data type `urn:oasis:names:tc:acal:1.0:data-type:string` and a second and a third argument of type `urn:oasis:names:tc:acal:1.0:data-type:integer` and SHALL return a `urn:oasis:names:tc:acal:1.0:data-type:string`. The result SHALL be the substring of the first argument beginning at the position given by the second argument and ending at the position before the position given by the third argument. The first character of the string has position zero. The negative integer value -1 given for the third arguments indicates the end of the string. If the second or third arguments are out of bounds, then the function MUST evaluate to `Indeterminate` with a status code of `urn:oasis:names:tc:acal:1.0:status:processing-error`.
 
-`urn:oasis:names:tc:xacml:3.0:function:anyURI-substring`
+`urn:oasis:names:tc:acal:1.0:function:anyURI-substring`
 
-: This function SHALL take a first argument of data type `https://www.w3.org/2001/XMLSchema#anyURI` and a second and a third argument of type `https://www.w3.org/2001/XMLSchema#integer` and SHALL return a `https://www.w3.org/2001/XMLSchema#string`. The result SHALL be the substring of the first argument converted to a string with `urn:oasis:names:tc:xacml:3.0:function:string-from-anyURI` beginning at the position given by the second argument and ending at the position before the position given by the third argument. The first character of the URI converted to a string has position zero. The negative integer value -1 given for the third arguments indicates the end of the string. If the second or third arguments are out of bounds, then the function MUST evaluate to `Indeterminate` with a status code of `urn:oasis:names:tc:xacml:1.0:status:processing-error`. If the resulting substring is not syntactically a valid URI, then the function MUST evaluate to `Indeterminate` with a status code of `urn:oasis:names:tc:xacml:1.0:status:processing-error`.
+: This function SHALL take a first argument of data type `urn:oasis:names:tc:acal:1.0:data-type:anyURI` and a second and a third argument of type `urn:oasis:names:tc:acal:1.0:data-type:integer` and SHALL return a `urn:oasis:names:tc:acal:1.0:data-type:string`. The result SHALL be the substring of the first argument converted to a string with `urn:oasis:names:tc:acal:1.0:function:string-from-anyURI` beginning at the position given by the second argument and ending at the position before the position given by the third argument. The first character of the URI converted to a string has position zero. The negative integer value -1 given for the third arguments indicates the end of the string. If the second or third arguments are out of bounds, then the function MUST evaluate to `Indeterminate` with a status code of `urn:oasis:names:tc:acal:1.0:status:processing-error`. If the resulting substring is not syntactically a valid URI, then the function MUST evaluate to `Indeterminate` with a status code of `urn:oasis:names:tc:acal:1.0:status:processing-error`.
 
 ### C.3.10 Bag Functions
 
 These functions operate on a bag of `type` values, where `type` is one of the ACAL data types, and x.x is a version of XACML where the function has been defined. Some additional conditions defined for each function below SHALL cause the expression to evaluate to `Indeterminate` if not satisfied.
 
-`urn:oasis:names:tc:xacml:x.x:function:type-one-and-only`
+`urn:oasis:names:tc:acal:1.0:function:type-one-and-only`
 
 : This function SHALL take a bag of `type` values as an argument and SHALL return a value of `type`. It SHALL return the only value in the bag. If the bag does not have one and only one value, then the expression SHALL evaluate to `Indeterminate`.
 
-`urn:oasis:names:tc:xacml:x.x:function:type-bag-size`
+`urn:oasis:names:tc:acal:1.0:function:type-bag-size`
 
 : This function SHALL take a bag of `type` values as an argument and SHALL return an <!-- Line break added for the previous line to fit on a PDF page -->
-: `https://www.w3.org/2001/XMLSchema#integer` indicating the number of values in the bag.
+: `urn:oasis:names:tc:acal:1.0:data-type:integer` indicating the number of values in the bag.
 
-`urn:oasis:names:tc:xacml:x.x:function:type-is-in`
+`urn:oasis:names:tc:acal:1.0:function:type-is-in`
 
-: This function SHALL take an argument of `type` as the first argument and a bag of `type` values as the second argument and SHALL return an `https://www.w3.org/2001/XMLSchema#boolean`. The function SHALL evaluate to `true` if and only if the first argument matches by <!-- Line break added for the previous line to fit on a PDF page -->
-: `urn:oasis:names:tc:xacml:x.x:function:type-equal` any value in the bag. Otherwise, it SHALL return `false`.
+: This function SHALL take an argument of `type` as the first argument and a bag of `type` values as the second argument and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The function SHALL evaluate to `true` if and only if the first argument matches by <!-- Line break added for the previous line to fit on a PDF page -->
+: `urn:oasis:names:tc:acal:1.0:function:type-equal` any value in the bag. Otherwise, it SHALL return `false`.
 
-`urn:oasis:names:tc:xacml:x.x:function:type-bag`
+`urn:oasis:names:tc:acal:1.0:function:type-bag`
 
 : This function SHALL take any number of arguments of `type` and return a bag of `type` values containing the values of the arguments. An application of this function to zero arguments SHALL produce an empty bag of the specified data type.
 
@@ -5045,38 +4999,38 @@ These functions operate on a bag of `type` values, where `type` is one of the AC
 
 These functions operate on bags mimicking sets by eliminating duplicate values from the bag.
 
-`urn:oasis:names:tc:xacml:x.x:function:type-intersection`
+`urn:oasis:names:tc:acal:1.0:function:type-intersection`
 
-: This function SHALL take two arguments that are both a bag of `type` values. It SHALL return a bag of `type` values such that it contains only values that are common between the two bags, which is determined by `urn:oasis:names:tc:xacml:x.x:function:type-equal`. Duplicates, as determined by `urn:oasis:names:tc:xacml:x.x:function:type-equal`, SHALL NOT exist in the result.
+: This function SHALL take two arguments that are both a bag of `type` values. It SHALL return a bag of `type` values such that it contains only values that are common between the two bags, which is determined by `urn:oasis:names:tc:acal:1.0:function:type-equal`. Duplicates, as determined by `urn:oasis:names:tc:acal:1.0:function:type-equal`, SHALL NOT exist in the result.
 
-`urn:oasis:names:tc:xacml:x.x:function:type-at-least-one-member-of`
+`urn:oasis:names:tc:acal:1.0:function:type-at-least-one-member-of`
 
-: This function SHALL take two arguments that are both a bag of `type` values. It SHALL return a `https://www.w3.org/2001/XMLSchema#boolean`. The function SHALL evaluate to `true` if and only if at least one value of the first argument is contained in the second argument as determined by `urn:oasis:names:tc:xacml:x.x:function:type-is-in`.
+: This function SHALL take two arguments that are both a bag of `type` values. It SHALL return a `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The function SHALL evaluate to `true` if and only if at least one value of the first argument is contained in the second argument as determined by `urn:oasis:names:tc:acal:1.0:function:type-is-in`.
 
-`urn:oasis:names:tc:xacml:x.x:function:type-union`
+`urn:oasis:names:tc:acal:1.0:function:type-union`
 
-: This function SHALL take two or more arguments that are both a bag of `type` values. The expression SHALL return a bag of `type` such that it contains all the values of all the argument bags. Duplicates, as determined by `urn:oasis:names:tc:xacml:x.x:function:type-equal`, SHALL NOT exist in the result.
+: This function SHALL take two or more arguments that are both a bag of `type` values. The expression SHALL return a bag of `type` such that it contains all the values of all the argument bags. Duplicates, as determined by `urn:oasis:names:tc:acal:1.0:function:type-equal`, SHALL NOT exist in the result.
 
-`urn:oasis:names:tc:xacml:x.x:function:type-subset`
+`urn:oasis:names:tc:acal:1.0:function:type-subset`
 
-: This function SHALL take two arguments that are both a bag of `type` values. It SHALL return a `https://www.w3.org/2001/XMLSchema#boolean`. It SHALL return `true` if and only if the first argument is a subset of the second argument. Each argument SHALL be considered to have had its duplicates removed, as determined by `urn:oasis:names:tc:xacml:x.x:function:type-equal`, before the subset calculation.
+: This function SHALL take two arguments that are both a bag of `type` values. It SHALL return a `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is a subset of the second argument. Each argument SHALL be considered to have had its duplicates removed, as determined by `urn:oasis:names:tc:acal:1.0:function:type-equal`, before the subset calculation.
 
-`urn:oasis:names:tc:xacml:x.x:function:type-set-equals`
+`urn:oasis:names:tc:acal:1.0:function:type-set-equals`
 
-: This function SHALL take two arguments that are both a bag of `type` values. It SHALL return a `https://www.w3.org/2001/XMLSchema#boolean`. It SHALL return the result of applying `urn:oasis:names:tc:xacml:1.0:function:and` to the application of <!-- Line break added for the previous line to fit on a PDF page -->
-: `urn:oasis:names:tc:xacml:x.x:function:type-subset` to the first and second arguments and the application of `urn:oasis:names:tc:xacml:x.x:function:type-subset` to the second and first arguments.
+: This function SHALL take two arguments that are both a bag of `type` values. It SHALL return a `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return the result of applying `urn:oasis:names:tc:acal:1.0:function:and` to the application of <!-- Line break added for the previous line to fit on a PDF page -->
+: `urn:oasis:names:tc:acal:1.0:function:type-subset` to the first and second arguments and the application of `urn:oasis:names:tc:acal:1.0:function:type-subset` to the second and first arguments.
 
 ### C.3.12 Higher-order Bag Functions
 
 This section describes functions in ACAL that perform operations on bags such that functions may be applied to the bags in general.
 
-Examples in this section are presented in both the XML and JSON representations and assume the use of the standardized short identifier set `urn:oasis:names:tc:xacml:4.0:core:identifiers`.
+Examples in this section are presented in both the XML and JSON representations and assume the use of the standardized short identifier set `urn:oasis:names:tc:acal:1.0:core:identifiers`.
 
-* `urn:oasis:names:tc:xacml:3.0:function:any-of`
+* `urn:oasis:names:tc:acal:1.0:function:any-of`
 
   This function applies a Boolean function between single values and a bag of values, and SHALL return `true` if and only if the function is `true` for at least one value in the bag.
 
-  This function SHALL take n+1 arguments, where n is one or greater. The first argument SHALL be a `FunctionType` object that names a Boolean function that takes n single value arguments. Under the remaining n arguments, n-1 arguments SHALL be single values and one SHALL be a bag of values. The expression SHALL be evaluated as if the function named in the `FunctionType` object were applied to the n-1 single value arguments and each value in the bag argument and the results are combined with `urn:oasis:names:tc:xacml:1.0:function:or`.
+  This function SHALL take n+1 arguments, where n is one or greater. The first argument SHALL be a `FunctionType` object that names a Boolean function that takes n single value arguments. Under the remaining n arguments, n-1 arguments SHALL be single values and one SHALL be a bag of values. The expression SHALL be evaluated as if the function named in the `FunctionType` object were applied to the n-1 single value arguments and each value in the bag argument and the results are combined with `urn:oasis:names:tc:acal:1.0:function:or`.
 
   For example, the following expression evaluates to `true`:
 
@@ -5115,11 +5069,11 @@ Examples in this section are presented in both the XML and JSON representations 
 <span> </span>
 :  This expression is `true` because the first argument is equal to at least one of the values in the bag, according to the function.
 
-* `urn:oasis:names:tc:xacml:3.0:function:all-of`
+* `urn:oasis:names:tc:acal:1.0:function:all-of`
 
   This function applies a Boolean function between single values and a bag of values, and returns `true` if and only if the function is `true` for every value in the bag.
 
-  This function SHALL take n+1 arguments, where n is one or greater. The first argument SHALL be a `FunctionType` object that names a Boolean function that takes n single value arguments. Under the remaining n arguments, n-1 arguments SHALL be single values and one SHALL be a bag of values. The expression SHALL be evaluated as if the function named in the `FunctionType` object were applied to the n-1 single-value arguments and each value of the bag argument and the results are combined with `urn:oasis:names:tc:xacml:1.0:function:and`.
+  This function SHALL take n+1 arguments, where n is one or greater. The first argument SHALL be a `FunctionType` object that names a Boolean function that takes n single value arguments. Under the remaining n arguments, n-1 arguments SHALL be single values and one SHALL be a bag of values. The expression SHALL be evaluated as if the function named in the `FunctionType` object were applied to the n-1 single-value arguments and each value of the bag argument and the results are combined with `urn:oasis:names:tc:acal:1.0:function:and`.
 
   For example, the following expression evaluates to `true`:
 
@@ -5158,11 +5112,11 @@ Examples in this section are presented in both the XML and JSON representations 
 <span> </span>
 :  The expression is `true` because the first argument (10) is greater than all of the values in the bag (9, 3, 4 and 2).
 
-* `urn:oasis:names:tc:xacml:3.0:function:any-of-any`
+* `urn:oasis:names:tc:acal:1.0:function:any-of-any`
 
   This function applies a Boolean function on each tuple from the cross product on all bag arguments, and returns `true` if and only if the function is `true` for at least one inside-function call.
 
-  This function SHALL take n+1 arguments, where n is one or greater. The first argument SHALL be an `FunctionType` object that names a Boolean function that takes n single-value arguments. The remaining arguments are either single values or bags of values. The expression SHALL be evaluated as if the function named in the `FunctionType` object was applied between every tuple of the cross product on all bags and single values, and the results were combined using `urn:oasis:names:tc:xacml:1.0:function:or`. The semantics are that the result of the expression SHALL be `true` if and only if the applied function is `true` for at least one function call on the tuples from the bags and single values.
+  This function SHALL take n+1 arguments, where n is one or greater. The first argument SHALL be an `FunctionType` object that names a Boolean function that takes n single-value arguments. The remaining arguments are either single values or bags of values. The expression SHALL be evaluated as if the function named in the `FunctionType` object was applied between every tuple of the cross product on all bags and single values, and the results were combined using `urn:oasis:names:tc:acal:1.0:function:or`. The semantics are that the result of the expression SHALL be `true` if and only if the applied function is `true` for at least one function call on the tuples from the bags and single values.
 
   For example, the following expression evaluates to `true`:
 
@@ -5210,11 +5164,11 @@ Examples in this section are presented in both the XML and JSON representations 
 <span> </span>
 :  The expression is `true` because at least one of the values of the first bag, namely `Ringo`, is equal to at least one of the values of the second bag.
 
-* `urn:oasis:names:tc:xacml:1.0:function:all-of-any`
+* `urn:oasis:names:tc:acal:1.0:function:all-of-any`
 
   This function applies a Boolean function between the values of two bags. The expression SHALL be `true` if and only if the supplied function is `true` between each value of the first bag and any value of the second bag.
 
-  This function SHALL take three arguments. The first argument SHALL be a `FunctionType` object that names a Boolean function that takes two single-value arguments. The second argument SHALL be a bag of values. The third argument SHALL be a bag of values. The expression SHALL be evaluated as if the `urn:oasis:names:tc:xacml:3.0:function:any-of` function had been applied to each value of the first bag and the whole of the second bag using the supplied function, and the results were then combined using `urn:oasis:names:tc:xacml:1.0:function:and`.
+  This function SHALL take three arguments. The first argument SHALL be a `FunctionType` object that names a Boolean function that takes two single-value arguments. The second argument SHALL be a bag of values. The third argument SHALL be a bag of values. The expression SHALL be evaluated as if the `urn:oasis:names:tc:acal:1.0:function:any-of` function had been applied to each value of the first bag and the whole of the second bag using the supplied function, and the results were then combined using `urn:oasis:names:tc:acal:1.0:function:and`.
 
   For example, the following expression evaluates to `true`:
 
@@ -5262,11 +5216,11 @@ Examples in this section are presented in both the XML and JSON representations 
 <span> </span>
 :  The expression is `true` because each of the values of the first bag is greater than at least one of the values of the second bag.
 
-* `urn:oasis:names:tc:xacml:1.0:function:any-of-all`
+* `urn:oasis:names:tc:acal:1.0:function:any-of-all`
 
   This function applies a Boolean function between the values of two bags. The expression SHALL be `true` if and only if the supplied function is `true` between each value of the second bag and any value of the first bag.
 
-  This function SHALL take three arguments. The first argument SHALL be a `FunctionType` object that names a Boolean function that takes two single-value arguments. The second argument SHALL be a bag of values. The third argument SHALL be a bag of values. The expression SHALL be evaluated as if the `urn:oasis:names:tc:xacml:3.0:function:any-of` function had been applied to each value of the second bag and the whole of the first bag using the supplied function, and the results were then combined using `urn:oasis:names:tc:xacml:1.0:function:and`.
+  This function SHALL take three arguments. The first argument SHALL be a `FunctionType` object that names a Boolean function that takes two single-value arguments. The second argument SHALL be a bag of values. The third argument SHALL be a bag of values. The expression SHALL be evaluated as if the `urn:oasis:names:tc:acal:1.0:function:any-of` function had been applied to each value of the second bag and the whole of the first bag using the supplied function, and the results were then combined using `urn:oasis:names:tc:acal:1.0:function:and`.
 
   For example, the following expression evaluates to `true`:
 
@@ -5314,11 +5268,11 @@ Examples in this section are presented in both the XML and JSON representations 
 <span> </span>
 :  The expression is `true` because, for all of the values in the second bag, there is a value in the first bag that is greater.
 
-* `urn:oasis:names:tc:xacml:1.0:function:all-of-all`
+* `urn:oasis:names:tc:acal:1.0:function:all-of-all`
 
   This function applies a Boolean function between the values of two bags. The expression SHALL be `true` if and only if the supplied function is `true` between each and every value of the first bag collectively against all the values of the second bag.
 
-  This function SHALL take three arguments. The first argument SHALL be an `FunctionType` object that names a Boolean function that takes two single-value arguments. The second argument SHALL be a bag of values. The third argument SHALL be a bag of values. The expression is evaluated as if the function named in the `FunctionType` object were applied between every value in the second argument and every value in the third argument and the results were combined using `urn:oasis:names:tc:xacml:1.0:function:and`. The semantics are that the result of the expression is `true` if and only if the applied function is `true` for all the values of the first bag compared to all the values of the second bag.
+  This function SHALL take three arguments. The first argument SHALL be an `FunctionType` object that names a Boolean function that takes two single-value arguments. The second argument SHALL be a bag of values. The third argument SHALL be a bag of values. The expression is evaluated as if the function named in the `FunctionType` object were applied between every value in the second argument and every value in the third argument and the results were combined using `urn:oasis:names:tc:acal:1.0:function:and`. The semantics are that the result of the expression is `true` if and only if the applied function is `true` for all the values of the first bag compared to all the values of the second bag.
 
   For example, the following expression evaluates to `true`:
 
@@ -5366,7 +5320,7 @@ Examples in this section are presented in both the XML and JSON representations 
 <span> </span>
 :  The expression is `true` because all values of the first bag, i.e., `5` and `6`, are each greater than all of the integer values `1`, `2`, `3`, `4` of the second bag.
 
-* `urn:oasis:names:tc:xacml:3.0:function:map`
+* `urn:oasis:names:tc:acal:1.0:function:map`
 
   This function converts a bag of values to another bag of values.
 
@@ -5405,88 +5359,88 @@ Examples in this section are presented in both the XML and JSON representations 
 
 ### C.3.13 Regular-Expression-Based Functions
 
-These functions operate on various types using regular expressions and evaluate to 
+These functions operate on various types using regular expressions and evaluate to
 <!-- Line break added for the previous line to fit on a PDF page -->
-`https://www.w3.org/2001/XMLSchema#boolean`.
+`urn:oasis:names:tc:acal:1.0:data-type:boolean`.
 
-* `urn:oasis:names:tc:xacml:1.0:function:string-regexp-match`
+* `urn:oasis:names:tc:acal:1.0:function:string-regexp-match`
 
-  This function decides a regular expression match. It SHALL take two arguments of 
+  This function decides a regular expression match. It SHALL take two arguments of
   <!-- Line break added for the previous line to fit on a PDF page -->
-  `https://www.w3.org/2001/XMLSchema#string` and SHALL return an 
-  `https://www.w3.org/2001/XMLSchema#boolean`. The first argument SHALL be a regular expression and the second argument SHALL be a general string. The function specification SHALL be that of the `xf:matches` function with the arguments reversed [[XF](#xf)] Section 7.6.2.
+  `urn:oasis:names:tc:acal:1.0:data-type:string` and SHALL return an
+  `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The first argument SHALL be a regular expression and the second argument SHALL be a general string. The function specification SHALL be that of the `xf:matches` function with the arguments reversed [[XF](#xf)] Section 7.6.2.
 
-* `urn:oasis:names:tc:xacml:2.0:function:anyURI-regexp-match`
+* `urn:oasis:names:tc:acal:1.0:function:anyURI-regexp-match`
 
-  This function decides a regular expression match. It SHALL take two arguments; the first is of type `https://www.w3.org/2001/XMLSchema#string` and the second is of type 
+  This function decides a regular expression match. It SHALL take two arguments; the first is of type `urn:oasis:names:tc:acal:1.0:data-type:string` and the second is of type
   <!-- Line break added for the previous line to fit on a PDF page -->
-  `https://www.w3.org/2001/XMLSchema#anyURI`. It SHALL return an
+  `urn:oasis:names:tc:acal:1.0:data-type:anyURI`. It SHALL return an
   <!-- Line break added for the previous line to fit on a PDF page -->
-  `https://www.w3.org/2001/XMLSchema#boolean`. The first argument SHALL be a regular expression and the second argument SHALL be a URI. The function SHALL convert the second argument to type `https://www.w3.org/2001/XMLSchema#string` with 
+  `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The first argument SHALL be a regular expression and the second argument SHALL be a URI. The function SHALL convert the second argument to type `urn:oasis:names:tc:acal:1.0:data-type:string` with
   <!-- Line break added for the previous line to fit on a PDF page -->
-  `urn:oasis:names:tc:xacml:3.0:function:string-from-anyURI`, then apply
+  `urn:oasis:names:tc:acal:1.0:function:string-from-anyURI`, then apply
   <!-- Line break added for the previous line to fit on a PDF page -->
-  `urn:oasis:names:tc:xacml:1.0:function:string-regexp-match`.
+  `urn:oasis:names:tc:acal:1.0:function:string-regexp-match`.
 
-* `urn:oasis:names:tc:xacml:2.0:function:ipAddress-regexp-match`
+* `urn:oasis:names:tc:acal:1.0:function:ipAddress-regexp-match`
 
-  This function decides a regular expression match. It SHALL take two arguments; the first is of type `https://www.w3.org/2001/XMLSchema#string` and the second is of type 
+  This function decides a regular expression match. It SHALL take two arguments; the first is of type `urn:oasis:names:tc:acal:1.0:data-type:string` and the second is of type
   <!-- Line break added for the previous line to fit on a PDF page -->
-  `urn:oasis:names:tc:xacml:2.0:data-type:ipAddress`. It SHALL return an 
+  `urn:oasis:names:tc:acal:1.0:data-type:ipAddress`. It SHALL return an
   <!-- Line break added for the previous line to fit on a PDF page -->
-  `https://www.w3.org/2001/XMLSchema#boolean`. The first argument SHALL be a regular expression and the second argument SHALL be an IPv4 or IPv6 address. The function SHALL convert the second argument to type `https://www.w3.org/2001/XMLSchema#string` with 
+  `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The first argument SHALL be a regular expression and the second argument SHALL be an IPv4 or IPv6 address. The function SHALL convert the second argument to type `urn:oasis:names:tc:acal:1.0:data-type:string` with
   <!-- Line break added for the previous line to fit on a PDF page -->
-  `urn:oasis:names:tc:xacml:3.0:function:string-from-ipAddress`, then apply 
+  `urn:oasis:names:tc:acal:1.0:function:string-from-ipAddress`, then apply
   <!-- Line break added for the previous line to fit on a PDF page -->
-  `urn:oasis:names:tc:xacml:1.0:function:string-regexp-match`.
+  `urn:oasis:names:tc:acal:1.0:function:string-regexp-match`.
 
-* `urn:oasis:names:tc:xacml:2.0:function:dnsName-regexp-match`
+* `urn:oasis:names:tc:acal:1.0:function:dnsName-regexp-match`
 
-  This function decides a regular expression match. It SHALL take two arguments; the first is of type `https://www.w3.org/2001/XMLSchema#string` and the second is of type 
+  This function decides a regular expression match. It SHALL take two arguments; the first is of type `urn:oasis:names:tc:acal:1.0:data-type:string` and the second is of type
   <!-- Line break added for the previous line to fit on a PDF page -->
-  `urn:oasis:names:tc:xacml:2.0:data-type:dnsName`. It SHALL return an 
+  `urn:oasis:names:tc:acal:1.0:data-type:dnsName`. It SHALL return an
   <!-- Line break added for the previous line to fit on a PDF page -->
-  `https://www.w3.org/2001/XMLSchema#boolean`. The first argument SHALL be a regular expression and the second argument SHALL be a DNS name. The function SHALL convert the second argument to type `https://www.w3.org/2001/XMLSchema#string` with `urn:oasis:names:tc:xacml:3.0:function:string-from-dnsName`, then apply 
+  `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The first argument SHALL be a regular expression and the second argument SHALL be a DNS name. The function SHALL convert the second argument to type `urn:oasis:names:tc:acal:1.0:data-type:string` with `urn:oasis:names:tc:acal:1.0:function:string-from-dnsName`, then apply
   <!-- Line break added for the previous line to fit on a PDF page -->
-  `urn:oasis:names:tc:xacml:1.0:function:string-regexp-match`.
+  `urn:oasis:names:tc:acal:1.0:function:string-regexp-match`.
 
-* `urn:oasis:names:tc:xacml:2.0:function:rfc822Name-regexp-match`
+* `urn:oasis:names:tc:acal:1.0:function:rfc822Name-regexp-match`
 
-  This function decides a regular expression match. It SHALL take two arguments; the first is of type `https://www.w3.org/2001/XMLSchema#string` and the second is of type 
+  This function decides a regular expression match. It SHALL take two arguments; the first is of type `urn:oasis:names:tc:acal:1.0:data-type:string` and the second is of type
   <!-- Line break added for the previous line to fit on a PDF page -->
-  `urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name`. It SHALL return an 
+  `urn:oasis:names:tc:acal:1.0:data-type:rfc822Name`. It SHALL return an
   <!-- Line break added for the previous line to fit on a PDF page -->
-  `https://www.w3.org/2001/XMLSchema#boolean`. The first argument SHALL be a regular expression and the second argument SHALL be an RFC 822 name. The function SHALL convert the second argument to type `https://www.w3.org/2001/XMLSchema#string` with 
+  `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The first argument SHALL be a regular expression and the second argument SHALL be an RFC 822 name. The function SHALL convert the second argument to type `urn:oasis:names:tc:acal:1.0:data-type:string` with
   <!-- Line break added for the previous line to fit on a PDF page -->
-  `urn:oasis:names:tc:xacml:3.0:function:string-from-rfc822Name`, then apply 
+  `urn:oasis:names:tc:acal:1.0:function:string-from-rfc822Name`, then apply
   <!-- Line break added for the previous line to fit on a PDF page -->
-  `urn:oasis:names:tc:xacml:1.0:function:string-regexp-match`.
+  `urn:oasis:names:tc:acal:1.0:function:string-regexp-match`.
 
-* `urn:oasis:names:tc:xacml:2.0:function:x500Name-regexp-match`
+* `urn:oasis:names:tc:acal:1.0:function:x500Name-regexp-match`
 
-  This function decides a regular expression match. It SHALL take two arguments; the first is of type `https://www.w3.org/2001/XMLSchema#string` and the second is of type 
+  This function decides a regular expression match. It SHALL take two arguments; the first is of type `urn:oasis:names:tc:acal:1.0:data-type:string` and the second is of type
   <!-- Line break added for the previous line to fit on a PDF page -->
-  `urn:oasis:names:tc:xacml:1.0:data-type:x500Name`. It SHALL return an 
+  `urn:oasis:names:tc:acal:1.0:data-type:x500Name`. It SHALL return an
   <!-- Line break added for the previous line to fit on a PDF page -->
-  `https://www.w3.org/2001/XMLSchema#boolean`. The first argument SHALL be a regular expression and the second argument SHALL be an X.500 directory name. The function SHALL convert the second argument to type `https://www.w3.org/2001/XMLSchema#string` with 
+  `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The first argument SHALL be a regular expression and the second argument SHALL be an X.500 directory name. The function SHALL convert the second argument to type `urn:oasis:names:tc:acal:1.0:data-type:string` with
   <!-- Line break added for the previous line to fit on a PDF page -->
-  `urn:oasis:names:tc:xacml:3.0:function:string-from-x500Name`, then apply 
+  `urn:oasis:names:tc:acal:1.0:function:string-from-x500Name`, then apply
   <!-- Line break added for the previous line to fit on a PDF page -->
-  `urn:oasis:names:tc:xacml:1.0:function:string-regexp-match`.
+  `urn:oasis:names:tc:acal:1.0:function:string-regexp-match`.
 
 ### C.3.14 Special Match Functions
 
-These functions operate on various types and evaluate to `https://www.w3.org/2001/XMLSchema#boolean` based on the specified standard matching algorithm.
+These functions operate on various types and evaluate to `urn:oasis:names:tc:acal:1.0:data-type:boolean` based on the specified standard matching algorithm.
 
-`urn:oasis:names:tc:xacml:1.0:function:x500Name-match`
+`urn:oasis:names:tc:acal:1.0:function:x500Name-match`
 
-: This function shall take two arguments of `urn:oasis:names:tc:xacml:1.0:data-type:x500Name` and shall return an `https://www.w3.org/2001/XMLSchema#boolean`. It shall return `true` if and only if the first argument matches some terminal sequence of RDNs from the second argument when compared using `x500Name-equal`.
+: This function shall take two arguments of `urn:oasis:names:tc:acal:1.0:data-type:x500Name` and shall return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It shall return `true` if and only if the first argument matches some terminal sequence of RDNs from the second argument when compared using `x500Name-equal`.
 
 : As an example (non-normative), if the first argument is `O=Medico Corp,C=US` and the second argument is `cn=John Smith,o=Medico Corp, c=US`, then the function will return `true`.
 
-`urn:oasis:names:tc:xacml:1.0:function:rfc822Name-match`
+`urn:oasis:names:tc:acal:1.0:function:rfc822Name-match`
 
-: This function SHALL take two arguments, the first is of data type `https://www.w3.org/2001/XMLSchema#string` and the second is of data type `urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name` and SHALL return an `https://www.w3.org/2001/XMLSchema#boolean`. This function SHALL evaluate to `true` if the first argument matches the second argument according to the following specification.
+: This function SHALL take two arguments, the first is of data type `urn:oasis:names:tc:acal:1.0:data-type:string` and the second is of data type `urn:oasis:names:tc:acal:1.0:data-type:rfc822Name` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. This function SHALL evaluate to `true` if the first argument matches the second argument according to the following specification.
 
 : An RFC822 name consists of a local-part followed by `@` followed by a domain-part. The local-part is case-sensitive, while the domain-part (which is usually a DNS name) is not case-sensitive.
 
@@ -5502,26 +5456,26 @@ These functions operate on various types and evaluate to `https://www.w3.org/200
 
 This section specifies functions that take XPath expressions for arguments. An XPath expression evaluates to a node-set, which is a set of XML nodes that match the expression. A node or node-set is not in the formal data type system of ACAL. All comparison or other operations on node-sets are performed in isolation of the particular function specified. The context nodes and namespace mappings of the XPath expressions are defined by the XPath data type, see [Annex C.2.5](#c25-xpath-expression). The following functions are defined:
 
-`urn:oasis:names:tc:xacml:3.0:function:xpath-node-count`
+`urn:oasis:names:tc:acal:1.0:function:xpath-node-count`
 
-: This function SHALL take an `urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression` as an argument and evaluates to an `https://www.w3.org/2001/XMLSchema#integer`. The value returned from the function SHALL be the count of the nodes within the node-set that match the given XPath expression. If the `ContentType` object of the category to which the XPath expression applies is not present in the request, this function SHALL return a value of zero.
+: This function SHALL take an `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` as an argument and evaluates to an `urn:oasis:names:tc:acal:1.0:data-type:integer`. The value returned from the function SHALL be the count of the nodes within the node-set that match the given XPath expression. If the `ContentType` object of the category to which the XPath expression applies is not present in the request, this function SHALL return a value of zero.
 
-`urn:oasis:names:tc:xacml:3.0:function:xpath-node-equal`
+`urn:oasis:names:tc:acal:1.0:function:xpath-node-equal`
 
-: This function SHALL take two `urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression` arguments and SHALL return an `https://www.w3.org/2001/XMLSchema#boolean`. The function SHALL return `true` if any of the XML nodes in the node-set matched by the first argument equals any of the XML nodes in the node-set matched by the second argument. Two nodes are considered equal if they have the same identity. If the `ContentType` object of the category to which either XPath expression applies is not present in the request, this function SHALL return a value of `false`.
+: This function SHALL take two `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` arguments and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The function SHALL return `true` if any of the XML nodes in the node-set matched by the first argument equals any of the XML nodes in the node-set matched by the second argument. Two nodes are considered equal if they have the same identity. If the `ContentType` object of the category to which either XPath expression applies is not present in the request, this function SHALL return a value of `false`.
 
-`urn:oasis:names:tc:xacml:3.0:function:xpath-node-match`
+`urn:oasis:names:tc:acal:1.0:function:xpath-node-match`
 
-: This function SHALL take two `urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression` arguments and SHALL return an `https://www.w3.org/2001/XMLSchema#boolean`. This function SHALL evaluate to `true` if one of the following two conditions is satisfied: (1) Any of the XML nodes in the node-set matched by the first argument is equal to any of the XML nodes in the node-set matched by the second argument; (2) any node below any of the XML nodes in the node-set matched by the first argument is equal to any of the XML nodes in the node-set matched by the second argument. Two nodes are considered equal if they have the same identity. If the `ContentType` object of the category to which either XPath expression applies is not present in the request, this function SHALL return a value of `false`. Note: The first condition is equivalent to `xpath-node-equal`, and guarantees that `xpath-node-equal` is a special case of `xpath-node-match`.
+: This function SHALL take two `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` arguments and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. This function SHALL evaluate to `true` if one of the following two conditions is satisfied: (1) Any of the XML nodes in the node-set matched by the first argument is equal to any of the XML nodes in the node-set matched by the second argument; (2) any node below any of the XML nodes in the node-set matched by the first argument is equal to any of the XML nodes in the node-set matched by the second argument. Two nodes are considered equal if they have the same identity. If the `ContentType` object of the category to which either XPath expression applies is not present in the request, this function SHALL return a value of `false`. Note: The first condition is equivalent to `xpath-node-equal`, and guarantees that `xpath-node-equal` is a special case of `xpath-node-match`.
 
 ### C.3.16 Other Functions
 
-`urn:oasis:names:tc:xacml:3.0:function:access-permitted`
+`urn:oasis:names:tc:acal:1.0:function:access-permitted`
 
-_This function should be redesigned to take a value of the entity data type as the second argument. An entity value already has the structure of an attribute category in the same representation (XML, JSON or YAML), including a `Content` property to hold arbitrary XML or JSON._ 
+_This function should be redesigned to take a value of the entity data type as the second argument. An entity value already has the structure of an attribute category in the same representation (XML, JSON or YAML), including a `Content` property to hold arbitrary XML or JSON._
 
-: This function SHALL take an `https://www.w3.org/2001/XMLSchema#anyURI` and an <!-- Line break added for the previous line to fit on a PDF page -->
-: `https://www.w3.org/2001/XMLSchema#string` as arguments. The first argument SHALL be interpreted as an attribute category. The second argument SHALL be interpreted as the XML content of a `RequestCategoryType` object with `CategoryId` property equal to the first argument. The function evaluates to an `https://www.w3.org/2001/XMLSchema#boolean`. This function SHALL return `true` if and only if the policy evaluation described below returns the value of `Permit`.
+: This function SHALL take an `urn:oasis:names:tc:acal:1.0:data-type:anyURI` and an <!-- Line break added for the previous line to fit on a PDF page -->
+: `urn:oasis:names:tc:acal:1.0:data-type:string` as arguments. The first argument SHALL be interpreted as an attribute category. The second argument SHALL be interpreted as the XML content of a `RequestCategoryType` object with `CategoryId` property equal to the first argument. The function evaluates to an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. This function SHALL return `true` if and only if the policy evaluation described below returns the value of `Permit`.
 
 : The following evaluation is described as if the context is actually instantiated, but it is only required that an equivalent result be obtained.
 
@@ -5529,91 +5483,13 @@ _This function should be redesigned to take a value of the entity data type as t
 
 : The function SHALL invoke a complete policy evaluation using the newly constructed context. This evaluation SHALL be completely isolated from the evaluation which invoked the function, but shall use all current policies and combining algorithms, including any per request policies.
 
-: The PDP SHALL detect any loop which may occur if successive evaluations invoke this function by counting the number of total invocations of any instance of this function during any single initial invocation of the PDP. If the total number of invocations exceeds the bound for such invocations, the initial invocation of this function evaluates to `Indeterminate` with a `urn:oasis:names:tc:xacml:1.0:status:processing-error` status code. Also, see the security considerations in [Section 11.1.8](#1118-denial-of-service).
+: The PDP SHALL detect any loop which may occur if successive evaluations invoke this function by counting the number of total invocations of any instance of this function during any single initial invocation of the PDP. If the total number of invocations exceeds the bound for such invocations, the initial invocation of this function evaluates to `Indeterminate` with a `urn:oasis:names:tc:acal:1.0:status:processing-error` status code. Also, see the security considerations in [Section 11.1.8](#1118-denial-of-service).
 
 ### C.3.17 Extension Functions and Data Types
 
 Functions and data types are specified by string identifiers allowing for the introduction of functions in addition to those specified by ACAL. This approach allows one to extend the ACAL module with special functions and special data types.
 
 In order to preserve the integrity of the ACAL evaluation strategy, the result of an extension function SHALL depend only on the values of its arguments. Global and hidden parameters SHALL NOT affect the evaluation of an expression. Functions SHALL NOT have side effects, as evaluation order cannot be guaranteed in a standard way.
-
-## C.4 Functions, Data Types, Attributes and Algorithms Planned for Deprecation
-
-The following functions, data types and algorithms have been defined by previous versions of XACML and newer and better alternatives are defined in ACAL 1.0. Their use is discouraged for new use and they are candidates for deprecation in future versions of ACAL.
-
-The following xpath based functions have been replaced with equivalent functions which use the `urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression` data type instead of strings.
-
-`urn:oasis:names:tc:xacml:1.0:function:xpath-node-count`
-
-: Replaced with `urn:oasis:names:tc:xacml:3.0:function:xpath-node-count`
-
-`urn:oasis:names:tc:xacml:1.0:function:xpath-node-equal`
-
-: Replaced with `urn:oasis:names:tc:xacml:3.0:function:xpath-node-equal`
-
-`urn:oasis:names:tc:xacml:1.0:function:xpath-node-match`
-
-: Replaced with `urn:oasis:names:tc:xacml:3.0:function:xpath-node-match`
-
-The following URI and string concatenation function has been replaced with a string to URI conversion function, which allows the use of the general string functions with URI through string conversion.
-
-`urn:oasis:names:tc:xacml:2.0:function:uri-string-concatenate`
-
-: Replaced by `urn:oasis:names:tc:xacml:3.0:function:string-from-anyURI`
-
-The following identifiers have been replaced with official identifiers defined by W3C.
-
-`https://www.w3.org/TR/2002/WD-xquery-operators-20020816#dayTimeDuration`
-
-: Replaced with `https://www.w3.org/2001/XMLSchema#dayTimeDuration`
-
-`https://www.w3.org/TR/2002/WD-xquery-operators-20020816#yearMonthDuration`
-
-: Replaced with `https://www.w3.org/2001/XMLSchema#yearMonthDuration`
-
-The following functions have been replaced with functions which use the updated dayTimeDuration and yearMonthDuration data types.
-
-`urn:oasis:names:tc:xacml:1.0:function:dayTimeDuration-equal`
-
-: Replaced with `urn:oasis:names:tc:xacml:3.0:function:dayTimeDuration-equal`
-
-`urn:oasis:names:tc:xacml:1.0:function:yearMonthDuration-equal`
-
-: Replaced with `urn:oasis:names:tc:xacml:3.0:function:yearMonthDuration-equal`
-
-`urn:oasis:names:tc:xacml:1.0:function:dateTime-add-dayTimeDuration`
-
-: Replaced with `urn:oasis:names:tc:xacml:3.0:function:dateTime-add-dayTimeDuration`
-
-`urn:oasis:names:tc:xacml:1.0:function:dateTime-add-yearMonthDuration`
-
-: Replaced with `urn:oasis:names:tc:xacml:3.0:function:dateTime-add-yearMonthDuration`
-
-`urn:oasis:names:tc:xacml:1.0:function:dateTime-subtract-dayTimeDuration`
-
-: Replaced with `urn:oasis:names:tc:xacml:3.0:function:dateTime-subtract-dayTimeDuration`
-
-`urn:oasis:names:tc:xacml:1.0:function:dateTime-subtract-yearMonthDuration`
-
-: Replaced with `urn:oasis:names:tc:xacml:3.0:function:dateTime-subtract-yearMonthDuration`
-
-`urn:oasis:names:tc:xacml:1.0:function:date-add-yearMonthDuration`
-
-: Replaced with `urn:oasis:names:tc:xacml:3.0:function:date-add-yearMonthDuration`
-
-`urn:oasis:names:tc:xacml:1.0:function:date-subtract-yearMonthDuration`
-
-: Replaced with `urn:oasis:names:tc:xacml:3.0:function:date-subtract-yearMonthDuration`
-
-The following attribute identifiers have been replaced with newer identifiers.
-
-`urn:oasis:names:tc:xacml:1.0:subject:authn-locality:ip-address`
-
-: Replaced with `urn:oasis:names:tc:xacml:3.0:subject:authn-locality:ip-address`
-
-`urn:oasis:names:tc:xacml:1.0:subject:authn-locality:dns-name`
-
-: Replaced with `urn:oasis:names:tc:xacml:3.0:subject:authn-locality:dns-name`
 
 
 # Annex D. ACAL Identifiers
@@ -5627,7 +5503,7 @@ This section defines standard identifiers for commonly used definitions.
 
 ACAL 1.0 is defined using this identifier.
 
-`urn:oasis:names:tc:xacml:4.0:core:schema`
+`urn:oasis:names:tc:acal:1.0:core:schema`
 
 ## D.2 Attribute Categories
 
@@ -5635,75 +5511,75 @@ The following attribute category identifiers MUST be used when an XACML 2.0 or e
 
 Attributes previously placed in the Resource, Action, and Environment sections of a request are placed in an attribute category with the following identifiers respectively. It is RECOMMENDED that they are used to list attributes of resources, actions, and the environment respectively when authoring ACAL policies or requests.
 
-`urn:oasis:names:tc:xacml:3.0:attribute-category:resource`
+`urn:oasis:names:tc:acal:1.0:attribute-category:resource`
 
-`urn:oasis:names:tc:xacml:3.0:attribute-category:action`
+`urn:oasis:names:tc:acal:1.0:attribute-category:action`
 
-`urn:oasis:names:tc:xacml:3.0:attribute-category:environment`
+`urn:oasis:names:tc:acal:1.0:attribute-category:environment`
 
 Attributes previously placed in the Subject section of a request are placed in an attribute category which is identical to the subject category in XACML 2.0, as defined below. It is RECOMMENDED that they are used to list attributes of subjects when authoring ACAL 1.0 policies or requests.
 
 This identifier indicates the system entity that initiated the access request. That is, the initial entity in a request chain. If subject category is not specified in XACML 2.0, this is the default translation value.
 
-`urn:oasis:names:tc:xacml:1.0:subject-category:access-subject`
+`urn:oasis:names:tc:acal:1.0:subject-category:access-subject`
 
 This identifier indicates the system entity that will receive the results of the request (used when it is distinct from the access-subject).
 
-`urn:oasis:names:tc:xacml:1.0:subject-category:recipient-subject`
+`urn:oasis:names:tc:acal:1.0:subject-category:recipient-subject`
 
 This identifier indicates a system entity through which the access request was passed.
 
-`urn:oasis:names:tc:xacml:1.0:subject-category:intermediary-subject`
+`urn:oasis:names:tc:acal:1.0:subject-category:intermediary-subject`
 
 This identifier indicates a system entity associated with a local or remote codebase that generated the request. Corresponding subject attributes might include the URL from which it was loaded and/or the identity of the code-signer.
 
-`urn:oasis:names:tc:xacml:1.0:subject-category:codebase`
+`urn:oasis:names:tc:acal:1.0:subject-category:codebase`
 
 This identifier indicates a system entity associated with the computer that initiated the access request. An example would be an IPsec identity.
 
-`urn:oasis:names:tc:xacml:1.0:subject-category:requesting-machine`
+`urn:oasis:names:tc:acal:1.0:subject-category:requesting-machine`
 
 ## D.3 Data Types
 
 The following identifiers indicate data types that are defined in [Annex C.2](#c2-data-types):
 
-* `urn:oasis:names:tc:xacml:1.0:data-type:x500Name`
+* `urn:oasis:names:tc:acal:1.0:data-type:x500Name`
 
-* `urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name`
+* `urn:oasis:names:tc:acal:1.0:data-type:rfc822Name`
 
-* `urn:oasis:names:tc:xacml:2.0:data-type:ipAddress`
+* `urn:oasis:names:tc:acal:1.0:data-type:ipAddress`
 
-* `urn:oasis:names:tc:xacml:2.0:data-type:dnsName`
+* `urn:oasis:names:tc:acal:1.0:data-type:dnsName`
 
-* `urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression`.
+* `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression`.
 
 The following data type identifiers are defined by XML Schema [[XS](#xs)]:
 
-* `https://www.w3.org/2001/XMLSchema#string`
+* `urn:oasis:names:tc:acal:1.0:data-type:string`
 
-* `https://www.w3.org/2001/XMLSchema#boolean`
+* `urn:oasis:names:tc:acal:1.0:data-type:boolean`
 
-* `https://www.w3.org/2001/XMLSchema#integer`
+* `urn:oasis:names:tc:acal:1.0:data-type:integer`
 
-* `https://www.w3.org/2001/XMLSchema#double`
+* `urn:oasis:names:tc:acal:1.0:data-type:double`
 
-* `https://www.w3.org/2001/XMLSchema#time`
+* `urn:oasis:names:tc:acal:1.0:data-type:time`
 
-* `https://www.w3.org/2001/XMLSchema#date`
+* `urn:oasis:names:tc:acal:1.0:data-type:date`
 
-* `https://www.w3.org/2001/XMLSchema#dateTime`
+* `urn:oasis:names:tc:acal:1.0:data-type:dateTime`
 
-* `https://www.w3.org/2001/XMLSchema#anyURI`
+* `urn:oasis:names:tc:acal:1.0:data-type:anyURI`
 
-* `https://www.w3.org/2001/XMLSchema#hexBinary`
+* `urn:oasis:names:tc:acal:1.0:data-type:hexBinary`
 
-* `https://www.w3.org/2001/XMLSchema#base64Binary`.
+* `urn:oasis:names:tc:acal:1.0:data-type:base64Binary`.
 
 The following data type identifiers correspond to the dayTimeDuration and yearMonthDuration data types defined in [[XF](#xf)] Sections 10.3.2 and 10.3.1, respectively:
 
-* `https://www.w3.org/2001/XMLSchema#dayTimeDuration`
+* `urn:oasis:names:tc:acal:1.0:data-type:dayTimeDuration`
 
-* `https://www.w3.org/2001/XMLSchema#yearMonthDuration`.
+* `urn:oasis:names:tc:acal:1.0:data-type:yearMonthDuration`.
 
 ## D.4 Subject Attributes
 
@@ -5713,45 +5589,45 @@ At most one of each of these attributes is associated with each subject. Each at
 
 This identifier indicates the name of the subject.
 
-`urn:oasis:names:tc:xacml:1.0:subject:subject-id`
+`urn:oasis:names:tc:acal:1.0:subject:subject-id`
 
 This identifier indicates the security domain of the subject. It identifies the administrator and policy that manages the name-space in which the subject id is administered.
 
-`urn:oasis:names:tc:xacml:1.0:subject:subject-id-qualifier`
+`urn:oasis:names:tc:acal:1.0:subject:subject-id-qualifier`
 
 This identifier indicates a public key used to confirm the subject's identity.
 
-`urn:oasis:names:tc:xacml:1.0:subject:key-info`
+`urn:oasis:names:tc:acal:1.0:subject:key-info`
 
 This identifier indicates the time at which the subject was authenticated.
 
-`urn:oasis:names:tc:xacml:1.0:subject:authentication-time`
+`urn:oasis:names:tc:acal:1.0:subject:authentication-time`
 
 This identifier indicates the method used to authenticate the subject.
 
-`urn:oasis:names:tc:xacml:1.0:subject:authentication-method`
+`urn:oasis:names:tc:acal:1.0:subject:authentication-method`
 
 This identifier indicates the time at which the subject initiated the access request, according to the PEP.
 
-`urn:oasis:names:tc:xacml:1.0:subject:request-time`
+`urn:oasis:names:tc:acal:1.0:subject:request-time`
 
 This identifier indicates the time at which the subject's current session began, according to the PEP.
 
-`urn:oasis:names:tc:xacml:1.0:subject:session-start-time`
+`urn:oasis:names:tc:acal:1.0:subject:session-start-time`
 
 The following identifiers indicate the location where authentication credentials were activated.
 
 This identifier indicates that the location is expressed as an IP address.
 
-`urn:oasis:names:tc:xacml:3.0:subject:authn-locality:ip-address`
+`urn:oasis:names:tc:acal:1.0:subject:authn-locality:ip-address`
 
-The corresponding attribute SHALL be of data type `urn:oasis:names:tc:xacml:2.0:data-type:ipAddress`.
+The corresponding attribute SHALL be of data type `urn:oasis:names:tc:acal:1.0:data-type:ipAddress`.
 
 This identifier indicates that the location is expressed as a DNS name.
 
-`urn:oasis:names:tc:xacml:3.0:subject:authn-locality:dns-name`
+`urn:oasis:names:tc:acal:1.0:subject:authn-locality:dns-name`
 
-The corresponding attribute SHALL be of data type `urn:oasis:names:tc:xacml:2.0:data-type:dnsName`.
+The corresponding attribute SHALL be of data type `urn:oasis:names:tc:acal:1.0:data-type:dnsName`.
 
 Where a suitable attribute is already defined in LDAP [LDAP-1], [LDAP-2], the ACAL identifier SHALL be the OID of the LDAP attribute represented as a URN. For example, the ACAL attribute identifier for the LDAP `title` attribute defined in RFC 2256 with the OID `2.5.4.12` would be `urn:oid:2.5.4.12`.
 
@@ -5761,49 +5637,57 @@ Short identifiers can be used to improve readability. For example `title` could 
 
 These identifiers indicate attributes of the resource. When used, it is RECOMMENDED they appear within the `RequestCategoryType` object of the request context with the `CategoryId` property that evaluates to
 <!-- Line break added for the previous line to fit on a PDF page -->
-`urn:oasis:names:tc:xacml:3.0:attribute-category:resource`.
+`urn:oasis:names:tc:acal:1.0:attribute-category:resource`.
 
 This attribute identifies the resource to which access is requested.
 
-`urn:oasis:names:tc:xacml:1.0:resource:resource-id`
+`urn:oasis:names:tc:acal:1.0:resource:resource-id`
 
-This attribute identifies the namespace of the top element(s) of the contents of the `ContentType` object. In the case where the resource content is supplied in the request context and the resource namespaces are defined in the resource, the PEP MAY provide this attribute in the request to indicate the namespaces of the resource content. In this case there SHALL be one value of this attribute for each unique namespace of the top level elements in the `ContentType` object. The data type of the corresponding attribute SHALL be `https://www.w3.org/2001/XMLSchema#anyURI`.
+This attribute identifies the namespace of the top element(s) of the contents of the `ContentType` object. In the case where the resource content is supplied in the request context and the resource namespaces are defined in the resource, the PEP MAY provide this attribute in the request to indicate the namespaces of the resource content. In this case there SHALL be one value of this attribute for each unique namespace of the top level elements in the `ContentType` object. The data type of the corresponding attribute SHALL be `urn:oasis:names:tc:acal:1.0:data-type:anyURI`.
 
-`urn:oasis:names:tc:xacml:2.0:resource:target-namespace`
+`urn:oasis:names:tc:acal:1.0:resource:target-namespace`
+
+This attribute is used to identify the location of a resource, such as a file path or a network address.
+
+`urn:oasis:names:tc:acal:1.0:resource:resource-location`
+
+This attribute indicates the last (rightmost) component of a file name identifying the resource. For example, if the URI is `file://home/my/status#pointer`, then the simple file name is "status".
+
+`urn:oasis:names:tc:acal:1.0:resource:simple-file-name`
 
 ## D.6 Action Attributes
 
-These identifiers indicate attributes of the action being requested. When used, it is RECOMMENDED they appear within the `RequestCategoryType` object of the request context with the `CategoryId` property that evaluates to `urn:oasis:names:tc:xacml:3.0:attribute-category:action`.
+These identifiers indicate attributes of the action being requested. When used, it is RECOMMENDED they appear within the `RequestCategoryType` object of the request context with the `CategoryId` property that evaluates to `urn:oasis:names:tc:acal:1.0:attribute-category:action`.
 
 This attribute identifies the action for which access is requested.
 
-`urn:oasis:names:tc:xacml:1.0:action:action-id`
+`urn:oasis:names:tc:acal:1.0:action:action-id`
 
 Where the action is implicit, the value of the action-id attribute SHALL be
 
-`urn:oasis:names:tc:xacml:1.0:action:implied-action`
+`urn:oasis:names:tc:acal:1.0:action:implied-action`
 
 This attribute identifies the namespace in which the action-id attribute is defined.
 
-`urn:oasis:names:tc:xacml:1.0:action:action-namespace`
+`urn:oasis:names:tc:acal:1.0:action:action-namespace`
 
 ## D.7 Environment Attributes
 
-These identifiers indicate attributes of the environment within which the decision request is to be evaluated. When used in the decision request, it is RECOMMENDED they appear in the `RequestCategoryType` object of the request context with the `CategoryId` property that evaluates to `urn:oasis:names:tc:xacml:3.0:attribute-category:environment`.
+These identifiers indicate attributes of the environment within which the decision request is to be evaluated. When used in the decision request, it is RECOMMENDED they appear in the `RequestCategoryType` object of the request context with the `CategoryId` property that evaluates to `urn:oasis:names:tc:acal:1.0:attribute-category:environment`.
 
 This identifier indicates the current time at the context handler. In practice it is the time at which the request context was created. For this reason, if these identifiers appear in multiple places within a policy, then the same value SHALL be assigned to each occurrence in the evaluation procedure, regardless of how much time elapses between the processing of the occurrences.
 
-`urn:oasis:names:tc:xacml:1.0:environment:current-time`
+`urn:oasis:names:tc:acal:1.0:environment:current-time`
 
-The corresponding attribute SHALL be of data type `https://www.w3.org/2001/XMLSchema#time`.
+The corresponding attribute SHALL be of data type `urn:oasis:names:tc:acal:1.0:data-type:time`.
 
-`urn:oasis:names:tc:xacml:1.0:environment:current-date`
+`urn:oasis:names:tc:acal:1.0:environment:current-date`
 
-The corresponding attribute SHALL be of data type `https://www.w3.org/2001/XMLSchema#date`.
+The corresponding attribute SHALL be of data type `urn:oasis:names:tc:acal:1.0:data-type:date`.
 
-`urn:oasis:names:tc:xacml:1.0:environment:current-dateTime`
+`urn:oasis:names:tc:acal:1.0:environment:current-dateTime`
 
-The corresponding attribute SHALL be of data type `https://www.w3.org/2001/XMLSchema#dateTime`.
+The corresponding attribute SHALL be of data type `urn:oasis:names:tc:acal:1.0:data-type:dateTime`.
 
 ## D.8 Status Codes
 
@@ -5811,49 +5695,49 @@ The following status code values are defined.
 
 This identifier indicates success.
 
-`urn:oasis:names:tc:xacml:1.0:status:ok`
+`urn:oasis:names:tc:acal:1.0:status:ok`
 
 This identifier indicates that all the attributes necessary to make a policy decision were not available (see [Section 7.50](#750-missingattributedetailtype)).
 
-`urn:oasis:names:tc:xacml:1.0:status:missing-attribute`
+`urn:oasis:names:tc:acal:1.0:status:missing-attribute`
 
 This identifier indicates that some attribute value contained a syntax error, such as a letter in a numeric field.
 
-`urn:oasis:names:tc:xacml:1.0:status:syntax-error`
+`urn:oasis:names:tc:acal:1.0:status:syntax-error`
 
 This identifier indicates that an error occurred during policy evaluation. An example would be division by zero.
 
-`urn:oasis:names:tc:xacml:1.0:status:processing-error`
+`urn:oasis:names:tc:acal:1.0:status:processing-error`
 
 ## D.9 Combining Algorithms
 
 The deny-overrides combining algorithm has the following value for the `CombiningAlgId` property:
 
-`urn:oasis:names:tc:xacml:4.0:combining-algorithm:deny-overrides`
+`urn:oasis:names:tc:acal:1.0:combining-algorithm:deny-overrides`
 
 The permit-overrides combining algorithm has the following value for the `CombiningAlgId` property:
 
-`urn:oasis:names:tc:xacml:4.0:combining-algorithm:permit-overrides`
+`urn:oasis:names:tc:acal:1.0:combining-algorithm:permit-overrides`
 
 The first-applicable combining algorithm has the following value for the `CombiningAlgId` property:
 
-`urn:oasis:names:tc:xacml:4.0:combining-algorithm:first-applicable`
+`urn:oasis:names:tc:acal:1.0:combining-algorithm:first-applicable`
 
 The ordered-deny-overrides combining algorithm has the following value for the `CombiningAlgId` property:
 
-`urn:oasis:names:tc:xacml:4.0:combining-algorithm:ordered-deny-overrides`
+`urn:oasis:names:tc:acal:1.0:combining-algorithm:ordered-deny-overrides`
 
 The ordered-permit-overrides combining algorithm has the following value for the `CombiningAlgId` property:
 
-`urn:oasis:names:tc:xacml:4.0:combining-algorithm:ordered-permit-overrides`
+`urn:oasis:names:tc:acal:1.0:combining-algorithm:ordered-permit-overrides`
 
 The deny-unless-permit combining algorithm has the following value for the `CombiningAlgId` property:
 
-`urn:oasis:names:tc:xacml:4.0:combining-algorithm:deny-unless-permit`
+`urn:oasis:names:tc:acal:1.0:combining-algorithm:deny-unless-permit`
 
 The permit-unless-deny combining algorithm has the following value for the `CombiningAlgId` property:
 
-`urn:oasis:names:tc:xacml:4.0:combining-algorithm:permit-unless-deny`
+`urn:oasis:names:tc:acal:1.0:combining-algorithm:permit-unless-deny`
 
 
 ---
@@ -5883,7 +5767,7 @@ This combining algorithm makes use of the extended `Indeterminate`.
 
 The combining algorithm defined here has the following identifier:
 
-`urn:oasis:names:tc:xacml:4.0:combining-algorithm:deny-overrides`
+`urn:oasis:names:tc:acal:1.0:combining-algorithm:deny-overrides`
 
 The following is a non-normative description of this combining algorithm. The `deny-overrides` combining algorithm is intended for those cases where a `Deny` decision should have priority over a `Permit` decision. This algorithm has the following behavior.
 
@@ -5974,7 +5858,7 @@ The following specification defines the `ordered-deny-overrides` combining algor
 
 The combining algorithm defined here has the following identifier:
 
-`urn:oasis:names:tc:xacml:4.0:combining-algorithm:ordered-deny-overrides`
+`urn:oasis:names:tc:acal:1.0:combining-algorithm:ordered-deny-overrides`
 
 ## E.4 Permit Overrides
 
@@ -5984,7 +5868,7 @@ This combining algorithm makes use of the extended `Indeterminate`.
 
 The combining algorithm defined here has the following identifier:
 
-`urn:oasis:names:tc:xacml:4.0:combining-algorithm:permit-overrides`
+`urn:oasis:names:tc:acal:1.0:combining-algorithm:permit-overrides`
 
 The following is a non-normative informative description of this combining algorithm. The `permit-overrides` combining algorithm is intended for those cases where a `Permit` decision should have priority over a `Deny` decision. This algorithm has the following behavior.
 
@@ -6075,7 +5959,7 @@ The following specification defines the `ordered-permit-overrides` combining alg
 
 The combining algorithm defined here has the following identifier:
 
-`urn:oasis:names:tc:xacml:4.0:combining-algorithm:ordered-permit-overrides`
+`urn:oasis:names:tc:acal:1.0:combining-algorithm:ordered-permit-overrides`
 
 ## E.6 Deny Unless Permit
 
@@ -6083,7 +5967,7 @@ This section defines the `deny-unless-permit` combining algorithm of a policy.
 
 The combining algorithm defined here has the following identifier:
 
-`urn:oasis:names:tc:xacml:4.0:combining-algorithm:deny-unless-permit`
+`urn:oasis:names:tc:acal:1.0:combining-algorithm:deny-unless-permit`
 
 The following is a non-normative informative description of this combining algorithm. The `deny-unless-permit` combining algorithm is intended for those cases where a `Permit` decision should have priority over a `Deny` decision, and an `Indeterminate` or `NotApplicable` must never be the result. It is particularly useful at the top level in a policy structure to ensure that a PDP will always return a definite `Permit` or `Deny` result. This algorithm has the following behavior.
 
@@ -6115,7 +5999,7 @@ This section defines the `permit-unless-deny` combining algorithm of a policy.
 
 The combining algorithm defined here has the following identifier:
 
-`urn:oasis:names:tc:xacml:4.0:combining-algorithm:permit-unless-deny`
+`urn:oasis:names:tc:acal:1.0:combining-algorithm:permit-unless-deny`
 
 The following is a non-normative informative description of this combining algorithm. The `permit-unless-deny` combining algorithm is intended for those cases where a `Deny` decision should have priority over a `Permit` decision, and an `Indeterminate` or `NotApplicable` must never be the result. It is particularly useful at the top level in a policy structure to ensure that a PDP will always return a definite `Permit` or `Deny` result. This algorithm has the following behavior.
 
@@ -6147,7 +6031,7 @@ This section defines the `first-applicable` combining algorithm of a policy.
 
 The combining algorithm defined here has the following identifier:
 
-`urn:oasis:names:tc:xacml:4.0:combining-algorithm:first-applicable`
+`urn:oasis:names:tc:acal:1.0:combining-algorithm:first-applicable`
 
 The following is a non-normative informative description of the `first-Applicable` combining algorithm of a policy.
 
@@ -6218,13 +6102,13 @@ This section **SHOULD** include the leadership (chairs, sub committees chairs, s
 \>
 
 
-- Chairs  
+- Chairs
   - Position, First Name Last Name, Company, [optional time frames]  
   - Hal Lochhart, Individual
   - Bill | Parducci, Individual
-- Secretaries  
-  - Position, First Name Last Name, Company, [optional time frames]  
-- Editors  
+- Secretaries
+  - Position, First Name Last Name, Company, [optional time frames]
+- Editors
   - Position, First Name Last Name, Company, [optional time frames]
   - Steven Legg, ViewDS Identity Solutions
   - Cyril Dangerville, THALES
