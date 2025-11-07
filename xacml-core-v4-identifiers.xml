@@ -117,6 +117,7 @@
 	<ShortId Name="and" Value="urn:oasis:names:tc:acal:1.0:function:and"/>
 	<ShortId Name="n-of" Value="urn:oasis:names:tc:acal:1.0:function:n-of"/>
 	<ShortId Name="not" Value="urn:oasis:names:tc:acal:1.0:function:not"/>
+	<ShortId Name="ternary-if" Value="urn:oasis:names:tc:acal:1.0:function:ternary-if"/>
 	<ShortId Name="integer-greater-than" Value="urn:oasis:names:tc:acal:1.0:function:integer-greater-than"/>
 	<ShortId Name="integer-greater-than-or-equal" Value="urn:oasis:names:tc:acal:1.0:function:integer-greater-than-or-equal"/>
 	<ShortId Name="integer-less-than" Value="urn:oasis:names:tc:acal:1.0:function:integer-less-than"/>
@@ -336,6 +337,22 @@
 	<ShortId Name="rfc822Name-union" Value="urn:oasis:names:tc:acal:1.0:function:rfc822Name-union"/>
 	<ShortId Name="rfc822Name-subset" Value="urn:oasis:names:tc:acal:1.0:function:rfc822Name-subset"/>
 	<ShortId Name="rfc822Name-set-equals" Value="urn:oasis:names:tc:acal:1.0:function:rfc822Name-set-equals"/>
+	<ShortId Name="string-minimum" Value="urn:oasis:names:tc:acal:1.0:function:string-minimum"/>
+	<ShortId Name="string-maximum" Value="urn:oasis:names:tc:acal:1.0:function:string-maximum"/>
+	<ShortId Name="integer-minimum" Value="urn:oasis:names:tc:acal:1.0:function:integer-minimum"/>
+	<ShortId Name="integer-maximum" Value="urn:oasis:names:tc:acal:1.0:function:integer-maximum"/>
+	<ShortId Name="integer-sum" Value="urn:oasis:names:tc:acal:1.0:function:integer-sum"/>
+	<ShortId Name="integer-average" Value="urn:oasis:names:tc:acal:1.0:function:integer-average"/>
+	<ShortId Name="double-minimum" Value="urn:oasis:names:tc:acal:1.0:function:double-minimum"/>
+	<ShortId Name="double-maximum" Value="urn:oasis:names:tc:acal:1.0:function:double-maximum"/>
+	<ShortId Name="double-sum" Value="urn:oasis:names:tc:acal:1.0:function:double-sum"/>
+	<ShortId Name="double-average" Value="urn:oasis:names:tc:acal:1.0:function:double-average"/>
+	<ShortId Name="dateTime-minimum" Value="urn:oasis:names:tc:acal:1.0:function:dateTime-minimum"/>
+	<ShortId Name="dateTime-maximum" Value="urn:oasis:names:tc:acal:1.0:function:dateTime-maximum"/>
+	<ShortId Name="date-minimum" Value="urn:oasis:names:tc:acal:1.0:function:date-minimum"/>
+	<ShortId Name="date-maximum" Value="urn:oasis:names:tc:acal:1.0:function:date-maximum"/>
+	<ShortId Name="time-minimum" Value="urn:oasis:names:tc:acal:1.0:function:time-minimum"/>
+	<ShortId Name="time-maximum" Value="urn:oasis:names:tc:acal:1.0:function:time-maximum"/>
 	<ShortId Name="access-permitted" Value="urn:oasis:names:tc:acal:1.0:function:access-permitted"/>
 
 	<!-- XPath Versions -->
