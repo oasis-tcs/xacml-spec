@@ -1,5 +1,5 @@
 <ShortIdSet xmlns="urn:oasis:names:tc:xacml:4.0:core:schema"
-	ShortIdSetId="urn:oasis:names:tc:acal:1.0:core:identifiers">
+	Id="urn:oasis:names:tc:acal:1.0:core:identifiers">
 
 	<!-- Attribute Categories -->
 

@@ -1,5 +1,5 @@
 {
-	"SIDCollectionId":"urn:oasis:names:tc:acal:1.0:core:identifiers",
+	"Id":"urn:oasis:names:tc:acal:1.0:core:identifiers",
 	"ShortIdentifier":[
 		{ "Name":"resource", "Value":"urn:oasis:names:tc:acal:1.0:attribute-category:resource" },
 		{ "Name":"action", "Value":"urn:oasis:names:tc:acal:1.0:attribute-category:action" },
