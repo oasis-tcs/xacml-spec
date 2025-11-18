@@ -886,7 +886,6 @@ Policy "*" *-- "*" Policy
 Policy "1" *-left- "1" CombiningAlgorithm: \t
 Policy "0..1" *-- "1" Target
 Policy "*" *-- "1" Rule
-' Policy "*" *-- "1" CombinerParameter
 ' Policy "*" *-- "1" VariableDefinition
 Policy "*" *-- "1" NoticeExpression
 ' Policy "1" *-- "1" PolicyId
@@ -896,7 +895,7 @@ Policy "*" *-- "1" NoticeExpression
 ' Rule "0..1" *-- "1" Description
 Rule "0..1" *-left- "1" Condition: \t
 Rule "*" *-right- "1" NoticeExpression: \t
-' Rule "1"*--"1" RuleId 
+' Rule "1"*--"1" Id
 Rule "1" *-- "1" Effect 
 @enduml
 ```
@@ -1094,7 +1093,7 @@ Rule 1 illustrates a policy with a simple rule containing a condition. It also i
 [34]       </Apply>
 [36]     </Apply>
 [38]   </VariableDefinition>
-[41]   <Rule RuleId="Rule 1" Effect="Permit">
+[41]   <Rule Id="Rule 1" Effect="Permit">
 [44]     <Description>A person may read any medical record in the http://www.med.example.com/springfield-hospital collection for which he or she is the designated patient.</Description>
 [45]     <Condition>
 [46]       <Apply FunctionId="and">
@@ -1161,7 +1160,7 @@ Rule 1 illustrates a policy with a simple rule containing a condition. It also i
 [38]   }],
 [39]   "CombinerInput":[{
 [41]     "Rule":{
-[42]       "RuleId":"Rule 1",
+[42]       "Id":"Rule 1",
 [43]       "Effect":"Permit",
 [44]       "Description":"A person may read any medical record in the http://www.med.example.com/springfield-hospital collection for which he or she is the designated patient",
 [45]       "Condition":{
@@ -1239,7 +1238,7 @@ Rule 1 illustrates a policy with a simple rule containing a condition. It also i
 
 [25] - [26] The result of the second attribute designator must also be converted to a single value for comparison.
 
-[41] - [43] The beginning of a rule definition. The `RuleId` component assigns a string identifier for the rule. The `Effect` component specifies the value the rule emits when it evaluates to `true`.
+[41] - [43] The beginning of a rule definition. The `Id` component assigns a string identifier for the rule. The `Effect` component specifies the value the rule emits when it evaluates to `true`.
 
 [44] A free-form description of the rule.
 
@@ -1414,7 +1413,7 @@ A `PolicyType` object describes a policy: an aggregation of rules and other poli
 
 A `PolicyType` object may be evaluated, in which case the evaluation procedure defined in [Section 9.12](#912-policy-evaluation) SHALL be used.
 
-The main components of this object type are the `CombiningAlgId`, `Target`, `Policy`, `Rule`, `CombinerParameters`, `PolicyCombinerParameters`, `RuleCombinerParameters`, `VariableDefinition` and `NoticeExpression` properties.
+The main components of this object type are the `CombiningAlgId`, `Target`, `Policy`, `Rule`, `VariableDefinition` and `NoticeExpression` properties.
 
 If a `PolicyType` object contains references to other policies in the form of URLs, then these references MAY be resolvable.
 
@@ -1448,10 +1447,6 @@ Any `NoticeExpressionType` objects may be evaluated into notices by the PDP. Any
       <xs:selector xpath="xacml:Rule"/>
       <xs:field xpath="@Id"/>
    </xs:unique>
-   <xs:unique name="combinerParameterNameUniqueness">
-      <xs:selector xpath="xacml:CombinerParameters/xacml:CombinerParameter|xacml:PolicyCombinerParameters/xacml:CombinerParameter|xacml:RuleCombinerParameters/xacml:CombinerParameter"/>
-      <xs:field xpath="@ParameterName"/>
-   </xs:unique>
 </xs:element>
 <xs:complexType name="PolicyType">
    <xs:sequence>
@@ -1466,9 +1461,6 @@ Any `NoticeExpressionType` objects may be evaluated into notices by the PDP. Any
          <xs:element ref="xacml:Policy"/>
          <xs:element ref="xacml:Rule"/>
          <xs:element ref="xacml:PolicyReference"/>
-         <xs:element ref="xacml:CombinerParameters"/>
-         <xs:element ref="xacml:PolicyCombinerParameters"/>
-		 <xs:element ref="xacml:RuleCombinerParameters"/>
       </xs:choice>
       <xs:element ref="xacml:NoticeExpression" minOccurs="0" maxOccurs="unbounded"/>
    </xs:sequence>
@@ -1494,7 +1486,7 @@ A `PolicyType` object contains the following properties:
 
 `CombiningAlgId` [Required]
 
-: An `IdentifierType` value identifying the combining algorithm by which the `PolicyType`, `RuleType`, `CombinerParametersType`, `PolicyCombinerParametersType` and `RuleCombinerParametersType` objects MUST be combined. Standard combining algorithms are listed in [Annex E](#annex-e-combining-algorithms). Standard combining algorithm identifiers are listed in [Annex D.9](#d9-combining-algorithms).
+: An `IdentifierType` value identifying the combining algorithm by which the `PolicyType` and `RuleType` objects MUST be combined. Standard combining algorithms are listed in [Annex E](#annex-e-combining-algorithms). Standard combining algorithm identifiers are listed in [Annex D.9](#d9-combining-algorithms).
 
 `MaxDelegationDepth` [Optional]
 
@@ -1550,18 +1542,6 @@ Each `CombinerInputType` object contains exactly one of the following properties
 
 : A `RuleType` object defining a nested rule that is included in this policy. A rule whose condition matches the decision request MUST be considered. A rule whose condition does not match the decision request SHALL be ignored.
 
-`CombinerParameters`
-
-: A `CombinerParameterType` object. The parameters apply to the combining algorithm as such and it is up to the specific combining algorithm to interpret them and adjust its behavior accordingly.
-
-`PolicyCombinerParameters`
-
-: A `PolicyCombinerParameterType` object that is associated with a particular nested `PolicyType` or `PolicyReferenceType` object within the policy. It is up to the specific combining algorithm to interpret the parameters and adjust its behavior accordingly.
-
-`RuleCombinerParameters`
-
-: A `CombinerParameterType` objects that is associated with a particular rule within the policy. It is up to the specific combining algorithm to interpret the parameters and adjust its behavior accordingly.
-
 ## 7.6 PolicyIssuerType
 
 A `PolicyIssuerType` object contains ACAL attributes describing the issuer of the policy. The use of the `PolicyIssuerType` object is defined in a separate administration profile [[XACMLAdmin](#xacmladmin)]. A PDP which does not implement the administration profile MUST report an error or return an `Indeterminate` result if it encounters this object.
@@ -1608,7 +1588,7 @@ A `DefaultsType` object contains the following property:
 
 : An `IdentifierType` value specifying the XPath version for XPath expressions occurring in the policy. XPath expressions are used by attribute selectors and as arguments to XPath-based functions.
 
-## 7.7b PolicyParameterType
+## 7.8 PolicyParameterType
 
 A `PolicyParameterType` object declares a single parameter for a parameterized policy.
 
@@ -1623,6 +1603,11 @@ A `PolicyParameterType` object declares a single parameter for a parameterized p
    <xs:attribute name="DataType" type="xs:anyURI" use="optional" default="urn:oasis:names:tc:acal:1.0:data-type:string"/>
    <xs:attribute name="IsBag" type="xs:boolean" use="optional" default="false"/>
 </xs:complexType>
+<xs:simpleType name="PolicyInternalIdentifierType">
+   <xs:restriction base="xs:string">
+      <xs:pattern value="_?[A-Za-z]([-._]?[A-Za-z0-9]+)*"/>
+   </xs:restriction>
+</xs:simpleType>
 ```
 
 A `PolicyParameterType` object contains the following properties:
@@ -1647,7 +1632,7 @@ A `PolicyParameterType` object contains the following properties:
 
 : An expression that evaluates to a default value (`Isbag` is `false`) or bag of values (`IsBag` is true`) for the parameter that is used when a `PolicyReferenceType` object does not provide an argument for the parameter.
 
-## 7.8 BooleanExpressionType
+## 7.9 BooleanExpressionType
 
 A `BooleanExpressionType` object contains one ACAL expression, with the restriction that the expression's return data type MUST be `urn:oasis:names:tc:acal:1.0:data-type:boolean`.
 
@@ -1663,7 +1648,7 @@ The `Target` and `Condition` properties are of this type.
 
 Expression evaluation is described in [Section 9.5](#95-expression-evaluation).
 
-## 7.9 PolicyReferenceType
+## 7.10 PolicyReferenceType
 
 A `PolicyReferenceType` object is used to reference a policy by identifier and version.
 
@@ -1715,7 +1700,7 @@ The `PatternMatchIdReferenceType` object type extends the `IdReferenceType` obje
 
 : Specifies a matching expression for the latest acceptable version of the policy referenced.
 
-The matching operation is defined in [Section 7.11](#711-versionmatchtype). Any combination of these properties MAY be present in a `PatternMatchIdReferenceType` object. The referenced policy MUST match all expressions. If none of these properties are present, then any version of the policy is acceptable. In the case that more than one matching version can be obtained, then the most recent one SHOULD be used.
+The matching operation is defined in [Section 7.12](#712-versionmatchtype). Any combination of these properties MAY be present in a `PatternMatchIdReferenceType` object. The referenced policy MUST match all expressions. If none of these properties are present, then any version of the policy is acceptable. In the case that more than one matching version can be obtained, then the most recent one SHOULD be used.
 
 The `IdReferenceType` object type contains the following property:
 
@@ -1723,7 +1708,7 @@ The `IdReferenceType` object type contains the following property:
 
 : A URI being the `PolicyId` of the referenced policy. If the URI is a URL, then it MAY be resolvable to the policy. However, the mechanism for resolving a policy reference to the corresponding policy is outside the scope of this specification.
 
-## 7.10 VersionType
+## 7.11 VersionType
 
 A value of this simple type specifies the version number of a policy.
 
@@ -1737,9 +1722,9 @@ A value of this simple type specifies the version number of a policy.
 
 The version number is expressed as a sequence of decimal numbers, each separated by a period (.). `d+` represents a sequence of one or more decimal digits.
 
-## 7.11 VersionMatchType
+## 7.12 VersionMatchType
 
-Properties of this type SHALL contain a restricted regular expression matching a version number (see [Section 7.10](#710-versiontype)). The expression SHALL match versions of a referenced policy that are acceptable for inclusion in the referencing policy.
+Properties of this type SHALL contain a restricted regular expression matching a version number (see [Section 7.11](#711-versiontype)). The expression SHALL match versions of a referenced policy that are acceptable for inclusion in the referencing policy.
 
 ```xml
 <xs:simpleType name="VersionMatchType">
@@ -1750,118 +1735,6 @@ Properties of this type SHALL contain a restricted regular expression matching a
 ```
 
 A version match is `.`-separated, like a version string. A number represents a direct numeric match. A `\*` means that any single number is valid. A `+` means that any number, and any subsequent numbers, are valid. In this manner, the following four patterns would all match the version string `1.2.3`: `1.2.3`, `1.\*.3`, `1.2.\*` and `1.+`.
-
-## 7.12 CombinerParametersType
-
-A `CombinerParametersType` object conveys parameters for a combining algorithm.
-
-If multiple `CombinerParametersType` objects occur within the same policy, they SHALL be considered equal to one `CombinerParametersType` object containing the concatenation of all the sequences of `CombinerParameterType` objects contained in all the aforementioned `CombinerParametersType` objects, such that the order of occurrence of the `CombinerParametersType` objects is preserved in the concatenation of the `CombinerParameterType` objects.
-
-Note that none of the combining algorithms specified in ACAL 1.0 are parameterized.
-
-```xml
-<xs:element name="CombinerParameters" type="xacml:CombinerParametersType"/>
-<xs:complexType name="CombinerParametersType">
-   <xs:sequence>
-      <xs:element ref="xacml:CombinerParameter" minOccurs="0" maxOccurs="unbounded"/>
-   </xs:sequence>
-</xs:complexType>
-```
-
-A `CombinerParametersType` object contains the following properties:
-
-`CombinerParameter` [Any Number]
-
-: A sequence of `CombinerParameterType` objects, each containing a single parameter for a combining algorithm. See [Section 7.13](#713-combinerparametertype).
-
-Support for `CombinerParametersType` is optional.
-
-## 7.13 CombinerParameterType
-
-A `CombinerParameterType` object conveys a single parameter for a combining algorithm.
-
-```xml
-<xs:element name="CombinerParameter" type="xacml:CombinerParameterType"/>
-<xs:complexType name="CombinerParameterType">
-   <xs:sequence>
-      <xs:element ref="xacml:Value"/>
-   </xs:sequence>
-   <xs:attribute name="ParameterName" type="xacml:PolicyInternalIdentifierType" use="required"/>
-   <xs:assert test="xacml:Value/@DataType"/>
-</xs:complexType>
-
-<xs:simpleType name="PolicyInternalIdentifierType">
-   <xs:restriction base="xs:string">
-      <xs:pattern value="_?[A-Za-z]([-._]?[A-Za-z0-9]+)*"/>
-   </xs:restriction>
-</xs:simpleType>
-```
-
-A `CombinerParameterType` object contains the following properties:
-
-`ParameterName` [Required]
-
-: A restricted `String` identifier for the parameter.
-
-`Value` [Required]
-
-: A `ValueType` object specifying the value of the parameter.
-
-Support for `CombinerParameterType` is optional.
-
-## 7.14 RuleCombinerParametersType
-
-A `RuleCombinerParametersType` object conveys combining algorithm parameters associated with a particular rule within a policy.
-
-Each `RuleCombinerParametersType` object MUST be associated with a rule contained within the same policy. If multiple `RuleCombinerParametersType` objects reference the same rule, they SHALL be considered equal to one `RuleCombinerParametersType` object containing the concatenation of all the sequences of `CombinerParameterType` objects contained in all the aforementioned `RuleCombinerParametersType` objects, such that the order of occurrence of the `RuleCombinerParametersType` objects is preserved in the concatenation of the `CombinerParameterType` objects.
-
-Note that none of the combining algorithms specified in ACAL 1.0 are parameterized.
-
-```xml
-<xs:element name="RuleCombinerParameters" type="xacml:RuleCombinerParametersType"/>
-<xs:complexType name="RuleCombinerParametersType">
-   <xs:complexContent>
-      <xs:extension base="xacml:CombinerParametersType">
-         <xs:attribute name="RuleId" type="xs:NCName" use="required"/>
-      </xs:extension>
-   </xs:complexContent>
-</xs:complexType>
-```
-
-A `RuleCombinerParametersType` object contains the following property:
-
-`RuleId` [Required]
-
-: The restricted `String` identifier of a rule contained in the policy.
-
-Support for `RuleCombinerParametersType` is optional, only if support for combiner parameters is not implemented.
-
-## 7.15 PolicyCombinerParametersType
-
-A `PolicyCombinerParametersType` object conveys parameters associated with a particular contained policy for a combining algorithm.
-
-Each `PolicyCombinerParametersType` object MUST be associated with a policy contained within the same enclosing policy. If multiple `PolicyCombinerParametersType` objects reference the same policy, they SHALL be considered equal to one `PolicyCombinerParametersType` object containing the concatenation of all the sequences of `CombinerParameterType` objects contained in all the aforementioned `PolicyCombinerParametersType` objects, such that the order of occurrence of the `PolicyCombinerParametersType` objects is preserved in the concatenation of the `CombinerParameterType` objects.
-
-Note that none of the combining algorithms specified in ACAL 1.0 are parameterized.
-
-```xml
-<xs:element name="PolicyCombinerParameters" type="xacml:PolicyCombinerParametersType"/>
-<xs:complexType name="PolicyCombinerParametersType">
-   <xs:complexContent>
-      <xs:extension base="xacml:CombinerParametersType">
-         <xs:attribute name="PolicyId" type="xs:anyURI" use="required"/>
-      </xs:extension>
-   </xs:complexContent>
-</xs:complexType>
-```
-
-A `PolicyCombinerParametersType` object contains the following property:
-
-`PolicyId` [Required]
-
-: A `URI` matching the `PolicyId` property of a `PolicyType` object, or the `Id` property of a `PolicyReferenceType` object, contained in the enclosing policy.
-
-Support for `PolicyCombinerParametersType` is optional, only if support for combiner parameters is not implemented.
 
 ## 7.16 RuleType
 
@@ -2785,7 +2658,7 @@ The `ExactMatchIdReferenceType` object type extends the `IdReferenceType` object
 
 `Version` [Required]
 
-: A `VersionType` value indicating the version of a policy that was applicable to the request. See [Section 7.9](#79-policyreferencetype).
+: A `VersionType` value indicating the version of a policy that was applicable to the request. See [Section 7.10](#710-policyreferencetype).
 
 ## 7.43 MultiRequestsType
 
@@ -3546,8 +3419,6 @@ The policy truth table is shown in Table 5.
 | `Indeterminate`| `Indeterminate{P}` | `Indeterminate{P}` |
 | `Indeterminate`| `Indeterminate{D}` | `Indeterminate{D}` |
 
-Note that none of the combining algorithms defined by ACAL 1.0 take parameters. However, non-standard combining algorithms MAY take parameters. In such a case, the values of these parameters associated with the policies and rules, MUST be taken into account when evaluating the policy. The parameters and their types should be defined in the specification of the combining algorithm. If the implementation supports combiner parameters and if combiner parameters are present in a policy, then the parameter values MUST be supplied to the combining algorithm implementation.
-
 ## 9.15 PolicyReference Evaluation
 
 A policy reference is evaluated by resolving the reference and evaluating the referenced policy.
@@ -3617,15 +3488,13 @@ Values of the `IdentifierType` simple type may use short identifiers names as al
 
 This definition of equality MUST also be used by the following URI identifiers (that are not instances of `IdentifierType`):
 
-* the `PolicyId` property in a `PolicyType` object,
-
-* the `PolicyIdRef` property in a `PolicyCombinerParametersType` object and
+* the `PolicyId` property in a `PolicyType` object and
 
 * the `Id` property in an `IdReferenceType` object.
 
 The following is a list of the string identifiers that MUST use this definition of equality:
 
-* the `Issuer` property in an `AttributeDesignatorType` object,
+* the `Issuer` property in a `BaseAttributeDesignatorType` object,
 
 * the `Issuer` property in a `MissingAttributeDetailType` object,
 
@@ -3633,11 +3502,7 @@ The following is a list of the string identifiers that MUST use this definition 
 
 * the `Issuer` property in an `AttributeAssignmentExpressionType` object,
 
-* the `ParameterName` property in a `CombinerParameterType` object,
-
-* the `RuleId` property in a `RuleType` object,
-
-* the `RuleIdRef` property in a `RuleCombinerParametersType` object,
+* the `Id` property in a `RuleType` object,
 
 * the `VariableId` property in a `VariableDefinitionType` object and
 
@@ -3909,8 +3774,6 @@ The implementation MUST support the object types that are marked `M`.
 | BaseAttributeDesignatorType | M |
 | BaseAttributeSelectorType | O |
 | BooleanExpressionType | M |
-| CombinerParameterType | O |
-| CombinerParametersType | O |
 | ContentType | O |
 | DecisionType | M |
 | DescriptionType | M |
@@ -3924,7 +3787,6 @@ The implementation MUST support the object types that are marked `M`.
 | NoticeType | M |
 | NoticeExpressionType | M |
 | PolicyType | M |
-| PolicyCombinerParametersType | O |
 | DefaultsType | O |
 | PolicyIdentifierListType | O |
 | PolicyReferenceType | M |
@@ -3938,7 +3800,6 @@ The implementation MUST support the object types that are marked `M`.
 | ResultEntityType | M |
 | ResultType | M |
 | RuleType | M |
-| RuleCombinerParametersType | O |
 | StatusType | M |
 | StatusCodeType | M |
 | StatusDetailType | O |
@@ -4558,6 +4419,10 @@ Sloman, M. Policy Driven Management for Distributed Systems. Journal of Network 
 ###### [XACML]
 
 _eXtensible Access Control Markup Language (XACML) Version 3.0 Plus Errata 01_. Edited by Erik Rissanen. OASIS Standard incorporating Approved Errata. https://docs.https:xacml/3.0/xacml-3.0-core-spec-en.html.
+
+###### [ENTITIES]
+
+_XACML v3.0 Related and Nested Entities Profile Version 1.0_. Edited by Steven Legg. 16 February 2021. OASIS Committee Specification 02. https://docs.oasis-open.org/xacml/xacml-3.0-related-entities/v1.0/cs02/xacml-3.0-related-entities-v1.0-cs02.html. Latest stage: https://docs.oasis-open.org/xacml/xacml-3.0-related-entities/v1.0/xacml-3.0-related-entities-v1.0.html.
 
 
 ---
@@ -6383,7 +6248,7 @@ ACAL 1.0 is a successor to XACML 3.0. ACAL 1.0 differs from XACML 3.0 in the fol
 
   - Compared to XACML 3.0, the `<PolicySet>`, `<PolicySetIdReference>`, `<PolicySetCombinerParameters>` and `<PolicySetDefaults>` elements and `PolicySet` type no longer appear.
 
-  - Compared to XACML 3.0, the `PolicyType` type now allows child `<Policy>`, `<PolicyReference>` (was `PolicyIdReference`) and `<PolicyCombinerParameters>` elements.
+  - Compared to XACML 3.0, the `PolicyType` type now allows child `<Policy>` and `<PolicyReference>` (was `PolicyIdReference`) elements.
 
   - Separate rule and policy combining algorithms have been replaced with a single collection of combining algorithms. Legacy combining algorithms have been removed. The `only-one-applicable` policy combining algorithm has been removed.
 
@@ -6393,13 +6258,17 @@ ACAL 1.0 is a successor to XACML 3.0. ACAL 1.0 differs from XACML 3.0 in the fol
 
 - Obligations and advice no longer have distinct syntactic representations. Instead they now share the common `NoticeType` object type. The difference between obligations and advice is indicated by an `IsObligation` property.
 
+- Combiner parameters are no longer supported and the `<CombinerParameter>`, `<CombinerParameters>`, `<PolicyCombinerParameters>` and `<RuleCombinerParameters>` elements no longer appear.
+
 - Users are able to define short identifiers, which provide simple alias names to use in place of absolute URIs to refer to ACAL definitions. A predefined set of short identifiers for standard-defined URIs is also provided.
 
-- Different types are now used to represent ACAL attributes in a request versus a response. ACAL attributes in the result don't have the `IncludeInResult` property since it is only meaningful in the request. Attributes in the request are `RequestAttributeType` objects and attributes in the response are `AttributeType` objects. `RequestAttributeType` is derived from `AttributeType`.
+- The `IncludeInResult` XML attribute of the `<Attribute>` element has been prohibited in results and entity data type values. It is meaningless in these cases.
 
-- Different types are now used to represent attribute categories in a request versus a response. Categories in the result don't have the `Content` property since there is no mechanism to request their inclusion. Attribute categories in the request are `RequestEntityType` objects and attributes in the response are `ResultEntityType` objects. These types supercede the XML Schema `AttributesType` complex type.
+- Different types are now used to represent attribute categories in a request versus a response. Categories in the result don't have the `Content` property, since there is no mechanism to request their inclusion, and their attributes don't have the `IncludeInResult` property because it is meaningless in that context. Categories in the request have both `Content` properties and attributes with `IncludeInResult` properties. Attribute categories in the request are `RequestEntityType` objects and attributes in the response are `ResultEntityType` objects. These types supercede the XML Schema `AttributesType` complex type.
 
 - The `xml:id` attribute for an attribute category is replaced by a generic 'Id' property so that all ACAL representation formats are on an equal footing.
+
+- The quantified expressions (`ForAny`, `ForAll`, `Select` and `Map`) and the entity data type from the XACML 3.0 Entities Profile [[ENTITIES](#entities)] have been incorporated in ACAL version 1.0. The `attribute-designator` function from the profile has been reinvented as the `EntityAttributeDesignatorType` expression object type and the `attribute-selector` function from the the profile has been reinvented as the `EntityAttributeSelectorType` expression object type.
 
 
 ## Revision History

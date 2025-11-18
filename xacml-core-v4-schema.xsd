@@ -336,24 +336,6 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 		</xs:sequence>
 	</xs:complexType>
 
-	<xs:element name="CombinerParameters" type="xacml:CombinerParametersType"/>
-	<xs:complexType name="CombinerParametersType">
-		<xs:sequence>
-			<xs:element ref="xacml:CombinerParameter" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
-
-	<xs:element name="CombinerParameter" type="xacml:CombinerParameterType"/>
-	<xs:complexType name="CombinerParameterType">
-		<xs:sequence>
-			<!-- Change to XACML 3.0 (issue #46): AttributeValue renamed to Value (not Attribute-specific anymore) -->
-			<xs:element ref="xacml:Value"/>
-		</xs:sequence>
-		<!-- Change to XACML 3.0 (issue #61): changed ParameterName type to be more restrictive than xs:string -->
-		<xs:attribute name="ParameterName" type="xacml:PolicyInternalIdentifierType" use="required"/>
-		<xs:assert test="xacml:Value/@DataType"/>
-	</xs:complexType>
-
 	<!-- Change to XACML 3.0 (issue #61): Simple type for Combiner ParameterNames, and for policy-internal identifiers in general
 	(whether to use it for VariableId and RuleId as well remains to be agreed with ALFA working group). -->
 	<xs:simpleType name="PolicyInternalIdentifierType">
@@ -361,28 +343,6 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 			<xs:pattern value="_?[A-Za-z]([-._]?[A-Za-z0-9]+)*"/>
 		</xs:restriction>
 	</xs:simpleType>
-
-	<xs:element name="RuleCombinerParameters" type="xacml:RuleCombinerParametersType"/>
-	<xs:complexType name="RuleCombinerParametersType">
-		<xs:complexContent>
-			<xs:extension base="xacml:CombinerParametersType">
-				<!-- Change to XACML 3.0 (issue #55 and #14): renamed RuleIdRef to RuleId -->
-				<!-- Change to XACML 3.0 (issue #42): changed RuleId type to something more restrictive than xs:string
-				(this is still very permissive, a more restrictive pattern remains to be agreed with ALFA working group). -->
-				<xs:attribute name="RuleId" type="xs:NCName" use="required"/>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-
-	<xs:element name="PolicyCombinerParameters" type="xacml:PolicyCombinerParametersType"/>
-	<xs:complexType name="PolicyCombinerParametersType">
-		<xs:complexContent>
-			<xs:extension base="xacml:CombinerParametersType">
-				<!-- Change to XACML 3.0 (issue #55 and #14): renamed PolicyIdRef to PolicyId -->
-				<xs:attribute name="PolicyId" type="xs:anyURI" use="required"/>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
 
 	<!-- Change to XACML 3.0 - Issue #16: old PolicyIdReference Type changed to new PatternMatchIdReferenceType and element name renamed to PolicyPatternMatchReference,
 	which is used only in a SAML XACMLPolicyQuery of the SAML Profile of XACML.
@@ -481,10 +441,6 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 			<xs:selector xpath="xacml:Rule"/>
 			<xs:field xpath="@Id"/>
 		</xs:unique>
-		<xs:unique name="combinerParameterNameUniqueness">
-			<xs:selector xpath="xacml:CombinerParameters/xacml:CombinerParameter|xacml:PolicyCombinerParameters/xacml:CombinerParameter|xacml:RuleCombinerParameters/xacml:CombinerParameter"/>
-			<xs:field xpath="@ParameterName"/>
-		</xs:unique>
 	</xs:element>
 	<xs:complexType name="PolicyType">
 		<xs:sequence>
@@ -493,7 +449,7 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 			<xs:element ref="xacml:Description" minOccurs="0"/>
 			<xs:element ref="xacml:PolicyIssuer" minOccurs="0"/>
 			<xs:element ref="xacml:PolicyDefaults" minOccurs="0"/>
-			<!-- Change to XACML 3.0 (issue #4 - Parameterized Policies): Parameters that may be passed to the Policy via PolicyReference (not to be confused with *CombinerParameters below) -->
+			<!-- Change to XACML 3.0 (issue #4 - Parameterized Policies): Parameters that may be passed to the Policy via PolicyReference -->
 			<xs:element ref="xacml:PolicyParameter" minOccurs="0" maxOccurs="unbounded"/>
 			<!-- Change to XACML 3.0 (issue #11): VariableDefinition elements moved before the Target to allow using these variables in the Target condition  -->
 			<xs:element ref="xacml:VariableDefinition" minOccurs="0" maxOccurs="unbounded"/>
@@ -503,9 +459,6 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 				<xs:element ref="xacml:Rule"/>
 				<!-- Issue #11 and #16: PolicyIdReference replaced with new PolicyReference -->
 				<xs:element ref="xacml:PolicyReference"/>
-				<xs:element ref="xacml:CombinerParameters"/>
-				<xs:element ref="xacml:PolicyCombinerParameters"/>
-				<xs:element ref="xacml:RuleCombinerParameters"/>
 			</xs:choice>
 			<!-- Change to XACML 3.0 (issue #6): Merged Obligation/Advice(Expression) into Notice(Expression) -->
 			<xs:element ref="xacml:NoticeExpression" minOccurs="0" maxOccurs="unbounded"/>
