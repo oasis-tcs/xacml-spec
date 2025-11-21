@@ -3251,52 +3251,52 @@ If the designated attribute category or entity value has a `Content` property, t
 4. The result of step 3 is converted to a bag of values of the data type specified by the `DataType` property as follows:
 
 <span> </span>
-: If the result is a Boolean and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:boolean`, then convert the result using the `xs:boolean()` constructor function from [[XF](#xf)] Section 5.
+: If the result is a Boolean and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:boolean`, then convert the result using the `xs:boolean()` constructor function from [[XF](#xf)] Section 18.1.
 
 &nbsp;
-: If the result is a string and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:string`, then convert the result using the `xs:string()` constructor function from [[XF](#xf)] Section 5.
+: If the result is a string and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:string`, then convert the result using the `xs:string()` constructor function from [[XF](#xf)] Section 18.1.
 
 &nbsp;
-: If the result is a number and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:integer`, then convert the result using the `xs:integer()` constructor function from [[XF](#xf)] Section 5.
+: If the result is a number and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:integer`, then convert the result using the `xs:integer()` constructor function from [[XF](#xf)] Section 18.1.
 
 &nbsp;
-: If the result is a number and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:double`, then convert the result using the `xs:double()` constructor function from [[XF](#xf)] Section 5.
+: If the result is a number and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:double`, then convert the result using the `xs:double()` constructor function from [[XF](#xf)] Section 18.1.
 
 &nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:boolean`, then convert the string value of each node using the `xs:boolean()` constructor function from [[XF](#xf)] Section 5.
+: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:boolean`, then convert the string value of each node using the `xs:boolean()` constructor function from [[XF](#xf)] Section 18.1.
 
 &nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:string`, then convert the string value of each node using the `xs:string()` constructor function from [[XF](#xf)] Section 5.
+: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:string`, then convert the string value of each node using the `xs:string()` constructor function from [[XF](#xf)] Section 18.1.
 
 &nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:integer`, then convert the string value of each node using the `xs:integer()` constructor function from [[XF](#xf)] Section 5.
+: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:integer`, then convert the string value of each node using the `xs:integer()` constructor function from [[XF](#xf)] Section 18.1.
 
 &nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:double`, then convert the string value of each node using the `xs:double()` constructor function from [[XF](#xf)] Section 5.
+: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:double`, then convert the string value of each node using the `xs:double()` constructor function from [[XF](#xf)] Section 18.1.
 
 &nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:dateTime`, then convert the string value of each node using the `xs:dateTime()` constructor function from [[XF](#xf)] Section 5.
+: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:dateTime`, then convert the string value of each node using the `xs:dateTime()` constructor function from [[XF](#xf)] Section 18.1.
 
 &nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:date`, then convert the string value of each node using the `xs:date()` constructor function from [[XF](#xf)] Section 5.
+: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:date`, then convert the string value of each node using the `xs:date()` constructor function from [[XF](#xf)] Section 18.1.
 
 &nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:time`, then convert the string value of each node using the `xs:time()` constructor function from [[XF](#xf)] Section 5.
+: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:time`, then convert the string value of each node using the `xs:time()` constructor function from [[XF](#xf)] Section 18.1.
 
 &nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:hexBinary`, then convert the string value of each node using the `xs:hexBinary()` constructor function from [[XF](#xf)] Section 5.
+: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:hexBinary`, then convert the string value of each node using the `xs:hexBinary()` constructor function from [[XF](#xf)] Section 18.1.
 
 &nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:base64Binary`, then convert the string value of each node using the `xs:base64Binary()` constructor function from [[XF](#xf)] Section 5.
+: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:base64Binary`, then convert the string value of each node using the `xs:base64Binary()` constructor function from [[XF](#xf)] Section 18.1.
 
 &nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:anyURI`, then convert the string value of each node using the `xs:anyURI()` constructor function from [[XF](#xf)] Section 5.
+: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:anyURI`, then convert the string value of each node using the `xs:anyURI()` constructor function from [[XF](#xf)] Section 18.1.
 
 &nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:yearMonthDuration`, then convert the string value of each node using the `xs:yearMonthDuration()` constructor function from [[XF](#xf)] Section 5.
+: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:yearMonthDuration`, then convert the string value of each node using the `xs:yearMonthDuration()` constructor function from [[XF](#xf)] Section 18.1.
 
 &nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:dayTimeDuration`, then convert the string value of each node using the `xs:dayTimeDuration()` constructor function from [[XF](#xf)] Section 5.
+: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:dayTimeDuration`, then convert the string value of each node using the `xs:dayTimeDuration()` constructor function from [[XF](#xf)] Section 18.1.
 
 &nbsp;
 : If the result is a node-set and every node is an element node and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:entity`, then convert each node to an `EntityType` object. Each object SHALL have a `Content` property and SHALL NOT have an `Attribute` property. The child element of the `Content` property SHALL be a copy of the element corresponding to the node, along with its entire content, plus whatever namespace declarations from ancestor elements as are required to define namespace prefixes used in the content. Namespace declarations from ancestor elements that are not visibly used in the content MAY be added.
@@ -4076,12 +4076,12 @@ The implementation MUST properly process those functions associated with the ide
 | urn:oasis:names:tc:acal:1.0:function:string-from-ipAddress | M | urn:oasis:names:tc:xacml:3.0:function:string-from-ipAddress |
 | urn:oasis:names:tc:acal:1.0:function:dnsName-from-string | M | urn:oasis:names:tc:xacml:3.0:function:dnsName-from-string |
 | urn:oasis:names:tc:acal:1.0:function:string-from-dnsName | M | urn:oasis:names:tc:xacml:3.0:function:string-from-dnsName |
-| urn:oasis:names:tc:acal:1.0:function:string-starts-with | M | urn:oasis:names:tc:xacml:3.0:function:string-starts-with |
-| urn:oasis:names:tc:acal:1.0:function:anyURI-starts-with | M | urn:oasis:names:tc:xacml:3.0:function:anyURI-starts-with |
-| urn:oasis:names:tc:acal:1.0:function:string-ends-with | M | urn:oasis:names:tc:xacml:3.0:function:string-ends-with |
-| urn:oasis:names:tc:acal:1.0:function:anyURI-ends-with | M | urn:oasis:names:tc:xacml:3.0:function:anyURI-ends-with |
-| urn:oasis:names:tc:acal:1.0:function:string-contains | M | urn:oasis:names:tc:xacml:3.0:function:string-contains |
-| urn:oasis:names:tc:acal:1.0:function:anyURI-contains | M | urn:oasis:names:tc:xacml:3.0:function:anyURI-contains |
+| urn:oasis:names:tc:acal:1.0:function:string-starts-with | M | |
+| urn:oasis:names:tc:acal:1.0:function:anyURI-starts-with | M | |
+| urn:oasis:names:tc:acal:1.0:function:string-ends-with | M | |
+| urn:oasis:names:tc:acal:1.0:function:anyURI-ends-with | M | |
+| urn:oasis:names:tc:acal:1.0:function:string-contains | M | |
+| urn:oasis:names:tc:acal:1.0:function:anyURI-contains | M | |
 | urn:oasis:names:tc:acal:1.0:function:string-substring | M | urn:oasis:names:tc:xacml:3.0:function:string-substring |
 | urn:oasis:names:tc:acal:1.0:function:anyURI-substring | M | urn:oasis:names:tc:xacml:3.0:function:anyURI-substring |
 | urn:oasis:names:tc:acal:1.0:function:any-of | M | urn:oasis:names:tc:xacml:3.0:function:any-of |
@@ -4091,14 +4091,14 @@ The implementation MUST properly process those functions associated with the ide
 | urn:oasis:names:tc:acal:1.0:function:any-of-all | M | urn:oasis:names:tc:xacml:1.0:function:any-of-all |
 | urn:oasis:names:tc:acal:1.0:function:all-of-all | M | urn:oasis:names:tc:xacml:1.0:function:all-of-all |
 | urn:oasis:names:tc:acal:1.0:function:map | M | urn:oasis:names:tc:xacml:3.0:function:map |
-| urn:oasis:names:tc:acal:1.0:function:x500Name-match | M | urn:oasis:names:tc:xacml:1.0:function:x500Name-match |
-| urn:oasis:names:tc:acal:1.0:function:rfc822Name-match | M | urn:oasis:names:tc:xacml:1.0:function:rfc822Name-match |
-| urn:oasis:names:tc:acal:1.0:function:string-regexp-match | M | urn:oasis:names:tc:xacml:1.0:function:string-regexp-match |
-| urn:oasis:names:tc:acal:1.0:function:anyURI-regexp-match | M | urn:oasis:names:tc:xacml:2.0:function:anyURI-regexp-match |
-| urn:oasis:names:tc:acal:1.0:function:ipAddress-regexp-match | M | urn:oasis:names:tc:xacml:2.0:function:ipAddress-regexp-match |
-| urn:oasis:names:tc:acal:1.0:function:dnsName-regexp-match | M | urn:oasis:names:tc:xacml:2.0:function:dnsName-regexp-match |
-| urn:oasis:names:tc:acal:1.0:function:rfc822Name-regexp-match | M | urn:oasis:names:tc:xacml:2.0:function:rfc822Name-regexp-match |
-| urn:oasis:names:tc:acal:1.0:function:x500Name-regexp-match | M | urn:oasis:names:tc:xacml:2.0:function:x500Name-regexp-match |
+| urn:oasis:names:tc:acal:1.0:function:x500Name-match | M | |
+| urn:oasis:names:tc:acal:1.0:function:rfc822Name-match | M | |
+| urn:oasis:names:tc:acal:1.0:function:string-regexp-match | M | |
+| urn:oasis:names:tc:acal:1.0:function:anyURI-regexp-match | M | |
+| urn:oasis:names:tc:acal:1.0:function:ipAddress-regexp-match | M | |
+| urn:oasis:names:tc:acal:1.0:function:dnsName-regexp-match | M | |
+| urn:oasis:names:tc:acal:1.0:function:rfc822Name-regexp-match | M | |
+| urn:oasis:names:tc:acal:1.0:function:x500Name-regexp-match | M | |
 | urn:oasis:names:tc:acal:1.0:function:xpath-node-count | O | urn:oasis:names:tc:xacml:3.0:function:xpath-node-count |
 | urn:oasis:names:tc:acal:1.0:function:xpath-node-equal | O | urn:oasis:names:tc:xacml:3.0:function:xpath-node-equal |
 | urn:oasis:names:tc:acal:1.0:function:xpath-node-match | O | urn:oasis:names:tc:xacml:3.0:function:xpath-node-match |
@@ -4369,7 +4369,7 @@ OASIS Committee Draft 03, XACML v3.0 Administration and Delegation Profile Versi
 
 ###### [XF]
 
-W3C XQuery, XPath, and XSLT Functions and Operators Namespace Document (XPath and XQuery Functions and Operators 3.1) 21 March 2017, https://www.w3.org/2005/xpath-functions/
+XPath and XQuery Functions and Operators 3.1, 21 March 2017, https://www.w3.org/TR/2017/REC-xpath-functions-31-20170321/
 
 ###### [XML]
 
@@ -4381,7 +4381,7 @@ Marsh, Jonathan, et.al. eds, xml:id Version 1.0. W3C Recommendation 9 September 
 
 ###### [XS]
 
-XML Schema, parts 1 and 2. Available at: https://www.w3.org/TR/xmlschema-1/ and https://www.w3.org/TR/xmlschema-2/
+XML Schema 1.1, parts 1 and 2. Available at: https://www.w3.org/TR/xmlschema11-1/ and https://www.w3.org/TR/xmlschema11-2/
 
 ###### [XPath]
 
@@ -4581,23 +4581,23 @@ The following functions are the equality functions for the various data types. E
 
 `urn:oasis:names:tc:acal:1.0:function:date-equal`
 
-: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:date` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL perform its evaluation according to the `op:date-equal` function [[XF](#xf)] Section 10.4.9.
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:date` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL perform its evaluation according to the `op:date-equal` function [[XF](#xf)] Section 9.4.4.
 
 `urn:oasis:names:tc:acal:1.0:function:time-equal`
 
-: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:time` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL perform its evaluation according to the `op:time-equal` function [[XF](#xf)] Section 10.4.12.
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:time` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL perform its evaluation according to the `op:time-equal` function [[XF](#xf)] Section 9.4.7.
 
 `urn:oasis:names:tc:acal:1.0:function:dateTime-equal`
 
-: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:dateTime` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL perform its evaluation according to the `op:dateTime-equal` function [[XF](#xf)] Section 10.4.6.
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:dateTime` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL perform its evaluation according to the `op:dateTime-equal` function [[XF](#xf)] Section 9.4.1.
 
 `urn:oasis:names:tc:acal:1.0:function:dayTimeDuration-equal`
 
-: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:dayTimeDuration` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. This function shall perform its evaluation according to the `op:duration-equal` function [[XF](#xf)] Section 10.4.5. Note that the lexical representation of each argument MUST be converted to a value expressed in fractional seconds [[XF](#xf)] Section 10.3.2.
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:dayTimeDuration` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. This function shall perform its evaluation according to the `op:duration-equal` function [[XF](#xf)] Section 8.2.5. Note that the lexical representation of each argument MUST be converted to a value expressed in fractional seconds [[XS](#xs)].
 
 `urn:oasis:names:tc:acal:1.0:function:yearMonthDuration-equal`
 
-: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:yearMonthDuration` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. This function shall perform its evaluation according to the `op:duration-equal` function [[XF](#xf)] Section 10.4.5. Note that the lexical representation of each argument MUST be converted to a value expressed in fractional seconds [[XF](#xf)] Section 10.3.2.
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:yearMonthDuration` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. This function shall perform its evaluation according to the `op:duration-equal` function [[XF](#xf)] Section 8.2.5. Note that the lexical representation of each argument MUST be converted to a value expressed in months [[XS](#xs)].
 
 `urn:oasis:names:tc:acal:1.0:function:anyURI-equal`
 
@@ -4728,7 +4728,7 @@ This section contains the specification for logical functions that operate on ar
 
 : The order of evaluation SHALL be: evaluate the first argument and if it is not `Indeterminate`, then evaluate each Boolean argument in order. The evaluation SHALL stop immediately leaving the rest of the Boolean arguments unevaluated if the requirements to return `true` or `false` have been satisfied or if there are insufficient remaining Boolean arguments to satisfy the requirements to return either `true` or `false`.
 
-: Note that this function differs from the similarly named function in XACML [[XACML](#xacml)], which returned `Indeterminate` if N was less than zero or greater than M.
+: Note that this function differs from the similarly-named function in XACML [[XACML](#xacml)], which returned `Indeterminate` if N was less than zero or greater than M.
 
 `urn:oasis:names:tc:acal:1.0:function:not`
 
@@ -4931,7 +4931,7 @@ The following functions operate on strings and convert to and from other data ty
 
 `urn:oasis:names:tc:acal:1.0:function:string-from-dayTimeDuration`
 
-: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:dayTimeDuration`, and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:string`. The result SHALL be the dayTimeDuration converted to a string in the canonical form specified in [XPathFunc].
+: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:dayTimeDuration`, and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:string`. The result SHALL be the dayTimeDuration converted to a string in the canonical form specified in [[XS](#xs)].
 
 `urn:oasis:names:tc:acal:1.0:function:yearMonthDuration-from-string`
 
@@ -4939,7 +4939,7 @@ The following functions operate on strings and convert to and from other data ty
 
 `urn:oasis:names:tc:acal:1.0:function:string-from-yearMonthDuration`
 
-: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:yearMonthDuration`, and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:string`. The result SHALL be the yearMonthDuration converted to a string in the canonical form specified in [XPathFunc].
+: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:yearMonthDuration`, and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:string`. The result SHALL be the yearMonthDuration converted to a string in the canonical form specified in [[XS](#xs)].
 
 `urn:oasis:names:tc:acal:1.0:function:x500Name-from-string`
 
@@ -4975,27 +4975,39 @@ The following functions operate on strings and convert to and from other data ty
 
 `urn:oasis:names:tc:acal:1.0:function:string-starts-with`
 
-: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:string` and SHALL return a `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The result SHALL be `true` if the second string begins with the first string, and `false` otherwise. Equality testing SHALL be done as defined for `urn:oasis:names:tc:acal:1.0:function:string-equal`.
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:string` and SHALL return a `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The result SHALL be `true` if the first string begins with the second string, and `false` otherwise. Equality testing SHALL be done as defined for `urn:oasis:names:tc:acal:1.0:function:string-equal`.
+
+: Note that the arguments to this function are swapped compared to the similarly-named function in XACML [[XACML](#xacml)].
 
 `urn:oasis:names:tc:acal:1.0:function:anyURI-starts-with`
 
-: This function SHALL take a first argument of data type`urn:oasis:names:tc:acal:1.0:data-type:string` and an a second argument of data type `urn:oasis:names:tc:acal:1.0:data-type:anyURI` and SHALL return a `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The result SHALL be `true` if the URI converted to a string with `urn:oasis:names:tc:acal:1.0:function:string-from-anyURI` begins with the string, and `false` otherwise. Equality testing SHALL be done as defined for `urn:oasis:names:tc:acal:1.0:function:string-equal`.
+: This function SHALL take a first argument of data type `urn:oasis:names:tc:acal:1.0:data-type:anyURI` and a second argument of data type `urn:oasis:names:tc:acal:1.0:data-type:string` and SHALL return a `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The result SHALL be `true` if the URI converted to a string with `urn:oasis:names:tc:acal:1.0:function:string-from-anyURI` begins with the string, and `false` otherwise. Equality testing SHALL be done as defined for `urn:oasis:names:tc:acal:1.0:function:string-equal`.
+
+: Note that the arguments to this function are swapped compared to the similarly-named function in XACML [[XACML](#xacml)].
 
 `urn:oasis:names:tc:acal:1.0:function:string-ends-with`
 
-: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:string` and SHALL return a `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The result SHALL be `true` if the second string ends with the first string, and `false` otherwise. Equality testing SHALL be done as defined for `urn:oasis:names:tc:acal:1.0:function:string-equal`.
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:string` and SHALL return a `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The result SHALL be `true` if the first string ends with the second string, and `false` otherwise. Equality testing SHALL be done as defined for `urn:oasis:names:tc:acal:1.0:function:string-equal`.
+
+: Note that the arguments to this function are swapped compared to the similarly-named function in XACML [[XACML](#xacml)].
 
 `urn:oasis:names:tc:acal:1.0:function:anyURI-ends-with`
 
-: This function SHALL take a first argument of data type `urn:oasis:names:tc:acal:1.0:data-type:string` and an a second argument of data type `urn:oasis:names:tc:acal:1.0:data-type:anyURI` and SHALL return a `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The result SHALL be `true` if the URI converted to a string with `urn:oasis:names:tc:acal:1.0:function:string-from-anyURI` ends with the string, and `false` otherwise. Equality testing SHALL be done as defined for `urn:oasis:names:tc:acal:1.0:function:string-equal`.
+: This function SHALL take a first argument of data type `urn:oasis:names:tc:acal:1.0:data-type:anyURI` and a second argument of data type `urn:oasis:names:tc:acal:1.0:data-type:string` and SHALL return a `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The result SHALL be `true` if the URI converted to a string with `urn:oasis:names:tc:acal:1.0:function:string-from-anyURI` ends with the string, and `false` otherwise. Equality testing SHALL be done as defined for `urn:oasis:names:tc:acal:1.0:function:string-equal`.
+
+: Note that the arguments to this function are swapped compared to the similarly-named function in XACML [[XACML](#xacml)].
 
 `urn:oasis:names:tc:acal:1.0:function:string-contains`
 
-: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:string` and SHALL return a `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The result SHALL be `true` if the second string contains the first string, and `false` otherwise. Equality testing SHALL be done as defined for `urn:oasis:names:tc:acal:1.0:function:string-equal`.
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:string` and SHALL return a `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The result SHALL be `true` if the first string contains the second string, and `false` otherwise. Equality testing SHALL be done as defined for `urn:oasis:names:tc:acal:1.0:function:string-equal`.
+
+: Note that the arguments to this function are swapped compared to the similarly-named function in XACML [[XACML](#xacml)].
 
 `urn:oasis:names:tc:acal:1.0:function:anyURI-contains`
 
-: This function SHALL take a first argument of data type `urn:oasis:names:tc:acal:1.0:data-type:string` and an a second argument of data type `urn:oasis:names:tc:acal:1.0:data-type:anyURI` and SHALL return a `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The result SHALL be `true` if the URI converted to a string with `urn:oasis:names:tc:acal:1.0:function:string-from-anyURI` contains the string, and `false` otherwise. Equality testing SHALL be done as defined for `urn:oasis:names:tc:acal:1.0:function:string-equal`.
+: This function SHALL take a first argument of data type `urn:oasis:names:tc:acal:1.0:data-type:anyURI` and a second argument of data type `urn:oasis:names:tc:acal:1.0:data-type:string` and SHALL return a `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The result SHALL be `true` if the URI converted to a string with `urn:oasis:names:tc:acal:1.0:function:string-from-anyURI` contains the string, and `false` otherwise. Equality testing SHALL be done as defined for `urn:oasis:names:tc:acal:1.0:function:string-equal`.
+
+: Note that the arguments to this function are swapped compared to the similarly-named function in XACML [[XACML](#xacml)].
 
 `urn:oasis:names:tc:acal:1.0:function:string-substring`
 
@@ -5394,48 +5406,50 @@ Examples in this section are presented in both the XML and JSON representations 
 These functions operate on various types using regular expressions and evaluate to <!-- Line break added for the previous line to fit on a PDF page -->
 `urn:oasis:names:tc:acal:1.0:data-type:boolean`.
 
+Note that the arguments to these functions are swapped compared to the similarly-named functions in XACML [[XACML](#xacml)].
+
 * `urn:oasis:names:tc:acal:1.0:function:string-regexp-match`
 
   This function decides a regular expression match. It SHALL take two arguments of <!-- Line break added for the previous line to fit on a PDF page -->
   `urn:oasis:names:tc:acal:1.0:data-type:string` and SHALL return an
-  `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The first argument SHALL be a regular expression and the second argument SHALL be a general string. The function specification SHALL be that of the `xf:matches` function with the arguments reversed [[XF](#xf)] Section 7.6.2.
+  `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The first argument SHALL be a general string and the second argument SHALL be a regular expression. The function specification SHALL be that of the `xf:matches` function [[XF](#xf)] Section 5.6.3.
 
 * `urn:oasis:names:tc:acal:1.0:function:anyURI-regexp-match`
 
-  This function decides a regular expression match. It SHALL take two arguments; the first is of type `urn:oasis:names:tc:acal:1.0:data-type:string` and the second is of type <!-- Line break added for the previous line to fit on a PDF page -->
-  `urn:oasis:names:tc:acal:1.0:data-type:anyURI`. It SHALL return an <!-- Line break added for the previous line to fit on a PDF page -->
-  `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The first argument SHALL be a regular expression and the second argument SHALL be a URI. The function SHALL convert the second argument to type `urn:oasis:names:tc:acal:1.0:data-type:string` with <!-- Line break added for the previous line to fit on a PDF page -->
+  This function decides a regular expression match. It SHALL take two arguments; the first is of type `urn:oasis:names:tc:acal:1.0:data-type:anyURI` and the second is of type <!-- Line break added for the previous line to fit on a PDF page -->
+  `urn:oasis:names:tc:acal:1.0:data-type:string`. It SHALL return an <!-- Line break added for the previous line to fit on a PDF page -->
+  `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The first argument SHALL be a URI and the second argument SHALL be a regular expression. The function SHALL convert the first argument to type `urn:oasis:names:tc:acal:1.0:data-type:string` with <!-- Line break added for the previous line to fit on a PDF page -->
   `urn:oasis:names:tc:acal:1.0:function:string-from-anyURI`, then apply <!-- Line break added for the previous line to fit on a PDF page -->
   `urn:oasis:names:tc:acal:1.0:function:string-regexp-match`.
 
 * `urn:oasis:names:tc:acal:1.0:function:ipAddress-regexp-match`
 
-  This function decides a regular expression match. It SHALL take two arguments; the first is of type `urn:oasis:names:tc:acal:1.0:data-type:string` and the second is of type <!-- Line break added for the previous line to fit on a PDF page -->
-  `urn:oasis:names:tc:acal:1.0:data-type:ipAddress`. It SHALL return an <!-- Line break added for the previous line to fit on a PDF page -->
-  `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The first argument SHALL be a regular expression and the second argument SHALL be an IPv4 or IPv6 address. The function SHALL convert the second argument to type `urn:oasis:names:tc:acal:1.0:data-type:string` with <!-- Line break added for the previous line to fit on a PDF page -->
+  This function decides a regular expression match. It SHALL take two arguments; the first is of type `urn:oasis:names:tc:acal:1.0:data-type:ipAddress` and the second is of type <!-- Line break added for the previous line to fit on a PDF page -->
+  `urn:oasis:names:tc:acal:1.0:data-type:string`. It SHALL return an <!-- Line break added for the previous line to fit on a PDF page -->
+  `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The first argument SHALL be an IPv4 or IPv6 address and the second argument SHALL be a regular expression. The function SHALL convert the first argument to type `urn:oasis:names:tc:acal:1.0:data-type:string` with <!-- Line break added for the previous line to fit on a PDF page -->
   `urn:oasis:names:tc:acal:1.0:function:string-from-ipAddress`, then apply <!-- Line break added for the previous line to fit on a PDF page -->
   `urn:oasis:names:tc:acal:1.0:function:string-regexp-match`.
 
 * `urn:oasis:names:tc:acal:1.0:function:dnsName-regexp-match`
 
-  This function decides a regular expression match. It SHALL take two arguments; the first is of type `urn:oasis:names:tc:acal:1.0:data-type:string` and the second is of type <!-- Line break added for the previous line to fit on a PDF page -->
-  `urn:oasis:names:tc:acal:1.0:data-type:dnsName`. It SHALL return an <!-- Line break added for the previous line to fit on a PDF page -->
-  `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The first argument SHALL be a regular expression and the second argument SHALL be a DNS name. The function SHALL convert the second argument to type `urn:oasis:names:tc:acal:1.0:data-type:string` with `urn:oasis:names:tc:acal:1.0:function:string-from-dnsName`, then apply <!-- Line break added for the previous line to fit on a PDF page -->
+  This function decides a regular expression match. It SHALL take two arguments; the first is of type `urn:oasis:names:tc:acal:1.0:data-type:dnsName` and the second is of type <!-- Line break added for the previous line to fit on a PDF page -->
+  `urn:oasis:names:tc:acal:1.0:data-type:string`. It SHALL return an <!-- Line break added for the previous line to fit on a PDF page -->
+  `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The first argument SHALL be a DNS name and the second argument SHALL be a regular expression. The function SHALL convert the first argument to type `urn:oasis:names:tc:acal:1.0:data-type:string` with `urn:oasis:names:tc:acal:1.0:function:string-from-dnsName`, then apply <!-- Line break added for the previous line to fit on a PDF page -->
   `urn:oasis:names:tc:acal:1.0:function:string-regexp-match`.
 
 * `urn:oasis:names:tc:acal:1.0:function:rfc822Name-regexp-match`
 
-  This function decides a regular expression match. It SHALL take two arguments; the first is of type `urn:oasis:names:tc:acal:1.0:data-type:string` and the second is of type <!-- Line break added for the previous line to fit on a PDF page -->
-  `urn:oasis:names:tc:acal:1.0:data-type:rfc822Name`. It SHALL return an <!-- Line break added for the previous line to fit on a PDF page -->
-  `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The first argument SHALL be a regular expression and the second argument SHALL be an RFC 822 name. The function SHALL convert the second argument to type `urn:oasis:names:tc:acal:1.0:data-type:string` with <!-- Line break added for the previous line to fit on a PDF page -->
+  This function decides a regular expression match. It SHALL take two arguments; the first is of type `urn:oasis:names:tc:acal:1.0:data-type:rfc822Name` and the second is of type <!-- Line break added for the previous line to fit on a PDF page -->
+  `urn:oasis:names:tc:acal:1.0:data-type:string`. It SHALL return an <!-- Line break added for the previous line to fit on a PDF page -->
+  `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The first argument SHALL be an RFC 822 name and the second argument SHALL be a regular expression. The function SHALL convert the first argument to type `urn:oasis:names:tc:acal:1.0:data-type:string` with <!-- Line break added for the previous line to fit on a PDF page -->
   `urn:oasis:names:tc:acal:1.0:function:string-from-rfc822Name`, then apply <!-- Line break added for the previous line to fit on a PDF page -->
   `urn:oasis:names:tc:acal:1.0:function:string-regexp-match`.
 
 * `urn:oasis:names:tc:acal:1.0:function:x500Name-regexp-match`
 
-  This function decides a regular expression match. It SHALL take two arguments; the first is of type `urn:oasis:names:tc:acal:1.0:data-type:string` and the second is of type <!-- Line break added for the previous line to fit on a PDF page -->
-  `urn:oasis:names:tc:acal:1.0:data-type:x500Name`. It SHALL return an <!-- Line break added for the previous line to fit on a PDF page -->
-  `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The first argument SHALL be a regular expression and the second argument SHALL be an X.500 directory name. The function SHALL convert the second argument to type `urn:oasis:names:tc:acal:1.0:data-type:string` with <!-- Line break added for the previous line to fit on a PDF page -->
+  This function decides a regular expression match. It SHALL take two arguments; the first is of type `urn:oasis:names:tc:acal:1.0:data-type:x500Name` and the second is of type <!-- Line break added for the previous line to fit on a PDF page -->
+  `urn:oasis:names:tc:acal:1.0:data-type:string`. It SHALL return an <!-- Line break added for the previous line to fit on a PDF page -->
+  `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The first argument SHALL be an X.500 directory name and the second argument SHALL be a regular expression. The function SHALL convert the first argument to type `urn:oasis:names:tc:acal:1.0:data-type:string` with <!-- Line break added for the previous line to fit on a PDF page -->
   `urn:oasis:names:tc:acal:1.0:function:string-from-x500Name`, then apply <!-- Line break added for the previous line to fit on a PDF page -->
   `urn:oasis:names:tc:acal:1.0:function:string-regexp-match`.
 
@@ -5513,23 +5527,27 @@ These functions operate on various types and evaluate to `urn:oasis:names:tc:aca
 
 `urn:oasis:names:tc:acal:1.0:function:x500Name-match`
 
-: This function shall take two arguments of `urn:oasis:names:tc:acal:1.0:data-type:x500Name` and shall return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It shall return `true` if and only if the first argument matches some terminal sequence of RDNs from the second argument when compared using `x500Name-equal`.
+: This function shall take two arguments of `urn:oasis:names:tc:acal:1.0:data-type:x500Name` and shall return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It shall return `true` if and only if the second argument matches some terminal sequence of RDNs from the first argument when compared using `x500Name-equal`.
 
-: As an example (non-normative), if the first argument is `O=Medico Corp,C=US` and the second argument is `cn=John Smith,o=Medico Corp, c=US`, then the function will return `true`.
+: As an example (non-normative), if the first argument is `cn=John Smith,o=Medico Corp,c=US` and the second argument is `O=Medico Corp,C=US`, then the function will return `true`.
+
+: Note that the arguments to this function are swapped compared to the similarly-named function in XACML [[XACML](#xacml)].
 
 `urn:oasis:names:tc:acal:1.0:function:rfc822Name-match`
 
-: This function SHALL take two arguments, the first is of data type `urn:oasis:names:tc:acal:1.0:data-type:string` and the second is of data type `urn:oasis:names:tc:acal:1.0:data-type:rfc822Name` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. This function SHALL evaluate to `true` if the first argument matches the second argument according to the following specification.
+: This function SHALL take two arguments, the first is of data type `urn:oasis:names:tc:acal:1.0:data-type:rfc822Name` and the second is of data type `urn:oasis:names:tc:acal:1.0:data-type:string` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. This function SHALL evaluate to `true` if the second argument matches the first argument according to the following specification.
 
 : An RFC822 name consists of a local-part followed by `@` followed by a domain-part. The local-part is case-sensitive, while the domain-part (which is usually a DNS name) is not case-sensitive.
 
-: The second argument contains a complete rfc822Name. The first argument is a complete or partial rfc822Name used to select appropriate values in the second argument as follows.
+: The first argument contains a complete rfc822Name. The second argument is a complete or partial rfc822Name used to select appropriate values in the first argument as follows.
 
-: In order to match a particular address in the second argument, the first argument must specify the complete mail address to be matched. For example, if the first argument is `Anderson@sun.com`, this matches a value in the second argument of `Anderson@sun.com` and `Anderson@SUN.COM`, but not `Anne.Anderson@sun.com`, `anderson@sun.com` or `Anderson@east.sun.com`.
+: In order to match a particular address in the first argument, the second argument must specify the complete mail address to be matched. For example, if the second argument is `Anderson@sun.com`, this matches a value in the first argument of `Anderson@sun.com` and `Anderson@SUN.COM`, but not `Anne.Anderson@sun.com`, `anderson@sun.com` or `Anderson@east.sun.com`.
 
-: In order to match any address at a particular domain in the second argument, the first argument must specify only a domain name (usually a DNS name). For example, if the first argument is `sun.com`, this matches a value in the second argument of `Anderson@sun.com` or `Baxter@SUN.COM`, but not `Anderson@east.sun.com`.
+: In order to match any address at a particular domain in the first argument, the second argument must specify only a domain name (usually a DNS name). For example, if the second argument is `sun.com`, this matches a value in the first argument of `Anderson@sun.com` or `Baxter@SUN.COM`, but not `Anderson@east.sun.com`.
 
-: In order to match any address in a particular domain in the second argument, the first argument must specify the desired domain-part with a leading `.`. For example, if the first argument is `.east.sun.com`, this matches a value in the second argument of `Anderson@east.sun.com` and `anne.anderson@ISRG.EAST.SUN.COM` but not `Anderson@sun.com`.
+: In order to match any address in a particular domain in the first argument, the second argument must specify the desired domain-part with a leading `.`. For example, if the second argument is `.east.sun.com`, this matches a value in the first argument of `Anderson@east.sun.com` and `anne.anderson@ISRG.EAST.SUN.COM` but not `Anderson@sun.com`.
+
+: Note that the arguments to this function are swapped compared to the similarly-named function in XACML [[XACML](#xacml)].
 
 ### C.3.16 XPath-based Functions
 
@@ -5653,8 +5671,6 @@ The following data type identifiers are defined by XML Schema [[XS](#xs)]:
 * `urn:oasis:names:tc:acal:1.0:data-type:hexBinary`
 
 * `urn:oasis:names:tc:acal:1.0:data-type:base64Binary`.
-
-The following data type identifiers correspond to the dayTimeDuration and yearMonthDuration data types defined in [[XF](#xf)] Sections 10.3.2 and 10.3.1, respectively:
 
 * `urn:oasis:names:tc:acal:1.0:data-type:dayTimeDuration`
 
@@ -6269,6 +6285,8 @@ ACAL 1.0 is a successor to XACML 3.0. ACAL 1.0 differs from XACML 3.0 in the fol
 - The `xml:id` attribute for an attribute category is replaced by a generic 'Id' property so that all ACAL representation formats are on an equal footing.
 
 - The quantified expressions (`ForAny`, `ForAll`, `Select` and `Map`) and the entity data type from the XACML 3.0 Entities Profile [[ENTITIES](#entities)] have been incorporated in ACAL version 1.0. The `attribute-designator` function from the profile has been reinvented as the `EntityAttributeDesignatorType` expression object type and the `attribute-selector` function from the the profile has been reinvented as the `EntityAttributeSelectorType` expression object type.
+
+- The arguments to each of the following functions have been swapped: `string-starts-with`, `anyURI-starts-with`, `string-ends-with`, `anyURI-ends-with`, `string-contains`, `anyURI-contains`, `x500Name-match`, `rfc822Name-match`, `string-regexp-match`, `anyURI-regexp-match`, `ipAddress-regexp-match`, `dnsName-regexp-match`, `rfc822Name-regexp-match` and `x500Name-regexp-match`.
 
 
 ## Revision History
