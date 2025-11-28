@@ -1806,7 +1806,7 @@ The `EffectType` simple type defines the values allowed for the `Effect` propert
 
 ## 7.18 VariableDefinitionType
 
-A `VariableDefinitionType` object is used to define a value or a bag of values that MAY be referenced by one or more `VariableReference` properties within the same enclosing policy. The name supplied for its `VariableId` property SHALL NOT occur in the `VariableId` property of any other `VariableDefinitionType` object within the enclosing policy. A `VariableDefinitionType` object MAY contain undefined `VariableReferenceType` objects, but if it does, a corresponding `VariableDefinitionType` object MUST be defined later in the same sequence of `VariableDefinitionType` objects.
+A `VariableDefinitionType` object is used to define a value or a bag of values that can be referenced by zero or more `VariableReferenceType` objects. `VariableDefinitionType` objects appear in the `VariableDefinition` property of a `PolicyType` or `RuleType` object. This is the parent object. The scope within which the variable definition can be referenced is any expression within the parent object, including any nested `PolicyType` or `RuleType` objects.
 
 ```xml
 <xs:element name="VariableDefinition" type="xacml:VariableDefinitionType"/>
@@ -1821,13 +1821,13 @@ A `VariableDefinitionType` object is used to define a value or a bag of values t
 
 A `VariableDefinitionType` object has the following properties:
 
-`Expression` [Required]
-
-: An `ExpressionType` object. The value of the variable definition is the result of evaluating the `ExpressionType` object.
-
 `VariableId` [Required]
 
-: A restricted `String` name for the variable definition.
+: A restricted `String` name for the variable definition. The value of the property MUST NOT be the same as the `VariableId` property of another `VariableDefinitionType` object in the same `VariableDefinition` property or in the `VariableDefinition` property of a `PolicyType` object enclosing the parent object.
+
+`Expression` [Required]
+
+: An `ExpressionType` object. The value of the variable definition is the result of evaluating the `ExpressionType` object. The expression MAY contain `VariableReferenceType` objects referring to other `VariableDefinitionType` objects provided those objects are in the same `VariableDefinition` property or in the `VariableDefinition` property of a `PolicyType` object enclosing the parent object. The expression SHALL NOT contain `VariableReferenceType` objects that refer to this `VariableDefinitionType` object or that refer to `VariableDefinitionType` objects that directly or indirectly refer to this `VariableDefinitionType` object.
 
 ## 7.19 ExpressionType
 
@@ -2158,7 +2158,7 @@ A `ValueType` object has the following properties:
 
 ## 7.29 VariableReferenceType
 
-A `VariableReferenceType` object is a kind of expression used to reference a value defined within the same enclosing `PolicyType` object. The `VariableReference` property SHALL refer to the `VariableDefinitionType` object by identifier equality on the value of their respective `VariableId` properties. One and only one `VariableDefinitionType` object MUST exist within the same encompassing `PolicyType` object to which the `VariableReference` property refers. Multiple `VariableDefinitionType` objects MAY refer to the same `VariableDefinitionType` object. A `VariableDefinitionType` object MAY have no references.
+A `VariableReferenceType` object is a kind of expression used to reference a variable definition.
 
 ```xml
 <xs:element name="VariableReference" type="xacml:VariableReferenceType" substitutionGroup="xacml:Expression"/>
@@ -2175,7 +2175,7 @@ A `VariableReferenceType` object contains the following property:
 
 `VariableId` [Required]
 
-: The name used to refer to the value defined in a `VariableDefinitionType` object.
+: The restricted `String` name used to refer to the ACAL value or bag of values defined in a `VariableDefinitionType` object. The property value MUST match, by identifier equality, the `VariableId` property of exactly one `VariableDefinitionType` object that is in the `VariableDefinition` property of an enclosing `RuleType` or `PolicyType` object.
 
 ## 7.30 QuantifiedExpressionType
 
@@ -2189,7 +2189,7 @@ A `QuantifiedExpressionType` object is a kind of expression that represents one 
         <xs:element ref="xacml:Expression"/>
         <xs:element ref="xacml:Expression"/>
       </xs:sequence>
-      <xs:attribute name="VariableId" type="xs:string" use="required"/>
+      <xs:attribute name="VariableId" type="xs:NCName" use="required"/>
     </xs:extension>
   </xs:complexContent>
 </xs:complexType>
@@ -2199,7 +2199,7 @@ A `QuantifiedExpressionType` object contains the following properties:
 
 `VariableId` [Required]
 
-: A `String` value naming the quantified variable that will be used by the quantified expression. The quantified variable does not have a corresponding variable definition. A quantified expression SHALL NOT use the same `VariableId` as a variable definition of an enclosing `PolicyType` or `RuleType` object.
+: A restricted `String` value naming the quantified variable that will be used by the quantified expression. The quantified variable does not have a corresponding variable definition. The value of the property MUST NOT be the same as the `VariableId` property of a `VariableDefinitionType` object in the `VariableDefinition` property of an enclosing `PolicyType` or `RuleType` object.
 
 `Domain` [Required]
 
@@ -3355,11 +3355,11 @@ The target value SHALL be `Match` if the `Target` property is absent or the expr
 
 ## 9.8 VariableReference Evaluation
 
-A `VariableReferenceType` object references a single `VariableDefinitionType` object contained within the same `PolicyType` object. A `VariableReferenceType` object that does not reference a particular `VariableDefinitionType` object within the encompassing `PolicyType` object is called an undefined reference. Policies with undefined references are invalid.
+A `VariableReferenceType` object references a single `VariableDefinitionType` object that has a matching `VariableId` property value and is in the `VariableDefinition` property of an enclosing `RuleType` or `PolicyType` object. If no such `VariableDefinitionType `object exists, then the reference is invalid. The PDP MUST detect invalid references either at policy loading time or during runtime evaluation. If the PDP detects an invalid reference during runtime the variable reference evaluates to `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`.
 
-In any place where a `VariableReferenceType` object occurs, it has the effect as if the text of the `ExpressionType` object defined in the `VariableDefinitionType` object replaces the `VariableReferenceType` object. Any evaluation scheme that preserves this semantic is acceptable. For instance, the expression in the `VariableDefinitionType` object may be evaluated to a particular value and cached for multiple references without consequence (i.e., the value of an `ExpressionType` object remains the same for the entire policy evaluation). This characteristic is one of the benefits of ACAL being a declarative language.
+In any place where a `VariableReferenceType` object occurs, it has the effect as if the `ExpressionType` object defined in the `VariableDefinitionType` object replaces the `VariableReferenceType` object. Any evaluation scheme that preserves this semantic is acceptable. For instance, the expression in the `VariableDefinitionType` object may be evaluated to a particular value and cached for multiple references without consequence (i.e., the value of an `ExpressionType` object remains the same for the entire policy evaluation). This characteristic is one of the benefits of ACAL being a declarative language.
 
-A variable reference containing circular references is invalid. The PDP MUST detect circular references either at policy loading time or during runtime evaluation. If the PDP detects a circular reference during runtime the variable reference evaluates to `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`.
+Circular references are invalid. The PDP MUST detect circular references either at policy loading time or during runtime evaluation. If the PDP detects a circular reference during runtime the variable reference evaluates to `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`.
 
 ## 9.9 Condition Evaluation
 

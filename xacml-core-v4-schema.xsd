@@ -651,6 +651,22 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 		</xs:complexContent>
 	</xs:complexType>
 
+	<xs:element name="ForAny" type="xacml:QuantifiedExpressionType" substitutionGroup="xacml:Expression"/>
+	<xs:element name="ForAll" type="xacml:QuantifiedExpressionType" substitutionGroup="xacml:Expression"/>
+	<xs:element name="Map" type="xacml:QuantifiedExpressionType" substitutionGroup="xacml:Expression"/>
+	<xs:element name="Select" type="xacml:QuantifiedExpressionType" substitutionGroup="xacml:Expression"/>
+	<xs:complexType name="QuantifiedExpressionType">
+		<xs:complexContent>
+			<xs:extension base="xacml:ExpressionType">
+				<xs:sequence>
+					<xs:element ref="xacml:Expression"/>
+					<xs:element ref="xacml:Expression"/>
+				</xs:sequence>
+				<xs:attribute name="VariableId" type="xs:NCName" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
 	<!-- Change to XACML 3.0 (issue #48): New IdentifierType for supporting both Short Identifiers and normal URIs as attribute/category/datatype/function/notice/status code/combinining algorithm identifiers -->
 	<xs:simpleType name="IdentifierType">
 		<xs:restriction base="xs:string">
