@@ -4049,6 +4049,8 @@ The implementation MUST properly process those functions associated with the ide
 | urn:oasis:names:tc:acal:1.0:function:entity-one-and-only | M | urn:oasis:names:tc:xacml:3.0:function:entity-one-and-only |
 | urn:oasis:names:tc:acal:1.0:function:entity-bag-size | M | urn:oasis:names:tc:xacml:3.0:function:entity-bag-size |
 | urn:oasis:names:tc:acal:1.0:function:entity-bag | M | urn:oasis:names:tc:xacml:3.0:function:entity-bag |
+| urn:oasis:names:tc:acal:1.0:function:is-empty | O | |
+| urn:oasis:names:tc:acal:1.0:function:is-not-empty | O | |
 | urn:oasis:names:tc:acal:1.0:function:string-concatenate | M | urn:oasis:names:tc:xacml:2.0:function:string-concatenate |
 | urn:oasis:names:tc:acal:1.0:function:boolean-from-string | M | urn:oasis:names:tc:xacml:3.0:function:boolean-from-string |
 | urn:oasis:names:tc:acal:1.0:function:string-from-boolean | M | urn:oasis:names:tc:xacml:3.0:function:string-from-boolean |
@@ -5038,6 +5040,14 @@ These functions operate on a bag of `type` values, where `type` is one of the AC
 `urn:oasis:names:tc:acal:1.0:function:type-bag`
 
 : This function SHALL take any number of arguments of `type` and return a bag of `type` values containing the values of the arguments. An application of this function to zero arguments SHALL produce an empty bag of the specified data type.
+
+`urn:oasis:names:tc:acal:1.0:function:is-empty`
+
+: This function SHALL take a single bag argument of any data type and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The function SHALL evaluate to `true` if and only if the bag argument has no values.
+
+`urn:oasis:names:tc:acal:1.0:function:is-not-empty`
+
+: This function SHALL take a single bag argument of any data type and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The function SHALL evaluate to `true` if and only if the bag argument has at least one value.
 
 ### C.3.11 Set Functions
 
