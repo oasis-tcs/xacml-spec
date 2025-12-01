@@ -1942,14 +1942,14 @@ A `FunctionType` object contains the following property:
 
 : An `IdentifierType` value identifying a function.
 
-## 7.22 BaseAttributeDesignatorType
+## 7.22 NamedAttributeType
 
-The `BaseAttributeDesignatorType` object type is an abstract object type that specifies a named attribute for the retrieval of a bag of attribute values from a source of attributes. The object types derived from `BaseAttributeDesignatorType` determine the source of attributes: an `AttributeDesignatorType` object (an attribute designator) specifies a named attribute in the request context and an `EntityAttributeDesignatorType` object (an entity attribute designator) specifies a named attribute in either the request context or a value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type.
+The `NamedAttributeType` object type is an abstract object type that specifies a named attribute for the retrieval of a bag of attribute values from a source of attributes. The object types derived from `NamedAttributeType` determine the source of attributes: an `AttributeDesignatorType` object (an attribute designator) specifies a named attribute in the request context and an `EntityAttributeDesignatorType` object (an entity attribute designator) specifies a named attribute in either the request context or a value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type.
 
 Evaluation of an `AttributeDesignatorType` or `EntityAttributeDesignatorType` object returns a bag containing all the ACAL attribute values that are matched by the named attribute, or an error. In the event that no matching attribute is present in the source of attributes, the `MustBePresent` property governs whether this evaluation returns an empty bag or `Indeterminate`. See [Section 9.4.5](#945-attribute-retrieval).
 
 ```
-<xs:complexType name="BaseAttributeDesignatorType" abstract="true">
+<xs:complexType name="NamedAttributeType" abstract="true">
    <xs:complexContent>
       <xs:extension base="xacml:ExpressionType">
          <xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
@@ -1961,7 +1961,7 @@ Evaluation of an `AttributeDesignatorType` or `EntityAttributeDesignatorType` ob
 </xs:complexType>
 ```
 
-A `BaseAttributeDesignatorType` object contains the following properties:
+A `NamedAttributeType` object contains the following properties:
 
 `AttributeId` [Required]
 
@@ -1993,7 +1993,7 @@ An `AttributeDesignatorType` object is a kind of expression that defines an attr
 <xs:element name="AttributeDesignator" type="xacml:AttributeDesignatorType" substitutionGroup="xacml:Expression"/>
 <xs:complexType name="AttributeDesignatorType">
    <xs:complexContent>
-      <xs:extension base="xacml:BaseAttributeDesignatorType">
+      <xs:extension base="xacml:NamedAttributeType">
          <xs:attribute name="Category" type="xacml:IdentifierType" use="required"/>
       </xs:extension>
    </xs:complexContent>
@@ -2001,13 +2001,13 @@ An `AttributeDesignatorType` object is a kind of expression that defines an attr
 
 ```
 
-The `AttributeDesignatorType` object type extends the `BaseAttributeDesignatorType` object type with the following property:
+The `AttributeDesignatorType` object type extends the `NamedAttributeType` object type with the following property:
 
 `Category` [Required]
 
 : An `IdentifierType` value specifying an attribute category in the request context from which values of the named attribute are retrieved.
 
-The properties inherited from `BaseAttributeDesignatorType` specify the named attribute. The attribute designator retrieves values from attributes matching the named attribute that are present in the `RequestEntityType` object having a `Category` property that matches, by identifier equality, the `Category` property of the attribute designator.
+The properties inherited from `NamedAttributeType` specify the named attribute. The attribute designator retrieves values from attributes matching the named attribute that are present in the `RequestEntityType` object having a `Category` property that matches, by identifier equality, the `Category` property of the attribute designator.
 
 ## 7.24 EntityAttributeDesignatorType
 
@@ -2017,7 +2017,7 @@ An `EntityAttributeDesignatorType` object is a kind of expression that defines a
 <xs:element name="EntityAttributeDesignator" type="xacml:EntityAttributeDesignatorType" substitutionGroup="xacml:Expression"/>
 <xs:complexType name="EntityAttributeDesignatorType">
    <xs:complexContent>
-      <xs:extension base="xacml:BaseAttributeDesignatorType">
+      <xs:extension base="xacml:NamedAttributeType">
          <xs:sequence>
             <xs:element ref="xacml:Expression"/>
          </xs:sequence>
@@ -2026,13 +2026,13 @@ An `EntityAttributeDesignatorType` object is a kind of expression that defines a
 </xs:complexType>
 ```
 
-The `EntityAttributeDesignatorType` object type extends the `BaseAttributeDesignatorType` object type with the following property:
+The `EntityAttributeDesignatorType` object type extends the `NamedAttributeType` object type with the following property:
 
 `Expression` [Required]
 
 : An `ExpressionType` object defining an expression that MUST evaluate to either a single value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type or a single value of the `urn:oasis:names:tc:acal:1.0:data-type:anyURI` data type.
 
-The properties inherited from `BaseAttributeDesignatorType` specify the named attribute.
+The properties inherited from `NamedAttributeType` specify the named attribute.
 
 If the expression evaluates to a value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type, then the entity attribute designator retrieves values from attributes matching the named attribute that are present in the value of the expression.
 
@@ -3494,7 +3494,7 @@ This definition of equality MUST also be used by the following URI identifiers (
 
 The following is a list of the string identifiers that MUST use this definition of equality:
 
-* the `Issuer` property in a `BaseAttributeDesignatorType` object,
+* the `Issuer` property in a `NamedAttributeType` object,
 
 * the `Issuer` property in a `MissingAttributeDetailType` object,
 
@@ -3771,7 +3771,6 @@ The implementation MUST support the object types that are marked `M`.
 | AttributeDesignatorType | M |
 | AttributeSelectorType | O |
 | AttributesReferenceType | O |
-| BaseAttributeDesignatorType | M |
 | BaseAttributeSelectorType | O |
 | BooleanExpressionType | M |
 | ContentType | O |
@@ -3784,6 +3783,7 @@ The implementation MUST support the object types that are marked `M`.
 | FunctionType | M |
 | MissingAttributeDetailType | M |
 | MultiRequestsType | O |
+| NamedAttributeType | M |
 | NoticeType | M |
 | NoticeExpressionType | M |
 | PolicyType | M |
