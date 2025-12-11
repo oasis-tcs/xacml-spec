@@ -725,4 +725,37 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 			<xs:minLength value="1"/>
 		</xs:restriction>
 	</xs:simpleType>
+
+	<xs:element name="SharedVariableDefinition" type="xacml:SharedVariableDefinitionType"/>
+	<xs:complexType name="SharedVariableDefinitionType">
+		<xs:sequence>
+			<xs:element ref="xacml:Description" minOccurs="0"/>
+			<xs:element ref="xacml:ShortIdSetReference" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="xacml:Expression"/>
+		</xs:sequence>
+		<xs:attribute name="Id" type="xs:anyURI" use="required"/>
+		<xs:attribute name="Version" type="xacml:VersionType" use="required"/>
+	</xs:complexType>
+
+	<xs:element name="SharedVariableReference" type="xacml:PatternMatchIdReferenceType">
+	<xs:complexType name="SharedVariableReferenceType">
+		<xs:complexContent>
+			<xs:extension base="xacml:ExpressionType">
+				<xs:attribute name="Id" type="xs:anyURI" use="required"/>
+				<xs:attribute name="Version" type="xacml:VersionMatchType" use="optional"/>
+				<xs:attribute name="EarliestVersion" type="xacml:VersionMatchType" use="optional"/>
+				<xs:attribute name="LatestVersion" type="xacml:VersionMatchType" use="optional"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:element name="Bundle" type="xacml:BundleType"/>
+	<xs:complexType name="BundleType">
+		<xs:sequence>
+			<xs:element ref="xacml:ShortIdSet" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="xacml:SharedVariableDefinition" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="xacml:Policy" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="xacml:PolicyReference" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
 </xs:schema>

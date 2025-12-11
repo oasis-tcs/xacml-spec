@@ -1403,7 +1403,7 @@ A value of this simple type is either:
 
 A short identifier name appearing in the second and third cases MUST be the name of a member of a short identifier set referenced by the containing policy, request or response.
 
-Note that the three cases can be distinguished from each other syntactically in a valid, correctly formatted value. If the value contains curly brackets, then the third case must apply since the curly bracket characters are not legal characters for an absolute URI or a short identifier name; otherwise, if the value matches the pattern for a short identifier name, then the second case applies since an absolute URI begins with a scheme name and a colon character (i.e., `:`; U+003A) and the colon character is not a legal character for a short identifier name; otherwise, the value is an absolute URI.
+Note that the three cases can be distinguished from each other syntactically in a valid, correctly-formatted value. If the value contains curly brackets, then the third case must apply since the curly bracket characters are not legal characters for an absolute URI or a short identifier name; otherwise, if the value matches the pattern for a short identifier name, then the second case applies since an absolute URI begins with a scheme name and a colon character (i.e., `:`; U+003A) and the colon character is not a legal character for a short identifier name; otherwise, the value is an absolute URI.
 
 The conversion of a value of the `IdentifierType` simple type into an absolute URI is detailed in [Section 9.3](#93-identifier-evaluation).
 
@@ -1494,7 +1494,7 @@ A `PolicyType` object contains the following properties:
 
 `ShortIdSetReference` [Any Number]
 
-: A sequence of `URI` values referencing short identifier sets. The short identifiers used by the policy MUST be ones defined in the referenced sets or in any further sets referenced by the referenced sets (recursively). The policy set SHALL NOT directly or indirectly reference any short identifier set more than once.
+: A sequence of `URI` values referencing short identifier sets. The short identifiers used by the policy MUST be ones defined in the referenced sets or in any further sets referenced by the referenced sets (recursively). The policy SHALL NOT directly or indirectly reference any short identifier set more than once.
 
 `Description` [Optional]
 
@@ -1829,6 +1829,45 @@ A `VariableDefinitionType` object has the following properties:
 
 : An `ExpressionType` object. The value of the variable definition is the result of evaluating the `ExpressionType` object. The expression MAY contain `VariableReferenceType` objects referring to other `VariableDefinitionType` objects provided those objects are in the same `VariableDefinition` property or in the `VariableDefinition` property of a `PolicyType` object enclosing the parent object. The expression SHALL NOT contain `VariableReferenceType` objects that refer to this `VariableDefinitionType` object or that refer to `VariableDefinitionType` objects that directly or indirectly refer to this `VariableDefinitionType` object.
 
+## 7.18b SharedVariableDefinitionType
+
+A `SharedVariableDefinitionType` object is used to define a value or a bag of values that can be referenced by zero or more `SharedVariableReferenceType` objects. `SharedVariableDefinitionType` objects appear in the `SharedVariableDefinition` property of a `BundleType` object, i.e., they exist independently of any policy. The scope within which the shared variable definition can be referenced is any expression nested within the `BundleType` object. This includes policies, any other `SharedVariableDefinitionType` objects and the arguments of the `BundleType` object's `PolicyReference` property.
+
+```xml
+<xs:element name="SharedVariableDefinition" type="xacml:SharedVariableDefinitionType"/>
+<xs:complexType name="SharedVariableDefinitionType">
+   <xs:sequence>
+      <xs:element ref="xacml:Description" minOccurs="0"/>
+      <xs:element ref="xacml:ShortIdSetReference" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="xacml:Expression"/>
+   </xs:sequence>
+   <xs:attribute name="Id" type="xs:anyURI" use="required"/>
+   <xs:attribute name="Version" type="xacml:VersionType" use="required"/>
+</xs:complexType>
+```
+
+`Id` [Required]
+
+: A `URI` value specifying an identifier for the shared variable. It is the responsibility of the PAP to ensure that no two shared variables visible to the PDP have the same identifier. This MAY be achieved by following a predefined URN or URI scheme. If the identifier is in the form of a URL, then it MAY be resolvable.
+
+`Version` [Required]
+
+: A `VersionType` value specifying the version number of the shared variable.
+
+`Description` [Optional]
+
+: A free-form `String` description of the shared variable.
+
+`ShortIdSetReference` [Any Number]
+
+: A sequence of `URI` values referencing short identifier sets. The short identifiers used by the shared variable MUST be ones defined in the referenced sets or in any further sets referenced by the referenced sets (recursively). The shared variable SHALL NOT directly or indirectly reference any short identifier set more than once.
+
+`Expression` [Required]
+
+: An `ExpressionType` object. The value of the shared variable definition is the result of evaluating the `ExpressionType` object. The expression MAY contain `SharedVariableReferenceType` objects referring to other `SharedVariableDefinitionType` objects. The expression SHALL NOT contain `SharedVariableReferenceType` objects that refer to this `SharedVariableDefinitionType` object or that refer to `SharedVariableDefinitionType` objects that directly or indirectly refer to this `SharedVariableDefinitionType` object.
+
+: Note that the expression cannot contain `VariableReferenceType` objects since the `SharedVariableDefinitionType` object is not in the scope of any `VariableDefinitionType` object.
+
 ## 7.19 ExpressionType
 
 An `ExpressionType` object defines an ACAL expression. Expression evaluation is defined in [Section 9.5](#95-expression-evaluation).
@@ -1842,35 +1881,39 @@ An `ExpressionType` object contains exactly one of the following properties:
 
 `Apply`
 
-: An `ApplyType` object.
+: An `ApplyType` object specifying a function call.
 
 `Function`
 
-: A `FunctionType` object.
+: A `FunctionType` object identifying a function.
 
 `AttributeDesignator`
 
-: An `AttributeDesignatorType` object.
+: An `AttributeDesignatorType` object specifying a named attribute from the request context.
 
 `EntityAttributeDesignator`
 
-: An `EntityAttributeDesignatorType` object.
+: An `EntityAttributeDesignatorType` object specifying a named attribute from either the request context or a value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type.
 
 `AttributeSelector`
 
-: An `AttributeSelectorType` object.
+: An `AttributeSelectorType` object specifying an XPath expression to apply to XML content in the request context to produce a bag of ACAL values.
 
 `EntityAttributeSelector`
 
-: An `EntityAttributeSelectorType` object.
+: An `EntityAttributeSelectorType` object specifying an XPath expression to apply to XML content either in the request context or in a value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type.
 
 `Value`
 
-: A `ValueType` object.
+: A `ValueType` object specifying a literal ACAL value.
 
 `VariableReference`
 
-: A `VariableReferenceType` object.
+: A `VariableReferenceType` object referencing a variable.
+
+`SharedVariableReference`
+
+: A `SharedVariableReferenceType` object referencing a shared variable.
 
 `ForAny`
 
@@ -2176,6 +2219,44 @@ A `VariableReferenceType` object contains the following property:
 `VariableId` [Required]
 
 : The restricted `String` name used to refer to the ACAL value or bag of values defined in a `VariableDefinitionType` object. The property value MUST match, by identifier equality, the `VariableId` property of exactly one `VariableDefinitionType` object that is in the `VariableDefinition` property of an enclosing `RuleType` or `PolicyType` object.
+
+## 7.29b SharedVariableReferenceType
+
+A `SharedVariableReferenceType` object is used to reference a shared variable by identifier and optional version.
+
+```xml
+<xs:element name="SharedVariableReference" type="xacml:PatternMatchIdReferenceType">
+<xs:complexType name="SharedVariableReferenceType">
+   <xs:complexContent>
+      <xs:extension base="xacml:ExpressionType">
+         <xs:attribute name="Id" type="xs:anyURI" use="required"/>
+         <xs:attribute name="Version" type="xacml:VersionMatchType" use="optional"/>
+         <xs:attribute name="EarliestVersion" type="xacml:VersionMatchType" use="optional"/>
+         <xs:attribute name="LatestVersion" type="xacml:VersionMatchType" use="optional"/>
+      </xs:extension>
+   </xs:complexContent>
+</xs:complexType>
+```
+
+The `SharedVariableReferenceType` object type contains the following properties:
+
+`Id` [Required]
+
+: A URI being the `Id` of the referenced shared variable. If the URI is a URL, then it MAY be resolvable to the shared variable. However, the mechanism for resolving a shared variable reference to the corresponding shared variable is outside the scope of this specification.
+
+`Version` [Optional]
+
+: Specifies a matching expression for an acceptable version of the shared variable referenced.
+
+`EarliestVersion` [Optional]
+
+: Specifies a matching expression for the earliest acceptable version of the shared variable referenced.
+
+`LatestVersion` [Optional]
+
+: Specifies a matching expression for the latest acceptable version of the shared variable referenced.
+
+The matching operation is defined in [Section 7.12](#712-versionmatchtype). Any combination of these properties may be present in a `SharedVariableReferenceType` object. The referenced shared variable MUST match all expressions. If none of these properties are present, then any version of the shared variable is acceptable. In the case that more than one matching version can be obtained, then the most recent one SHOULD be used.
 
 ## 7.30 QuantifiedExpressionType
 
@@ -2976,6 +3057,43 @@ An `EntityType` object contains the following properties:
 
 : A sequence of `AttributeType` objects.
 
+## 7.54 BundleType
+
+A `BundleType` object type collects together the policies, short identifier sets and shared variables that a PDP uses to evaluate an authorization request along with the starting point for that evaluation. A PDP is said to be defined by a `BundleType` object, although an implementation is not required to physically represent such an object.
+
+A `BundleType` object might also be used to convey policies, short identifier sets or shared variables between ACAL systems without necessarily being complete for the purpose of evaluating authorization requests. Protocols to enable such transfers are outside the scope of this specification.
+
+```xml
+<xs:element name="Bundle" type="xacml:BundleType"/>
+<xs:complexType name="BundleType">
+   <xs:sequence>
+      <xs:element ref="xacml:ShortIdSet" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="xacml:SharedVariableDefinition" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="xacml:Policy" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element ref="xacml:PolicyReference" minOccurs="0"/>
+   </xs:sequence>
+</xs:complexType>
+
+```
+
+A `BundleType` object contains the following properties:
+
+`ShortIdSet` [Any Number]
+
+: A sequence of `ShortIdSet` objects each defining a set of short identifiers that can be referenced by the policies, shared variable definitions and other short identifier sets in the `BundleType` object.
+
+`SharedVariableDefinition` [Any Number]
+
+: A sequence of `SharedVariableDefinitionType` objects, each defining an expression that can be referenced from anywhere in the `BundleType` object where an expression can appear.
+
+`Policy` [Any Number]
+
+: A sequence of `PolicyType` objects.
+
+`PolicyReference` [Optional]
+
+: If present, a `PolicyReferenceType` object that MUST reference a policy in the `Policy` property. A PDP defined by this `BundleType` object SHALL evaluate every authorization request by evaluating this policy reference. See [Section 9.15](#915-policyreferenceevaluation). If this property is absent, then the PDP returns `NotApplicable` for every authorization request. The policy reference MUST specify arguments if the referenced policy is parameterized.
+
 
 ---
 
@@ -3327,6 +3445,7 @@ An ACAL expression is a choice between the following object types:
 * `ApplyType`
 * `FunctionType`
 * `VariableReferenceType`
+* `SharedVariableReferenceType`
 * `QuantifiedExpressionType`
 
 ## 9.6 Arithmetic Evaluation
@@ -3434,9 +3553,9 @@ It is often the case that a resource is organized as a hierarchy (e.g., file sys
 
 ## 9.17 Authorization Decision
 
-In relation to a particular decision request, the PDP is defined by a combining algorithm and a set of policies. The PDP SHALL return a response context as if it had evaluated a single policy consisting of this combining algorithm and the set of policies.
+In relation to a particular decision request, the PDP is defined by a set of policies, a set of shared variable definitions, sets of short identifiers and a policy reference that specifies the starting point for evaluating the request. Conceptually, these items can be collected together as a single `BundleType` object, athough an implementation is free to represent and organize this information in any way it chooses as long as it produces the same result as is specified here.
 
-The PDP MUST evaluate the policy as specified in [Section 7](#7-structures) and [Section 9](#9-functional-requirements). The PDP MUST return a response context, with one `Decision` property of value `Permit`, `Deny`, `Indeterminate` or `NotApplicable`.
+The PDP SHALL return a response context as if it had evaluated the policy reference in the manner specified in [Section 7](#7-structures) and [Section 9](#9-functional-requirements). The PDP MUST return a response context, with one `Decision` property of value `Permit`, `Deny`, `Indeterminate` or `NotApplicable`.
 
 If the PDP cannot make a decision, then an `Indeterminate` `Decision` property SHALL be returned.
 
@@ -3488,7 +3607,9 @@ Values of the `IdentifierType` simple type may use short identifiers names as al
 
 This definition of equality MUST also be used by the following URI identifiers (that are not instances of `IdentifierType`):
 
-* the `PolicyId` property in a `PolicyType` object and
+* the `PolicyId` property in a `PolicyType` object,
+
+* the `Id` property in a `SharedVariableDefinitionType` object and
 
 * the `Id` property in an `IdReferenceType` object.
 
@@ -3800,6 +3921,8 @@ The implementation MUST support the object types that are marked `M`.
 | ResultEntityType | M |
 | ResultType | M |
 | RuleType | M |
+| SharedVariableDefinitionType | M |
+| SharedVariableReferenceType | M |
 | StatusType | M |
 | StatusCodeType | M |
 | StatusDetailType | O |
