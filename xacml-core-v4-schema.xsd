@@ -561,7 +561,7 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 		</xs:complexContent>
 	</xs:complexType>
 
-	<xs:complexType name="NamedAttributeType" abstract="true">
+	<xs:complexType name="NamedAttributeDesignatorType" abstract="true">
 		<xs:complexContent>
 			<xs:extension base="xacml:ExpressionType">
 				<!-- Change to XACML 3.0 (issue #48): Category / AttributeId / DataType attribute types changed to IdentifierType for supporting Short Identifiers -->
@@ -578,7 +578,7 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 	<xs:element name="AttributeDesignator" type="xacml:AttributeDesignatorType" substitutionGroup="xacml:Expression"/>
 	<xs:complexType name="AttributeDesignatorType">
 		<xs:complexContent>
-			<xs:extension base="xacml:NamedAttributeType">
+			<xs:extension base="xacml:NamedAttributeDesignatorType">
 				<!-- Change to XACML 3.0 (issue #48): Category / AttributeId / DataType attribute types changed to IdentifierType for supporting Short Identifiers -->
 				<xs:attribute name="Category" type="xacml:IdentifierType" use="required"/>
 			</xs:extension>
@@ -588,7 +588,7 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 	<xs:element name="EntityAttributeDesignator" type="xacml:EntityAttributeDesignatorType" substitutionGroup="xacml:Expression"/>
 	<xs:complexType name="EntityAttributeDesignatorType">
 		<xs:complexContent>
-			<xs:extension base="xacml:NamedAttributeType">
+			<xs:extension base="xacml:NamedAttributeDesignatorType">
 				<xs:sequence>
 					<xs:element ref="xacml:Expression"/>
 				</xs:sequence>
