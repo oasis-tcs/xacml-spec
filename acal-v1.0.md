@@ -449,22 +449,21 @@ Hinton et al [[Hinton94](#hinton94)] discuss the question of the compatibility o
 
 ## 4.3 Combining Algorithms
 
-ACAL defines a number of combining algorithms that each define a procedure for arriving at an authorization decision given the individual results of evaluation of a set of rules and policies. Some examples of standard combining algorithms are (see [Annex E](#annex-e-combining-algorithms) for a full list of standard combining algorithms):
+ACAL defines a number of combining algorithms that each define a procedure for arriving at an authorization decision given the individual results of evaluation of a set of rules and/or policies. Some examples of standard combining algorithms are (see [Annex E](#annex-e-combining-algorithms) for a full list of standard combining algorithms):
 
 * `deny-overrides` (ordered and unordered),
 
 * `permit-overrides` (ordered and unordered) and
 
-* `first-applicable`
+* `first-applicable`.
 
-In the case of the `deny-overrides` algorithm, if a single rule or policy is encountered that evaluates to `Deny`, then, regardless of the evaluation result of the other rules or policies in the applicable policy, the combined result is `Deny`.
+In the case of the `deny-overrides` algorithm, if a single rule or policy is encountered that evaluates to `Deny`, then, regardless of the evaluation result of the other rules or policies in the applicable policy, the combined result is `Deny`. (See also the similar `permit-unless-deny` algorithm in [Annex E](#annex-e-combining-algorithms).)
 
-Likewise, in the case of the `permit-overrides` algorithm, if a single `Permit` result is encountered, then the combined result is `Permit`.
+Likewise, in the case of the `permit-overrides` algorithm, if a single `Permit` result is encountered, then the combined result is `Permit`. (See also the similar `deny-unless-permit` algorithm in [Annex E](#annex-e-combining-algorithms).)
 
 In the case of the `first-applicable` combining algorithm, the combined result is the same as the result of the first rule or policy in the list of rules and policies that is applicable to the decision request.
 
-Policies may take parameters that modify the behavior of the combining algorithms. However, none of the standard combining algorithms are affected by parameters.
-
+<!-- Change to XACML 3.0: combining algorithm parameters removed from the spec. -->
 Users of this specification may, if necessary, define their own combining algorithms.
 
 ## 4.4 Multiple Subjects
@@ -473,15 +472,15 @@ Access control policies often place requirements on the actions of more than one
 
 ## 4.5 Policies Based on Subject and Resource Attributes
 
-Another common requirement is to base an authorization decision on some characteristic of the subject other than its identity. Perhaps, the most common application of this idea is the subject's role [[RBAC](#rbac)]. ACAL provides facilities to support this approach. Attributes of subjects contained in the request context may be identified by an attribute designator. Alternatively, an attribute selector may contain an XPath expression over the `ContentType` object of the subject to identify a particular subject attribute value by its location in the context (see [Section 4.11](#411-abstraction-layer) for an explanation of context).
+Another common requirement is to base an authorization decision on some characteristic of the subject other than its identity. Perhaps, the most common application of this idea is the subject's role [[RBAC](#rbac)]. ACAL provides facilities to support this approach. Attributes of subjects contained in the request context may be identified by an attribute designator. Alternatively, an attribute selector may contain an XPath/JSONPath expression over the `ContentType` object of the subject to identify a particular subject attribute value by its location in the context (see [Section 4.11](#411-abstraction-layer) for an explanation of context).
 
 ACAL provides a standard way to reference the attributes defined in the LDAP series of specifications [[LDAP-1](#ldap-1)], [[LDAP-2](#ldap-2)]. This is intended to encourage implementers to use standard attribute identifiers for some common subject attributes.
 
-Another common requirement is to base an authorization decision on some characteristic of the resource other than its identity. ACAL provides facilities to support this approach. Attributes of the resource may be identified by an attribute designator. Alternatively, an attribute selector may contain an XPath expression over the `ContentType` object of the resource to identify a particular resource attribute value by its location in the context.
+Another common requirement is to base an authorization decision on some characteristic of the resource other than its identity. ACAL provides facilities to support this approach. Attributes of the resource may be identified by an attribute designator. Alternatively, an attribute selector may contain an XPath/JSONPath expression over the `ContentType` object of the resource to identify a particular resource attribute value by its location in the context.
 
 ## 4.6 Multi-Valued Attributes
 
-The most common techniques for communicating attributes (LDAP, XPath, SAML, etc.) support multiple values per attribute. Therefore, when an ACAL PDP retrieves the value of a named attribute, the result may contain multiple values. A collection of such values is called a bag. A bag differs from a set in that it may contain duplicate values, whereas a set may not. Sometimes this situation represents an error. Sometimes the ACAL rule is satisfied if any one of the attribute values meets the criteria expressed in the rule.
+The most common techniques for communicating attributes (LDAP, XPath, JSONPath, SAML, etc.) support multiple values per attribute. Therefore, when an ACAL PDP retrieves the value of a named attribute, the result may contain multiple values. A collection of such values is called a bag. A bag differs from a set in that it may contain duplicate values, whereas a set may not. Sometimes this situation represents an error. Sometimes the ACAL rule is satisfied if any one of the attribute values meets the criteria expressed in the rule.
 
 ACAL provides a set of functions that allow a policy writer to be absolutely clear about how the PDP should handle the case of multiple attribute values. These are the "higher-order" functions (see [Annex C.3](#c3-functions)).
 
@@ -541,7 +540,7 @@ Similarly, in the case where the resource to which access is requested is an XML
 
 ## 4.12 Actions Performed in Conjunction with Enforcement
 
-In many applications, policies specify actions that MUST be performed, either instead of, or in addition to, actions that MAY be performed. This idea was described by Sloman [[Sloman94](#sloman94)]. ACAL provides facilities to specify actions that MUST be performed in conjunction with policy evaluation through obligation notices. This idea was described as a provisional action by Kudo [[Kudo00](#kudo00)]. There are no standard definitions for these actions in version 3.0 of ACAL. Therefore, bilateral agreement between a PAP and the PEP that will enforce its policies is required for correct interpretation. PEPs that conform to v3.0 of ACAL are required to deny access unless they understand and can discharge all of the obligation notices associated with the applicable policy. Obligation notices are returned to the PEP for enforcement.
+In many applications, policies specify actions that MUST be performed, either instead of, or in addition to, actions that MAY be performed. This idea was described by Sloman [[Sloman94](#sloman94)]. ACAL provides facilities to specify actions that MUST be performed in conjunction with policy evaluation through obligation notices. This idea was described as a provisional action by Kudo [[Kudo00](#kudo00)]. There are no standard definitions for these actions in version 1.0 of ACAL. Therefore, bilateral agreement between a PAP and the PEP that will enforce its policies is required for correct interpretation. PEPs that conform to v1.0 of ACAL are required to deny access unless they understand and can discharge all of the obligation notices associated with the applicable policy. Obligation notices are returned to the PEP for enforcement.
 
 ## 4.13 Supplemental Information About a Decision
 
@@ -791,7 +790,7 @@ The model operates by the following steps.
 
 ## 5.2 ACAL Context
 
-ACAL is intended to be suitable for a variety of application environments. The core language is insulated from the application environment by the ACAL context, as shown in [Figure 2](#figure-2---acal-context), in which the scope of the ACAL specification is indicated by the shaded area. The ACAL context is defined in XML schema, describing a canonical representation for the inputs and outputs of the PDP. Attributes referenced by an instance fof ACAL policy may be in the form of XPath expressions over the `ContentType` objects of the context, or attribute designators that identify the attribute by its category, identifier, data type and (optionally) its issuer. Implementations must convert between the attribute representations in the application environment (e.g., SAML, J2SE, CORBA, and so on) and the attribute representations in the ACAL context. How this is achieved is outside the scope of the ACAL specification. In some cases, such as SAML, this conversion may be accomplished in an automated way through the use of an XSLT transformation.
+ACAL is intended to be suitable for a variety of application environments. The core language is insulated from the application environment by the ACAL context, as shown in [Figure 2](#figure-2---acal-context), in which the scope of the ACAL specification is indicated by the shaded area. In the figure, the ACAL context is defined in XML schema, describing a canonical representation for the inputs and outputs of the PDP. An ACAL Policy references attributes in the ACAL context via XPath/JSONPath expressions over the `ContentType` objects of the context, or attribute designators that identify the attribute by its category, identifier, data type and (optionally) its issuer. Implementations must convert between the attribute representations in the application environment (e.g., SAML, J2SE, CORBA, and so on) and the attribute representations in the ACAL context. How this is achieved is outside the scope of the ACAL specification. In some cases, such as SAML, this conversion may be accomplished in an automated way through the use of an XSLT transformation.
 
 ###### Figure 2 - ACAL Context
 
@@ -915,18 +914,22 @@ These are discussed in the following sub-sections.
 
 #### 5.3.1.1 Condition
 
-The condition defines the set of requests to which the rule is intended to apply in the form of a logical expression on attributes in the request. If the rule is intended to apply to all entities of a particular data type, then the corresponding entity is omitted from the condition. An ACAL PDP verifies that the matches defined by the condition are satisfied by the attributes in the request context.
+The condition defines the set of requests to which the rule is intended to apply in the form of a logical expression on attributes in the request. If the rule is intended to apply to all entities of a particular data type, then the corresponding entity is omitted from the condition. <!-- TODO: what does this mean? Is this sentence necessary? Consider removing.--> 
+An ACAL PDP verifies that the matches defined by the condition are satisfied by the attributes in the request context.
 
 The condition may be absent from a rule. In this case, the condition of the rule is the same as the target of the parent policy.
 
 Certain subject name-forms, resource name-forms and certain types of resource are internally structured. For instance, the X.500 directory name-form and RFC 822 name-form are structured subject name-forms, whereas an account number commonly has no discernible structure. UNIX file-system path-names and URIs are examples of structured resource name-forms. An XML document is an example of a structured resource.
 
-Generally, the name of a node (other than a leaf node) in a structured name-form is also a legal instance of the name-form. So, for instance, the RFC822 name `med.example.com` is a legal RFC822 name identifying the set of mail addresses hosted by the med.example.com mail server. The XPath value md:record/md:patient/ is a legal XPath value identifying a node-set in an XML document.
+Generally, the name of a node (other than a leaf node) in a structured name-form is also a legal instance of the name-form. So, for instance, the RFC822 name `med.example.com` is a legal RFC822 name identifying the set of mail addresses hosted by the med.example.com mail server. The XPath value `md:record/md:patient/` is a legal XPath value identifying a node-set in an XML document.
 
 The question arises: how should a name that identifies a set of subjects or resources be interpreted by the PDP, whether it appears in a policy or a request context? Are they intended to represent just the node explicitly identified by the name, or are they intended to represent the entire sub-tree subordinate to that node?
 
 In the case of subjects, there is no real entity that corresponds to such a node. So, names of this type always refer to the set of subjects subordinate in the name structure to the identified node. Consequently, non-leaf subject names should not be used in equality functions, only in match functions, such as `urn:oasis:names:tc:acal:1.0:function:rfc822Name-match` <!-- Newline to fit on PDF page -->
 instead of `urn:oasis:names:tc:acal:1.0:function:rfc822Name-equal` (see [Annex C.3.15](#c315-special-match-functions)).
+<!-- FIXME: This paragraph is hard to follow. Maybe give an example? -->
+<!-- TODO -->
+*__TODO__: In the case of resources,...*
 
 #### 5.3.1.2 Effect
 
@@ -958,13 +961,16 @@ Rules are described above. The remaining components are described in the followi
 
 An ACAL policy contains a target that specifies the set of requests to which it applies. The target of a policy may be declared by the writer of the policy, or it may be calculated from the targets and conditions of the policies and rules (respectively) that it contains.
 
-A system entity that calculates a target in this way is not defined by ACAL, but there are two logical methods that might be used. In one method, the target of the outer policy (the "outer component") is calculated as the union of all the targets of the referenced policies and the conditions of the referenced rules (the "inner components"). In another method, the target of the outer component is calculated as the intersection of all the targets and conditions of the inner components. The results of evaluation in each case will be very different: in the first case, the target of the outer component makes it applicable to any decision request that matches the target or condition of at least one inner component; in the second case, the target of the outer component makes it applicable only to decision requests that match the target or condition of every inner component.
+A system entity that calculates a target in this way is not defined by ACAL, but there are two logical methods that might be used. <!-- TODO: Maybe not mention it here, this is Implementation guidance. -->
+In one method, the target of the outer policy (the "outer component") is calculated as the union of all the targets of the referenced policies and the conditions of the referenced rules (the "inner components"). <!-- TODO: clarify: this method is not possible if there is no policy references, only rules and inline policies, what then? -->
+In another method, the target of the outer component is calculated as the intersection of all the targets and conditions of the inner components.The results of evaluation in each case will be very different: in the first case, the target of the outer component makes it applicable to any decision request that matches the target or condition of at least one inner component; in the second case, the target of the outer component makes it applicable only to decision requests that match the target or condition of every inner component.
+<!-- TODO: what is the standard method? right method? Having two methods with different results makes it ambiguous / non-deterministic, which is not desirable in the spec. -->
 
 In cases where the target of a policy is declared by the policy writer, any component rules in the policy that have the same condition as the target may omit the condition. Such rules inherit the target of the policy in which they are contained.
 
 #### 5.3.2.2 Combining Algorithm
 
-The combining algorithm specifies the procedure by which the results of evaluating the component rules and policies are combined when evaluating the policy, i.e. the `Decision` value placed in the response context by the PDP is the result of evaluating the policy, as defined by the combining algorithm. A policy may have combining parameters that affect the operation of the combining algorithm.
+The combining algorithm specifies the procedure by which the results of evaluating the component rules and policies are combined when evaluating the policy, i.e. the `Decision` value placed in the response context by the PDP is the result of evaluating the policy, as defined by the combining algorithm. 
 
 See [Annex E](#annex-e-combining-algorithms) for definitions of the standard combining algorithms.
 
@@ -1032,9 +1038,9 @@ These rules may be written by different PAPs operating independently, or by a si
 
 ### 6.2.4 Example Short Identifier Set
 
-Policy writers are able to define sets of short identifiers to provide simple alias names to use in place of URIs. A set with the identifier `urn:oasis:names:tc:acal:1.0:core:identifiers` is defined by ACAL for the various identifiers assigned by this specification. However, a deployment will usually have need for additional identifiers, especially for locally-defined attributes, so it is usually desirable to define a set of additional short identifiers to use in the deployment.
+Policy writers are able to define sets of short identifiers to provide simple alias names to use in place of URIs. A set with the identifier `urn:oasis:names:tc:acal:1.0:core:identifiers` is defined by ACAL for the various identifiers assigned by this specification. However, a deployment will usually have need for additional identifiers, especially for locally-defined attributes, so it is usually desirable to define a set of additional short identifiers to use in the deployment, that may import the first set.
 
-The following short identifier set, in both the XML and JSON representations, defines short identifiers for the additional attributes in this example and also imports the standardized set.
+The following short-identifier set, in both the XML and JSON representations, defines short identifiers for the additional attributes in this example and also imports the standardized set.
 
 ```xml
 <ShortIdSet xmlns="urn:oasis:names:tc:xacml:4.0:core:schema"
@@ -1044,7 +1050,6 @@ The following short identifier set, in both the XML and JSON representations, de
   <ShortIdSetReference>urn:oasis:names:tc:acal:1.0:core:identifiers</ShortIdSetReference>
 
   <!-- These are the short identifiers specific to the deployment. -->
-
   <!-- Attributes -->
   <ShortId Name="patient-number" Value="urn:oasis:names:tc:acal:1.0:example:attribute:patient-number"/>
   <ShortId Name="collection" Value="urn:oasis:names:tc:acal:1.0:example:attribute:collection"/>
@@ -1077,7 +1082,7 @@ Rule 1 illustrates a policy with a simple rule containing a condition. It also i
 [05]   CombiningAlgId="deny-overrides"
 [06]   Version="1.0">
 [07]   <ShortIdSetReference>urn:oasis:names:tc:acal:1.0:example:identifiers</ShortIdSetReference>
-[08]   <VariableDefinition VariableId="17590034">
+[08]   <VariableDefinition VariableId="patient_number_match">
 [11]     <Apply FunctionId="string-equal">
 [14]       <Apply FunctionId="string-one-and-only">
 [17]         <AttributeDesignator
@@ -1099,8 +1104,7 @@ Rule 1 illustrates a policy with a simple rule containing a condition. It also i
 [46]       <Apply FunctionId="and">
 [49]         <Apply FunctionId="any-of">
 [52]           <Function Id="anyURI-equal"/>
-[56]           <Value DataType="anyURI"
-[58]             >http://www.med.example.com/springfield-hospital</Value>
+[56]           <Value>http://www.med.example.com/springfield-hospital</Value>
 [61]           <AttributeDesignator
 [62]             Category="resource"
 [63]             AttributeId="collection"
@@ -1108,13 +1112,13 @@ Rule 1 illustrates a policy with a simple rule containing a condition. It also i
 [67]         </Apply>
 [69]         <Apply FunctionId="any-of">
 [72]           <Function Id="string-equal"/>
-[76]           <Value DataType="string">read</Value>
+[76]           <Value>read</Value>
 [81]           <AttributeDesignator
 [82]             Category="action"
 [83]             AttributeId="action-id"
 [84]             DataType="string"/>
 [87]         </Apply>
-[89]         <VariableReference VariableId="17590034"/>
+[89]         <VariableReference VariableId="patient_number_match"/>
 [93]       </Apply>
 [94]     </Condition>
 [95]   </Rule>
@@ -1128,7 +1132,7 @@ Rule 1 illustrates a policy with a simple rule containing a condition. It also i
 [06]   "Version":"1.0",
 [07]   "ShortIdSetReference":["urn:oasis:names:tc:acal:1.0:example:identifiers"],
 [08]   "VariableDefinition":[{
-[09]     "VariableId":"17590034",
+[09]     "VariableId":"patient_number_match",
 [10]     "Expression":{
 [11]       "Apply":{
 [12]         "FunctionId":"string-equal",
@@ -1208,7 +1212,7 @@ Rule 1 illustrates a policy with a simple rule containing a condition. It also i
 [87]             }
 [88]           },{
 [89]             "VariableReference":{
-[90]               "VariableId":"17590034"
+[90]               "VariableId":"patient_number_match"
 [91]             }
 [92]           }]
 [93]         }
@@ -1278,8 +1282,6 @@ _Note: this section is referenced._
 
 # 7 Structures
 
-_XML Schema fragments are non-normative and will be replaced with UML diagrams._
-
 ## 7.1 Introduction
 
 The structures in ACAL are described here in abstract terms. The concrete representations of these structures are defined for a variety of syntaxes each in a separate profile.
@@ -1292,36 +1294,300 @@ A property has a unique name (unique among the object's properties) and a value,
 
 ### 7.1.2 Simple Types
 
-The simple types are:
+In UML, the simple types may be *primitive types* or *enumerations* (aka *enum types*). ACAL uses both UML standard primitive types and newly defined primitive and enumeration types, described in the next subsections.
 
-* `String` : A sequence of characters that may be constrained to a particular pattern.
+#### 7.1.2.1 Standard UML primitive types (String, Boolean, Integer, Real)
 
-* `URI` : A sequence of characters representing a Uniform Resource Identifier according to RFC 3986.
+Here are the simple types based on UML standard primitive types.
 
-* `Boolean` : Either `true` or `false`.
+* `String`: A sequence of characters that may be constrained to a particular pattern. Defined in UML by UML standard primitive type `String`:
+   ```plantuml
+   @startuml
+   hide empty members
+   hide circle
+   class String <<primitive>>
+   @enduml
+   ```
 
-* `Integer` : An integer number that may be constrained to a particular range.
+* `Boolean`: Either `true` or `false`. Defined in UML by UML standard primitive type `Boolean`
+   ```plantuml
+   @startuml
+   hide empty members
+   hide circle
+   class Boolean <<primitive>>
+   @enduml
+   ```
+
+* `Integer`: An integer number that may be constrained to a particular range.
+   Defined in UML by UML standard primitive type `Inter`:
+   ```plantuml
+   @startuml
+   hide empty members
+   hide circle
+   class Integer <<primitive>>
+   @enduml
+   ```
+
+* `Real`: real number in UML, typically represented using a floating point standard such as ISO/IEC/IEEE 60559:2011 (whose content is identical to the predecessor IEEE 754 standard).
+   ```plantuml
+   @startuml
+   hide empty members
+   hide circle
+   class Real <<primitive>>
+   @enduml
+   ```
+
+#### 7.1.2.2 ACAL-defined UML stereotype(s) used in new primitive types
+
+`RestrictedString` is defined as a UML stereotype for String-derived primitive types defined in the next subsection and restricted by a pattern (regular expression). That pattern is simply specified as the stereotype's property `pattern`:
+
+```plantuml
+@startuml
+hide empty members
+hide circle
+class PrimitiveType <<Metaclass>>
+class RestrictedType <<stereotype>> extends PrimitiveType {
+   + pattern: String [1]
+}
+@enduml
+```
+
+#### 7.1.2.3 ACAL-defined simple types
+
+##### 7.1.2.3.1 URI
+
+A `URI` is a sequence of characters representing a Uniform Resource Identifier according to RFC 3986. Defined in UML as follows:
+```plantuml
+@startuml
+hide empty members
+hide circle
+class URI <<primitive>>
+@enduml
+```
+
+ACAL representation formats (in ACAL profiles) usually have a native equivalent for this type, in which case they should use that, e.g. XML schema `xs:anyURI`, JSON schema `{ "type": "string", "format": "uri" }`.
+
+##### 7.1.2.3.2 Double
+
+A `Double` is a double-precision 64-bit IEEE 754 floating point represented in UML as follows:
+```plantuml
+@startuml
+hide empty members
+hide circle
+class Double <<primitive>>
+@enduml
+```
+
+In UML, it may be defined as a subtype of UML standard primitive type `Real`, restricted to 64-bit length. However, each ACAL representation format should map this to their closest native equivalent if there is any, e.g. `xs:double` in XML.
+
+##### 7.1.2.3.3 VersionType
+
+A `VersionType` specifies the version number of a policy, and defined in UML as follows:
+
+```plantuml
+@startuml
+hide empty members
+hide circle
+class VersionType <<primitive>> <<restrictedString>> {
+   <<restrictedString>>
+   pattern='^(0|[1-9]\d*)(\.(0|[1-9]\d*)){0,3}$'
+   --
+}
+@enduml
+```
+
+The version number is expressed as a sequence of decimal numbers, each separated by a period (.), which is compatible with [Semantic Versioning](https://semver.org/).
+
+##### 7.1.2.3.4 VersionMatchType
+
+Properties of this type SHALL contain a restricted regular expression matching a version number (see [Section 7.11](#711-versiontype)). The expression SHALL match versions of a referenced policy that are acceptable for inclusion in the referencing policy.
+
+UML definition:
+```plantuml
+@startuml
+hide empty members
+hide circle
+class VersionMatchType <<primitive>> <<restrictedString>> {
+   <<restrictedString>>
+   pattern='^(0|[1-9]\d*|\*)(\.(0|[1-9]\d*|\*|\+)){0,3}$'
+   --
+}
+@enduml
+```
+
+A version match is `.`-separated, like a version string. A number represents a direct numeric match. A `*` means that any single number is valid. A `+` means that any number, and any subsequent numbers, are valid. In this manner, the following four patterns would all match the version string `1.2.3`: `1.2.3`, `1.*.3`, `1.2.*` and `1.+`.
+
+##### 7.1.2.3.5 ShortIdNameType
+
+`ShortIdNameType` is the primitive type for Short Identifier names (cf. `ShortIdType` [section](#shortidtype) ).
+
+UML definition:
+```plantuml
+@startuml
+hide empty members
+hide circle
+class ShortIdNameType <<primitive>> <<restrictedString>> {
+   <<restrictedString>>
+   pattern='^[A-Za-z][0-9A-Za-z]*(-[0-9A-Za-z]+)*$'
+   --
+}
+@enduml
+```
+
+##### 7.1.2.3.6 IdentifierType
+
+A value of the `IdentifierType` simple type refers to a specific attribute category, attribute, data type, function, notice, status code, combining algorithm or XPath version.
+
+UML definition (class diagram):
+```plantuml
+@startuml
+hide empty members 
+hide circle
+class IdentifierType <<primitive>> <<restrictedString>> {
+   <<restrictedString>>
+   pattern='^[^{}]*(\{[A-Za-z][0-9A-Za-z]*(-[0-9A-Za-z]+)*\}[^{}]*)*$'
+   --
+}
+@enduml
+```
+
+A value of this simple type is either:
+* an absolute URI [[RFC2396](#rfc2396)],
+* the name of a short identifier or
+* a character string with one or more short identifier names enclosed by curly brackets (i.e., `{` and `}`; U+007B and U+007D) optionally preceded, followed and/or separated by other characters allowed in a URI.
+
+A short identifier name appearing in the second and third cases MUST be the name of a member of a short identifier set referenced by the containing policy, request or response.
+
+Note that the three cases can be distinguished from each other syntactically in a valid, correctly-formatted value. If the value contains curly brackets, then the third case must apply since the curly bracket characters are not legal characters for an absolute URI or a short identifier name; otherwise, if the value matches the pattern for a short identifier name, then the second case applies since an absolute URI begins with a scheme name and a colon character (i.e., `:`; U+003A) and the colon character is not a legal character for a short identifier name; otherwise, the value is an absolute URI.
+
+The conversion of a value of the `IdentifierType` simple type into an absolute URI is detailed in [Section 9.3](#93-identifier-evaluation).
+
+##### 7.1.2.3.7 LocalIdentifierType
+
+`LocalIdentifierType` values are local identifiers, i.e. identifiers that are unique only within a limited scope. Examples of local identifiers are Request-local identifiers (e.g. the `Id` properties of `RequestEntity` and `RequestEntityReference`), Policy-local identifiers (e.g. the `VariableId` of a policy's variable or the `ParameterName` of a policy parameter or the `RuleId` of a policy's rule), Rule-local identifiers (e.g. the `VariableId` of a rule's variable), etc.
+
+<!-- WARNING: for ALFA compatibility, the pattern should not be more restrictive than ALFA identifiers. 
+   Discussion ongoing with ALFA workgroup about allowing (or not) identifiers made of only underscore(s) and number(s), and identifiers containing consecutive underscores (more than one).
+-->
+
+UML definition (class diagram):
+```plantuml
+@startuml
+hide empty members 
+hide circle
+class IdentifierType <<primitive>> <<restrictedString>> {
+   <<restrictedString>>
+   pattern='_?[A-Za-z0-9]([-._]?[A-Za-z0-9]+)*$'
+   --
+}
+@enduml
+```
+
+##### 7.1.2.3.8 Name
+
+The `Name` type is the same as [XSD standard](#xs) `Name` datatype.
+
+UML definition:
+```plantuml
+@startuml
+hide empty members
+hide circle
+class Name <<primitive>>
+@enduml
+```
+
+Although an XML representations may use the standard XSD `Name` datatype as is for this type, other ACAL representation formats need an alternative representatio. One suggestion is to use the string type restricted by a pattern (regular expression) matching the XSD `Name`'s definition, i.e. matching XSD pattern `\i\c*`. Non-XML representation formats do not usually use the XSD regex (regular expression) flavor but other flavors such as ECMA 262 (Javascript) flavor in the case of JSON, therefore the pattern - the character classes `\i` and ``c` in particular - must be translated to the corresponding regex flavor. The following equivalence table may be used as a convenience to build the full pattern in non-XML ACAL representation formats:
+
+| XSD character class    | Javascript regex for full Unicode support | Javascript regex for plain ASCII support only|
+| -------- | ------- | -----------|
+| \i  | `[:A-Z_a-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD\u{10000}-\u{EFFFF}]`   | `[_:A-Za-z]` |
+| \c | `[-.0-9:A-Z_a-z\u00B7\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u037D\u037F-\u1FFF\u200C-\u200D\u203F\u2040\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD\u{10000}-\u{EFFFF}]`     | `[-._:A-Za-z0-9]` |
+
+##### 7.1.2.3.9 EffectType
+
+The `EffectType` simple type defines the values allowed for the `Effect` property of a `RuleType` object and for the `AppliesTo` property of the `NoticeExpressionType` objects; either `Permit` or `Deny`.
+
+UML definition:
+```plantuml
+@startuml
+hide empty members
+hide circle
+class EffectType <<enumeration>> {
+   Permit
+   Deny
+}
+@enduml
+```
+
+##### 7.1.2.3.10 DecisionType
+
+A `DecisionType` value indicates the result of policy evaluation.
+
+UML definition:
+```plantuml
+@startuml
+hide empty members
+hide circle
+class DecisionType <<enumeration>> {
+   Permit
+   Deny
+   Indeterminate
+   NotApplicable
+}
+@enduml
+```
+
+The values of `DecisionType` have the following meanings:
+
+: `Permit`: the requested access is permitted.
+
+: `Deny`: the requested access is denied.
+
+: `Indeterminate`: the PDP is unable to evaluate the requested access. Reasons for such inability include: missing attributes, network errors while retrieving policies, division by zero during policy evaluation, syntax errors in the decision request or in the policy, etc.
+
+: `NotApplicable`: the PDP does not have any policy that applies to this decision request.
+
+##### 7.1.2.3.11 AttributeSelectorPathType
+
+The `AttributeSelectorPathType` defines possible types of `Path` property value in `AttributeSelectorType`:
+* `XPath` for XPath expressions as defined in XPath standard (the actual version is identified by the policy's `PolicyDefaults` property);
+* `JSONPath` for JSONPath expressions as defined by RFC 9535.
+
+UML definition:
+```plantuml
+@startuml
+hide empty members
+hide circle
+class AttributeSelectorPathType <<enumeration>> {
+   XPath
+   JSONPath
+}
+@enduml
+```
 
 ### 7.1.3 Relationship to Concrete Representations
 
-In the JSON representation, an object maps to a JSON object and a property of that object maps to a JSON member (a name/value pair). An object type is formally defined by a JSON subschema.
+ACAL model mappings to a concrete representation are defined in the relevant ACAL Profile for that representation format, e.g. in the XML Profile of ACAL (XACML) for the XML representation.
 
-In the XML representation, a property corresponds to an XML element or XML attribute, an object corresponds to element content and an object type is formally defined by an XML Schema complex type.
+Examples of such mappings:
+- In the JSON representation, an object maps to a JSON object and a property of that object maps to a JSON member (a name/value pair). An object type is formally defined by a JSON subschema.
+- In the XML representation, a property corresponds to an XML element or XML attribute, an object corresponds to element content and an object type is formally defined by an XML Schema complex type.
 
 ## 7.2 ShortIdSetType
 
 A `ShortIdSetType` object defines a set of short identifiers. It contains its own short identifiers as well as references to other short identifier sets, which are imported (recursively) into this set.
 
-```xml
-<xs:element name="ShortIdSet" type="xacml:ShortIdSetType"/>
-<xs:complexType name="ShortIdSetType">
-   <xs:sequence>
-      <xs:element ref="xacml:ShortIdSetReference" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element ref="xacml:ShortId" minOccurs="0" maxOccurs="unbounded"/>
-   </xs:sequence>
-   <xs:attribute name="Id" type="xs:anyURI" use="required"/>
-</xs:complexType>
-<xs:element name="ShortIdSetReference" type="xs:anyURI"/>
+UML definition (class diagram):
+```plantuml
+@startuml
+hide empty members 
+hide circle
+class ShortIdSetType <<dataType>> {
+   + Id: URI [1]
+   + ShortIdSetReference: URI [*] {unordered, unique}
+   + ShortId: ShortIdType [*] {unordered, unique}
+}
+@enduml
 ```
 
 A `ShortIdSetType` object contains the following properties:
@@ -1342,22 +1608,20 @@ A predefined set of short identifiers for the URIs defined in this specification
 
 ## 7.3 ShortIdType
 
+<a name="shortidtype"/>
+
 A `ShortIdType` object defines a single short identifier. Attribute categories, attributes, data types, functions, combining algorithms and other artifacts in ACAL are ultimately identified by URIs. A short identifier provides a simple alias name to use when composing and displaying policies and protocol messages instead of using the full URI.
 
-```xml
-<xs:element name="ShortId" type="xacml:ShortIdType"/>
-<xs:complexType name="ShortIdType">
-   <xs:attribute name="Name" type="xacml:ShortIdNameType" use="required"/>
-   <xs:attribute name="Value" type="xs:string" use="required"/>
-</xs:complexType>
-
-<xs:simpleType name="ShortIdNameType">
-   <xs:restriction base="xs:string">
-      <xs:pattern value="[A-Za-z][0-9A-Za-z]*(-[0-9A-Za-z]+)*"/>
-         <!-- The exact pattern is still open for discussion. -->
-   </xs:restriction>
-</xs:simpleType>
-
+UML definition (class diagram):
+```plantuml
+@startuml
+hide empty members 
+hide circle
+class ShortIdType <<dataType>> {
+   + Name: ShortIdNameType [1]
+   + Value: String [1]
+}
+@enduml
 ```
 
 A `ShortIdType` object contains the following properties:
@@ -1383,31 +1647,7 @@ The value of the `Value` property SHALL be either one of the following:
 
 The name of the short identifier MUST NOT be the same as the name of any other short identifier in the same short identifier set or the same as the name of any other short identifier defined in one of the short identifier sets referenced by the containing short identifier set.
 
-## 7.4 IdentifierType
-
-A value of the `IdentifierType` simple type refers to a specific attribute category, attribute, data type, function, notice, status code, combining algorithm or XPath version.
-
-```xml
-<xs:simpleType name="IdentifierType">
-   <xs:restriction base="xs:string">
-      <xs:pattern value="[^{}]*({[A-Za-z][0-9A-Za-z]*(-[0-9A-Za-z]+)*}[^{}]*)*"/>
-   </xs:restriction>
-</xs:simpleType>
-
-```
-
-A value of this simple type is either:
-* an absolute URI [[RFC2396](#rfc2396)],
-* the name of a short identifier or
-* a character string with one or more short identifier names enclosed by curly brackets (i.e., `{` and `}`; U+007B and U+007D) optionally preceded, followed and/or separated by other characters allowed in a URI.
-
-A short identifier name appearing in the second and third cases MUST be the name of a member of a short identifier set referenced by the containing policy, request or response.
-
-Note that the three cases can be distinguished from each other syntactically in a valid, correctly-formatted value. If the value contains curly brackets, then the third case must apply since the curly bracket characters are not legal characters for an absolute URI or a short identifier name; otherwise, if the value matches the pattern for a short identifier name, then the second case applies since an absolute URI begins with a scheme name and a colon character (i.e., `:`; U+003A) and the colon character is not a legal character for a short identifier name; otherwise, the value is an absolute URI.
-
-The conversion of a value of the `IdentifierType` simple type into an absolute URI is detailed in [Section 9.3](#93-identifier-evaluation).
-
-## 7.5 PolicyType
+## 7.4 PolicyType
 
 A `PolicyType` object describes a policy: an aggregation of rules and other policies. Policies MAY be included in an enclosing `PolicyType` object either directly using the `Policy` property or indirectly using the `PolicyReference` property.
 
@@ -1423,55 +1663,33 @@ A `PolicyType` object MAY contain a `PolicyIssuer` property. The interpretation 
 
 The `Target` property defines the applicability of the `PolicyType` object to a set of decision requests. If the `Target` property within the `PolicyType` object matches the request context, then the `PolicyType` object may be used by the PDP in making its authorization decision. See [Section 9.12](#912-policy-evaluation).
 
-Any `NoticeExpressionType` objects may be evaluated into notices by the PDP. Any resulting obligation notices MUST be fulfilled by the PEP in conjunction with the authorization decision. If the PEP does not understand or cannot fulfill any of the obligation notices, then it MUST act according to the PEP bias. See [Section 9.2](#92-policy-enforcement-point) and [Section 9.18](#918-notices). Any resulting advice notices MAY be safely ignored by the PEP.
+Any `NoticeExpressionType` objects may be evaluated into notices by the PDP. Any resulting obligation notice (with `isObligation="true"`) MUST be fulfilled by the PEP in conjunction with the authorization decision. If the PEP does not understand or cannot fulfill any of the obligation notices, then it MUST act according to the PEP bias. See [Section 9.2](#92-policy-enforcement-point) and [Section 9.18](#918-notices). Any resulting advice notice MAY be safely ignored by the PEP.
 
-```xml
-<xs:element name="Policy" type="xacml:PolicyType"/>
-   <xs:unique name="policyShortIdSetReferenceUniqueness">
-      <xs:selector xpath="xacml:ShortIdSetReference"/>
-      <xs:field xpath="."/>
-   </xs:unique>
-   <xs:unique name="policyParameterNameUniqueness">
-      <xs:selector xpath="xacml:PolicyParameter"/>
-      <xs:field xpath="@ParameterName"/>
-   </xs:unique>
-   <xs:unique name="policyVariableIdUniqueness">
-      <xs:selector xpath="xacml:VariableDefinition"/>
-      <xs:field xpath="@VariableId"/>
-   </xs:unique>
-   <xs:unique name="policyIdUniqueness">
-      <xs:selector xpath="xacml:Policy"/>
-      <xs:field xpath="@PolicyId"/>
-   </xs:unique>
-      <xs:unique name="ruleIdUniqueness">
-      <xs:selector xpath="xacml:Rule"/>
-      <xs:field xpath="@Id"/>
-   </xs:unique>
-</xs:element>
-<xs:complexType name="PolicyType">
-   <xs:sequence>
-      <xs:element ref="xacml:ShortIdSetReference" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element ref="xacml:Description" minOccurs="0"/>
-      <xs:element ref="xacml:PolicyIssuer" minOccurs="0"/>
-      <xs:element ref="xacml:PolicyDefaults" minOccurs="0"/>
-      <xs:element ref="xacml:PolicyParameter" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element ref="xacml:VariableDefinition" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element ref="xacml:Target" minOccurs="0"/>
-      <xs:choice minOccurs="0" maxOccurs="unbounded">
-         <xs:element ref="xacml:Policy"/>
-         <xs:element ref="xacml:Rule"/>
-         <xs:element ref="xacml:PolicyReference"/>
-      </xs:choice>
-      <xs:element ref="xacml:NoticeExpression" minOccurs="0" maxOccurs="unbounded"/>
-   </xs:sequence>
-   <xs:attribute name="PolicyId" type="xs:anyURI" use="required"/>
-   <xs:attribute name="Version" type="xacml:VersionType" use="required"/>
-   <xs:attribute name="CombiningAlgId" type="xacml:IdentifierType" use="required"/>
-   <xs:attribute name="MaxDelegationDepth" type="xs:integer" use="optional"/>
-</xs:complexType>
+UML definition (class diagram):
+```plantuml
+@startuml
+hide empty members 
+hide circle
+class PolicyType <<dataType>> extends CombinerInputType {
+   + PolicyId: URI [1]
+   + Version: VersionType [1]
+   + Description: String [0..1]
+   + ShortIdSetReference: URI [*] {unordered, unique}
+   + MaxDelegationDepth: Integer [0..1]
+   + PolicyIssuer: EntityType [0..1]
+   + PolicyDefaults: DefaultsType [0..1]
+   + PolicyParameter: PolicyParameterType [*] {ordered, unique}
+   + VariableDefinition: VariableDefinitionType [*] {ordered, unique}
+   + Target: BooleanExpressionType [0..1]
+   + CombiningAlgId: IdentifierType [1]
+   + CombinerInput: CombinerInputType [*] {ordered}
+   + NoticeExpression: NoticeExpressionType [*] {unordered, unique}
+}
 
-<xs:element name="Target" type="xacml:BooleanExpressionType"/>
-<xs:element name="Description" type="xs:string"/>
+abstract class CombinerInputType <<dataType>>
+class PolicyReferenceType <<dataType>> extends CombinerInputType
+class RuleType <<dataType>> extends CombinerInputType 
+@enduml
 ```
 
 A `PolicyType` object contains the following properties:
@@ -1502,11 +1720,11 @@ A `PolicyType` object contains the following properties:
 
 `PolicyIssuer` [Optional]
 
-: A `PolicyIssuerType` object containing attributes of the issuer of the policy.
+: An `EntityType` object containing attributes of the issuer of the policy. See the *EntityType* section for more details on the structure, and see the *Administration and Delegation profile* [[XACMLAdmin](#xacmladmin)] for a particular use of this object. A PDP which does not implement this profile MUST report an error or return an `Indeterminate` result if it encounters this object.
 
 `PolicyDefaults` [Optional]
 
-: A `DefaultsType` object containing a set of default values applicable to the policy, such as the XPath version. The scope of the `PolicyDefaults` property SHALL be the enclosing policy. The `PolicyDefaults` property is REQUIRED if the enclosing policy contains attribute selectors or expressions applying XPath-based functions.
+: A `DefaultsType` object containing a set of default values applicable to the policy, such as the XPath version. The scope of the `PolicyDefaults` property SHALL be the enclosing policy. The `PolicyDefaults` property is REQUIRED if and only if the enclosing policy contains attribute selectors or expressions applying XPath-based functions.
 
 `PolicyParameter` [Any Number]
 
@@ -1532,95 +1750,69 @@ Each `CombinerInputType` object contains exactly one of the following properties
 
 `Policy`
 
-: A `PolicyType` object defining a nested policy that is included in this policy. A policy whose target matches the decision request MUST be considered. A policy whose target does not match the decision request SHALL be ignored.
+: A `PolicyType` object defining a nested policy that is included in this policy. A policy whose target matches the decision request MUST be evaluated. A policy whose target does not match the decision request SHALL be ignored.
 
 `PolicyReference`
 
-: A `PolicyReferenceType` object referencing a separate policy that is included in this policy. If the `Id` property of the `PolicyReferenceType` object is a URL, then it MAY be resolvable. A policy whose target matches the decision request MUST be considered. A policies whose target does not match the decision request SHALL be ignored.
+: A `PolicyReferenceType` object referencing a separate policy that is included in this policy. If the `Id` property of the `PolicyReferenceType` object is a URL, then it MAY be resolvable. A policy whose target matches the decision request MUST be considered. A policy whose target does not match the decision request SHALL be ignored.
 
 `Rule`
 
 : A `RuleType` object defining a nested rule that is included in this policy. A rule whose condition matches the decision request MUST be considered. A rule whose condition does not match the decision request SHALL be ignored.
 
-## 7.6 PolicyIssuerType
+## 7.5 DefaultsType (optional)
 
-A `PolicyIssuerType` object contains ACAL attributes describing the issuer of the policy. The use of the `PolicyIssuerType` object is defined in a separate administration profile [[XACMLAdmin](#xacmladmin)]. A PDP which does not implement the administration profile MUST report an error or return an `Indeterminate` result if it encounters this object.
-
-```xml
-<xs:element name="PolicyIssuer" type="xacml:EntityType">
-   <xs:unique name="attributeUniqueness">
-      <xs:selector xpath="xacml:Attribute"/>
-      <xs:field xpath="@AttributeId"/>
-      <xs:field xpath="@Issuer"/>
-   </xs:unique>
-</xs:element>
-```
-
-A `PolicyIssuerType` object contains the following properties:
-
-`Content` [Optional]
-
-: Free form XML describing the issuer. See [Section 7.38](#738-contenttype).
-
-`Attribute` [Zero to many]
-
-: A sequence of `AttributeType` objects, each holding an ACAL attribute of the issuer. See [Section 7.39](#739-attributetype).
-
-## 7.7 DefaultsType
+_**Supporting this object type is optional, but required if AttributeSelectors and/or XPath-based functions are to be supported.**_
 
 A `DefaultsType` object specifies default values that apply to the enclosing `PolicyType` object.
 
-```xml
-<xs:element name="PolicyDefaults" type="xacml:DefaultsType"/>
-<xs:complexType name="DefaultsType">
-   <xs:sequence>
-      <xs:choice>
-         <xs:element ref="xacml:XPathVersion"/>
-      </xs:choice>
-   </xs:sequence>
-</xs:complexType>
-<xs:element name="XPathVersion" type="xacml:IdentifierType"/>
+UML definition (class diagram):
+```plantuml
+@startuml
+hide empty members 
+hide circle
+class DefaultsType <<dataType>> {
+   + XPathVersion: IdentifierType [1]
+}
+@enduml
 ```
 
 A `DefaultsType` object contains the following property:
 
 `XPathVersion` [Required]
 
-: An `IdentifierType` value specifying the XPath version for XPath expressions occurring in the policy. XPath expressions are used by attribute selectors and as arguments to XPath-based functions.
+: An `IdentifierType` value specifying the XPath version for XPath expressions occurring in the policy (see section 8). XPath expressions are used by attribute selectors and as arguments to XPath-based functions.
 
-## 7.8 PolicyParameterType
+## 7.6 PolicyParameterType
 
-A `PolicyParameterType` object declares a single parameter for a parameterized policy.
+A `PolicyParameterType` object declares a single parameter for a parameterized policy. Policy parameters specify arguments that may be passed to the Policy from a PolicyReference. This enables other Policies to pass dynamic (Expression-based) values to the Policy during evaluation, and make sure those values match the Policy Parameter definitions (`PolicyParameterType` objects), in the same way as calling a function according to the function signature.
 
-```xml
-<xs:element name ="PolicyParameter" type="xacml:PolicyParameterType"/>
-<xs:complexType name="PolicyParameterType">
-   <xs:sequence>
-      <xs:element ref="xacml:Description" minOccurs="0"/>
-      <xs:element ref="xacml:Expression" minOccurs="0"/>
-   </xs:sequence>
-   <xs:attribute name="ParameterName" type="xacml:PolicyInternalIdentifierType" use="required"/>
-   <xs:attribute name="DataType" type="xs:anyURI" use="optional" default="urn:oasis:names:tc:acal:1.0:data-type:string"/>
-   <xs:attribute name="IsBag" type="xs:boolean" use="optional" default="false"/>
-</xs:complexType>
-<xs:simpleType name="PolicyInternalIdentifierType">
-   <xs:restriction base="xs:string">
-      <xs:pattern value="_?[A-Za-z]([-._]?[A-Za-z0-9]+)*"/>
-   </xs:restriction>
-</xs:simpleType>
+UML definition (class diagram):
+```plantuml
+@startuml
+hide empty members 
+hide circle
+class PolicyParameterType <<dataType>> {
+   + ParameterName: LocalIdentifierType [1]
+   + DataType: IdentifierType [0..1] = 'urn:oasis:names:tc:acal:1.0:data-type:string'
+   + isBag: Boolean [0..1] = false
+   + Description: String [0..1]
+   + Expression: ExpressionType [0..1]
+}
+@enduml
 ```
 
 A `PolicyParameterType` object contains the following properties:
 
 `ParameterName` [Required]
 
-: The name of the parameter. The value of the parameter MAY be referenced within an expression contained within the policy using a `VariableReferenceType` object with its `VariableId` property set to this name.
+: The name of the parameter (`LocalIdentifierType` value). The value of the parameter MAY be referenced within an expression contained within the policy using a `VariableReferenceType` object with its `VariableId` property set to this name.
 
-`DataType` [Optional]
+`DataType` [Optional, Default `urn:oasis:names:tc:acal:1.0:data-type:string`]
 
 : An `IdentifierType` value specifying the data type of the parameter. If this property is omitted, then it is treated as being set to `urn:oasis:names:tc:acal:1.0:data-type:string`.
 
-`IsBag` [Optional]
+`IsBag` [Optional, Default false]
 
 : A `Boolean` value that specifies whether the parameter takes a single value (set to `false`) or a bag of values (set to `true`). If this property is omitted, then it is treated as being set to `false`.
 
@@ -1632,52 +1824,110 @@ A `PolicyParameterType` object contains the following properties:
 
 : An expression that evaluates to a default value (`Isbag` is `false`) or bag of values (`IsBag` is true`) for the parameter that is used when a `PolicyReferenceType` object does not provide an argument for the parameter.
 
-## 7.9 BooleanExpressionType
+## 7.7 BooleanExpressionType
 
 A `BooleanExpressionType` object contains one ACAL expression, with the restriction that the expression's return data type MUST be `urn:oasis:names:tc:acal:1.0:data-type:boolean`.
 
-```xml
-<xs:complexType name="BooleanExpressionType">
-   <xs:sequence>
-      <xs:element ref="xacml:Expression"/>
-   </xs:sequence>
-</xs:complexType>
+UML definition (class diagram):
+```plantuml
+@startuml
+hide empty members 
+hide circle
+class BooleanExpressionType <<dataType>> {
+   + Expression: ExpressionType [1]
+}
+@enduml
 ```
 
 The `Target` and `Condition` properties are of this type.
 
 Expression evaluation is described in [Section 9.5](#95-expression-evaluation).
 
-## 7.10 PolicyReferenceType
+## 7.8 IdReferenceType
+
+<a name="idreferencetype"></a>
+
+`IdReferenceType` is an abstract type used for referencing policies by their policy identifier (URI). This has two subtypes for matching also a specific policy version: `ExactMatchIdReferenceType`, `PatternMatchIdReferenceType`.
+
+UML definition (class diagram):
+```plantuml
+@startuml
+hide empty members 
+hide circle
+abstract class IdReferenceType <<dataType>> {
+   + Id: URI [1]
+}
+@enduml
+```
+
+The `IdReferenceType` object type contains the following property:
+
+`Id` [Required]
+
+: A URI being the `PolicyId` of the referenced policy. If the URI is a URL, then it MAY be resolvable to the policy. However, the mechanism for resolving a policy reference to the corresponding policy is outside the scope of this specification.
+
+## 7.9 ExactMatchIdReferenceType (optional)
+
+_**Support for this object type is optional, required only if the `ReturnPolicyIdList` property in the Request is supported.**_
+
+An `ExactMatchIdReferenceType` object is a type of policy reference that matches both the identifier and a specific (fixed) version of a policy. In a `ApplicablePolicyReference`, it is used to identify a policy that has been applicable to a request.
+
+UML definition (class diagram):
+```plantuml
+@startuml
+hide empty members 
+hide circle
+abstract class IdReferenceType <<dataType>>
+class ExactMatchIdReferenceType <<dataType>> extends IdReferenceType {
+   + Version: VersionType [1]
+}
+@enduml
+```
+
+The `ExactMatchIdReferenceType` object type extends the [`IdReferenceType` object type](#idreferencetype) with the following property:
+
+`Version` [Required]
+
+: A `VersionType` value indicating the version of a policy that was applicable to the request. See [Section 7.10](#710-policyreferencetype).
+
+## 7.10 PatternMatchIdReferenceType
+
+An `PatternMatchIdReferenceType` object is a type of policy reference that matches both the identifier and one or more versions of a policy using version patterns.
+
+UML definition (class diagram):
+```plantuml
+@startuml
+hide empty members 
+hide circle
+abstract class IdReferenceType <<dataType>>
+class PatternMatchIdReferenceType <<dataType>> extends IdReferenceType {
+   + Version: VersionMatchType [0..1]
+}
+@enduml
+```
+
+The `PatternMatchIdReferenceType` object type extends the `IdReferenceType` object type with the following properties:
+
+`Version` [Optional]
+
+: Specifies a matching expression for an acceptable version of the policy referenced.
+
+The matching operation is defined in [Section 7.12](#712-versionmatchtype). Any combination of these properties MAY be present in a `PatternMatchIdReferenceType` object. The referenced policy MUST match all expressions. If none of these properties are present, then any version of the policy is acceptable. In the case that more than one matching version can be obtained, then the most recent one (latest version) SHOULD be used.
+
+## 7.11 PolicyReferenceType
 
 A `PolicyReferenceType` object is used to reference a policy by identifier and version.
 
-```xml
-<xs:element name="PolicyReference" type="xacml:PolicyReferenceType"/>
-
-<xs:complexType name="PolicyReferenceType">
-   <xs:complexContent>
-      <xs:extension base="xacml:PatternMatchIdReferenceType">
-         <xs:sequence>
-            <xs:element ref="xacml:Expression" minOccurs="0" maxOccurs="unbounded"/>
-         </xs:sequence>
-      </xs:extension>
-   </xs:complexContent>
-</xs:complexType>
-
-<xs:complexType name="PatternMatchIdReferenceType">
-   <xs:complexContent>
-      <xs:extension base="xacml:IdReferenceType">
-         <xs:attribute name="Version" type="xacml:VersionMatchType" use="optional"/>
-         <xs:attribute name="EarliestVersion" type="xacml:VersionMatchType" use="optional"/>
-         <xs:attribute name="LatestVersion" type="xacml:VersionMatchType" use="optional"/>
-      </xs:extension>
-   </xs:complexContent>
-</xs:complexType>
-
-<xs:complexType name="IdReferenceType" abstract="true">
-   <xs:attribute name="Id" type="xs:anyURI" use="required"/>
-</xs:complexType>
+UML definition (class diagram):
+```plantuml
+@startuml
+hide empty members 
+hide circle
+class PatternMatchIdReferenceType <<dataType>>
+class PolicyReferenceType <<dataType>> extends PatternMatchIdReferenceType {
+   +  Expression: ExpressionType [*] {ordered, nonunique}
+}
+@enduml
 ```
 
 The `PolicyReferenceType` object type extends the `PatternMatchIdReferenceType` object type with the following properties:
@@ -1686,83 +1936,26 @@ The `PolicyReferenceType` object type extends the `PatternMatchIdReferenceType` 
 
 : Arguments for a parameterized policy.
 
-The `PatternMatchIdReferenceType` object type extends the `IdReferenceType` object type with the following properties:
-
-`Version` [Optional]
-
-: Specifies a matching expression for an acceptable version of the policy referenced.
-
-`EarliestVersion` [Optional]
-
-: Specifies a matching expression for the earliest acceptable version of the policy referenced.
-
-`LatestVersion` [Optional]
-
-: Specifies a matching expression for the latest acceptable version of the policy referenced.
-
-The matching operation is defined in [Section 7.12](#712-versionmatchtype). Any combination of these properties MAY be present in a `PatternMatchIdReferenceType` object. The referenced policy MUST match all expressions. If none of these properties are present, then any version of the policy is acceptable. In the case that more than one matching version can be obtained, then the most recent one SHOULD be used.
-
-The `IdReferenceType` object type contains the following property:
-
-`Id` [Required]
-
-: A URI being the `PolicyId` of the referenced policy. If the URI is a URL, then it MAY be resolvable to the policy. However, the mechanism for resolving a policy reference to the corresponding policy is outside the scope of this specification.
-
-## 7.11 VersionType
-
-A value of this simple type specifies the version number of a policy.
-
-```xml
-<xs:simpleType name="VersionType">
-   <xs:restriction base="xs:string">
-      <xs:pattern value="(\d+\.)*\d+"/>
-   </xs:restriction>
-</xs:simpleType>
-```
-
-The version number is expressed as a sequence of decimal numbers, each separated by a period (.). `d+` represents a sequence of one or more decimal digits.
-
-## 7.12 VersionMatchType
-
-Properties of this type SHALL contain a restricted regular expression matching a version number (see [Section 7.11](#711-versiontype)). The expression SHALL match versions of a referenced policy that are acceptable for inclusion in the referencing policy.
-
-```xml
-<xs:simpleType name="VersionMatchType">
-   <xs:restriction base="xs:string">
-      <xs:pattern value="((\d+|\*)\.)*(\d+|\*|\+)"/>
-   </xs:restriction>
-</xs:simpleType>
-```
-
-A version match is `.`-separated, like a version string. A number represents a direct numeric match. A `\*` means that any single number is valid. A `+` means that any number, and any subsequent numbers, are valid. In this manner, the following four patterns would all match the version string `1.2.3`: `1.2.3`, `1.\*.3`, `1.2.\*` and `1.+`.
-
-## 7.16 RuleType
+## 7.12 RuleType
 
 A `RuleType` object defines an individual rule in a policy. The main components of an object of this type are the `Condition`, `NoticeExpression` and `Effect` properties.
 
 A `RuleType` object may be evaluated, in which case the evaluation procedure defined in [Section 9.11](#911-rule-evaluation) SHALL be used.
 
-```xml
-<xs:element name="Rule" type="xacml:RuleType">
-   <xs:unique name="ruleVariableIdUniqueness">
-      <xs:selector xpath="xacml:VariableDefinition"/>
-      <xs:field xpath="@VariableId"/>
-   </xs:unique>
-   <xs:unique name="noticeExpressionIdUniqueness">
-      <xs:selector xpath="xacml:NoticeExpression"/>
-      <xs:field xpath="@Id"/>
-   </xs:unique>
-</xs:element>
-<xs:complexType name="RuleType">
-   <xs:sequence>
-      <xs:element ref="xacml:Description" minOccurs="0"/>
-      <xs:element ref="xacml:VariableDefinition" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element ref="xacml:Condition" minOccurs="0"/>
-      <xs:element ref="xacml:NoticeExpression" minOccurs="0" maxOccurs="unbounded"/>
-   </xs:sequence>
-   <xs:attribute name="Id" type="xs:NCName" use="required"/>
-   <xs:attribute name="Effect" type="xacml:EffectType" use="required"/>
-</xs:complexType>
+UML definition (class diagram):
+```plantuml
+@startuml
+hide empty members 
+hide circle
+class RuleType <<dataType>> {
+   + Id: LocalIdentifierType [1]
+   + Description: String [0..1]
+   + VariableDefinition: VariableDefinitionType [*] {ordered, unique}
+   + Condition: BooleanExpressionType [0..1]
+   + Effect: EffectType [1]
+   + NoticeExpression: NoticeExpressionType [*] {unordered, unique}
+}
+@enduml
 ```
 
 A `RuleType` object contains the following properties:
@@ -1781,7 +1974,7 @@ A `RuleType` object contains the following properties:
 
 `VariableDefinition` [Any Number]
 
-: A sequence of `VariableDefinitionType` objects, each defining an expression that can be referenced from anywhere in the rule where an expression can appear.
+: A sequence of `VariableDefinitionType` objects, each defining a variable - with a value expression - that can be referenced from anywhere in the rule where an Expression can appear.
 
 `Condition` [Optional]
 
@@ -1791,59 +1984,53 @@ A `RuleType` object contains the following properties:
 
 : A sequence of `NoticeExpressionType` objects, each defining a notice expression potentially evaluated into a notice by the PDP. See [Section 7.33](#733-noticeexpressiontype). See [Section 9.18](#918-notices) for a description of how the notices to be returned by the PDP shall be determined. See [Section 9.2](#92-policy-enforcement-point) about enforcement of obligation notices.
 
-## 7.17 EffectType
-
-The `EffectType` simple type defines the values allowed for the `Effect` property of a `RuleType` object and for the `AppliesTo` property of the `NoticeExpressionType` objects; either `Permit` or `Deny`.
-
-```xml
-<xs:simpleType name="EffectType">
-   <xs:restriction base="xs:string">
-      <xs:enumeration value="Permit"/>
-      <xs:enumeration value="Deny"/>
-   </xs:restriction>
-</xs:simpleType>
-```
-
-## 7.18 VariableDefinitionType
+## 7.13 VariableDefinitionType
 
 A `VariableDefinitionType` object is used to define a value or a bag of values that can be referenced by zero or more `VariableReferenceType` objects. `VariableDefinitionType` objects appear in the `VariableDefinition` property of a `PolicyType` or `RuleType` object. This is the parent object. The scope within which the variable definition can be referenced is any expression within the parent object, including any nested `PolicyType` or `RuleType` objects.
 
-```xml
-<xs:element name="VariableDefinition" type="xacml:VariableDefinitionType"/>
-<xs:complexType name="VariableDefinitionType">
-   <xs:sequence>
-      <xs:element ref="xacml:Expression"/>
-   </xs:sequence>
-   <xs:attribute name="VariableId" type="xs:NCName" use="required"/>
-   <xs:assert test="not(xacml:Value) or xacml:Value/@DataType"/>
-</xs:complexType>
+UML definition (class diagram):
+```plantuml
+@startuml
+skinparam style strictuml
+hide empty members 
+hide circle
+class VariableDefinitionType <<dataType>> {
+   + VariableId: LocalIdentifierType [1]
+   + Expression: ExpressionType [1]
+}
+note "{{OCL} not Expression.attributes->includes('DataType') or Expression.DataType <> null}" as ValueDataTypeMustBeNonNull
+VariableDefinitionType .. ValueDataTypeMustBeNonNull
+@enduml
 ```
+
 
 A `VariableDefinitionType` object has the following properties:
 
 `VariableId` [Required]
 
-: A restricted `String` name for the variable definition. The value of the property MUST NOT be the same as the `VariableId` property of another `VariableDefinitionType` object in the same `VariableDefinition` property or in the `VariableDefinition` property of a `PolicyType` object enclosing the parent object.
+: A restricted `String` name for the variable definition. The value of the property MUST NOT be the same as the `VariableId` property of another `VariableDefinitionType` object in the same `VariableDefinition` property list or in the `VariableDefinition` property of a `PolicyType` object enclosing the parent object.
 
 `Expression` [Required]
 
-: An `ExpressionType` object. The value of the variable definition is the result of evaluating the `ExpressionType` object. The expression MAY contain `VariableReferenceType` objects referring to other `VariableDefinitionType` objects provided those objects are in the same `VariableDefinition` property or in the `VariableDefinition` property of a `PolicyType` object enclosing the parent object. The expression SHALL NOT contain `VariableReferenceType` objects that refer to this `VariableDefinitionType` object or that refer to `VariableDefinitionType` objects that directly or indirectly refer to this `VariableDefinitionType` object.
+: An `ExpressionType` object. The value of the variable definition is the result of evaluating the `ExpressionType` object. The expression MAY contain `VariableReferenceType` objects referring to other `VariableDefinitionType` objects provided those objects are in the same `VariableDefinition` property or in the `VariableDefinition` property (list) of a `PolicyType` object enclosing the parent object. The expression SHALL NOT contain `VariableReferenceType` objects that refer to this `VariableDefinitionType` object or that refer to `VariableDefinitionType` objects that directly or indirectly refer to this `VariableDefinitionType` object. If the Expression's type has a `DataType` property, e.g. it is a `ValueType` or a subtype of `ValueType`, this `DataType` property must be set to a value (non-null).
 
-## 7.18b SharedVariableDefinitionType
+## 7.13b SharedVariableDefinitionType
 
 A `SharedVariableDefinitionType` object is used to define a value or a bag of values that can be referenced by zero or more `SharedVariableReferenceType` objects. `SharedVariableDefinitionType` objects appear in the `SharedVariableDefinition` property of a `BundleType` object, i.e., they exist independently of any policy. The scope within which the shared variable definition can be referenced is any expression nested within the `BundleType` object. This includes policies, any other `SharedVariableDefinitionType` objects and the arguments of the `BundleType` object's `PolicyReference` property.
 
-```xml
-<xs:element name="SharedVariableDefinition" type="xacml:SharedVariableDefinitionType"/>
-<xs:complexType name="SharedVariableDefinitionType">
-   <xs:sequence>
-      <xs:element ref="xacml:Description" minOccurs="0"/>
-      <xs:element ref="xacml:ShortIdSetReference" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element ref="xacml:Expression"/>
-   </xs:sequence>
-   <xs:attribute name="Id" type="xs:anyURI" use="required"/>
-   <xs:attribute name="Version" type="xacml:VersionType" use="required"/>
-</xs:complexType>
+UML definition (class diagram):
+```plantuml
+@startuml
+hide empty members 
+hide circle
+class SharedVariableDefinitionType <<dataType>> {
+   + Id: URI [1]
+   + Version: VersionType [1]
+   + Description: String [0..1]
+   + ShortIdSetReference: URI [*] {ordered, unique}
+   + Expression: ExpressionType [1]
+}
+@enduml
 ```
 
 `Id` [Required]
@@ -1868,13 +2055,38 @@ A `SharedVariableDefinitionType` object is used to define a value or a bag of va
 
 : Note that the expression cannot contain `VariableReferenceType` objects since the `SharedVariableDefinitionType` object is not in the scope of any `VariableDefinitionType` object.
 
-## 7.19 ExpressionType
+## 7.14 ExpressionType
 
 An `ExpressionType` object defines an ACAL expression. Expression evaluation is defined in [Section 9.5](#95-expression-evaluation).
 
-```xml
-<xs:element name="Expression" type="xacml:ExpressionType" abstract="true"/>
-<xs:complexType name="ExpressionType" abstract="true"/>
+UML definition (class diagram):
+```plantuml
+@startuml
+hide empty members 
+hide circle
+abstract class ExpressionType <<dataType>>
+class ApplyType <<dataType>> extends ExpressionType
+
+abstract class BaseAttributeSelectorType <<dataType>> extends ExpressionType
+class AttributeSelectorType <<dataType>> extends BaseAttributeSelectorType
+class EntityAttributeSelectorType <<dataType>> extends BaseAttributeSelectorType
+
+class FunctionType <<dataType>> extends ExpressionType
+
+abstract class NamedAttributeDesignatorType <<dataType>> extends ExpressionType
+class AttributeDesignatorType <<dataType>> extends NamedAttributeDesignatorType
+class EntityAttributeDesignatorType <<dataType>> extends NamedAttributeDesignatorType
+
+class QuantifiedExpressionType <<dataType>> extends ExpressionType
+class ForAnyExpressionType <<dataType>> extends QuantifiedExpressionType
+class ForAllExpressionType <<dataType>> extends QuantifiedExpressionType
+class MapExpressionType <<dataType>> extends QuantifiedExpressionType
+class SelectExpressionType <<dataType>> extends QuantifiedExpressionType
+
+class SharedVariableReferenceType <<dataType>> extends ExpressionType
+class ValueType <<dataType>> extends ExpressionType
+class VariableReferenceType <<dataType>> extends ExpressionType
+@enduml
 ```
 
 An `ExpressionType` object contains exactly one of the following properties:
@@ -1931,23 +2143,22 @@ An `ExpressionType` object contains exactly one of the following properties:
 
 : A `QuantifiedExpressionType` object specifying transformation of an input bag of values.
 
-## 7.20 ApplyType
+## 7.15 ApplyType
 
 An `ApplyType` object is a kind of expression that denotes application of a function to its arguments, which are also expressions, thus encoding a function call.
 
-```xml
-<xs:element name="Apply" type="xacml:ApplyType" substitutionGroup="xacml:Expression"/>
-<xs:complexType name="ApplyType">
-   <xs:complexContent>
-      <xs:extension base="xacml:ExpressionType">
-         <xs:sequence>
-            <xs:element ref="xacml:Description" minOccurs="0"/>
-            <xs:element ref="xacml:Expression" minOccurs="0" maxOccurs="unbounded"/>
-         </xs:sequence>
-         <xs:attribute name="FunctionId" type="xacml:IdentifierType" use="required"/>
-       </xs:extension>
-   </xs:complexContent>
-</xs:complexType>
+UML definition (class diagram):
+```plantuml
+@startuml
+hide empty members 
+hide circle
+abstract class ExpressionType <<datatype>>
+class ApplyType <<dataType>> extends ExpressionType {
+   + Description: String [0..1]
+   + FunctionId: IdentifierType [1]
+   + Expression: ExpressionType [*] {ordered, nonunique}
+}
+@enduml
 ```
 
 An `ApplyType` object contains the following properties:
@@ -1962,21 +2173,22 @@ An `ApplyType` object contains the following properties:
 
 `Expression` [Any Number]
 
-: A sequence of `ExpressionType` objects, each defining an expression as an argument to the function.
+: A sequence of `ExpressionType` objects, each defining an expression as an argument to the function. If one of these is a `Value` and the function's signature defines explicitly the data-type of the corresponding argument, then the `Value`'s DataType should be omitted as it is already defined accordingly.
 
-## 7.21 FunctionType
+## 7.16 FunctionType
 
-A `FunctionType` object is a kind of expression used to identify a function as an argument to the function defined by the argument's parent `ApplyType` object.
+A `FunctionType` object is a kind of expression used to identify a function as an argument to a higher-order function defined by the argument's parent `ApplyType` object.
 
-```xml
-<xs:element name="Function" type="xacml:FunctionType" substitutionGroup="xacml:Expression"/>
-<xs:complexType name="FunctionType">
-   <xs:complexContent>
-          <xs:extension base="xacml:ExpressionType">
-                <xs:attribute name="Id" type="xacml:IdentifierType" use="required"/>
-          </xs:extension>
-   </xs:complexContent>
-</xs:complexType>
+UML definition (class diagram):
+```plantuml
+@startuml
+hide empty members 
+hide circle
+abstract class ExpressionType <<datatype>>
+class FunctionType <<dataType>> extends ExpressionType {
+   + Id: IdentifierType [1]
+}
+@enduml
 ```
 
 A `FunctionType` object contains the following property:
@@ -1985,23 +2197,25 @@ A `FunctionType` object contains the following property:
 
 : An `IdentifierType` value identifying a function.
 
-## 7.22 NamedAttributeDesignatorType
+## 7.17 NamedAttributeDesignatorType
 
 The `NamedAttributeDesignatorType` object type is an abstract object type that specifies a named attribute for the retrieval of a bag of attribute values from a source of attributes. The object types derived from `NamedAttributeDesignatorType` determine the source of attributes: an `AttributeDesignatorType` object (an attribute designator) specifies a named attribute in the request context and an `EntityAttributeDesignatorType` object (an entity attribute designator) specifies a named attribute in either the request context or a value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type.
 
 Evaluation of an `AttributeDesignatorType` or `EntityAttributeDesignatorType` object returns a bag containing all the ACAL attribute values that are matched by the named attribute, or an error. In the event that no matching attribute is present in the source of attributes, the `MustBePresent` property governs whether this evaluation returns an empty bag or `Indeterminate`. See [Section 9.4.5](#945-attribute-retrieval).
 
-```
-<xs:complexType name="NamedAttributeDesignatorType" abstract="true">
-   <xs:complexContent>
-      <xs:extension base="xacml:ExpressionType">
-         <xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
-         <xs:attribute name="DataType" type="xacml:IdentifierType" use="optional" default="urn:oasis:names:tc:acal:1.0:data-type:string"/>
-         <xs:attribute name="Issuer" type="xs:Name" use="optional"/>
-         <xs:attribute name="MustBePresent" type="xs:boolean" use="optional" default="false"/>
-      </xs:extension>
-   </xs:complexContent>
-</xs:complexType>
+UML definition (class diagram):
+```plantuml
+@startuml
+hide empty members 
+hide circle
+abstract class ExpressionType <<datatype>>
+abstract class NamedAttributeDesignatorType <<dataType>> extends ExpressionType {
+   + AttributeId: IdentifierType [1]
+   + DataType: IdentifierType [0..1] = 'urn:oasis:names:tc:acal:1.0:data-type:string'
+   + Issuer: Name [0..1]
+   + MustBePresent: Boolean [0..1] = false
+}
+@enduml
 ```
 
 A `NamedAttributeDesignatorType` object contains the following properties:
@@ -2010,7 +2224,7 @@ A `NamedAttributeDesignatorType` object contains the following properties:
 
 : An `IdentifierType` value specifying the `AttributeId` of the named attribute.
 
-`DataType` [Required]
+`DataType` [Required, Default `urn:oasis:names:tc:acal:1.0:data-type:string`]
 
 : An `IdentifierType` value specifying the `DataType` of the named attribute. The bag returned by the designator SHALL contain values of this data type. If this property is omitted, then it is treated as being set to `urn:oasis:names:tc:acal:1.0:data-type:string`.
 
@@ -2028,20 +2242,20 @@ A named attribute matches an attribute in the source of attributes if the values
 
 If the `Issuer` property is present in the attribute designator, then it MUST match, using the `urn:oasis:names:tc:acal:1.0:function:string-equal` function, the `Issuer` property of the same attribute. If the `Issuer` property is not present in the attribute designator, then the matching of the attribute to the named attribute SHALL be governed by `AttributeId` and `DataType` properties alone.
 
-## 7.23 AttributeDesignatorType
+## 7.18 AttributeDesignatorType
 
 An `AttributeDesignatorType` object is a kind of expression that defines an attribute designator. An attribute designator retrieves a bag of values for a named attribute from the request context.
 
-```
-<xs:element name="AttributeDesignator" type="xacml:AttributeDesignatorType" substitutionGroup="xacml:Expression"/>
-<xs:complexType name="AttributeDesignatorType">
-   <xs:complexContent>
-      <xs:extension base="xacml:NamedAttributeDesignatorType">
-         <xs:attribute name="Category" type="xacml:IdentifierType" use="required"/>
-      </xs:extension>
-   </xs:complexContent>
-</xs:complexType>
-
+UML definition (class diagram):
+```plantuml
+@startuml
+hide empty members 
+hide circle
+abstract class NamedAttributeDesignatorType <<datatype>>
+class AttributeDesignatorType <<dataType>> extends NamedAttributeDesignatorType {
+   + Category: IdentifierType [1]
+}
+@enduml
 ```
 
 The `AttributeDesignatorType` object type extends the `NamedAttributeDesignatorType` object type with the following property:
@@ -2052,21 +2266,20 @@ The `AttributeDesignatorType` object type extends the `NamedAttributeDesignatorT
 
 The properties inherited from `NamedAttributeDesignatorType` specify the named attribute. The attribute designator retrieves values from attributes matching the named attribute that are present in the `RequestEntityType` object having a `Category` property that matches, by identifier equality, the `Category` property of the attribute designator.
 
-## 7.24 EntityAttributeDesignatorType
+## 7.19 EntityAttributeDesignatorType
 
 An `EntityAttributeDesignatorType` object is a kind of expression that defines an entity attribute designator. An entity attribute designator retrieves a bag of values for a named attribute from either the request context or a value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type.
 
-```xml
-<xs:element name="EntityAttributeDesignator" type="xacml:EntityAttributeDesignatorType" substitutionGroup="xacml:Expression"/>
-<xs:complexType name="EntityAttributeDesignatorType">
-   <xs:complexContent>
-      <xs:extension base="xacml:NamedAttributeDesignatorType">
-         <xs:sequence>
-            <xs:element ref="xacml:Expression"/>
-         </xs:sequence>
-      </xs:extension>
-   </xs:complexContent>
-</xs:complexType>
+UML definition (class diagram):
+```plantuml
+@startuml
+hide empty members 
+hide circle
+abstract class NamedAttributeDesignatorType <<datatype>>
+class EntityAttributeDesignatorType <<dataType>> extends NamedAttributeDesignatorType {
+   + Expression: ExpressionType [1]
+}
+@enduml
 ```
 
 The `EntityAttributeDesignatorType` object type extends the `NamedAttributeDesignatorType` object type with the following property:
@@ -2081,40 +2294,56 @@ If the expression evaluates to a value of the `urn:oasis:names:tc:acal:1.0:data-
 
 If the expression evaluates to a value of the `urn:oasis:names:tc:acal:1.0:data-type:anyURI` data type, then the entity attribute designator retrieves values from attributes matching the named attribute that are present in the `RequestEntityType` object having a `Category` property that matches, by identifier equality, the value of the expression. In this case the entity attribute designator emulates an attribute designator.
 
-## 7.25 BaseAttributeSelectorType
+## 7.20 BaseAttributeSelectorType (optional)
 
-The `BaseAttributeSelectorType` object type is an abstract object type that specifies an XPath expression for the production of a bag of ACAL attribute values from XML content. The object types derived from `BaseAttributeSelectorType` determine the source of the XML content: an `AttributeSelectorType` object (an attribute selector) specifies the `Content` property of an attribute category in the request context and an `EntityAttributeSelectorType` object (an entity attribute selector) specifies the `Content` property in either an attribute category in the request context or a value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type.
+<a name="baseattributeselectortype"></a>
 
-Evaluation of an `AttributeSelectorType` or `EntityAttributeSelectorType` object returns a bag of unnamed and uncategorized ACAL attribute values, or an error. Support for attribute selectors and entity attribute selectors is OPTIONAL.
+_**Support for this part (attribute selectors and entity attribute selectors) is OPTIONAL.**_
+
+The `BaseAttributeSelectorType` object type is an abstract object type that specifies an XPath (resp. JSONPath) expression for the production of a bag of ACAL attribute values from XML (resp. JSON) content. The object types derived from `BaseAttributeSelectorType` determine the source of the XML (resp. JSON) content: an `AttributeSelectorType` object (an attribute selector) specifies the `Content` property of an attribute category in the request context and an `EntityAttributeSelectorType` object (an entity attribute selector) specifies the `Content` property in either an attribute category in the request context or a value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type.
+
+Evaluation of an `AttributeSelectorType` or `EntityAttributeSelectorType` object returns a bag of unnamed and uncategorized ACAL attribute values, or an error.
 
 See [Section 9.4.7](#947-selector-evaluation) for details of attribute selector and entity attribute selector evaluation.
 
-```xml
-<xs:complexType name="BaseAttributeSelectorType">
-   <xs:complexContent>
-      <xs:extension base="xacml:ExpressionType">
-         <xs:attribute name="ContextSelectorId" type="xacml:IdentifierType" use="optional"/>
-         <xs:attribute name="Path" type="xs:string" use="required"/>
-         <xs:attribute name="DataType" type="xacml:IdentifierType" use="optional" default="urn:oasis:names:tc:acal:1.0:data-type:string"/>
-         <xs:attribute name="MustBePresent" type="xs:boolean" use="optional" default="false"/>
-       </xs:extension>
-   </xs:complexContent>
-</xs:complexType>
+UML definition (class diagram):
+```plantuml
+@startuml
+skinparam style strictuml
+hide empty members 
+hide circle
+abstract class ExpressionType <<datatype>>
+abstract class BaseAttributeSelectorType <<dataType>> extends ExpressionType {
+   + Path: String [1]
+   + PathType: AttributeSelectorPathType [0..1] = XPath
+   + ContextSelectorId: IdentifierType [0..1]
+   + DataType: IdentifierType [0..1] = 'urn:oasis:names:tc:acal:1.0:data-type:string'
+   + MustBePresent: Boolean [0..1] = false
+}
+note "{{OCL} ContextSelectorId = null or PathType = XPath}" as ContextSelectorIdForXPathOnly
+BaseAttributeSelectorType .. ContextSelectorIdForXPathOnly
+@enduml
 ```
 
 A `BaseAttributeSelectorType` object has the following properties:
 
 `ContextSelectorId` [Optional]
 
-: An `IdentifierType` value specifying an ACAL attribute (by its `AttributeId`) in the attribute category or `urn:oasis:names:tc:acal:1.0:data-type:entity` value containing the XML content. The referenced attribute MUST have a single value of data type `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` and the XPath expression represented by that value must select a single node in the XML content. The `XPathCategory` property of the referenced ACAL attribute value SHALL be ignored.
+: An `IdentifierType` value specifying an ACAL attribute (by its `AttributeId`) in the attribute category or `urn:oasis:names:tc:acal:1.0:data-type:entity` value containing the XML content. The referenced attribute MUST have a single value of data type `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` and the XPath expression represented by that value must select a single node in the XML content. The `XPathCategory` property of the referenced ACAL attribute value SHALL be ignored. This property is not allowed if the `PathType` property is not set to `XPath` (as it is by default). 
 
 `Path` [Required]
 
-: A `String` value that contains an XPath expression to be evaluated against the specified XML content. See [Section 9.4.7](#947-selector-evaluation) for details of the XPath evaluation during attribute selector and entity attribute selector processing. The namespace context for the value of the `Path` property is given by the [in-scope namespaces] [[INFOSET](#infoset)] of the `BaseAttributeSelectorType` object.
+: A `String` value that contains an expression to be evaluated against the specified content. The syntax and semantics of the expression are identified by the `PathType` property. See [Section 9.4.7](#947-selector-evaluation) for details of the expression evaluation during attribute selector and entity attribute selector processing. In the case of XPath, the namespace context for the value of the `Path` property is given by the [in-scope namespaces] [[INFOSET](#infoset)] of the `BaseAttributeSelectorType` object.
 
-  _The namespaces will need to be handled in a manner similar to how namespaces are handled in the JSON profile for values of the xpathexpression data type._
+  _The namespaces will need to be handled in a manner similar to how namespaces are handled in the JSON profile for values of the xpathExpression data type._
 
-`DataType` [Optional]
+`PathType` [Optional, Default `XPath`]
+
+: The type of `Path` expression to be evaluated. Possible values are:
+  * `XPath` (default): in this case, the `Path` property must be set to a valid XPath expression according to the XPath version specified in the `PolicyDefaults` property of the enclosing Policy, and the selected content is expected to be XML;
+  * `JSONPath`: in this case, the selected content is expected to be a JSON Object, and the `Path` property must be set to a JSONPath compliant with [RFC 9535](https://datatracker.ietf.org/doc/html/rfc9535).
+
+`DataType` [Optional, Default `urn:oasis:names:tc:acal:1.0:data-type:string`]
 
 : An `IdentifierType` value specifying the data type of the values returned from the evaluation of the attribute selector or entity attribute selector. If this property is omitted, then it is treated as being set to `urn:oasis:names:tc:acal:1.0:data-type:string`.
 
@@ -2122,21 +2351,24 @@ A `BaseAttributeSelectorType` object has the following properties:
 
 : A `Boolean` value that governs whether the attribute selector or entity attribute selector returns `Indeterminate` or an empty bag in the event that the specified XML content does not exist, or the XML content does exist but the XPath expression selects no node. See [Section 9.4.5](#945-attribute-retrieval). Also see [Section 9.19.2](#9192-syntax-and-type-errors) and [Section 9.19.3](#9193-missing-attributes). If this property is omitted, then it is treated as being set to `false`.
 
-## 7.26 AttributeSelectorType
+## 7.21 AttributeSelectorType (optional)
 
-An `AttributeSelectorType` object is a kind of expression that defines an attribute selector. An attribute selector produces a bag of unnamed and uncategorized ACAL attribute values. The values shall be constructed from the node(s) selected by applying the XPath expression given by the attribute selector's `Path` property to the XML content indicated by the attribute selector's `Category` property. Support for attribute selectors is OPTIONAL.
+_**Support for this part (attribute selectors) is OPTIONAL.**_
+
+An `AttributeSelectorType` object is a kind of expression that defines an attribute selector. An attribute selector produces a bag of unnamed and uncategorized ACAL attribute values. The values shall be constructed from the node(s) selected by applying the XPath expression given by the attribute selector's `Path` property to the XML content indicated by the attribute selector's `Category` property. 
 
 See [Section 9.4.7](#947-selector-evaluation) for details of attribute selector evaluation.
 
-```xml
-<xs:element name="AttributeSelector" type="xacml:AttributeSelectorType" substitutionGroup="xacml:Expression"/>
-<xs:complexType name="AttributeSelectorType">
-   <xs:complexContent>
-      <xs:extension base="xacml:BaseAttributeSelectorType">
-         <xs:attribute name="Category" type="xacml:IdentifierType" use="required"/>
-      </xs:extension>
-   </xs:complexContent>
-</xs:complexType>
+UML definition (class diagram):
+```plantuml
+@startuml
+hide empty members 
+hide circle
+abstract class BaseAttributeSelectorType <<datatype>>
+class AttributeSelectorType <<dataType>> extends BaseAttributeSelectorType {
+   + Category: IdentifierType [1]
+}
+@enduml
 ```
 
 The `AttributeSelectorType` object type extends the `BaseAttributeSelectorType` object type with the following property:
@@ -2145,23 +2377,24 @@ The `AttributeSelectorType` object type extends the `BaseAttributeSelectorType` 
 
 : An `IdentifierType` value specifying an attribute category in the request context. The `Content` property of that attribute categeory contains the XML from which nodes will be selected. The `Category` property also indicates the attribute category containing the ACAL attribute nominated by the `ContextSelectorId` property, if the object includes a `ContextSelectorId` property.
 
-## 7.27 EntityAttributeSelectorType
+## 7.22 EntityAttributeSelectorType (optional)
 
-An `EntityAttributeSelectorType` object is a kind of expression that defines an entity attribute selector. An entity attribute selector produces a bag of unnamed and uncategorized ACAL attribute values. The values shall be constructed from the node(s) selected by applying the XPath expression given by the entity attribute selector's `Path` property to the XML content in the `Content` property in either an attribute category in the request context or a value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type. Support for entity attribute selectors is OPTIONAL.
+_**Support for this part (entity attribute selectors) is OPTIONAL.**_
+
+An `EntityAttributeSelectorType` object is a kind of expression that defines an entity attribute selector. An entity attribute selector produces a bag of unnamed and uncategorized ACAL attribute values. The values shall be constructed from the node(s) selected by applying the XPath expression given by the entity attribute selector's `Path` property to the XML content in the `Content` property in either an attribute category in the request context or a value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type. 
 
 See [Section 9.4.7](#947-selector-evaluation) for details of entity attribute selector evaluation.
 
-```xml
-<xs:element name="EntityAttributeSelector" type="xacml:EntityAttributeSelectorType" substitutionGroup="xacml:Expression"/>
-<xs:complexType name="EntityAttributeSelectorType">
-   <xs:complexContent>
-      <xs:extension base="xacml:BaseAttributeSelectorType">
-         <xs:sequence>
-            <xs:element ref="xacml:Expression"/>
-         </xs:sequence>
-       </xs:extension>
-   </xs:complexContent>
-</xs:complexType>
+UML definition (class diagram):
+```plantuml
+@startuml
+hide empty members 
+hide circle
+abstract class BaseAttributeSelectorType <<datatype>>
+class EntityAttributeSelectorType <<dataType>> extends BaseAttributeSelectorType {
+   + Expression: ExpressionType [1]
+}
+@enduml
 ```
 
 The `EntityAttributeSelectorType` object type extends the `BaseAttributeSelectorType` object type with the following property:
@@ -2174,45 +2407,91 @@ If the expression evaluates to a value of the `urn:oasis:names:tc:acal:1.0:data-
 
 If the expression evaluates to a value of the `urn:oasis:names:tc:acal:1.0:data-type:anyURI` data type, then the entity attribute selector applies the XPath expression given by the entity attribute selector's `Path` property to the XML content in the `Content` property of the `RequestEntityType` object having a `Category` property that matches, by identifier equality, the value of the expression. In this case the entity attribute selector emulates an attribute selector. The ACAL attribute nominated by the `ContextSelectorId` property, if any, is obtained from this same object.
 
-## 7.28 ValueType
+## 7.23 ValueType
 
-A `ValueType` object is a kind of expression that contains a literal ACAL attribute value.
+A `ValueType` object is a kind of expression that contains a literal ACAL value.
 
-```xml
-<xs:element name="Value" type="xacml:ValueType" substitutionGroup="xacml:Expression"/>
-<xs:complexType name="ValueType" mixed="true">
-   <xs:complexContent mixed="true">
-      <xs:extension base="xacml:ExpressionType">
-         <xs:sequence>
-            <xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
-         </xs:sequence>
-         <xs:attribute name="DataType" type="xacml:IdentifierType" use="optional"/>
-         <xs:anyAttribute namespace="##any" processContents="lax"/>
-       </xs:extension>
-   </xs:complexContent>
-</xs:complexType>
+UML model (class diagram):
+```plantuml
+@startuml
+hide empty members
+hide circle
+
+abstract class ValueType
+abstract class SimpleValueType extends ValueType
+abstract class PrimitiveValueType extends SimpleValueType
+class LiteralBooleanType <<fixedDatatype>> extends PrimitiveValueType {
+    <<fixedDatatype>>
+    DataType='urn:oasis:names:tc:acal:1.0:data-type:boolean'
+    __
+    +Value: Boolean [1]
+}
+class LiteralIntegerType <<fixedDatatype>> extends PrimitiveValueType {
+    <<fixedDatatype>>
+    DataType='urn:oasis:names:tc:acal:1.0:data-type:integer'
+    __
+    +Value: Integer [1]
+}
+class LiteralDoubleType <<fixedDatatype>> extends PrimitiveValueType {
+    <<fixedDatatype>>
+    DataType='urn:oasis:names:tc:acal:1.0:data-type:double'
+    __
+    +Value: Double [1]
+}
+class LiteralStringType <<fixedDatatype>> extends PrimitiveValueType {
+    <<fixedDatatype>>
+    DataType='urn:oasis:names:tc:acal:1.0:data-type:string'
+    __
+    +Value: String [1]
+}
+class LiteralRestrictedStringValueType <<restrictedString>> extends PrimitiveValueType {
+    +DataType: IdentifierType [0..1]
+    +Value: String [1]
+}
+
+note bottom of LiteralRestrictedStringValueType: Other ACAL datatypes with lexical representation can be derived from this type, such as the standard time, date, dateTime, anyURI, hexBinary, base64Binary, \ndayTimeDuration, yearMonthDuration, x50Name, rfc822Name, ipAddress, dnsName.
+ 
+class XpathExpressionValueType <<fixedDatatype>> extends SimpleValueType {
+    <<fixedDatatype>>
+    DataType='urn:oasis:names:tc:acal:1.0:data-type:xpathExpression'
+    __
+    +Value: String [1]
+    +XPathCategory: IdentifierType [1]
+}
+
+abstract class StructuredValueType extends ValueType
+
+class DataType <<Metaclass>>
+class FixedDatatype <<Stereotype>> extends DataType {
+     DataType: URI [1]
+}
+@enduml 
 ```
 
 A `ValueType` object has the following properties:
 
 `DataType` [Optional]
 
-: An `IdentifierType` value specifying the data type of the attribute value. If this property is omitted, then it is treated as being set to `urn:oasis:names:tc:acal:1.0:data-type:string`.
+: An `IdentifierType` value specifying the data type of the attribute value. If this property is omitted and the DataType is not defined by the parent object (e.g. `AttributeType` object), then it is treated as being set to `urn:oasis:names:tc:acal:1.0:data-type:string`.
 
-## 7.29 VariableReferenceType
+A ValueType is abstract and maybe either the primitive LiteralXXXType (LiteralStringType, LiteralIntegerType) etc. or StructuredValueType (XACML 3.0 7.3.1 structured attribute)
+
+## 7.24 VariableReferenceType
 
 A `VariableReferenceType` object is a kind of expression used to reference a variable definition.
 
-```xml
-<xs:element name="VariableReference" type="xacml:VariableReferenceType" substitutionGroup="xacml:Expression"/>
-<xs:complexType name="VariableReferenceType">
-   <xs:complexContent>
-      <xs:extension base="xacml:ExpressionType">
-         <xs:attribute name="VariableId" type="xs:NCName" use="required"/>
-      </xs:extension>
-   </xs:complexContent>
-</xs:complexType>
+UML definition (class diagram):
+```plantuml
+@startuml
+hide empty members 
+hide circle
+abstract class ExpressionType <<datatype>>
+class VariableReferenceType <<dataType>> extends ExpressionType {
+   + VariableId: LocalIdentifierType [1]
+}
+@enduml
 ```
+
 
 A `VariableReferenceType` object contains the following property:
 
@@ -2220,22 +2499,21 @@ A `VariableReferenceType` object contains the following property:
 
 : The restricted `String` name used to refer to the ACAL value or bag of values defined in a `VariableDefinitionType` object. The property value MUST match, by identifier equality, the `VariableId` property of exactly one `VariableDefinitionType` object that is in the `VariableDefinition` property of an enclosing `RuleType` or `PolicyType` object.
 
-## 7.29b SharedVariableReferenceType
+## 7.24b SharedVariableReferenceType
 
 A `SharedVariableReferenceType` object is used to reference a shared variable by identifier and optional version.
 
-```xml
-<xs:element name="SharedVariableReference" type="xacml:PatternMatchIdReferenceType">
-<xs:complexType name="SharedVariableReferenceType">
-   <xs:complexContent>
-      <xs:extension base="xacml:ExpressionType">
-         <xs:attribute name="Id" type="xs:anyURI" use="required"/>
-         <xs:attribute name="Version" type="xacml:VersionMatchType" use="optional"/>
-         <xs:attribute name="EarliestVersion" type="xacml:VersionMatchType" use="optional"/>
-         <xs:attribute name="LatestVersion" type="xacml:VersionMatchType" use="optional"/>
-      </xs:extension>
-   </xs:complexContent>
-</xs:complexType>
+UML definition (class diagram):
+```plantuml
+@startuml
+hide empty members 
+hide circle
+abstract class ExpressionType <<datatype>>
+class SharedVariableReferenceType <<dataType>> extends ExpressionType {
+   + Id: URI [1]
+   + Version: VersionMatchType [0..1]
+}
+@enduml
 ```
 
 The `SharedVariableReferenceType` object type contains the following properties:
@@ -2248,32 +2526,24 @@ The `SharedVariableReferenceType` object type contains the following properties:
 
 : Specifies a matching expression for an acceptable version of the shared variable referenced.
 
-`EarliestVersion` [Optional]
-
-: Specifies a matching expression for the earliest acceptable version of the shared variable referenced.
-
-`LatestVersion` [Optional]
-
-: Specifies a matching expression for the latest acceptable version of the shared variable referenced.
-
 The matching operation is defined in [Section 7.12](#712-versionmatchtype). Any combination of these properties may be present in a `SharedVariableReferenceType` object. The referenced shared variable MUST match all expressions. If none of these properties are present, then any version of the shared variable is acceptable. In the case that more than one matching version can be obtained, then the most recent one SHOULD be used.
 
-## 7.30 QuantifiedExpressionType
+## 7.25 QuantifiedExpressionType
 
 A `QuantifiedExpressionType` object is a kind of expression that represents one of four kinds of quantified expression. The kind of quantified expression is determined by the name of the property that holds the object, either `ForAny`, `ForAll`, `Select` or `Map`. There are some common requirements for all four kinds of quantified expressions.
 
-```xml
-<xs:complexType name="QuantifiedExpressionType">
-  <xs:complexContent>
-    <xs:extension base="xacml:ExpressionType">
-      <xs:sequence>
-        <xs:element ref="xacml:Expression"/>
-        <xs:element ref="xacml:Expression"/>
-      </xs:sequence>
-      <xs:attribute name="VariableId" type="xs:NCName" use="required"/>
-    </xs:extension>
-  </xs:complexContent>
-</xs:complexType>
+UML definition (class diagram):
+```plantuml
+@startuml
+hide empty members 
+hide circle
+abstract class ExpressionType <<datatype>>
+class QuantifiedExpressionType <<dataType>> extends ExpressionType {
+   + VariableId: LocalIdentifierType [1]
+   + Domain: ExpressionType [1]
+   + Iterant: ExpressionType [1]
+}
+@enduml
 ```
 
 A `QuantifiedExpressionType` object contains the following properties:
@@ -2296,13 +2566,19 @@ The evaluation of a quantified expression begins with the evaluation of the doma
 
 The value of the quantified variable, i.e., the particular value from the domain, MAY be referenced one or more times from within the iterant expression using a `VariableReferenceType` object. It is not an error if the quantified variable is not referenced at all. The quantified variable SHALL NOT be referenced from within the domain of the quantified expression to which it belongs. A quantified variable MAY be referenced from within the domain of another quantified expression nested within the iterant expression.
 
-### 7.30.1 ForAny Expression
+### 7.25.1 ForAny Expression
 
 The ForAny quantified expression tests whether any value of a bag satisfies the iterant expression. It is represented by a `ForAny` property, which is of the `QuantifiedExpressionType` object type.
 
-```xml
-<xs:element name="ForAny" type="xacml:QuantifiedExpressionType"
-  substitutionGroup="xacml:Expression"/>
+UML definition (class diagram):
+```plantuml
+@startuml
+hide empty members 
+hide circle
+abstract class ExpressionType <<dataType>>
+class QuantifiedExpressionType <<dataType>> extends ExpressionType
+class ForAnyExpressionType <<dataType>> extends QuantifiedExpressionType
+@enduml
 ```
 
 The iterant expression of a ForAny expression SHALL be an expression that evaluates to a value of the `urn:oasis:names:tc:acal:1.0:data-type:boolean` data type.
@@ -2311,13 +2587,19 @@ The result of a ForAny expression SHALL be a value of the `urn:oasis:names:tc:ac
 
 The ForAny expression evaluates to `true` if the iterant expression evaluates to `true` for any value from the domain; otherwise, the expression evaluates to `Indeterminate` if the iterant expression evaluates to `Indeterminate` for any value from the domain; otherwise, the expression evaluates to `false`. Note that the ForAny expression evaluates to `false` if the domain is an empty bag. Evaluation of the expression MAY terminate whenever the iterant expression evaluates to `true`.
 
-### 7.30.2 ForAll Expression
+### 7.25.2 ForAll Expression
 
 The ForAll quantified expression tests whether all values of a bag satisfy the iterant expression. It is represented by the `ForAll` property, which is of the `QuantifiedExpressionType` object type.
 
-```xml
-<xs:element name="ForAll" type="xacml:QuantifiedExpressionType"
-  substitutionGroup="xacml:Expression"/>
+UML definition (class diagram):
+```plantuml
+@startuml
+hide empty members 
+hide circle
+abstract class ExpressionType <<dataType>>
+class QuantifiedExpressionType <<dataType>> extends ExpressionType
+class ForAllExpressionType <<dataType>> extends QuantifiedExpressionType
+@enduml
 ```
 
 The iterant expression of a ForAll expression SHALL be an expression that evaluates to a value of the `urn:oasis:names:tc:acal:1.0:data-type:boolean` data type.
@@ -2326,28 +2608,39 @@ The result of a ForAll expression SHALL be a value of the `urn:oasis:names:tc:ac
 
 The ForAll expression evaluates to `false` if the iterant expression evaluates to `false` for any value from the domain; otherwise, the expression evaluates to `Indeterminate` if the iterant expression evaluates to `Indeterminate` for any value from the domain; otherwise, the expression evaluates to `true`. Note that the ForAll expression evaluates to `true` if the domain is an empty bag. Evaluation of the expression MAY terminate whenever the iterant expression evaluates to `false`.
 
-### 7.30.3 Map Expression
+### 7.25.3 Map Expression
 
 The Map quantified expression converts a bag of values to another bag of values. It is represented by the `Map` property, which is of the `QuantifiedExpressionType` object type.
 
-```xml
-<xs:element name="Map" type="xacml:QuantifiedExpressionType"
-  substitutionGroup="xacml:Expression"/>
+UML definition (class diagram):
+```plantuml
+@startuml
+hide empty members 
+hide circle
+abstract class ExpressionType <<dataType>>
+class QuantifiedExpressionType <<dataType>> extends ExpressionType
+class MapExpressionType <<dataType>> extends QuantifiedExpressionType
+@enduml
 ```
-
 The iterant expression of a Map expression SHALL be an expression that evaluates to a single value (not necessarily of the same data type as the values in the domain).
 
 The result of the Map expression SHALL be a bag of values of the same data type as the iterant expression or `Indeterminate`.
 
 If the iterant expression evaluates to `Indeterminate` for any value from the domain, then the result of the Map expression is `Indeterminate`; otherwise, the result bag contains the values resulting from the evaluation of the iterant expression for each value from the domain. The Map expression evaluates to an empty bag if the domain is an empty bag. Evaluation of the Map expression MAY terminate whenever the iterant expression evaluates to `Indeterminate`.
 
-### 7.30.4 Select Expression
+### 7.25.4 Select Expression
 
 The Select quantified expression returns a bag containing the values from the domain that satisfy the iterant expression. That is, the result is a subset of, or equal to, the domain. The Select expression is represented by the `Select` property, which is of the `QuantifiedExpressionType` object type.
 
-```xml
-<xs:element name="Select" type="xacml:QuantifiedExpressionType"
-  substitutionGroup="xacml:Expression"/>
+UML definition (class diagram):
+```plantuml
+@startuml
+hide empty members 
+hide circle
+abstract class ExpressionType <<dataType>>
+class QuantifiedExpressionType <<dataType>> extends ExpressionType
+class SelectExpressionType <<dataType>> extends QuantifiedExpressionType
+@enduml
 ```
 
 The iterant expression of a Select expression SHALL be an expression that evaluates to a value of the `urn:oasis:names:tc:acal:1.0:data-type:boolean` data type.
@@ -2356,26 +2649,21 @@ The result of a Select expression SHALL be a bag of values of the same data type
 
 If the iterant expression evaluates to `Indeterminate` for any value from the domain, then the result of the Select expression is `Indeterminate`; otherwise, the result bag contains each value from the domain for which the iterant expression evaluates to `true`. The Select expression evaluates to an empty bag if the domain is an empty bag. Evaluation of the Select expression MAY terminate whenever the iterant expression evaluates to `Indeterminate`.
 
-## 7.31 NoticeType
+## 7.26 NoticeType
 
 A `NoticeType` object contains an identifier for a notice and a list of attribute assignments that form arguments of the notice.
 
-```xml
-<xs:element name="Notice" type="xacml:NoticeType">
-   <xs:unique name="attributeAssignmentUniqueness">
-      <xs:selector xpath="xacml:AttributeAssignment"/>
-      <xs:field xpath="@AttributeId"/>
-      <xs:field xpath="@Category"/>
-      <xs:field xpath="@Issuer"/>
-   </xs:unique>
-</xs:element>
-<xs:complexType name="NoticeType">
-   <xs:sequence>
-      <xs:element ref="xacml:AttributeAssignment" minOccurs="0" maxOccurs="unbounded"/>
-   </xs:sequence>
-   <xs:attribute name="Id" type="xacml:IdentifierType" use="required"/>
-   <xs:attribute name="IsObligation" type="xs:boolean" use="optional" default="false"/>
-</xs:complexType>
+UML definition (class diagram):
+```plantuml
+@startuml
+hide empty members 
+hide circle
+class NoticeType <<dataType>> {
+   + Id: IdentifierType [1]
+   + IsObligation: Boolean [0..1] = false
+   + AttributeAssignment: AttributeAssignmentType [*] {ordered, unique}
+}
+@enduml
 ```
 
 See [Section 9.18](#918-notices) for a description of how the list of notices to be returned by the PDP is determined.
@@ -2386,30 +2674,30 @@ A `NoticeType` object contains the following properties:
 
 : An `IdentifierType` value specifying an identifier for the notice that the PEP associates with particular processing requirements or informational content.
 
-`IsObligation` [Optional]
+`IsObligation` [Optional, Default `false`]
 
-: A `Boolean` value which if present and set to `true` indicates the notice is an obligation; otherwise, the notice is advice.
+: A `Boolean` value which, if present and set to `true`, indicates the notice is an obligation; otherwise, the notice is advice.
 
 `AttributeAssignment` [Any Number]
 
-: A sequence of `AttributeAssignmentType` objects, each an attribute assignment for forming the arguments of the notice.
+: A sequence of `AttributeAssignmentType` objects (each of them is an attribute assignment) forming the arguments of the notice.
 
-## 7.32 AttributeAssignmentType
+## 7.27 AttributeAssignmentType
 
 An `AttributeAssignmentType` object is used in a notice expression to include an attribute in a notice. The `AttributeAssignmentType` object type extends the `AttributeType` definition by adding a `Category` property.
 
 The attribute specified SHALL be understood by the PEP, but it is not further specified by ACAL. See [Section 9.18](#918-notices). [Section 6.2.5.3](#6253-rule-3) provides a number of examples of attribute assignments included in notices.
 
-```xml
-<xs:element name="AttributeAssignment" type="xacml:AttributeAssignmentType"/>
-<xs:complexType name="AttributeAssignmentType">
-   <xs:complexContent>
-      <xs:extension base="xacml:AttributeType">
-         <xs:attribute name="Category" type="xacml:IdentifierType" use="optional"/>
-         <xs:assert test="not(xacml:Value/@DataType)"/>
-      </xs:extension>
-   </xs:complexContent>
-</xs:complexType>
+UML definition (class diagram):
+```plantuml
+@startuml
+hide empty members 
+hide circle
+class AttributeType <<dataType>>
+class AttributeAssignmentType <<dataType>> extends AttributeType {
+   + Category: IdentifierType [0..1]
+}
+@enduml
 ```
 
 The `AttributeAssignmentType` object type extends the `AttributeType` object type with the following property:
@@ -2418,28 +2706,25 @@ The `AttributeAssignmentType` object type extends the `AttributeType` object typ
 
 : An `IdentifierType` value specifying the category of the attribute. If this property is absent, the attribute has no category. The PEP SHALL interpret the significance and meaning of any `Category` property. Non-normative note: an expected use of the category is to disambiguate attributes that are relayed from the request.
 
-## 7.33 NoticeExpressionType
+None of the `Value`s may have a `DataType` property on its own since it is already defined by the `DataType` property at the `AttributeAssignmentType` object level (inherited from `AttributeType`).
+
+## 7.28 NoticeExpressionType
 
 A `NoticeExpressionType` object defines a notice expression that is potentially evaluated into a notice. A notice expression contains an identifier for the notice and a set of expressions that form arguments of the notice. The `AppliesTo` property indicates the effect for which this notice is eligible to be provided to the PEP. If the `AppliesTo` property is absent, then this notice is eligible to be provided to the PEP if the effect is either `Permit` or `Deny`. See [Section 9.18](#918-notices) for a description of how the list of notices to be returned by the PDP is determined.
 
-```xml
-<xs:element name="NoticeExpression" type="xacml:NoticeExpressionType">
-   <xs:unique name="attributeAssignmentExpressionUniqueness">
-      <xs:selector xpath="xacml:AttributeAssignmentExpression"/>
-      <xs:field xpath="@AttributeId"/>
-      <xs:field xpath="@Category"/>
-      <xs:field xpath="@Issuer"/>
-   </xs:unique>
-</xs:element>
-<xs:complexType name="NoticeExpressionType">
-   <xs:sequence>
-      <xs:element ref="xacml:Condition" minOccurs="0"/>
-      <xs:element ref="xacml:AttributeAssignmentExpression" minOccurs="0" maxOccurs="unbounded"/>
-   </xs:sequence>
-   <xs:attribute name="Id" type="xacml:IdentifierType" use="required"/>
-   <xs:attribute name="IsObligation" type="xs:boolean" use="optional"/>
-   <xs:attribute name="AppliesTo" type="xacml:EffectType" use="optional"/>
-</xs:complexType>
+UML definition (class diagram):
+```plantuml
+@startuml
+hide empty members 
+hide circle
+class NoticeExpressionType <<dataType>> {
+   + Id: IdentifierType [1]
+   + IsObligation: Boolean [0..1]
+   + AppliesTo: EffectType [0..1]
+   + Condition: BooleanExpressionType [0..1]
+   + AttributeAssignmentExpression: AttributeAssignmentExpressionType [*] {ordered, unique}
+}
+@enduml
 ```
 
 A `NoticeExpressionType` object contains the following properties:
@@ -2464,28 +2749,32 @@ A `NoticeExpressionType` object contains the following properties:
 
 : A sequence of `AttributeAssignmentExpressionType` objects, each specifying a notice argument in the form of an expression. The expressions SHALL be evaluated by the PDP to constant `ValueType` objects or bags, which shall be the attribute assignments in the notice returned to the PEP. If an `AttributeAssignmentExpressionType` object evaluates to an atomic attribute value, then there MUST be one resulting `AttributeAssignmentType` object which MUST contain this single attribute value. If the `AttributeAssignmentExpressionType` object evaluates to a bag, then there MUST be a resulting `AttributeAssignmentType` object for each of the values in the bag. If the bag is empty, there shall be no `AttributeAssignmentType` objects from this `AttributeAssignmentExpressionType` object. The values of the notice arguments SHALL be interpreted by the PEP.
 
-## 7.34 AttributeAssignmentExpressionType
+## 7.29 AttributeAssignmentExpressionType
 
 An `AttributeAssignmentExpressionType` object is used to include an argument in a notice. It SHALL contain an `AttributeId` property and an expression which SHALL be evaluated into the corresponding attribute value. The value specified SHALL be understood by the PEP, but it is not further specified by ACAL. See [Section 9.18](#918-notices). [Section 6.2.5.3](#6253-rule-3) provides a number of examples of attribute assignment expressions included in notice expressions.
 
-```xml
-<xs:element name="AttributeAssignmentExpression" type="xacml:AttributeAssignmentExpressionType"/>
-<xs:complexType name="AttributeAssignmentExpressionType">
-   <xs:sequence>
-      <xs:element ref="xacml:Expression"/>
-   </xs:sequence>
-   <xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
-   <xs:attribute name="Category" type="xacml:IdentifierType" use="optional"/>
-   <xs:attribute name="Issuer" type="xs:string" use="optional"/>
-   <xs:assert test="not(xacml:Value) or xacml:Value/@DataType"/>
-</xs:complexType>
+UML definition (class diagram):
+```plantuml
+@startuml
+skinparam style strictuml
+hide empty members 
+hide circle
+class AttributeAssignmentExpressionType <<dataType>> {
+   + AttributeId: IdentifierType [1]
+   + Category: IdentifierType [0..1]
+   + Issuer: Name [0..1]
+   + Expression: ExpressionType [1] 
+}
+note "{{OCL} not Expression.attributes->includes('DataType') or Expression.DataType <> null}" as ValueDataTypeMustBeNonNull
+AttributeAssignmentExpressionType .. ValueDataTypeMustBeNonNull
+@enduml
 ```
 
 An `AttributeAssignmentExpressionType` object contains the following properties:
 
 `Expression` [Required]
 
-: An `ExpressionType` object defining an expression which evaluates to a constant attribute value or a bag of zero or more attribute values. See [Section 7.19](#719-expressiontype).
+: An `ExpressionType` object defining an expression which evaluates to a constant attribute value or a bag of zero or more attribute values. See [Section 7.19](#719-expressiontype). If the expression's type has a `DataType` property (e.g. `ValueType` or subtype of `ValueType`), this `DataType` property must have a value (non-null).
 
 `AttributeId` [Required]
 
@@ -2497,42 +2786,35 @@ An `AttributeAssignmentExpressionType` object contains the following properties:
 
 `Issuer` [Optional]
 
-: A `String` value specifying the issuer of the attribute. If this property is absent, the attribute has no issuer. The value of the `Issuer` property in the resulting `AttributeAssignmentType` object MUST be equal to this value.
+: A `Name` value specifying the issuer of the attribute. If this property is absent, the attribute has no issuer. The value of the `Issuer` property in the resulting `AttributeAssignmentType` object MUST be equal to this value.
 
-## 7.35 RequestType
+## 7.30 RequestType
 
 The `RequestType` object type is an abstraction layer used by the policy language. For simplicity of expression, this document describes policy evaluation in terms of operations on the context. However a conforming PDP is not required to actually instantiate the context in any particular syntactic form. But, any system conforming to the ACAL specification MUST produce exactly the same authorization decisions as if all the inputs had been transformed into the form of a `RequestType` object.
 
-```xml
-<xs:element name="Request" type="xacml:RequestType">
-   <xs:unique name="shortIdSetReferenceUniqueness">
-      <xs:selector xpath="xacml:ShortIdSetReference"/>
-      <xs:field xpath="."/>
-   </xs:unique>
-   <xs:unique name="requestEntityIdUniqueness">
-      <xs:selector xpath="xacml:RequestEntity"/>
-      <xs:field xpath="@Id"/>
-   </xs:unique>
-</xs:element>
-<xs:complexType name="RequestType">
-   <xs:sequence>
-      <xs:element ref="xacml:ShortIdSetReference" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element ref="xacml:RequestDefaults" minOccurs="0"/>
-      <xs:element ref="xacml:RequestEntity" maxOccurs="unbounded"/>
-      <xs:element ref="xacml:MultiRequests" minOccurs="0"/>
-   </xs:sequence>
-   <xs:attribute name="ReturnPolicyIdList" type="xs:boolean" use="optional" default="false"/>
-   <xs:attribute name="CombinedDecision" type="xs:boolean" use="optional" default="false"/>
-</xs:complexType>
+UML definition (class diagram):
+```plantuml
+@startuml
+hide empty members 
+hide circle
+class RequestType <<dataType>> {
+   + ShortIdSetReference: URI [*] {unordered, unique}
+   + RequestDefaults: RequestDefaultsType [0..1]
+   + RequestEntity: RequestEntityType [1..*] {unordered, unique}
+   + MultiRequests: MultiRequestsType [0..1]
+   + ReturnPolicyIdList: Boolean [0..1] = false
+   + CombinedDecision: Boolean [0..1] = false
+}
+@enduml
 ```
 
 A `RequestType` object contains the following properties:
 
-`ReturnPolicyIdList` [Optional]
+`ReturnPolicyIdList` [Optional, Default `false`]
 
 : A `Boolean` value that is used to request that the PDP return a list of all fully applicable policies which were used in the decision as a part of the decision response. If this property is omitted, then it is treated as being set to `false`.
 
-`CombinedDecision` [Optional]
+`CombinedDecision` [Optional, Default `false`]
 
 : A `Boolean` value that is used to request that the PDP combines multiple decisions into a single decision. The use of this property is specified in [[Multi](#multi)]. If the PDP does not implement the relevant functionality in [[Multi](#multi)], then the PDP must return an `Indeterminate` decision with a status code of `urn:oasis:names:tc:acal:1.0:status:processing-error` if it receives a request with this property set to `true`. If this property is omitted, then it is treated as being set to `false`.
 
@@ -2552,41 +2834,45 @@ A `RequestType` object contains the following properties:
 
 : A `MultiRequestsType` object listing multiple request contexts using references to the `RequestEntityType` objects. Implementation of this property is optional. The semantics of this property are defined in [[Multi](#multi)]. If the implementation does not implement this property, it MUST return an `Indeterminate` result if it encounters this property. See [Section 7.43](#743-multirequeststype).
 
-## 7.36 RequestDefaultsType
+## 7.31 RequestDefaultsType (optional)
+
+_**Supporting this part is optional, but required if AttributeSelectors and/or XPath-based functions are to be supported.**_
 
 A `RequestDefaultsType` object specifies default values that apply to the parent `RequestType` object.
 
-```xml
-<xs:element name="RequestDefaults" type="xacml:RequestDefaultsType"/>
-<xs:complexType name="RequestDefaultsType">
-   <xs:sequence>
-      <xs:choice>
-         <xs:element ref="xacml:XPathVersion"/>
-      </xs:choice>
-   </xs:sequence>
-</xs:complexType>
+UML definition (class diagram):
+```plantuml
+@startuml
+hide empty members 
+hide circle
+class RequestDefaultsType <<dataType>> {
+   + XPathVersion: IdentifierType [1]
+}
+@enduml
 ```
 
 A `RequestDefaultsType` object contains the following properties:
 
 `XPathVersion` [Optional]
 
-: An `IdentifierType` value specifying the XPath version for XPath expressions occurring in the request as values of the `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` data type.
+: An `IdentifierType` value specifying the XPath version for XPath expressions occurring in the request as values of the `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` data type (see section 8).
 
-## 7.37 RequestEntityType
+## 7.32 RequestEntityType
 
 A `RequestEntityType` object specifies ACAL attributes of a subject, resource, action, environment or another category using a sequence of `RequestAttributeType` objects.
 
-```xml
-<xs:element name="RequestEntity" type="xacml:RequestEntityType"/>
-<xs:complexType name="RequestEntityType">
-   <xs:sequence>
-      <xs:element ref="xacml:Content" minOccurs="0"/>
-      <xs:element ref="xacml:RequestAttribute" minOccurs="0" maxOccurs="unbounded"/>
-   </xs:sequence>
-   <xs:attribute name="Category" type="xacml:IdentifierType" use="required"/>
-   <xs:attribute name="Id" type="xs:ID" use="optional"/>
-</xs:complexType>
+UML definition (class diagram):
+```plantuml
+@startuml
+hide empty members 
+hide circle
+class RequestEntityType <<dataType>> {
+   + Category: IdentifierType [1]
+   + Id: LocalIdentifierType [0..1]
+   + Content: ContentType [0..1]
+   + RequestAttribute: RequestAttributeType [*] {unordered, unique}
+}
+@enduml
 ```
 
 A `RequestEntityType` object contains the following properties:
@@ -2597,7 +2883,7 @@ A `RequestEntityType` object contains the following properties:
 
 `Id` [Optional]
 
-: A unique `String` identifier for this `RequestEntityType` object, similar to [[XMLid](#xmlid)]. It is primarily intended to be referenced in multiple requests. See [[Multi](#multi)].
+: A unique `String` identifier for this `RequestEntityType` object. It is primarily intended to be referenced in multiple requests. See [[Multi](#multi)].
 
 `Content` [Optional]
 
@@ -2607,63 +2893,84 @@ A `RequestEntityType` object contains the following properties:
 
 : A sequence of `RequestAttributeType` objects associated with the attribute category of the request.
 
-## 7.38 ContentType
+## 7.33 ContentType (optional)
+
+_**Support for this object type is optional. It is required only if AttributeSelectors and/or xpathExpression values (optional) are to be supported.**_
 
 A `ContentType` object is a notional placeholder for additional attributes, typically the content of the resource.
+A `ContentType` object has exactly one child element of arbitrary type .
+
+`ContentType` objects should be used only for structured data that cannot be handled by named attributes, i.e. the child element's type should be a structured data-type.
+
+The following UML definition (class diagram) is provided for information purposes only:
+```plantuml
+@startuml
+hide empty members 
+hide circle
+class ContentType <<dataType>> {
+   + <any>: AnyType [1]
+}
+@enduml
+
+abstract class AnyType <<dataType>>
+```
+
+The `AnyType` data-type above represents *any type* (e.g. [XSD](#xs) `anyType` in XML), preferably any structured data-type (according to the previous recommendation), and the `<any>` name is only a placeholder for any property name. 
+This UML definition is for information only, and it is the responsibility of each ACAL representation format (ACAL Profile) to either define the correct representation for arbitrary structured content in their own format, or simply state that *`ContentType` objects are not supported at all* in that representation format.
+
+For example, this can be represented in XML as follows:
 
 ```xml
 <xs:element name="Content" type="xacml:ContentType"/>
-<xs:complexType name="ContentType" mixed="true">
+<xs:complexType name="ContentType">
    <xs:sequence>
       <xs:any namespace="##any" processContents="lax"/>
    </xs:sequence>
 </xs:complexType>
 ```
 
-A `ContentType` object has exactly one arbitrary type child element.
-
+<!-- TODO -->
 _This needs to be aligned with the way the JSON profile handles the Content member of a category._
 
-## 7.39 RequestAttributeType
+## 7.34 RequestAttributeType
 
 A `RequestAttributeType` object describes an ACAL attribute in the request context.
 
-```xml
-<xs:element name="RequestAttribute" type="xacml:RequestAttributeType"/>
-<xs:complexType name="RequestAttributeType">
-   <xs:complexContent mixed="false">
-      <xs:extension base="xacml:AttributeType">
-         <xs:attribute name="IncludeInResult" type="xs:boolean" use="optional" default="false"/>
-      </xs:extension>
-   </xs:complexContent>
-</xs:complexType>
+UML definition (class diagram):
+```plantuml
+@startuml
+hide empty members 
+hide circle
+class RequestAttributeType <<dataType>> extends AttributeType {
+   + IncludeInResult: Boolean [0..1] = false
+}
+@enduml
+
+class AttributeType <<dataType>>
 ```
 
 The `RequestAttributeType` object type extends the `AttributeType` object type with the following property:
 
-`IncludeInResult` [Optional, Default false]
+`IncludeInResult` [Optional, Default `false`]
 
 : A `Boolean` value that governs whether this ACAL attribute is included in the result. This is useful to correlate requests with their responses in the case of multiple requests. If this property is omitted, then it is treated as being set to `false`. Note that ACAL attributes appear in the result as `AttributeType` objects.
 
-## 7.40 ResponseType
+## 7.35 ResponseType
 
 The `ResponseType` object type is an abstraction layer used by the policy language. Any proprietary system using the ACAL specification MUST transform an ACAL context `ResponseType` object into the form of its authorization decision.
 
 A `ResponseType` object encapsulates the authorization decision produced by the PDP. It includes a sequence of one or more results, with one `ResultType` object per requested resource. Multiple results MAY be returned by some implementations, in particular those that support the ACAL Profile for Requests for Multiple Resources [[Multi](#multi)]. Support for multiple results is OPTIONAL.
 
-```xml
-<xs:element name="Response" type="xacml:ResponseType">
-   <xs:unique name="responseShortIdSetReferenceUniqueness">
-      <xs:selector xpath="xacml:ShortIdSetReference"/>
-      <xs:field xpath="."/>
-   </xs:unique>
-</xs:element>
-<xs:complexType name="ResponseType">
-   <xs:sequence>
-      <xs:element ref="xacml:ShortIdSetReference" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element ref="xacml:Result" maxOccurs="unbounded"/>
-   </xs:sequence>
-</xs:complexType>
+UML definition (class diagram):
+```plantuml
+@startuml
+hide empty members 
+hide circle
+class ResponseType <<dataType>> {
+   + ShortIdSetReference: URI [*] {unordered, unique}
+   + Result: ResultType [1..*] {unordered, nonunique}
+}
+@enduml
 ```
 
 A `ResponseType` object contains the following properties:
@@ -2676,26 +2983,23 @@ A `ResponseType` object contains the following properties:
 
 : A sequence of `ResultType` objects, each an authorization decision result. See [Section 7.41](#741-resulttype).
 
-## 7.41 ResultType
+## 7.36 ResultType
 
 A `ResultType` object represents an authorization decision result. It MAY include a list of notices. If the PEP does not understand or cannot fulfill an obligation notice, then the action of the PEP is determined by its bias, see [Section 9.2](#92-policy-enforcement-point). Any advice notices MAY be safely ignored by the PEP.
 
-```xml
-<xs:element name="Result" type="xacml:ResultType">
-   <xs:unique name="resultEntityCategoryUniqueness">
-      <xs:selector xpath="xacml:ResultEntity"/>
-      <xs:field xpath="@Category"/>
-   </xs:unique>
-</xs:element>
-<xs:complexType name="ResultType">
-   <xs:sequence>
-      <xs:element ref="xacml:Decision"/>
-      <xs:element ref="xacml:Status" minOccurs="0"/>
-      <xs:element ref="xacml:Notice" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element ref="xacml:ResultEntity" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element ref="xacml:ApplicablePolicyReference" minOccurs="0" maxOccurs="unbounded"/>
-   </xs:sequence>
-</xs:complexType>
+UML definition (class diagram):
+```plantuml
+@startuml
+hide empty members 
+hide circle
+class ResultType <<dataType>> {
+   + Decision: DecisionType [1]
+   + Status: StatusType [0..1]
+   + Notice: NoticeType [*] {unordered, unique}
+   + ResultEntity: ResultEntityType [*] {unordered, unique}
+   + ApplicablePolicyReference: ExactMatchIdReferenceType [*] {unordered, unique}
+}
+@enduml
 ```
 
 A `ResultType` object contains the following properties:
@@ -2720,38 +3024,21 @@ A `ResultType` object contains the following properties:
 
 : A sequence of `ExactMatchIdReferenceType` objects. If the `ReturnPolicyIdList` property in the `RequestType` object is `true` (see [Section 7.35](#735-requesttype)), a PDP that implements this optional feature MUST return a sequence that includes the identifiers of all policies which were found to be fully applicable, whether or not the effect (after rule combining) was the same or different from the decision. The sequence is unordered. The sequence MAY include the identifiers of other policies that are currently in force, as long as no policies required for the decision are omitted. A PDP MAY satisfy this requirement by including all policies currently in force, or by including all policies which were evaluated in making the decision, or by including all policies which did not evaluate to `NotApplicable`, or by any other algorithm which does not omit any policies which contributed to the decision. However, a decision which returns `NotApplicable` MUST return an empty list.
 
-## 7.42 ExactMatchIdReferenceType
+## 7.37 MultiRequestsType (optional)
 
-An `ExactMatchIdReferenceType` object contains the policy identifier of a policy that has been applicable to a request.
+_**Support for this object type and associated property (`MultiRequests`) is optional.**_
 
-```xml
-<xs:element name="ApplicablePolicyReference" type="xacml:ExactMatchIdReferenceType"/>
-<xs:complexType name="ExactMatchIdReferenceType">
-   <xs:complexContent>
-      <xs:extension base="xacml:IdReferenceType">
-         <xs:attribute name="Version" type="xacml:VersionType" use="required"/>
-      </xs:extension>
-   </xs:complexContent>
-</xs:complexType>
-```
+A `MultiRequestsType` object contains a list of requests by reference to `RequestEntityType` objects in the enclosing `RequestType` object. The `MultiRequests` property is of `MultiRequestsType` object type. The semantics of this property are defined in [[Multi](#multi)]. If an implementation does not support this property, but receives it, the implementation MUST generate an `Indeterminate` response.
 
-The `ExactMatchIdReferenceType` object type extends the `IdReferenceType` object type with the following property:
-
-`Version` [Required]
-
-: A `VersionType` value indicating the version of a policy that was applicable to the request. See [Section 7.10](#710-policyreferencetype).
-
-## 7.43 MultiRequestsType
-
-A `MultiRequestsType` object contains a list of requests by reference to `RequestEntityType` objects in the enclosing `RequestType` object. The `MultiRequests` property is of `MultiRequestsType` object type. The semantics of this property are defined in [[Multi](#multi)]. Support for this property is optional. If an implementation does not support this property, but receives it, the implementation MUST generate an `Indeterminate` response.
-
-```xml
-<xs:element name="MultiRequests" type="xacml:MultiRequestsType"/>
-<xs:complexType name="MultiRequestsType">
-   <xs:sequence>
-      <xs:element ref="xacml:RequestReference" maxOccurs="unbounded"/>
-   </xs:sequence>
-</xs:complexType>
+UML definition (class diagram):
+```plantuml
+@startuml
+hide empty members 
+hide circle
+class MultiRequestsType <<dataType>> {
+   + RequestReference: RequestReferenceType [1..*] {unordered, unique}
+}
+@enduml
 ```
 
 A `MultiRequestsType` object contains the following properties.
@@ -2760,86 +3047,67 @@ A `MultiRequestsType` object contains the following properties.
 
 : A sequence of `RequestReferenceType` objects, each defining a request instance by reference to `RequestEntityType` objects in the enclosing `RequestType` object. See [Section 7.44](#744-requestreferencetype).
 
-## 7.44 RequestReferenceType
+## 7.38 RequestReferenceType (optional)
 
-A `RequestReferenceType` object defines an instance of a request in terms of references to `RequestEntityType` objects. The semantics of this object type are defined in [[Multi](#multi)]. Support for this object type is optional.
+_**Support for this object type is optional.**_
 
-```xml
-<xs:element name="RequestReference" type="xacml:RequestReferenceType">
-   <xs:unique name="requestEntityReferenceUniqueness">
-      <xs:selector xpath="xacml:RequestEntityReference"/>
-      <xs:field xpath="@Id"/>
-   </xs:unique>
-</xs:element>
-<xs:complexType name="RequestReferenceType">
-   <xs:sequence>
-      <xs:element ref="xacml:RequestEntityReference" maxOccurs="unbounded"/>
-   </xs:sequence>
-</xs:complexType>
+A `RequestReferenceType` object defines an instance of a request in terms of references to `RequestEntityType` objects. The semantics of this object type are defined in [[Multi](#multi)].
+
+UML definition (class diagram):
+```plantuml
+@startuml
+hide empty members 
+hide circle
+class RequestReferenceType <<dataType>> {
+   + RequestEntityReference: RequestEntityReferenceType [1..*] {unordered, unique}
+}
+@enduml
 ```
 
 A `RequestReferenceType` object contains the following properties.
 
 `RequestEntityReference` [one to many]
 
-: A sequence of RequestEntityReferenceType` objects, each a reference to a `RequestEntityType` object in the enclosing `RequestType` object. See [Section 7.45](#745-requestcategoryreferencetype).
+: A sequence of `RequestEntityReferenceType` objects, each a reference to a `RequestEntityType` object in the enclosing `RequestType` object. See [Section 7.45](#745-requestcategoryreferencetype).
 
-## 7.45 RequestEntityReferenceType
+## 7.39 RequestEntityReferenceType (optional)
 
-A `RequestEntityReferenceType` object makes a reference to a `RequestEntityType` object. The meaning of this object is defined in [[Multi](#multi)]. Support for this object is optional.
+_**Support for this object is optional.**_
 
-```xml
-<xs:element name="RequestEntityReference" type="xacml:RequestEntityReferenceType"/>
-<xs:complexType name="RequestEntityReferenceType">
-   <xs:attribute name="Id" type="xs:IDREF" use="required"/>
-</xs:complexType>
+A `RequestEntityReferenceType` object makes a reference to a `RequestEntityType` object. The meaning of this object is defined in [[Multi](#multi)].
+
+UML definition (class diagram):
+```plantuml
+@startuml
+hide empty members 
+hide circle
+class RequestEntityReferenceType <<dataType>> {
+   + Id: LocalIdentifierType [1]
+}
+@enduml
 ```
 
-A `RequestEntityReferenceType` object contains the following properties.
+A `RequestEntityReferenceType` object contains the following properties:
 
-`Id` [required]
+`Id` [Required]
 
 : A `String` value referencing a `RequestEntityType` object in the enclosing `RequestType` object by the value of its `Id` property.
 
-## 7.46 DecisionType
-
-A `DecisionType` value indicates the result of policy evaluation.
-
-```xml
-<xs:element name="Decision" type="xacml:DecisionType"/>
-<xs:simpleType name="DecisionType">
-   <xs:restriction base="xs:string">
-      <xs:enumeration value="Permit"/>
-      <xs:enumeration value="Deny"/>
-      <xs:enumeration value="Indeterminate"/>
-      <xs:enumeration value="NotApplicable"/>
-   </xs:restriction>
-</xs:simpleType>
-```
-
-The values of `DecisionType` have the following meanings:
-
-: `Permit`: the requested access is permitted.
-
-: `Deny`: the requested access is denied.
-
-: `Indeterminate`: the PDP is unable to evaluate the requested access. Reasons for such inability include: missing attributes, network errors while retrieving policies, division by zero during policy evaluation, syntax errors in the decision request or in the policy, etc.
-
-: `NotApplicable`: the PDP does not have any policy that applies to this decision request.
-
-## 7.47 StatusType
+## 7.40 StatusType
 
 A `StatusType` object represents the status of the authorization decision result.
 
-```xml
-<xs:element name="Status" type="xacml:StatusType"/>
-<xs:complexType name="StatusType">
-   <xs:sequence>
-      <xs:element ref="xacml:StatusCode"/>
-      <xs:element ref="xacml:StatusMessage" minOccurs="0"/>
-      <xs:element ref="xacml:StatusDetail" minOccurs="0"/>
-   </xs:sequence>
-</xs:complexType>
+UML definition (class diagram):
+```plantuml
+@startuml
+hide empty members 
+hide circle
+class StatusType <<dataType>> {
+   + StatusCode: StatusCodeType [1]
+   + StatusMessage: String [0..1]
+   + StatusDetail: StatusDetailType [0..1]
+}
+@enduml
 ```
 
 A `StatusType` object contains the following properties:
@@ -2856,18 +3124,20 @@ A `StatusType` object contains the following properties:
 
 : A `StatusDetailType` object containing additional status information.
 
-## 7.48 StatusCodeType
+## 7.41 StatusCodeType
 
 A `StatusCodeType` object contains a major status code value and an optional recursive series of minor status codes.
 
-```xml
-<xs:element name="StatusCode" type="xacml:StatusCodeType"/>
-<xs:complexType name="StatusCodeType">
-   <xs:sequence>
-      <xs:element ref="xacml:StatusCode" minOccurs="0"/>
-   </xs:sequence>
-   <xs:attribute name="Value" type="xacml:IdentifierType" use="required"/>
-</xs:complexType>
+UML definition (class diagram):
+```plantuml
+@startuml
+hide empty members 
+hide circle
+class StatusCodeType <<dataType>> {
+   + Value: IdentifierType [1]
+   + StatusCode: StatusCodeType [0..1]
+}
+@enduml
 ```
 
 A `StatusCodeType` object contains the following properties:
@@ -2880,9 +3150,27 @@ A `StatusCodeType` object contains the following properties:
 
 : A sequence of `StatusCodeType` objects describing minor status codes. Each minor status code qualifies its parent status code.
 
-## 7.49 StatusDetailType
+## 7.42 StatusDetailType (optional)
 
-A `StatusDetailType` object qualifies its parent `StatusType` object with additional information.
+_**Support for this object type is optional.**_
+
+A `StatusDetailType` object qualifies its parent `StatusType` object with additional information. A `StatusDetailType` object allows arbitrary content.
+
+The following UML definition (class diagram) is provided for information purposes only:
+```plantuml
+@startuml
+hide empty members 
+hide circle
+class StatusDetailType <<dataType>> {
+   + <any>: AnyType [*]
+}
+@enduml
+```
+
+The `AnyType` data-type above represents *any type* (e.g. [XSD](#xs) `anyType` in XML), and the `<any>` name is only a placeholder for any property name. 
+This UML definition is for information only, and it is the responsibility of each ACAL representation format (ACAL Profile) to either define the correct representation for arbitrary content in their own format, or simply state that *`StatusDetailType` objects are not supported at all* in that representation format.
+
+For example, this can be represented in XML as follows:
 
 ```xml
 <xs:element name="StatusDetail" type="xacml:StatusDetailType"/>
@@ -2892,8 +3180,6 @@ A `StatusDetailType` object qualifies its parent `StatusType` object with additi
    </xs:sequence>
 </xs:complexType>
 ```
-
-A `StatusDetailType` object allows arbitrary XML content.
 
 Inclusion of a `StatusDetailType` object is optional. However, if a PDP returns one of the following ACAL-defined status code values, then the following rules apply.
 
@@ -2921,29 +3207,33 @@ urn:oasis:names:tc:acal:1.0:status:processing-error
 
 A PDP MUST NOT return a `StatusDetailType` object in conjunction with the `processing-error` status value. This status code indicates an internal problem in the PDP. For security reasons, the PDP MAY choose to return no further information to the PEP. In the case of a divide-by-zero error or other computational error, the PDP MAY return a `StatusMessage` property describing the nature of the error.
 
-## 7.50 MissingAttributeDetailType
+## 7.43 MissingAttributeDetailType
 
 A `MissingAttributeDetailType` object conveys information about attributes required for policy evaluation that were missing from the request context.
 
-```xml
-<xs:element name="MissingAttributeDetail" type="xacml:MissingAttributeDetailType"/>
-<xs:complexType name="MissingAttributeDetailType">
-   <xs:sequence>
-      <xs:element ref="xacml:Value" minOccurs="0" maxOccurs="unbounded"/>
-   </xs:sequence>
-   <xs:attribute name="Category" type="xacml:IdentifierType" use="required"/>
-   <xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
-   <xs:attribute name="DataType" type="xacml:IdentifierType" use="required"/>
-   <xs:attribute name="Issuer" type="xs:string" use="optional"/>
-   <xs:assert test="not(xacml:Value/@DataType)"/>
-</xs:complexType>
+UML definition (class diagram):
+```plantuml
+@startuml
+skinparam style strictuml
+hide empty members 
+hide circle
+class MissingAttributeDetailType <<dataType>> {
+   + Category: IdentifierType [1]
+   + AttributeId: IdentifierType [1]
+   + Issuer: Name [0..1]
+   + DataType: IdentifierType [1]
+   + Value: ValueType [*] {unordered, nonunique}
+}
+note "{{OCL} Value->forAll(DataType = null)}" as DataTypeForbiddenInValues
+MissingAttributeDetailType -[dotted] DataTypeForbiddenInValues
+@enduml
 ```
 
 A `MissingAttributeDetailType` object contains the following properties:
 
-`Value` [Optional]
+`Value` [Any Number]
 
-: A `ValueType` object specifying the required value of the missing attribute.
+: A sequence of `ValueType` objects specifying the required value(s) of the missing attribute. The DataType must be omitted from each Value since already defined by the `DataType` property below.
 
 `Category` [Required]
 
@@ -2959,27 +3249,31 @@ A `MissingAttributeDetailType` object contains the following properties:
 
 `Issuer` [Optional]
 
-: A `String` value, which if supplied, specifies the required `Issuer` of the missing attribute.
+: A `Name` value, which if supplied, specifies the required `Issuer` of the missing attribute.
 
-If the PDP includes `ValueType` objects in the `MissingAttributeDetailType` object, then this indicates the acceptable values for that attribute. If no `ValueType` objects are included, then the 1MissingAttributeDetailType` object indicates the names of attributes that the PDP failed to resolve during its evaluation. The list of attributes may be partial or complete. There is no guarantee by the PDP that supplying the missing values or attributes will be sufficient to satisfy the policy.
+If the PDP includes `ValueType` objects in the `MissingAttributeDetailType` object, then this indicates the acceptable values for that attribute. If no `ValueType` objects are included, then the `MissingAttributeDetailType` object indicates the names of attributes that the PDP failed to resolve during its evaluation. The list of attributes may be partial or complete. There is no guarantee by the PDP that supplying the missing values or attributes will be sufficient to satisfy the policy.
 
-## 7.51 AttributeType
+## 7.44 AttributeType
 
 _This definition should appear earlier._
 
 An `AttributeType` object contains attribute meta-data and one or more attribute values. The attribute meta-data comprises the attribute identifier and the attribute issuer. Attribute designators in a policy MAY refer to attributes by means of this meta-data.
 
-```xml
-<xs:element name="Attribute" type="xacml:AttributeType"/>
-<xs:complexType name="AttributeType">
-   <xs:sequence>
-      <xs:element ref="xacml:Value" maxOccurs="unbounded"/>
-   </xs:sequence>
-   <xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
-   <xs:attribute name="Issuer" type="xs:string" use="optional"/>
-   <xs:attribute name="DataType" type="xacml:IdentifierType" use="optional" default="urn:oasis:names:tc:acal:1.0:data-type:string"/>
-   <xs:assert test="not(xacml:Value/@DataType)"/>
-</xs:complexType>
+UML definition (class diagram):
+```plantuml
+@startuml
+skinparam style strictuml
+hide empty members 
+hide circle
+class AttributeType <<dataType>> {
+   + AttributeId: IdentifierType [1]
+   + Issuer: Name [0..1]
+   + DataType: IdentifierType [0..1] = 'urn:oasis:names:tc:acal:1.0:data-type:string'
+   + Value: ValueType [1..*] {unordered, nonunique}
+}
+note "{{OCL} Value->forAll(DataType = null)}" as DataTypeForbiddenInValues
+AttributeType .. DataTypeForbiddenInValues
+@enduml
 ```
 
 An `AttributeType` object contains the following properties:
@@ -2990,34 +3284,31 @@ An `AttributeType` object contains the following properties:
 
 `Issuer` [Optional]
 
-: A `String` value specifying the issuer of the attribute. For example, this attribute value may be an `x500Name` that binds to a public key, or it may be some other identifier exchanged out-of-band by issuing and relying parties.
+: A `Name` value specifying the issuer of the attribute. For example, this attribute value may be an `x500Name` that binds to a public key, or it may be some other identifier exchanged out-of-band by issuing and relying parties.
 
-`DataType` [Optional]
+`DataType` [Optional, Default `urn:oasis:names:tc:acal:1.0:data-type:string`]
 
 : An `IdentifierType` value specifying the data type of the attribute's values. If this property is omitted, then it is treated as being set to `urn:oasis:names:tc:acal:1.0:data-type:string`.
 
 `Value` [One to Many]
 
-: A sequence of `ValueType` objects, each denoting an ACAL attribute value. Duplicated attribute values are permitted.
+: A sequence of `ValueType` objects, each denoting an ACAL attribute value. Duplicated attribute values are permitted. None of these `Value`s may have a `DataType` property since it is already defined by the above `DataType` property.
 
-## 7.52 ResultEntityType
+## 7.45 ResultEntityType
 
 A `ResultEntityType` object contains a sequence of `AttributeType` objects reflecting `RequestAttributeType` objects in a given attribute category from the request that had their `IncludeInResult` properties set to `true`. The `ResultEntityType` objects only appear in a result.
 
-```xml
-<xs:element name="ResultEntity" type="xacml:ResultEntityType">
-   <xs:unique name="attributeIdUniqueness">
-      <xs:selector xpath="xacml:Attribute"/>
-      <xs:field xpath="@Id"/>
-   </xs:unique>
-</xs:element>
-<xs:complexType name="ResultEntityType">
-   <xs:sequence>
-      <xs:element ref="xacml:Attribute" minOccurs="1" maxOccurs="unbounded"/>
-   </xs:sequence>
-   <xs:attribute name="Category" type="xacml:IdentifierType" use="required"/>
-   <xs:attribute name="Id" type="xs:ID" use="optional"/>
-</xs:complexType>
+UML definition (class diagram):
+```plantuml
+@startuml
+hide empty members 
+hide circle
+class ResultEntityType <<dataType>> {
+   + Category: IdentifierType [1]
+   + Id: LocalIdentifierType [0..1]
+   + Attribute: AttributeType [1..*] {unique, unordered}
+}
+@enduml
 ```
 
 A `ResultEntityType` object contains the following properties:
@@ -3034,17 +3325,23 @@ A `ResultEntityType` object contains the following properties:
 
 : A sequence of `AttributeType` objects representing `RequestAttributeType` objects from the same attribute category in the request.
 
-## 7.53 EntityType
+## 7.46 EntityType
 
 The `EntityType` object class defines the structure of values of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type. An `EntityType` object contains a sequence of `AttributeType` objects and/or syntax-specific content (i.e., XML or JSON). The `EntityType` object type is similar to the `RequestEntityType` object type but omits the `Category` property; values of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type don't self-identify with any particular attribute category.
 
-```xml
-<xs:complexType name="EntityType">
-   <xs:sequence>
-      <xs:element ref="xacml:Content" minOccurs="0"/>
-      <xs:element ref="xacml:Attribute" minOccurs="0" maxOccurs="unbounded"/>
-   </xs:sequence>
-</xs:complexType>
+UML definition (class diagram):
+```plantuml
+@startuml
+skinparam style strictuml
+hide empty members 
+hide circle
+class EntityType <<dataType>> {
+   + Content: ContentType [0..1]
+   + Attribute: AttributeType [*] {unique, unordered}
+}
+note "{{OCL} Content <> null or Attribute->notEmpty()}" as NotEmpty
+EntityType .. NotEmpty
+@enduml
 ```
 
 An `EntityType` object contains the following properties:
@@ -3057,30 +3354,34 @@ An `EntityType` object contains the following properties:
 
 : A sequence of `AttributeType` objects.
 
-## 7.54 BundleType
+## 7.47 BundleType
 
 A `BundleType` object type collects together the policies, short identifier sets and shared variables that a PDP uses to evaluate an authorization request along with the starting point for that evaluation. A PDP is said to be defined by a `BundleType` object, although an implementation is not required to physically represent such an object.
 
 A `BundleType` object might also be used to convey policies, short identifier sets or shared variables between ACAL systems without necessarily being complete for the purpose of evaluating authorization requests. Protocols to enable such transfers are outside the scope of this specification.
 
-```xml
-<xs:element name="Bundle" type="xacml:BundleType"/>
-<xs:complexType name="BundleType">
-   <xs:sequence>
-      <xs:element ref="xacml:ShortIdSet" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element ref="xacml:SharedVariableDefinition" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element ref="xacml:Policy" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element ref="xacml:PolicyReference" minOccurs="0"/>
-   </xs:sequence>
-</xs:complexType>
-
+UML definition (class diagram):
+```plantuml
+@startuml
+skinparam style strictuml
+hide empty members 
+hide circle
+class BundleType <<dataType>> {
+   + ShortIdSet: ShortIdSetType [*] {unique, ordered}
+   + SharedVariableDefinition: SharedVariableDefinitionType [*] {unique, ordered}
+   + Policy: PolicyType [*] {unique, ordered}
+   + PolicyReference: PolicyReferenceType [0..1]
+}
+note "{{OCL} PolicyReference = null or Policy->notEmpty()}" as PolicyNotEmptyIfPolicyRef
+BundleType .. PolicyNotEmptyIfPolicyRef
+@enduml
 ```
 
 A `BundleType` object contains the following properties:
 
 `ShortIdSet` [Any Number]
 
-: A sequence of `ShortIdSet` objects each defining a set of short identifiers that can be referenced by the policies, shared variable definitions and other short identifier sets in the `BundleType` object.
+: A sequence of `ShortIdSetType` objects each defining a set of short identifiers that can be referenced by the policies, shared variable definitions and other short identifier sets in the `BundleType` object.
 
 `SharedVariableDefinition` [Any Number]
 
@@ -3092,23 +3393,32 @@ A `BundleType` object contains the following properties:
 
 `PolicyReference` [Optional]
 
-: If present, a `PolicyReferenceType` object that MUST reference a policy in the `Policy` property. A PDP defined by this `BundleType` object SHALL evaluate every authorization request by evaluating this policy reference. See [Section 9.15](#915-policyreferenceevaluation). If this property is absent, then the PDP returns `NotApplicable` for every authorization request. The policy reference MUST specify arguments if the referenced policy is parameterized.
-
+: If present, a `PolicyReferenceType` object that MUST reference a policy in the `Policy` property. A PDP defined by this `BundleType` object SHALL evaluate every authorization request by evaluating this policy reference (the referenced policy is the entry point of evaluation). See [Section 9.15](#915-policyreferenceevaluation). If this property is absent, then the PDP returns `NotApplicable` for every authorization request. The policy reference MUST specify arguments if the referenced policy is parameterized.
 
 ---
 
 
-# 8 XPath Definitions
+# 8 XPath Definitions (optional)
 
 _This section will migrate to a separate document._
 
-The `XPathVersion` property in a `DefaultsType` or `RequestDefaultsType` object contains an `IdentifierType` value that specifies the XPath version that applies for a policy or request, respectively.
+_**Reminder: XPath support is optional, and required only to support one of these optional features: attribute selectors, entity attribute selectors, xpathExpression datatype (and associated xpath-based functions).**_
 
-To specify XPath 1.0 the `IdentifierType` value MUST evaluate to `https://www.w3.org/TR/1999/REC-xpath-19991116/`.
+## Supported XPath versions
+
+The `XPathVersion` property in a `DefaultsType` or `RequestDefaultsType` object contains an `IdentifierType` value that specifies the XPath version that applies for a policy or request, respectively.
 
 To specify XPath 2.0 the `IdentifierType` value MUST evaluate to `https://www.w3.org/TR/xpath20/`.
 
-The XPath 2.0 specification leaves a number of aspects of behavior implementation defined. This section defines how XPath 2.0 SHALL behave when hosted in ACAL.
+To specify XPath 3.0, the `IdentifierType` value MUST evaluate to `http://www.w3.org/TR/xpath-30/`. 
+
+To specify XPath 3.1, the `IdentifierType` value MUST evaluate to `http://www.w3.org/TR/xpath-31/`.
+
+XPath 1.0, and therefore the XPath 1.0 identifier `https://www.w3.org/TR/1999/REC-xpath-19991116/`, is deprecated.
+
+The XPath specification leaves a number of aspects of behavior implementation-defined. The following sections defines how XPath 2.0 and later versions SHALL behave when hosted in ACAL.
+
+## XPath 2.0 Implementation-Defined Items
 
 `https://www.w3.org/TR/xpath20/#id-impl-defined-items` defines the following items:
 
@@ -3200,6 +3510,43 @@ The XPath 2.0 specification leaves a number of aspects of behavior implementatio
 
     : ACAL leaves this implementation defined.
 
+### XPath 3.0 additional implementation-defined items
+
+`https://www.w3.org/TR/xpath-30/#id-impl-defined-items` defines the following additional items to XPath 2.0 items:
+
+1. How XDM instances are created from sources other than an Infoset or PSVI.
+
+   : ACAL implementations should not have to create XDM instances from sources other than an Infoset or PSVI.
+
+1. The signatures of functions provided by the implementation or via an implementation-defined API. 
+
+   : It is RECOMMENDED that implementations of ACAL do not define any additional XPath functions and it is RECOMMENDED that users of ACAL do not make use of any additional XPath functions.
+
+1. Any environment variables provided by the implementation.
+
+   : It is RECOMMENDED that users of ACAL use ACAL-defined VariableDefinitions (based on AttributeDesignator and appropriate PIP to obtain the values) in order to capture environment variables, then use the ACAL-defined Variables as XPath variables in XPath expressions, as specified by ACAL. If this is hardly feasible, as an alternative, ACAL users may use implementation-defined environment variables in their XPath expressions only if they are standard, e.g. POSIX environment variables. 
+
+`https://www.w3.org/TR/xpath-datamodel-30/#implementation-defined` defines the following additional item(s):
+
+1. When converting from an xs:string to an xs:float or xs:double, it is implementation-defined whether the lexical value `-0` (and similar forms such as `-0.0`) convert to negative zero or to positive zero in the value space.
+
+   : ACAL leaves this implementation-defined.
+
+`https://www.w3.org/TR/xpath-datamodel-30/#implementation-defined` defines the following additional items:
+
+*TO BE COMPLETED (52 items...)*
+<!-- Hint: https://www.saxonica.com/html/documentation12/conformance/xslt30.html -->
+
+### XPath 3.1 additional implementation-defined items
+
+<!--
+Implementation-Defined Items sections from XPath 3.1 standard ( https://www.w3.org/TR/xpath-31/#id-impl-defined-items ) and 'XQuery and XPath Data Model 3.1' ( https://www.w3.org/TR/xpath-datamodel-31/#implementation-defined ) do not seem to add anything to XPath 3.0 ones.
+-->
+
+`https://www.w3.org/TR/xpath-functions-31/#impl-def` defines the following additional item(s):
+
+*TO BE COMPLETED (70 items...)*
+<!-- Hint: https://www.saxonica.com/html/documentation12/conformance/xpath31.html -->
 
 ---
 
@@ -3316,15 +3663,15 @@ Attributes are represented in the request context by the context handler, regard
 
 In general, this method will not be adequate unless the structured data type is quite simple.
 
-2. The structured attribute MAY be made available in the `Content` property of the appropriate attribute category and an attribute selector MAY be used to select the contents of a leaf sub-element of the structured data type by means of an XPath expression. That value MAY then be compared using one of the supported ACAL functions appropriate for its data type. This method requires support by the PDP for the optional XPath expressions feature.
+2. The structured attribute MAY be made available in the `Content` property of the appropriate attribute category and an attribute selector MAY be used to select the contents of a leaf sub-element of the structured data type by means of an XPath/JSONPath expression. That value MAY then be compared using one of the supported ACAL functions appropriate for its data type. This method requires support by the PDP for the optional XPath/JSONPath expressions feature.
 
-3. The structured attribute MAY be made available in the `Content` property of the appropriate attribute category and an attribute selector MAY be used to select any node in the structured data type by means of an XPath expression. This node MAY then be compared using one of the XPath-based functions described in [Annex C.3.16](#c316-xpath-based-functions). This method requires support by the PDP for the optional XPath expressions and XPath functions features.
+3. The structured attribute MAY be made available in the `Content` property of the appropriate attribute category and an attribute selector MAY be used to select any XML node in the structured data type by means of an XPath expression. This node MAY then be compared using one of the XPath-based functions described in [Annex C.3.16](#c316-xpath-based-functions). This method requires support by the PDP for the optional XPath expressions and XPath functions features.
 
 ### 9.4.2 Attribute Bags
 
-ACAL defines implicit collections of its data types. ACAL refers to a collection of values that are of a single data type as a bag. Bags of data types are needed because selections of nodes from an XML resource or ACAL request context may return more than one value.
+ACAL defines implicit collections of its data types. ACAL refers to a collection of values that are of a single data type as a bag. Bags of data types are needed because selections of nodes from an XML/JSON resource or ACAL request context may return more than one value.
 
-An attribute selector uses an XPath expression to specify the selection of data from free-form XML. The result of an XPath expression is termed a node-set, which contains all the nodes from the XML content that match the predicate in the XPath expression. Based on the various indexing functions provided in the XPath specification, it SHALL be implied that a resultant node-set is the collection of the matching nodes. ACAL also defines attribute designators to have the same matching methodology for attributes in the ACAL request context.
+An attribute selector uses an XPath/JSONPath expression to specify the selection of data from free-form XML/JSON. The result of an XPath expression is termed a node-set, which contains all the nodes from the XML content that match the predicate in the XPath expression. Based on the various indexing functions provided in the XPath specification, it SHALL be implied that a resultant node-set is the collection of the matching nodes. Similary, the result of a JSONPath (RFC 9535) expression is a *nodelist* that contains zero or more nodes from the JSON content. ACAL also defines attribute designators to have the same matching methodology for attributes in the ACAL request context.
 
 The values in a bag are not ordered, and some of the values may be duplicates. There SHALL be no notion of a bag containing bags, or a bag containing values of differing types; i.e., a bag in ACAL SHALL contain only values that are of the same data type.
 
@@ -3334,7 +3681,7 @@ If a single attribute in a request context contains multiple attribute values, t
 
 ### 9.4.4 Attribute Matching
 
-A named attribute includes specific criteria with which to match attributes in the context. An attribute specifies a `Category`, `AttributeId` and `DataType`, and a named attribute also specifies the `Issuer`. A named attribute SHALL match an attribute if the values of their respective `Category`, `AttributeId`, `DataType` and optional `Issuer` properties match. The `Category` property of the named attribute MUST match, by identifier equality, the `Category` property of the corresponding context attribute. The `AttributeId` property of the named attribute MUST match, by identifier equality, the `AttributeId` property of the corresponding context attribute. The `DataType` property of the named attribute MUST match, by identifier equality, the `DataType` property of the corresponding context attribute. If the `Issuer` property is supplied in the named attribute, then it MUST match, using the `urn:oasis:names:tc:acal:1.0:function:string-equal` function, the `Issuer` property of the corresponding context attribute. If the `Issuer` property is not supplied in the named attribute, then the matching of the context attribute to the named attribute SHALL be governed by the `AttributeId` and `DataType` properties alone, regardless of the presence, absence, or actual value of `Issuer` property in the corresponding context attribute. In the case of an attribute selector, the matching of the attribute to the named attribute SHALL be governed by the XPath expression and `DataType` property.
+A named attribute includes specific criteria with which to match attributes in the context. An attribute specifies a `Category`, `AttributeId` and `DataType`, and a named attribute also specifies the `Issuer`. A named attribute SHALL match an attribute if the values of their respective `Category`, `AttributeId`, `DataType` and optional `Issuer` properties match. The `Category` property of the named attribute MUST match, by identifier equality, the `Category` property of the corresponding context attribute. The `AttributeId` property of the named attribute MUST match, by identifier equality, the `AttributeId` property of the corresponding context attribute. The `DataType` property of the named attribute MUST match, by identifier equality, the `DataType` property of the corresponding context attribute. If the `Issuer` property is supplied in the named attribute, then it MUST match, using the `urn:oasis:names:tc:acal:1.0:function:string-equal` function, the `Issuer` property of the corresponding context attribute. If the `Issuer` property is not supplied in the named attribute, then the matching of the context attribute to the named attribute SHALL be governed by the `AttributeId` and `DataType` properties alone, regardless of the presence, absence, or actual value of `Issuer` property in the corresponding context attribute. In the case of an attribute selector, the matching of the attribute to the named attribute SHALL be governed by the XPath/JSONPath expression and `DataType` property.
 
 ### 9.4.5 Attribute Retrieval
 
@@ -3358,17 +3705,21 @@ If the `Expression` property of an `EntityAttributeSelectorType` object evaluate
 
 If the `Expression` property of an `EntityAttributeSelectorType` object evaluates to a value of the `urn:oasis:names:tc:acal:1.0:data-type:anyURI` data type and an attribute category with that value as its `Category` is not found or does not have a `Content` property, then the return value is either `Indeterminate` or an empty bag as determined by the `MustBePresent` property.
 
-If the designated attribute category or entity value has a `Content` property, then follow these steps:
+If the designated attribute category or entity value has a `Content` property, then follow the steps below:
 
-1. Construct an XML data structure suitable for xpath processing from the value of the `Content` property. The data structure shall be constructed so that the document node of this structure contains a single document element which corresponds to the single child element of the `Content` property. The constructed data structure shall be equivalent to one that would result from parsing a stand-alone XML document consisting of the contents of the `Content` property (including any comment and processing-instruction markup). Namespace declarations from the `<Content>` element and its ancestor elements for namespace prefixes that are "visibly utilized", as defined by [[exc-c14n](#exc-c14n)], within the contents MUST be present. Namespace declarations from the single child element or its ancestor elements for namespace prefixes that are not "visibly utilized" MAY be present. The data structure must meet the requirements of the applicable XPath version.
+1. If `PathType` is `JSONPath`, construct a JSON object (RFC 8259) from the value of the `Content` property. If it is not a valid JSON object, then the attribute selector MUST return `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`.
 
-2. Select a context node for XPath processing from this data structure. If there is a `ContextSelectorId` property, the context node shall be the node selected by applying the XPath expression given in the attribute value of the designated ACAL attribute. It shall be an error if this evaluation returns no node or more than one node, in which case the return value MUST be `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`. If there is no `ContextSelectorId` property, then the document node of the data structure shall be the context node.
+   If `PathType` is `XPath`, then construct an XML data structure suitable for XPath processing from the value of the `Content` property. The data structure shall be constructed so that the document node of this structure contains a single document element which corresponds to the single child element of the `Content` property. The constructed data structure shall be equivalent to one that would result from parsing a stand-alone XML document consisting of the contents of the `Content` property (including any comment and processing-instruction markup). Namespace declarations from the `<Content>` element and its ancestor elements for namespace prefixes that are "visibly utilized", as defined by [[exc-c14n](#exc-c14n)], within the contents MUST be present. Namespace declarations from the single child element or its ancestor elements for namespace prefixes that are not "visibly utilized" MAY be present. The data structure must meet the requirements of the applicable XPath version.
 
-3. Evaluate the XPath expression given in the `Path` property against the context node selected in the previous step.
+2. If `PathType` is `JSONPath`, the root node of the data structure (JSON object) shall be used as context node of evaluation (JSONPath *query argument*).
+
+   If `PathType` is `XPath`, then if there is a `ContextSelectorId` property, the context node shall be the node selected by applying the XPath expression given in the attribute value of the designated ACAL attribute. It shall be an error if this evaluation returns no node or more than one node, in which case the return value MUST be `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`. If there is no `ContextSelectorId` property, then the document node of the data structure shall be the context node.
+
+3. Evaluate the expression given in the `Path` property against the context node selected in the previous step, according to the syntax and semantics of the `PathType` value.
 
 4. The result of step 3 is converted to a bag of values of the data type specified by the `DataType` property as follows:
 
-<span> </span>
+&nbsp;
 : If the result is a Boolean and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:boolean`, then convert the result using the `xs:boolean()` constructor function from [[XF](#xf)] Section 18.1.
 
 &nbsp;
@@ -3426,7 +3777,7 @@ If the designated attribute category or entity value has a `Content` property, t
 : If the data type is not one of the types referred to above, then the return values shall be constructed from the node-set in a manner specified by the particular data type extension specification. If the data type extension does not specify an appropriate constructor function, then the attribute selector MUST return `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`.
 
 &nbsp;
-: If an error occurs when converting the values returned by the XPath expression to the specified data type, then the result of the attribute selector MUST be `Indeterminate`, with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`
+: If an error occurs when converting the values returned by the expression to the specified data type, then the result of the attribute selector MUST be `Indeterminate`, with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`
 
 &nbsp;
 : If the result of step 3 is an empty node-set, then the return value is either `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`, or an empty bag, as determined by the `MustBePresent` property.
@@ -3886,20 +4237,22 @@ The implementation MUST support the object types that are marked `M`.
 | Object Type | M/O |
 | :--- | :--- |
 | ApplyType | M |
-| AttributeType | M |
-| AttributeAssignmentType | M |
 | AttributeAssignmentExpressionType | M |
+| AttributeAssignmentType | M |
 | AttributeDesignatorType | M |
 | AttributeSelectorType | O |
-| AttributesReferenceType | O |
+| AttributeType | M |
 | BaseAttributeSelectorType | O |
 | BooleanExpressionType | M |
+| BundleType | O |
 | ContentType | O |
 | DecisionType | M |
+| DefaultsType | O |
 | DescriptionType | M |
 | EntityAttributeDesignatorType | M |
 | EntityAttributeSelectorType | O |
 | EntityType | M |
+| ExactMatchIdReferenceType | O |
 | ExpressionType | M |
 | FunctionType | M |
 | MissingAttributeDetailType | M |
@@ -3907,22 +4260,26 @@ The implementation MUST support the object types that are marked `M`.
 | NamedAttributeDesignatorType | M |
 | NoticeType | M |
 | NoticeExpressionType | M |
-| PolicyType | M |
-| DefaultsType | O |
-| PolicyIdentifierListType | O |
-| PolicyReferenceType | M |
+| NoticeType | M |
 | PolicyIssuerType | O |
+| PolicyParameterType | M |
+| PolicyReferenceType | M |
+| PolicyType | M |
+| QuantifiedExpressionType | O |
 | RequestAttributeType | M |
-| RequestEntityType | M |
-| RequestType | M |
 | RequestDefaultsType | O |
+| RequestEntityReferenceType | O |
+| RequestEntityType | M |
 | RequestReferenceType | O |
+| RequestType | M |
 | ResponseType | M |
 | ResultEntityType | M |
 | ResultType | M |
 | RuleType | M |
 | SharedVariableDefinitionType | M |
 | SharedVariableReferenceType | M |
+| ShortIdSetType | M |
+| ShortIdType | M |
 | StatusType | M |
 | StatusCodeType | M |
 | StatusDetailType | O |
@@ -4601,7 +4958,7 @@ Although a syntactic representation of ACAL objects may represent most data type
 
 * `urn:oasis:names:tc:acal:1.0:data-type:dnsName`
 
-* `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression`
+* `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` (optional)
 
 For the sake of improved interoperability, it is RECOMMENDED that all time references be in UTC time.
 
@@ -4662,13 +5019,15 @@ portrange = portnumber | `-`portnumber | portnumber`-`[portnumber]
 
 where `portnumber` is a decimal port number. If the port number is of the form `-x`, where `x` is a port number, then the range is all ports numbered `x` and below. If the port number is of the form `x-`, then the range is all ports numbered `x` and above. [This syntax is taken from the Java SocketPermission.]
 
-### C.2.5 XPath Expression
+### C.2.5 XPath Expression (optional)
+
+_**Support for this data-type is OPTIONAL._**
 
 _This section needs to be aligned with the JSON profile's handling of values of the xpathExpression data type._
 
 The `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` data type represents an XPath expression over the XML in a `ContentType` object. The syntax is defined by the XPath W3C recommendation. The content of this data-type also includes the context in which namespaces prefixes in the expression are resolved, which distinguishes it from a plain string and the ACAL attribute category of the `ContentType` object to which it applies. When the value is encoded in a `ValueType` object, the namespace context is given by the [in-scope namespaces] (see [INFOSET]) of the `ValueType` object, and an XML attribute called XPathCategory gives the category of the `ContentType` object where the expression applies.
 
-The XPath expression MUST be evaluated in a context which is equivalent of a stand alone XML document with the only child of the `ContentType` object as the document element. The context node of the XPath expression is the document node of this stand alone document. Namespace declarations from the `ContentType` object and its ancestor elements for namespace prefixes that are "visibly utilized", as defined by [[exc-c14n](#exc-c14n)], within the contents MUST be present. Namespace declarations from the `<Content>` element or its ancestor elements for namespace prefixes that are not "visibly utilized" MAY be present.
+The XPath expression MUST be evaluated in a context which is equivalent of a stand alone XML document with the only child of the `ContentType` object as the document element. The context node of the XPath expression is the document node of this standalone document. Namespace declarations from the `ContentType` object and its ancestor elements for namespace prefixes that are "visibly utilized", as defined by [[exc-c14n](#exc-c14n)], within the contents MUST be present. Namespace declarations from the `<Content>` element or its ancestor elements for namespace prefixes that are not "visibly utilized" MAY be present.
 
 ### C.2.6 Entity
 
@@ -5682,7 +6041,9 @@ These functions operate on various types and evaluate to `urn:oasis:names:tc:aca
 
 : Note that the arguments to this function are swapped compared to the similarly-named function in XACML [[XACML](#xacml)].
 
-### C.3.16 XPath-based Functions
+### C.3.16 XPath-based Functions (optional)
+
+_**Supporting this function is optional.**_
 
 This section specifies functions that take XPath expressions for arguments. An XPath expression evaluates to a node-set, which is a set of XML nodes that match the expression. A node or node-set is not in the formal data type system of ACAL. All comparison or other operations on node-sets are performed in isolation of the particular function specified. The context nodes and namespace mappings of the XPath expressions are defined by the XPath data type, see [Annex C.2.5](#c25-xpath-expression). The following functions are defined:
 
@@ -5737,7 +6098,7 @@ ACAL 1.0 is defined using this identifier.
 
 ## D.2 Attribute Categories
 
-The following attribute category identifiers MUST be used when an XACML 2.0 or earlier policy or request is translated into ACAL 1.0.
+The following attribute category identifiers MUST be used when an XACML 3.0 or earlier policy or request is translated into ACAL 1.0.
 
 Attributes previously placed in the Resource, Action, and Environment sections of a request are placed in an attribute category with the following identifiers respectively. It is RECOMMENDED that they are used to list attributes of resources, actions, and the environment respectively when authoring ACAL policies or requests.
 
@@ -5749,23 +6110,23 @@ Attributes previously placed in the Resource, Action, and Environment sections o
 
 Attributes previously placed in the Subject section of a request are placed in an attribute category which is identical to the subject category in XACML 2.0, as defined below. It is RECOMMENDED that they are used to list attributes of subjects when authoring ACAL 1.0 policies or requests.
 
-This identifier indicates the system entity that initiated the access request. That is, the initial entity in a request chain. If subject category is not specified in XACML 2.0, this is the default translation value.
+This identifier indicates the system entity that initiated the access request, that is, the initial entity in a request chain; if the subject category is not specified in XACML 2.0, this is also the default translation value:
 
 `urn:oasis:names:tc:acal:1.0:subject-category:access-subject`
 
-This identifier indicates the system entity that will receive the results of the request (used when it is distinct from the access-subject).
+This identifier indicates the system entity that will receive the results of the request (used when it is distinct from the access-subject):
 
 `urn:oasis:names:tc:acal:1.0:subject-category:recipient-subject`
 
-This identifier indicates a system entity through which the access request was passed.
+This identifier indicates a system entity through which the access request was passed:
 
 `urn:oasis:names:tc:acal:1.0:subject-category:intermediary-subject`
 
-This identifier indicates a system entity associated with a local or remote codebase that generated the request. Corresponding subject attributes might include the URL from which it was loaded and/or the identity of the code-signer.
+This identifier indicates a system entity associated with a local or remote codebase that generated the request (corresponding subject attributes might include the URL from which it was loaded and/or the identity of the code-signer):
 
 `urn:oasis:names:tc:acal:1.0:subject-category:codebase`
 
-This identifier indicates a system entity associated with the computer that initiated the access request. An example would be an IPsec identity.
+This identifier indicates a system entity associated with the computer that initiated the access request (for example, an IPsec identity):
 
 `urn:oasis:names:tc:acal:1.0:subject-category:requesting-machine`
 
@@ -5783,7 +6144,7 @@ The following identifiers indicate data types that are defined in [Annex C.2](#c
 
 * `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression`.
 
-The following data type identifiers are defined by XML Schema [[XS](#xs)]:
+The following data type identifiers are defined by W3C XML Schema [[XS](#xs)] (each `urn:oasis:names:tc:acal:1.0:data-type:<name>` below corresponds to the `xs:<name>` type in the XML schema Data Types specification):
 
 * `urn:oasis:names:tc:acal:1.0:data-type:string`
 
@@ -6393,7 +6754,7 @@ ACAL 1.0 is a successor to XACML 3.0. ACAL 1.0 differs from XACML 3.0 in the fol
 
 - ACAL constructs can be represented in JSON, YAML or XML at the implementor's discretion.
 
-- The policy and policy set constructs have been merged into a single construct which is known as a policy in ACAL 1.0.
+- The policy (`Policy`) and policy set (`PolicySet`) constructs have been merged into a single construct which is known as a policy (`Policy`) in ACAL 1.0.
 
   - Compared to XACML 3.0, the `<PolicySet>`, `<PolicySetIdReference>`, `<PolicySetCombinerParameters>` and `<PolicySetDefaults>` elements and `PolicySet` type no longer appear.
 
@@ -6401,26 +6762,58 @@ ACAL 1.0 is a successor to XACML 3.0. ACAL 1.0 differs from XACML 3.0 in the fol
 
   - Separate rule and policy combining algorithms have been replaced with a single collection of combining algorithms. Legacy combining algorithms have been removed. The `only-one-applicable` policy combining algorithm has been removed.
 
-- The target of a policy has been changed to have the same structure as the condition of a rule (i.e., a single Boolean expression). From the XML perspective, this means that the `<AnyOf>`, `<AllOf>` and `<Match>` elements no longer appear.
+- The target (`Target` element) of a policy has been changed to have the same structure as the condition of a rule (i.e., a single Boolean expression). From the XML perspective, this means that the `<AnyOf>`, `<AllOf>` and `<Match>` elements no longer appear.
 
-- Rules no longer have a target.
+- Rules no longer have a target (`Target` element removed).
 
-- Obligations and advice no longer have distinct syntactic representations. Instead they now share the common `NoticeType` object type. The difference between obligations and advice is indicated by an `IsObligation` property.
+- Obligations and advice no longer have distinct syntactic representations. Instead they now share the common `NoticeType` object type. The difference between obligations and advice is indicated by an `IsObligation` property. (XML elements `ObligationExpressions`, `ObligationExpression`, `Obligations`, `Obligation`, `AdviceExpressions`, `AdviceExpression`, `AssociatedAdvice`, `Advice` replaced with `NoticeExpression` and `Notice`.)
 
 - Combiner parameters are no longer supported and the `<CombinerParameter>`, `<CombinerParameters>`, `<PolicyCombinerParameters>` and `<RuleCombinerParameters>` elements no longer appear.
 
-- Users are able to define short identifiers, which provide simple alias names to use in place of absolute URIs to refer to ACAL definitions. A predefined set of short identifiers for standard-defined URIs is also provided.
+- Users are able to define short identifiers (`ShortIdSet` objects), which provide simple alias names to use in place of absolute URIs to refer to ACAL definitions. A predefined set of short identifiers for standard-defined URIs is also provided.
 
 - The `IncludeInResult` XML attribute of the `<Attribute>` element has been prohibited in results and entity data type values. It is meaningless in these cases.
 
-- Different types are now used to represent attribute categories in a request versus a response. Categories in the result don't have the `Content` property, since there is no mechanism to request their inclusion, and their attributes don't have the `IncludeInResult` property because it is meaningless in that context. Categories in the request have both `Content` properties and attributes with `IncludeInResult` properties. Attribute categories in the request are `RequestEntityType` objects and attributes in the response are `ResultEntityType` objects. These types supercede the XML Schema `AttributesType` complex type.
+- `IncludeInResult`, `ReturnPolicyIdList` and `CombinedDecision` attributes (in a `Request`) are now optional with default value `false`.
+
+- Different types are now used to represent attribute categories in a request versus a response. Categories in the result don't have the `Content` property, since there is no mechanism to request their inclusion, and their attributes don't have the `IncludeInResult` property because it is meaningless in that context. Categories in the request have both `Content` properties and attributes with `IncludeInResult` properties. Attribute categories in the request are `RequestEntityType` objects and attributes in the response are `ResultEntityType` objects. These types supersede the XML Schema `AttributesType` complex type. As a result:
+
+  - `Attributes` element replaced with new `RequestEntity` and `ResultEntity` elements in the `Request` and `Result` elements respectively
+  - `AttributesReference` replaced with new `RequestEntityReference`.
+
+- `Attribute` has a new optional `DataType` attribute (set to the standard string type as default), to have a common data-type for all the attribute values. In XACML 3.0, defining the data-type for each `AttributeValue` individually led to the risk of mixing different datatypes in the same attribute. We consider this bad practice (one may simply split in different attributes if using different data-types).
+
+- `AttributeValue` is replaced with more generic `Value` whose `DataType` is now optional, i.e. it may be omitted when it is already defined by at the parent or ancestor level, which simplifies expressions with literal values. In particular, as a result of the previous change, in an `Attribute`, the `Value`'s `DataType` is now omitted since defined at the `Attribute` level already.
+
+- `AttributeSelector` changes:
+  
+  - `DataType` attribute changed to be optional with the standard string type as default value to simplify the element declaration in most cases.
+   * `MustBePresent`: changed to be optional with `false` as default value, to simplify the element declaration in most cases.
+   * `PathType` attribute (optional): new attribute to add support for JSONPath, indicates the type of `Path` expression (JSONPath or XPath which is the default value);
+   * `Path` attribute value can be a XPath or JSONPath expression according to `PathType`, and if XPath, can use *ACAL* variables from `VariableDefinition`s as XPath variables.
+
+- `AttributeDesignator` changes to simplify the declaration in most cases: 
+
+  * `DataType` attribute changed to be optional, with the standard string type as default.
+  * `MustBePresent`: changed to be optional with `false` as default value.
 
 - The `xml:id` attribute for an attribute category is replaced by a generic 'Id' property so that all ACAL representation formats are on an equal footing.
 
-- The quantified expressions (`ForAny`, `ForAll`, `Select` and `Map`) and the entity data type from the XACML 3.0 Entities Profile [[ENTITIES](#entities)] have been incorporated in ACAL version 1.0. The `attribute-designator` function from the profile has been reinvented as the `EntityAttributeDesignatorType` expression object type and the `attribute-selector` function from the the profile has been reinvented as the `EntityAttributeSelectorType` expression object type.
+- The quantified expressions (`ForAny`, `ForAll`, `Select` and `Map`) and the `entity` data type from the XACML 3.0 Entities Profile [[ENTITIES](#entities)] have been incorporated in ACAL version 1.0. The `attribute-designator` function from the profile has been reinvented as the `EntityAttributeDesignatorType` expression object type and the `attribute-selector` function from the the profile has been reinvented as the `EntityAttributeSelectorType` expression object type.
+
+- Added new `BundleType` object which allows to bundle variable definitions (`SharedVariableDefintion`), short identifier (`ShortIdSet`) and policies together in order to be portable / reused from one ACAL system to another, more particularly one PDP to another.
 
 - The arguments to each of the following functions have been swapped: `string-starts-with`, `anyURI-starts-with`, `string-ends-with`, `anyURI-ends-with`, `string-contains`, `anyURI-contains`, `x500Name-match`, `rfc822Name-match`, `string-regexp-match`, `anyURI-regexp-match`, `ipAddress-regexp-match`, `dnsName-regexp-match`, `rfc822Name-regexp-match` and `x500Name-regexp-match`.
 
+- Added a new logical function (annex C.3) commonly known as *ternary (conditional) operator*: `function ternary-if(a,b,c) -> if a is true, return b, else return c`).
+
+- Added new aggregate functions (annex C.3) for computing:
+  - Sums and averages of integers/doubles;
+  - Minimum and maximum values among integers, doubles, strings, times, dates, date-times.
+
+- XPath versions: deprecated XPath version 1.0; added support for XPath 3.0 and 3.1.
+
+- Deprecated prefixes `urn:oasis:names:tc:xacml:` and `https://www.w3.org/2001/XMLSchema#` in favor of `urn:oasis:names:tc:acal:` for all standard identifiers (algorithms, status codes, data-types, functions, attributes and categories)
 
 ## Revision History
 
