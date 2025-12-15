@@ -242,8 +242,8 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 	<!-- Change to XACML 3.0 (issue #18): Attributes renamed to RequestEntity in the Request, therefore AttributesReference renamed to RequestEntityReference for consistency -->
 	<xs:element name="RequestEntityReference" type="xacml:RequestEntityReferenceType"/>
 	<xs:complexType name="RequestEntityReferenceType">
-		<!-- Change to XACML 3.0 (issue #62): ReferenceId attribute renamed to Id for simplicity-->
-		<xs:attribute name="Id" type="xs:IDREF" use="required"/>
+		<!-- Change to XACML 3.0 (issue #62): ReferenceId attribute renamed to Id for simplicity and type aligned with other "local" identifiers (RuleId, VariableId, etc.) and portable to other representation formats like JSON -->
+		<xs:attribute name="Id" type="xacml:PolicyScopedIdentifierType" use="required"/>
 	</xs:complexType>
 
 <!-- Change to XACML 3.0 (issue #6): Merged Obligation/Advice(Expression) into Notice(Expression) -->
@@ -336,11 +336,10 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 		</xs:sequence>
 	</xs:complexType>
 
-	<!-- Change to XACML 3.0 (issue #61): Simple type for Combiner ParameterNames, and for policy-internal identifiers in general
-	(whether to use it for VariableId and RuleId as well remains to be agreed with ALFA working group). -->
-	<xs:simpleType name="PolicyInternalIdentifierType">
+	<!-- Change to XACML 3.0 (issue #61): Simple type for policy-scoped identifiers in general, i.e. identifiers meant to be unique within the scope of a Policy , e.g. ParameterName, VariableId, RuleId (to be agreed with ALFA working group). -->
+	<xs:simpleType name="PolicyScopedIdentifierType">
 		<xs:restriction base="xs:string">
-			<xs:pattern value="_?[A-Za-z]([-._]?[A-Za-z0-9]+)*"/>
+			<xs:pattern value="_?[A-Za-z0-9]([-._]?[A-Za-z0-9]+)*"/>
 		</xs:restriction>
 	</xs:simpleType>
 
@@ -354,8 +353,6 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 		<xs:complexContent>
 			<xs:extension base="xacml:IdReferenceType">
 				<xs:attribute name="Version" type="xacml:VersionMatchType" use="optional"/>
-				<xs:attribute name="EarliestVersion" type="xacml:VersionMatchType" use="optional"/>
-				<xs:attribute name="LatestVersion" type="xacml:VersionMatchType" use="optional"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -415,8 +412,9 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 			<!-- Default value expression (optional), i.e. that is used if no argument is passed to this parameter in the policy reference. -->
 			<xs:element ref="xacml:Expression" minOccurs="0"/>
 		</xs:sequence>
-		<xs:attribute name="ParameterName" type="xacml:PolicyInternalIdentifierType" use="required"/>
-		<xs:attribute name="DataType" type="xs:anyURI" use="optional" default="urn:oasis:names:tc:acal:1.0:data-type:string"/>
+		<xs:attribute name="ParameterName" type="xacml:PolicyScopedIdentifierType" use="required" />
+		<xs:attribute name="DataType" type="xacml:IdentifierType" use="optional"
+			default="urn:oasis:names:tc:acal:1.0:data-type:string" />
 		<xs:attribute name="IsBag" type="xs:boolean" use="optional" default="false"/>
 	</xs:complexType>
 
@@ -491,10 +489,9 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 			<!-- Change to XACML 3.0 (issue #6): Merged Obligation/Advice(Expression) into Notice(Expression) -->
 			<xs:element ref="xacml:NoticeExpression" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
-		<!-- Change to XACML 3.0 (issue #42): changed RuleId type to something more restrictive than xs:string
-		(this is still very permissive, a more restrictive pattern remains to be agreed with ALFA working group). -->
+		<!-- Change to XACML 3.0 (issue #42): changed RuleId type to more restrictive PolicyScopedIdentifierType (agreed with ALFA working group). -->
 		<!-- Change to XACML 3.0 (issue #55): renamed RuleId to Id -->
-		<xs:attribute name="Id" type="xs:NCName" use="required"/>
+		<xs:attribute name="Id" type="xacml:PolicyScopedIdentifierType" use="required" />
 		<xs:attribute name="Effect" type="xacml:EffectType" use="required"/>
 	</xs:complexType>
 
@@ -506,9 +503,8 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 			<!-- Whatever Expression used here must have a clearly identifiable Datatype (Value must have a defined DataType). -->
 			<xs:element ref="xacml:Expression"/>
 		</xs:sequence>
-		<!-- Change to XACML 3.0 (issue #42): changed VariableId type to something more restrictive than xs:string
-		(this is still very permissive, a more restrictive pattern remains to be agreed with ALFA working group). -->
-		<xs:attribute name="VariableId" type="xs:NCName" use="required"/>
+		<!-- Change to XACML 3.0 (issue #42): changed VariableId type to more restrictive PolicyScopedIdentifierType (agreed with ALFA working group). -->
+		<xs:attribute name="VariableId" type="xacml:PolicyScopedIdentifierType" use="required"/>
 		<!-- If the Expression is a Value, it must have a Datatype (in other words: either it is NOT a Value OR it is a Value with a DataType) -->
 		<xs:assert test="not(xacml:Value) or xacml:Value/@DataType"/>
 	</xs:complexType>
@@ -520,25 +516,38 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 	<xs:complexType name="VariableReferenceType">
 		<xs:complexContent>
 			<xs:extension base="xacml:ExpressionType">
-				<!-- Change to XACML 3.0 (issue #42): changed VariableId type to something more restrictive than xs:string
-				(this is still very permissive, a more restrictive pattern remains to be agreed with ALFA working group). -->
-				<xs:attribute name="VariableId" type="xs:NCName" use="required"/>
+				<!-- Change to XACML 3.0 (issue #42): changed VariableId type to more restrictive PolicyScopedIdentifierType
+				(agreed with ALFA working group). -->
+				<xs:attribute name="VariableId" type="xacml:PolicyScopedIdentifierType" use="required" />
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 
-	<xs:complexType name="BaseAttributeSelectorType">
+	<xs:complexType name="BaseAttributeSelectorType" abstract="true">
 		<xs:complexContent>
 			<xs:extension base="xacml:ExpressionType">
 				<xs:attribute name="ContextSelectorId" type="xacml:IdentifierType" use="optional"/>
 				<xs:attribute name="Path" type="xs:string" use="required"/>
+				<!-- Change to XACML 3.0 (issue #5): JSONPath support-->
+				<xs:attribute name="PathType" type="xacml:AttributeSelectorPathType" use="optional" default="XPath"/>
 				<!-- Change to XACML 3.0 (issue #48): DataType attribute type changed to IdentifierType for supporting Short Identifiers -->
 				<xs:attribute name="DataType" type="xacml:IdentifierType" use="optional" default="urn:oasis:names:tc:acal:1.0:data-type:string"/>
 				<!-- Change to XACML 3.0 (issue #20): MustBePresent changed to optional with default false -->
 				<xs:attribute name="MustBePresent" type="xs:boolean" use="optional" default="false"/>
+				<!-- If the PathType is not XPath, ContextSelectorId is not allowed. -->
+				<xs:assert test="@PathType = 'XPath' or not(@ContextSelectorId)" />
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+
+	<xs:simpleType name="AttributeSelectorPathType">
+		<xs:restriction base="xs:string">
+			<!-- XPath (version specified by PolicyDefaults)-->
+			<xs:enumeration value="XPath" />
+			<!-- JSONPath specified by RFC 9535 -->
+			<xs:enumeration value="JSONPath" />
+		</xs:restriction>
+	</xs:simpleType>
 
 	<xs:element name="AttributeSelector" type="xacml:AttributeSelectorType" substitutionGroup="xacml:Expression"/>
 	<xs:complexType name="AttributeSelectorType">
@@ -650,7 +659,8 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-
+	
+	<!-- Change to XACML 3.0 (issue #????): ??? -->
 	<xs:element name="ForAny" type="xacml:QuantifiedExpressionType" substitutionGroup="xacml:Expression"/>
 	<xs:element name="ForAll" type="xacml:QuantifiedExpressionType" substitutionGroup="xacml:Expression"/>
 	<xs:element name="Map" type="xacml:QuantifiedExpressionType" substitutionGroup="xacml:Expression"/>
@@ -662,7 +672,7 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 					<xs:element ref="xacml:Expression"/>
 					<xs:element ref="xacml:Expression"/>
 				</xs:sequence>
-				<xs:attribute name="VariableId" type="xs:NCName" use="required"/>
+				<xs:attribute name="VariableId" type="xacml:PolicyScopedIdentifierType" use="required" />
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -701,7 +711,7 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 	<xs:simpleType name="ShortIdNameType">
 		<xs:restriction base="xs:string">
 			<xs:pattern value="[A-Za-z][0-9A-Za-z]*(-[0-9A-Za-z]+)*"/>
-				<!-- The exact pattern is still open for discussion. -->
+			<!-- The exact pattern is still open for discussion. -->
 		</xs:restriction>
 	</xs:simpleType>
 
@@ -737,14 +747,12 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 		<xs:attribute name="Version" type="xacml:VersionType" use="required"/>
 	</xs:complexType>
 
-	<xs:element name="SharedVariableReference" type="xacml:PatternMatchIdReferenceType">
+	<xs:element name="SharedVariableReference" type="xacml:SharedVariableReferenceType" />
 	<xs:complexType name="SharedVariableReferenceType">
 		<xs:complexContent>
 			<xs:extension base="xacml:ExpressionType">
 				<xs:attribute name="Id" type="xs:anyURI" use="required"/>
 				<xs:attribute name="Version" type="xacml:VersionMatchType" use="optional"/>
-				<xs:attribute name="EarliestVersion" type="xacml:VersionMatchType" use="optional"/>
-				<xs:attribute name="LatestVersion" type="xacml:VersionMatchType" use="optional"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
