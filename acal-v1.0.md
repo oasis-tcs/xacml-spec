@@ -927,7 +927,7 @@ The question arises: how should a name that identifies a set of subjects or reso
 
 In the case of subjects, there is no real entity that corresponds to such a node. So, names of this type always refer to the set of subjects subordinate in the name structure to the identified node. Consequently, non-leaf subject names should not be used in equality functions, only in match functions, such as `urn:oasis:names:tc:acal:1.0:function:rfc822Name-match` <!-- Newline to fit on PDF page -->
 instead of `urn:oasis:names:tc:acal:1.0:function:rfc822Name-equal` (see [Annex C.3.15](#c315-special-match-functions)).
-<!-- FIXME: This paragraph is hard to follow. Maybe give an example? -->
+<!-- TODO: This paragraph is hard to follow. Maybe give an example? -->
 <!-- TODO -->
 *__TODO__: In the case of resources,...*
 
@@ -959,14 +959,12 @@ Rules are described above. The remaining components are described in the followi
 
 #### 5.3.2.1 Policy Target
 
-An ACAL policy contains a target that specifies the set of requests to which it applies. The target of a policy may be declared by the writer of the policy, or it may be calculated from the targets and conditions of the policies and rules (respectively) that it contains.
-
-A system entity that calculates a target in this way is not defined by ACAL, but there are two logical methods that might be used. <!-- TODO: Maybe not mention it here, this is Implementation guidance. -->
-In one method, the target of the outer policy (the "outer component") is calculated as the union of all the targets of the referenced policies and the conditions of the referenced rules (the "inner components"). <!-- TODO: clarify: this method is not possible if there is no policy references, only rules and inline policies, what then? -->
-In another method, the target of the outer component is calculated as the intersection of all the targets and conditions of the inner components.The results of evaluation in each case will be very different: in the first case, the target of the outer component makes it applicable to any decision request that matches the target or condition of at least one inner component; in the second case, the target of the outer component makes it applicable only to decision requests that match the target or condition of every inner component.
-<!-- TODO: what is the standard method? right method? Having two methods with different results makes it ambiguous / non-deterministic, which is not desirable in the spec. -->
-
-In cases where the target of a policy is declared by the policy writer, any component rules in the policy that have the same condition as the target may omit the condition. Such rules inherit the target of the policy in which they are contained.
+An ACAL policy contains a target that specifies the set of requests to which it applies. The target of a policy may be:
+1. Either declared by the writer of the policy. In this case, any component rules in the policy that have the same condition as the target may omit the condition. Such rules inherit the target of the policy in which they are contained.
+1. Or not, in which case it may be calculated from the targets and conditions of the policies and rules (respectively) that it contains. A system entity that calculates a target in this way is not defined by ACAL, but there are two logical methods that might be used: <!-- TODO: Maybe not mention it here, this is Implementation guidance.  Also presenting two methods with different results is confusing and make the spec look ambiguous / non-deterministic behavior. What is the standard/right method then? -->
+   1. First method: the target of the outer policy (the "outer component") is calculated as the union of all the targets of the referenced policies and the conditions of the referenced rules (the "inner components"). <!-- TODO: clarify: this method is not possible if there is no policy references, only rules and inline policies, what then? -->
+   1. Second method: the target of the outer component is calculated as the intersection of all the targets and conditions of the inner components.The results of evaluation in each case will be very different: in the first case, the target of the outer component makes it applicable to any decision request that matches the target or condition of at least one inner component; in the second case, the target of the outer component makes it applicable only to decision requests that match the target or condition of every inner component.
+  
 
 #### 5.3.2.2 Combining Algorithm
 
