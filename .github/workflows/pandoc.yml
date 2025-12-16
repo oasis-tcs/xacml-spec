@@ -50,7 +50,7 @@ jobs:
             --standalone
             --lua-filter diagram.lua
             --embed-resources
-            --metadata title="Attribute Centric Authorization Language 1.0 (supersedes eXtensible Access Control Markup Language (XACML))"
+            --metadata title="Attribute-Centric Authorization Language 1.0"
             --output output/acal-v1.0-csd01.html 
             acal-v1.0.md 
       - name: Pandoc PDF generation 
@@ -65,7 +65,7 @@ jobs:
             --standalone
             --lua-filter diagram.lua
             --embed-resources
-            --metadata title="Attribute-Centric Authorization Language 1.0 (supersedes eXtensible Access Control Markup Language (XACML))"
+            --metadata title="Attribute-Centric Authorization Language 1.0"
             --output output/acal-v1.0-csd01.pdf 
             acal-v1.0.md 
       - name: Upload artifact
