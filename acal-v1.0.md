@@ -173,7 +173,7 @@ Under the heading of each Appendix the following text **MUST** be present:
 ## Committee Specification Draft 01
 
 
-## 7 November 2025
+## 16 December 2025
 
 
 ### This version
@@ -262,6 +262,56 @@ This document is related to:
 
 Copyright © OASIS Open 2025. All Rights Reserved.  For license and copyright information, and complete status, please see Annex A which contains the License, Document Status and Notices.
 
+## How to generate HTML and PDF versions
+
+### Online generation
+
+HTML/PDF versions are generated automatically online via Github Actions after each update pushed to the main branch of [OASIS XACML TC Github repository](https://github.com/oasis-tcs/xacml-spec/). Go to  Github Actions on the github repository, then go to the latest workflow run, and, if the run succeeded, the summary should display the links to the generated HTML/PDF documents.
+
+### Offline generation
+
+#### Prerequisites
+
+Install Pandoc, Graphviz and PlantUML on your system; or simply use Docker with the following shell alias:
+```
+$ alias pandoc='docker run --rm --volume "$(pwd):/data" cdang/pandoc-plantuml'
+```
+_The Dockerfile (named `Dockerfile`) of the docker image used in the alias above is provided in the same folder as this markdown file for your convenience if you wish to build it yourself._  
+
+OASIS staff are currently using pandoc 3.0 from https://github.com/jgm/pandoc/releases/tag/3.0.
+
+Git clone or get a local copy of [OASIS XACML TC Github repository](https://github.com/oasis-tcs/xacml-spec/), open a terminal and **change your working directory to the root directory of your local copy of the repository**.
+
+#### CSS stylesheet
+
+The generation command uses a CSS stylesheet file (`-c` argument) provided by OASIS. It may be changed to one of these (or the local version in the `styles` folder) to get a different style of output:
+- https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3.css
+- https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3a.css (this one produces HTML that resembles the github display more closely, especially for blocks of code) This template already includes a reference (in HTML code) to this .css file.
+- https://docs.oasis-open.org/templates/css/markdown-styles-v1.8.1-cn_final.css
+
+#### HTML generation
+
+Run the following command line to generate HTML from this markdown file (named `acal-v1.0-csd01.md`), :
+
+```console
+$ pandoc -f gfm+definition_lists -t html acal-v1.0-csd01.md -c styles/markdown-styles-v1.7.3a.css --toc --toc-depth=5 \ 
+         -s --lua-filter diagram.lua --embed-resources \
+         --metadata title="Attribute-Centric Authorization Language (ACAL) Version 1.0" \
+         -o acal-v1.0-csd01.html
+ ```
+
+Note this command generates a Table of Contents (TOC) in HTML which is located at the top of the HTML document, and which requires additional editing in order to be published in the expected OASIS style. This editing will be handled by OASIS staff during publication.
+
+#### PDF generation
+
+For PDF output, the command line is the following (different `-t` and `-H` arguments):
+
+```console
+$ pandoc -f gfm+definition_lists -t pdf acal-v1.0-csd01.md -c styles/markdown-styles-v1.7.3a.css \
+         -H custom_latex_header_for_pandoc_pdf_output.tex --toc --toc-depth=5 -s -L diagram.lua \
+         --metadata title="Attribute-Centric Authorization Language (ACAL) Version 1.0" --embed-resources \
+         -o acal-v1.0-csd01.pdf 
+```
 
 ---
 
