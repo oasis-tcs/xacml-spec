@@ -1,5 +1,5 @@
 # Simple workflow for Pandoc generation and deployment of static content to GitHub Pages
-name: Run pandoc and deploy generated content to Pages
+name: Pandoc generate and deploy HTML/PDF docs to OASIS Github Pages site
 
 on:
   # Runs on pushes targeting the main branch
@@ -78,5 +78,5 @@ jobs:
         uses: actions/deploy-pages@v4
       - name: summary
         run: |
-          echo "### Check the result: https://oasis-tcs.github.io/xacml-spec/" >> $GITHUB_STEP_SUMMARY
+          echo "### Check the results: https://oasis-tcs.github.io/xacml-spec/acal-v1.0-csd01.html | https://oasis-tcs.github.io/xacml-spec/acal-v1.0-csd01.pdf" >> $GITHUB_STEP_SUMMARY
 
