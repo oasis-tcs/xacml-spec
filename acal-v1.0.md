@@ -1,167 +1,4 @@
-﻿\<
-
-# OASIS Open Specification Template Instructions
-
-
-## General Template Instructions
-
-
-**Template Instructions:** All template instructions are included within angle brackets and need to be deleted prior to publication. This includes these five pages.
-
-
-**Square Brackets**: Nearly all text within square brackets needs to be updated or replaced, except for any reference tokens that also use square brackets. For formats that support it, this text will be highlighted in yellow to make it easier to see.
-
-
-**Additional Versions**: The editors of the document **MUST** produce all additional desired or required formats (HTML, PDF, etc) before sending this for publication.
-
-
-**Names, Organizations, and Emails**: Individuals or companies, past or present, may request that their name and/or affiliation and/or email address be not included in any of the acknowledgments and or leadership positions. 
-
-
-## Formatting Instructions
-
-
-**Paragraph Spacing**: There **SHOULD** be a single empty line between paragraphs. In some cases, editors may add additional spacing to improve readability and the cosmetic look of the section, especially around figures, tables, and charts.
-
-
-**Quotes:** Straight "quotes" **SHOULD** be used, not “smart quotes” or curly quotes. This can be set as a persistent preference in most writing tools.
-
-
-**Document Date**: At the top of the document on the first page is a date, this date **MUST** be the date that the document was approved. 
-
-
-**Document Title and Subtitle:** The title of the document **SHOULD** be written in title case, meaning all words that have four or more letters **SHOULD** be capitalized.
-
-
-**Headings**: While various editors and formats support up to 6 levels of nested headers it is generally advised to structure the document to minimize the number of nested sections. A best practice is to try and keep nesting to no greater than 3 levels of headings. All headings **SHOULD** be written in title case, meaning all words that have four or more letters **SHOULD** be capitalized. 
-
-
-**Tables**: Text presented in tables **SHOULD** be no smaller in font size than the body copy text.
-
-
-## Extra Items Instructions
-
-
-All equations, listings, code snippets, figures (Fig. 1), tables (Table I), etc., need to be referenced in the text (preferably before their appearance).
-
-
-**Mathematical Syntax and Equations:** Editors **SHOULD** consider using simple text (with the Markdown Blockquotes feature designated by the following angle bracket \>) or images to create mathematical representations. All equations, listings, code snippets, figures (Fig. 1), tables (Table 1), etc., need to be referenced in the text (preferably before their appearance). 
-
-
-**Equations:** All equations **MUST** use the Markdown Blockquotes feature, **MUST** be numbered, **MAY** use a section number dot equation number (see example below) to track the equations within a particular section, and **SHOULD** be numbered consecutively where the number is in parentheses and appears after the formula. All symbols in the equation **SHOULD** be defined before the equation appears in the text. When referring to an equation or formula, use for example "Eq. 1.1".
-
-
-> y2 \= x3 \+ ax \+ b (Eq. 1.1)
-
-
-**Listings:** All algorithms and pseudo code **MUST** use the Markdown Fenced Code Blocks feature, **MUST** be numbered, **MAY** use a section number dot listing number (see example below) to track the listing within a particular section, **SHOULD** be numbered consecutively, and **SHOULD** include a short title forming a header. There **SHOULD** be a line above and below the header and a line at the bottom of the algorithm. Editors **SHOULD** use the markdown 
-
-
----
-
-
-**Listing 1.1** Sample Title  
----
-
-
-```
-currentMax ← A[0]  
-    for i ← 1 to n \-1 do  
-        if A[i] \> currentMax then  
-            currentMax ← A[i]  
-    { increment counter i }  
-    return currentMax  
-```
-
-
----
-
-
-**Code Snippets**: Actual code samples and snippets **MUST** be numbered, **MAY** use a section number followed by a dot which is then followed by a code sample number (see example below) to track the code samples within a particular section, **SHOULD** be numbered consecutively, and **SHOULD** include a short title forming a header. There **SHOULD** be a line above and below the header. A single header **MAY** be used for multiple code samples in a block, but in this case, each sample **SHOULD** individually be numbered as shown below. The code itself **SHOULD** use the Markdown Fenced Code Blocks feature and programming language designator to style the code snippet. Meaning that the first code line will start with three back tick characters (\`\`\`) followed by the language (e.g., json, yaml, cpp, go, etc) and the last line starts with three back tick characters (\`\`\`).
-
-
----
-
-
-**Code 1.1** Sample Title  
----
-
-
-*Some subheading (e.g., Example 1.1.1 \- Some example code)*  
-```json  
-{  
-  "Some key": "some value"  
-}  
-```
-
-
-*Some subheading (e.g., Example 1.1.2 \- Some other example code)*  
-```xml 
-<your xml> 
-```
-
-
-**Figures and Tables**: All figures **MUST** be numbered and **MAY** use a section number followed by a hyphen which is then followed by a figure number (see example below) to track the figures within a particular section. When referencing a figure or table please use the abbreviation "Fig." for figures and "Table" for tables. Tables **SHOULD** be numbered with Roman numerals.
-
-
-Figure 2-1  
-![FIG2-1](figure2-1.png)
-**Fig. 2-1.** This is a sample of a figure caption.
-
-
-Table I  
-This is a Sample of a Table Title
-
-
-|  Name  | \#1 | \#2 | \#3 | \#4 | \#5 |
-|:------:|:---:|:---:|:---:|:---:|:---:|
-| **AB** |  3  |  3  |  6  | 11  |  9  |
-| **BC** |  7  |  7  |  4  | 12  |  9  |
-| **CD** | 10  |  3  |  3  |  9  |  7  |
-| **DE** |  3  |  7  | 10  |  5  |  6  |
-| **DF** |  7  |  1  | 12  |  1  |  3  |
-| **ZZ** |  5  | 12  | 11  |  9  |  8  |
-
-
-**Table I:** This table contains information about x and y and z.
-
-
-## Other Instructions
-
-
-**References:** OASIS uses the IEEE Reference format for citations. However, unlike the IEEE Reference format the in-line tokens can be either named or a number; in either case they are enclosed in square braces. Editors **SHOULD** be consistent in the body of the document and use either named tokens "[RFC2119]" or numbered "[1]" tokens, but not both. Any named tokens that are used in the template front matter do not impact the decision about named or numbered in the body of the document. All other rules about in-line use and style **MUST** follow the IEEE Reference format found here: [https://journals.ieeeauthorcenter.ieee.org/wp-content/uploads/sites/7/IEEE\_Reference\_Guide.pdf](https://journals.ieeeauthorcenter.ieee.org/wp-content/uploads/sites/7/IEEE_Reference_Guide.pdf)
-
-
-**Definitions and Terms:** It is generally more consistent to refer to an existing official definition in other open standards or readily-available nonproprietary reference documents, rather than to redefine a term. It is a best practice to refer to the specific version or date of the source document for a definition, either explicitly or by a reference link to the specific version (not a ‘current version’ link). Normally, terms defined elsewhere will simply refer to the defining document. In certain cases, it may be desirable to quote the definition to allow for a stand-alone document. Before defining a new term, verify whether it has already been defined in an official document elsewhere such as in another OASIS Standard, the ITU terminology database ([https://www.itu.int/br\_tsb\_terms/\#/](https://www.itu.int/br_tsb_terms/#/)), ISO terms ([https://www.iso.org/obp/ui](https://www.iso.org/obp/ui)), IEEE/IEC electropedia ([https://www.electropedia.org/IEEE](https://www.electropedia.org/IEEE)), IETF, CEN/CENELEC, or NIST ([https://csrc.nist.gov/glossary](https://csrc.nist.gov/glossary)).
-
-
-**Annex vs Appendix:** An annex is considered normative, meaning that it **MUST** be included with the document and its contents form an integral part of the document. Whereas an Appendix is purely informational content and is not required to be included with the document.
-
-
-Under the heading of each Annex the following text **MUST** be present:  
-(This annex forms an integral part of this Specification.)
-
-
-Under the heading of each Appendix the following text **MUST** be present:  
-(This appendix does not form an integral part of this Specification and is informational.)
-
-
-- Annex A **MUST** be the License, Document Status and Notices information.  
-- Annex B **MUST** be the References information.  
-- Annex C+ can be whatever is needed  
-- Appendix 1 **MUST** be the Acknowledgments information  
-- Appendix 2 **MUST** be the Changes From Previous Version information  
-- Appendix 3+ can be whatever is needed
-
-
-\>
-
-
-
-
-
-
-![OASIS](http://docs.oasis-open.org/templates/OASISLogo-v3.0.png)
+﻿![OASIS](http://docs.oasis-open.org/templates/OASISLogo-v3.0.png)
 
 
 ---
@@ -236,7 +73,7 @@ When referencing this document, the following citation format should be used:
 
 
 _Attribute-Centric Authorization Language (ACAL) Version 1.0_.
-Edited by Steven Legg and Cyril Dangerville. 22 August 2025. OASIS Committee Specification Draft 01.
+Edited by Steven Legg and Cyril Dangerville. 16 December 2025. OASIS Committee Specification Draft 01.
 
 
 ### Related Work
@@ -294,10 +131,10 @@ The generation command uses a CSS stylesheet file (`-c` argument) provided by OA
 Run the following command line to generate HTML from this markdown file (named `acal-v1.0-csd01.md`), :
 
 ```console
-$ pandoc -f gfm+definition_lists -t html acal-v1.0-csd01.md -c styles/markdown-styles-v1.7.3a.css --toc --toc-depth=5 \ 
+$ pandoc -f gfm+definition_lists -t html acal-v1.0.md -c styles/markdown-styles-v1.7.3a.css --toc --toc-depth=5 \ 
          -s --lua-filter diagram.lua --embed-resources \
          --metadata title="Attribute-Centric Authorization Language (ACAL) Version 1.0" \
-         -o acal-v1.0-csd01.html
+         -o acal-v1.0.html
  ```
 
 Note this command generates a Table of Contents (TOC) in HTML which is located at the top of the HTML document, and which requires additional editing in order to be published in the expected OASIS style. This editing will be handled by OASIS staff during publication.
@@ -307,10 +144,10 @@ Note this command generates a Table of Contents (TOC) in HTML which is located a
 For PDF output, the command line is the following (different `-t` and `-H` arguments):
 
 ```console
-$ pandoc -f gfm+definition_lists -t pdf acal-v1.0-csd01.md -c styles/markdown-styles-v1.7.3a.css \
+$ pandoc -f gfm+definition_lists -t pdf acal-v1.0.md -c styles/markdown-styles-v1.7.3a.css \
          -H custom_latex_header_for_pandoc_pdf_output.tex --toc --toc-depth=5 -s -L diagram.lua \
          --metadata title="Attribute-Centric Authorization Language (ACAL) Version 1.0" --embed-resources \
-         -o acal-v1.0-csd01.pdf 
+         -o acal-v1.0.pdf 
 ```
 
 ---
@@ -1428,6 +1265,8 @@ class Double <<primitive>>
 
 In UML, it may be defined as a subtype of UML standard primitive type `Real`, restricted to 64-bit length. However, each ACAL representation format should map this to their closest native equivalent if there is any, e.g. `xs:double` in XML.
 
+<a name="versiontype"></a>
+
 ##### 7.1.2.3.3 VersionType
 
 A `VersionType` specifies the version number of a policy, and defined in UML as follows:
@@ -1446,9 +1285,11 @@ class VersionType <<primitive>> <<restrictedString>> {
 
 The version number is expressed as a sequence of decimal numbers, each separated by a period (.), which is compatible with [Semantic Versioning](https://semver.org/).
 
+<a name="versionmatchtype"></a>
+
 ##### 7.1.2.3.4 VersionMatchType
 
-Properties of this type SHALL contain a restricted regular expression matching a version number (see [Section 7.11](#711-versiontype)). The expression SHALL match versions of a referenced policy that are acceptable for inclusion in the referencing policy.
+Properties of this type SHALL contain a restricted regular expression matching a version number (see [Section 7.1.2.3.3](#versiontype)). The expression SHALL match versions of a referenced policy that are acceptable for inclusion in the referencing policy.
 
 UML definition:
 ```plantuml
@@ -1467,7 +1308,7 @@ A version match is `.`-separated, like a version string. A number represents a d
 
 ##### 7.1.2.3.5 ShortIdNameType
 
-`ShortIdNameType` is the primitive type for Short Identifier names (cf. `ShortIdType` [section](#shortidtype) ).
+`ShortIdNameType` is the primitive type for Short Identifier names (see [Section 7.3](#shortidtype) ).
 
 UML definition:
 ```plantuml
@@ -1654,9 +1495,9 @@ A `ShortIdSetType` object contains the following properties:
 
 A predefined set of short identifiers for the URIs defined in this specification is provided as a convenience, in both XML (`xacml-core-v4-identifiers.xml`) and JSON (`xacml-core-v4-identifiers.json`) representations. Use of this set is OPTIONAL.
 
-## 7.3 ShortIdType
-
 <a name="shortidtype"/>
+
+## 7.3 ShortIdType
 
 A `ShortIdType` object defines a single short identifier. Attribute categories, attributes, data types, functions, combining algorithms and other artifacts in ACAL are ultimately identified by URIs. A short identifier provides a simple alias name to use when composing and displaying policies and protocol messages instead of using the full URI.
 
@@ -1788,7 +1629,7 @@ A `PolicyType` object contains the following properties:
 
 `NoticeExpression` [Any Number]
 
-: A sequence of `NoticeExpressionType` objects to be evaluated into notices by the PDP. See [Section 7.33](#733-noticeexpressiontype). See [Section 9.18](#918-notices) for a description of how the notices to be returned by the PDP are determined.
+: A sequence of `NoticeExpressionType` objects to be evaluated into notices by the PDP. See [Section 7.29](#noticeexpressiontype). See [Section 9.18](#918-notices) for a description of how the notices to be returned by the PDP are determined.
 
 `CombinerInput` [Any Number]
 
@@ -1810,7 +1651,7 @@ Each `CombinerInputType` object contains exactly one of the following properties
 
 ## 7.5 DefaultsType (optional)
 
-_**Supporting this object type is optional, but required if AttributeSelectors and/or XPath-based functions are to be supported.**_
+_**Supporting this object type is optional.** It is required only for supporting AttributeSelectors and/or XPath-based functions._
 
 A `DefaultsType` object specifies default values that apply to the enclosing `PolicyType` object.
 
@@ -1891,9 +1732,9 @@ The `Target` and `Condition` properties are of this type.
 
 Expression evaluation is described in [Section 9.5](#95-expression-evaluation).
 
-## 7.8 IdReferenceType
-
 <a name="idreferencetype"></a>
+
+## 7.8 IdReferenceType
 
 `IdReferenceType` is an abstract type used for referencing policies by their policy identifier (URI). This has two subtypes for matching also a specific policy version: `ExactMatchIdReferenceType`, `PatternMatchIdReferenceType`.
 
@@ -1932,11 +1773,11 @@ class ExactMatchIdReferenceType <<dataType>> extends IdReferenceType {
 @enduml
 ```
 
-The `ExactMatchIdReferenceType` object type extends the [`IdReferenceType` object type](#idreferencetype) with the following property:
+The `ExactMatchIdReferenceType` object type extends the [`IdReferenceType` object type (section 7.8)](#idreferencetype) with the following property:
 
 `Version` [Required]
 
-: A `VersionType` value indicating the version of a policy that was applicable to the request. See [Section 7.10](#710-policyreferencetype).
+: A `VersionType` value indicating the version of a policy that was applicable to the request. See [PolicyReferenceType (section 7.11)](#policyreferencetype).
 
 ## 7.10 PatternMatchIdReferenceType
 
@@ -1960,7 +1801,9 @@ The `PatternMatchIdReferenceType` object type extends the `IdReferenceType` obje
 
 : Specifies a matching expression for an acceptable version of the policy referenced.
 
-The matching operation is defined in [Section 7.12](#712-versionmatchtype). Any combination of these properties MAY be present in a `PatternMatchIdReferenceType` object. The referenced policy MUST match all expressions. If none of these properties are present, then any version of the policy is acceptable. In the case that more than one matching version can be obtained, then the most recent one (latest version) SHOULD be used.
+The matching operation is defined by [VersionMatchType (section 7.1.2.3.4)](#versionmatchtype). Any combination of these properties MAY be present in a `PatternMatchIdReferenceType` object. The referenced policy MUST match all expressions. If none of these properties are present, then any version of the policy is acceptable. In the case that more than one matching version can be obtained, then the most recent one (latest version) SHOULD be used.
+
+<a name="policyreferencetype"></a>
 
 ## 7.11 PolicyReferenceType
 
@@ -2030,7 +1873,7 @@ A `RuleType` object contains the following properties:
 
 `NoticeExpression` [Any Number]
 
-: A sequence of `NoticeExpressionType` objects, each defining a notice expression potentially evaluated into a notice by the PDP. See [Section 7.33](#733-noticeexpressiontype). See [Section 9.18](#918-notices) for a description of how the notices to be returned by the PDP shall be determined. See [Section 9.2](#92-policy-enforcement-point) about enforcement of obligation notices.
+: A sequence of `NoticeExpressionType` objects, each defining a notice expression potentially evaluated into a notice by the PDP. See [NoticeExpressionType](#noticeexpressiontype). See [Section 9.18](#918-notices) for a description of how the notices to be returned by the PDP shall be determined. See [Section 9.2](#92-policy-enforcement-point) about enforcement of obligation notices.
 
 ## 7.13 VariableDefinitionType
 
@@ -2102,6 +1945,8 @@ class SharedVariableDefinitionType <<dataType>> {
 : An `ExpressionType` object. The value of the shared variable definition is the result of evaluating the `ExpressionType` object. The expression MAY contain `SharedVariableReferenceType` objects referring to other `SharedVariableDefinitionType` objects. The expression SHALL NOT contain `SharedVariableReferenceType` objects that refer to this `SharedVariableDefinitionType` object or that refer to `SharedVariableDefinitionType` objects that directly or indirectly refer to this `SharedVariableDefinitionType` object.
 
 : Note that the expression cannot contain `VariableReferenceType` objects since the `SharedVariableDefinitionType` object is not in the scope of any `VariableDefinitionType` object.
+
+<a name="expressiontype"></a>
 
 ## 7.14 ExpressionType
 
@@ -2245,6 +2090,8 @@ A `FunctionType` object contains the following property:
 
 : An `IdentifierType` value identifying a function.
 
+<a name="namedattributedesignatortype"></a>
+
 ## 7.17 NamedAttributeDesignatorType
 
 The `NamedAttributeDesignatorType` object type is an abstract object type that specifies a named attribute for the retrieval of a bag of attribute values from a source of attributes. The object types derived from `NamedAttributeDesignatorType` determine the source of attributes: an `AttributeDesignatorType` object (an attribute designator) specifies a named attribute in the request context and an `EntityAttributeDesignatorType` object (an entity attribute designator) specifies a named attribute in either the request context or a value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type.
@@ -2342,9 +2189,9 @@ If the expression evaluates to a value of the `urn:oasis:names:tc:acal:1.0:data-
 
 If the expression evaluates to a value of the `urn:oasis:names:tc:acal:1.0:data-type:anyURI` data type, then the entity attribute designator retrieves values from attributes matching the named attribute that are present in the `RequestEntityType` object having a `Category` property that matches, by identifier equality, the value of the expression. In this case the entity attribute designator emulates an attribute designator.
 
-## 7.20 BaseAttributeSelectorType (optional)
-
 <a name="baseattributeselectortype"></a>
+
+## 7.20 BaseAttributeSelectorType (optional)
 
 _**Support for this part (attribute selectors and entity attribute selectors) is OPTIONAL.**_
 
@@ -2574,7 +2421,7 @@ The `SharedVariableReferenceType` object type contains the following properties:
 
 : Specifies a matching expression for an acceptable version of the shared variable referenced.
 
-The matching operation is defined in [Section 7.12](#712-versionmatchtype). Any combination of these properties may be present in a `SharedVariableReferenceType` object. The referenced shared variable MUST match all expressions. If none of these properties are present, then any version of the shared variable is acceptable. In the case that more than one matching version can be obtained, then the most recent one SHOULD be used.
+The matching operation is defined by [VersionMatchType (section 7.1.2.3.4)](#versionmatchtype). Any combination of these properties may be present in a `SharedVariableReferenceType` object. The referenced shared variable MUST match all expressions. If none of these properties are present, then any version of the shared variable is acceptable. In the case that more than one matching version can be obtained, then the most recent one SHOULD be used.
 
 ## 7.25 QuantifiedExpressionType
 
@@ -2697,6 +2544,8 @@ The result of a Select expression SHALL be a bag of values of the same data type
 
 If the iterant expression evaluates to `Indeterminate` for any value from the domain, then the result of the Select expression is `Indeterminate`; otherwise, the result bag contains each value from the domain for which the iterant expression evaluates to `true`. The Select expression evaluates to an empty bag if the domain is an empty bag. Evaluation of the Select expression MAY terminate whenever the iterant expression evaluates to `Indeterminate`.
 
+<a name="noticetype"></a>
+
 ## 7.26 NoticeType
 
 A `NoticeType` object contains an identifier for a notice and a list of attribute assignments that form arguments of the notice.
@@ -2730,7 +2579,46 @@ A `NoticeType` object contains the following properties:
 
 : A sequence of `AttributeAssignmentType` objects (each of them is an attribute assignment) forming the arguments of the notice.
 
-## 7.27 AttributeAssignmentType
+## 7.27 AttributeType
+
+An `AttributeType` object contains attribute meta-data and one or more attribute values. The attribute meta-data comprises the attribute identifier and the attribute issuer. Attribute designators in a policy MAY refer to attributes by means of this meta-data.
+
+UML definition (class diagram):
+```plantuml
+@startuml
+skinparam style strictuml
+hide empty members 
+hide circle
+class AttributeType <<dataType>> {
+   + AttributeId: IdentifierType [1]
+   + Issuer: Name [0..1]
+   + DataType: IdentifierType [0..1] = 'urn:oasis:names:tc:acal:1.0:data-type:string'
+   + Value: ValueType [1..*] {unordered, nonunique}
+}
+note "{{OCL} Value->forAll(DataType = null)}" as DataTypeForbiddenInValues
+AttributeType .. DataTypeForbiddenInValues
+@enduml
+```
+
+An `AttributeType` object contains the following properties:
+
+`AttributeId` [Required]
+
+: An `IdentifierType` value identifying the attribute. A number of identifiers are reserved by ACAL to denote commonly used attributes. See [Annex D](#annex-d-acal-identifiers).
+
+`Issuer` [Optional]
+
+: A `Name` value specifying the issuer of the attribute. For example, this attribute value may be an `x500Name` that binds to a public key, or it may be some other identifier exchanged out-of-band by issuing and relying parties.
+
+`DataType` [Optional, Default `urn:oasis:names:tc:acal:1.0:data-type:string`]
+
+: An `IdentifierType` value specifying the data type of the attribute's values. If this property is omitted, then it is treated as being set to `urn:oasis:names:tc:acal:1.0:data-type:string`.
+
+`Value` [One to Many]
+
+: A sequence of `ValueType` objects, each denoting an ACAL attribute value. Duplicated attribute values are permitted. None of these `Value`s may have a `DataType` property since it is already defined by the above `DataType` property.
+
+## 7.28 AttributeAssignmentType
 
 An `AttributeAssignmentType` object is used in a notice expression to include an attribute in a notice. The `AttributeAssignmentType` object type extends the `AttributeType` definition by adding a `Category` property.
 
@@ -2756,7 +2644,9 @@ The `AttributeAssignmentType` object type extends the `AttributeType` object typ
 
 None of the `Value`s may have a `DataType` property on its own since it is already defined by the `DataType` property at the `AttributeAssignmentType` object level (inherited from `AttributeType`).
 
-## 7.28 NoticeExpressionType
+<a name="noticeexpressiontype"></a>
+
+## 7.29 NoticeExpressionType
 
 A `NoticeExpressionType` object defines a notice expression that is potentially evaluated into a notice. A notice expression contains an identifier for the notice and a set of expressions that form arguments of the notice. The `AppliesTo` property indicates the effect for which this notice is eligible to be provided to the PEP. If the `AppliesTo` property is absent, then this notice is eligible to be provided to the PEP if the effect is either `Permit` or `Deny`. See [Section 9.18](#918-notices) for a description of how the list of notices to be returned by the PDP is determined.
 
@@ -2797,7 +2687,7 @@ A `NoticeExpressionType` object contains the following properties:
 
 : A sequence of `AttributeAssignmentExpressionType` objects, each specifying a notice argument in the form of an expression. The expressions SHALL be evaluated by the PDP to constant `ValueType` objects or bags, which shall be the attribute assignments in the notice returned to the PEP. If an `AttributeAssignmentExpressionType` object evaluates to an atomic attribute value, then there MUST be one resulting `AttributeAssignmentType` object which MUST contain this single attribute value. If the `AttributeAssignmentExpressionType` object evaluates to a bag, then there MUST be a resulting `AttributeAssignmentType` object for each of the values in the bag. If the bag is empty, there shall be no `AttributeAssignmentType` objects from this `AttributeAssignmentExpressionType` object. The values of the notice arguments SHALL be interpreted by the PEP.
 
-## 7.29 AttributeAssignmentExpressionType
+## 7.30 AttributeAssignmentExpressionType
 
 An `AttributeAssignmentExpressionType` object is used to include an argument in a notice. It SHALL contain an `AttributeId` property and an expression which SHALL be evaluated into the corresponding attribute value. The value specified SHALL be understood by the PEP, but it is not further specified by ACAL. See [Section 9.18](#918-notices). [Section 6.2.5.3](#6253-rule-3) provides a number of examples of attribute assignment expressions included in notice expressions.
 
@@ -2822,7 +2712,7 @@ An `AttributeAssignmentExpressionType` object contains the following properties:
 
 `Expression` [Required]
 
-: An `ExpressionType` object defining an expression which evaluates to a constant attribute value or a bag of zero or more attribute values. See [Section 7.19](#719-expressiontype). If the expression's type has a `DataType` property (e.g. `ValueType` or subtype of `ValueType`), this `DataType` property must have a value (non-null).
+: An `ExpressionType` object defining an expression which evaluates to a constant attribute value or a bag of zero or more attribute values. See [Section 7.14](#expressiontype). If the expression's type has a `DataType` property (e.g. `ValueType` or subtype of `ValueType`), this `DataType` property must have a value (non-null).
 
 `AttributeId` [Required]
 
@@ -2836,7 +2726,9 @@ An `AttributeAssignmentExpressionType` object contains the following properties:
 
 : A `Name` value specifying the issuer of the attribute. If this property is absent, the attribute has no issuer. The value of the `Issuer` property in the resulting `AttributeAssignmentType` object MUST be equal to this value.
 
-## 7.30 RequestType
+<a name="requesttype"></a>
+
+## 7.31 RequestType
 
 The `RequestType` object type is an abstraction layer used by the policy language. For simplicity of expression, this document describes policy evaluation in terms of operations on the context. However a conforming PDP is not required to actually instantiate the context in any particular syntactic form. But, any system conforming to the ACAL specification MUST produce exactly the same authorization decisions as if all the inputs had been transformed into the form of a `RequestType` object.
 
@@ -2872,7 +2764,7 @@ A `RequestType` object contains the following properties:
 
 `RequestDefaults` [Optional]
 
-: A `RequestDefaultsType` object containing default values for the request, such as the XPath version. See [Section 7.36](#736-requestdefaultstype). The `RequestDefaults` property is REQUIRED if the request contains values of the `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` data type.
+: A `RequestDefaultsType` object containing default values for the request, such as the XPath version. See [Section 7.32](#requestdefaultstype). The `RequestDefaults` property is REQUIRED if the request contains values of the `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` data type.
 
 `RequestEntity` [One to Many]
 
@@ -2880,11 +2772,13 @@ A `RequestType` object contains the following properties:
 
 `MultiRequests` [Optional]
 
-: A `MultiRequestsType` object listing multiple request contexts using references to the `RequestEntityType` objects. Implementation of this property is optional. The semantics of this property are defined in [[Multi](#multi)]. If the implementation does not implement this property, it MUST return an `Indeterminate` result if it encounters this property. See [Section 7.43](#743-multirequeststype).
+: A `MultiRequestsType` object listing multiple request contexts using references to the `RequestEntityType` objects. Implementation of this property is optional. The semantics of this property are defined in [[Multi](#multi)]. If the implementation does not implement this property, it MUST return an `Indeterminate` result if it encounters this property. See [Section 7.38](#multirequeststype).
 
-## 7.31 RequestDefaultsType (optional)
+<a name="requestdefaultstype">
 
-_**Supporting this part is optional, but required if AttributeSelectors and/or XPath-based functions are to be supported.**_
+## 7.32 RequestDefaultsType (optional)
+
+_**Supporting this part is optional.** It is required only for supporting AttributeSelectors and/or XPath-based functions._
 
 A `RequestDefaultsType` object specifies default values that apply to the parent `RequestType` object.
 
@@ -2905,7 +2799,7 @@ A `RequestDefaultsType` object contains the following properties:
 
 : An `IdentifierType` value specifying the XPath version for XPath expressions occurring in the request as values of the `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` data type (see section 8).
 
-## 7.32 RequestEntityType
+## 7.33 RequestEntityType
 
 A `RequestEntityType` object specifies ACAL attributes of a subject, resource, action, environment or another category using a sequence of `RequestAttributeType` objects.
 
@@ -2941,7 +2835,7 @@ A `RequestEntityType` object contains the following properties:
 
 : A sequence of `RequestAttributeType` objects associated with the attribute category of the request.
 
-## 7.33 ContentType (optional)
+## 7.34 ContentType (optional)
 
 _**Support for this object type is optional. It is required only if AttributeSelectors and/or xpathExpression values (optional) are to be supported.**_
 
@@ -2980,7 +2874,7 @@ For example, this can be represented in XML as follows:
 <!-- TODO -->
 _This needs to be aligned with the way the JSON profile handles the Content member of a category._
 
-## 7.34 RequestAttributeType
+## 7.35 RequestAttributeType
 
 A `RequestAttributeType` object describes an ACAL attribute in the request context.
 
@@ -3003,7 +2897,7 @@ The `RequestAttributeType` object type extends the `AttributeType` object type w
 
 : A `Boolean` value that governs whether this ACAL attribute is included in the result. This is useful to correlate requests with their responses in the case of multiple requests. If this property is omitted, then it is treated as being set to `false`. Note that ACAL attributes appear in the result as `AttributeType` objects.
 
-## 7.35 ResponseType
+## 7.36 ResponseType
 
 The `ResponseType` object type is an abstraction layer used by the policy language. Any proprietary system using the ACAL specification MUST transform an ACAL context `ResponseType` object into the form of its authorization decision.
 
@@ -3029,9 +2923,11 @@ A `ResponseType` object contains the following properties:
 
 `Result` [One to Many]
 
-: A sequence of `ResultType` objects, each an authorization decision result. See [Section 7.41](#741-resulttype).
+: A sequence of `ResultType` objects, each an authorization decision result. See [Section 7.37](#resulttype).
 
-## 7.36 ResultType
+<a name="resulttype"></a>
+
+## 7.37 ResultType
 
 A `ResultType` object represents an authorization decision result. It MAY include a list of notices. If the PEP does not understand or cannot fulfill an obligation notice, then the action of the PEP is determined by its bias, see [Section 9.2](#92-policy-enforcement-point). Any advice notices MAY be safely ignored by the PEP.
 
@@ -3062,17 +2958,19 @@ A `ResultType` object contains the following properties:
 
 `Notice` [any Number]
 
-: A sequence of `NoticeType` objects, each a notice to be interpreted by the PEP. See [Section 7.31](#731-noticetype). If the PEP does not understand or cannot fulfill an obligation notice, then the action of the PEP is determined by its bias, see [Section 9.2](#92-policy-enforcement-point). If the PEP does not understand an advice notice, the PEP may safely ignore the notice. See [Section 9.18](#918-notices) for a description of how the list of notices to be returned by the PDP is determined.
+: A sequence of `NoticeType` objects, each a notice to be interpreted by the PEP. See [Section 7.26](#noticetype). If the PEP does not understand or cannot fulfill an obligation notice, then the action of the PEP is determined by its bias, see [Section 9.2](#92-policy-enforcement-point). If the PEP does not understand an advice notice, the PEP may safely ignore the notice. See [Section 9.18](#918-notices) for a description of how the list of notices to be returned by the PDP is determined.
 
 `ResultEntity` [Optional]
 
-: A sequence of `ResultEntityType` objects, each an attribute category containing attributes that were part of the request. The choice of which attributes are included here is made with the `IncludeInResult` property of the `RequestAttributeType` objects of the request. See [Section 7.51](#751-attributetype).
+: A sequence of `ResultEntityType` objects, each an attribute category containing attributes that were part of the request. The choice of which attributes are included here is made with the `IncludeInResult` property of the `RequestAttributeType` objects of the request. See [Section 7.27](#attributetype).
 
 `ApplicablePolicyReference` [Optional]
 
-: A sequence of `ExactMatchIdReferenceType` objects. If the `ReturnPolicyIdList` property in the `RequestType` object is `true` (see [Section 7.35](#735-requesttype)), a PDP that implements this optional feature MUST return a sequence that includes the identifiers of all policies which were found to be fully applicable, whether or not the effect (after rule combining) was the same or different from the decision. The sequence is unordered. The sequence MAY include the identifiers of other policies that are currently in force, as long as no policies required for the decision are omitted. A PDP MAY satisfy this requirement by including all policies currently in force, or by including all policies which were evaluated in making the decision, or by including all policies which did not evaluate to `NotApplicable`, or by any other algorithm which does not omit any policies which contributed to the decision. However, a decision which returns `NotApplicable` MUST return an empty list.
+: A sequence of `ExactMatchIdReferenceType` objects. If the `ReturnPolicyIdList` property in the `RequestType` object is `true` (see [Section 7.31](#requesttype)), a PDP that implements this optional feature MUST return a sequence that includes the identifiers of all policies which were found to be fully applicable, whether or not the effect (after rule combining) was the same or different from the decision. The sequence is unordered. The sequence MAY include the identifiers of other policies that are currently in force, as long as no policies required for the decision are omitted. A PDP MAY satisfy this requirement by including all policies currently in force, or by including all policies which were evaluated in making the decision, or by including all policies which did not evaluate to `NotApplicable`, or by any other algorithm which does not omit any policies which contributed to the decision. However, a decision which returns `NotApplicable` MUST return an empty list.
 
-## 7.37 MultiRequestsType (optional)
+<a name="multirequeststype"></a>
+
+## 7.38 MultiRequestsType (optional)
 
 _**Support for this object type and associated property (`MultiRequests`) is optional.**_
 
@@ -3093,9 +2991,11 @@ A `MultiRequestsType` object contains the following properties.
 
 `RequestReference` [one to many]
 
-: A sequence of `RequestReferenceType` objects, each defining a request instance by reference to `RequestEntityType` objects in the enclosing `RequestType` object. See [Section 7.44](#744-requestreferencetype).
+: A sequence of `RequestReferenceType` objects, each defining a request instance by reference to `RequestEntityType` objects in the enclosing `RequestType` object. See [Section 7.39](#requestreferencetype).
 
-## 7.38 RequestReferenceType (optional)
+<a name="requestreferencetype"></a>
+
+## 7.39 RequestReferenceType (optional)
 
 _**Support for this object type is optional.**_
 
@@ -3116,9 +3016,11 @@ A `RequestReferenceType` object contains the following properties.
 
 `RequestEntityReference` [one to many]
 
-: A sequence of `RequestEntityReferenceType` objects, each a reference to a `RequestEntityType` object in the enclosing `RequestType` object. See [Section 7.45](#745-requestcategoryreferencetype).
+: A sequence of `RequestEntityReferenceType` objects, each a reference to a `RequestEntityType` object in the enclosing `RequestType` object. See [Section 7.40](#requestentityreferencetype).
 
-## 7.39 RequestEntityReferenceType (optional)
+<a name="requestentityreferencetype"></a>
+
+## 7.40 RequestEntityReferenceType (optional)
 
 _**Support for this object is optional.**_
 
@@ -3141,7 +3043,7 @@ A `RequestEntityReferenceType` object contains the following properties:
 
 : A `String` value referencing a `RequestEntityType` object in the enclosing `RequestType` object by the value of its `Id` property.
 
-## 7.40 StatusType
+## 7.41 StatusType
 
 A `StatusType` object represents the status of the authorization decision result.
 
@@ -3172,7 +3074,7 @@ A `StatusType` object contains the following properties:
 
 : A `StatusDetailType` object containing additional status information.
 
-## 7.41 StatusCodeType
+## 7.42 StatusCodeType
 
 A `StatusCodeType` object contains a major status code value and an optional recursive series of minor status codes.
 
@@ -3198,7 +3100,7 @@ A `StatusCodeType` object contains the following properties:
 
 : A sequence of `StatusCodeType` objects describing minor status codes. Each minor status code qualifies its parent status code.
 
-## 7.42 StatusDetailType (optional)
+## 7.43 StatusDetailType (optional)
 
 _**Support for this object type is optional.**_
 
@@ -3255,7 +3157,9 @@ urn:oasis:names:tc:acal:1.0:status:processing-error
 
 A PDP MUST NOT return a `StatusDetailType` object in conjunction with the `processing-error` status value. This status code indicates an internal problem in the PDP. For security reasons, the PDP MAY choose to return no further information to the PEP. In the case of a divide-by-zero error or other computational error, the PDP MAY return a `StatusMessage` property describing the nature of the error.
 
-## 7.43 MissingAttributeDetailType
+<a name="missingattributedetailtype"></a>
+
+## 7.44 MissingAttributeDetailType
 
 A `MissingAttributeDetailType` object conveys information about attributes required for policy evaluation that were missing from the request context.
 
@@ -3301,47 +3205,6 @@ A `MissingAttributeDetailType` object contains the following properties:
 
 If the PDP includes `ValueType` objects in the `MissingAttributeDetailType` object, then this indicates the acceptable values for that attribute. If no `ValueType` objects are included, then the `MissingAttributeDetailType` object indicates the names of attributes that the PDP failed to resolve during its evaluation. The list of attributes may be partial or complete. There is no guarantee by the PDP that supplying the missing values or attributes will be sufficient to satisfy the policy.
 
-## 7.44 AttributeType
-
-_This definition should appear earlier._
-
-An `AttributeType` object contains attribute meta-data and one or more attribute values. The attribute meta-data comprises the attribute identifier and the attribute issuer. Attribute designators in a policy MAY refer to attributes by means of this meta-data.
-
-UML definition (class diagram):
-```plantuml
-@startuml
-skinparam style strictuml
-hide empty members 
-hide circle
-class AttributeType <<dataType>> {
-   + AttributeId: IdentifierType [1]
-   + Issuer: Name [0..1]
-   + DataType: IdentifierType [0..1] = 'urn:oasis:names:tc:acal:1.0:data-type:string'
-   + Value: ValueType [1..*] {unordered, nonunique}
-}
-note "{{OCL} Value->forAll(DataType = null)}" as DataTypeForbiddenInValues
-AttributeType .. DataTypeForbiddenInValues
-@enduml
-```
-
-An `AttributeType` object contains the following properties:
-
-`AttributeId` [Required]
-
-: An `IdentifierType` value identifying the attribute. A number of identifiers are reserved by ACAL to denote commonly used attributes. See [Annex D](#annex-d-acal-identifiers).
-
-`Issuer` [Optional]
-
-: A `Name` value specifying the issuer of the attribute. For example, this attribute value may be an `x500Name` that binds to a public key, or it may be some other identifier exchanged out-of-band by issuing and relying parties.
-
-`DataType` [Optional, Default `urn:oasis:names:tc:acal:1.0:data-type:string`]
-
-: An `IdentifierType` value specifying the data type of the attribute's values. If this property is omitted, then it is treated as being set to `urn:oasis:names:tc:acal:1.0:data-type:string`.
-
-`Value` [One to Many]
-
-: A sequence of `ValueType` objects, each denoting an ACAL attribute value. Duplicated attribute values are permitted. None of these `Value`s may have a `DataType` property since it is already defined by the above `DataType` property.
-
 ## 7.45 ResultEntityType
 
 A `ResultEntityType` object contains a sequence of `AttributeType` objects reflecting `RequestAttributeType` objects in a given attribute category from the request that had their `IncludeInResult` properties set to `true`. The `ResultEntityType` objects only appear in a result.
@@ -3372,6 +3235,8 @@ A `ResultEntityType` object contains the following properties:
 `Attribute` [Any Number]
 
 : A sequence of `AttributeType` objects representing `RequestAttributeType` objects from the same attribute category in the request.
+
+<a name="entitytype"></a>
 
 ## 7.46 EntityType
 
@@ -3984,11 +3849,11 @@ If a policy that contains invalid static data types is evaluated by the ACAL PDP
 
 ### 9.19.3 Missing Attributes
 
-The absence of matching attributes in the request context for any of the attribute designators or attribute selectors that are found in the policy potentially results in the policy evaluating to `Indeterminate`, if the designator or selector has the `MustBePresent` property set to `true`, as described in [Section 7.22](#722-baseattributedesignatortype) and [Section 7.25](#725-baseattributeselectortype) and potentially results in a `Decision` property containing the `Indeterminate` value. In this case, if a status code is supplied, then the value
+The absence of matching attributes in the request context for any of the attribute designators or attribute selectors that are found in the policy potentially results in the policy evaluating to `Indeterminate`, if the designator or selector has the `MustBePresent` property set to `true`, as described in [Section 7.17](#namedattributedesignatortype) and [Section 7.20](#baseattributeselectortype) and potentially results in a `Decision` property containing the `Indeterminate` value. In this case, if a status code is supplied, then the value
 
 `urn:oasis:names:tc:acal:1.0:status:missing-attribute`
 
-SHALL be used, to indicate that more information is needed in order for a definitive decision to be rendered. In this case, the `StatusType` object MAY list the names and data types of any attributes that are needed by the PDP to refine its decision (see [Section 7.50](#750-missingattributedetailtype)). A PEP MAY resubmit a refined request context in response to a `Decision` property contents of `Indeterminate` with a status code of
+SHALL be used, to indicate that more information is needed in order for a definitive decision to be rendered. In this case, the `StatusType` object MAY list the names and data types of any attributes that are needed by the PDP to refine its decision (see [Section 7.44](#missingattributedetailtype)). A PEP MAY resubmit a refined request context in response to a `Decision` property contents of `Indeterminate` with a status code of
 
 `urn:oasis:names:tc:acal:1.0:status:missing-attribute`
 
@@ -4306,7 +4171,6 @@ The implementation MUST support the object types that are marked `M`.
 | MissingAttributeDetailType | M |
 | MultiRequestsType | O |
 | NamedAttributeDesignatorType | M |
-| NoticeType | M |
 | NoticeExpressionType | M |
 | NoticeType | M |
 | PolicyIssuerType | O |
@@ -5079,7 +4943,7 @@ The XPath expression MUST be evaluated in a context which is equivalent of a sta
 
 ### C.2.6 Entity
 
-The `urn:oasis:names:tc:acal:1.0:data-type:entity` data type is used to represent an entity nested within another entity. Values of this data type are objects of the `EntityType` object type [Section 7.53](#753-entitytype).
+The `urn:oasis:names:tc:acal:1.0:data-type:entity` data type is used to represent an entity nested within another entity. Values of this data type are objects of the `EntityType` object type [Section 7.46](#entitytype).
 
 ## C.3 Functions
 
@@ -6333,7 +6197,7 @@ This identifier indicates success.
 
 `urn:oasis:names:tc:acal:1.0:status:ok`
 
-This identifier indicates that all the attributes necessary to make a policy decision were not available (see [Section 7.50](#750-missingattributedetailtype)).
+This identifier indicates that all the attributes necessary to make a policy decision were not available (see [Section 7.44](#missingattributedetailtype)).
 
 `urn:oasis:names:tc:acal:1.0:status:missing-attribute`
 
@@ -6389,7 +6253,7 @@ Note that in each case an implementation is conformant as long as it produces th
 
 ## E.1 Extended Indeterminate Values
 
-Some combining algorithms are defined in terms of an extended set of `Indeterminate` values. See [Section 9.10](#910-extended-indeterminate) for the definition of the Extended Indeterminate values. For these algorithms, the PDP MUST keep track of the extended set of `Indeterminate` values during rule and policy combining.
+Some combining algorithms are defined in terms of an extended set of `Indeterminate` values. See [Section 9.10](#extended-indeterminate) for the definition of the Extended Indeterminate values. For these algorithms, the PDP MUST keep track of the extended set of `Indeterminate` values during rule and policy combining.
 
 The output of a combining algorithm which does not track the extended set of `Indeterminate` values MUST be treated as `Indeterminate{DP}` for the value `Indeterminate` by a combining algorithm which tracks the extended set of `Indeterminate` values.
 
@@ -6872,8 +6736,163 @@ ACAL 1.0 is a successor to XACML 3.0. ACAL 1.0 differs from XACML 3.0 in the fol
 
 ---
 
+# Appendix 3 OASIS Open Specification Template Instructions
 
-# Appendix 3 Additional Appendix as Needed
+(This appendix does not form an integral part of this Specification and is informational.)
+
+
+## General Template Instructions
+
+
+**Template Instructions:** All template instructions are included within angle brackets and need to be deleted prior to publication. This includes these five pages.
+
+
+**Square Brackets**: Nearly all text within square brackets needs to be updated or replaced, except for any reference tokens that also use square brackets. For formats that support it, this text will be highlighted in yellow to make it easier to see.
+
+
+**Additional Versions**: The editors of the document **MUST** produce all additional desired or required formats (HTML, PDF, etc) before sending this for publication.
+
+
+**Names, Organizations, and Emails**: Individuals or companies, past or present, may request that their name and/or affiliation and/or email address be not included in any of the acknowledgments and or leadership positions. 
+
+
+## Formatting Instructions
+
+
+**Paragraph Spacing**: There **SHOULD** be a single empty line between paragraphs. In some cases, editors may add additional spacing to improve readability and the cosmetic look of the section, especially around figures, tables, and charts.
+
+
+**Quotes:** Straight "quotes" **SHOULD** be used, not “smart quotes” or curly quotes. This can be set as a persistent preference in most writing tools.
+
+
+**Document Date**: At the top of the document on the first page is a date, this date **MUST** be the date that the document was approved. 
+
+
+**Document Title and Subtitle:** The title of the document **SHOULD** be written in title case, meaning all words that have four or more letters **SHOULD** be capitalized.
+
+
+**Headings**: While various editors and formats support up to 6 levels of nested headers it is generally advised to structure the document to minimize the number of nested sections. A best practice is to try and keep nesting to no greater than 3 levels of headings. All headings **SHOULD** be written in title case, meaning all words that have four or more letters **SHOULD** be capitalized. 
+
+
+**Tables**: Text presented in tables **SHOULD** be no smaller in font size than the body copy text.
+
+
+## Extra Items Instructions
+
+
+All equations, listings, code snippets, figures (Fig. 1), tables (Table I), etc., need to be referenced in the text (preferably before their appearance).
+
+
+**Mathematical Syntax and Equations:** Editors **SHOULD** consider using simple text (with the Markdown Blockquotes feature designated by the following angle bracket \>) or images to create mathematical representations. All equations, listings, code snippets, figures (Fig. 1), tables (Table 1), etc., need to be referenced in the text (preferably before their appearance). 
+
+
+**Equations:** All equations **MUST** use the Markdown Blockquotes feature, **MUST** be numbered, **MAY** use a section number dot equation number (see example below) to track the equations within a particular section, and **SHOULD** be numbered consecutively where the number is in parentheses and appears after the formula. All symbols in the equation **SHOULD** be defined before the equation appears in the text. When referring to an equation or formula, use for example "Eq. 1.1".
+
+
+> y2 \= x3 \+ ax \+ b (Eq. 1.1)
+
+
+**Listings:** All algorithms and pseudo code **MUST** use the Markdown Fenced Code Blocks feature, **MUST** be numbered, **MAY** use a section number dot listing number (see example below) to track the listing within a particular section, **SHOULD** be numbered consecutively, and **SHOULD** include a short title forming a header. There **SHOULD** be a line above and below the header and a line at the bottom of the algorithm. Editors **SHOULD** use the markdown 
+
+
+---
+
+
+**Listing 1.1** Sample Title  
+---
+
+
+```
+currentMax ← A[0]  
+    for i ← 1 to n \-1 do  
+        if A[i] \> currentMax then  
+            currentMax ← A[i]  
+    { increment counter i }  
+    return currentMax  
+```
+
+
+---
+
+
+**Code Snippets**: Actual code samples and snippets **MUST** be numbered, **MAY** use a section number followed by a dot which is then followed by a code sample number (see example below) to track the code samples within a particular section, **SHOULD** be numbered consecutively, and **SHOULD** include a short title forming a header. There **SHOULD** be a line above and below the header. A single header **MAY** be used for multiple code samples in a block, but in this case, each sample **SHOULD** individually be numbered as shown below. The code itself **SHOULD** use the Markdown Fenced Code Blocks feature and programming language designator to style the code snippet. Meaning that the first code line will start with three back tick characters (\`\`\`) followed by the language (e.g., json, yaml, cpp, go, etc) and the last line starts with three back tick characters (\`\`\`).
+
+
+---
+
+
+**Code 1.1** Sample Title  
+---
+
+
+*Some subheading (e.g., Example 1.1.1 \- Some example code)*  
+```json  
+{  
+  "Some key": "some value"  
+}  
+```
+
+
+*Some subheading (e.g., Example 1.1.2 \- Some other example code)*  
+```xml 
+<your xml> 
+```
+
+
+**Figures and Tables**: All figures **MUST** be numbered and **MAY** use a section number followed by a hyphen which is then followed by a figure number (see example below) to track the figures within a particular section. When referencing a figure or table please use the abbreviation "Fig." for figures and "Table" for tables. Tables **SHOULD** be numbered with Roman numerals.
+
+
+Figure 2-1  
+![FIG2-1](figure2-1.png)
+**Fig. 2-1.** This is a sample of a figure caption.
+
+
+Table I  
+This is a Sample of a Table Title
+
+
+|  Name  | \#1 | \#2 | \#3 | \#4 | \#5 |
+|:------:|:---:|:---:|:---:|:---:|:---:|
+| **AB** |  3  |  3  |  6  | 11  |  9  |
+| **BC** |  7  |  7  |  4  | 12  |  9  |
+| **CD** | 10  |  3  |  3  |  9  |  7  |
+| **DE** |  3  |  7  | 10  |  5  |  6  |
+| **DF** |  7  |  1  | 12  |  1  |  3  |
+| **ZZ** |  5  | 12  | 11  |  9  |  8  |
+
+
+**Table I:** This table contains information about x and y and z.
+
+
+## Other Instructions
+
+
+**References:** OASIS uses the IEEE Reference format for citations. However, unlike the IEEE Reference format the in-line tokens can be either named or a number; in either case they are enclosed in square braces. Editors **SHOULD** be consistent in the body of the document and use either named tokens "[RFC2119]" or numbered "[1]" tokens, but not both. Any named tokens that are used in the template front matter do not impact the decision about named or numbered in the body of the document. All other rules about in-line use and style **MUST** follow the IEEE Reference format found here: [https://journals.ieeeauthorcenter.ieee.org/wp-content/uploads/sites/7/IEEE\_Reference\_Guide.pdf](https://journals.ieeeauthorcenter.ieee.org/wp-content/uploads/sites/7/IEEE_Reference_Guide.pdf)
+
+
+**Definitions and Terms:** It is generally more consistent to refer to an existing official definition in other open standards or readily-available nonproprietary reference documents, rather than to redefine a term. It is a best practice to refer to the specific version or date of the source document for a definition, either explicitly or by a reference link to the specific version (not a ‘current version’ link). Normally, terms defined elsewhere will simply refer to the defining document. In certain cases, it may be desirable to quote the definition to allow for a stand-alone document. Before defining a new term, verify whether it has already been defined in an official document elsewhere such as in another OASIS Standard, the ITU terminology database ([https://www.itu.int/br\_tsb\_terms/\#/](https://www.itu.int/br_tsb_terms/#/)), ISO terms ([https://www.iso.org/obp/ui](https://www.iso.org/obp/ui)), IEEE/IEC electropedia ([https://www.electropedia.org/IEEE](https://www.electropedia.org/IEEE)), IETF, CEN/CENELEC, or NIST ([https://csrc.nist.gov/glossary](https://csrc.nist.gov/glossary)).
+
+
+**Annex vs Appendix:** An annex is considered normative, meaning that it **MUST** be included with the document and its contents form an integral part of the document. Whereas an Appendix is purely informational content and is not required to be included with the document.
+
+
+Under the heading of each Annex the following text **MUST** be present:  
+(This annex forms an integral part of this Specification.)
+
+
+Under the heading of each Appendix the following text **MUST** be present:  
+(This appendix does not form an integral part of this Specification and is informational.)
+
+
+- Annex A **MUST** be the License, Document Status and Notices information.  
+- Annex B **MUST** be the References information.  
+- Annex C+ can be whatever is needed  
+- Appendix 1 **MUST** be the Acknowledgments information  
+- Appendix 2 **MUST** be the Changes From Previous Version information  
+- Appendix 3+ can be whatever is needed
+
+
+# Appendix 4 Additional Appendix as Needed
 
 
 (This appendix does not form an integral part of this Specification and is informational.)
