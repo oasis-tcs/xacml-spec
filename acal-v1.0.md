@@ -6803,7 +6803,7 @@ ACAL 1.0 is a successor to XACML 3.0. ACAL 1.0 differs from XACML 3.0 in the fol
 
 - The arguments to each of the following functions have been swapped: `string-starts-with`, `anyURI-starts-with`, `string-ends-with`, `anyURI-ends-with`, `string-contains`, `anyURI-contains`, `x500Name-match`, `rfc822Name-match`, `string-regexp-match`, `anyURI-regexp-match`, `ipAddress-regexp-match`, `dnsName-regexp-match`, `rfc822Name-regexp-match` and `x500Name-regexp-match`.
 
-- Added a new logical function (annex C.3) commonly known as *ternary (conditional) operator*: `function ternary-if(a,b,c) -> if a is true, return b, else return c`).
+- Added a new logical function (annex C.3) commonly known as *ternary (conditional) operator*: `function ternary-if(a,b,c) -> if a is true, return b, else return c`.
 
 - Added new aggregate functions (annex C.3) for computing:
   - Sums and averages of integers/doubles;
