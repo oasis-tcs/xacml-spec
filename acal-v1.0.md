@@ -1407,6 +1407,18 @@ Note that the three cases can be distinguished from each other syntactically in 
 
 The conversion of a value of the `IdentifierType` simple type into an absolute URI is detailed in [Section 9.3](#93-identifier-evaluation).
 
+## 7.4b PolicyScopedIdentifierType
+
+A `PolicyScopedIdentifierType` value is a restricted `String` value used to refer to a parameter, rule or variable within the same policy, or a category within the same request.
+
+```xml
+<xs:simpleType name="PolicyScopedIdentifierType">
+   <xs:restriction base="xs:string">
+      <xs:pattern value="_?[A-Za-z0-9]([-._]?[A-Za-z0-9]+)*"/>
+   </xs:restriction>
+</xs:simpleType>
+```
+
 ## 7.5 PolicyType
 
 A `PolicyType` object describes a policy: an aggregation of rules and other policies. Policies MAY be included in an enclosing `PolicyType` object either directly using the `Policy` property or indirectly using the `PolicyReference` property.
@@ -1599,22 +1611,18 @@ A `PolicyParameterType` object declares a single parameter for a parameterized p
       <xs:element ref="xacml:Description" minOccurs="0"/>
       <xs:element ref="xacml:Expression" minOccurs="0"/>
    </xs:sequence>
-   <xs:attribute name="ParameterName" type="xacml:PolicyInternalIdentifierType" use="required"/>
-   <xs:attribute name="DataType" type="xs:anyURI" use="optional" default="urn:oasis:names:tc:acal:1.0:data-type:string"/>
+   <xs:attribute name="ParameterName" type="xacml:PolicyScopedIdentifierType" use="required"/>
+   <xs:attribute name="DataType" type="xacml:IdentifierType" use="optional"
+                 default="urn:oasis:names:tc:acal:1.0:data-type:string"/>
    <xs:attribute name="IsBag" type="xs:boolean" use="optional" default="false"/>
 </xs:complexType>
-<xs:simpleType name="PolicyInternalIdentifierType">
-   <xs:restriction base="xs:string">
-      <xs:pattern value="_?[A-Za-z]([-._]?[A-Za-z0-9]+)*"/>
-   </xs:restriction>
-</xs:simpleType>
 ```
 
 A `PolicyParameterType` object contains the following properties:
 
 `ParameterName` [Required]
 
-: The name of the parameter. The value of the parameter MAY be referenced within an expression contained within the policy using a `VariableReferenceType` object with its `VariableId` property set to this name.
+: A `PolicyScopedIdentifierType` value to name the parameter. The value of the parameter MAY be referenced within an expression contained within the policy using a `VariableReferenceType` object with its `VariableId` property set to this name.
 
 `DataType` [Optional]
 
@@ -1669,8 +1677,6 @@ A `PolicyReferenceType` object is used to reference a policy by identifier and v
    <xs:complexContent>
       <xs:extension base="xacml:IdReferenceType">
          <xs:attribute name="Version" type="xacml:VersionMatchType" use="optional"/>
-         <xs:attribute name="EarliestVersion" type="xacml:VersionMatchType" use="optional"/>
-         <xs:attribute name="LatestVersion" type="xacml:VersionMatchType" use="optional"/>
       </xs:extension>
    </xs:complexContent>
 </xs:complexType>
@@ -1690,17 +1696,7 @@ The `PatternMatchIdReferenceType` object type extends the `IdReferenceType` obje
 
 `Version` [Optional]
 
-: Specifies a matching expression for an acceptable version of the policy referenced.
-
-`EarliestVersion` [Optional]
-
-: Specifies a matching expression for the earliest acceptable version of the policy referenced.
-
-`LatestVersion` [Optional]
-
-: Specifies a matching expression for the latest acceptable version of the policy referenced.
-
-The matching operation is defined in [Section 7.12](#712-versionmatchtype). Any combination of these properties MAY be present in a `PatternMatchIdReferenceType` object. The referenced policy MUST match all expressions. If none of these properties are present, then any version of the policy is acceptable. In the case that more than one matching version can be obtained, then the most recent one SHOULD be used.
+: Specifies a matching expression for selecting an acceptable version of the referenced policy. The matching operation is defined in [Section 7.12](#712-versionmatchtype). If this property is present, then the selected version of the policy MUST match the expression. If the property is absent, then any version of the policy is acceptable. In the case that more than one version matches, then the most recent one SHOULD be used.
 
 The `IdReferenceType` object type contains the following property:
 
@@ -1710,7 +1706,7 @@ The `IdReferenceType` object type contains the following property:
 
 ## 7.11 VersionType
 
-A value of this simple type specifies the version number of a policy.
+A value of this simple type specifies the version number of a policy or shared variable.
 
 ```xml
 <xs:simpleType name="VersionType">
@@ -1760,7 +1756,7 @@ A `RuleType` object may be evaluated, in which case the evaluation procedure def
       <xs:element ref="xacml:Condition" minOccurs="0"/>
       <xs:element ref="xacml:NoticeExpression" minOccurs="0" maxOccurs="unbounded"/>
    </xs:sequence>
-   <xs:attribute name="Id" type="xs:NCName" use="required"/>
+   <xs:attribute name="Id" type="xacml:PolicyScopedIdentifierType" use="required"/>
    <xs:attribute name="Effect" type="xacml:EffectType" use="required"/>
 </xs:complexType>
 ```
@@ -1769,7 +1765,7 @@ A `RuleType` object contains the following properties:
 
 `Id` [Required]
 
-: A restricted `String` identifier for this rule. It is the responsibility of the PAP to ensure that no two rules in the same policy have the same identifier.
+: A `PolicyScopedIdentifierType` value to identify this rule. It is the responsibility of the PAP to ensure that no two rules in the same policy have the same identifier.
 
 `Effect` [Required]
 
@@ -1814,7 +1810,7 @@ A `VariableDefinitionType` object is used to define a value or a bag of values t
    <xs:sequence>
       <xs:element ref="xacml:Expression"/>
    </xs:sequence>
-   <xs:attribute name="VariableId" type="xs:NCName" use="required"/>
+   <xs:attribute name="VariableId" type="xacml:PolicyScopedIdentifierType" use="required"/>
    <xs:assert test="not(xacml:Value) or xacml:Value/@DataType"/>
 </xs:complexType>
 ```
@@ -1823,7 +1819,7 @@ A `VariableDefinitionType` object has the following properties:
 
 `VariableId` [Required]
 
-: A restricted `String` name for the variable definition. The value of the property MUST NOT be the same as the `VariableId` property of another `VariableDefinitionType` object in the same `VariableDefinition` property or in the `VariableDefinition` property of a `PolicyType` object enclosing the parent object.
+: A `PolicyScopedIdentifierType` value to identify the variable definition. The value of the property MUST NOT be the same as the `VariableId` property of another `VariableDefinitionType` object in the same `VariableDefinition` property or in the `VariableDefinition` property of a `PolicyType` object enclosing the parent object.
 
 `Expression` [Required]
 
@@ -2090,10 +2086,11 @@ Evaluation of an `AttributeSelectorType` or `EntityAttributeSelectorType` object
 See [Section 9.4.7](#947-selector-evaluation) for details of attribute selector and entity attribute selector evaluation.
 
 ```xml
-<xs:complexType name="BaseAttributeSelectorType">
+<xs:complexType name="BaseAttributeSelectorType" abstract="true">
    <xs:complexContent>
       <xs:extension base="xacml:ExpressionType">
          <xs:attribute name="ContextSelectorId" type="xacml:IdentifierType" use="optional"/>
+         <xs:attribute name="PathType" type="xacml:AttributeSelectorPathType" use="optional" default="XPath"/>
          <xs:attribute name="Path" type="xs:string" use="required"/>
          <xs:attribute name="DataType" type="xacml:IdentifierType" use="optional" default="urn:oasis:names:tc:acal:1.0:data-type:string"/>
          <xs:attribute name="MustBePresent" type="xs:boolean" use="optional" default="false"/>
@@ -2108,11 +2105,17 @@ A `BaseAttributeSelectorType` object has the following properties:
 
 : An `IdentifierType` value specifying an ACAL attribute (by its `AttributeId`) in the attribute category or `urn:oasis:names:tc:acal:1.0:data-type:entity` value containing the XML content. The referenced attribute MUST have a single value of data type `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` and the XPath expression represented by that value must select a single node in the XML content. The `XPathCategory` property of the referenced ACAL attribute value SHALL be ignored.
 
+`PathType` [Optional]
+
+: An `AttributeSelectorPathType` value indicating whether the path expression in the `Path` property is an XPath expression (`PathType` is `XPath`) or a JSONPath expression (`PathType` is `JSONPath`). If this property is omitted, then it is treated as being set to `XPath`.
+
 `Path` [Required]
 
-: A `String` value that contains an XPath expression to be evaluated against the specified XML content. See [Section 9.4.7](#947-selector-evaluation) for details of the XPath evaluation during attribute selector and entity attribute selector processing. The namespace context for the value of the `Path` property is given by the [in-scope namespaces] [[INFOSET](#infoset)] of the `BaseAttributeSelectorType` object.
+: A `String` value that contains a path expression to be evaluated against the specified content. See [Section 9.4.7](#947-selector-evaluation) for details of XPath evaluation during attribute selector and entity attribute selector processing. In the case of an XPath expression, the namespace context for the value of the `Path` property is given by the [in-scope namespaces] [[INFOSET](#infoset)] of the `BaseAttributeSelectorType` object.
 
   _The namespaces will need to be handled in a manner similar to how namespaces are handled in the JSON profile for values of the xpathexpression data type._
+
+  _Support for JSONPath is still to be defined._
 
 `DataType` [Optional]
 
@@ -2208,7 +2211,7 @@ A `VariableReferenceType` object is a kind of expression used to reference a var
 <xs:complexType name="VariableReferenceType">
    <xs:complexContent>
       <xs:extension base="xacml:ExpressionType">
-         <xs:attribute name="VariableId" type="xs:NCName" use="required"/>
+         <xs:attribute name="VariableId" type="xacml:PolicyScopedIdentifierType" use="required"/>
       </xs:extension>
    </xs:complexContent>
 </xs:complexType>
@@ -2218,7 +2221,7 @@ A `VariableReferenceType` object contains the following property:
 
 `VariableId` [Required]
 
-: The restricted `String` name used to refer to the ACAL value or bag of values defined in a `VariableDefinitionType` object. The property value MUST match, by identifier equality, the `VariableId` property of exactly one `VariableDefinitionType` object that is in the `VariableDefinition` property of an enclosing `RuleType` or `PolicyType` object.
+: A `PolicyScopedIdentifierType` value used to refer to the ACAL value or bag of values defined in a `VariableDefinitionType` object. The property value MUST match, by identifier equality, the `VariableId` property of exactly one `VariableDefinitionType` object that is in the `VariableDefinition` property of an enclosing `RuleType` or `PolicyType` object.
 
 ## 7.29b SharedVariableReferenceType
 
@@ -2231,8 +2234,6 @@ A `SharedVariableReferenceType` object is used to reference a shared variable by
       <xs:extension base="xacml:ExpressionType">
          <xs:attribute name="Id" type="xs:anyURI" use="required"/>
          <xs:attribute name="Version" type="xacml:VersionMatchType" use="optional"/>
-         <xs:attribute name="EarliestVersion" type="xacml:VersionMatchType" use="optional"/>
-         <xs:attribute name="LatestVersion" type="xacml:VersionMatchType" use="optional"/>
       </xs:extension>
    </xs:complexContent>
 </xs:complexType>
@@ -2246,17 +2247,7 @@ The `SharedVariableReferenceType` object type contains the following properties:
 
 `Version` [Optional]
 
-: Specifies a matching expression for an acceptable version of the shared variable referenced.
-
-`EarliestVersion` [Optional]
-
-: Specifies a matching expression for the earliest acceptable version of the shared variable referenced.
-
-`LatestVersion` [Optional]
-
-: Specifies a matching expression for the latest acceptable version of the shared variable referenced.
-
-The matching operation is defined in [Section 7.12](#712-versionmatchtype). Any combination of these properties may be present in a `SharedVariableReferenceType` object. The referenced shared variable MUST match all expressions. If none of these properties are present, then any version of the shared variable is acceptable. In the case that more than one matching version can be obtained, then the most recent one SHOULD be used.
+: Specifies a matching expression for selecting an acceptable version of the referenced shared variable. The matching operation is defined in [Section 7.12](#712-versionmatchtype). If this property is present, then the selected version of the shared variable MUST match the expression. If the property is absent, then any version of the shared variable is acceptable. In the case that more than one version matches, then the most recent one SHOULD be used.
 
 ## 7.30 QuantifiedExpressionType
 
@@ -2270,7 +2261,7 @@ A `QuantifiedExpressionType` object is a kind of expression that represents one 
         <xs:element ref="xacml:Expression"/>
         <xs:element ref="xacml:Expression"/>
       </xs:sequence>
-      <xs:attribute name="VariableId" type="xs:NCName" use="required"/>
+      <xs:attribute name="VariableId" type="xacml:PolicyScopedIdentifierType" use="required"/>
     </xs:extension>
   </xs:complexContent>
 </xs:complexType>
@@ -2280,7 +2271,7 @@ A `QuantifiedExpressionType` object contains the following properties:
 
 `VariableId` [Required]
 
-: A restricted `String` value naming the quantified variable that will be used by the quantified expression. The quantified variable does not have a corresponding variable definition. The value of the property MUST NOT be the same as the `VariableId` property of a `VariableDefinitionType` object in the `VariableDefinition` property of an enclosing `PolicyType` or `RuleType` object.
+: A `PolicyScopedIdentifierType` value to identify the quantified variable that will be used by the quantified expression. The quantified variable does not have a corresponding variable definition. The value of the property MUST NOT be the same as the `VariableId` property of a `VariableDefinitionType` object in the `VariableDefinition` property of an enclosing `PolicyType` or `RuleType` object.
 
 `Domain` [Required]
 
@@ -2791,7 +2782,7 @@ A `RequestEntityReferenceType` object makes a reference to a `RequestEntityType`
 ```xml
 <xs:element name="RequestEntityReference" type="xacml:RequestEntityReferenceType"/>
 <xs:complexType name="RequestEntityReferenceType">
-   <xs:attribute name="Id" type="xs:IDREF" use="required"/>
+   <xs:attribute name="Id" type="xacml:PolicyScopedIdentifierType" use="required"/>
 </xs:complexType>
 ```
 
@@ -2799,7 +2790,7 @@ A `RequestEntityReferenceType` object contains the following properties.
 
 `Id` [required]
 
-: A `String` value referencing a `RequestEntityType` object in the enclosing `RequestType` object by the value of its `Id` property.
+: A `PolicyScopedIdentifierType` value referencing a `RequestEntityType` object in the enclosing `RequestType` object by the value of its `Id` property.
 
 ## 7.46 DecisionType
 
@@ -3093,6 +3084,19 @@ A `BundleType` object contains the following properties:
 `PolicyReference` [Optional]
 
 : If present, a `PolicyReferenceType` object that MUST reference a policy in the `Policy` property. A PDP defined by this `BundleType` object SHALL evaluate every authorization request by evaluating this policy reference. See [Section 9.15](#915-policyreferenceevaluation). If this property is absent, then the PDP returns `NotApplicable` for every authorization request. The policy reference MUST specify arguments if the referenced policy is parameterized.
+
+## 7.55 AttributeSelectorPathType
+
+The `AttributeSelectorPathType` simple type defines the values allowed for the `PathType` property of an `AttributeSelector` or `EntityAttributeSelector` object; either `XPath` or `JSONPath`.
+
+```xml
+<xs:simpleType name="AttributeSelectorPathType">
+   <xs:restriction base="xs:string">
+      <xs:enumeration value="XPath" />
+      <xs:enumeration value="JSONPath" />
+   </xs:restriction>
+</xs:simpleType>
+```
 
 
 ---

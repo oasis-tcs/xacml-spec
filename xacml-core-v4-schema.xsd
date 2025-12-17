@@ -527,9 +527,9 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 		<xs:complexContent>
 			<xs:extension base="xacml:ExpressionType">
 				<xs:attribute name="ContextSelectorId" type="xacml:IdentifierType" use="optional"/>
-				<xs:attribute name="Path" type="xs:string" use="required"/>
 				<!-- Change to XACML 3.0 (issue #5): JSONPath support-->
 				<xs:attribute name="PathType" type="xacml:AttributeSelectorPathType" use="optional" default="XPath"/>
+				<xs:attribute name="Path" type="xs:string" use="required"/>
 				<!-- Change to XACML 3.0 (issue #48): DataType attribute type changed to IdentifierType for supporting Short Identifiers -->
 				<xs:attribute name="DataType" type="xacml:IdentifierType" use="optional" default="urn:oasis:names:tc:acal:1.0:data-type:string"/>
 				<!-- Change to XACML 3.0 (issue #20): MustBePresent changed to optional with default false -->
