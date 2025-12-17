@@ -1089,7 +1089,7 @@ The model operates by the following steps.
 
 ## 5.2 ACAL Context
 
-ACAL is intended to be suitable for a variety of application environments. The core language is insulated from the application environment by the ACAL context, as shown in [Figure 2](#figure-2---acal-context), in which the scope of the ACAL specification is indicated by the shaded area. In the figure, the ACAL context is defined in XML schema, describing a canonical representation for the inputs and outputs of the PDP. An ACAL Policy references attributes in the ACAL context via XPath/JSONPath expressions over the `ContentType` objects of the context, or attribute designators that identify the attribute by its category, identifier, data type and (optionally) its issuer. Implementations must convert between the attribute representations in the application environment (e.g., SAML, J2SE, CORBA, and so on) and the attribute representations in the ACAL context. How this is achieved is outside the scope of the ACAL specification. In some cases, such as SAML, this conversion may be accomplished in an automated way through the use of an XSLT transformation.
+ACAL is intended to be suitable for a variety of application environments. The core language is insulated from the application environment by the ACAL context, as shown in [Figure 2](#figure-2---acal-context), in which the scope of the ACAL specification is indicated by the shaded area. In the figure, the ACAL context represents the inputs and outputs of the PDP decision. An ACAL Policy references attributes in the ACAL context via content-specific path expressions (e.g. XPath for XML content, JSONPath for JSON content) over the `ContentType` objects of the context, or *named* attribute designators that identify the attribute by its category, identifier, data type and (optionally) its issuer. Implementations must convert between the attribute representations in the application environment (e.g., SAML, J2SE, CORBA, and so on) and the attribute representations in the ACAL context. How this is achieved is outside the scope of the ACAL specification. In some cases, such as SAML, this conversion may be accomplished in an automated way through the use of an XSLT transformation.
 
 **Figure 2.** ACAL Context
 
@@ -1120,12 +1120,12 @@ digraph Fig1 {
         bgcolor=lightgrey
         // Increase the margin if the bottom link (flow 11) is too low
         //margin="40"
-        policy [label="xacml\nPolicy.xml", shape=box, style="filled,rounded"]
-        request [label="xacml Context/\nRequest.xml", style="filled,rounded"]
+        policy [label="ACAL \nPolicy", shape=box, style="filled,rounded"]
+        request [label="ACAL Context/\nDecision Request", style="filled,rounded"]
         request_to_pdp [shape=rarrow, label="", style="filled", width=0.5]
         pdp [label="PDP", style="filled"]
         pdp_to_response [shape=rarrow, label="", style=filled, width=0.5]
-        response [label="xacml Context/\nResponse.xml", style="filled,rounded"]
+        response [label="ACAL Context/\nDecision Response", style="filled,rounded"]
         
         // Link the nodes to force vertical alignment from top to bottom and make the links invisible
         // NB: changing minlen to 0 to reduce edge length screws up everything, don't do it.
