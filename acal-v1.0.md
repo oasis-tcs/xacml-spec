@@ -154,7 +154,7 @@ $ pandoc -f gfm+definition_lists -t pdf acal-v1.0.md -c styles/markdown-styles-v
 
 
 ## Table of Contents
-
+<!-- ToC template from OASIS Open Specification Template Instructions:
 
 - [1 Scope](#1-scope)
 - [2 Definitions and Acronyms](#2-definitions-and-acronyms)
@@ -195,6 +195,270 @@ $ pandoc -f gfm+definition_lists -t pdf acal-v1.0.md -c styles/markdown-styles-v
 - [Appendix 3 Additional Appendix as Needed](#appendix-3-additional-appendix-as-needed)
   - [Subsection Title](#subsection-title)
 - [Sub-subsection](#sub-subsection)
+-->
+
+<!-- Generated ToC -->
+- [1 Scope](#1-scope)
+- [2 Definitions and Acronyms](#2-definitions-and-acronyms)
+  - [2.1 Definitions](#21-definitions)
+    - [2.1.1 Terms Defined Elsewhere](#211-terms-defined-elsewhere)
+    - [2.1.2 Terms Defined in this Document](#212-terms-defined-in-this-document)
+    - [2.1.3 Related terms](#213-related-terms)
+  - [2.2 Abbreviations and Acronyms](#22-abbreviations-and-acronyms)
+- [3 Document Conventions](#3-document-conventions)
+  - [3.1 Key Words](#31-key-words)
+  - [3.2 Typographical Conventions](#32-typographical-conventions)
+- [4 Introduction (non-normative)](#4-introduction-non-normative)
+  - [4.1 Requirements](#41-requirements)
+  - [4.2 Rule and Policy Combining](#42-rule-and-policy-combining)
+  - [4.3 Combining Algorithms](#43-combining-algorithms)
+  - [4.4 Multiple Subjects](#44-multiple-subjects)
+  - [4.5 Policies Based on Subject and Resource Attributes](#45-policies-based-on-subject-and-resource-attributes)
+  - [4.6 Multi-Valued Attributes](#46-multi-valued-attributes)
+  - [4.7 Policies Based on Resource Contents](#47-policies-based-on-resource-contents)
+  - [4.8 Operators](#48-operators)
+  - [4.9 Policy Distribution](#49-policy-distribution)
+  - [4.10 Policy Indexing](#410-policy-indexing)
+  - [4.11 Abstraction Layer](#411-abstraction-layer)
+  - [4.12 Actions Performed in Conjunction with Enforcement](#412-actions-performed-in-conjunction-with-enforcement)
+  - [4.13 Supplemental Information About a Decision](#413-supplemental-information-about-a-decision)
+  - [4.14 Changes From the Previous Version](#414-changes-from-the-previous-version)
+- [5 Models (non-normative)](#5-models-non-normative)
+  - [5.1 Data-Flow Model](#51-data-flow-model)
+  - [5.2 ACAL Context](#52-acal-context)
+  - [5.3 Policy Language Model](#53-policy-language-model)
+    - [5.3.1 Rule](#531-rule)
+      - [5.3.1.1 Condition](#5311-condition)
+      - [5.3.1.2 Effect](#5312-effect)
+      - [5.3.1.4 Notice Expressions](#5314-notice-expressions)
+    - [5.3.2 Policy](#532-policy)
+      - [5.3.2.1 Policy Target](#5321-policy-target)
+      - [5.3.2.2 Combining Algorithm](#5322-combining-algorithm)
+      - [5.3.2.3 Notice Expressions](#5323-notice-expressions)
+- [6 Examples (non-normative)](#6-examples-non-normative)
+  - [6.1 Example One](#61-example-one)
+    - [6.1.1 Example Policy](#611-example-policy)
+    - [6.1.2 Example Request Context](#612-example-request-context)
+    - [6.1.3 Example Response Context](#613-example-response-context)
+  - [6.2 Example Two](#62-example-two)
+    - [6.2.1 Example Medical Record Instance](#621-example-medical-record-instance)
+    - [6.2.2 Example Request Context](#622-example-request-context)
+    - [6.2.3 Example Plain-Language Rules](#623-example-plain-language-rules)
+    - [6.2.4 Example Short Identifier Set](#624-example-short-identifier-set)
+    - [6.2.5 Example ACAL Rule Instances](#625-example-acal-rule-instances)
+      - [6.2.5.1 Rule 1](#6251-rule-1)
+      - [6.2.5.2 Rule 2](#6252-rule-2)
+      - [6.2.5.3 Rule 3](#6253-rule-3)
+      - [6.2.5.4 Rule 4](#6254-rule-4)
+      - [6.2.5.5 Example Policy with Nested Policies](#6255-example-policy-with-nested-policies)
+- [7 Structures](#7-structures)
+  - [7.1 Introduction](#71-introduction)
+    - [7.1.1 Object Type](#711-object-type)
+    - [7.1.2 Simple Types](#712-simple-types)
+      - [7.1.2.1 Standard UML primitive types (String, Boolean, Integer, Real)](#7121-standard-uml-primitive-types-string-boolean-integer-real)
+      - [7.1.2.2 ACAL-defined UML stereotype(s) used in new primitive types](#7122-acal-defined-uml-stereotypes-used-in-new-primitive-types)
+      - [7.1.2.3 ACAL-defined simple types](#7123-acal-defined-simple-types)
+        - [7.1.2.3.1 URI](#71231-uri)
+        - [7.1.2.3.2 Double](#71232-double)
+        - [7.1.2.3.3 VersionType](#71233-versiontype)
+        - [7.1.2.3.4 VersionMatchType](#71234-versionmatchtype)
+        - [7.1.2.3.5 ShortIdNameType](#71235-shortidnametype)
+        - [7.1.2.3.6 IdentifierType](#71236-identifiertype)
+        - [7.1.2.3.7 LocalIdentifierType](#71237-localidentifiertype)
+        - [7.1.2.3.8 Name](#71238-name)
+        - [7.1.2.3.9 EffectType](#71239-effecttype)
+        - [7.1.2.3.10 DecisionType](#712310-decisiontype)
+        - [7.1.2.3.11 AttributeSelectorPathType](#712311-attributeselectorpathtype)
+    - [7.1.3 Relationship to Concrete Representations](#713-relationship-to-concrete-representations)
+  - [7.2 ShortIdSetType](#72-shortidsettype)
+  - [7.3 ShortIdType](#73-shortidtype)
+  - [7.4 PolicyType](#74-policytype)
+  - [7.5 DefaultsType (optional)](#75-defaultstype-optional)
+  - [7.6 PolicyParameterType](#76-policyparametertype)
+  - [7.7 BooleanExpressionType](#77-booleanexpressiontype)
+  - [7.8 IdReferenceType](#78-idreferencetype)
+  - [7.9 ExactMatchIdReferenceType (optional)](#79-exactmatchidreferencetype-optional)
+  - [7.10 PatternMatchIdReferenceType](#710-patternmatchidreferencetype)
+  - [7.11 PolicyReferenceType](#711-policyreferencetype)
+  - [7.12 RuleType](#712-ruletype)
+  - [7.13 VariableDefinitionType](#713-variabledefinitiontype)
+  - [7.13b SharedVariableDefinitionType](#713b-sharedvariabledefinitiontype)
+  - [7.14 ExpressionType](#714-expressiontype)
+  - [7.15 ApplyType](#715-applytype)
+  - [7.16 FunctionType](#716-functiontype)
+  - [7.17 NamedAttributeDesignatorType](#717-namedattributedesignatortype)
+  - [7.18 AttributeDesignatorType](#718-attributedesignatortype)
+  - [7.19 EntityAttributeDesignatorType](#719-entityattributedesignatortype)
+  - [7.20 BaseAttributeSelectorType (optional)](#720-baseattributeselectortype-optional)
+  - [7.21 AttributeSelectorType (optional)](#721-attributeselectortype-optional)
+  - [7.22 EntityAttributeSelectorType (optional)](#722-entityattributeselectortype-optional)
+  - [7.23 ValueType](#723-valuetype)
+  - [7.24 VariableReferenceType](#724-variablereferencetype)
+  - [7.24b SharedVariableReferenceType](#724b-sharedvariablereferencetype)
+  - [7.25 QuantifiedExpressionType](#725-quantifiedexpressiontype)
+    - [7.25.1 ForAny Expression](#7251-forany-expression)
+    - [7.25.2 ForAll Expression](#7252-forall-expression)
+    - [7.25.3 Map Expression](#7253-map-expression)
+    - [7.25.4 Select Expression](#7254-select-expression)
+  - [7.26 NoticeType](#726-noticetype)
+  - [7.27 AttributeType](#727-attributetype)
+  - [7.28 AttributeAssignmentType](#728-attributeassignmenttype)
+  - [7.29 NoticeExpressionType](#729-noticeexpressiontype)
+  - [7.30 AttributeAssignmentExpressionType](#730-attributeassignmentexpressiontype)
+  - [7.31 RequestType](#731-requesttype)
+  - [7.32 RequestDefaultsType (optional)](#732-requestdefaultstype-optional)
+  - [7.33 RequestEntityType](#733-requestentitytype)
+  - [7.34 ContentType (optional)](#734-contenttype-optional)
+  - [7.35 RequestAttributeType](#735-requestattributetype)
+  - [7.36 ResponseType](#736-responsetype)
+  - [7.37 ResultType](#737-resulttype)
+  - [7.38 MultiRequestsType (optional)](#738-multirequeststype-optional)
+  - [7.39 RequestReferenceType (optional)](#739-requestreferencetype-optional)
+  - [7.40 RequestEntityReferenceType (optional)](#740-requestentityreferencetype-optional)
+  - [7.41 StatusType](#741-statustype)
+  - [7.42 StatusCodeType](#742-statuscodetype)
+  - [7.43 StatusDetailType (optional)](#743-statusdetailtype-optional)
+  - [7.44 MissingAttributeDetailType](#744-missingattributedetailtype)
+  - [7.45 ResultEntityType](#745-resultentitytype)
+  - [7.46 EntityType](#746-entitytype)
+  - [7.47 BundleType](#747-bundletype)
+- [8 XPath Definitions (optional)](#8-xpath-definitions-optional)
+  - [Supported XPath versions](#supported-xpath-versions)
+  - [XPath 2.0 Implementation-Defined Items](#xpath-20-implementation-defined-items)
+    - [XPath 3.0 additional implementation-defined items](#xpath-30-additional-implementation-defined-items)
+    - [XPath 3.1 additional implementation-defined items](#xpath-31-additional-implementation-defined-items)
+- [9 Functional Requirements](#9-functional-requirements)
+  - [9.1 Unicode Issues](#91-unicode-issues)
+    - [9.1.1 Normalization](#911-normalization)
+    - [9.1.2 Version of Unicode](#912-version-of-unicode)
+  - [9.2 Policy Enforcement Point](#92-policy-enforcement-point)
+    - [9.2.1 Base PEP](#921-base-pep)
+    - [9.2.2 Deny-Biased PEP](#922-deny-biased-pep)
+    - [9.2.3 Permit-Biased PEP](#923-permit-biased-pep)
+  - [9.3 Identifier Evaluation](#93-identifier-evaluation)
+    - [9.3.1 Identifier Examples (non-normative)](#931-identifier-examples-non-normative)
+    - [9.3.2 Short Identifier Set Usage (non-normative)](#932-short-identifier-set-usage-non-normative)
+  - [9.4 Attribute Evaluation](#94-attribute-evaluation)
+    - [9.4.1 Structured Attributes](#941-structured-attributes)
+    - [9.4.2 Attribute Bags](#942-attribute-bags)
+    - [9.4.3 Multivalued Attributes](#943-multivalued-attributes)
+    - [9.4.4 Attribute Matching](#944-attribute-matching)
+    - [9.4.5 Attribute Retrieval](#945-attribute-retrieval)
+    - [9.4.6 Environment Attributes](#946-environment-attributes)
+    - [9.4.7 Selector Evaluation](#947-selector-evaluation)
+  - [9.5 Expression Evaluation](#95-expression-evaluation)
+  - [9.6 Arithmetic Evaluation](#96-arithmetic-evaluation)
+  - [9.7 Target Evaluation](#97-target-evaluation)
+  - [9.8 VariableReference Evaluation](#98-variablereference-evaluation)
+  - [9.9 Condition Evaluation](#99-condition-evaluation)
+  - [9.10 Extended Indeterminate](#910-extended-indeterminate)
+  - [9.11 Rule Evaluation](#911-rule-evaluation)
+  - [9.12 Policy Evaluation](#912-policy-evaluation)
+  - [9.15 PolicyReference Evaluation](#915-policyreference-evaluation)
+  - [9.16 Hierarchical Resources](#916-hierarchical-resources)
+  - [9.17 Authorization Decision](#917-authorization-decision)
+  - [9.18 Notices](#918-notices)
+  - [9.19 Exception Handling](#919-exception-handling)
+    - [9.19.1 Unsupported Functionality](#9191-unsupported-functionality)
+    - [9.19.2 Syntax and Type Errors](#9192-syntax-and-type-errors)
+    - [9.19.3 Missing Attributes](#9193-missing-attributes)
+  - [9.20 Identifier Equality](#920-identifier-equality)
+  - [9.21 Short Identifiers in Responses](#921-short-identifiers-in-responses)
+- [10 ACAL Extensibility Points (non-normative)](#10-acal-extensibility-points-non-normative)
+  - [10.1 Extensible Properties](#101-extensible-properties)
+  - [10.2 Structured Attributes](#102-structured-attributes)
+- [11 Safety, Security, and Data Protection Considerations](#11-safety-security-and-data-protection-considerations)
+  - [11.1 Threat Model](#111-threat-model)
+    - [11.1.1 Unauthorized Disclosure](#1111-unauthorized-disclosure)
+    - [11.1.2 Message Replay](#1112-message-replay)
+    - [11.1.3 Message Insertion](#1113-message-insertion)
+    - [11.1.4 Message Deletion](#1114-message-deletion)
+    - [11.1.5 Message Modification](#1115-message-modification)
+    - [11.1.6 NotApplicable Results](#1116-notapplicable-results)
+    - [11.1.7 Negative Rules](#1117-negative-rules)
+    - [11.1.8 Denial of Service](#1118-denial-of-service)
+  - [11.2 Safeguards](#112-safeguards)
+    - [11.2.1 Authentication](#1121-authentication)
+    - [11.2.2 Policy Administration](#1122-policy-administration)
+    - [11.2.3 Confidentiality](#1123-confidentiality)
+      - [11.2.3.1 Communication Confidentiality](#11231-communication-confidentiality)
+      - [11.2.3.2 Statement Level Confidentiality](#11232-statement-level-confidentiality)
+    - [11.2.4 Policy Integrity](#1124-policy-integrity)
+    - [11.2.5 Policy Identifiers](#1125-policy-identifiers)
+    - [11.2.6 Trust Model](#1126-trust-model)
+    - [11.2.7 Privacy](#1127-privacy)
+  - [11.3 Unicode Security Issues](#113-unicode-security-issues)
+  - [11.4 Identifier Equality](#114-identifier-equality)
+- [12 Conformance](#12-conformance)
+  - [12.1 Introduction](#121-introduction)
+  - [12.2 Conformance Tables](#122-conformance-tables)
+    - [12.2.1 Object Types](#1221-object-types)
+    - [12.2.2 Identifier Prefixes](#1222-identifier-prefixes)
+    - [12.2.3 Algorithms](#1223-algorithms)
+    - [12.2.4 Status Codes](#1224-status-codes)
+    - [12.2.5 Environment Attributes](#1225-environment-attributes)
+    - [12.2.6 Attributes and Categories](#1226-attributes-and-categories)
+    - [12.2.7 Data Types](#1227-data-types)
+    - [12.2.8 Functions](#1228-functions)
+- [Annex A License, Document Status and Notices](#annex-a-license-document-status-and-notices)
+  - [A.1 Document Status](#a1-document-status)
+  - [A.2 License and Notices](#a2-license-and-notices)
+- [Annex B References](#annex-b-references)
+  - [B.1 Normative References](#b1-normative-references)
+  - [B.2 Informative References](#b2-informative-references)
+- [Annex C. Data Types and Functions](#annex-c-data-types-and-functions)
+  - [C.1 Introduction](#c1-introduction)
+  - [C.2 Data Types](#c2-data-types)
+    - [C.2.1 X.500 Directory Name](#c21-x500-directory-name)
+    - [C.2.2 RFC 822 Name](#c22-rfc-822-name)
+    - [C.2.3 IP Address](#c23-ip-address)
+    - [C.2.4 DNS Name](#c24-dns-name)
+    - [C.2.5 XPath Expression (optional)](#c25-xpath-expression-optional)
+    - [C.2.6 Entity](#c26-entity)
+  - [C.3 Functions](#c3-functions)
+    - [C.3.1 Equality Predicates](#c31-equality-predicates)
+    - [C.3.2 Arithmetic Functions](#c32-arithmetic-functions)
+    - [C.3.3 String Conversion Functions](#c33-string-conversion-functions)
+    - [C.3.4 Numeric Data Type Conversion Functions](#c34-numeric-data-type-conversion-functions)
+    - [C.3.5 Logical Functions](#c35-logical-functions)
+    - [C.3.6 Numeric Comparison Functions](#c36-numeric-comparison-functions)
+    - [C.3.7 Date and Time Arithmetic Functions](#c37-date-and-time-arithmetic-functions)
+    - [C.3.8 Non-numeric Comparison Functions](#c38-non-numeric-comparison-functions)
+    - [C.3.9 String Functions](#c39-string-functions)
+    - [C.3.10 Bag Functions](#c310-bag-functions)
+    - [C.3.11 Set Functions](#c311-set-functions)
+    - [C.3.12 Higher-order Bag Functions](#c312-higher-order-bag-functions)
+    - [C.3.13 Regular-Expression-Based Functions](#c313-regular-expression-based-functions)
+    - [C.3.14 Aggregate Functions](#c314-aggregate-functions)
+    - [C.3.15 Special Match Functions](#c315-special-match-functions)
+    - [C.3.16 XPath-based Functions (optional)](#c316-xpath-based-functions-optional)
+    - [C.3.17 Other Functions](#c317-other-functions)
+    - [C.3.18 Extension Functions and Data Types](#c318-extension-functions-and-data-types)
+- [Annex D. ACAL Identifiers](#annex-d-acal-identifiers)
+  - [D.1 ACAL Namespaces](#d1-acal-namespaces)
+  - [D.2 Attribute Categories](#d2-attribute-categories)
+  - [D.3 Data Types](#d3-data-types)
+  - [D.4 Subject Attributes](#d4-subject-attributes)
+  - [D.5 Resource Attributes](#d5-resource-attributes)
+  - [D.6 Action Attributes](#d6-action-attributes)
+  - [D.7 Environment Attributes](#d7-environment-attributes)
+  - [D.8 Status Codes](#d8-status-codes)
+  - [D.9 Combining Algorithms](#d9-combining-algorithms)
+- [Annex E. Combining Algorithms](#annex-e-combining-algorithms)
+  - [E.1 Extended Indeterminate Values](#e1-extended-indeterminate-values)
+  - [E.2 Deny Overrides](#e2-deny-overrides)
+  - [E.3 Ordered Deny Overrides](#e3-ordered-deny-overrides)
+  - [E.4 Permit Overrides](#e4-permit-overrides)
+  - [E.5 Ordered Permit Overrides](#e5-ordered-permit-overrides)
+  - [E.6 Deny Unless Permit](#e6-deny-unless-permit)
+  - [E.7 Permit Unless Deny](#e7-permit-unless-deny)
+  - [E.8 First Applicable](#e8-first-applicable)
+- [Appendix 1 Acknowledgments](#appendix-1-acknowledgments)
+  - [Leadership](#leadership)
+  - [Special Thanks](#special-thanks)
+  - [Participants](#participants)
+- [Appendix 2 Changes From Previous Version](#appendix-2-changes-from-previous-version)
+  - [Revision History](#revision-history)
 
 
 ---
@@ -202,13 +466,10 @@ $ pandoc -f gfm+definition_lists -t pdf acal-v1.0.md -c styles/markdown-styles-v
 
 # 1 Scope
 
-
-\<
-
+<!-- OASIS Open Specification Template Instructions: 
 
 What is the purpose and scope of this document?   
 Best practices: 
-
 
 - Expect this text to be reused in multiple other places to explain the specification in summary form.  
 - This is not the TC or OP scope (which is an IPR and rules boundary);  rather, this section is the summary intended purpose of this specification.  
@@ -216,9 +477,15 @@ Best practices:
 - If use of this spec is deliberately created to rely on or complement another standard, consider briefly mentioning that here as context.  
 - To the extent that discussion of the larger context of the spec, or its history, or the circumstances that led to its creation or revision, are necessary, they belong in the Introduction, not here. 
 
+-->
 
-\>
+This specification defines a common language and processing model for:
+1. Attribute-Based Access Control policies;
+2. Access Control Decision Request and Response information exchanged between an Access Control Enforcement entity and an Access Control Decision entity. 
 
+This common language intends to be technology-agnostic enough to address enterprise-wide access control requirements, i.e. for any kind of enterprise resource that requires protection against unauthorized access. 
+
+Concrete representations (data formats) are to be provided as separate specifications and therefore out of scope of this document.
 
 ---
 
@@ -234,33 +501,175 @@ Best practices:
 
 This document uses the following terms defined elsewhere:
 
+<!-- The following syntax (: definition) for definition lists requires the 'definition_lists' extension enabled in the pandoc command (-f gfm+definition_lists) to be rendered properly. -->
+<!-- For some reason, if the line below is only 'Bag', the line break is missing from the PDF output -->
+**Bag (a.k.a. _multiset_)**
 
-- Term 1: [Reference]: optional quoted definition.  
-- Term 2: [Reference]: optional quoted definition.
-- etc
+: [[NISTIR8318](#nistir8318)] An unordered collection of values, in which there may be duplicate values.
 
+**Type Unification**
+
+: [[Hancock](#hancock)] The method by which two type expressions are "unified". The type expressions are matched along their structure. Where a type variable appears in one expression it is then "unified" to represent the corresponding structure element of the other expression, be it another variable or subexpression. All variable assignments must remain consistent in both structures. Unification fails if the two expressions cannot be aligned, either by having dissimilar structure, or by having instance conflicts, such as a variable needs to represent both `xs:string` and `xs:integer`. For a full explanation of **_type unification_**, please see [[Hancock](#hancock)].
 
 ### 2.1.2 Terms Defined in this Document
 
-
 This document defines the following terms:
 
+<!-- The following syntax (: definition) for definition lists requires the 'definition_lists' extension enabled in the pandoc command (-f gfm+definition_lists) to be rendered properly. -->
 
-- Term 1: some definition.  
-- Term 2: some definition.  
-- etc
+**Access**
+
+: Performing an **_action_**.
+
+**Access control**
+
+: Controlling **_access_** in accordance with a **_policy_**.
+
+**Action**
+
+: An operation on a **_resource_**.
+
+**Advice**
+
+: A **_notice_** providing supplementary information to the **_PEP_** about a **_decision_** from the **_PDP_**.
+
+**Applicable policy**
+
+: The set of **_policies_** that governs **_access_** for a specific **_decision request_**.
+
+**Attribute**
+
+: Characteristic of a **_subject_**, **_resource_**, **_action_** or **_environment_** that may be referenced in a **_predicate_** (see also – **_named attribute_**).
+
+**Attribute issuer**
+
+: Source of a **_named attribute_**, e.g. a particular PIP or the PEP itself.
+
+**Authorization decision**
+
+: The result of evaluating **_applicable policy_**, returned by the **_PDP_** to the **_PEP_**. A function that evaluates to `Permit`, `Deny`, `Indeterminate` or `NotApplicable`, and (optionally) a list of **_notices_**.
+
+**Combining algorithm**
+
+: The procedure for combining the **_decision_** and **_notices_** from multiple **_policies_** and **_rules_**.
+
+**Condition**
+
+: An expression of **_predicates_**. A function that evaluates to `True`, `False` or `Indeterminate`.
+
+**Conjunctive sequence**
+
+: A sequence of **_predicates_** combined using the logical `AND` operation.
+
+**Context**
+
+: The canonical representation of a **_decision request_** and an **_authorization decision_**.
+
+**Context handler**
+
+: The system entity that converts **_decision requests_** in the native request format to the XACML canonical form, coordinates with Policy Information Points to add attribute values to the request **_context_**, and converts **_authorization decisions_** in the XACML canonical form to the native response format.
+
+**Decision**
+
+: The result of evaluating a **_rule_** or **_policy_**.
+
+**Decision request**
+
+: The request by a **_PEP_** to a **_PDP_** to render an **_authorization decision_**.
+
+**Disjunctive sequence**
+
+: A sequence of **_predicates_** combined using the logical `OR` operation.
+
+**Effect**
+
+: The intended consequence of a satisfied **_rule_** (either `Permit` or `Deny`).
+
+**Environment**
+
+: The set of **_attributes_** that are relevant to an **_authorization decision_** and are independent of a particular **_subject_**, **_resource_** or **_action_**.
+
+**Identifier equality**
+
+: The identifier equality operation which is defined in [Section 9.20](#920-identifier-equality).
+
+**Named attribute**
+
+: A specific instance of an **_attribute_**, determined by the **_attribute_** name and type, the identity of the **_attribute_** holder (which may be of type: **_subject_**, **_resource_**, **_action_** or **_environment_**) and (optionally) the identity of the issuing authority.
+
+**Notice**
+
+: An additional information item provided to the **_PEP_** alongside a **_decision_** from the **_PDP_**. A **_notice_** is either an **_obligation_** or **_advice_**. **_Notices_** are potentially generated by **_rules_** and **_policies_** during their evaluation by the **_PDP_**.
+
+**Obligation**
+
+: A **_notice_** specifying an operation that should be performed by the **_PEP_** in conjunction with the enforcement of an **_authorization decision_**.
+
+**Policy**
+
+: A set of **_rules_**, other **_policies_**, an identifier for the **_combining algorithm_** and (optionally) a list of **_notice_** expressions. May be a component of another **_policy_**.
+
+**Policy issuer**
+
+: A set of **_attributes_** describing the source of a **_policy_**.
+
+**Predicate**
+
+: A statement about **_attributes_** whose truth can be evaluated.
+
+**Resource**
+
+: Data, service or system component that a subject requests access to.
+
+**Rule**
+
+: An **_effect_**, a **_condition_** and (optionally) a list of **_notice_** expressions. A component of a **_policy_**.
+
+**Short identifier**
+
+: A binding of a simple alias name to a URI or a part thereof.
+
+**Subject**
+
+: An actor that requests access to a resource and whose **_attributes_** may be referenced by a **_predicate_**.
+
+**Target**
+
+: An element of an XACML **_policy_** which matches specified values of **_resource_**, **_subject_**, **_environment_**, **_action_**, or other custom **_attributes_** against those provided in the request **_context_** as a part of the process of determining whether the **_policy_** is applicable to the current decision.
+
+### 2.1.3 Related terms
+
+In the field of **_access control_** and authorization there are several closely related terms in common use. For purposes of precision and clarity, certain of these terms are not used in this specification.
+
+For instance, the term **_attribute_** is used in place of the terms: group and role.
+
+In place of the terms: privilege, permission, authorization, entitlement and right, we use the term **_rule_**.
+
+The term object is also in common use, but we use the term **_resource_** in this specification.
+
+Access requestors and initiators are covered by the term **_subject_**.
 
 
 ## 2.2 Abbreviations and Acronyms
 
-
 This document uses the following abbreviations and acronyms:
+<!-- The following syntax (: definition) for definition lists requires the 'definition_lists' extension enabled in the pandoc command (-f gfm+definition_lists) to be rendered properly. -->
 
+**PAP (Policy Administration Point)**
 
-- Term 1: expanded form.  
-- Term 2: expanded form.  
-- etc
+: The system entity that creates a **_policy_**.
 
+**PDP (Policy Decision Point)**
+
+: The system entity that evaluates **_applicable policy_** and renders an **_authorization decision_**. This term is defined in a joint effort by the IETF Policy Framework Working Group and the Distributed Management Task Force (DMTF)/Common Information Model (CIM) in [[RFC3198](#rfc3198)]. This term corresponds to "Access Decision Function" (ADF) in [[ISO10181-3](#iso10181-3)].
+
+**PEP (Policy Enforcement Point)**
+
+: The system entity that performs **_access control_**, by making **_decision requests_** and enforcing **_authorization decisions_**. This term is defined in a joint effort by the IETF Policy Framework Working Group and the Distributed Management Task Force (DMTF)/Common Information Model (CIM) in [[RFC3198](#rfc3198)]. This term corresponds to "Access Enforcement Function" (AEF) in [[ISO10181-3](#iso10181-3)].
+
+**PIP (Policy Information Point)**
+
+: The system entity that acts as a source of **_attribute_** values.
 
 ---
 
@@ -276,16 +685,15 @@ The key words "**MUST**", "**MUST NOT**", "**REQUIRED**", "**SHALL**", "**SHALL 
 
 ## 3.2 Typographical Conventions
 
-
-\< Describe any standards or typographical conventions that were followed when writing this document, such as fonts or highlighting that have special significance. If there are no typographical conventions than one is to put "None". \>
-
+<!-- From OASIS Open Specification Template Instructions: Describe any standards or typographical conventions that were followed when writing this document, such as fonts or highlighting that have special significance. If there are no typographical conventions than one is to put "None". -->
+None.
 
 ---
 
 
 # 4 Introduction (non-normative)
 
-
+<!-- From XACML 3.0 section 2 Background -->
 The "economics of scale" have driven computing platform vendors to develop products with very generalized functionality, so that they can be used in the widest possible range of situations. "Out of the box", these products have the maximum possible privilege for accessing data and executing software, so that they can be used in as many application environments as possible, including those with the most permissive security policies. In the more common case of a relatively restrictive security policy, the platform's inherent privileges must be constrained by configuration.
 
 The security policy of a large enterprise has many elements and many points of enforcement. Elements of policy may be managed by the Information Systems department, by Human Resources, by the Legal department and by the Finance department. And the policy may be enforced by the extranet, mail, WAN, and remote-access systems; platforms which inherently implement a permissive security policy. The current practice is to manage the configuration of each point of enforcement independently in order to implement the security policy as accurately as possible. Consequently, it is an expensive and unreliable proposition to modify the security policy. Moreover, it is virtually impossible to obtain a consolidated view of the safeguards in effect throughout the enterprise to enforce the policy. At the same time, there is increasing pressure on corporate and government executives from consumers, shareholders, and regulators to demonstrate "best practice" in the protection of the information assets of the enterprise and its customers.
@@ -296,7 +704,6 @@ This specification defines the concepts and processing models for such a common 
 
 
 ## 4.1 Requirements
-
 
 The basic requirements of a policy language for expressing information system security policy are:
 
@@ -326,6 +733,7 @@ The motivation behind ACAL is to express these well-established ideas in the fie
 
 ## 4.2 Rule and Policy Combining
 
+
 The complete policy applicable to a particular decision request may be composed of a number of individual rules or policies. For instance, in a personal privacy application, the owner of the personal information may define certain aspects of disclosure policy, whereas the enterprise that is the custodian of the information may define certain other aspects. In order to render an authorization decision, it must be possible to combine the two separate policies to form the single policy applicable to the request.
 
 A rule contains a Boolean expression that can be evaluated in isolation, but that is not intended to be accessed in isolation by a PDP. So, it is not intended to form the basis of an authorization decision by itself. It is intended to exist in isolation only within an ACAL PAP, where it may form the basic unit of management.
@@ -335,6 +743,7 @@ A policy contains a set of rules and/or other policies and a specified procedure
 Hinton et al [[Hinton94](#hinton94)] discuss the question of the compatibility of separate policies applicable to the same decision request.
 
 ## 4.3 Combining Algorithms
+
 
 ACAL defines a number of combining algorithms that each define a procedure for arriving at an authorization decision given the individual results of evaluation of a set of rules and/or policies. Some examples of standard combining algorithms are (see [Annex E](#annex-e-combining-algorithms) for a full list of standard combining algorithms):
 
@@ -352,6 +761,7 @@ In the case of the `first-applicable` combining algorithm, the combined result i
 
 <!-- Change to XACML 3.0: combining algorithm parameters removed from the spec. -->
 Users of this specification may, if necessary, define their own combining algorithms.
+
 
 ## 4.4 Multiple Subjects
 
@@ -437,7 +847,7 @@ In some applications it is helpful to specify supplemental information about a d
 ## 4.14 Changes From the Previous Version
 
 
-\< This section is **REQUIRED** and **MUST** be the last numbered subsection in this section. \>
+<!-- From OASIS Open Specification Template Instructions: This section is **REQUIRED** and **MUST** be the last numbered subsection in this section. -->
 
 The list of changes from the previous version and any revision history can be found in [Appendix 2](#appendix-2-changes-from-previous-version).
 
@@ -447,13 +857,15 @@ The list of changes from the previous version and any revision history can be fo
 
 # 5 Models (non-normative)
 
+<!-- From XACML 3.0 section 3 Models -->
+
 The data-flow model and language model of ACAL are described in the following sub-sections.
 
 ## 5.1 Data-Flow Model
 
 The major actors in the ACAL domain are shown in the data-flow diagram of [Figure 1](#figure-1---data-flow-diagram).
 
-###### Figure 1 - Data-Flow Diagram
+**Figure 1.** Data-Flow Diagram
 
 <!-- ![data-flow diagram](images/DataFlowDiagram.png) -->
 
@@ -679,7 +1091,7 @@ The model operates by the following steps.
 
 ACAL is intended to be suitable for a variety of application environments. The core language is insulated from the application environment by the ACAL context, as shown in [Figure 2](#figure-2---acal-context), in which the scope of the ACAL specification is indicated by the shaded area. In the figure, the ACAL context is defined in XML schema, describing a canonical representation for the inputs and outputs of the PDP. An ACAL Policy references attributes in the ACAL context via XPath/JSONPath expressions over the `ContentType` objects of the context, or attribute designators that identify the attribute by its category, identifier, data type and (optionally) its issuer. Implementations must convert between the attribute representations in the application environment (e.g., SAML, J2SE, CORBA, and so on) and the attribute representations in the ACAL context. How this is achieved is outside the scope of the ACAL specification. In some cases, such as SAML, this conversion may be accomplished in an automated way through the use of an XSLT transformation.
 
-###### Figure 2 - ACAL Context
+**Figure 2.** ACAL Context
 
 <!-- ![context](images/Context.png) -->
 ```dot
@@ -750,7 +1162,7 @@ The policy language model is shown in [Figure 3](#figure-3---policy-language-mod
 
 These are described in the following sub-sections.
 
-###### Figure 3 - Policy Language Model
+**Figure 3.** Policy Language Model
 
 <!-- ![policy language model](images/PolicyLanguageModel.png) -->
 <div style="text-align: center;">
@@ -815,8 +1227,8 @@ The question arises: how should a name that identifies a set of subjects or reso
 In the case of subjects, there is no real entity that corresponds to such a node. So, names of this type always refer to the set of subjects subordinate in the name structure to the identified node. Consequently, non-leaf subject names should not be used in equality functions, only in match functions, such as `urn:oasis:names:tc:acal:1.0:function:rfc822Name-match` <!-- Newline to fit on PDF page -->
 instead of `urn:oasis:names:tc:acal:1.0:function:rfc822Name-equal` (see [Annex C.3.15](#c315-special-match-functions)).
 <!-- TODO: This paragraph is hard to follow. Maybe give an example? -->
-<!-- TODO -->
-*__TODO__: In the case of resources,...*
+<!-- TODO: In the case of resources,... -->
+
 
 #### 5.3.1.2 Effect
 
@@ -848,11 +1260,10 @@ Rules are described above. The remaining components are described in the followi
 
 An ACAL policy contains a target that specifies the set of requests to which it applies. The target of a policy may be:
 1. Either declared by the writer of the policy. In this case, any component rules in the policy that have the same condition as the target may omit the condition. Such rules inherit the target of the policy in which they are contained.
-1. Or not, in which case it may be calculated from the targets and conditions of the policies and rules (respectively) that it contains. A system entity that calculates a target in this way is not defined by ACAL, but there are two logical methods that might be used: <!-- TODO: Maybe not mention it here, this is Implementation guidance.  Also presenting two methods with different results is confusing and make the spec look ambiguous / non-deterministic behavior. What is the standard/right method then? -->
-   1. First method: the target of the outer policy (the "outer component") is calculated as the union of all the targets of the referenced policies and the conditions of the referenced rules (the "inner components"). <!-- TODO: clarify: this method is not possible if there is no policy references, only rules and inline policies, what then? -->
+2. Or not, in which case it may be calculated from the targets and conditions of the policies and rules (respectively) that it contains. A system entity that calculates a target in this way is not defined by ACAL, but there are two logical methods that might be used: <!-- TODO: Maybe not mention it here, this is Implementation guidance.  Also presenting two methods with different results is confusing and make the spec look ambiguous / non-deterministic behavior. What is the standard/right method between those two? -->
+   1. First method: the target of the outer policy (the "outer component") is calculated as the union of all the targets of the referenced policies and the conditions of the referenced rules (the "inner components"). <!-- TODO: clarify: this method is not possible if there is no policy references, only rules and inline policies, what then? Also now a policy can contain policies inline (not referenced). -->
    1. Second method: the target of the outer component is calculated as the intersection of all the targets and conditions of the inner components.The results of evaluation in each case will be very different: in the first case, the target of the outer component makes it applicable to any decision request that matches the target or condition of at least one inner component; in the second case, the target of the outer component makes it applicable only to decision requests that match the target or condition of every inner component.
   
-
 #### 5.3.2.2 Combining Algorithm
 
 The combining algorithm specifies the procedure by which the results of evaluating the component rules and policies are combined when evaluating the policy, i.e. the `Decision` value placed in the response context by the PDP is the result of evaluating the policy, as defined by the combining algorithm. 
@@ -872,6 +1283,8 @@ When a PDP evaluates a policy containing notice expressions, it evaluates the no
 # 6 Examples (non-normative)
 
 This section contains two examples of the use of ACAL for illustrative purposes. The first example is a relatively simple one to illustrate the use of target, context, matching functions and subject attributes. The second example additionally illustrates the use of the combining algorithm, conditions and notices.
+
+<!-- TODO -->
 
 ## 6.1 Example One
 
@@ -1045,7 +1458,7 @@ Rule 1 illustrates a policy with a simple rule containing a condition. It also i
 [34]           }
 [35]         }]
 [36]       }
-[37]     }]
+[37]     }
 [38]   }],
 [39]   "CombinerInput":[{
 [41]     "Rule":{
@@ -2579,6 +2992,8 @@ A `NoticeType` object contains the following properties:
 
 : A sequence of `AttributeAssignmentType` objects (each of them is an attribute assignment) forming the arguments of the notice.
 
+<a name="attributetype"></a>
+
 ## 7.27 AttributeType
 
 An `AttributeType` object contains attribute meta-data and one or more attribute values. The attribute meta-data comprises the attribute identifier and the attribute issuer. Attribute designators in a policy MAY refer to attributes by means of this meta-data.
@@ -2852,9 +3267,9 @@ hide circle
 class ContentType <<dataType>> {
    + <any>: AnyType [1]
 }
-@enduml
 
 abstract class AnyType <<dataType>>
+@enduml
 ```
 
 The `AnyType` data-type above represents *any type* (e.g. [XSD](#xs) `anyType` in XML), preferably any structured data-type (according to the previous recommendation), and the `<any>` name is only a placeholder for any property name. 
@@ -2886,9 +3301,9 @@ hide circle
 class RequestAttributeType <<dataType>> extends AttributeType {
    + IncludeInResult: Boolean [0..1] = false
 }
-@enduml
 
 class AttributeType <<dataType>>
+@enduml
 ```
 
 The `RequestAttributeType` object type extends the `AttributeType` object type with the following property:
@@ -3728,7 +4143,7 @@ IEEE 754 [[IEEE754](#ieee754)] specifies how to evaluate arithmetic functions in
 
 The target value SHALL be `Match` if the `Target` property is absent or the expression specified in the target evaluates to `true`. Otherwise, if the expression evaluates to `false`, then the target SHALL be `No Match`. Otherwise, the target SHALL be `Indeterminate`. The target match table is shown in Table 1.
 
-###### Table 1 Target Match Table
+**Table 1:** Target Match Table
 
 | Expression value | Target value |
 | :--- | :--- |
@@ -3768,7 +4183,7 @@ The tables in the following four sections define how extended `Indeterminate` va
 
 A rule has a value that can be calculated by evaluating the rule's condition. The rule truth table is shown in Table 4.
 
-###### Table 4 Rule Truth Table
+**Table 4:** Rule Truth Table
 
 | Condition | Rule Value |
 | :--- | :--- |
@@ -3782,7 +4197,7 @@ The value of a policy SHALL be determined only by its contents, considered in re
 
 The policy truth table is shown in Table 5.
 
-###### Table 5 Policy Truth Table
+**Table 5:** Policy Truth Table
 
 | Target | Combining Algorithm Value | Policy Value |
 | :--- | :--- | :--- |
@@ -3947,7 +4362,7 @@ A `ValueType` object MAY contain an instance of a structured XML data type. [Sec
 # 11 Safety, Security, and Data Protection Considerations
 
 
-\< 
+<!-- From OASIS Open Specification Template Instructions:
 
 
 This section is **REQUIRED** and **MUST** be the second to last numbered section in the document, right before Conformance. This section contains information about safety, security, data protection, and privacy considerations. These can be divided up into separate subsections as desired. All documents **SHOULD** have at least a security and data protection considerations section, and otherwise **MUST** have a blank section indicating “None.” Any other considerations **MAY** also be added.
@@ -3956,7 +4371,7 @@ This section is **REQUIRED** and **MUST** be the second to last numbered section
 Please note that any specification that will need to register something with IANA or has plans to go on to ITU/ISO/IEC **MUST** have this section filled out. For an example please see the following section in the CACAO specification here [https://docs.oasis-open.org/cacao/security-playbooks/v2.0/cs01/security-playbooks-v2.0-cs01.html\#\_Toc152256574](https://docs.oasis-open.org/cacao/security-playbooks/v2.0/cs01/security-playbooks-v2.0-cs01.html#_Toc152256574) 
 
 
-\>
+-->
 
 This section identifies possible security and privacy compromise scenarios that should be considered when implementing an ACAL-based system. The section is informative only. It is left to the implementer to decide whether these compromise scenarios are practical in their environment and to select appropriate safeguards.
 
@@ -4119,13 +4534,13 @@ There are many security considerations related to use of Unicode. An ACAL implem
 # 12 Conformance
 
 
-\< 
+<!-- From OASIS Open Specification Template Instructions: 
 
 
 This section is **REQUIRED** and **MUST** be the last numbered section in the document. 
 
 
-\>
+-->
 
 ## 12.1 Introduction
 
@@ -4805,6 +5220,10 @@ Character Model for the World Wide Web: String Matching W3C Working Group Note 1
 ###### [Hinton94]
 
 Hinton, H, M, Lee, E, S, The Compatibility of Policies, Proceedings 2nd ACM Conference on Computer and Communications Security, Nov 1994, Fairfax, Virginia, USA.
+
+###### [NISTIR8318] 
+
+Black, P. (2020), DADS: The On-Line Dictionary of Algorithms and Data Structures, NIST Interagency/Internal Report (NISTIR), National Institute of Standards and Technology, Gaithersburg, MD, [online](https://doi.org/10.6028/NIST.IR.8318) (Accessed December 16, 2025) 
 
 ###### [Sloman94]
 
@@ -5509,7 +5928,7 @@ Examples in this section are presented in both the XML and JSON representations 
           { "Value":{ "Value":"George" } },
           { "Value":{ "Value":"Ringo" } }
         ]
-      }
+      }}
     ]
   }
   ```
@@ -5552,7 +5971,7 @@ Examples in this section are presented in both the XML and JSON representations 
           { "Value":{ "Value":4 } },
           { "Value":{ "Value":2 } }
         ]
-      }
+      }}
     ]
   }
   ```
@@ -5595,7 +6014,7 @@ Examples in this section are presented in both the XML and JSON representations 
           { "Value":{ "Value":"Ringo" } },
           { "Value":{ "Value":"Mary" } }
         ]
-      },
+      }},
       { "Apply":{
         "FunctionId":"string-bag",
         "Argument":[
@@ -5604,7 +6023,7 @@ Examples in this section are presented in both the XML and JSON representations 
           { "Value":{ "Value":"George" } },
           { "Value":{ "Value":"Ringo" } }
         ]
-      }
+      }}
     ]
   }
   ```
@@ -5647,7 +6066,7 @@ Examples in this section are presented in both the XML and JSON representations 
           { "Value":{ "Value":10 } },
           { "Value":{ "Value":20 } }
         ]
-      },
+      }},
       { "Apply":{
         "FunctionId":"integer-bag",
         "Argument":[
@@ -5656,7 +6075,7 @@ Examples in this section are presented in both the XML and JSON representations 
           { "Value":{ "Value":5 } },
           { "Value":{ "Value":19 } }
         ]
-      }
+      }}
     ]
   }
   ```
@@ -5699,7 +6118,7 @@ Examples in this section are presented in both the XML and JSON representations 
           { "Value":{ "Value":3 } },
           { "Value":{ "Value":5 } }
         ]
-      },
+      }},
       { "Apply":{
         "FunctionId":"integer-bag",
         "Argument":[
@@ -5708,7 +6127,7 @@ Examples in this section are presented in both the XML and JSON representations 
           { "Value":{ "Value":3 } },
           { "Value":{ "Value":4 } }
         ]
-      }
+      }}
     ]
   }
   ```
@@ -5751,7 +6170,7 @@ Examples in this section are presented in both the XML and JSON representations 
           { "Value":{ "Value":6 } },
           { "Value":{ "Value":5 } }
         ]
-      },
+      }},
       { "Apply":{
         "FunctionId":"integer-bag",
         "Argument":[
@@ -5760,7 +6179,7 @@ Examples in this section are presented in both the XML and JSON representations 
           { "Value":{ "Value":3 } },
           { "Value":{ "Value":4 } }
         ]
-      }
+      }}
     ]
   }
   ```
@@ -5797,7 +6216,7 @@ Examples in this section are presented in both the XML and JSON representations 
           { "Value":{ "Value":"Hello" } },
           { "Value":{ "Value":"World!" } }
         ]
-      }
+      }}
     ]
   }
   ```
@@ -6578,13 +6997,13 @@ Notices SHALL be combined as described in [Section 9.18](#918-notices).
 (This appendix does not form an integral part of this Specification and is informational.)
 
 
-\< 
+<!-- From OASIS Open Specification Template Instructions:
 
 
 All parts in this appendix are optional to the TC. Individuals or companies, past or present, may request that their name and/or affiliation is not included in this list. 
 
 
-\>
+-->
 
 
 ## Leadership
@@ -6593,13 +7012,13 @@ All parts in this appendix are optional to the TC. Individuals or companies, pas
 The following individuals have had significant leadership positions during the development of this document, not just this version of the document, and they are gratefully acknowledged:
 
 
-\< 
+<!-- From OASIS Open Specification Template Instructions:
 
 
 This section **SHOULD** include the leadership (chairs, sub committees chairs, secretaries, editors, etc.) of this document, and not just for this version of the document, even if they are no longer members of the TC.
 
 
-\>
+-->
 
 
 - Chairs
@@ -6617,16 +7036,12 @@ This section **SHOULD** include the leadership (chairs, sub committees chairs, s
 
 
 The following individuals have made substantial contributions to this document, not just this version of the document, and their contributions are gratefully acknowledged:
-
-
-\< 
+<!-- From OASIS Open Specification Template Instructions:
 
 
 This section **SHOULD** include individuals that have made significant contributions to this document, and not just this version of the document, even if they are no longer members of the TC or were never members of the TC but sent in a contribution through one of the public comment methods. 
 
-
-\>
-
+-->
 
 - Steven Legg, ViewDS Identity Solutions
 - Cyril Dangerville, THALES
@@ -6652,15 +7067,11 @@ The following individuals were members of this committee during the creation of 
 
 (This appendix does not form an integral part of this Specification and is informational.)
 
-
-\< 
-
+<!-- From OASIS Open Specification Template Instructions: 
 
 The appendix **SHOULD** contain any explanatory text about the reason for this version including any major changes. The level of detail that is included in this appendix is up to the editors and chairs of the TC to determine. This appendix is **REQUIRED**, if there are no changes then one is to put "None." In addition to any descriptive text, all major changes **SHOULD** be in a bulleted list so that reviewers and implementers can easily understand what they need to know.
 
-
-\>
-
+-->
 
 ACAL 1.0 is a successor to XACML 3.0. ACAL 1.0 differs from XACML 3.0 in the following ways:
 
@@ -6904,5 +7315,5 @@ Under the heading of each Appendix the following text **MUST** be present:
 ### Sub-subsection
 
 
-\< The following centered line represents the end of the document \>  
+<!-- The following centered line represents the end of the document -->  
 \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
