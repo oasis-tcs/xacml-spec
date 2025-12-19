@@ -1,0 +1,95 @@
+
+/* OASIS specification styles for HTML generated from Markdown or similar sources */
+/* usually used after basic w3.css */
+/* Paul Knight 2018-09-27 */
+/* pk 2018-10-01 - v1.2 reduced section header and title (h*) font sizes */
+/* pk 2018-10-02 - v1.3 added right margin; allowed text wrapping in code blocks and scrolling for overflowing text */
+/* pk 2018-10-19 - v1.4 added display:inline to avoid page-wide background coloring */
+/* pk 2018-10-25 - v1.5 added use of <h6> as citation tag for References section or elsewhere */
+/* pk 2018-10-26 - v1.5.1 (experimental) and v1.6 added use of <hr /> as a page break when generating PDF from the HTML */
+/* pk 2018-11-14 - v1.6.1 - lighter gray background color for code blocks */
+/* pk 2019-02-18 - v1.7 - Use Liberation Sans and Liberation Mono fonts if possible */
+/* pk 2019-02-18 - v1.7.1 (experimental) changed px to pt (and reduced numbers) for fonts and tables; added bigtitle style */
+/* pk 2019-05-23 - v1.7.2 (based on 1.7.1) changed monospace "code" font to Courier New */
+/* pk 2019-08-01 - v1.7.3 substitute PostScript name for fonts (LiberationSans for "Liberation Sans" and CourierNew for "Courier New") to address a flaw in "wkhtmltopdf" which rendered all text as bold. Changed "bigtitle" to "h1big" */
+/* pk 2020-04-08 - v1.8  Version to support Committee Notes */
+/* pk 2023-04-24 - v1.8.1  modified style for blockquotes to generate sidebar with space before text */
+
+body {
+    margin-left: 3pc;
+    margin-right: 3pc;
+    font-family: LiberationSans, Arial, Helvetica, sans-serif;
+    font-size:12pt;
+    line-height:1.2;
+}
+
+html {
+    overflow-x: auto;
+}
+
+h1{font-size:18pt}h2{font-size:14pt}h3{font-size:13pt}h4{font-size:12pt}h5{font-size:11pt}
+h1big{font-size: 24pt}
+h1,h2,h3,h4,h5,h1big {
+    font-family: LiberationSans, Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    margin:8pt 0;
+    color: #446CAA;
+}
+
+/* style for gray "OASIS Committee Note" text */
+h1gray {
+    font-size:18pt;
+    font-family: LiberationSans, Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    color: #717171;
+}
+
+/* style for h6, for use as Reference tag */
+h6 {
+    font-size:12pt; 
+    line-height:1.0;
+    font-family: LiberationSans, Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    margin:0pt;
+}
+
+/* Fix applied: Avoid page break before <hr> */
+hr {
+    page-break-before: avoid;
+}
+
+/* Table styles - bordered with option for striped */
+table {
+    border-collapse: collapse;
+    width:100%;
+    display:table;
+    font-size:12pt;
+    margin-top: 6pt;
+}
+
+table, th, td {
+    border: 1pt solid black;
+    padding:6pt 6pt;
+    text-align:left;
+    vertical-align:top;
+}
+
+th {
+    color:#ffffff;
+    background-color:#1a8cff;
+}
+
+/* style for code blocks */
+code,kbd,pre,samp {
+    font-family:CourierNew, monospace;
+    font-size:1em;
+    white-space: pre-wrap;
+    background-color:#e8e8e8;
+    display:inline;
+}
+
+/* offset block quote */
+blockquote {
+    border-left: 5px solid #ccc;
+    padding-left: 10px;
+}

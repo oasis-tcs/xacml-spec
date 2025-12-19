@@ -1,10 +1,10 @@
 # Simple workflow for Pandoc generation and deployment of static content to GitHub Pages
-name: Run pandoc and deploy generated content to Pages
+name: Pandoc generate and deploy HTML/PDF docs to OASIS Github Pages site
 
 on:
-  # Runs on pushes targeting the acal branch
+  # Runs on pushes targeting the main branch
   push:
-    branches: ["acal"]
+    branches: ["main"]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -32,14 +32,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: acal
+          ref: main
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: List files in the repository
         run: |
           ls ${{ github.workspace }}
           mkdir output
-      - name: Pandoc generation 
+      - name: Pandoc HTML generation 
         uses: docker://cdang/pandoc-plantuml
         with:
           args: >-
@@ -50,9 +50,24 @@ jobs:
             --standalone
             --lua-filter diagram.lua
             --embed-resources
-            --metadata title="eXtensible Access Control Markup Language (XACML) Version 4.0"
-            --output output/xacml-v4.0-csd01.html 
-            xacml-v4.0-csd01.md 
+            --metadata title="Attribute-Centric Authorization Language 1.0"
+            --output output/acal-v1.0-csd01.html 
+            acal-v1.0.md 
+      - name: Pandoc PDF generation 
+        uses: docker://cdang/pandoc-plantuml
+        with:
+          args: >-
+            -f gfm+definition_lists 
+            -t pdf
+            -c styles/markdown-styles-v1.7.3a.css
+            -H custom_latex_header_for_pandoc_pdf_output.tex
+            --toc --toc-depth=5 
+            --standalone
+            --lua-filter diagram.lua
+            --embed-resources
+            --metadata title="Attribute-Centric Authorization Language 1.0"
+            --output output/acal-v1.0-csd01.pdf 
+            acal-v1.0.md 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
@@ -63,5 +78,5 @@ jobs:
         uses: actions/deploy-pages@v4
       - name: summary
         run: |
-          echo "### Check the result: https://oasis-tcs.github.io/xacml-spec/xacml-v4.0-csd01.html" >> $GITHUB_STEP_SUMMARY
+          echo "### Check the results: https://oasis-tcs.github.io/xacml-spec/acal-v1.0-csd01.html | https://oasis-tcs.github.io/xacml-spec/acal-v1.0-csd01.pdf" >> $GITHUB_STEP_SUMMARY
 

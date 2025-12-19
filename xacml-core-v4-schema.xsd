@@ -98,8 +98,8 @@
 	  </xs:sequence>
       <!-- Change to XACML 3.0 (issue #48): Category type changed to IdentifierType for supporting Short Identifiers -->
       <xs:attribute name="Category" type="xacml:IdentifierType" use="required"/>
-      <!-- Change to XACML 3.0 (issue #18): 'xml:id' replaced with 'Id' attribute to be consistently named in all XACML 4.0 / ACAL representation formats including JSON. -->
-	  <xs:attribute name="Id" type="xs:ID" use="optional"/>
+      <!-- Change to XACML 3.0 (issue #18): 'xml:id' replaced with 'Id' attribute to be consistently named in all XACML 4.0 / ACAL representation formats including JSON, and type changed to LocalIdentifierType which is more portable to JSON. -->
+	  <xs:attribute name="Id" type="xacml:LocalIdentifierType" use="optional"/>
 	</xs:complexType>
 
 	<!-- Issue #16: PolicyIdentifierList removed, replaced in ResultType with ref to new ApplicablePolicyReference below (with maxOccurs="unbounded") -->
@@ -184,8 +184,8 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 		</xs:sequence>
 		<!-- Change to XACML 3.0 (issue #48): Category type changed to IdentifierType for supporting Short Identifiers -->
 		<xs:attribute name="Category" type="xacml:IdentifierType" use="required"/>
-		<!-- Change to XACML 3.0 (issue #18): 'xml:id' replaced with 'Id' attribute to be consistently named in all XACML 4.0 / ACAL representation formats including JSON. -->
-		<xs:attribute name="Id" type="xs:ID" use="optional"/>
+		<!-- Change to XACML 3.0 (issue #18): 'xml:id' replaced with 'Id' attribute to be consistently named in all XACML 4.0 / ACAL representation formats including JSON, and type changed to LocalIdentifierType which is more portable to JSON. -->
+		<xs:attribute name="Id" type="xacml:LocalIdentifierType" use="optional"/>
 	</xs:complexType>
 
 	<xs:element name="Attribute" type="xacml:AttributeType"/>
@@ -242,8 +242,8 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 	<!-- Change to XACML 3.0 (issue #18): Attributes renamed to RequestEntity in the Request, therefore AttributesReference renamed to RequestEntityReference for consistency -->
 	<xs:element name="RequestEntityReference" type="xacml:RequestEntityReferenceType"/>
 	<xs:complexType name="RequestEntityReferenceType">
-		<!-- Change to XACML 3.0 (issue #62): ReferenceId attribute renamed to Id for simplicity and type aligned with other "local" identifiers (RuleId, VariableId, etc.) and portable to other representation formats like JSON -->
-		<xs:attribute name="Id" type="xacml:PolicyScopedIdentifierType" use="required"/>
+		<!-- Change to XACML 3.0 (issue #62): ReferenceId attribute renamed to Id for simplicity and type aligned with other "local" identifiers (RuleId, VariableId, etc.) and portable to other representation formats like JSON. -->
+		<xs:attribute name="Id" type="xacml:LocalIdentifierType" use="required"/>
 	</xs:complexType>
 
 <!-- Change to XACML 3.0 (issue #6): Merged Obligation/Advice(Expression) into Notice(Expression) -->
@@ -334,10 +334,12 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 			<xs:element ref="xacml:Content" minOccurs="0"/>
 			<xs:element ref="xacml:Attribute" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
+		<xs:assert test="xacml:Content or xacml:Attribute"/>
 	</xs:complexType>
 
-	<!-- Change to XACML 3.0 (issue #61): Simple type for policy-scoped identifiers in general, i.e. identifiers meant to be unique within the scope of a Policy , e.g. ParameterName, VariableId, RuleId (to be agreed with ALFA working group). -->
-	<xs:simpleType name="PolicyScopedIdentifierType">
+	<!-- Change to XACML 3.0 (issue #61): Simple type for local identifiers in general i.e. identifiers that are unique only locally, such as Request-local identifiers (e.g. RequestEntity/@Id and RequestEntityReference/@Id), Policy-local identifiers (e.g. a policy's variable ID (VariableId) or
+	parameter name, or RuleId), Rule-local identifiers (e.g. a rule's variable ID), etc. (To be agreed with ALFA working group). -->
+	<xs:simpleType name="LocalIdentifierType">
 		<xs:restriction base="xs:string">
 			<xs:pattern value="_?[A-Za-z0-9]([-._]?[A-Za-z0-9]+)*"/>
 		</xs:restriction>
@@ -412,7 +414,7 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 			<!-- Default value expression (optional), i.e. that is used if no argument is passed to this parameter in the policy reference. -->
 			<xs:element ref="xacml:Expression" minOccurs="0"/>
 		</xs:sequence>
-		<xs:attribute name="ParameterName" type="xacml:PolicyScopedIdentifierType" use="required" />
+		<xs:attribute name="ParameterName" type="xacml:LocalIdentifierType" use="required" />
 		<xs:attribute name="DataType" type="xacml:IdentifierType" use="optional"
 			default="urn:oasis:names:tc:acal:1.0:data-type:string" />
 		<xs:attribute name="IsBag" type="xs:boolean" use="optional" default="false"/>
@@ -489,9 +491,9 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 			<!-- Change to XACML 3.0 (issue #6): Merged Obligation/Advice(Expression) into Notice(Expression) -->
 			<xs:element ref="xacml:NoticeExpression" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
-		<!-- Change to XACML 3.0 (issue #42): changed RuleId type to more restrictive PolicyScopedIdentifierType (agreed with ALFA working group). -->
+		<!-- Change to XACML 3.0 (issue #42): changed RuleId type to more restrictive LocalIdentifierType (agreed with ALFA working group). -->
 		<!-- Change to XACML 3.0 (issue #55): renamed RuleId to Id -->
-		<xs:attribute name="Id" type="xacml:PolicyScopedIdentifierType" use="required" />
+		<xs:attribute name="Id" type="xacml:LocalIdentifierType" use="required" />
 		<xs:attribute name="Effect" type="xacml:EffectType" use="required"/>
 	</xs:complexType>
 
@@ -503,8 +505,8 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 			<!-- Whatever Expression used here must have a clearly identifiable Datatype (Value must have a defined DataType). -->
 			<xs:element ref="xacml:Expression"/>
 		</xs:sequence>
-		<!-- Change to XACML 3.0 (issue #42): changed VariableId type to more restrictive PolicyScopedIdentifierType (agreed with ALFA working group). -->
-		<xs:attribute name="VariableId" type="xacml:PolicyScopedIdentifierType" use="required"/>
+		<!-- Change to XACML 3.0 (issue #42): changed VariableId type to more restrictive LocalIdentifierType (agreed with ALFA working group). -->
+		<xs:attribute name="VariableId" type="xacml:LocalIdentifierType" use="required"/>
 		<!-- If the Expression is a Value, it must have a Datatype (in other words: either it is NOT a Value OR it is a Value with a DataType) -->
 		<xs:assert test="not(xacml:Value) or xacml:Value/@DataType"/>
 	</xs:complexType>
@@ -516,9 +518,9 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 	<xs:complexType name="VariableReferenceType">
 		<xs:complexContent>
 			<xs:extension base="xacml:ExpressionType">
-				<!-- Change to XACML 3.0 (issue #42): changed VariableId type to more restrictive PolicyScopedIdentifierType
+				<!-- Change to XACML 3.0 (issue #42): changed VariableId type to more restrictive LocalIdentifierType
 				(agreed with ALFA working group). -->
-				<xs:attribute name="VariableId" type="xacml:PolicyScopedIdentifierType" use="required" />
+				<xs:attribute name="VariableId" type="xacml:LocalIdentifierType" use="required" />
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -672,7 +674,7 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 					<xs:element ref="xacml:Expression"/>
 					<xs:element ref="xacml:Expression"/>
 				</xs:sequence>
-				<xs:attribute name="VariableId" type="xacml:PolicyScopedIdentifierType" use="required" />
+				<xs:attribute name="VariableId" type="xacml:LocalIdentifierType" use="required" />
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -736,6 +738,7 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 		</xs:restriction>
 	</xs:simpleType>
 
+	<!-- Change to XACML 3.0 (issue #12): introduction of Global/Shared variables and Bundle -->
 	<xs:element name="SharedVariableDefinition" type="xacml:SharedVariableDefinitionType"/>
 	<xs:complexType name="SharedVariableDefinitionType">
 		<xs:sequence>
@@ -765,5 +768,7 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 			<xs:element ref="xacml:Policy" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element ref="xacml:PolicyReference" minOccurs="0"/>
 		</xs:sequence>
+		<!-- If there is a PolicyRef, there must be at least one Policy element -->
+		<xs:assert test="not(xacml:PolicyReference) or xacml:Policy"/>
 	</xs:complexType>
 </xs:schema>
