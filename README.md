@@ -20,3 +20,18 @@ Please note that the TC currently is soliciting comments from the community on e
 
 ## Contact
 Please send questions or comments about <a href="https://www.oasis-open.org/resources/tcadmin/github-repositories-for-oasis-tc-members-chartered-work">OASIS TC GitHub repositories</a> to <a href="mailto:project-administration@oasis-open.org">Project Administration</a>.  For questions about content in this repository, please contact the TC Chair or Co-Chairs as listed on the the XACML TC's <a href="https://www.oasis-open.org/committees/xacml/">home page</a>.
+
+## Testing XACML schemas in XSD version 1.1
+
+Since XACML 4.0, XACML schemas exist in XSD version 1.1 to provide more advanced validation and especially an equivalence for the UML constraints (OCL) defined in ACAL agnostic model, in form of XSD 1.1 assertions (`xs:assert`). One way to test XSD 1.1 validation is to use [Apache Xerces2 Java XML Parser](https://xerces.apache.org/xerces2-j/), more specifically its [binary distribution](https://xerces.apache.org/mirrors.cgi#binary) called _**Xerces2 Java 2.12.2 (XML Schema 1.1)**_. 
+
+Download the binary distribution zip or tar.gz depending on your OS, then unzip it to a folder, say `xerces-2_12_2-xml-schema-1.1`.
+
+Then (based on Apache [Xerces2 Java XML Parser's issue 1726](https://issues.apache.org/jira/browse/XERCESJ-1726?page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel&focusedCommentId=17191197)), change your working directory to the root of this repository where the XACML schemas are located.
+
+In order to validate a XACML document, say `MyPolicy.xml`, run the following command line (you may omit `-a ./xacml-xpath-v4-schema.xsd` (resp. `a ./xacml-jsonpath-v4-schema.xsd`) if your XACML document does not use the XPath (resp. JSONPath) Profile):
+
+```console
+# Tested with Java 21 LTS
+$ java -cp "xerces-2_12_2-xml-schema-1.1/*" jaxp.SourceValidator -i MyPolicy.xml -a ./xacml-core-v4-schema.xsd -a ./xacml-xpath-v4-schema.xsd -a ./xacml-jsonpath-v4-schema.xsd -f -fx -xsd11
+```

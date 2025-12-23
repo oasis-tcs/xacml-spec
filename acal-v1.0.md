@@ -10,7 +10,7 @@
 ## Committee Specification Draft 01
 
 
-## 16 December 2025
+## 17 December 2025
 
 
 ### This version
@@ -42,22 +42,21 @@
 ### Chairs
 
 
-Bill Parducci (bill@parducci.net), Individual
+- Bill Parducci (bill@parducci.net), Individual
 
 
 ### Secretaries
 
 
-- [ First Name Last Name (email), Company ]   
-- [ First Name Last Name (email), Company ] 
+- Bill Parducci (bill@parducci.net), Individual 
 
 
 ### Editors
 
 
-Steven Legg (steven.legg@viewds.com), [ViewDS Identity Solutions](https://www.viewds.com/) \
-Cyril Dangerville (cyril.dangerville@thalesgroup.com), [THALES](https://www.thalesgroup.com/) \
-Bill Parducci (bill@parducci.net), Individual
+- Steven Legg (steven.legg@viewds.com), [ViewDS Identity Solutions](https://www.viewds.com/)
+- Cyril Dangerville (cyril.dangerville@thalesgroup.com), [THALES](https://www.thalesgroup.com/)
+- Bill Parducci (bill@parducci.net), Individual
 
 
 ### Abstract
@@ -81,14 +80,11 @@ Edited by Steven Legg and Cyril Dangerville. 16 December 2025. OASIS Committee S
 
 This document replaces or supersedes:
 
-
 - _eXtensible Access Control Markup Language (XACML) Version 3.0 Plus Errata 01_. Edited by Erik Rissanen. OASIS Standard incorporating Approved Errata. https://docs.https:xacml/3.0/xacml-3.0-core-spec-en.html.
 
 
 This document is related to:
 
-
-- [ The full reference to the related document in IEEE reference format ] 
 - _JACAL: The JSON representation of the Attribute-Centric Authorization Language (ACAL) Version 1.0_.
 - _XACML Version 4.0: The XML representation of the Attribute-Centric Authorization Language (ACAL)_.
 - _YACAL: The YAML representation of the Attribute-Centric Authorization Language (ACAL) Version 1.0_.
@@ -131,7 +127,7 @@ The generation command uses a CSS stylesheet file (`-c` argument) provided by OA
 Run the following command line to generate HTML from this markdown file (named `acal-v1.0-csd01.md`), :
 
 ```console
-$ pandoc -f gfm+definition_lists -t html acal-v1.0.md -c styles/markdown-styles-v1.7.3a.css --toc --toc-depth=5 \ 
+$ pandoc -f gfm+definition_lists -t html acal-v1.0.md -c styles/markdown-styles-v1.7.3a.css \ 
          -s --lua-filter diagram.lua --embed-resources \
          --metadata title="Attribute-Centric Authorization Language (ACAL) Version 1.0" \
          -o acal-v1.0.html
@@ -145,7 +141,7 @@ For PDF output, the command line is the following (different `-t` and `-H` argum
 
 ```console
 $ pandoc -f gfm+definition_lists -t pdf acal-v1.0.md -c styles/markdown-styles-v1.7.3a.css \
-         -H custom_latex_header_for_pandoc_pdf_output.tex --toc --toc-depth=5 -s -L diagram.lua \
+         -H custom_latex_header_for_pandoc_pdf_output.tex -s -L diagram.lua \
          --metadata title="Attribute-Centric Authorization Language (ACAL) Version 1.0" --embed-resources \
          -o acal-v1.0.pdf 
 ```
@@ -263,17 +259,18 @@ $ pandoc -f gfm+definition_lists -t pdf acal-v1.0.md -c styles/markdown-styles-v
         - [7.1.2.3.3 VersionType](#71233-versiontype)
         - [7.1.2.3.4 VersionMatchType](#71234-versionmatchtype)
         - [7.1.2.3.5 ShortIdNameType](#71235-shortidnametype)
-        - [7.1.2.3.6 IdentifierType](#71236-identifiertype)
-        - [7.1.2.3.7 LocalIdentifierType](#71237-localidentifiertype)
-        - [7.1.2.3.8 Name](#71238-name)
-        - [7.1.2.3.9 EffectType](#71239-effecttype)
-        - [7.1.2.3.10 DecisionType](#712310-decisiontype)
-        - [7.1.2.3.11 AttributeSelectorPathType](#712311-attributeselectorpathtype)
+        - [7.1.2.3.6 ShortIdValueType](#71236-shortidvaluetype)
+        - [7.1.2.3.7 IdentifierType](#71237-identifiertype)
+        - [7.1.2.3.8 LocalIdentifierType](#71238-localidentifiertype)
+        - [7.1.2.3.9 AttributeSelectorPathType](#71239-attributeselectorpathtype)
+        - [7.1.2.3.10 Name](#712310-name)
+        - [7.1.2.3.11 EffectType](#712311-effecttype)
+        - [7.1.2.3.12 DecisionType](#712312-decisiontype)
     - [7.1.3 Relationship to Concrete Representations](#713-relationship-to-concrete-representations)
   - [7.2 ShortIdSetType](#72-shortidsettype)
   - [7.3 ShortIdType](#73-shortidtype)
   - [7.4 PolicyType](#74-policytype)
-  - [7.5 DefaultsType (optional)](#75-defaultstype-optional)
+  - [7.5 PolicyDefaultsType (optional)](#75-policydefaultstype-optional)
   - [7.6 PolicyParameterType](#76-policyparametertype)
   - [7.7 BooleanExpressionType](#77-booleanexpressiontype)
   - [7.8 IdReferenceType](#78-idreferencetype)
@@ -322,84 +319,79 @@ $ pandoc -f gfm+definition_lists -t pdf acal-v1.0.md -c styles/markdown-styles-v
   - [7.45 ResultEntityType](#745-resultentitytype)
   - [7.46 EntityType](#746-entitytype)
   - [7.47 BundleType](#747-bundletype)
-- [8 XPath Definitions (optional)](#8-xpath-definitions-optional)
-  - [Supported XPath versions](#supported-xpath-versions)
-  - [XPath 2.0 Implementation-Defined Items](#xpath-20-implementation-defined-items)
-    - [XPath 3.0 additional implementation-defined items](#xpath-30-additional-implementation-defined-items)
-    - [XPath 3.1 additional implementation-defined items](#xpath-31-additional-implementation-defined-items)
-- [9 Functional Requirements](#9-functional-requirements)
-  - [9.1 Unicode Issues](#91-unicode-issues)
-    - [9.1.1 Normalization](#911-normalization)
-    - [9.1.2 Version of Unicode](#912-version-of-unicode)
-  - [9.2 Policy Enforcement Point](#92-policy-enforcement-point)
-    - [9.2.1 Base PEP](#921-base-pep)
-    - [9.2.2 Deny-Biased PEP](#922-deny-biased-pep)
-    - [9.2.3 Permit-Biased PEP](#923-permit-biased-pep)
-  - [9.3 Identifier Evaluation](#93-identifier-evaluation)
-    - [9.3.1 Identifier Examples (non-normative)](#931-identifier-examples-non-normative)
-    - [9.3.2 Short Identifier Set Usage (non-normative)](#932-short-identifier-set-usage-non-normative)
-  - [9.4 Attribute Evaluation](#94-attribute-evaluation)
-    - [9.4.1 Structured Attributes](#941-structured-attributes)
-    - [9.4.2 Attribute Bags](#942-attribute-bags)
-    - [9.4.3 Multivalued Attributes](#943-multivalued-attributes)
-    - [9.4.4 Attribute Matching](#944-attribute-matching)
-    - [9.4.5 Attribute Retrieval](#945-attribute-retrieval)
-    - [9.4.6 Environment Attributes](#946-environment-attributes)
-    - [9.4.7 Selector Evaluation](#947-selector-evaluation)
-  - [9.5 Expression Evaluation](#95-expression-evaluation)
-  - [9.6 Arithmetic Evaluation](#96-arithmetic-evaluation)
-  - [9.7 Target Evaluation](#97-target-evaluation)
-  - [9.8 VariableReference Evaluation](#98-variablereference-evaluation)
-  - [9.9 Condition Evaluation](#99-condition-evaluation)
-  - [9.10 Extended Indeterminate](#910-extended-indeterminate)
-  - [9.11 Rule Evaluation](#911-rule-evaluation)
-  - [9.12 Policy Evaluation](#912-policy-evaluation)
-  - [9.15 PolicyReference Evaluation](#915-policyreference-evaluation)
-  - [9.16 Hierarchical Resources](#916-hierarchical-resources)
-  - [9.17 Authorization Decision](#917-authorization-decision)
-  - [9.18 Notices](#918-notices)
-  - [9.19 Exception Handling](#919-exception-handling)
-    - [9.19.1 Unsupported Functionality](#9191-unsupported-functionality)
-    - [9.19.2 Syntax and Type Errors](#9192-syntax-and-type-errors)
-    - [9.19.3 Missing Attributes](#9193-missing-attributes)
-  - [9.20 Identifier Equality](#920-identifier-equality)
-  - [9.21 Short Identifiers in Responses](#921-short-identifiers-in-responses)
-- [10 ACAL Extensibility Points (non-normative)](#10-acal-extensibility-points-non-normative)
-  - [10.1 Extensible Properties](#101-extensible-properties)
-  - [10.2 Structured Attributes](#102-structured-attributes)
-- [11 Safety, Security, and Data Protection Considerations](#11-safety-security-and-data-protection-considerations)
-  - [11.1 Threat Model](#111-threat-model)
-    - [11.1.1 Unauthorized Disclosure](#1111-unauthorized-disclosure)
-    - [11.1.2 Message Replay](#1112-message-replay)
-    - [11.1.3 Message Insertion](#1113-message-insertion)
-    - [11.1.4 Message Deletion](#1114-message-deletion)
-    - [11.1.5 Message Modification](#1115-message-modification)
-    - [11.1.6 NotApplicable Results](#1116-notapplicable-results)
-    - [11.1.7 Negative Rules](#1117-negative-rules)
-    - [11.1.8 Denial of Service](#1118-denial-of-service)
-  - [11.2 Safeguards](#112-safeguards)
-    - [11.2.1 Authentication](#1121-authentication)
-    - [11.2.2 Policy Administration](#1122-policy-administration)
-    - [11.2.3 Confidentiality](#1123-confidentiality)
-      - [11.2.3.1 Communication Confidentiality](#11231-communication-confidentiality)
-      - [11.2.3.2 Statement Level Confidentiality](#11232-statement-level-confidentiality)
-    - [11.2.4 Policy Integrity](#1124-policy-integrity)
-    - [11.2.5 Policy Identifiers](#1125-policy-identifiers)
-    - [11.2.6 Trust Model](#1126-trust-model)
-    - [11.2.7 Privacy](#1127-privacy)
-  - [11.3 Unicode Security Issues](#113-unicode-security-issues)
-  - [11.4 Identifier Equality](#114-identifier-equality)
-- [12 Conformance](#12-conformance)
-  - [12.1 Introduction](#121-introduction)
-  - [12.2 Conformance Tables](#122-conformance-tables)
-    - [12.2.1 Object Types](#1221-object-types)
-    - [12.2.2 Identifier Prefixes](#1222-identifier-prefixes)
-    - [12.2.3 Algorithms](#1223-algorithms)
-    - [12.2.4 Status Codes](#1224-status-codes)
-    - [12.2.5 Environment Attributes](#1225-environment-attributes)
-    - [12.2.6 Attributes and Categories](#1226-attributes-and-categories)
-    - [12.2.7 Data Types](#1227-data-types)
-    - [12.2.8 Functions](#1228-functions)
+- [8 Functional Requirements](#8-functional-requirements)
+  - [8.1 Unicode Issues](#81-unicode-issues)
+    - [8.1.1 Normalization](#811-normalization)
+    - [8.1.2 Version of Unicode](#812-version-of-unicode)
+  - [8.2 Policy Enforcement Point](#82-policy-enforcement-point)
+    - [8.2.1 Base PEP](#821-base-pep)
+    - [8.2.2 Deny-Biased PEP](#822-deny-biased-pep)
+    - [8.2.3 Permit-Biased PEP](#823-permit-biased-pep)
+  - [8.3 Identifier Evaluation](#83-identifier-evaluation)
+    - [8.3.1 Identifier Examples (non-normative)](#831-identifier-examples-non-normative)
+    - [8.3.2 Short Identifier Set Usage (non-normative)](#832-short-identifier-set-usage-non-normative)
+  - [8.4 Attribute Evaluation](#84-attribute-evaluation)
+    - [8.4.1 Structured Attributes](#841-structured-attributes)
+    - [8.4.2 Attribute Bags](#842-attribute-bags)
+    - [8.4.3 Multivalued Attributes](#843-multivalued-attributes)
+    - [8.4.4 Attribute Matching](#844-attribute-matching)
+    - [8.4.5 Attribute Retrieval](#845-attribute-retrieval)
+    - [8.4.6 Environment Attributes](#846-environment-attributes)
+    - [8.4.7 Selector Evaluation](#847-selector-evaluation)
+  - [8.5 Expression Evaluation](#85-expression-evaluation)
+  - [8.6 Arithmetic Evaluation](#86-arithmetic-evaluation)
+  - [8.7 Target Evaluation](#87-target-evaluation)
+  - [8.8 VariableReference Evaluation](#88-variablereference-evaluation)
+  - [8.9 Condition Evaluation](#89-condition-evaluation)
+  - [8.10 Extended Indeterminate](#810-extended-indeterminate)
+  - [8.11 Rule Evaluation](#811-rule-evaluation)
+  - [8.12 Policy Evaluation](#812-policy-evaluation)
+  - [8.13 PolicyReference Evaluation](#813-policyreference-evaluation)
+  - [8.14 Hierarchical Resources](#814-hierarchical-resources)
+  - [8.15 Authorization Decision](#815-authorization-decision)
+  - [8.16 Notices](#816-notices)
+  - [8.17 Exception Handling](#817-exception-handling)
+    - [8.17.1 Unsupported Functionality](#8171-unsupported-functionality)
+    - [8.17.2 Syntax and Type Errors](#8172-syntax-and-type-errors)
+    - [8.17.3 Missing Attributes](#8173-missing-attributes)
+  - [8.18 Identifier Equality](#818-identifier-equality)
+  - [8.19 Short Identifiers in Responses](#819-short-identifiers-in-responses)
+- [9 ACAL Extensibility Points (non-normative)](#9-acal-extensibility-points-non-normative)
+  - [9.1 Extensible Properties](#91-extensible-properties)
+  - [9.2 Structured Attributes](#92-structured-attributes)
+- [10 Safety, Security, and Data Protection Considerations](#10-safety-security-and-data-protection-considerations)
+  - [10.1 Threat Model](#101-threat-model)
+    - [10.1.1 Unauthorized Disclosure](#1011-unauthorized-disclosure)
+    - [10.1.2 Message Replay](#1012-message-replay)
+    - [10.1.3 Message Insertion](#1013-message-insertion)
+    - [10.1.4 Message Deletion](#1014-message-deletion)
+    - [10.1.5 Message Modification](#1015-message-modification)
+    - [10.1.6 NotApplicable Results](#1016-notapplicable-results)
+    - [10.1.7 Negative Rules](#1017-negative-rules)
+    - [10.1.8 Denial of Service](#1018-denial-of-service)
+  - [10.2 Safeguards](#102-safeguards)
+    - [10.2.1 Authentication](#1021-authentication)
+    - [10.2.2 Policy Administration](#1022-policy-administration)
+    - [10.2.3 Confidentiality](#1023-confidentiality)
+      - [10.2.3.1 Communication Confidentiality](#10231-communication-confidentiality)
+      - [10.2.3.2 Statement Level Confidentiality](#10232-statement-level-confidentiality)
+    - [10.2.4 Policy Integrity](#1024-policy-integrity)
+    - [10.2.5 Policy Identifiers](#1025-policy-identifiers)
+    - [10.2.6 Trust Model](#1026-trust-model)
+    - [10.2.7 Privacy](#1027-privacy)
+  - [10.3 Unicode Security Issues](#103-unicode-security-issues)
+  - [10.4 Identifier Equality](#104-identifier-equality)
+- [11 Conformance](#11-conformance)
+  - [11.1 Introduction](#111-introduction)
+  - [11.2 Conformance Tables](#112-conformance-tables)
+    - [11.2.1 Object Types](#1121-object-types)
+    - [11.2.2 Identifier Prefixes](#1122-identifier-prefixes)
+    - [11.2.3 Algorithms](#1123-algorithms)
+    - [11.2.4 Status Codes](#1124-status-codes)
+    - [11.2.5 Environment Attributes](#1125-environment-attributes)
+    - [11.2.6 Attributes and Categories](#1126-attributes-and-categories)
+    - [11.2.7 Data Types](#1127-data-types)
+    - [11.2.8 Functions](#1128-functions)
 - [Annex A License, Document Status and Notices](#annex-a-license-document-status-and-notices)
   - [A.1 Document Status](#a1-document-status)
   - [A.2 License and Notices](#a2-license-and-notices)
@@ -413,7 +405,6 @@ $ pandoc -f gfm+definition_lists -t pdf acal-v1.0.md -c styles/markdown-styles-v
     - [C.2.2 RFC 822 Name](#c22-rfc-822-name)
     - [C.2.3 IP Address](#c23-ip-address)
     - [C.2.4 DNS Name](#c24-dns-name)
-    - [C.2.5 XPath Expression (optional)](#c25-xpath-expression-optional)
     - [C.2.6 Entity](#c26-entity)
   - [C.3 Functions](#c3-functions)
     - [C.3.1 Equality Predicates](#c31-equality-predicates)
@@ -431,8 +422,7 @@ $ pandoc -f gfm+definition_lists -t pdf acal-v1.0.md -c styles/markdown-styles-v
     - [C.3.13 Regular-Expression-Based Functions](#c313-regular-expression-based-functions)
     - [C.3.14 Aggregate Functions](#c314-aggregate-functions)
     - [C.3.15 Special Match Functions](#c315-special-match-functions)
-    - [C.3.16 XPath-based Functions (optional)](#c316-xpath-based-functions-optional)
-    - [C.3.17 Other Functions](#c317-other-functions)
+    - [C.3.16 Other Functions](#c316-other-functions)
     - [C.3.18 Extension Functions and Data Types](#c318-extension-functions-and-data-types)
 - [Annex D. ACAL Identifiers](#annex-d-acal-identifiers)
   - [D.1 ACAL Namespaces](#d1-acal-namespaces)
@@ -459,7 +449,16 @@ $ pandoc -f gfm+definition_lists -t pdf acal-v1.0.md -c styles/markdown-styles-v
   - [Participants](#participants)
 - [Appendix 2 Changes From Previous Version](#appendix-2-changes-from-previous-version)
   - [Revision History](#revision-history)
-
+- [Appendix 3 OASIS Open Specification Template Instructions](#appendix-3-oasis-open-specification-template-instructions)
+  - [General Template Instructions](#general-template-instructions)
+  - [Formatting Instructions](#formatting-instructions)
+  - [Extra Items Instructions](#extra-items-instructions)
+  - [**Listing 1.1** Sample Title](#listing-11-sample-title)
+  - [**Code 1.1** Sample Title](#code-11-sample-title)
+  - [Other Instructions](#other-instructions)
+- [Appendix 4 Additional Appendix as Needed](#appendix-4-additional-appendix-as-needed)
+  - [Subsection Title](#subsection-title)
+    - [Sub-subsection](#sub-subsection)
 
 ---
 
@@ -591,7 +590,7 @@ This document defines the following terms:
 
 **Identifier equality**
 
-: The identifier equality operation which is defined in [Section 9.20](#920-identifier-equality).
+: The identifier equality operation which is defined in [Section 8.18](#818-identifier-equality).
 
 **Named attribute**
 
@@ -769,11 +768,11 @@ Access control policies often place requirements on the actions of more than one
 
 ## 4.5 Policies Based on Subject and Resource Attributes
 
-Another common requirement is to base an authorization decision on some characteristic of the subject other than its identity. Perhaps, the most common application of this idea is the subject's role [[RBAC](#rbac)]. ACAL provides facilities to support this approach. Attributes of subjects contained in the request context may be identified by an attribute designator. Alternatively, an attribute selector may contain an XPath/JSONPath expression over the `ContentType` object of the subject to identify a particular subject attribute value by its location in the context (see [Section 4.11](#411-abstraction-layer) for an explanation of context).
+Another common requirement is to base an authorization decision on some characteristic of the subject other than its identity. Perhaps, the most common application of this idea is the subject's role [[RBAC](#rbac)]. ACAL provides facilities to support this approach. Attributes of subjects contained in the request context may be identified by an attribute designator. Alternatively, an attribute selector may contain a Path expression (e.g. Path/JSONPath) over the `ContentType` object of the subject to identify a particular subject attribute value by its location in the context (see [Section 4.11](#411-abstraction-layer) for an explanation of context).
 
 ACAL provides a standard way to reference the attributes defined in the LDAP series of specifications [[LDAP-1](#ldap-1)], [[LDAP-2](#ldap-2)]. This is intended to encourage implementers to use standard attribute identifiers for some common subject attributes.
 
-Another common requirement is to base an authorization decision on some characteristic of the resource other than its identity. ACAL provides facilities to support this approach. Attributes of the resource may be identified by an attribute designator. Alternatively, an attribute selector may contain an XPath/JSONPath expression over the `ContentType` object of the resource to identify a particular resource attribute value by its location in the context.
+Another common requirement is to base an authorization decision on some characteristic of the resource other than its identity. ACAL provides facilities to support this approach. Attributes of the resource may be identified by an attribute designator. Alternatively, an attribute selector may contain a Path expression (e.g. XPath/JSONPath) over the `ContentType` object of the resource to identify a particular resource attribute value by its location in the context.
 
 ## 4.6 Multi-Valued Attributes
 
@@ -783,11 +782,12 @@ ACAL provides a set of functions that allow a policy writer to be absolutely cle
 
 ## 4.7 Policies Based on Resource Contents
 
+<!-- TODO: merge this section into 4.5, as Attribute selectors are already mentioned in section 4.5. This seems redundant. -->
 In many applications, it is required to base an authorization decision on data contained in the information resource to which access is requested. For instance, a common component of privacy policy is that a person should be allowed to read records for which he or she is the subject. The corresponding policy must contain a reference to the subject identified in the information resource itself.
 
-ACAL provides facilities for doing this when the information resource can be represented as an XML or JSON document. The `AttributeSelectorType` object may contain an XPath or JSONPath expression over the `ContentType` object of the resource to identify data in the information resource to be used in the policy evaluation.
+ACAL provides facilities for doing this when the information resource can be represented as a structured document like XML or JSON. The `AttributeSelectorType` object may contain a content-specific Path expression (e.g. XPath) over the `ContentType` object of the resource to identify data in the information resource to be used in the policy evaluation.
 
-In cases where the information resource is not an XML or JSON document, specified attributes of the resource can be referenced, as described in [Section 4.5](#45-policies-based-on-subject-and-resource-attributes).
+In cases where the information resource is not structured document like XML or JSON, specified attributes of the resource can be referenced, as described in [Section 4.5](#45-policies-based-on-subject-and-resource-attributes).
 
 ## 4.8 Operators
 
@@ -803,7 +803,7 @@ Relationship operators (equality and comparison) are also defined for a number o
 
 Also noteworthy are the operators over Boolean data types, which permit the logical combination of predicates in a rule. For example, a rule may contain the statement that access may be permitted during business hours AND from a terminal on business premises.
 
-The ACAL method of representing functions borrows from MathML [[MathML](#mathml)] and from the XPath and XQuery Functions and Operators 3.1 specification [[XF](#xf)].
+The ACAL method of representing functions borrows from MathML [[MathML](#mathml)]. (For XPath functions, see the XPath Profile of ACAL.)
 
 ## 4.9 Policy Distribution
 
@@ -825,15 +825,11 @@ The use of constraints limiting the applicability of a policy was described by S
 
 ## 4.11 Abstraction Layer
 
-PEPs come in many forms. For instance, a PEP may be part of a remote-access gateway, part of a Web server or part of an email user-agent, etc. It is unrealistic to expect that all PEPs in an enterprise do currently, or will in the future, issue decision requests to a PDP in a common format. Nevertheless, a particular policy may have to be enforced by multiple PEPs. It would be inefficient to force a policy writer to write the same policy several different ways in order to accommodate the format requirements of each PEP. Similarly attributes may be contained in various envelope types (e.g. X.509 attribute certificates, SAML attribute assertions, etc.). Therefore, there is a need for a canonical form of the request and response handled by an ACAL PDP. This canonical form is called the ACAL context. Its syntax is defined in XML schema.
+PEPs come in many forms. For instance, a PEP may be part of a remote-access gateway, part of a Web server or part of an email user-agent, etc. It is unrealistic to expect that all PEPs in an enterprise do currently, or will in the future, issue decision requests to a PDP in a common format. Nevertheless, a particular policy may have to be enforced by multiple PEPs. It would be inefficient to force a policy writer to write the same policy several different ways in order to accommodate the format requirements of each PEP. Similarly attributes may be contained in various envelope types (e.g. X.509 attribute certificates, SAML attribute assertions, etc.). Therefore, there is a need for a canonical form of the request and response handled by an ACAL PDP. This canonical form is called the ACAL context. Its abstract syntax is defined here in UML and concrete syntaxes and representation formats in separate profiles of ACAL (XML, JSON, etc.).
 
 Naturally, ACAL-conformant PEPs may issue requests and receive responses in the form of an ACAL context. But, where this situation does not exist, an intermediate step is required to convert between the request/response format understood by the PEP and the ACAL context format understood by the PDP.
 
 The benefit of this approach is that policies may be written and analyzed independently of the specific environment in which they are to be enforced.
-
-In the case where the native request/response format is specified in XML Schema (e.g. a SAML-conformant PEP), the transformation between the native format and the ACAL context may be specified in the form of an Extensible Stylesheet Language Transformation [[XSLT](#xslt)].
-
-Similarly, in the case where the resource to which access is requested is an XML document, the resource itself may be included in, or referenced by, the request context. Then, through the use of XPath expressions [[XPath](#xpath)] in the policy, values in the resource may be included in the policy evaluation.
 
 ## 4.12 Actions Performed in Conjunction with Enforcement
 
@@ -863,7 +859,7 @@ The data-flow model and language model of ACAL are described in the following su
 
 ## 5.1 Data-Flow Model
 
-The major actors in the ACAL domain are shown in the data-flow diagram of [Figure 1](#figure-1---data-flow-diagram).
+The major actors in the ACAL domain are shown in the data-flow diagram of Figure 1.
 
 **Figure 1.** Data-Flow Diagram
 
@@ -1089,7 +1085,7 @@ The model operates by the following steps.
 
 ## 5.2 ACAL Context
 
-ACAL is intended to be suitable for a variety of application environments. The core language is insulated from the application environment by the ACAL context, as shown in [Figure 2](#figure-2---acal-context), in which the scope of the ACAL specification is indicated by the shaded area. In the figure, the ACAL context represents the inputs and outputs of the PDP decision. An ACAL Policy references attributes in the ACAL context via content-specific path expressions (e.g. XPath for XML content, JSONPath for JSON content) over the `ContentType` objects of the context, or *named* attribute designators that identify the attribute by its category, identifier, data type and (optionally) its issuer. Implementations must convert between the attribute representations in the application environment (e.g., SAML, J2SE, CORBA, and so on) and the attribute representations in the ACAL context. How this is achieved is outside the scope of the ACAL specification. In some cases, such as SAML, this conversion may be accomplished in an automated way through the use of an XSLT transformation.
+ACAL is intended to be suitable for a variety of application environments. The core language is insulated from the application environment by the ACAL context, as shown in Figure 2, in which the scope of the ACAL specification is indicated by the shaded area. In the figure, the ACAL context represents the inputs and outputs of the PDP decision. An ACAL Policy references attributes in the ACAL context via content-specific path expressions (e.g. XPath for XML content, JSONPath for JSON content) over the `ContentType` objects of the context, or *named* attribute designators that identify the attribute by its category, identifier, data type and (optionally) its issuer. Implementations must convert between the attribute representations in the application environment (e.g., SAML, J2SE, CORBA, and so on) and the attribute representations in the ACAL context. How this is achieved is outside the scope of the ACAL specification. In some cases, such as SAML, this conversion may be accomplished in an automated way through the use of an XSLT transformation.
 
 **Figure 2.** ACAL Context
 
@@ -1150,11 +1146,11 @@ digraph Fig1 {
 
 Typical categories of attributes in the context are the subject, resource, action and environment, but users may define their own categories as needed. See [Annex D.2](#d2-attribute-categories) for suggested attribute categories.
 
-See [Section 9.4.5](#945-attribute-retrieval) for a more detailed discussion of the request context.
+See [Section 8.4.5](#845-attribute-retrieval) for a more detailed discussion of the request context.
 
 ## 5.3 Policy Language Model
 
-The policy language model is shown in [Figure 3](#figure-3---policy-language-model). The main components of the model are:
+The policy language model is shown in Figure 3. The main components of the model are:
 
 * Rule; and
 
@@ -1164,7 +1160,6 @@ These are described in the following sub-sections.
 
 **Figure 3.** Policy Language Model
 
-<!-- ![policy language model](images/PolicyLanguageModel.png) -->
 <div style="text-align: center;">
 
 ```plantuml
@@ -1238,7 +1233,7 @@ The effect of the rule indicates the rule-writer's intended consequence of a `tr
 
 Notice expressions may be added by the writer of the rule.
 
-When a PDP evaluates a rule containing notice expressions, it evaluates the notice expressions into notices and returns certain of those notices to the PEP in the response context. [Section 9.18](#918-notices) explains which notices are to be returned.
+When a PDP evaluates a rule containing notice expressions, it evaluates the notice expressions into notices and returns certain of those notices to the PEP in the response context. [Section 8.16](#816-notices) explains which notices are to be returned.
 
 In contrast to obligation notices, advice notices may be safely ignored by the PEP.
 
@@ -1274,7 +1269,7 @@ See [Annex E](#annex-e-combining-algorithms) for definitions of the standard com
 
 The writer of a policy may add notice expressions to the policy, in addition to those contained in the component rules and policies.
 
-When a PDP evaluates a policy containing notice expressions, it evaluates the notice expressions into notices and returns certain of those notices to the PEP in the response context. [Section 9.18](#918-notices) explains which notices are to be returned. In contrast to obligation notices, advice notices may be safely ignored by the PEP.
+When a PDP evaluates a policy containing notice expressions, it evaluates the notice expressions into notices and returns certain of those notices to the PEP in the response context. [Section 8.16](#816-notices) explains which notices are to be returned. In contrast to obligation notices, advice notices may be safely ignored by the PEP.
 
 
 ---
@@ -1634,10 +1629,11 @@ Here are the simple types based on UML standard primitive types.
    class Real <<primitive>>
    @enduml
    ```
+This primitive type is not directly used in the current ACAL model and provided for information purposes only. The subtype `Double` is used instead.
 
 #### 7.1.2.2 ACAL-defined UML stereotype(s) used in new primitive types
 
-`RestrictedString` is defined as a UML stereotype for String-derived primitive types defined in the next subsection and restricted by a pattern (regular expression). That pattern is simply specified as the stereotype's property `pattern`:
+`RestrictedString` is defined as a UML stereotype for String-derived primitive types defined in the next subsection and restricted by a pattern (regular expression) and an optional minimum length (positive integer), both specified as the stereotype's properties `pattern` and `minLength` respectively:
 
 ```plantuml
 @startuml
@@ -1646,6 +1642,7 @@ hide circle
 class PrimitiveType <<Metaclass>>
 class RestrictedType <<stereotype>> extends PrimitiveType {
    + pattern: String [1]
+   + minLength: Integer [0..1]
 }
 @enduml
 ```
@@ -1721,7 +1718,7 @@ A version match is `.`-separated, like a version string. A number represents a d
 
 ##### 7.1.2.3.5 ShortIdNameType
 
-`ShortIdNameType` is the primitive type for Short Identifier names (see [Section 7.3](#shortidtype) ).
+`ShortIdNameType` is the primitive type for Short Identifier names (see [Section 7.3](#73-shortidtype) ).
 
 UML definition:
 ```plantuml
@@ -1736,9 +1733,32 @@ class ShortIdNameType <<primitive>> <<restrictedString>> {
 @enduml
 ```
 
-##### 7.1.2.3.6 IdentifierType
+##### 7.1.2.3.6 ShortIdValueType
 
-A value of the `IdentifierType` simple type refers to a specific attribute category, attribute, data type, function, notice, status code, combining algorithm or XPath version.
+`ShortIdValueType` is the primitive type for Short Identifier values (see [Section 7.3](#73-shortidtype) ). Such value is an alternating sequence of URI characters and *{ShortId}*s (short identifier names enclosed in curly braces). Reminder: the curly brace is not a valid URI character. 
+
+UML definition:
+```plantuml
+@startuml
+hide empty members
+hide circle
+class ShortIdValueType <<primitive>> <<restrictedString>> {
+   <<restrictedString>>
+   pattern='^[!#-;=?-\[\]_a-z~]*(\{[A-Za-z][0-9A-Za-z]*(-[0-9A-Za-z]+)*\}[!#-;=?-\[\]_a-z~]*)*$'
+   minLength=1
+   --
+}
+@enduml
+```
+
+The pattern is: `^uc*(\{s\}uc*)*$` where:
+- `s` is the pattern for a ShortId name, copied from the `ShortIdNameType` definition (which excludes curly braces).
+- `uc` is the pattern for a valid URI character based on RFC 3986 (cf. the ABNF definition of 'URI' in Appendix A), which excludes curly braces: `[!#-;=?-\[\]_a-z~]`
+The `minLength=1` restriction prevents the empty string, i.e. there is at least one `uc` or `{s}`.
+
+##### 7.1.2.3.7 IdentifierType
+
+A value of the `IdentifierType` simple type refers to a specific attribute category, attribute, data type, function, notice, status code, combining algorithm.
 
 UML definition (class diagram):
 ```plantuml
@@ -1762,14 +1782,15 @@ A short identifier name appearing in the second and third cases MUST be the name
 
 Note that the three cases can be distinguished from each other syntactically in a valid, correctly-formatted value. If the value contains curly brackets, then the third case must apply since the curly bracket characters are not legal characters for an absolute URI or a short identifier name; otherwise, if the value matches the pattern for a short identifier name, then the second case applies since an absolute URI begins with a scheme name and a colon character (i.e., `:`; U+003A) and the colon character is not a legal character for a short identifier name; otherwise, the value is an absolute URI.
 
-The conversion of a value of the `IdentifierType` simple type into an absolute URI is detailed in [Section 9.3](#93-identifier-evaluation).
+The conversion of a value of the `IdentifierType` simple type into an absolute URI is detailed in [Section 8.3](#83-identifier-evaluation).
 
-##### 7.1.2.3.7 LocalIdentifierType
+##### 7.1.2.3.8 LocalIdentifierType
 
 `LocalIdentifierType` values are local identifiers, i.e. identifiers that are unique only within a limited scope. Examples of local identifiers are Request-local identifiers (e.g. the `Id` properties of `RequestEntity` and `RequestEntityReference`), Policy-local identifiers (e.g. the `VariableId` of a policy's variable or the `ParameterName` of a policy parameter or the `RuleId` of a policy's rule), Rule-local identifiers (e.g. the `VariableId` of a rule's variable), etc.
 
 <!-- WARNING: for ALFA compatibility, the pattern should not be more restrictive than ALFA identifiers. 
-   Discussion ongoing with ALFA workgroup about allowing (or not) identifiers made of only underscore(s) and number(s), and identifiers containing consecutive underscores (more than one).
+   Pattern agreed with ALFA working group, except the hypen is allowed as separator in addition to the dot: 
+			<name>.<name>.<name>... or <name>-<name>-<name>... where <name> is at least a letter possibly preceded by underscore(s) and/or followed by letter(s)/digit(s)/underscore(s).
 -->
 
 UML definition (class diagram):
@@ -1779,13 +1800,30 @@ hide empty members
 hide circle
 class IdentifierType <<primitive>> <<restrictedString>> {
    <<restrictedString>>
-   pattern='_?[A-Za-z0-9]([-._]?[A-Za-z0-9]+)*$'
+   pattern='^_*[A-Za-z][A-Za-z_0-9]*([-.]_*[A-Za-z][A-Za-z_0-9]*)*$'
    --
 }
 @enduml
 ```
 
-##### 7.1.2.3.8 Name
+##### 7.1.2.3.9 AttributeSelectorPathType
+
+The `AttributeSelectorPathType` defines valid values for the `Path` property of `BaseAttributeSelectorType` objects (non-empty strings without leading/trailing whitespace).
+
+UML definition (class diagram):
+```plantuml
+@startuml
+hide empty members 
+hide circle
+class AttributeSelectorPathType <<primitive>> <<restrictedString>> {
+   <<restrictedString>>
+   pattern='^\S(.*\S)?$'
+   --
+}
+@enduml
+```
+
+##### 7.1.2.3.10 Name
 
 The `Name` type is the same as [XSD standard](#xs) `Name` datatype.
 
@@ -1805,7 +1843,8 @@ Although an XML representations may use the standard XSD `Name` datatype as is f
 | \i  | `[:A-Z_a-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD\u{10000}-\u{EFFFF}]`   | `[_:A-Za-z]` |
 | \c | `[-.0-9:A-Z_a-z\u00B7\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u037D\u037F-\u1FFF\u200C-\u200D\u203F\u2040\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD\u{10000}-\u{EFFFF}]`     | `[-._:A-Za-z0-9]` |
 
-##### 7.1.2.3.9 EffectType
+
+##### 7.1.2.3.11 EffectType
 
 The `EffectType` simple type defines the values allowed for the `Effect` property of a `RuleType` object and for the `AppliesTo` property of the `NoticeExpressionType` objects; either `Permit` or `Deny`.
 
@@ -1821,7 +1860,7 @@ class EffectType <<enumeration>> {
 @enduml
 ```
 
-##### 7.1.2.3.10 DecisionType
+##### 7.1.2.3.12 DecisionType
 
 A `DecisionType` value indicates the result of policy evaluation.
 
@@ -1849,23 +1888,6 @@ The values of `DecisionType` have the following meanings:
 
 : `NotApplicable`: the PDP does not have any policy that applies to this decision request.
 
-##### 7.1.2.3.11 AttributeSelectorPathType
-
-The `AttributeSelectorPathType` simple type defines possible types of `Path` property value in `AttributeSelectorType` and `EntityAttributeSelectorType`:
-* `XPath` for XPath expressions as defined in XPath standard (the actual version is identified by the policy's `PolicyDefaults` property);
-* `JSONPath` for JSONPath expressions as defined by RFC 9535.
-
-UML definition:
-```plantuml
-@startuml
-hide empty members
-hide circle
-class AttributeSelectorPathType <<enumeration>> {
-   XPath
-   JSONPath
-}
-@enduml
-```
 
 ### 7.1.3 Relationship to Concrete Representations
 
@@ -1921,7 +1943,7 @@ hide empty members
 hide circle
 class ShortIdType <<dataType>> {
    + Name: ShortIdNameType [1]
-   + Value: String [1]
+   + Value: ShortIdValueType [1]
 }
 @enduml
 ```
@@ -1934,7 +1956,7 @@ A `ShortIdType` object contains the following properties:
 
 `Value` [Required]
 
-: The character string used to replace the simple alias name when a value of `IdentifierType` is evaluated to produce a complete URI; see [Section 9.3](#93-identifier-evaluation).
+: The character string used to replace the simple alias name when a value of `IdentifierType` is evaluated to produce a complete URI; see [Section 8.3](#83-identifier-evaluation).
 
 The value of the `Value` property SHALL be either one of the following:
 * a character string with only characters allowed in a URI [RFC3986] (curly brackets are not allowed) or
@@ -1953,7 +1975,7 @@ The name of the short identifier MUST NOT be the same as the name of any other s
 
 A `PolicyType` object describes a policy: an aggregation of rules and other policies. Policies MAY be included in an enclosing `PolicyType` object either directly using the `Policy` property or indirectly using the `PolicyReference` property.
 
-A `PolicyType` object may be evaluated, in which case the evaluation procedure defined in [Section 9.12](#912-policy-evaluation) SHALL be used.
+A `PolicyType` object may be evaluated, in which case the evaluation procedure defined in [Section 8.12](#812-policy-evaluation) SHALL be used.
 
 The main components of this object type are the `CombiningAlgId`, `Target`, `Policy`, `Rule`, `VariableDefinition` and `NoticeExpression` properties.
 
@@ -1963,9 +1985,9 @@ The results of evaluating the policies and rules included in a `PolicyType` obje
 
 A `PolicyType` object MAY contain a `PolicyIssuer` property. The interpretation of the `PolicyIssuer` property is explained in the separate administrative policy profile [[XACMLAdmin](#xacmladmin)].
 
-The `Target` property defines the applicability of the `PolicyType` object to a set of decision requests. If the `Target` property within the `PolicyType` object matches the request context, then the `PolicyType` object may be used by the PDP in making its authorization decision. See [Section 9.12](#912-policy-evaluation).
+The `Target` property defines the applicability of the `PolicyType` object to a set of decision requests. If the `Target` property within the `PolicyType` object matches the request context, then the `PolicyType` object may be used by the PDP in making its authorization decision. See [Section 8.12](#812-policy-evaluation).
 
-Any `NoticeExpressionType` objects may be evaluated into notices by the PDP. Any resulting obligation notice (with `isObligation="true"`) MUST be fulfilled by the PEP in conjunction with the authorization decision. If the PEP does not understand or cannot fulfill any of the obligation notices, then it MUST act according to the PEP bias. See [Section 9.2](#92-policy-enforcement-point) and [Section 9.18](#918-notices). Any resulting advice notice MAY be safely ignored by the PEP.
+Any `NoticeExpressionType` objects may be evaluated into notices by the PDP. Any resulting obligation notice (with `isObligation="true"`) MUST be fulfilled by the PEP in conjunction with the authorization decision. If the PEP does not understand or cannot fulfill any of the obligation notices, then it MUST act according to the PEP bias. See [Section 8.2](#82-policy-enforcement-point) and [Section 8.16](#816-notices). Any resulting advice notice MAY be safely ignored by the PEP.
 
 UML definition (class diagram):
 ```plantuml
@@ -1979,7 +2001,7 @@ class PolicyType <<dataType>> extends CombinerInputType {
    + ShortIdSetReference: URI [*] {unordered, unique}
    + MaxDelegationDepth: Integer [0..1]
    + PolicyIssuer: EntityType [0..1]
-   + PolicyDefaults: DefaultsType [0..1]
+   + PolicyDefaults: PolicyDefaultsType [*]
    + PolicyParameter: PolicyParameterType [*] {ordered, unique}
    + VariableDefinition: VariableDefinitionType [*] {ordered, unique}
    + Target: BooleanExpressionType [0..1]
@@ -2024,9 +2046,9 @@ A `PolicyType` object contains the following properties:
 
 : An `EntityType` object containing attributes of the issuer of the policy. See the *EntityType* section for more details on the structure, and see the *Administration and Delegation profile* [[XACMLAdmin](#xacmladmin)] for a particular use of this object. A PDP which does not implement this profile MUST report an error or return an `Indeterminate` result if it encounters this object.
 
-`PolicyDefaults` [Optional]
+`PolicyDefaults` [Any Number]
 
-: A `DefaultsType` object containing a set of default values applicable to the policy, such as the XPath version. The scope of the `PolicyDefaults` property SHALL be the enclosing policy. The `PolicyDefaults` property is REQUIRED if and only if the enclosing policy contains attribute selectors or expressions applying XPath-based functions.
+: sequence of `PolicyDefaultsType` objects containing each a set of default values specific to a particular ACAL Profile, applicable to the policy (e.g. ACAL XPath Profile's default XPath version). The scope of the `PolicyDefaults` property SHALL be the enclosing policy. The use of `PolicyDefaults` property is specified by particular ACAL Profiles (e.g. XPath Profile).
 
 `PolicyParameter` [Any Number]
 
@@ -2038,11 +2060,11 @@ A `PolicyType` object contains the following properties:
 
 `Target` [Optional]
 
-: A `BooleanExpressionType` object that determines the set of decision requests to which the parent policy is applicable. If this property is omitted from the `PolicyType` object, then the policy applies to all decision requests. Evaluation of the `Target` property is described in [Section 9.7](#97-target-evaluation).
+: A `BooleanExpressionType` object that determines the set of decision requests to which the parent policy is applicable. If this property is omitted from the `PolicyType` object, then the policy applies to all decision requests. Evaluation of the `Target` property is described in [Section 8.7](#87-target-evaluation).
 
 `NoticeExpression` [Any Number]
 
-: A sequence of `NoticeExpressionType` objects to be evaluated into notices by the PDP. See [Section 7.29](#noticeexpressiontype). See [Section 9.18](#918-notices) for a description of how the notices to be returned by the PDP are determined.
+: A sequence of `NoticeExpressionType` objects to be evaluated into notices by the PDP. See [Section 7.29](#729-noticeexpressiontype). See [Section 8.16](#816-notices) for a description of how the notices to be returned by the PDP are determined.
 
 `CombinerInput` [Any Number]
 
@@ -2062,28 +2084,21 @@ Each `CombinerInputType` object contains exactly one of the following properties
 
 : A `RuleType` object defining a nested rule that is included in this policy. A rule whose condition matches the decision request MUST be considered. A rule whose condition does not match the decision request SHALL be ignored.
 
-## 7.5 DefaultsType (optional)
 
-_**Supporting this object type is optional.** It is required only for supporting AttributeSelectors and/or XPath-based functions._
+## 7.5 PolicyDefaultsType (optional)
 
-A `DefaultsType` object specifies default values that apply to the enclosing `PolicyType` object.
+_**Supporting this part is optional.**_ _It is required only for supporting ACAL Profiles that define extensions (subtypes) of `PolicyDefaultsType` (e.g. XPath Profile)._
+
+`PolicyDefaultsType` is an abstract object type for default values that apply to the parent `PolicyType` object. Concrete subtypes of `PolicyDefaultsType` are defined in separate ACAL Profiles, e.g. XPath Profile.
 
 UML definition (class diagram):
 ```plantuml
 @startuml
 hide empty members 
 hide circle
-class DefaultsType <<dataType>> {
-   + XPathVersion: IdentifierType [1]
-}
+abstract class PolicyDefaultsType <<dataType>>
 @enduml
 ```
-
-A `DefaultsType` object contains the following property:
-
-`XPathVersion` [Required]
-
-: An `IdentifierType` value specifying the XPath version for XPath expressions occurring in the policy (see Section 8). XPath expressions are used by attribute selectors and as arguments to XPath-based functions.
 
 ## 7.6 PolicyParameterType
 
@@ -2143,7 +2158,7 @@ class BooleanExpressionType <<dataType>> {
 
 The `Target` and `Condition` properties are of this type.
 
-Expression evaluation is described in [Section 9.5](#95-expression-evaluation).
+Expression evaluation is described in [Section 8.5](#85-expression-evaluation).
 
 <a name="idreferencetype"></a>
 
@@ -2242,7 +2257,7 @@ The `PolicyReferenceType` object type extends the `PatternMatchIdReferenceType` 
 
 A `RuleType` object defines an individual rule in a policy. The main components of an object of this type are the `Condition`, `NoticeExpression` and `Effect` properties.
 
-A `RuleType` object may be evaluated, in which case the evaluation procedure defined in [Section 9.11](#911-rule-evaluation) SHALL be used.
+A `RuleType` object may be evaluated, in which case the evaluation procedure defined in [Section 8.11](#811-rule-evaluation) SHALL be used.
 
 UML definition (class diagram):
 ```plantuml
@@ -2280,11 +2295,11 @@ A `RuleType` object contains the following properties:
 
 `Condition` [Optional]
 
-: A `BooleanExpressionType` object holding an expression that MUST be satisfied for the rule to be assigned its `Effect` value. Evaluation of the `Condition` property is described in [Section 9.9](#99-condition-evaluation).
+: A `BooleanExpressionType` object holding an expression that MUST be satisfied for the rule to be assigned its `Effect` value. Evaluation of the `Condition` property is described in [Section 8.9](#89-condition-evaluation).
 
 `NoticeExpression` [Any Number]
 
-: A sequence of `NoticeExpressionType` objects, each defining a notice expression potentially evaluated into a notice by the PDP. See [NoticeExpressionType](#noticeexpressiontype). See [Section 9.18](#918-notices) for a description of how the notices to be returned by the PDP shall be determined. See [Section 9.2](#92-policy-enforcement-point) about enforcement of obligation notices.
+: A sequence of `NoticeExpressionType` objects, each defining a notice expression potentially evaluated into a notice by the PDP. See [NoticeExpressionType](#noticeexpressiontype). See [Section 8.16](#816-notices) for a description of how the notices to be returned by the PDP shall be determined. See [Section 8.2](#82-policy-enforcement-point) about enforcement of obligation notices.
 
 ## 7.13 VariableDefinitionType
 
@@ -2300,7 +2315,7 @@ class VariableDefinitionType <<dataType>> {
    + VariableId: LocalIdentifierType [1]
    + Expression: ExpressionType [1]
 }
-note "{{OCL} not Expression.attributes->includes('DataType') or Expression.DataType <> null}" as ValueDataTypeMustBeNonNull
+note "{{OCL} not Expression.oclIsKindOf(ValueType) or Expression.DataType <> null}" as ValueDataTypeMustBeNonNull
 VariableDefinitionType .. ValueDataTypeMustBeNonNull
 @enduml
 ```
@@ -2313,7 +2328,7 @@ A `VariableDefinitionType` object has the following properties:
 
 `Expression` [Required]
 
-: An `ExpressionType` object. The value of the variable definition is the result of evaluating the `ExpressionType` object. The expression MAY contain `VariableReferenceType` objects referring to other `VariableDefinitionType` objects provided those objects are in the same `VariableDefinition` property or in the `VariableDefinition` property (list) of a `PolicyType` object enclosing the parent object. The expression SHALL NOT contain `VariableReferenceType` objects that refer to this `VariableDefinitionType` object or that refer to `VariableDefinitionType` objects that directly or indirectly refer to this `VariableDefinitionType` object. If the Expression's type has a `DataType` property, e.g. it is a `ValueType` or a subtype of `ValueType`, this `DataType` property must be set to a value (non-null).
+: An `ExpressionType` object. The value of the variable definition is the result of evaluating the `ExpressionType` object. The expression MAY contain `VariableReferenceType` objects referring to other `VariableDefinitionType` objects provided those objects are in the same `VariableDefinition` property or in the `VariableDefinition` property (list) of a `PolicyType` object enclosing the parent object. The expression SHALL NOT contain `VariableReferenceType` objects that refer to this `VariableDefinitionType` object or that refer to `VariableDefinitionType` objects that directly or indirectly refer to this `VariableDefinitionType` object. If the Expression is a `ValueType` or a subtype of `ValueType`, its `DataType` property must be set to a value (non-null).
 
 ## 7.13b SharedVariableDefinitionType
 
@@ -2360,7 +2375,7 @@ class SharedVariableDefinitionType <<dataType>> {
 
 ## 7.14 ExpressionType
 
-An `ExpressionType` object defines an ACAL expression. Expression evaluation is defined in [Section 9.5](#95-expression-evaluation).
+An `ExpressionType` object defines an ACAL expression. Expression evaluation is defined in [Section 8.5](#85-expression-evaluation).
 
 UML definition (class diagram):
 ```plantuml
@@ -2381,10 +2396,10 @@ class AttributeDesignatorType <<dataType>> extends NamedAttributeDesignatorType
 class EntityAttributeDesignatorType <<dataType>> extends NamedAttributeDesignatorType
 
 class QuantifiedExpressionType <<dataType>> extends ExpressionType
-class ForAnyExpressionType <<dataType>> extends QuantifiedExpressionType
-class ForAllExpressionType <<dataType>> extends QuantifiedExpressionType
-class MapExpressionType <<dataType>> extends QuantifiedExpressionType
-class SelectExpressionType <<dataType>> extends QuantifiedExpressionType
+class ForAnyType <<dataType>> extends QuantifiedExpressionType
+class ForAllType <<dataType>> extends QuantifiedExpressionType
+class MapType <<dataType>> extends QuantifiedExpressionType
+class SelectType <<dataType>> extends QuantifiedExpressionType
 
 class SharedVariableReferenceType <<dataType>> extends ExpressionType
 class ValueType <<dataType>> extends ExpressionType
@@ -2412,11 +2427,11 @@ An `ExpressionType` object contains exactly one of the following properties:
 
 `AttributeSelector`
 
-: An `AttributeSelectorType` object specifying an XPath expression to apply to XML content in the request context to produce a bag of ACAL values.
+: An `AttributeSelectorType` object specifying  Path expression - depending on the content type (e.g. XPath for XML content) - to apply to the structured content in the request context to produce a bag of ACAL values.
 
 `EntityAttributeSelector`
 
-: An `EntityAttributeSelectorType` object specifying an XPath expression to apply to XML content either in the request context or in a value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type.
+: An `EntityAttributeSelectorType` object specifying an Path expression - depending on the content type (e.g. XPath for XML content) - to apply to the structured content either in the request context or in a value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type.
 
 `Value`
 
@@ -2506,7 +2521,7 @@ A `FunctionType` object contains the following property:
 
 The `NamedAttributeDesignatorType` object type is an abstract object type that specifies a named attribute for the retrieval of a bag of attribute values from a source of attributes. The object types derived from `NamedAttributeDesignatorType` determine the source of attributes: an `AttributeDesignatorType` object (an attribute designator) specifies a named attribute in the request context and an `EntityAttributeDesignatorType` object (an entity attribute designator) specifies a named attribute in either the request context or a value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type.
 
-Evaluation of an `AttributeDesignatorType` or `EntityAttributeDesignatorType` object returns a bag containing all the ACAL attribute values that are matched by the named attribute, or an error. In the event that no matching attribute is present in the source of attributes, the `MustBePresent` property governs whether this evaluation returns an empty bag or `Indeterminate`. See [Section 9.4.5](#945-attribute-retrieval).
+Evaluation of an `AttributeDesignatorType` or `EntityAttributeDesignatorType` object returns a bag containing all the ACAL attribute values that are matched by the named attribute, or an error. In the event that no matching attribute is present in the source of attributes, the `MustBePresent` property governs whether this evaluation returns an empty bag or `Indeterminate`. See [Section 8.4.5](#845-attribute-retrieval).
 
 UML definition (class diagram):
 ```plantuml
@@ -2539,7 +2554,7 @@ A `NamedAttributeDesignatorType` object contains the following properties:
 
 `MustBePresent` [Optional, Default false]
 
-: A `Boolean` value that governs whether the designator returns `Indeterminate` or an empty bag in the event the named attribute is absent from the source of attributes. See [Section 9.4.5](#945-attribute-retrieval). Also see [Section 9.19.2](#9192-syntax-and-type-errors) and [Section 9.19.3](#9193-missing-attributes). If this property is omitted, then it is treated as being set to `false`.
+: A `Boolean` value that governs whether the designator returns `Indeterminate` or an empty bag in the event the named attribute is absent from the source of attributes. See [Section 8.4.5](#845-attribute-retrieval). Also see [Section 8.17.2](#8172-syntax-and-type-errors) and [Section 8.17.3](#8173-missing-attributes). If this property is omitted, then it is treated as being set to `false`.
 
 A named attribute SHALL be considered present if there is at least one attribute in the source of attributes that matches the criteria set out below.
 
@@ -2605,11 +2620,11 @@ If the expression evaluates to a value of the `urn:oasis:names:tc:acal:1.0:data-
 
 _**Support for this part (attribute selectors and entity attribute selectors) is OPTIONAL.**_
 
-The `BaseAttributeSelectorType` object type is an abstract object type that specifies an XPath (resp. JSONPath) expression for the production of a bag of ACAL attribute values from XML (resp. JSON) content. The object types derived from `BaseAttributeSelectorType` determine the source of the XML (resp. JSON) content: an `AttributeSelectorType` object (an attribute selector) specifies the `Content` property of an attribute category in the request context and an `EntityAttributeSelectorType` object (an entity attribute selector) specifies the `Content` property in either an attribute category in the request context or a value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type.
+The `BaseAttributeSelectorType` object type is an abstract object type that specifies a Content-specific Path expression (e.g. XPath) for the production of a bag of ACAL attribute values. The object types derived from `BaseAttributeSelectorType` determine the source of the content: an `AttributeSelectorType` object (an attribute selector) specifies the `Content` property of an attribute category in the request context and an `EntityAttributeSelectorType` object (an entity attribute selector) specifies the `Content` property in either an attribute category in the request context or a value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type.
 
 Evaluation of an `AttributeSelectorType` or `EntityAttributeSelectorType` object returns a bag of unnamed and uncategorized ACAL attribute values, or an error.
 
-See [Section 9.4.7](#947-selector-evaluation) for details of attribute selector and entity attribute selector evaluation.
+See [Section 8.4.7](#847-selector-evaluation) for details of attribute selector and entity attribute selector evaluation.
 
 UML definition (class diagram):
 ```plantuml
@@ -2619,36 +2634,19 @@ hide empty members
 hide circle
 abstract class ExpressionType <<datatype>>
 abstract class BaseAttributeSelectorType <<dataType>> extends ExpressionType {
-   + PathType: AttributeSelectorPathType [0..1] = XPath
-   + Path: String [1]
-   + ContextSelectorId: IdentifierType [0..1]
+   + Path: AttributeSelectorPathType [1]
    + DataType: IdentifierType [0..1] = 'urn:oasis:names:tc:acal:1.0:data-type:string'
    + MustBePresent: Boolean [0..1] = false
 }
-note "{{OCL} ContextSelectorId = null or PathType = XPath}" as ContextSelectorIdForXPathOnly
-BaseAttributeSelectorType .. ContextSelectorIdForXPathOnly
 @enduml
 ```
 
 A `BaseAttributeSelectorType` object has the following properties:
 
-`ContextSelectorId` [Optional]
-
-: An `IdentifierType` value specifying an ACAL attribute (by its `AttributeId`) in the attribute category or `urn:oasis:names:tc:acal:1.0:data-type:entity` value containing the XML content. The referenced attribute MUST have a single value of data type `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` and the XPath expression represented by that value must select a single node in the XML content. The `XPathCategory` property of the referenced ACAL attribute value SHALL be ignored. This property is not allowed if the `PathType` property is not set to `XPath` (as it is by default). 
-
-`PathType` [Optional, Default `XPath`]
-
-: An `AttributeSelectorPathType` value indicating the type of `Path` expression to be evaluated. Possible values are:
-  * `XPath` (default): in this case, the selected content is expected to be XML, and the `Path` property must be set to a valid XPath expression according to the XPath version specified in the `PolicyDefaults` property of the enclosing Policy;
-  * `JSONPath`: in this case, the selected content is expected to be a JSON Object, and the `Path` property must be set to a JSONPath compliant with [RFC 9535](https://datatracker.ietf.org/doc/html/rfc9535).
-
 `Path` [Required]
 
-: A `String` value that contains an expression to be evaluated against the specified content. The syntax and semantics of the expression are identified by the `PathType` property. See [Section 9.4.7](#947-selector-evaluation) for details of the expression evaluation during attribute selector and entity attribute selector processing. In the case of an XPath expression, the namespace context for the value of the `Path` property is given by the [in-scope namespaces] [[INFOSET](#infoset)] of the `BaseAttributeSelectorType` object.
+: A restricted `String` value that contains an expression to be evaluated against the specified content. The concrete syntax and semantics of the expression is separate ACAL Profiles (e.g. XPath / JSONPath Profiles). See [Section 8.4.7](#847-selector-evaluation) for details of the expression evaluation during attribute selector and entity attribute selector processing.
 
-  _The namespaces will need to be handled in a manner similar to how namespaces are handled in the JSON profile for values of the xpathExpression data type._
-
-  _Support for JSONPath is still to be defined._
 
 `DataType` [Optional, Default `urn:oasis:names:tc:acal:1.0:data-type:string`]
 
@@ -2656,15 +2654,15 @@ A `BaseAttributeSelectorType` object has the following properties:
 
 `MustBePresent` [Optional, Default false]
 
-: A `Boolean` value that governs whether the attribute selector or entity attribute selector returns `Indeterminate` or an empty bag in the event that the specified XML content does not exist, or the XML content does exist but the XPath expression selects no node. See [Section 9.4.5](#945-attribute-retrieval). Also see [Section 9.19.2](#9192-syntax-and-type-errors) and [Section 9.19.3](#9193-missing-attributes). If this property is omitted, then it is treated as being set to `false`.
+: A `Boolean` value that governs whether the attribute selector or entity attribute selector returns `Indeterminate` or an empty bag in the event that the specified content does not exist, or the content does exist but the Path expression selects no node. See [Section 8.4.5](#845-attribute-retrieval). Also see [Section 8.17.2](#8172-syntax-and-type-errors) and [Section 8.19.3](#8173-missing-attributes). If this property is omitted, then it is treated as being set to `false`.
 
 ## 7.21 AttributeSelectorType (optional)
 
 _**Support for this part (attribute selectors) is OPTIONAL.**_
 
-An `AttributeSelectorType` object is a kind of expression that defines an attribute selector. An attribute selector produces a bag of unnamed and uncategorized ACAL attribute values. The values shall be constructed from the node(s) selected by applying the XPath expression given by the attribute selector's `Path` property to the XML content indicated by the attribute selector's `Category` property. 
+An `AttributeSelectorType` object is an abstract object type of expression that defines an attribute selector. An attribute selector produces a bag of unnamed and uncategorized ACAL attribute values. The values shall be constructed from the node(s) selected by applying the Path expression given by the attribute selector's `Path` property to the structured `Content` indicated by the attribute selector's `Category` property. Concrete types of this are defined in ACAL Profiles, e.g. XPath Profile.
 
-See [Section 9.4.7](#947-selector-evaluation) for details of attribute selector evaluation.
+See [Section 8.4.7](#847-selector-evaluation) for details of attribute selector evaluation.
 
 UML definition (class diagram):
 ```plantuml
@@ -2672,7 +2670,7 @@ UML definition (class diagram):
 hide empty members 
 hide circle
 abstract class BaseAttributeSelectorType <<datatype>>
-class AttributeSelectorType <<dataType>> extends BaseAttributeSelectorType {
+abstract class AttributeSelectorType <<dataType>> extends BaseAttributeSelectorType {
    + Category: IdentifierType [1]
 }
 @enduml
@@ -2682,15 +2680,15 @@ The `AttributeSelectorType` object type extends the `BaseAttributeSelectorType` 
 
 `Category` [Required]
 
-: An `IdentifierType` value specifying an attribute category in the request context. The `Content` property of that attribute categeory contains the XML from which nodes will be selected. The `Category` property also indicates the attribute category containing the ACAL attribute nominated by the `ContextSelectorId` property, if the object includes a `ContextSelectorId` property.
+: An `IdentifierType` value specifying an attribute category in the request context. The `Content` property of that attribute categeory contains the structured content from which nodes will be selected.
 
 ## 7.22 EntityAttributeSelectorType (optional)
 
 _**Support for this part (entity attribute selectors) is OPTIONAL.**_
 
-An `EntityAttributeSelectorType` object is a kind of expression that defines an entity attribute selector. An entity attribute selector produces a bag of unnamed and uncategorized ACAL attribute values. The values shall be constructed from the node(s) selected by applying the XPath expression given by the entity attribute selector's `Path` property to the XML content in the `Content` property in either an attribute category in the request context or a value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type. 
+An `EntityAttributeSelectorType` object is an abstract object type of expression that defines an entity attribute selector. An entity attribute selector produces a bag of unnamed and uncategorized ACAL attribute values. The values shall be constructed from the node(s) selected by applying the Path expression given by the entity attribute selector's `Path` property to the structured content in the `Content` property in either an attribute category in the request context or a value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type. Concrete types of this are defined in ACAL Profiles, e.g. XPath Profile.
 
-See [Section 9.4.7](#947-selector-evaluation) for details of entity attribute selector evaluation.
+See [Section 8.4.7](#847-selector-evaluation) for details of entity attribute selector evaluation.
 
 UML definition (class diagram):
 ```plantuml
@@ -2698,7 +2696,7 @@ UML definition (class diagram):
 hide empty members 
 hide circle
 abstract class BaseAttributeSelectorType <<datatype>>
-class EntityAttributeSelectorType <<dataType>> extends BaseAttributeSelectorType {
+abstract class EntityAttributeSelectorType <<dataType>> extends BaseAttributeSelectorType {
    + Expression: ExpressionType [1]
 }
 @enduml
@@ -2710,9 +2708,9 @@ The `EntityAttributeSelectorType` object type extends the `BaseAttributeSelector
 
 : An `ExpressionType` object defining an expression that MUST evaluate to either a single value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type or a single value of the `urn:oasis:names:tc:acal:1.0:data-type:anyURI` data type.
 
-If the expression evaluates to a value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type, then the entity attribute selector applies the XPath expression given by the entity attribute selector's `Path` property to the XML content in the `Content` property of that value. The ACAL attribute nominated by the `ContextSelectorId` property, if any, is obtained from this same value.
+If the expression evaluates to a value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type, then the entity attribute selector applies the Path expression given by the entity attribute selector's `Path` property to the structured content in the `Content` property of that value. 
 
-If the expression evaluates to a value of the `urn:oasis:names:tc:acal:1.0:data-type:anyURI` data type, then the entity attribute selector applies the XPath expression given by the entity attribute selector's `Path` property to the XML content in the `Content` property of the `RequestEntityType` object having a `Category` property that matches, by identifier equality, the value of the expression. In this case the entity attribute selector emulates an attribute selector. The ACAL attribute nominated by the `ContextSelectorId` property, if any, is obtained from this same object.
+If the expression evaluates to a value of the `urn:oasis:names:tc:acal:1.0:data-type:anyURI` data type, then the entity attribute selector applies the Path expression given by the entity attribute selector's `Path` property to the structured content in the `Content` property of the `RequestEntityType` object having a `Category` property that matches, by identifier equality, the value of the expression. In this case the entity attribute selector emulates an attribute selector.
 
 ## 7.23 ValueType
 
@@ -2724,7 +2722,8 @@ UML model (class diagram):
 hide empty members
 hide circle
 
-abstract class ValueType
+abstract class ExpressionType
+abstract class ValueType extends ExpressionType
 abstract class SimpleValueType extends ValueType
 abstract class PrimitiveValueType extends SimpleValueType
 class LiteralBooleanType <<fixedDatatype>> extends PrimitiveValueType {
@@ -2758,13 +2757,7 @@ class LiteralRestrictedStringValueType <<restrictedString>> extends PrimitiveVal
 
 note bottom of LiteralRestrictedStringValueType: Other ACAL datatypes with lexical representation can be derived from this type, such as the standard time, date, dateTime, anyURI, hexBinary, base64Binary, \ndayTimeDuration, yearMonthDuration, x50Name, rfc822Name, ipAddress, dnsName.
  
-class XpathExpressionValueType <<fixedDatatype>> extends SimpleValueType {
-    <<fixedDatatype>>
-    DataType='urn:oasis:names:tc:acal:1.0:data-type:xpathExpression'
-    __
-    +Value: String [1]
-    +XPathCategory: IdentifierType [1]
-}
+note bottom of SimpleValueType: an ACAL datatype which is not a primitive type but represent a primitive value with only properties of primitive type (like simple metadata, no hierarchical content), such as ACAL XPath Profile's xpathExpression, may be considered a SimpleValueType.
 
 abstract class StructuredValueType extends ValueType
 
@@ -2830,7 +2823,7 @@ The `SharedVariableReferenceType` object type contains the following properties:
 
 `Version` [Optional]
 
-: Specifies a matching expression for selecting an acceptable version of the referenced shared variable. The matching operation is defined in [Section 7.12](#712-versionmatchtype). If this property is present, then the selected version of the shared variable MUST match the expression. If the property is absent, then any version of the shared variable is acceptable. In the case that more than one version matches, then the most recent one SHOULD be used.
+: Specifies a matching expression for selecting an acceptable version of the referenced shared variable. The matching operation is defined in [Section 7.12](#versionmatchtype). If this property is present, then the selected version of the shared variable MUST match the expression. If the property is absent, then any version of the shared variable is acceptable. In the case that more than one version matches, then the most recent one SHOULD be used.
 
 ## 7.25 QuantifiedExpressionType
 
@@ -2881,7 +2874,7 @@ hide empty members
 hide circle
 abstract class ExpressionType <<dataType>>
 class QuantifiedExpressionType <<dataType>> extends ExpressionType
-class ForAnyExpressionType <<dataType>> extends QuantifiedExpressionType
+class ForAnyType <<dataType>> extends QuantifiedExpressionType
 @enduml
 ```
 
@@ -2902,7 +2895,7 @@ hide empty members
 hide circle
 abstract class ExpressionType <<dataType>>
 class QuantifiedExpressionType <<dataType>> extends ExpressionType
-class ForAllExpressionType <<dataType>> extends QuantifiedExpressionType
+class ForAllType <<dataType>> extends QuantifiedExpressionType
 @enduml
 ```
 
@@ -2923,7 +2916,7 @@ hide empty members
 hide circle
 abstract class ExpressionType <<dataType>>
 class QuantifiedExpressionType <<dataType>> extends ExpressionType
-class MapExpressionType <<dataType>> extends QuantifiedExpressionType
+class MapType <<dataType>> extends QuantifiedExpressionType
 @enduml
 ```
 The iterant expression of a Map expression SHALL be an expression that evaluates to a single value (not necessarily of the same data type as the values in the domain).
@@ -2943,7 +2936,7 @@ hide empty members
 hide circle
 abstract class ExpressionType <<dataType>>
 class QuantifiedExpressionType <<dataType>> extends ExpressionType
-class SelectExpressionType <<dataType>> extends QuantifiedExpressionType
+class SelectType <<dataType>> extends QuantifiedExpressionType
 @enduml
 ```
 
@@ -2972,7 +2965,7 @@ class NoticeType <<dataType>> {
 @enduml
 ```
 
-See [Section 9.18](#918-notices) for a description of how the list of notices to be returned by the PDP is determined.
+See [Section 8.16](#816-notices) for a description of how the list of notices to be returned by the PDP is determined.
 
 A `NoticeType` object contains the following properties:
 
@@ -3033,7 +3026,7 @@ An `AttributeType` object contains the following properties:
 
 An `AttributeAssignmentType` object is used in a notice expression to include an attribute in a notice. The `AttributeAssignmentType` object type extends the `AttributeType` definition by adding a `Category` property.
 
-The attribute specified SHALL be understood by the PEP, but it is not further specified by ACAL. See [Section 9.18](#918-notices). [Section 6.2.5.3](#6253-rule-3) provides a number of examples of attribute assignments included in notices.
+The attribute specified SHALL be understood by the PEP, but it is not further specified by ACAL. See [Section 8.16](#816-notices). [Section 6.2.5.3](#6253-rule-3) provides a number of examples of attribute assignments included in notices.
 
 UML definition (class diagram):
 ```plantuml
@@ -3059,7 +3052,7 @@ None of the `Value`s may have a `DataType` property on its own since it is alrea
 
 ## 7.29 NoticeExpressionType
 
-A `NoticeExpressionType` object defines a notice expression that is potentially evaluated into a notice. A notice expression contains an identifier for the notice and a set of expressions that form arguments of the notice. The `AppliesTo` property indicates the effect for which this notice is eligible to be provided to the PEP. If the `AppliesTo` property is absent, then this notice is eligible to be provided to the PEP if the effect is either `Permit` or `Deny`. See [Section 9.18](#918-notices) for a description of how the list of notices to be returned by the PDP is determined.
+A `NoticeExpressionType` object defines a notice expression that is potentially evaluated into a notice. A notice expression contains an identifier for the notice and a set of expressions that form arguments of the notice. The `AppliesTo` property indicates the effect for which this notice is eligible to be provided to the PEP. If the `AppliesTo` property is absent, then this notice is eligible to be provided to the PEP if the effect is either `Permit` or `Deny`. See [Section 8.16](#816-notices) for a description of how the list of notices to be returned by the PDP is determined.
 
 UML definition (class diagram):
 ```plantuml
@@ -3092,7 +3085,7 @@ A `NoticeExpressionType` object contains the following properties:
 
 `Condition` [Optional]
 
-: A `BooleanExpressionType` object holding an expression that must be satisfied for this notice to be provided to the PEP. An absent condition is treated as unconditionally satisfied. Evaluation of the `Condition` property is described in [Section 9.9](#99-condition-evaluation).
+: A `BooleanExpressionType` object holding an expression that must be satisfied for this notice to be provided to the PEP. An absent condition is treated as unconditionally satisfied. Evaluation of the `Condition` property is described in [Section 8.9](#89-condition-evaluation).
 
 `AttributeAssignmentExpression` [Any Number]
 
@@ -3100,7 +3093,7 @@ A `NoticeExpressionType` object contains the following properties:
 
 ## 7.30 AttributeAssignmentExpressionType
 
-An `AttributeAssignmentExpressionType` object is used to include an argument in a notice. It SHALL contain an `AttributeId` property and an expression which SHALL be evaluated into the corresponding attribute value. The value specified SHALL be understood by the PEP, but it is not further specified by ACAL. See [Section 9.18](#918-notices). [Section 6.2.5.3](#6253-rule-3) provides a number of examples of attribute assignment expressions included in notice expressions.
+An `AttributeAssignmentExpressionType` object is used to include an argument in a notice. It SHALL contain an `AttributeId` property and an expression which SHALL be evaluated into the corresponding attribute value. The value specified SHALL be understood by the PEP, but it is not further specified by ACAL. See [Section 8.16](#816-notices). [Section 6.2.5.3](#6253-rule-3) provides a number of examples of attribute assignment expressions included in notice expressions.
 
 UML definition (class diagram):
 ```plantuml
@@ -3114,7 +3107,7 @@ class AttributeAssignmentExpressionType <<dataType>> {
    + Issuer: Name [0..1]
    + Expression: ExpressionType [1] 
 }
-note "{{OCL} not Expression.attributes->includes('DataType') or Expression.DataType <> null}" as ValueDataTypeMustBeNonNull
+note "{{OCL} not Expression.oclIsKindOf(ValueType) or Expression.DataType <> null}" as ValueDataTypeMustBeNonNull
 AttributeAssignmentExpressionType .. ValueDataTypeMustBeNonNull
 @enduml
 ```
@@ -3123,7 +3116,7 @@ An `AttributeAssignmentExpressionType` object contains the following properties:
 
 `Expression` [Required]
 
-: An `ExpressionType` object defining an expression which evaluates to a constant attribute value or a bag of zero or more attribute values. See [Section 7.14](#expressiontype). If the expression's type has a `DataType` property (e.g. `ValueType` or subtype of `ValueType`), this `DataType` property must have a value (non-null).
+: An `ExpressionType` object defining an expression which evaluates to a constant attribute value or a bag of zero or more attribute values. See [Section 7.14](#expressiontype). If the expression is a `ValueType` or subtype of `ValueType`, its `DataType` property must have a non-null value.
 
 `AttributeId` [Required]
 
@@ -3150,7 +3143,7 @@ hide empty members
 hide circle
 class RequestType <<dataType>> {
    + ShortIdSetReference: URI [*] {unordered, unique}
-   + RequestDefaults: RequestDefaultsType [0..1]
+   + RequestDefaults: RequestDefaultsType [*]
    + RequestEntity: RequestEntityType [1..*] {unordered, unique}
    + MultiRequests: MultiRequestsType [0..1]
    + ReturnPolicyIdList: Boolean [0..1] = false
@@ -3173,13 +3166,13 @@ A `RequestType` object contains the following properties:
 
 : A sequence of `URI` values referencing short identifier sets. The short identifiers used by the request MUST be ones defined in the referenced sets.
 
-`RequestDefaults` [Optional]
+`RequestDefaults` [Any Number]
 
-: A `RequestDefaultsType` object containing default values for the request, such as the XPath version. See [Section 7.32](#requestdefaultstype). The `RequestDefaults` property is REQUIRED if the request contains values of the `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` data type.
+: sequence of `RequestDefaultsType` objects; each contains default values specific to an ACAL Profile, for processing the request (e.g. ACAL XPath Profile defines the default XPath version). See [Section 7.32](#requestdefaultstype).
 
 `RequestEntity` [One to Many]
 
-: A sequence of `RequestEntityType` objects, each containing a sequence of `RequestAttributeType` objects associated with an attribute category of the request context. Different `RequestEntityType` objects with different category identifiers are used to represent information about the subject, resource, action, environment or other categories of the access request. There may be multiple `RequestEntityType` objects with the same `Category` property value if the PDP implements the multiple decision profile, see [[Multi](#multi)]. Under other conditions, it is a syntax error if there are multiple `RequestEntityType` objects with the same `Category` (see [Section 9.19.2](#9192-syntax-and-type-errors) for error codes).
+: A sequence of `RequestEntityType` objects, each containing a sequence of `RequestAttributeType` objects associated with an attribute category of the request context. Different `RequestEntityType` objects with different category identifiers are used to represent information about the subject, resource, action, environment or other categories of the access request. There may be multiple `RequestEntityType` objects with the same `Category` property value if the PDP implements the multiple decision profile, see [[Multi](#multi)]. Under other conditions, it is a syntax error if there are multiple `RequestEntityType` objects with the same `Category` (see [Section 8.17.2](#8172-syntax-and-type-errors) for error codes).
 
 `MultiRequests` [Optional]
 
@@ -3189,26 +3182,19 @@ A `RequestType` object contains the following properties:
 
 ## 7.32 RequestDefaultsType (optional)
 
-_**Supporting this part is optional.** It is required only for supporting AttributeSelectors and/or XPath-based functions._
+_**Supporting this part is optional.**_ _It is required only for supporting the ACAL Profiles that define extensions (subtypes) of `RequestDefaultsType` (e.g. XPath Profile)._
 
-A `RequestDefaultsType` object specifies default values that apply to the parent `RequestType` object.
+`RequestDefaultsType` is an abstract object type for default values that apply to the parent `RequestType` object. Concrete subtypes of `RequestDefaultsType` are defined in separate ACAL Profiles, e.g. XPath Profile.
 
 UML definition (class diagram):
 ```plantuml
 @startuml
 hide empty members 
 hide circle
-class RequestDefaultsType <<dataType>> {
-   + XPathVersion: IdentifierType [1]
-}
+abstract class RequestDefaultsType <<dataType>>
 @enduml
 ```
 
-A `RequestDefaultsType` object contains the following properties:
-
-`XPathVersion` [Optional]
-
-: An `IdentifierType` value specifying the XPath version for XPath expressions occurring in the request as values of the `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` data type (see Section 8).
 
 ## 7.33 RequestEntityType
 
@@ -3340,7 +3326,7 @@ A `ResponseType` object contains the following properties:
 
 ## 7.37 ResultType
 
-A `ResultType` object represents an authorization decision result. It MAY include a list of notices. If the PEP does not understand or cannot fulfill an obligation notice, then the action of the PEP is determined by its bias, see [Section 9.2](#92-policy-enforcement-point). Any advice notices MAY be safely ignored by the PEP.
+A `ResultType` object represents an authorization decision result. It MAY include a list of notices. If the PEP does not understand or cannot fulfill an obligation notice, then the action of the PEP is determined by its bias, see [Section 8.2](#82-policy-enforcement-point). Any advice notices MAY be safely ignored by the PEP.
 
 UML definition (class diagram):
 ```plantuml
@@ -3369,7 +3355,7 @@ A `ResultType` object contains the following properties:
 
 `Notice` [any Number]
 
-: A sequence of `NoticeType` objects, each a notice to be interpreted by the PEP. See [Section 7.26](#noticetype). If the PEP does not understand or cannot fulfill an obligation notice, then the action of the PEP is determined by its bias, see [Section 9.2](#92-policy-enforcement-point). If the PEP does not understand an advice notice, the PEP may safely ignore the notice. See [Section 9.18](#918-notices) for a description of how the list of notices to be returned by the PDP is determined.
+: A sequence of `NoticeType` objects, each a notice to be interpreted by the PEP. See [Section 7.26](#noticetype). If the PEP does not understand or cannot fulfill an obligation notice, then the action of the PEP is determined by its bias, see [Section 8.2](#82-policy-enforcement-point). If the PEP does not understand an advice notice, the PEP may safely ignore the notice. See [Section 8.16](#816-notices) for a description of how the list of notices to be returned by the PDP is determined.
 
 `ResultEntity` [Optional]
 
@@ -3717,174 +3703,20 @@ A `BundleType` object contains the following properties:
 
 `PolicyReference` [Optional]
 
-: If present, a `PolicyReferenceType` object that MUST reference a policy in the `Policy` property. A PDP defined by this `BundleType` object SHALL evaluate every authorization request by evaluating this policy reference (the referenced policy is the entry point of evaluation). See [Section 9.15](#915-policyreferenceevaluation). If this property is absent, then the PDP returns `NotApplicable` for every authorization request. The policy reference MUST specify arguments if the referenced policy is parameterized.
-
+: If present, a `PolicyReferenceType` object that MUST reference a policy in the `Policy` property. A PDP defined by this `BundleType` object SHALL evaluate every authorization request by evaluating this policy reference (the referenced policy is the entry point of evaluation). See [Section 8.13](#813-policyreference-evaluation). If this property is absent, then the PDP returns `NotApplicable` for every authorization request. The policy reference MUST specify arguments if the referenced policy is parameterized.
 
 ---
 
 
-# 8 XPath Definitions (optional)
-
-_This section will migrate to a separate document._
-
-_**Reminder: XPath support is optional, and required only to support one of these optional features: attribute selectors, entity attribute selectors, xpathExpression datatype (and associated xpath-based functions).**_
-
-## Supported XPath versions
-
-The `XPathVersion` property in a `DefaultsType` or `RequestDefaultsType` object contains an `IdentifierType` value that specifies the XPath version that applies for a policy or request, respectively.
-
-To specify XPath 2.0 the `IdentifierType` value MUST evaluate to `https://www.w3.org/TR/xpath20/`.
-
-To specify XPath 3.0, the `IdentifierType` value MUST evaluate to `http://www.w3.org/TR/xpath-30/`. 
-
-To specify XPath 3.1, the `IdentifierType` value MUST evaluate to `http://www.w3.org/TR/xpath-31/`.
-
-XPath 1.0, and therefore the XPath 1.0 identifier `https://www.w3.org/TR/1999/REC-xpath-19991116/`, is deprecated.
-
-The XPath specification leaves a number of aspects of behavior implementation-defined. The following sections defines how XPath 2.0 and later versions SHALL behave when hosted in ACAL.
-
-## XPath 2.0 Implementation-Defined Items
-
-`https://www.w3.org/TR/xpath20/#id-impl-defined-items` defines the following items:
-
-1. The version of Unicode that is used to construct expressions.
-
-    : ACAL leaves this implementation defined. It is RECOMMENDED that the latest version is used.
-
-2. The statically-known collations.
-
-    : ACAL leaves this implementation defined.
-
-3. The implicit timezone.
-
-    : ACAL defines the implicit time zone as UTC.
-
-4. The circumstances in which warnings are raised, and the ways in which warnings are handled.
-
-    : ACAL leaves this implementation defined.
-
-5. The method by which errors are reported to the external processing environment.
-
-    : An XPath error in the evaluation of an attribute selector causes the result to be `Indeterminate`. The status code SHALL be `urn:oasis:names:tc:acal:1.0:status:processing-error`. Implementations MAY provide additional details about the error in the response or by some other means.
-
-6. Whether the implementation is based on the rules of XML 1.0 or 1.1.
-
-    : ACAL is based on XML 1.0.
-
-7. Whether the implementation supports the namespace axis.
-
-    : ACAL leaves this implementation defined. It is RECOMMENDED that users of ACAL do not make use of the namespace axis.
-
-8. Any static typing extensions supported by the implementation, if the Static Typing Feature is supported.
-
-    : ACAL leaves this implementation defined.
-
-`https://www.w3.org/TR/2007/REC-xpath-datamodel-20070123/#implementation-defined` defines the following items:
-
-1. Support for additional user-defined or implementation-defined types is implementation-defined.
-
-    : It is RECOMMENDED that implementations of ACAL do not define any additional types and it is RECOMMENDED that users of ACAL do not make use of any additional types.
-
-2. Some typed values in the data model are undefined. Attempting to access an undefined property is always an error. Behavior in these cases is implementation-defined and the host language is responsible for determining the result.
-
-    : An XPath error in the evaluation of an attribute selector causes the result to be `Indeterminate`. The status code SHALL be `urn:oasis:names:tc:acal:1.0:status:processing-error`. Implementations MAY provide additional details about the error in the response or by some other means.
-
-`https://www.w3.org/TR/xpath-functions/#impl-def` defines the following items:
-
-1. The destination of the trace output is implementation-defined.
-
-    : ACAL leaves this implementation defined.
-
-2. For `xs:integer` operations, implementations that support limited-precision integer operations must either raise an error [err:FOAR0002] or provide an implementation-defined mechanism that allows users to choose between raising an error and returning a result that is modulo the largest representable integer value.
-
-    : ACAL leaves this implementation defined. If an implementation chooses to raise an error, the status code SHALL be `urn:oasis:names:tc:acal:1.0:status:processing-error`. Implementations MAY provide additional details about the error in the response or by some other means.
-
-3. For `xs:decimal` values the number of digits of precision returned by the numeric operators is implementation-defined.
-
-    : ACAL leaves this implementation defined.
-
-4. If the number of digits in the result of a numeric operation exceeds the number of digits that the implementation supports, the result is truncated or rounded in an implementation-defined manner.
-
-    : ACAL leaves this implementation defined.
-
-5. It is implementation-defined which version of Unicode is supported.
-
-    : ACAL leaves this implementation defined. It is RECOMMENDED that the latest version is used.
-
-6. For `fn:normalize-unicode`, conforming implementations must support normalization form "NFC" and may support normalization forms "NFD", "NFKC", "NFKD", "FULLY-NORMALIZED". They may also support other normalization forms with implementation-defined semantics.
-
-    : ACAL leaves this implementation defined.
-
-7. The ability to decompose strings into collation units suitable for substring matching is an implementation-defined property of a collation.
-
-    : ACAL leaves this implementation defined.
-
-8. All minimally conforming processors must support year values with a minimum of 4 digits (i.e., YYYY) and a minimum fractional second precision of 1 millisecond or three digits (i.e., s.sss). However, conforming processors may set larger implementation-defined limits on the maximum number of digits they support in these two situations.
-
-    : ACAL leaves this implementation defined, and it is RECOMMENDED that users of ACAL do not expect greater limits and precision.
-
-9. The result of casting a string to `xs:decimal`, when the resulting value is not too large or too small but nevertheless has too many decimal digits to be accurately represented, is implementation-defined.
-
-    : ACAL leaves this implementation defined.
-
-10. Various aspects of the processing provided by `fn:doc` are implementation-defined. Implementations may provide external configuration options that allow any aspect of the processing to be controlled by the user.
-
-    : ACAL leaves this implementation defined.
-
-11. The manner in which implementations provide options to weaken the stable characteristic of `fn:collection` and `fn:doc` are implementation-defined.
-
-    : ACAL leaves this implementation defined.
-
-### XPath 3.0 additional implementation-defined items
-
-`https://www.w3.org/TR/xpath-30/#id-impl-defined-items` defines the following additional items to XPath 2.0 items:
-
-1. How XDM instances are created from sources other than an Infoset or PSVI.
-
-   : ACAL implementations should not have to create XDM instances from sources other than an Infoset or PSVI.
-
-1. The signatures of functions provided by the implementation or via an implementation-defined API. 
-
-   : It is RECOMMENDED that implementations of ACAL do not define any additional XPath functions and it is RECOMMENDED that users of ACAL do not make use of any additional XPath functions.
-
-1. Any environment variables provided by the implementation.
-
-   : It is RECOMMENDED that users of ACAL use ACAL-defined VariableDefinitions (based on AttributeDesignator and appropriate PIP to obtain the values) in order to capture environment variables, then use the ACAL-defined Variables as XPath variables in XPath expressions, as specified by ACAL. If this is hardly feasible, as an alternative, ACAL users may use implementation-defined environment variables in their XPath expressions only if they are standard, e.g. POSIX environment variables. 
-
-`https://www.w3.org/TR/xpath-datamodel-30/#implementation-defined` defines the following additional item(s):
-
-1. When converting from an xs:string to an xs:float or xs:double, it is implementation-defined whether the lexical value `-0` (and similar forms such as `-0.0`) convert to negative zero or to positive zero in the value space.
-
-   : ACAL leaves this implementation-defined.
-
-`https://www.w3.org/TR/xpath-datamodel-30/#implementation-defined` defines the following additional items:
-
-*TO BE COMPLETED (52 items...)*
-<!-- Hint: https://www.saxonica.com/html/documentation12/conformance/xslt30.html -->
-
-### XPath 3.1 additional implementation-defined items
-
-<!--
-Implementation-Defined Items sections from XPath 3.1 standard ( https://www.w3.org/TR/xpath-31/#id-impl-defined-items ) and 'XQuery and XPath Data Model 3.1' ( https://www.w3.org/TR/xpath-datamodel-31/#implementation-defined ) do not seem to add anything to XPath 3.0 ones.
--->
-
-`https://www.w3.org/TR/xpath-functions-31/#impl-def` defines the following additional item(s):
-
-*TO BE COMPLETED (70 items...)*
-<!-- Hint: https://www.saxonica.com/html/documentation12/conformance/xpath31.html -->
-
----
-
-
-# 9 Functional Requirements
+# 8 Functional Requirements
 
 This section specifies certain functional requirements that are not directly associated with the production or consumption of a particular ACAL object.
 
 Note that in each case an implementation is conformant as long as it produces the same result as is specified here, regardless of how and in what order the implementation behaves internally.
 
-## 9.1 Unicode Issues
+## 8.1 Unicode Issues
 
-### 9.1.1 Normalization
+### 8.1.1 Normalization
 
 In Unicode, some equivalent characters can be represented by more than one different Unicode character sequence. See [[CMF](#cmf)]. The process of converting Unicode strings into equivalent character sequences is called "normalization" [[UAX15](#uax15)]. Some operations, such as string comparison, are sensitive to normalization. An operation is normalization-sensitive if its output(s) are different depending on the state of normalization of the input(s); if the output(s) are textual, they are deemed different only if they would remain different were they to be normalized.
 
@@ -3892,11 +3724,11 @@ For more information on normalization see [[CM](#cm)].
 
 An ACAL implementation MUST behave as if each normalization-sensitive operation normalizes input strings into Unicode Normalization Form C ("NFC"). An implementation MAY use some other form of internal processing (such as using a non-Unicode, "legacy" character encoding) as long as the externally visible results are identical to this specification.
 
-### 9.1.2 Version of Unicode
+### 8.1.2 Version of Unicode
 
-The version of Unicode used by ACAL is implementation defined. It is RECOMMENDED that the latest version is used. Also note security issues in [Section 11.3](#113-unicode-security-issues).
+The version of Unicode used by ACAL is implementation defined. It is RECOMMENDED that the latest version is used. Also note security issues in [Section 10.3](#103-unicode-security-issues).
 
-## 9.2 Policy Enforcement Point
+## 8.2 Policy Enforcement Point
 
 This section describes the requirements for the PEP.
 
@@ -3904,7 +3736,7 @@ An application functions in the role of the PEP if it guards access to a set of 
 
 In any case any advice in the decision may be safely ignored by the PEP.
 
-### 9.2.1 Base PEP
+### 8.2.1 Base PEP
 
 If the decision is `Permit`, then the PEP SHALL permit access. If obligation notices accompany the decision, then the PEP SHALL permit access only if it understands and it can and will discharge those obligations.
 
@@ -3914,7 +3746,7 @@ If the decision is `Not Applicable`, then the PEP's behavior is undefined.
 
 If the decision is `Indeterminate`, then the PEP's behavior is undefined.
 
-### 9.2.2 Deny-Biased PEP
+### 8.2.2 Deny-Biased PEP
 
 If the decision is `Permit`, then the PEP SHALL permit access. If obligation notices accompany the decision, then the PEP SHALL permit access only if it understands and it can and will discharge those obligations.
 
@@ -3922,7 +3754,7 @@ All other decisions SHALL result in the denial of access.
 
 : Note: other actions, e.g. consultation of additional PDPs, reformulation/resubmission of the decision request, etc., are not prohibited.
 
-### 9.2.3 Permit-Biased PEP
+### 8.2.3 Permit-Biased PEP
 
 If the decision is `Deny`, then the PEP SHALL deny access. If obligation notices accompany the decision, then the PEP shall deny access only if it understands, and it can and will discharge those obligations.
 
@@ -3930,9 +3762,9 @@ All other decisions SHALL result in the permission of access.
 
 : Note: other actions, e.g. consultation of additional PDPs, reformulation/resubmission of the decision request, etc., are not prohibited.
 
-## 9.3 Identifier Evaluation
+## 8.3 Identifier Evaluation
 
-Various ACAL artifacts are uniquely identified by URI [[RFC2396](#rfc2396)]. This includes attribute categories, attributes, data types, functions, notices, status codes, combining algorithms and XPath versions. Values of the `IdentifierType` simple type are used to refer to such artifacts, possibly using short identifier names, which are not themselves URIs. Therefore an `IdentifierType` value containing short identifier names must undergo evaluation to convert the value to an absolute URI.
+Various ACAL artifacts are uniquely identified by URI [[RFC2396](#rfc2396)]. This includes attribute categories, attributes, data types, functions, notices, status codes, combining algorithms. Values of the `IdentifierType` simple type are used to refer to such artifacts, possibly using short identifier names, which are not themselves URIs. Therefore an `IdentifierType` value containing short identifier names must undergo evaluation to convert the value to an absolute URI.
 
 The value of a short identifier may also contain short identifier names. The _expanded value_ of the short identifier is the value of the short identifier with any reference to another short identifier (including the curly brackets) replaced by the _expanded value_ of the referenced short identifier (thus the expansion is applied recursively).
 
@@ -3944,7 +3776,7 @@ In the case where the `IdentifierType` value contains curly brackets then the re
 
 The end result of evaluation MUST be an absolute URI.
 
-### 9.3.1 Identifier Examples (non-normative)
+### 8.3.1 Identifier Examples (non-normative)
 
 Given the following short identifiers:
 ```xml
@@ -3960,7 +3792,7 @@ these `IdentifierType` values are all equivalent and evaluate to the URI of the 
 "{xs}string"
 ```
 
-### 9.3.2 Short Identifier Set Usage (non-normative)
+### 8.3.2 Short Identifier Set Usage (non-normative)
 
 The predefined short identifier set is not expected to contain short identifier definitions for all the identifiers an implementation or a deployment of that implementation will be using. In particular, a deployment is likely to have a number of custom ACAL attributes holding information specific to that deployment. Deployments may be part of a community of interest making use of common attributes and categories. Implementations may take advantage of the extension points in ACAL to define proprietary functions and data types, and may define custom categories and custom attributes that are appropriate for their user base. One aim of this specification is give implementors and users the ability to define their own short identifiers to use in these cases. Future ACAL extensions may also provide additional, predefined short identifier sets for any identifiers they introduce.
 
@@ -3970,55 +3802,53 @@ Short identifier names are not globally unique, so implementations should not ha
 
 The predefined short identifier set is not required to be used but its use is recommended to promote a common understanding of identifiers between deployments. For this reason, the use of alternative names should be minimized, and preferably allowed _in addition to_ the predefined set. Users should not exclude the standard set and assign any short identifier names from that set to different URIs.
 
-## 9.4 Attribute Evaluation
+## 8.4 Attribute Evaluation
 
 Attributes are represented in the request context by the context handler, regardless of whether or not they appeared in the original decision request, and are referred to in the policy by attribute designators and attribute selectors. A named attribute is the term used for the criteria that the specific attribute designators use to refer to particular attributes in the `RequestEntityType` objects of the request context.
 
-### 9.4.1 Structured Attributes
+### 8.4.1 Structured Attributes
 
-`ValueType` objects MAY contain an instance of a structured XML data type, for example `<ds:KeyInfo>`. ACAL 1.0 supports several ways for comparing the contents of such elements.
+`ValueType` objects MAY contain an instance of a structured data type, for example and XML element `<ds:KeyInfo>`. ACAL 1.0 supports several ways for comparing the contents of such elements.
 
 1. In some cases, such elements MAY be compared using one of the ACAL string functions, such as `string-regexp-match`, described below. This requires that the element be given the data type `urn:oasis:names:tc:acal:1.0:data-type:string`. For example, a structured data type that is actually a `ds:KeyInfo/KeyName` would appear in the context as:
 
-```xml
-    <Value DataType="urn:oasis:names:tc:acal:1.0:data-type:string">
-       &lt;ds:KeyName&gt;jhibbert-key&lt;/ds:KeyName&gt;
-    </Value>
-```
+   ```xml
+        <Value DataType="urn:oasis:names:tc:acal:1.0:data-type:string">
+          &lt;ds:KeyName&gt;jhibbert-key&lt;/ds:KeyName&gt;
+        </Value>
+   ```
 
-In general, this method will not be adequate unless the structured data type is quite simple.
+   In general, this method will not be adequate unless the structured data type is quite simple.
 
-2. The structured attribute MAY be made available in the `Content` property of the appropriate attribute category and an attribute selector MAY be used to select the contents of a leaf sub-element of the structured data type by means of an XPath/JSONPath expression. That value MAY then be compared using one of the supported ACAL functions appropriate for its data type. This method requires support by the PDP for the optional XPath/JSONPath expressions feature.
+1. The structured attribute MAY be made available in the `Content` property of the appropriate attribute category and an attribute selector MAY be used to select the contents of a leaf sub-element of the structured data type by means of a *path* expression whose syntax and semantics depends on the type of content (e.g. XPath for XML content). That value MAY then be compared using one of the supported ACAL functions appropriate for its data type. This method requires support by the PDP for the specific ACAL Profile that defines the particular kind of attribute selector, and type of *path* expression in particular, for the type of `Content` being used (e.g. XPath Profile for XML content).
 
-3. The structured attribute MAY be made available in the `Content` property of the appropriate attribute category and an attribute selector MAY be used to select any XML node in the structured data type by means of an XPath expression. This node MAY then be compared using one of the XPath-based functions described in [Annex C.3.16](#c316-xpath-based-functions). This method requires support by the PDP for the optional XPath expressions and XPath functions features.
-
-### 9.4.2 Attribute Bags
+### 8.4.2 Attribute Bags
 
 ACAL defines implicit collections of its data types. ACAL refers to a collection of values that are of a single data type as a bag. Bags of data types are needed because selections of nodes from an XML/JSON resource or ACAL request context may return more than one value.
 
-An attribute selector uses an XPath/JSONPath expression to specify the selection of data from free-form XML/JSON. The result of an XPath expression is termed a node-set, which contains all the nodes from the XML content that match the predicate in the XPath expression. Based on the various indexing functions provided in the XPath specification, it SHALL be implied that a resultant node-set is the collection of the matching nodes. Similary, the result of a JSONPath (RFC 9535) expression is a *nodelist* that contains zero or more nodes from the JSON content. ACAL also defines attribute designators to have the same matching methodology for attributes in the ACAL request context.
+An attribute selector uses an expression to specify the selection of data from free-form structured content (e.g. any XML element). The result of the expression evaluation may return multiple values from the content. ACAL also defines attribute designators to have the same matching methodology for attributes in the ACAL request context.
 
 The values in a bag are not ordered, and some of the values may be duplicates. There SHALL be no notion of a bag containing bags, or a bag containing values of differing types; i.e., a bag in ACAL SHALL contain only values that are of the same data type.
 
-### 9.4.3 Multivalued Attributes
+### 8.4.3 Multivalued Attributes
 
 If a single attribute in a request context contains multiple attribute values, then the bag of values resulting from evaluation of the attribute MUST be identical to the bag of values that results from evaluating a context in which each attribute value appears in a separate attribute, with each separate attribute carrying identical meta-data.
 
-### 9.4.4 Attribute Matching
+### 8.4.4 Attribute Matching
 
-A named attribute includes specific criteria with which to match attributes in the context. An attribute specifies a `Category`, `AttributeId` and `DataType`, and a named attribute also specifies the `Issuer`. A named attribute SHALL match an attribute if the values of their respective `Category`, `AttributeId`, `DataType` and optional `Issuer` properties match. The `Category` property of the named attribute MUST match, by identifier equality, the `Category` property of the corresponding context attribute. The `AttributeId` property of the named attribute MUST match, by identifier equality, the `AttributeId` property of the corresponding context attribute. The `DataType` property of the named attribute MUST match, by identifier equality, the `DataType` property of the corresponding context attribute. If the `Issuer` property is supplied in the named attribute, then it MUST match, using the `urn:oasis:names:tc:acal:1.0:function:string-equal` function, the `Issuer` property of the corresponding context attribute. If the `Issuer` property is not supplied in the named attribute, then the matching of the context attribute to the named attribute SHALL be governed by the `AttributeId` and `DataType` properties alone, regardless of the presence, absence, or actual value of `Issuer` property in the corresponding context attribute. In the case of an attribute selector, the matching of the attribute to the named attribute SHALL be governed by the XPath/JSONPath expression and `DataType` property.
+A named attribute includes specific criteria with which to match attributes in the context. An attribute specifies a `Category` and `DataType`, and a named attribute also specifies an `AttributeId` and optional `Issuer`. A named attribute SHALL match an attribute if the values of their respective `Category`, `AttributeId`, `DataType` and optional `Issuer` properties match. The `Category` property of the named attribute MUST match, by identifier equality, the `Category` property of the corresponding context attribute. The `AttributeId` property of the named attribute MUST match, by identifier equality, the `AttributeId` property of the corresponding context attribute. The `DataType` property of the named attribute MUST match, by identifier equality, the `DataType` property of the corresponding context attribute. If the `Issuer` property is supplied in the named attribute, then it MUST match, using the `urn:oasis:names:tc:acal:1.0:function:string-equal` function, the `Issuer` property of the corresponding context attribute. If the `Issuer` property is not supplied in the named attribute, then the matching of the context attribute to the named attribute SHALL be governed by the `AttributeId` and `DataType` properties alone, regardless of the presence, absence, or actual value of `Issuer` property in the corresponding context attribute. In the case of an attribute selector, the matching of the attribute to the named attribute SHALL be governed by the `Category`, `Path` expression and `DataType` property and other properties as defined by the respective ACAL Profile being used to provide the concrete `AttributeSelectorType` object.
 
-### 9.4.5 Attribute Retrieval
+### 8.4.5 Attribute Retrieval
 
-The PDP SHALL request the values of attributes in the request context from the context handler. The context handler MAY also add attributes to the request context without the PDP requesting them. The PDP SHALL reference the attributes as if they were in a physical request context document, but the context handler is responsible for obtaining and supplying the requested values by whatever means it deems appropriate, including by retrieving them from one or more Policy Information Points. The context handler SHALL return the values of attributes that match the attribute designator or attribute selector and form them into a bag of values with the specified data type. If no attributes from the request context match, then the attribute SHALL be considered missing. If the attribute is missing, then the `MustBePresent` property governs whether the attribute designator or attribute selector returns an empty bag or an `Indeterminate` result. If the `MustBePresent` property is `false` (default value), then a missing attribute SHALL result in an empty bag. If the `MustBePresent` property is `true`, then a missing attribute SHALL result in `Indeterminate`. This `Indeterminate` result SHALL be handled in accordance with the specification of the encompassing expressions, rules and policies. If the result is `Indeterminate`, then the `AttributeId`, `DataType` and `Issuer` properties of the attribute MAY be listed in the authorization decision as described in [Section 9.17](#917-authorization-decision). However, a PDP MAY choose not to return such information for security reasons.
+The PDP SHALL request the values of attributes in the request context from the context handler. The context handler MAY also add attributes to the request context without the PDP requesting them. The PDP SHALL reference the attributes as if they were in a physical request context document, but the context handler is responsible for obtaining and supplying the requested values by whatever means it deems appropriate, including by retrieving them from one or more Policy Information Points. The context handler SHALL return the values of attributes that match the attribute designator or attribute selector and form them into a bag of values with the specified data type. If no attributes from the request context match, then the attribute SHALL be considered missing. If the attribute is missing, then the `MustBePresent` property governs whether the attribute designator or attribute selector returns an empty bag or an `Indeterminate` result. If the `MustBePresent` property is `false` (default value), then a missing attribute SHALL result in an empty bag. If the `MustBePresent` property is `true`, then a missing attribute SHALL result in `Indeterminate`. This `Indeterminate` result SHALL be handled in accordance with the specification of the encompassing expressions, rules and policies. If the result is `Indeterminate`, then the `AttributeId`, `DataType` and `Issuer` properties of the attribute MAY be listed in the authorization decision as described in [Section 8.15](#815-authorization-decision). However, a PDP MAY choose not to return such information for security reasons.
 
 Regardless of any dynamic modifications of the request context during policy evaluation, the PDP SHALL behave as if each bag of attribute values is fully populated in the context before it is first tested, and is thereafter immutable during evaluation. That is, every subsequent test of that attribute shall use the same bag of values that was initially tested.
 
-### 9.4.6 Environment Attributes
+### 8.4.6 Environment Attributes
 
 Standard environment attributes are listed in [Annex D.7](#d7-environment-attributes). If a value for one of these attributes is supplied in the decision request, then the context handler SHALL use that value. Otherwise, the context handler SHALL supply a value. In the case of date and time attributes, the supplied value SHALL have the semantics of the "date and time that apply to the decision request".
 
-### 9.4.7 Selector Evaluation
+### 8.4.7 Selector Evaluation
 
 An `AttributeSelectorType` or `EntityAttributeSelector` object will be evaluated according to the following processing model.
 
@@ -4032,17 +3862,11 @@ If the `Expression` property of an `EntityAttributeSelectorType` object evaluate
 
 If the designated attribute category or entity value has a `Content` property, then follow the steps below:
 
-1. If `PathType` is `JSONPath`, construct a JSON object (RFC 8259) from the value of the `Content` property. If it is not a valid JSON object, then the attribute selector MUST return `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`.
+1. Parse the value of the `Content` property into the data structure suitable for processing by the concrete type of AttributeSelector/EntityAttributeSelector defined by the ACAL Profile in use (e.g. XML content for the XPath Profile). If it is not a valid data structure according to the ACAL Profile, then the attribute selector MUST return `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`.
 
-   If `PathType` is `XPath`, then construct an XML data structure suitable for XPath processing from the value of the `Content` property. The data structure shall be constructed so that the document node of this structure contains a single document element which corresponds to the single child element of the `Content` property. The constructed data structure shall be equivalent to one that would result from parsing a stand-alone XML document consisting of the contents of the `Content` property (including any comment and processing-instruction markup). Namespace declarations from the `<Content>` element and its ancestor elements for namespace prefixes that are "visibly utilized", as defined by [[exc-c14n](#exc-c14n)], within the contents MUST be present. Namespace declarations from the single child element or its ancestor elements for namespace prefixes that are not "visibly utilized" MAY be present. The data structure must meet the requirements of the applicable XPath version.
+2. Evaluate the expression given in the `Path` property against the data structure obtained in the previous step, according to the syntax and semantics of the respective ACAL Profile in use (as indicated by the concrete subtype of `AttributeSelectorType` being used).
 
-2. If `PathType` is `JSONPath`, the root node of the data structure (JSON object) shall be used as context node of evaluation (JSONPath *query argument*).
-
-   If `PathType` is `XPath`, then if there is a `ContextSelectorId` property, the context node shall be the node selected by applying the XPath expression given in the attribute value of the designated ACAL attribute. It shall be an error if this evaluation returns no node or more than one node, in which case the return value MUST be `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`. If there is no `ContextSelectorId` property, then the document node of the data structure shall be the context node.
-
-3. Evaluate the expression given in the `Path` property against the context node selected in the previous step, according to the syntax and semantics of the `PathType` value.
-
-4. The result of step 3 is converted to a bag of values of the data type specified by the `DataType` property as follows:
+3. The result of step 3 is converted to a bag of values of the data type specified by the `DataType` property as follows:
 
 &nbsp;
 : If the result is a Boolean and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:boolean`, then convert the result using the `xs:boolean()` constructor function from [[XF](#xf)] Section 18.1.
@@ -4107,7 +3931,7 @@ If the designated attribute category or entity value has a `Content` property, t
 &nbsp;
 : If the result of step 3 is an empty node-set, then the return value is either `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`, or an empty bag, as determined by the `MustBePresent` property.
 
-## 9.5 Expression Evaluation
+## 8.5 Expression Evaluation
 
 ACAL specifies expressions in terms of objects of the object types listed below, of which the `ApplyType` objects recursively compose greater expressions. Expressions SHALL be type correct and satisfy cardinality requirements (i.e., single value versus bag). This means that the types of each of the objects contained within an `ApplyType` object SHALL agree with the respective argument types and cardinalities of the function that is named by the `FunctionId` property. The resultant type and cardinality of the `ApplyType` object SHALL be the resultant type and cardinality of the function. ACAL defines an evaluation result of `Indeterminate`, which is said to be the result of an invalid expression, or an operational error occurring during the evaluation of the expression.
 
@@ -4124,7 +3948,7 @@ An ACAL expression is a choice between the following object types:
 * `SharedVariableReferenceType`
 * `QuantifiedExpressionType`
 
-## 9.6 Arithmetic Evaluation
+## 8.6 Arithmetic Evaluation
 
 IEEE 754 [[IEEE754](#ieee754)] specifies how to evaluate arithmetic functions in a context, which specifies defaults for precision, rounding, etc. ACAL SHALL use this specification for the evaluation of all integer and double functions relying on the Extended Default Context, enhanced with double precision:
 
@@ -4136,7 +3960,7 @@ IEEE 754 [[IEEE754](#ieee754)] specifies how to evaluate arithmetic functions in
 
 : rounding -  is set to round-half-even (IEEE 854 §4.1)
 
-## 9.7 Target Evaluation
+## 8.7 Target Evaluation
 
 The target value SHALL be `Match` if the `Target` property is absent or the expression specified in the target evaluates to `true`. Otherwise, if the expression evaluates to `false`, then the target SHALL be `No Match`. Otherwise, the target SHALL be `Indeterminate`. The target match table is shown in Table 1.
 
@@ -4148,7 +3972,7 @@ The target value SHALL be `Match` if the `Target` property is absent or the expr
 | `false` | `No Match` |
 | `Indeterminate` | `Indeterminate` |
 
-## 9.8 VariableReference Evaluation
+## 8.8 VariableReference Evaluation
 
 A `VariableReferenceType` object references a single `VariableDefinitionType` object that has a matching `VariableId` property value and is in the `VariableDefinition` property of an enclosing `RuleType` or `PolicyType` object. If no such `VariableDefinitionType `object exists, then the reference is invalid. The PDP MUST detect invalid references either at policy loading time or during runtime evaluation. If the PDP detects an invalid reference during runtime the variable reference evaluates to `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`.
 
@@ -4156,11 +3980,11 @@ In any place where a `VariableReferenceType` object occurs, it has the effect as
 
 Circular references are invalid. The PDP MUST detect circular references either at policy loading time or during runtime evaluation. If the PDP detects a circular reference during runtime the variable reference evaluates to `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`.
 
-## 9.9 Condition Evaluation
+## 8.9 Condition Evaluation
 
 The condition value SHALL be `true` if the `Condition` property is absent, or if the expression contained in the `Condition` property evaluates to `true`. Its value SHALL be `false` if the expression evaluates to `false`. The condition value SHALL be `Indeterminate`, if the expression evaluates to `Indeterminate.`
 
-## 9.10 Extended Indeterminate
+## 8.10 Extended Indeterminate
 
 Some combining algorithms are defined in terms of an extended set of `Indeterminate` values. The extended set associated with the `Indeterminate` contains the potential effect values which could have occurred if there would not have been an error causing the `Indeterminate`. The possible extended set `Indeterminate` values are
 
@@ -4176,7 +4000,7 @@ The final decision returned by a PDP cannot be an extended `Indeterminate`. Any 
 
 The tables in the following four sections define how extended `Indeterminate` values are produced during rule and policy evaluation.
 
-## 9.11 Rule Evaluation
+## 8.11 Rule Evaluation
 
 A rule has a value that can be calculated by evaluating the rule's condition. The rule truth table is shown in Table 4.
 
@@ -4188,7 +4012,7 @@ A rule has a value that can be calculated by evaluating the rule's condition. Th
 | `false` | `NotApplicable` |
 | `Indeterminate` | `Indeterminate{P}` if the Effect is Permit, or `Indeterminate{D}` if the Effect is Deny |
 
-## 9.12 Policy Evaluation
+## 8.12 Policy Evaluation
 
 The value of a policy SHALL be determined only by its contents, considered in relation to the contents of the request context. A policy's value SHALL be determined by evaluation of the policy's target and evaluation of the specified combining algorithm on the contained policies and rules.
 
@@ -4214,7 +4038,7 @@ The policy truth table is shown in Table 5.
 | `Indeterminate`| `Indeterminate{P}` | `Indeterminate{P}` |
 | `Indeterminate`| `Indeterminate{D}` | `Indeterminate{D}` |
 
-## 9.15 PolicyReference Evaluation
+## 8.13 PolicyReference Evaluation
 
 A policy reference is evaluated by resolving the reference and evaluating the referenced policy.
 
@@ -4223,19 +4047,19 @@ If resolving the reference fails, the reference evaluates to `Indeterminate` wit
 
 A policy reference containing circular references is invalid. The PDP MUST detect circular references either at policy loading time or during runtime evaluation. If the PDP detects a circular reference during runtime the reference evaluates to `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`.
 
-## 9.16 Hierarchical Resources
+## 8.14 Hierarchical Resources
 
 It is often the case that a resource is organized as a hierarchy (e.g., file system, XML document). ACAL provides several optional mechanisms for supporting hierarchical resources. These are described in the ACAL Profile for Hierarchical Resources [[Hier](#hier)] and in the ACAL Profile for Requests for Multiple Resources [[Multi](#multi)].
 
-## 9.17 Authorization Decision
+## 8.15 Authorization Decision
 
 In relation to a particular decision request, the PDP is defined by a set of policies, a set of shared variable definitions, sets of short identifiers and a policy reference that specifies the starting point for evaluating the request. Conceptually, these items can be collected together as a single `BundleType` object, athough an implementation is free to represent and organize this information in any way it chooses as long as it produces the same result as is specified here.
 
-The PDP SHALL return a response context as if it had evaluated the policy reference in the manner specified in [Section 7](#7-structures) and [Section 9](#9-functional-requirements). The PDP MUST return a response context, with one `Decision` property of value `Permit`, `Deny`, `Indeterminate` or `NotApplicable`.
+The PDP SHALL return a response context as if it had evaluated the policy reference in the manner specified in [Section 7](#7-structures) and [Section 8](#8-functional-requirements). The PDP MUST return a response context, with one `Decision` property of value `Permit`, `Deny`, `Indeterminate` or `NotApplicable`.
 
 If the PDP cannot make a decision, then an `Indeterminate` `Decision` property SHALL be returned.
 
-## 9.18 Notices
+## 8.16 Notices
 
 A rule or policy may contain one or more notice expressions. When such a rule or policy is evaluated, the notice expression SHALL be evaluated to a notice, which SHALL be passed up to the next level of evaluation (the enclosing or referencing policy or authorization decision) only if the result of the rule or policy being evaluated matches the value of the `AppliesTo` property of the notice (or matches either `Permit` or `Deny` if the `AppliesTo` property is absent) and the notice expression does not have a condition or it has a condition that evaluates to `true`. If the condition in a notice expression with a matching `AppliesTo` property evaluates to `Indeterminate`, then the whole rule or policy SHALL be `Indeterminate`. If the condition is absent or evaluates to `true` and any of the attribute assignment expressions in the notice expression evaluates to `Indeterminate`, then the whole rule or policy SHALL be `Indeterminate`. If the `AppliesTo` property is present and does not match the result of the combining algorithm or the rule evaluation, then any `Indeterminate` evaluation in a notice expression has no effect.
 
@@ -4243,23 +4067,23 @@ As a consequence of this procedure, notices SHALL NOT be returned to the PEP if 
 
 If the PDP's evaluation is viewed as a tree of rules and policies, each of which returns `Permit` or `Deny`, then the collection of notices returned by the PDP to the PEP will include only the notices associated with those paths where the result at each level of evaluation is the same as the result being returned by the PDP. In situations where any lack of determinism is unacceptable, a deterministic combining algorithm, such as ordered-deny-overrides, should be used.
 
-Also see [Section 9.2](#92-policy-enforcement-point).
+Also see [Section 8.2](#82-policy-enforcement-point).
 
-## 9.19 Exception Handling
+## 8.17 Exception Handling
 
 ACAL specifies behavior for the PDP in the following situations.
 
-### 9.19.1 Unsupported Functionality
+### 8.17.1 Unsupported Functionality
 
 If the PDP attempts to evaluate a policy that contains an optional object type or function that the PDP does not support, then the PDP SHALL return a `DecisionType` value of `Indeterminate`. If a `StatusCodeType` object is also returned, then its Value property SHALL be `urn:oasis:names:tc:acal:1.0:status:syntax-error` in the case of an unsupported object type, and `urn:oasis:names:tc:acal:1.0:status:processing-error` in the case of an unsupported function.
 
-### 9.19.2 Syntax and Type Errors
+### 8.17.2 Syntax and Type Errors
 
 If a policy that contains invalid syntax is evaluated by the ACAL PDP at the time a decision request is received, then the result of that policy SHALL be `Indeterminate` with a status code of `urn:oasis:names:tc:acal:1.0:status:syntax-error`.
 
 If a policy that contains invalid static data types is evaluated by the ACAL PDP at the time a decision request is received, then the result of that policy SHALL be `Indeterminate` with a status code of `urn:oasis:names:tc:acal:1.0:status:processing-error`.
 
-### 9.19.3 Missing Attributes
+### 8.17.3 Missing Attributes
 
 The absence of matching attributes in the request context for any of the attribute designators or attribute selectors that are found in the policy potentially results in the policy evaluating to `Indeterminate`, if the designator or selector has the `MustBePresent` property set to `true`, as described in [Section 7.17](#namedattributedesignatortype) and [Section 7.20](#baseattributeselectortype) and potentially results in a `Decision` property containing the `Indeterminate` value. In this case, if a status code is supplied, then the value
 
@@ -4275,11 +4099,11 @@ by adding attribute values for the attribute names that were listed in the previ
 
 it MUST NOT list the names and data types of any attribute for which values were supplied in the original request. Note, this requirement forces the PDP to eventually return an authorization decision of `Permit`, `Deny`, or `Indeterminate` with some other status code, in response to successively-refined requests.
 
-## 9.20 Identifier Equality
+## 8.18 Identifier Equality
 
 ACAL makes use of URIs and strings as identifiers. When such identifiers are compared for equality, the comparison MUST be done so that the identifiers are equal if they have the same length and the characters in the two identifiers are equal codepoint by codepoint.
 
-Values of the `IdentifierType` simple type may use short identifiers names as aliases for URIs. Where it is necessary to determine identifier equality, values of the `IdentifierType` simple type MUST first be evaluated according to [Section 9.3](#93-identifier-evaluation) and then the comparison SHALL be performed using the resulting URI. This applies to all instances of `IdentifierType`.
+Values of the `IdentifierType` simple type may use short identifiers names as aliases for URIs. Where it is necessary to determine identifier equality, values of the `IdentifierType` simple type MUST first be evaluated according to [Section 8.3](#83-identifier-evaluation) and then the comparison SHALL be performed using the resulting URI. This applies to all instances of `IdentifierType`.
 
 This definition of equality MUST also be used by the following URI identifiers (that are not instances of `IdentifierType`):
 
@@ -4309,7 +4133,7 @@ It is RECOMMENDED that extensions to ACAL use the same definition of identifier 
 
 It is RECOMMENDED that extensions which define identifiers do not define identifiers which could be easily misinterpreted by people as being subject to other kind of processing, such as URL character escaping, before matching.
 
-## 9.21 Short Identifiers in Responses
+## 8.19 Short Identifiers in Responses
 
 A `ResponseType` object may contain references to short identifier sets, and short identifier names from those sets may be used within the response. The PDP can freely choose what short identifier sets it uses in the response, if any. There are two cases that require special care.
 
@@ -4317,7 +4141,7 @@ ACAL attributes in the request that have the `IncludeInResult` property set to `
 
 Notices in the response originate from notice expressions in policies. If those notice expressions contain short identifier names, then those short identifier names are interpreted with respect to the short identifier sets referenced by the policies, which may also be different from the short identifier sets chosen by the PDP for the response.
 
-The PDP is responsible for ensuring that any short identifier names in the response reflect the correct URI when they are evaluated according to [Section 9.3](#93-identifier-evaluation) in the presence of the short identifier sets it has chosen. An implementation strategy for achieving this is for the PDP and context handler to evaluate any `IdentifierType` values as they are encountered and store them in internal memory as absolute URIs. Then when the response is composed the absolute URIs can be replaced by appropriate short identifier names from the short identifier sets chosen by the PDP.
+The PDP is responsible for ensuring that any short identifier names in the response reflect the correct URI when they are evaluated according to [Section 8.3](#83-identifier-evaluation) in the presence of the short identifier sets it has chosen. An implementation strategy for achieving this is for the PDP and context handler to evaluate any `IdentifierType` values as they are encountered and store them in internal memory as absolute URIs. Then when the response is composed the absolute URIs can be replaced by appropriate short identifier names from the short identifier sets chosen by the PDP.
 
 If the PDP chooses the same short identifier sets referenced by the request, then it has the advantage that they are sets known by the PEP and any attributes included in the result are more likely to have their original short identifier names restored.
 
@@ -4325,11 +4149,11 @@ If the PDP chooses the same short identifier sets referenced by the request, the
 ---
 
 
-# 10 ACAL Extensibility Points (non-normative)
+# 9 ACAL Extensibility Points (non-normative)
 
 This section describes the points within the ACAL model and schema where extensions can be added.
 
-## 10.1 Extensible Properties
+## 9.1 Extensible Properties
 
 The following `IdentifierType` properties have values that evaluate to URIs. They may be extended by the creation of new URIs associated with new semantics. \
 `Category`, \
@@ -4342,11 +4166,11 @@ the `Id` property of `NoticeType` and `NoticeExpressionType`, \
 
 See [Section 7](#7-structures) for definitions of these properties.
 
-## 10.2 Structured Attributes
+## 9.2 Structured Attributes
 
 _This section needs a major rewrite to de-emphasize XML and incorporate the entity data type._
 
-A `ValueType` object MAY contain an instance of a structured XML data type. [Section 9.4.1](#941-structured-attributes) describes a number of standard techniques to identify data items within such a structured attribute. Listed here are some additional techniques that require ACAL extensions.
+A `ValueType` object MAY contain an instance of a structured XML data type. [Section 8.4.1](#841-structured-attributes) describes a number of standard techniques to identify data items within such a structured attribute. Listed here are some additional techniques that require ACAL extensions.
 
 1. For a given structured data type, a community of ACAL users MAY define new attribute identifiers for each leaf sub-element of the structured data type that has a type conformant with one of the ACAL-defined data types. Using these new attribute identifiers, the PEPs or context handlers used by that community of users can flatten instances of the structured data type into a sequence of individual `AttributeType` objects. Each such `AttributeType` object can be compared using the ACAL-defined functions. Using this method, the structured data type itself never appears in a `ValueType` object.
 
@@ -4356,7 +4180,7 @@ A `ValueType` object MAY contain an instance of a structured XML data type. [Sec
 ---
 
 
-# 11 Safety, Security, and Data Protection Considerations
+# 10 Safety, Security, and Data Protection Considerations
 
 
 <!-- From OASIS Open Specification Template Instructions:
@@ -4372,7 +4196,7 @@ Please note that any specification that will need to register something with IAN
 
 This section identifies possible security and privacy compromise scenarios that should be considered when implementing an ACAL-based system. The section is informative only. It is left to the implementer to decide whether these compromise scenarios are practical in their environment and to select appropriate safeguards.
 
-## 11.1 Threat Model
+## 10.1 Threat Model
 
 We assume here that the adversary has access to the communication channel between the ACAL actors and is able to interpret, insert, delete, and modify messages or parts of messages.
 
@@ -4384,13 +4208,13 @@ It should be noted that there are other components of a distributed system that 
 
 The following sections detail specific compromise scenarios that may be relevant to an ACAL system.
 
-### 11.1.1 Unauthorized Disclosure
+### 10.1.1 Unauthorized Disclosure
 
 ACAL does not specify any inherent mechanisms to protect the confidentiality of the messages exchanged between actors. Therefore, an adversary could observe the messages in transit. Under certain security policies, disclosure of this information is a violation. Disclosure of attributes or the types of decision requests that a subject submits may be a breach of privacy policy. In the commercial sector, the consequences of unauthorized disclosure of personal data may range from embarrassment to the custodian, to imprisonment and/or large fines in the case of medical or financial data.
 
 Unauthorized disclosure is addressed by confidentiality safeguards.
 
-### 11.1.2 Message Replay
+### 10.1.2 Message Replay
 
 A message replay attack is one in which the adversary records and replays legitimate messages between ACAL actors. This attack may lead to denial of service, the use of out-of-date information or impersonation.
 
@@ -4398,23 +4222,23 @@ Prevention of replay attacks requires the use of message freshness safeguards.
 
 Note that encryption of the message does not mitigate a replay attack since the message is simply replayed and does not have to be understood by the adversary.
 
-### 11.1.3 Message Insertion
+### 10.1.3 Message Insertion
 
 A message insertion attack is one in which the adversary inserts messages in the sequence of messages between ACAL actors.
 
 The solution to a message insertion attack is to use mutual authentication and message sequence integrity safeguards between the actors. It should be noted that just using SSL mutual authentication is not sufficient. This only proves that the other party is the one identified by the subject of the X.509 certificate. In order to be effective, it is necessary to confirm that the certificate subject is authorized to send the message.
 
-### 11.1.4 Message Deletion
+### 10.1.4 Message Deletion
 
 A message deletion attack is one in which the adversary deletes messages in the sequence of messages between ACAL actors. Message deletion may lead to denial of service. However, a properly designed ACAL system should not render an incorrect authorization decision as a result of a message deletion attack.
 
 The solution to a message deletion attack is to use message sequence integrity safeguards between the actors.
 
-### 11.1.5 Message Modification
+### 10.1.5 Message Modification
 
 If an adversary can intercept a message and change its contents, then they may be able to alter an authorization decision. A message integrity safeguard can prevent a successful message modification attack.
 
-### 11.1.6 NotApplicable Results
+### 10.1.6 NotApplicable Results
 
 A result of `NotApplicable` means that the PDP could not locate a policy whose target matched the information in the decision request. In general, it is highly recommended that a `Deny` effect policy be used, so that when a PDP would have returned `NotApplicable`, a result of `Deny` is returned instead.
 
@@ -4424,9 +4248,9 @@ If `NotApplicable` is to be treated as `Permit`, it is vital that the matching a
 
 Commercial http responders allow a variety of syntaxes to be treated equivalently. The `%` can be used to represent characters by hex value. The URL path `/../` provides multiple ways of specifying the same value. Multiple character sets may be permitted and, in some cases, the same printed character can be represented by different binary values. Unless the matching algorithm used by the policy is sophisticated enough to catch these variations, unintended access may be permitted.
 
-It may be safe to treat `NotApplicable` as `Permit` only in a closed environment where all applications that formulate a decision request can be guaranteed to use the exact syntax expected by the policies. In a more open environment, where decision requests may be received from applications that use any legal syntax, it is strongly recommended that `NotApplicable` NOT be treated as `Permit` unless matching rules have been very carefully designed to match all possible applicable inputs, regardless of syntax or type variations. Note, however, that according to [Section 9.2](#92-policy-enforcement-point), a PEP must deny access unless it receives an explicit `Permit` authorization decision.
+It may be safe to treat `NotApplicable` as `Permit` only in a closed environment where all applications that formulate a decision request can be guaranteed to use the exact syntax expected by the policies. In a more open environment, where decision requests may be received from applications that use any legal syntax, it is strongly recommended that `NotApplicable` NOT be treated as `Permit` unless matching rules have been very carefully designed to match all possible applicable inputs, regardless of syntax or type variations. Note, however, that according to [Section 8.2](#82-policy-enforcement-point), a PEP must deny access unless it receives an explicit `Permit` authorization decision.
 
-### 11.1.7 Negative Rules
+### 10.1.7 Negative Rules
 
 A negative rule is one that is based on a predicate not being `true`. If not used with care, negative rules can lead to policy violations, therefore some authorities recommend that they not be used. However, negative rules can be extremely efficient in certain cases, so ACAL has chosen to include them. Nevertheless, it is recommended that they be used with care and avoided if possible.
 
@@ -4436,15 +4260,15 @@ If not used with care, negative rules can lead to policy violations in two commo
 
 An example of a changing base group would be if there is a policy that everyone in the engineering department may change software source code, except for secretaries. Suppose now that the department was to merge with another engineering department and the intent is to maintain the same policy. However, the new department also includes individuals identified as administrative assistants, who ought to be treated in the same way as secretaries. Unless the policy is altered, they will unintentionally be permitted to change software source code. Problems of this type are easy to avoid when one individual administers all policies, but when administration is distributed, as ACAL allows, this type of situation must be explicitly guarded against.
 
-### 11.1.8 Denial of Service
+### 10.1.8 Denial of Service
 
 A denial of service attack is one in which the adversary overloads an ACAL actor with excessive computations or network traffic such that legitimate users cannot access the services provided by the actor.
 
 The `urn:oasis:names:tc:acal:1.0:function:access-permitted` function may lead to hard to predict behavior in the PDP. It is possible that the function is invoked during the recursive invocations of the PDP such that loops are formed. Such loops may in some cases lead to large numbers of requests to be generated before the PDP can detect the loop and abort evaluation. Such loops could cause a denial of service at the PDP, either because of a malicious policy or because of a mistake in a policy.
 
-## 11.2 Safeguards
+## 10.2 Safeguards
 
-### 11.2.1 Authentication
+### 10.2.1 Authentication
 
 Authentication provides the means for one party in a transaction to determine the identity of the other party in the transaction. Authentication may be in one direction, or it may be bilateral.
 
@@ -4454,17 +4278,17 @@ It is equally important for a PDP to authenticate the identity of the PEP and as
 
 Many different techniques may be used to provide authentication, such as co-located code, a private network, a VPN, or digital signatures. Authentication may also be performed as part of the communication protocol used to exchange the contexts. In this case, authentication may be performed either at the message level or at the session level.
 
-### 11.2.2 Policy Administration
+### 10.2.2 Policy Administration
 
 If the contents of policies are exposed outside of the access control system, potential subjects may use this information to determine how to gain unauthorized access.
 
 To prevent this threat, the repository used for the storage of policies may itself require access control. In addition, the `StatusType` object should be used to return values of missing attributes only when exposure of the identities of those attributes will not compromise security.
 
-### 11.2.3 Confidentiality
+### 10.2.3 Confidentiality
 
 Confidentiality mechanisms ensure that the contents of a message can be read only by the desired recipients and not by anyone else who encounters the message while it is in transit. There are two areas in which confidentiality should be considered: one is confidentiality during transmission; the other is confidentiality within a policy.
 
-#### 11.2.3.1 Communication Confidentiality
+#### 10.2.3.1 Communication Confidentiality
 
 In some environments it is deemed good practice to treat all data within an access control system as confidential. In other environments, policies may be made freely available for distribution, inspection, and audit. The idea behind keeping policy information secret is to make it more difficult for an adversary to know what steps might be sufficient to obtain unauthorized access. Regardless of the approach chosen, the security of the access control system should not depend on the secrecy of the policy.
 
@@ -4472,23 +4296,25 @@ Any security considerations related to transmitting or exchanging ACAL policies 
 
 Communications confidentiality can be provided by a confidentiality mechanism, such as SSL. Using a point-to-point scheme like SSL may lead to other vulnerabilities when one of the end-points is compromised.
 
-#### 11.2.3.2 Statement Level Confidentiality
+#### 10.2.3.2 Statement Level Confidentiality
 
 In some cases, an implementation may want to encrypt only parts of an ACAL policy.
 
-Where the policy is represented in XML the XML Encryption Syntax and Processing Candidate Recommendation from W3C can be used to encrypt all or parts of an XML document. This specification is recommended for use with ACAL.
+The particular policy encryption mechanism and syntax for encrypted policy or policy parts will be described by the ACAL Representation Profiles (e.g. W3C XML Encryption standard for XACML - XML Representation Profile).
 
 It should go without saying that if a repository is used to facilitate the communication of cleartext (i.e., unencrypted) policy between the PAP and PDP, then a secure repository should be used to store this sensitive data.
 
-### 11.2.4 Policy Integrity
+### 10.2.4 Policy Integrity
 
 ACAL policies used by the PDP to evaluate the request context are the heart of the system. Therefore, maintaining their integrity is essential. There are two aspects to maintaining the integrity of the policies. One is to ensure that the policies have not been altered since they were originally created by the PAP. The other is to ensure that policies have not been inserted or deleted from the set of policies.
 
-In many cases, both aspects can be achieved by ensuring the integrity of the actors and implementing session-level mechanisms to secure the communication between actors. The selection of the appropriate mechanisms is left to the implementers. However, when policy is distributed between organizations to be acted on at a later time, or when the policy travels with the protected resource, it would be useful to sign the policy. In these cases, the XML Signature Syntax and Processing standard from W3C is recommended to be used with ACAL policies represented in XML.
+In many cases, both aspects can be achieved by ensuring the integrity of the actors and implementing session-level mechanisms to secure the communication between actors. The selection of the appropriate mechanisms is left to the implementers. However, when policy is distributed between organizations to be acted on at a later time, or when the policy travels with the protected resource, it would be useful to sign the policy. 
+
+The particular policy signature mechanism and syntax for signed policy or policy parts will be described by the ACAL Representation Profiles (W3C XML Signature Syntax and Processing standard for XACML - XML Representation Profile).
 
 Digital signatures should only be used to ensure the integrity of the statements. Digital signatures should not be used as a method of selecting or evaluating policy. That is, the PDP should not request a policy based on who signed it or whether or not it has been signed (as such a basis for selection would, itself, be a matter of policy). However, the PDP must verify that the key used to sign the policy is one controlled by the purported issuer of the policy. The means to do this are dependent on the specific signature technology chosen and are outside the scope of this document.
 
-### 11.2.5 Policy Identifiers
+### 10.2.5 Policy Identifiers
 
 Since policies can be referenced by their identifiers, it is the responsibility of the PAP to ensure that these are unique. Confusion between identifiers could lead to misidentification of the applicable policy. This specification is silent on whether a PAP must generate a new identifier when a policy is modified or may use the same identifier in the modified policy. This is a matter of administrative practice. However, care must be taken in either case. If the identifier is reused, there is a danger that other policies that reference it may be adversely affected. Conversely, if a new identifier is used, these other policies may continue to use the prior policy, unless it is deleted. In either case the results may not be what the policy administrator intends.
 
@@ -4496,7 +4322,7 @@ If a PDP is provided with policies from distinct sources which might not be full
 
 If this issue is a concern it is RECOMMENDED that distinct policy issuers or sources are assigned distinct namespaces for policy identifiers. One method is to make sure that the policy identifier begins with a string which has been assigned to the particular policy issuer or source. The remainder of the policy identifier is an issuer-specific unique part. For instance, Alice from Example Inc. could be assigned the policy identifiers which begin with `https://example.com/xacml/policyId/alice/`. The PDP or another trusted component can then verify that the authenticated source of the policy is Alice at Example Inc, or otherwise reject the policy. Anyone else will be unable to publish policies with identifiers which collide with the policies of Alice.
 
-### 11.2.6 Trust Model
+### 10.2.6 Trust Model
 
 Discussions of authentication, integrity and confidentiality safeguards necessarily assume an underlying trust model: how can one actor come to believe that a given key is uniquely associated with a specific, identified actor so that the key can be used to encrypt data for that actor or verify signatures (or other integrity structures) from that actor? Many different types of trust models exist, including strict hierarchies, distributed authorities, the Web, the bridge, and so on.
 
@@ -4510,25 +4336,25 @@ It is worth considering the relationships between the various actors of the acce
 
 * The PDP depends on the PAP to supply appropriate policies. The PAP is not dependent on other components.
 
-### 11.2.7 Privacy
+### 10.2.7 Privacy
 
 It is important to be aware that any transactions that occur with respect to access control may reveal private information about the actors. For example, if an ACAL policy states that certain data may only be read by subjects with `Gold Card Member` status, then any transaction in which a subject is permitted access to that data leaks information to an adversary about the subject's status. Privacy considerations may therefore lead to encryption and/or to access control requirements surrounding the enforcement of ACAL policy instances themselves: confidentiality-protected channels for the request/response protocol messages, protection of subject attributes in storage and in transit, and so on.
 
 Selection and use of privacy mechanisms appropriate to a given environment are outside the scope of ACAL. The decision regarding whether, how, and when to deploy such mechanisms is left to the implementers associated with the environment.
 
-## 11.3 Unicode Security Issues
+## 10.3 Unicode Security Issues
 
 There are many security considerations related to use of Unicode. An ACAL implementation SHOULD follow the advice given in the relevant version of [UTR36].
 
-## 11.4 Identifier Equality
+## 10.4 Identifier Equality
 
-[Section 9.20](#920-identifier-equality) defines the identifier equality operation for ACAL. This definition of equality does not do any kind of canonicalization or escaping of characters. The identifiers defined in the ACAL specification have been selected to not include any ambiguity regarding these aspects. It is RECOMMENDED that identifiers defined by extensions also do not introduce any identifiers which might be mistaken for being subject to processing, like for instance URL character encoding using `%`.
+[Section 8.18](#818-identifier-equality) defines the identifier equality operation for ACAL. This definition of equality does not do any kind of canonicalization or escaping of characters. The identifiers defined in the ACAL specification have been selected to not include any ambiguity regarding these aspects. It is RECOMMENDED that identifiers defined by extensions also do not introduce any identifiers which might be mistaken for being subject to processing, like for instance URL character encoding using `%`.
 
 
 ---
 
 
-# 12 Conformance
+# 11 Conformance
 
 
 <!-- From OASIS Open Specification Template Instructions: 
@@ -4539,23 +4365,23 @@ This section is **REQUIRED** and **MUST** be the last numbered section in the do
 
 -->
 
-## 12.1 Introduction
+## 11.1 Introduction
 
 The ACAL specification addresses the following aspect of conformance:
 
 The ACAL specification defines a number of functions, etc. that have somewhat special applications, therefore they are not required to be implemented in an implementation that claims to conform with to this specification.
 
-## 12.2 Conformance Tables
+## 11.2 Conformance Tables
 
 This section lists those portions of the specification that MUST be included in an implementation of a PDP that claims to conform to ACAL 1.0. A set of test cases has been created to assist in this process. These test cases can be located from the OASIS XACML TC Web page. The site hosting the test cases contains a full description of the test cases and how to execute them.
 
 : Note: "M" means mandatory-to-implement. "O" means optional.
 
-The implementation MUST follow [Section 7](#7-structures), [Section 8](#8-xpath-definitions), [Section 9](#9-functional-requirements), [Annex C](#annex-c-data-types-and-functions), [Annex D](#annex-d-acal-identifiers) and [Annex E](#annex-e-combining-algorithms) where they apply to implemented items in the following tables.
+The implementation MUST follow [Section 7](#7-structures), [Section 8](#8-functional-requirements), [Annex C](#annex-c-data-types-and-functions), [Annex D](#annex-d-acal-identifiers) and [Annex E](#annex-e-combining-algorithms) where they apply to implemented items in the following tables.
 
 Many of these items are associated with versions of XACML preceding ACAL but have been assigned new identifiers with the `urn:oasis:names:tc:acal:1.0:` prefix. The older XACML identifiers have been listed in the tables as deprecated identifiers. Implementations MUST support a new identifier defined in this specification but MAY recognize the corresponding deprecated identifier as equivalent. It is RECOMMENDED that these deprecated identifiers not be used in new policies and requests; they are planned to be removed in a subsequent version of ACAL. Note that some items appear to be carried over from a preceding version of XACML but do not list the XACML identifier. This is because ACAL has redefined the item in some way that means it is no longer identical to the original definition in XACML, and so the identifiers can no longer be considered equivalent. Items new to ACAL 1.0 will also not list an XACML identifier.
 
-### 12.2.1 Object Types
+### 11.2.1 Object Types
 
 The implementation MUST support the object types that are marked `M`.
 
@@ -4572,7 +4398,6 @@ The implementation MUST support the object types that are marked `M`.
 | BundleType | O |
 | ContentType | O |
 | DecisionType | M |
-| DefaultsType | O |
 | DescriptionType | M |
 | EntityAttributeDesignatorType | M |
 | EntityAttributeSelectorType | O |
@@ -4585,6 +4410,7 @@ The implementation MUST support the object types that are marked `M`.
 | NamedAttributeDesignatorType | M |
 | NoticeExpressionType | M |
 | NoticeType | M |
+| PolicyDefaultsType | O |
 | PolicyIssuerType | O |
 | PolicyParameterType | M |
 | PolicyReferenceType | M |
@@ -4600,7 +4426,7 @@ The implementation MUST support the object types that are marked `M`.
 | ResultEntityType | M |
 | ResultType | M |
 | RuleType | M |
-| SharedVariableDefinitionType | M |
+| SharedVariableDefinitionType | O |
 | SharedVariableReferenceType | M |
 | ShortIdSetType | M |
 | ShortIdType | M |
@@ -4611,7 +4437,7 @@ The implementation MUST support the object types that are marked `M`.
 | VariableDefinitionType | M |
 | VariableReferenceType | M |
 
-### 12.2.2 Identifier Prefixes
+### 11.2.2 Identifier Prefixes
 
 The following identifier prefixes are reserved by ACAL.
 
@@ -4623,7 +4449,7 @@ The following identifier prefixes are reserved by ACAL.
 | urn:oasis:names:tc:xacml:2.0 |
 | urn:oasis:names:tc:xacml:1.0 |
 
-### 12.2.3 Algorithms
+### 11.2.3 Algorithms
 
 The implementation MUST include the combining algorithms associated with the following identifiers that are marked `M`
 
@@ -4637,7 +4463,7 @@ The implementation MUST include the combining algorithms associated with the fol
 | urn:oasis:names:tc:acal:1.0:combining-algorithm:deny-unless-permit | M |
 | urn:oasis:names:tc:acal:1.0:combining-algorithm:permit-unless-deny | M |
 
-### 12.2.4 Status Codes
+### 11.2.4 Status Codes
 
 Implementation support for the `StatusCodeType` object is optional, but if the object is supported, then the following status codes must be supported and must be used in the way ACAL has specified.
 
@@ -4648,7 +4474,7 @@ Implementation support for the `StatusCodeType` object is optional, but if the o
 | urn:oasis:names:tc:acal:1.0:status:processing-error | M | urn:oasis:names:tc:xacml:1.0:status:processing-error |
 | urn:oasis:names:tc:acal:1.0:status:syntax-error | M | urn:oasis:names:tc:xacml:1.0:status:syntax-error |
 
-### 12.2.5 Environment Attributes
+### 11.2.5 Environment Attributes
 
 The implementation MUST support the attributes associated with the following identifiers as specified by ACAL. If values for these attributes are not present in the decision request, then their values MUST be supplied by the context handler. So, unlike most other attributes, their semantics are not transparent to the PDP.
 
@@ -4658,7 +4484,7 @@ The implementation MUST support the attributes associated with the following ide
 | urn:oasis:names:tc:acal:1.0:environment:current-date | M | urn:oasis:names:tc:xacml:1.0:environment:current-date |
 | urn:oasis:names:tc:acal:1.0:environment:current-dateTime | M | urn:oasis:names:tc:xacml:1.0:environment:current-dateTime |
 
-### 12.2.6 Attributes and Categories
+### 11.2.6 Attributes and Categories
 
 The implementation MUST use the attributes or attribute categories associated with the following identifiers in the way ACAL has defined. This requirement pertains primarily to implementations of a PAP or PEP that uses ACAL, since the semantics of the attributes are transparent to the PDP.
 
@@ -4689,7 +4515,7 @@ The implementation MUST use the attributes or attribute categories associated wi
 | urn:oasis:names:tc:acal:1.0:subject-category:recipient-subject | O | urn:oasis:names:tc:xacml:1.0:subject-category:recipient-subject |
 | urn:oasis:names:tc:acal:1.0:subject-category:requesting-machine | O | urn:oasis:names:tc:xacml:1.0:subject-category:requesting-machine |
 
-### 12.2.7 Data Types
+### 11.2.7 Data Types
 
 The implementation MUST support the data types associated with the following identifiers marked `M`.
 
@@ -4709,12 +4535,11 @@ The implementation MUST support the data types associated with the following ide
 | urn:oasis:names:tc:acal:1.0:data-type:base64Binary | M | https://www.w3.org/2001/XMLSchema#base64Binary |
 | urn:oasis:names:tc:acal:1.0:data-type:rfc822Name | M | urn:oasis:names:tc:xacml:1.0:data-type:rfc822Name |
 | urn:oasis:names:tc:acal:1.0:data-type:x500Name | M | urn:oasis:names:tc:xacml:1.0:data-type:x500Name |
-| urn:oasis:names:tc:acal:1.0:data-type:xpathExpression | O | urn:oasis:names:tc:xacml:3.0:data-type:xpathExpression |
 | urn:oasis:names:tc:acal:1.0:data-type:ipAddress | M | urn:oasis:names:tc:xacml:2.0:data-type:ipAddress |
 | urn:oasis:names:tc:acal:1.0:data-type:dnsName | M | urn:oasis:names:tc:xacml:2.0:data-type:dnsName |
 | urn:oasis:names:tc:acal:1.0:data-type:entity | M | urn:oasis:names:tc:xacml:3.0:data-type:entity |
 
-### 12.2.8 Functions
+### 11.2.8 Functions
 
 The implementation MUST properly process those functions associated with the identifiers marked with an `M`.
 
@@ -4905,9 +4730,6 @@ The implementation MUST properly process those functions associated with the ide
 | urn:oasis:names:tc:acal:1.0:function:dnsName-regexp-match | M | |
 | urn:oasis:names:tc:acal:1.0:function:rfc822Name-regexp-match | M | |
 | urn:oasis:names:tc:acal:1.0:function:x500Name-regexp-match | M | |
-| urn:oasis:names:tc:acal:1.0:function:xpath-node-count | O | urn:oasis:names:tc:xacml:3.0:function:xpath-node-count |
-| urn:oasis:names:tc:acal:1.0:function:xpath-node-equal | O | urn:oasis:names:tc:xacml:3.0:function:xpath-node-equal |
-| urn:oasis:names:tc:acal:1.0:function:xpath-node-match | O | urn:oasis:names:tc:xacml:3.0:function:xpath-node-match |
 | urn:oasis:names:tc:acal:1.0:function:string-intersection | M | urn:oasis:names:tc:xacml:1.0:function:string-intersection |
 | urn:oasis:names:tc:acal:1.0:function:string-at-least-one-member-of | M | urn:oasis:names:tc:xacml:1.0:function:string-at-least-one-member-of |
 | urn:oasis:names:tc:acal:1.0:function:string-union | M | urn:oasis:names:tc:xacml:1.0:function:string-union |
@@ -5009,10 +4831,10 @@ The implementation MUST properly process those functions associated with the ide
 ## A.1 Document Status
 
 
-This document was last revised or approved by the [ full project name e.g., OASIS Collaborative Automated Course of Action Operations (CACAO) for Cyber Security TC ] on the above date. The level of approval is also listed above. Check the "Latest version" location noted above for possible later revisions of this document. Any other numbered Versions and other technical work produced by the Technical Committee (TC) are listed at [ project publication page e.g., https://www.oasis-open.org/committees/tc\_home.php?wg\_abbrev=cacao\#technical ].
+This document was last revised or approved by the OASIS eXtensible Access Control Markup Language (XACML) TC on the above date. The level of approval is also listed above. Check the "Latest version" location noted above for possible later revisions of this document. Any other numbered Versions and other technical work produced by the Technical Committee (TC) are listed at https://groups.https:communities/tc-community-home2?CommunityKey=67afe552-0921-49b7-9a85-018dc7d3ef1d#technical.
 
 
-TC members should send comments on this document to the TC's email list. Others should send comments to the TC's public comment list, after subscribing to it by following the instructions at the "Send A Comment" button on the TC's web page at [ project home page e.g., https://www.oasis-open.org/committees/cacao/ ].
+TC members should send comments on this document to the TC's email list. Others should send comments to the TC's public comment list, after subscribing to it by following the instructions at the "Send A Comment" button on the TC's web page at https://www.oasis-open.org/committees/xacml/.
 
 
 NOTE: any machine-readable content (Computer Language Definitions) declared Normative for this Work Product is provided in separate plain text files. In the event of a discrepancy between any such plain text file and display content in the Work Product's prose narrative document(s), the content in the separate plain text file prevails.
@@ -5033,7 +4855,7 @@ This document and translations of it may be copied and furnished to others, and 
 The limited permissions granted above are perpetual and will not be revoked by OASIS or its successors or assigns, as provided in the OASIS IPR Policy.
 
 
-This document is provided under the [ add IPR Mode, e.g., “Non-Assertion” ] IPR mode that was chosen when the project was established, as defined in the IPR Policy. For information on whether any patents have been disclosed that may be essential to implementing this document, and any offers of patent licensing terms, please refer to the Intellectual Property Rights section of the project’s web page ( [ e.g., [https://www.oasis-open.org/committees/cacao/ipr.php](https://www.oasis-open.org/committees/cacao/ipr.php) ] ).
+This document is provided under the [RF on Limited Terms](https://www.https:policies-guidelines/ipr/#RF-on-Limited-Mode) IPR mode that was chosen when the project was established, as defined in the IPR Policy. For information on whether any patents have been disclosed that may be essential to implementing this document, and any offers of patent licensing terms, please refer to the Intellectual Property Rights section of the project’s web page ([https://www.oasis-open.org/committees/xacml/ipr.php](https://www.oasis-open.org/committees/xacml/ipr.php)).
 
 
 This document and the information contained herein is provided on an "AS IS" basis and OASIS DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. OASIS AND ITS MEMBERS WILL NOT BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF ANY USE OF THIS DOCUMENT OR ANY PART THEREOF.
@@ -5075,12 +4897,6 @@ Normative references are specific (identified by date of publication and/or edit
 The following documents are referenced in such a way that some or all of their content constitutes requirements of this document.
 
 
-**[RFC8174]** *Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words*, BCP 14, RFC 8174, May 2017. [Online]. Available: https://www.rfc-editor.org/info/rfc8174
-
-
-**[Reference]** Reference Details
-
-
 ###### [CMF]
 
 Martin J. Dürst et al, eds., Character Model for the World Wide Web 1.0: Fundamentals, W3C Recommendation 15 February 2005, https://www.w3.org/TR/2005/REC-charmod-20050215/
@@ -5119,11 +4935,11 @@ Kudo M and Hada S, XML document security based on provisional authorization, Pro
 
 ###### [LDAP-1]
 
-RFC2256, A summary of the X500(96) User Schema for use with LDAPv3, Section 5, M Wahl, December 1997, https://www.ietf.org/rfc/rfc2256.txt
+RFC 2256, A summary of the X500(96) User Schema for use with LDAPv3, Section 5, M Wahl, December 1997, https://www.ietf.org/rfc/rfc2256.txt
 
 ###### [LDAP-2]
 
-RFC2798, Definition of the inetOrgPerson, M. Smith, April 2000, https://www.ietf.org/rfc/rfc2798.txt
+RFC 2798, Definition of the inetOrgPerson, M. Smith, April 2000, https://www.ietf.org/rfc/rfc2798.txt
 
 ###### [MathML]
 
@@ -5143,15 +4959,15 @@ David Ferraiolo and Richard Kuhn, Role-Based Access Controls, 15th National Comp
 
 ###### [RFC2119]
 
-**[RFC2119]** *Key Words for Use in RFCs to Indicate Requirement Levels*, BCP 14, RFC 2119, March 1997. [Online]. Available: https://www.rfc-editor.org/info/rfc2119
+*Key Words for Use in RFCs to Indicate Requirement Levels*, BCP 14, RFC 2119, March 1997. [Online]. Available: https://www.rfc-editor.org/info/rfc2119
 
 ###### [RFC2396]
 
-Berners-Lee T, Fielding R, Masinter L, Uniform Resource Identifiers (URI): Generic Syntax, https://www.ietf.org/rfc/rfc2396.txt
+RFC 2396, Berners-Lee T, Fielding R, Masinter L, Uniform Resource Identifiers (URI): Generic Syntax, https://www.ietf.org/rfc/rfc2396.txt
 
 ###### [RFC2732]
 
-Hinden R, Carpenter B, Masinter L, Format for Literal IPv6 Addresses in URL's,  https://www.ietf.org/rfc/rfc2732.txt
+RFC 2732, Hinden R, Carpenter B, Masinter L, Format for Literal IPv6 Addresses in URL's,  https://www.ietf.org/rfc/rfc2732.txt
 
 ###### [RFC3198]
 
@@ -5159,7 +4975,7 @@ IETF RFC 3198: Terminology for Policy-Based Management, November 2001. https://w
 
 ###### [RFC8174]
 
-**[RFC8174]** *Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words*, BCP 14, RFC 8174, May 2017. [Online]. Available: https://www.rfc-editor.org/info/rfc8174
+*Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words*, BCP 14, RFC 8174, May 2017. [Online]. Available: https://www.rfc-editor.org/info/rfc8174
 
 ###### [UAX15]
 
@@ -5173,10 +4989,6 @@ Davis, Mark, Suignard, Michel, Unicode Technical Report #36: Unicode Security Co
 
 OASIS Committee Draft 03, XACML v3.0 Administration and Delegation Profile Version 1.0. 11 March 2010, https://docs.oasis-open.org/xacml/3.0/xacml-3.0-administration-v1-spec-cd-03-en.doc
 
-###### [XF]
-
-XPath and XQuery Functions and Operators 3.1, 21 March 2017, https://www.w3.org/TR/2017/REC-xpath-functions-31-20170321/
-
 ###### [XML]
 
 Bray, Tim, et.al. eds, Extensible Markup Language (XML) 1.0 (Fifth Edition), W3C Recommendation 26 November 2008, https://www.w3.org/TR/2008/REC-xml-20081126/
@@ -5185,6 +4997,10 @@ Bray, Tim, et.al. eds, Extensible Markup Language (XML) 1.0 (Fifth Edition), W3C
 
 Marsh, Jonathan, et.al. eds, xml:id Version 1.0. W3C Recommendation 9 September 2005, https://www.w3.org/TR/2005/REC-xml-id-20050909/
 
+###### [XF]
+
+W3C XQuery, XPath, and XSLT Functions and Operators Namespace Document (XPath and XQuery Functions and Operators 3.1) 21 March 2017, https://www.w3.org/2005/xpath-functions/
+
 ###### [XS]
 
 XML Schema 1.1, parts 1 and 2. Available at: https://www.w3.org/TR/xmlschema11-1/ and https://www.w3.org/TR/xmlschema11-2/
@@ -5192,10 +5008,6 @@ XML Schema 1.1, parts 1 and 2. Available at: https://www.w3.org/TR/xmlschema11-1
 ###### [XPath]
 
 XML Path Language (XPath) 3.1, W3C Recommendation 21 March 2017, https://www.w3.org/TR/xpath-31/
-
-###### [XPathFunc]
-
-W3C XQuery, XPath, and XSLT Functions and Operators Namespace Document (XPath and XQuery Functions and Operators 3.1) 21 March 2017, https://www.w3.org/2005/xpath-functions/
 
 ###### [XSLT]
 
@@ -5206,9 +5018,6 @@ XSL Transformations (XSLT) Version 1.0, W3C Recommendation 16 November 1999, htt
 
 
 The following referenced documents are not required for the application of this document but may assist the reader with regard to a particular subject area.
-
-
-**[Reference 1]** Reference Details
 
 ###### [CM]
 
@@ -5286,8 +5095,6 @@ Although a syntactic representation of ACAL objects may represent most data type
 
 * `urn:oasis:names:tc:acal:1.0:data-type:dnsName`
 
-* `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` (optional)
-
 For the sake of improved interoperability, it is RECOMMENDED that all time references be in UTC time.
 
 An ACAL PDP SHALL be capable of converting string representations into various data types. For double values, implementations SHALL use the conversions described in [IEEE754].
@@ -5347,16 +5154,6 @@ portrange = portnumber | `-`portnumber | portnumber`-`[portnumber]
 
 where `portnumber` is a decimal port number. If the port number is of the form `-x`, where `x` is a port number, then the range is all ports numbered `x` and below. If the port number is of the form `x-`, then the range is all ports numbered `x` and above. [This syntax is taken from the Java SocketPermission.]
 
-### C.2.5 XPath Expression (optional)
-
-_**Support for this data-type is OPTIONAL._**
-
-_This section needs to be aligned with the JSON profile's handling of values of the xpathExpression data type._
-
-The `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` data type represents an XPath expression over the XML in a `ContentType` object. The syntax is defined by the XPath W3C recommendation. The content of this data-type also includes the context in which namespaces prefixes in the expression are resolved, which distinguishes it from a plain string and the ACAL attribute category of the `ContentType` object to which it applies. When the value is encoded in a `ValueType` object, the namespace context is given by the [in-scope namespaces] (see [INFOSET]) of the `ValueType` object, and an XML attribute called XPathCategory gives the category of the `ContentType` object where the expression applies.
-
-The XPath expression MUST be evaluated in a context which is equivalent of a stand alone XML document with the only child of the `ContentType` object as the document element. The context node of the XPath expression is the document node of this standalone document. Namespace declarations from the `ContentType` object and its ancestor elements for namespace prefixes that are "visibly utilized", as defined by [[exc-c14n](#exc-c14n)], within the contents MUST be present. Namespace declarations from the `<Content>` element or its ancestor elements for namespace prefixes that are not "visibly utilized" MAY be present.
-
 ### C.2.6 Entity
 
 The `urn:oasis:names:tc:acal:1.0:data-type:entity` data type is used to represent an entity nested within another entity. Values of this data type are objects of the `EntityType` object type [Section 7.46](#entitytype).
@@ -5393,15 +5190,15 @@ The following functions are the equality functions for the various data types. E
 
 `urn:oasis:names:tc:acal:1.0:function:date-equal`
 
-: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:date` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL perform its evaluation according to the `op:date-equal` function [[XF](#xf)] Section 9.4.4.
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:date` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL perform its evaluation according to the `op:date-equal` function [[XF](#xf)] Section 8.4.4.
 
 `urn:oasis:names:tc:acal:1.0:function:time-equal`
 
-: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:time` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL perform its evaluation according to the `op:time-equal` function [[XF](#xf)] Section 9.4.7.
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:time` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL perform its evaluation according to the `op:time-equal` function [[XF](#xf)] Section 8.4.7.
 
 `urn:oasis:names:tc:acal:1.0:function:dateTime-equal`
 
-: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:dateTime` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL perform its evaluation according to the `op:dateTime-equal` function [[XF](#xf)] Section 9.4.1.
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:dateTime` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL perform its evaluation according to the `op:dateTime-equal` function [[XF](#xf)] Section 8.4.1.
 
 `urn:oasis:names:tc:acal:1.0:function:dayTimeDuration-equal`
 
@@ -6369,25 +6166,7 @@ These functions operate on various types and evaluate to `urn:oasis:names:tc:aca
 
 : Note that the arguments to this function are swapped compared to the similarly-named function in XACML [[XACML](#xacml)].
 
-### C.3.16 XPath-based Functions (optional)
-
-_**Supporting this function is optional.**_
-
-This section specifies functions that take XPath expressions for arguments. An XPath expression evaluates to a node-set, which is a set of XML nodes that match the expression. A node or node-set is not in the formal data type system of ACAL. All comparison or other operations on node-sets are performed in isolation of the particular function specified. The context nodes and namespace mappings of the XPath expressions are defined by the XPath data type, see [Annex C.2.5](#c25-xpath-expression). The following functions are defined:
-
-`urn:oasis:names:tc:acal:1.0:function:xpath-node-count`
-
-: This function SHALL take an `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` as an argument and evaluates to an `urn:oasis:names:tc:acal:1.0:data-type:integer`. The value returned from the function SHALL be the count of the nodes within the node-set that match the given XPath expression. If the `ContentType` object of the category to which the XPath expression applies is not present in the request, this function SHALL return a value of zero.
-
-`urn:oasis:names:tc:acal:1.0:function:xpath-node-equal`
-
-: This function SHALL take two `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` arguments and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The function SHALL return `true` if any of the XML nodes in the node-set matched by the first argument equals any of the XML nodes in the node-set matched by the second argument. Two nodes are considered equal if they have the same identity. If the `ContentType` object of the category to which either XPath expression applies is not present in the request, this function SHALL return a value of `false`.
-
-`urn:oasis:names:tc:acal:1.0:function:xpath-node-match`
-
-: This function SHALL take two `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` arguments and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. This function SHALL evaluate to `true` if one of the following two conditions is satisfied: (1) Any of the XML nodes in the node-set matched by the first argument is equal to any of the XML nodes in the node-set matched by the second argument; (2) any node below any of the XML nodes in the node-set matched by the first argument is equal to any of the XML nodes in the node-set matched by the second argument. Two nodes are considered equal if they have the same identity. If the `ContentType` object of the category to which either XPath expression applies is not present in the request, this function SHALL return a value of `false`. Note: The first condition is equivalent to `xpath-node-equal`, and guarantees that `xpath-node-equal` is a special case of `xpath-node-match`.
-
-### C.3.17 Other Functions
+### C.3.16 Other Functions
 
 `urn:oasis:names:tc:acal:1.0:function:access-permitted`
 
@@ -6402,7 +6181,7 @@ This section specifies functions that take XPath expressions for arguments. An X
 
 : The function SHALL invoke a complete policy evaluation using the newly constructed context. This evaluation SHALL be completely isolated from the evaluation which invoked the function, but shall use all current policies and combining algorithms, including any per request policies.
 
-: The PDP SHALL detect any loop which may occur if successive evaluations invoke this function by counting the number of total invocations of any instance of this function during any single initial invocation of the PDP. If the total number of invocations exceeds the bound for such invocations, the initial invocation of this function evaluates to `Indeterminate` with a `urn:oasis:names:tc:acal:1.0:status:processing-error` status code. Also, see the security considerations in [Section 11.1.8](#1118-denial-of-service).
+: The PDP SHALL detect any loop which may occur if successive evaluations invoke this function by counting the number of total invocations of any instance of this function during any single initial invocation of the PDP. If the total number of invocations exceeds the bound for such invocations, the initial invocation of this function evaluates to `Indeterminate` with a `urn:oasis:names:tc:acal:1.0:status:processing-error` status code. Also, see the security considerations in [Section 10.1.8](#1018-denial-of-service).
 
 ### C.3.18 Extension Functions and Data Types
 
@@ -6469,8 +6248,6 @@ The following identifiers indicate data types that are defined in [Annex C.2](#c
 * `urn:oasis:names:tc:acal:1.0:data-type:ipAddress`
 
 * `urn:oasis:names:tc:acal:1.0:data-type:dnsName`
-
-* `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression`.
 
 The following data type identifiers are defined by W3C XML Schema [[XS](#xs)] (each `urn:oasis:names:tc:acal:1.0:data-type:<name>` below corresponds to the `xs:<name>` type in the XML schema Data Types specification):
 
@@ -6669,7 +6446,7 @@ Note that in each case an implementation is conformant as long as it produces th
 
 ## E.1 Extended Indeterminate Values
 
-Some combining algorithms are defined in terms of an extended set of `Indeterminate` values. See [Section 9.10](#extended-indeterminate) for the definition of the Extended Indeterminate values. For these algorithms, the PDP MUST keep track of the extended set of `Indeterminate` values during rule and policy combining.
+Some combining algorithms are defined in terms of an extended set of `Indeterminate` values. See [Section 8.10](#extended-indeterminate) for the definition of the Extended Indeterminate values. For these algorithms, the PDP MUST keep track of the extended set of `Indeterminate` values during rule and policy combining.
 
 The output of a combining algorithm which does not track the extended set of `Indeterminate` values MUST be treated as `Indeterminate{DP}` for the value `Indeterminate` by a combining algorithm which tracks the extended set of `Indeterminate` values.
 
@@ -6766,7 +6543,7 @@ Decision denyOverridesCombiningAlgorithm(Node[] children)
 }
 ```
 
-Notices SHALL be combined as described in [Section 9.18](#918-notices).
+Notices SHALL be combined as described in [Section 8.16](#816-notices).
 
 ## E.3 Ordered Deny Overrides
 
@@ -6867,7 +6644,7 @@ Decision permitOverridesCombiningAlgorithm(Node[] children)
 }
 ```
 
-Notices SHALL be combined as described in [Section 9.18](#918-notices).
+Notices SHALL be combined as described in [Section 8.16](#816-notices).
 
 ## E.5 Ordered Permit Overrides
 
@@ -6907,7 +6684,7 @@ Decision denyUnlessPermitCombiningAlgorithm(Node[] children)
 }
 ```
 
-Notices SHALL be combined as described in [Section 9.18](#918-notices).
+Notices SHALL be combined as described in [Section 8.16](#816-notices).
 
 ## E.7 Permit Unless Deny
 
@@ -6939,7 +6716,7 @@ Decision permitUnlessDenyCombiningAlgorithm(Node[] children)
 }
 ```
 
-Notices SHALL be combined as described in [Section 9.18](#918-notices).
+Notices SHALL be combined as described in [Section 8.16](#816-notices).
 
 ## E.8 First Applicable
 
@@ -6982,7 +6759,7 @@ Decision firstApplicableEffectRuleCombiningAlgorithm(Node[] children)
 }
 ```
 
-Notices SHALL be combined as described in [Section 9.18](#918-notices).
+Notices SHALL be combined as described in [Section 8.16](#816-notices).
 
 
 ---
@@ -7014,17 +6791,16 @@ The following individuals have had significant leadership positions during the d
 
 This section **SHOULD** include the leadership (chairs, sub committees chairs, secretaries, editors, etc.) of this document, and not just for this version of the document, even if they are no longer members of the TC.
 
+- Position, First Name Last Name, Company, [optional time frames] 
 
 -->
 
 
 - Chairs
-  - Position, First Name Last Name, Company, [optional time frames]  
   - Bill | Parducci, Individual
 - Secretaries
-  - Position, First Name Last Name, Company, [optional time frames]
+  - Bill | Parducci, Individual
 - Editors
-  - Position, First Name Last Name, Company, [optional time frames]
   - Steven Legg, ViewDS Identity Solutions
   - Cyril Dangerville, THALES
 
@@ -7049,6 +6825,7 @@ This section **SHOULD** include individuals that have made significant contribut
 
 The following individuals were members of this committee during the creation of this document, not just this version of the document, and their contributions are gratefully acknowledged:
 
+**XACML TC Members:**
 
 - Hal Lochhart, Individual
 - Bill | Parducci, Individual
@@ -7080,6 +6857,8 @@ ACAL 1.0 is a successor to XACML 3.0. ACAL 1.0 differs from XACML 3.0 in the fol
 
   - Compared to XACML 3.0, the `PolicyType` type now allows child `<Policy>` and `<PolicyReference>` (was `PolicyIdReference`) elements.
 
+  - Compared to XACML 3.0, a `Policy` may contain more than one `PolicyDefaults` element, one per ACAL Profile possibly. 
+
   - Separate rule and policy combining algorithms have been replaced with a single collection of combining algorithms. Legacy combining algorithms have been removed. The `only-one-applicable` policy combining algorithm has been removed.
 
 - The target (`Target` element) of a policy has been changed to have the same structure as the condition of a rule (i.e., a single Boolean expression). From the XML perspective, this means that the `<AnyOf>`, `<AllOf>` and `<Match>` elements no longer appear.
@@ -7096,6 +6875,8 @@ ACAL 1.0 is a successor to XACML 3.0. ACAL 1.0 differs from XACML 3.0 in the fol
 
 - `IncludeInResult`, `ReturnPolicyIdList` and `CombinedDecision` attributes (in a `Request`) are now optional with default value `false`.
 
+- A `Request` may contain more than one `RequestDefaults` element, one per ACAL Profile possibly.
+
 - Different types are now used to represent attribute categories in a request versus a response. Categories in the result don't have the `Content` property, since there is no mechanism to request their inclusion, and their attributes don't have the `IncludeInResult` property because it is meaningless in that context. Categories in the request have both `Content` properties and attributes with `IncludeInResult` properties. Attribute categories in the request are `RequestEntityType` objects and attributes in the response are `ResultEntityType` objects. These types supersede the XML Schema `AttributesType` complex type. As a result:
 
   - `Attributes` element replaced with new `RequestEntity` and `ResultEntity` elements in the `Request` and `Result` elements respectively
@@ -7109,15 +6890,14 @@ ACAL 1.0 is a successor to XACML 3.0. ACAL 1.0 differs from XACML 3.0 in the fol
   
   - `DataType` attribute changed to be optional with the standard string type as default value to simplify the element declaration in most cases.
    * `MustBePresent`: changed to be optional with `false` as default value, to simplify the element declaration in most cases.
-   * `PathType` attribute (optional): new attribute to add support for JSONPath, indicates the type of `Path` expression (JSONPath or XPath which is the default value);
-   * `Path` attribute value can be a XPath or JSONPath expression according to `PathType`, and if XPath, can use *ACAL* variables from `VariableDefinition`s as XPath variables.
+   * `AttributeSelector` and `Path` type of expression are abstract in ACAL model, concrete types of AttributeSelector Path expressions to be defined in ACAL Profiles, e.g. XPath Profile.
 
 - `AttributeDesignator` changes to simplify the declaration in most cases: 
 
   * `DataType` attribute changed to be optional, with the standard string type as default.
   * `MustBePresent`: changed to be optional with `false` as default value.
 
-- The `xml:id` attribute for an attribute category is replaced by a generic 'Id' property so that all ACAL representation formats are on an equal footing.
+- The `xml:id` attribute ([XMLid]) for an attribute category is replaced by a generic 'Id' property so that all ACAL representation formats are on an equal footing.
 
 - The quantified expressions (`ForAny`, `ForAll`, `Select` and `Map`) and the `entity` data type from the XACML 3.0 Entities Profile [[ENTITIES](#entities)] have been incorporated in ACAL version 1.0. The `attribute-designator` function from the profile has been reinvented as the `EntityAttributeDesignatorType` expression object type and the `attribute-selector` function from the the profile has been reinvented as the `EntityAttributeSelectorType` expression object type.
 
@@ -7131,12 +6911,13 @@ ACAL 1.0 is a successor to XACML 3.0. ACAL 1.0 differs from XACML 3.0 in the fol
   - Sums and averages of integers/doubles;
   - Minimum and maximum values among integers, doubles, strings, times, dates, date-times.
 
-- XPath versions: deprecated XPath version 1.0; added support for XPath 3.0 and 3.1.
+- XPath features moved to separate ACAL XPath Profile: XPath-based AttributeSelector, XPath-based functions, XPath expression datatype.
 
 - Deprecated prefixes `urn:oasis:names:tc:xacml:` and `https://www.w3.org/2001/XMLSchema#` in favor of `urn:oasis:names:tc:acal:` for all standard identifiers (algorithms, status codes, data-types, functions, attributes and categories)
 
 ## Revision History
 
+Latest revision history can be obtain from [OASIS XACML TC's github repository](https://github.com/oasis-tcs/xacml-spec/commits/main/acal-v1.0.md).
 
 - \< Date in yyyy-mm-dd format \>, \< Revision number \>  
 - \< Date in yyyy-mm-dd format \>, \< Revision number \>

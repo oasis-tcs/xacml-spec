@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright OASIS Open 2025. All Rights Reserved. -->
+<xs:schema xmlns:xacml="urn:oasis:names:tc:xacml:4.0:core:schema"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:xml="http://www.w3.org/XML/1998/namespace"
+	targetNamespace="urn:oasis:names:tc:xacml:4.0:xpath:schema"
+	xmlns="urn:oasis:names:tc:xacml:4.0:xpath:schema"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+	<xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="https://www.w3.org/2001/xml.xsd"/>
+	<xs:import namespace="urn:oasis:names:tc:xacml:4.0:core:schema" schemaLocation="xacml-core-v4-schema.xsd" />
+
+	<!-- Change to XACML 3.0 (issue #33): Moved XPath-specific features to separate XPath profile and XSD  -->
+	<xs:element name="XPathAttributeSelector" type="XPathAttributeSelectorType" substitutionGroup="xacml:AttributeSelector">
+	<xs:annotation>
+			<xs:documentation xml:lang="en">The namespace context for the value of the Path attribute is given by the [in-scope namespaces]
+			[[INFOSET](#infoset)] of this XPathAttributeSelector element. </xs:documentation>
+	</xs:annotation>	
+	</xs:element>
+	<xs:complexType name="XPathAttributeSelectorType">
+		<xs:complexContent>
+			<xs:extension base="xacml:AttributeSelectorType">
+				<xs:attribute name="ContextSelectorId" type="xacml:IdentifierType" use="optional" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<!-- Change to XACML 3.0 (issue #33): Moved XPath-specific features to separate XPath profile and XSD  -->
+	<xs:element name="XPathEntityAttributeSelector" type="XPathEntityAttributeSelectorType"	substitutionGroup="xacml:EntityAttributeSelector" />
+	<xs:complexType name="XPathEntityAttributeSelectorType">
+		<xs:complexContent>
+			<xs:extension base="xacml:EntityAttributeSelectorType">
+				<xs:attribute name="ContextSelectorId" type="xacml:IdentifierType" use="optional" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<!-- Change to XACML 3.0 (issue #33 and #36): Moved XPath-specific features to separate XPath profile and XSD, including Defaults -->
+	<xs:complexType name="XPathDefaultsType">
+		<xs:complexContent>
+			<xs:extension base="xacml:DefaultsType">
+				<!-- Change to XACML 3.0 (issue #48): XPathVersion type changed to IdentifierType for supporting Short Identifiers -->
+				<xs:attribute name="XPathVersion" type="xacml:IdentifierType" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:element name="XPathPolicyDefaults" type="XPathDefaultsType" substitutionGroup="xacml:PolicyDefaults"/>
+	<xs:element name="XPathRequestDefaults" type="XPathDefaultsType" substitutionGroup="xacml:RequestDefaults"/>
+	<!-- In XSD 1.1, the 2 lines above may be replaced with:   
+	<xs:element name="XPathDefaults" type="XPathDefaultsType" substitutionGroup="xacml:PolicyDefaults xacml:RequestDefaults"/>
+	-->
+</xs:schema>
