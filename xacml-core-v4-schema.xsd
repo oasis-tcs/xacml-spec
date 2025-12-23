@@ -349,6 +349,7 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 	<xs:element name="PolicyPatternMatchReference" type="xacml:PatternMatchIdReferenceType"/>
 	<!-- Change to XACML 3.0 - Issue #16: New IdReferenceType extension with Version pattern matching, to be used in Policies (PolicyReference) and XACMLPolicyQuery (PolicyIdReference).
 	Same as old PolicyIdReferenceType except the Id is now an XML attribute, cf. IdReferenceType change down below.-->
+	<!-- Change to XACML 3.0 - Issue #12: EarliestVersion / LatestVersion attributes removed from policy references-->
 	<xs:complexType name="PatternMatchIdReferenceType">
 		<xs:complexContent>
 			<xs:extension base="xacml:IdReferenceType">
@@ -533,7 +534,7 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	
+
 	<!-- Change to XACML 3.0: more restrictive type for the AttributeSelector Path attribute (non-empty string without leading/trailing whitespace) -->
 	<xs:simpleType name="AttributeSelectorPathType">
 		<xs:restriction base="xs:string">

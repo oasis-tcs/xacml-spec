@@ -1109,6 +1109,8 @@ XACML 4.0 differs from XACML 3.0 in the following ways:
   - Compared to XACML 3.0, the `PolicyType` type now allows child `<Policy>` and `<PolicyReference>` (was `PolicyIdReference`) elements.
 
   - Compared to XACML 3.0, a `Policy` may contain more than one `PolicyDefaults` element, one per ACAL Profile possibly. 
+  
+  -  EarliestVersion and LatestVersion attributes removed from `<PolicyReference>`
 
 - The target (`Target` element) of a policy has been changed to have the same structure as the condition of a rule (i.e., a single Boolean expression). From the XML perspective, this means that the `<AnyOf>`, `<AllOf>` and `<Match>` elements no longer appear.
 
