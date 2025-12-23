@@ -1,4 +1,4 @@
-﻿![OASIS](http://docs.oasis-open.org/templates/OASISLogo-v3.0.png)
+![OASIS](http://docs.oasis-open.org/templates/OASISLogo-v3.0.png)
 
 
 ---
@@ -1208,22 +1208,18 @@ These are discussed in the following sub-sections.
 
 #### 5.3.1.1 Condition
 
-The condition defines the set of requests to which the rule is intended to apply in the form of a logical expression on attributes in the request. If the rule is intended to apply to all entities of a particular data type, then the corresponding entity is omitted from the condition. <!-- TODO: what does this mean? Is this sentence necessary? Consider removing.--> 
-An ACAL PDP verifies that the matches defined by the condition are satisfied by the attributes in the request context.
+The condition defines the set of requests to which the rule applies, expressed as a logical expression on attributes in the request. If a rule is intended to apply to all requests to which its parent policy is applicable, the condition may be omitted.
 
-The condition may be absent from a rule. In this case, the condition of the rule is the same as the target of the parent policy.
+**Hierarchical Logic**
+When evaluating conditions against structured name-forms (such as directory names, file paths, or nested object keys), the matching logic must distinguish between a discrete node and a subtree. 
 
-Certain subject name-forms, resource name-forms and certain types of resource are internally structured. For instance, the X.500 directory name-form and RFC 822 name-form are structured subject name-forms, whereas an account number commonly has no discernible structure. UNIX file-system path-names and URIs are examples of structured resource name-forms. An XML document is an example of a structured resource.
+* **Subjects:** Non-leaf subject names generally identify the set of subjects subordinate to that node.
+* **Resources:** A resource node may represent either a discrete entity or a container for a subtree of entities. 
 
-Generally, the name of a node (other than a leaf node) in a structured name-form is also a legal instance of the name-form. So, for instance, the RFC822 name `med.example.com` is a legal RFC822 name identifying the set of mail addresses hosted by the med.example.com mail server. The XPath value `md:record/md:patient/` is a legal XPath value identifying a node-set in an XML document.
+The interpretation of these structures is influenced by the match function selected and the hierarchy's specific delimiter (e.g., `/`, `\`, or `.`). The **Hierarchical Resource Profile** provides the specific functions and logic required to handle these variations across different data representations.
 
-The question arises: how should a name that identifies a set of subjects or resources be interpreted by the PDP, whether it appears in a policy or a request context? Are they intended to represent just the node explicitly identified by the name, or are they intended to represent the entire sub-tree subordinate to that node?
-
-In the case of subjects, there is no real entity that corresponds to such a node. So, names of this type always refer to the set of subjects subordinate in the name structure to the identified node. Consequently, non-leaf subject names should not be used in equality functions, only in match functions, such as `urn:oasis:names:tc:acal:1.0:function:rfc822Name-match` <!-- Newline to fit on PDF page -->
-instead of `urn:oasis:names:tc:acal:1.0:function:rfc822Name-equal` (see [Annex C.3.15](#c315-special-match-functions)).
-<!-- TODO: This paragraph is hard to follow. Maybe give an example? -->
-<!-- TODO: In the case of resources,... -->
-
+**Evaluation**
+The PDP verifies that the matches defined by the condition are satisfied by the attributes in the request context. For the formal processing model, see **Section 9, "Condition Evaluation"**.
 
 #### 5.3.1.2 Effect
 
