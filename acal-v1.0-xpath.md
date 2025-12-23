@@ -215,8 +215,8 @@ $ pandoc -f gfm+definition_lists -t pdf acal-v1.0-xpath.md -c styles/markdown-st
 - [6 XPath Definitions](#6-xpath-definitions)
   - [Supported XPath versions](#supported-xpath-versions)
   - [XPath 2.0 Implementation-Defined Items](#xpath-20-implementation-defined-items)
-    - [XPath 3.0 additional implementation-defined items](#xpath-30-additional-implementation-defined-items)
-    - [XPath 3.1 additional implementation-defined items](#xpath-31-additional-implementation-defined-items)
+  - [XPath 3.0 additional implementation-defined items](#xpath-30-additional-implementation-defined-items)
+  - [XPath 3.1 additional implementation-defined items](#xpath-31-additional-implementation-defined-items)
 - [7 Attribute Selector Evaluation](#7-attribute-selector-evaluation)
 - [8 Safety, Security, and Data Protection Considerations](#8-safety-security-and-data-protection-considerations)
 - [9 Conformance](#9-conformance)
@@ -637,7 +637,7 @@ The XPath specification leaves a number of aspects of behavior implementation-de
 
     : ACAL leaves this implementation defined.
 
-### XPath 3.0 additional implementation-defined items
+## XPath 3.0 additional implementation-defined items
 
 `https://www.w3.org/TR/xpath-30/#id-impl-defined-items` defines the following additional items to XPath 2.0 items:
 
@@ -664,7 +664,7 @@ The XPath specification leaves a number of aspects of behavior implementation-de
 *TO BE COMPLETED (52 items...)*
 <!-- Hint: https://www.saxonica.com/html/documentation12/conformance/xslt30.html -->
 
-### XPath 3.1 additional implementation-defined items
+## XPath 3.1 additional implementation-defined items
 
 <!--
 Implementation-Defined Items sections from XPath 3.1 standard ( https://www.w3.org/TR/xpath-31/#id-impl-defined-items ) and 'XQuery and XPath Data Model 3.1' ( https://www.w3.org/TR/xpath-datamodel-31/#implementation-defined ) do not seem to add anything to XPath 3.0 ones.
