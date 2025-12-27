@@ -653,16 +653,19 @@ The XPath specification leaves a number of aspects of behavior implementation-de
 
    : It is RECOMMENDED that users of ACAL use ACAL-defined VariableDefinitions (based on AttributeDesignator and appropriate PIP to obtain the values) in order to capture environment variables, then use the ACAL-defined Variables as XPath variables in XPath expressions, as specified by ACAL. If this is hardly feasible, as an alternative, ACAL users may use implementation-defined environment variables in their XPath expressions only if they are standard, e.g. POSIX environment variables. 
 
-`https://www.w3.org/TR/xpath-datamodel-30/#implementation-defined` defines the following additional item(s):
+`[XQuery and XPath Data Model (XDM) 3.0](https://www.w3.org/TR/xpath-datamodel-30/#implementation-defined)` defines the following additional item(s):
 
 1. When converting from an xs:string to an xs:float or xs:double, it is implementation-defined whether the lexical value `-0` (and similar forms such as `-0.0`) convert to negative zero or to positive zero in the value space.
 
    : ACAL leaves this implementation-defined.
 
-`https://www.w3.org/TR/xpath-datamodel-30/#implementation-defined` defines the following additional items:
+`[XQuery and XPath Functions and Operators 3.0](https://www.w3.org/TR/xpath-functions-30/#impl-def)` (Appendix D) defines the following additional items:
 
-*TO BE COMPLETED (52 items...)*
-<!-- Hint: https://www.saxonica.com/html/documentation12/conformance/xslt30.html -->
+1. Item #39: ACAL systems SHALL apply schema validation to ACAL documents instead of DTD validation.
+2. Item #44: schema validation SHALL be invoked and an XML 1.0 parser SHALL be used.
+3. Item #45: an XML 1.0 parser SHALL be used.
+4. Item #50: 
+1. ACAL leaves other features of Appendix D implementation-defined, unless otherwise specified in the previous section (XPath 2.0 implementation-defined items).
 
 ## XPath 3.1 additional implementation-defined items
 
