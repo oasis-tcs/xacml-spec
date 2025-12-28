@@ -205,10 +205,11 @@ $ pandoc -f gfm+definition_lists -t pdf acal-v1.0-xpath.md -c styles/markdown-st
   - [4.4 Changes From the Previous Version](#44-changes-from-the-previous-version)
 - [5 Structures](#5-structures)
   - [5.1 Introduction](#51-introduction)
-  - [5.2 Multiple-inheritance alternative - XPathDefaultsType](#52-multiple-inheritance-alternative---xpathdefaultstype)
-  - [5.3 Single inheritance alternative - XPathPolicyDefaultsType and XPathRequestDefaultsType](#53-single-inheritance-alternative---xpathpolicydefaultstype-and-xpathrequestdefaultstype)
-    - [5.3.1 XPathPolicyDefaultsType](#531-xpathpolicydefaultstype)
-    - [5.3.2 XPathRequestDefaultsType](#532-xpathrequestdefaultstype)
+  - [5.2 Extensions of PolicyDefaultsType and RequestDefaultsType](#52-extensions-of-policydefaultstype-and-requestdefaultstype)
+    - [5.2.1 Multiple-inheritance alternative - XPathDefaultsType](#521-multiple-inheritance-alternative---xpathdefaultstype)
+    - [5.2.2 Single inheritance alternative - XPathPolicyDefaultsType and XPathRequestDefaultsType](#522-single-inheritance-alternative---xpathpolicydefaultstype-and-xpathrequestdefaultstype)
+      - [5.2.2.1 XPathPolicyDefaultsType](#5221-xpathpolicydefaultstype)
+      - [5.2.2.2 XPathRequestDefaultsType](#5222-xpathrequestdefaultstype)
   - [5.4 XPathAttributeSelectorType](#54-xpathattributeselectortype)
   - [5.5 XPathEntityAttributeSelectorType (optional)](#55-xpathentityattributeselectortype-optional)
   - [5.6 XpathExpressionValueType](#56-xpathexpressionvaluetype)
@@ -363,7 +364,9 @@ The structures in this profile are extensions to [ACAL] model and described here
 
 The types `IdentifierType`, `ValueType`, `SimpleValueType`, `PolicyDefaultsType` and `RequestDefaultsType`, `AttributeSelectorType` and `EntityAttributeSelectorType` used in the next UML models are defined in [ACAL].
 
-## 5.2 Multiple-inheritance alternative - XPathDefaultsType
+## 5.2 Extensions of PolicyDefaultsType and RequestDefaultsType
+
+### 5.2.1 Multiple-inheritance alternative - XPathDefaultsType
 
 A `XPathDefaultsType` object extends `PolicyDefaultsType` and `RequestDefaultsType` from [ACAL] to specify default XPath settings that apply to the evaluation of `XPathAttributeSelectorType` and `XPathEntityAttributeSelectorType` objects, `xpathExpression` values and XPath-based functions in the enclosing `PolicyType` or `RequestType` object.
 
@@ -388,11 +391,11 @@ A `XPathDefaultsType` object contains the following property:
 
 : An `IdentifierType` value specifying the XPath version for XPath expressions occurring in the policy. XPath expressions are used by attribute selectors and as arguments to XPath-based functions.
 
-## 5.3 Single inheritance alternative - XPathPolicyDefaultsType and XPathRequestDefaultsType
+## 5.2.2 Single inheritance alternative - XPathPolicyDefaultsType and XPathRequestDefaultsType
 
 The model defined in the previous section requires support for multiple inheritance in a concrete representation format of ACAL, i.e. `XPathDefaultsType` extending both `PolicyDefaultsType` and `RequestDefaultsType` at the same time. There are representation formats that support only single inheritance, in which case they can follow the model defined in this section, i.e. separate `XPathPolicyDefaultsType` (resp. `XPathRequestDefaultsType`) that extends `PolicyDefaultsType` (resp. `RequestDefaultsype`). 
 
-### 5.3.1 XPathPolicyDefaultsType
+### 5.2.2.1 XPathPolicyDefaultsType
 
 A `XPathPolicyDefaultsType` object extends `PolicyDefaultsType` from [ACAL] to specify default XPath settings that apply to the evaluation of `XPathAttributeSelectorType` and `XPathEntityAttributeSelectorType` objects, `xpathExpression` values and XPath-based functions in the enclosing `PolicyType` object.
 
@@ -414,7 +417,7 @@ A `XPathDefaultsType` object contains the following property:
 
 : An `IdentifierType` value specifying the XPath version for XPath expressions occurring in the policy. XPath expressions are used by attribute selectors and as arguments to XPath-based functions.
 
-### 5.3.2 XPathRequestDefaultsType
+### 5.2.2.2 XPathRequestDefaultsType
 
 A `XPathRequestDefaultsType` object extends `RequestDefaultsType` from [ACAL] to specify default XPath settings that apply to the evaluation of `XPathAttributeSelectorType` and `XPathEntityAttributeSelectorType` objects, `xpathExpression` values and XPath-based functions in the enclosing `RequestType` object.
 
