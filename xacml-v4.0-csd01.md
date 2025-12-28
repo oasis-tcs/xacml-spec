@@ -426,7 +426,7 @@ The next sections describe the rules that SHALL be applied for mapping the [ACAL
 
 ## 5.1 Mapping ACAL primitive types 
 
-For each primitive type (stereotyped `<<primitive>>` or `<<enumeration>>`) in [ACAL][#ACAL] model, apply the mapping rules in the next subsections.
+For each primitive type (stereotyped `<<primitive>>` or `<<enumeration>>`) in [ACAL](#ACAL) model, apply the mapping rules in the next subsections.
 
 ### 5.1.1 Primitive types mapped to standard XSD data-types
 
@@ -507,7 +507,7 @@ For example, ACAL `DecisionType` translates to the following XSD definition:
 
 ## 5.2 Mapping complex ACAL types (UML stereotype `<<dataType>>`)
 
-For each complex type (stereotyped `<<dataType>>`) in [ACAL][#ACAL] model, apply the mapping rules in the next subsections.
+For each complex type (stereotyped `<<dataType>>`) in [ACAL](#ACAL) model, apply the mapping rules in the next subsections.
 
 The expression `xs:foo` means a `foo` element in W3C [XML schema](#XS) standard.
 
@@ -686,7 +686,7 @@ Refer to [ACAL](#acal) section 11.1.
 
 ## 6.2 Safeguards
 
-Refer to [ACAl](#acal) section 11.2 for general considerations.
+Refer to [ACAL](#acal) section 11.2 for general considerations.
 
 ### 6.2.1 Policy confidentiality
 
