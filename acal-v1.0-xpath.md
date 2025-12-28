@@ -547,7 +547,7 @@ The XPath specification leaves a number of aspects of behavior implementation-de
 
 ## XPath 2.0 Implementation-Defined Items
 
-`https://www.w3.org/TR/xpath20/#id-impl-defined-items` defines the following items:
+[XPath 2.0 - Appendix D](https://www.w3.org/TR/xpath20/#id-impl-defined-items) defines the following items:
 
 1. The version of Unicode that is used to construct expressions.
 
@@ -581,7 +581,7 @@ The XPath specification leaves a number of aspects of behavior implementation-de
 
     : ACAL leaves this implementation defined.
 
-`https://www.w3.org/TR/2007/REC-xpath-datamodel-20070123/#implementation-defined` defines the following items:
+[XPath 2.0 Data Model - Appendix F](https://www.w3.org/TR/2007/REC-xpath-datamodel-20070123/#implementation-defined) defines the following items:
 
 1. Support for additional user-defined or implementation-defined types is implementation-defined.
 
@@ -591,7 +591,7 @@ The XPath specification leaves a number of aspects of behavior implementation-de
 
     : An XPath error in the evaluation of an attribute selector causes the result to be `Indeterminate`. The status code SHALL be `urn:oasis:names:tc:acal:1.0:status:processing-error`. Implementations MAY provide additional details about the error in the response or by some other means.
 
-`https://www.w3.org/TR/xpath-functions/#impl-def` defines the following items:
+[XPath Functions](https://www.w3.org/TR/xpath-functions/#impl-def) defines the following items:
 
 1. The destination of the trace output is implementation-defined.
 
@@ -639,7 +639,7 @@ The XPath specification leaves a number of aspects of behavior implementation-de
 
 ## XPath 3.0 additional implementation-defined items
 
-`https://www.w3.org/TR/xpath-30/#id-impl-defined-items` defines the following additional items to XPath 2.0 items:
+[XPath 3.0](https://www.w3.org/TR/xpath-30/#id-impl-defined-items) Appendix D defines the following additional items to XPath 2.0 items:
 
 1. How XDM instances are created from sources other than an Infoset or PSVI.
 
@@ -653,30 +653,30 @@ The XPath specification leaves a number of aspects of behavior implementation-de
 
    : It is RECOMMENDED that users of ACAL use ACAL-defined VariableDefinitions (based on AttributeDesignator and appropriate PIP to obtain the values) in order to capture environment variables, then use the ACAL-defined Variables as XPath variables in XPath expressions, as specified by ACAL. If this is hardly feasible, as an alternative, ACAL users may use implementation-defined environment variables in their XPath expressions only if they are standard, e.g. POSIX environment variables. 
 
-`[XQuery and XPath Data Model (XDM) 3.0](https://www.w3.org/TR/xpath-datamodel-30/#implementation-defined)` defines the following additional item(s):
+[XQuery and XPath Data Model (XDM) 3.0](https://www.w3.org/TR/xpath-datamodel-30/#implementation-defined) - Appendix F.1 defines the following additional item(s):
 
 1. When converting from an xs:string to an xs:float or xs:double, it is implementation-defined whether the lexical value `-0` (and similar forms such as `-0.0`) convert to negative zero or to positive zero in the value space.
 
    : ACAL leaves this implementation-defined.
 
-`[XQuery and XPath Functions and Operators 3.0](https://www.w3.org/TR/xpath-functions-30/#impl-def)` (Appendix D) defines the following additional items:
+[XQuery and XPath Functions and Operators 3.0](https://www.w3.org/TR/xpath-functions-30/#impl-def) (Appendix D) defines the following additional items:
 
-1. Item #39: ACAL systems SHALL apply schema validation to ACAL documents instead of DTD validation.
-2. Item #44: schema validation SHALL be invoked and an XML 1.0 parser SHALL be used.
-3. Item #45: an XML 1.0 parser SHALL be used.
-4. Item #50: 
-1. ACAL leaves other features of Appendix D implementation-defined, unless otherwise specified in the previous section (XPath 2.0 implementation-defined items).
+1. Item #39: implementations SHALL apply schema validation to ACAL documents instead of DTD validation.
+2. Item #44: implementations SHALL invoke schema validation instead of DTD validation, and use an XML 1.0 parser.
+3. Item #45: implementations SHALL use an XML 1.0 parser.
+4. Item #50: implementations SHALL support (at least) version [2025b](https://lists.iana.org/hyperkitty/list/tz-announce@iana.org/thread/6JVHNHLB6I2WAYTQ75L6KEPEQHFXAJK3/) of the *tz* timezone database. <!-- 2025b is the latest version supported by JAVA as of writing: https://www.oracle.com/java/technologies/tzdata-versions.html -->
+1. ACAL leaves other features of Appendix D implementation-defined, unless otherwise specified by the previous section (XPath 2.0 implementation-defined items).
 
 ## XPath 3.1 additional implementation-defined items
 
-<!--
-Implementation-Defined Items sections from XPath 3.1 standard ( https://www.w3.org/TR/xpath-31/#id-impl-defined-items ) and 'XQuery and XPath Data Model 3.1' ( https://www.w3.org/TR/xpath-datamodel-31/#implementation-defined ) do not seem to add anything to XPath 3.0 ones.
--->
+For addressing Implementation-Defined Items sections of [XPath 3.1 standard, Appendix D](https://www.w3.org/TR/xpath-31/#id-impl-defined-items) and [XQuery and XPath Data Model 3.1](https://www.w3.org/TR/xpath-datamodel-31/#implementation-defined), refer to the previous sections for XPath 2.0 and 3.0.
 
-`https://www.w3.org/TR/xpath-functions-31/#impl-def` defines the following additional item(s):
+[XQuery and XPath Functions and Operators 3.1](https://www.w3.org/TR/xpath-functions-31/#impl-def) (Appendix E) defines the following additional item(s):
 
-*TO BE COMPLETED (70 items...)*
-<!-- Hint: https://www.saxonica.com/html/documentation12/conformance/xpath31.html -->
+1. Item #45: schema validation SHALL be applied to the source document.
+2. Items #52, #53: schema validation SHALL be invoked and an XML 1.0 parser SHALL be used.
+3. Item #66: implementations SHALL support (at least) version [2025b](https://lists.iana.org/hyperkitty/list/tz-announce@iana.org/thread/6JVHNHLB6I2WAYTQ75L6KEPEQHFXAJK3/) of the *tz* timezone database. <!-- 2025b is the latest version supported by JAVA as of writing: https://www.oracle.com/java/technologies/tzdata-versions.html -->
+1. ACAL leaves other features of Appendix E implementation-defined, unless otherwise specified by the previous section (XPath 2.0 and 3.0 implementation-defined items).
 
 ---
 
@@ -703,7 +703,6 @@ If the designated attribute category or entity value has a `Content` property, t
 2. If there is a `ContextSelectorId` property, the context node shall be the node selected by applying the XPath expression given in the attribute value of the designated ACAL attribute. It shall be an error if this evaluation returns no node or more than one node, in which case the return value MUST be `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`. If there is no `ContextSelectorId` property, then the document node of the data structure shall be the context node.
 
 3. Evaluate the XPath expression given in the `Path` property against the context node selected in the previous step, according to the [XPath] standard in the version indicated in the `PolicyDefaults` property for this profile. This XPath expression may reference one or more XPath variables, in which case each XPath variable's value(s) is taken(s) from the corresponding so-called *XACML variable*, i.e. the variable defined by a `<VariableDefinition>` with a `VariableId` matching the XPath variable name, in the scope of this element. Only XPath variables of primitive atomic type or array of primitive atomic type are allowed in this XPath expression; in the first case (respectively the second case), the corresponding XACML variable must return a single value (respectively a bag) of a primitive datatype that is convertible to that XPath atomic type. How to do this conversion is the same as in step 4 below. If no such variable is found (in the current scope) or the datatype is incompatible (XACML-to-XPath type conversion is not possible), the XPath expression and therefore this `Path` attribute must be considered invalid and a syntax error returned (status code `urn:oasis:names:tc:xacml:1.0:status:syntax-error`).
-   
 
 1. The result of step 3 is converted to ACAL value(s) according to the same rules as in the last step of [ACAL] section 8.4.7 (Attribute Selector evaluation).
 
