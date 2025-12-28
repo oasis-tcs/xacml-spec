@@ -480,7 +480,7 @@ For example, ACAL `VersionType` translates to the following XSD definition:
 
 ### 5.1.3 Enum types (UML stereotype `<<enumeration>>`)
 
-An ACAL enumerated type `FooType` (stereotyped ``<<enumeration>>`) with enum values *V1, V2, ... Vn* is mapped to the following XSD definition:
+An ACAL enumerated type `FooType` (stereotyped `<<enumeration>>`) with enum values *V1, V2, ... Vn* is mapped to the following XSD definition:
 
 ```xml
 <xs:simpleType name="FooType">
