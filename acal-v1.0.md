@@ -70,7 +70,6 @@ This specification defines Version 1.0 of the Attribute-Centric Authorization La
 
 When referencing this document, the following citation format should be used:
 
-
 _Attribute-Centric Authorization Language (ACAL) Version 1.0_.
 Edited by Steven Legg and Cyril Dangerville. 16 December 2025. OASIS Committee Specification Draft 01.
 
@@ -250,22 +249,28 @@ $ pandoc -f gfm+definition_lists -t pdf acal-v1.0.md -c styles/markdown-styles-v
 - [7 Structures](#7-structures)
   - [7.1 Introduction](#71-introduction)
     - [7.1.1 Object Type](#711-object-type)
+      - [7.1.1.1 Object constraints](#7111-object-constraints)
+        - [7.1.1.1.1 Property-level constraints](#71111-property-level-constraints)
+          - [7.1.1.1.1.1 UML native constraints](#711111-uml-native-constraints)
+          - [7.1.1.1.1.2 OCL constraints](#711112-ocl-constraints)
+        - [7.1.1.1.2 Object-level constraints](#71112-object-level-constraints)
     - [7.1.2 Simple Types](#712-simple-types)
       - [7.1.2.1 Standard UML primitive types (String, Boolean, Integer, Real)](#7121-standard-uml-primitive-types-string-boolean-integer-real)
       - [7.1.2.2 ACAL-defined UML stereotype(s) used in new primitive types](#7122-acal-defined-uml-stereotypes-used-in-new-primitive-types)
       - [7.1.2.3 ACAL-defined simple types](#7123-acal-defined-simple-types)
         - [7.1.2.3.1 URI](#71231-uri)
-        - [7.1.2.3.2 Double](#71232-double)
-        - [7.1.2.3.3 VersionType](#71233-versiontype)
-        - [7.1.2.3.4 VersionMatchType](#71234-versionmatchtype)
-        - [7.1.2.3.5 ShortIdNameType](#71235-shortidnametype)
-        - [7.1.2.3.6 ShortIdValueType](#71236-shortidvaluetype)
-        - [7.1.2.3.7 IdentifierType](#71237-identifiertype)
-        - [7.1.2.3.8 LocalIdentifierType](#71238-localidentifiertype)
-        - [7.1.2.3.9 AttributeSelectorPathType](#71239-attributeselectorpathtype)
-        - [7.1.2.3.10 Name](#712310-name)
-        - [7.1.2.3.11 EffectType](#712311-effecttype)
-        - [7.1.2.3.12 DecisionType](#712312-decisiontype)
+        - [7.1.2.3.2 NonNegativeInteger](#71232-nonnegativeinteger)
+        - [7.1.2.3.3 Double](#71233-double)
+        - [7.1.2.3.4 VersionType](#71234-versiontype)
+        - [7.1.2.3.5 VersionMatchType](#71235-versionmatchtype)
+        - [7.1.2.3.6 ShortIdNameType](#71236-shortidnametype)
+        - [7.1.2.3.7 ShortIdValueType](#71237-shortidvaluetype)
+        - [7.1.2.3.8 IdentifierType](#71238-identifiertype)
+        - [7.1.2.3.9 LocalIdentifierType](#71239-localidentifiertype)
+        - [7.1.2.3.10 AttributeSelectorPathType](#712310-attributeselectorpathtype)
+        - [7.1.2.3.11 Name](#712311-name)
+        - [7.1.2.3.12 EffectType](#712312-effecttype)
+        - [7.1.2.3.13 DecisionType](#712313-decisiontype)
     - [7.1.3 Relationship to Concrete Representations](#713-relationship-to-concrete-representations)
   - [7.2 ShortIdSetType](#72-shortidsettype)
   - [7.3 ShortIdType](#73-shortidtype)
@@ -450,15 +455,7 @@ $ pandoc -f gfm+definition_lists -t pdf acal-v1.0.md -c styles/markdown-styles-v
 - [Appendix 2 Changes From Previous Version](#appendix-2-changes-from-previous-version)
   - [Revision History](#revision-history)
 - [Appendix 3 OASIS Open Specification Template Instructions](#appendix-3-oasis-open-specification-template-instructions)
-  - [General Template Instructions](#general-template-instructions)
-  - [Formatting Instructions](#formatting-instructions)
-  - [Extra Items Instructions](#extra-items-instructions)
-  - [**Listing 1.1** Sample Title](#listing-11-sample-title)
-  - [**Code 1.1** Sample Title](#code-11-sample-title)
-  - [Other Instructions](#other-instructions)
-- [Appendix 4 Additional Appendix as Needed](#appendix-4-additional-appendix-as-needed)
-  - [Subsection Title](#subsection-title)
-    - [Sub-subsection](#sub-subsection)
+
 
 ---
 
@@ -654,6 +651,15 @@ Access requestors and initiators are covered by the term **_subject_**.
 This document uses the following abbreviations and acronyms:
 <!-- The following syntax (: definition) for definition lists requires the 'definition_lists' extension enabled in the pandoc command (-f gfm+definition_lists) to be rendered properly. -->
 
+**Iff**
+Term used in logic and mathematic fields, that means *if and only if*.
+
+**OCL (Object Constraint Language)**
+
+: [[OCL](#ocl)] is an international OMG and ISO standard specifying a formal language to describe expressions on UML
+models, UML constraints in particular. These expressions typically specify invariant conditions that must hold for the system being modeled or queries
+over objects described in a model. 
+
 **PAP (Policy Administration Point)**
 
 : The system entity that creates a **_policy_**.
@@ -669,6 +675,10 @@ This document uses the following abbreviations and acronyms:
 **PIP (Policy Information Point)**
 
 : The system entity that acts as a source of **_attribute_** values.
+
+**UML (Unified Modelling Language)**
+
+: [[UML](#uml)] is an international OMG (Object Management Group) and ISO standard defining a graphical language for visualizing, specifying, constructing, and documenting the artifacts of distributed software systems.
 
 ---
 
@@ -1573,13 +1583,94 @@ _Note: this section is referenced._
 
 ## 7.1 Introduction
 
-The structures in ACAL are described here in abstract terms. The concrete representations of these structures are defined for a variety of syntaxes each in a separate profile.
+The structures in ACAL are described here in abstract terms, both in textual form and [[UML](#uml)] class diagrams. The concrete representations of these structures are defined for a variety of syntaxes each in a separate profile.
 
 ### 7.1.1 Object Type
 
 The ACAL structures are objects that each conform to a specific object type. Objects of the same kind conform to a specific, named object type, which describes a set of properties that an object of the type is permitted to have and for each property whether it is required or optional.
 
 A property has a unique name (unique among the object's properties) and a value, where the value conforms to a specific type, either a simple type, an object type, or a sequence of such values.
+
+#### 7.1.1.1 Object constraints
+
+ACAL object types may have extra object constraints expressed in form of UML constraints (section 7.6 of [[UML](#uml)]) in the UML models of each ACAL type. These constraints may apply either to a single property of the object - so-called *property-level constraints* - or more globally on multiple properties of the object at once, i.e. *object-level constraints*.
+
+As a reminder, a property is said *multi-valued* (or *multivalued*) if the upper bound of its multiplicity (UML) is (strictly) greater than one, else it is said *single-valued*.
+
+##### 7.1.1.1.1 Property-level constraints
+
+Property-level constraints are defined at the level of a specific property as an annotation between curly braces that is part of the UML property's description in the class diagram. In ACAL model, we use the following kinds of property-level constraints:
+
+###### 7.1.1.1.1.1 UML native constraints
+
+**Order constraint:**
+
+: For multi-valued properties only, the UML standard `ordered` (opposite `unordered`) annotation is used to express that the order of values should be preserved in the created collection.
+
+**Simple uniqueness constraint:** 
+
+: For multi-valued properties of primitive type only, the UML standard `unique` (opposite `nonunique`) annotation is used to express that each value of the property MUST be unique. Combined with the previous order constraint, this determines the type of collection to be used (cf. Table 7.1 of [[UML](#uml)]). For example, the following constraint (`{unordered, unique}`) indicates that the order does not matter and each string value SHALL be unique, therefore a Set may be used as collection for the property *P*'s values:
+   ```
+   + P: String [*] {unordered, unique}
+   ```
+   For uniqueness constraints on object-typed properties, see the next section.
+
+###### 7.1.1.1.1.2 OCL constraints
+
+More advanced constraints are expressed in [[OCL](#OCL)] in the form `{{OCL} expression}` as specified by section 8.3.4.2 (and 8.3.5.2 for the example) of [[UML](#uml)].
+Let refer to *prop* as the property to which the constraint is applied. In each OCL expression below, *prop* is used as the OCL context. Therefore, the `self` keyword in particular refers to *prop* itself.
+
+**Mandatory-property-based uniqueness constraint:**
+
+: For multi-valued properties of complex (object) type, the previous simple `uniqueness` constraint is not enough to define what SHALL be unique about each value object. In that case, assuming each value of *prop* has a mandatory property *itemProp* of primitive type, we use the following OCL expression to specify that the property *itemProp* of each item SHALL be unique (in other words, *itemProp* is used as the unique key): 
+  ```
+  self->isUnique(itemProp)
+  ```
+
+**Optional-property-based uniqueness constraint:**
+
+: This is a variant of the previous constraint where the property used as unique key is optional, and therefore the OCL expression only checks that the non-null values of *itemProp* are unique and ignore the rest where *itemProp* is null/undefined:
+  ```
+  self->select(itemProp <> null)->isUnique(itemProp)
+  ```
+
+**Multi-property-based uniqueness constraint:**
+
+: This is a variant of the first constraint in this section where the unique key consists of multiple properties (*itemProp1, itemProp2, ...itemPropN*) of each value of *prop*, all those properties have primitive type and at least *itemProp1* is a mandatory property. In this case, we use the following OCL expression to check that each value (i.e. each key based on those properties, i.e. it is a *compound key*) is unique:
+  ```
+  self->isUnique(Sequence{itemProp1, itemProp2, ..., itemPropN})
+  ```  
+  
+**Multivalued-property-based uniqueness constraint:**
+
+: This is a variant where the unique key is based on a property *itemProp* which is itself multi-valued, and has its own unique key based on a single property *itemPropKey*. In this case, the key for each *item* in *prop*'s values that is checked for uniqueness is the sequence (if ordered) or set (if unordered) of all *itemPropKey* values, i.e. the following OCL expression:
+  ```
+  self->isUnique(itemProp->collect(itemPropKey))
+  ```
+
+**Value type uniqueness constraint:**
+
+: This is a variant where the constraint only checks that the type of each value of *prop* is unique:
+  ```
+  self->isUnique(oclType())
+  ```
+
+**Type exclusion constraint:**
+
+: For a property *prop* of type *FooType*, this constraint excludes a specific subtype *FooSubType* from all possible subtypes of *FooType*, to be used as *prop*'s value type. The OCL expression goes as follows:
+  ```
+  not oclIsKindOf(FooSubType)
+  ```
+
+
+##### 7.1.1.1.2 Object-level constraints
+
+ACAL object-level constraints are expressed in UML as a note attached by a dashed line to the UML class, as specified in [[UML](#uml)] Constraints section, and in OCL language. For such constraint, ACAL only uses OCL expressions of the form `X or Y` where X and Y are each one of the following kinds of simple expressions:
+
+1. `prop <> null`: true *iff* the single-valued property *prop* of the object is not null (defined).
+2. `prop = null`: true *iff* the single-valued property *prop* of the object is null (undefined).
+3. `prop->NotEmpty()`: true *iff* the multivalued property *prop* has at least one value (the collection of values is not empty).
+
 
 ### 7.1.2 Simple Types
 
@@ -1658,7 +1749,20 @@ class URI <<primitive>>
 
 ACAL representation formats (in ACAL profiles) usually have a native equivalent for this type, in which case they should use that, e.g. XML schema `xs:anyURI`, JSON schema `{ "type": "string", "format": "uri" }`.
 
-##### 7.1.2.3.2 Double
+##### 7.1.2.3.2 NonNegativeInteger
+
+A `NonNegativeInteger` is a positive `Integer`, equal to or greater than zero. Defined in UML as follows:
+```plantuml
+@startuml
+hide empty members
+hide circle
+class NonNegativeInteger <<primitive>>
+@enduml
+```
+
+ACAL representation formats (in ACAL profiles) may have a native equivalent for this type, in which case they should use that, e.g. XML schema `xs:nonNegativeInteger`, JSON schema `{ "type": "integer", "minimum": 0 }`.
+
+##### 7.1.2.3.3 Double
 
 A `Double` is a double-precision 64-bit IEEE 754 floating point represented in UML as follows:
 ```plantuml
@@ -1673,7 +1777,7 @@ In UML, it may be defined as a subtype of UML standard primitive type `Real`, re
 
 <a name="versiontype"></a>
 
-##### 7.1.2.3.3 VersionType
+##### 7.1.2.3.4 VersionType
 
 A `VersionType` value specifies the version number of a policy or shared variable, and is defined in UML as follows:
 
@@ -1693,7 +1797,7 @@ The version number is expressed as a sequence of decimal numbers, each separated
 
 <a name="versionmatchtype"></a>
 
-##### 7.1.2.3.4 VersionMatchType
+##### 7.1.2.3.5 VersionMatchType
 
 Properties of this type SHALL contain a restricted regular expression matching a version number (see [Section 7.1.2.3.3](#versiontype)). The expression SHALL match versions of a referenced policy that are acceptable for inclusion in the referencing policy.
 
@@ -1712,7 +1816,7 @@ class VersionMatchType <<primitive>> <<restrictedString>> {
 
 A version match is `.`-separated, like a version string. A number represents a direct numeric match. A `*` means that any single number is valid. A `+` means that any number, and any subsequent numbers, are valid. In this manner, the following four patterns would all match the version string `1.2.3`: `1.2.3`, `1.*.3`, `1.2.*` and `1.+`.
 
-##### 7.1.2.3.5 ShortIdNameType
+##### 7.1.2.3.6 ShortIdNameType
 
 `ShortIdNameType` is the primitive type for Short Identifier names (see [Section 7.3](#73-shortidtype) ).
 
@@ -1729,7 +1833,7 @@ class ShortIdNameType <<primitive>> <<restrictedString>> {
 @enduml
 ```
 
-##### 7.1.2.3.6 ShortIdValueType
+##### 7.1.2.3.7 ShortIdValueType
 
 `ShortIdValueType` is the primitive type for Short Identifier values (see [Section 7.3](#73-shortidtype) ). Such value is an alternating sequence of URI characters and *{ShortId}*s (short identifier names enclosed in curly braces). Reminder: the curly brace is not a valid URI character. 
 
@@ -1752,11 +1856,12 @@ The pattern is: `^uc*(\{s\}uc*)*$` where:
 - `uc` is the pattern for a valid URI character based on RFC 3986 (cf. the ABNF definition of 'URI' in Appendix A), which excludes curly braces: `[!#-;=?-\[\]_a-z~]`
 The `minLength=1` restriction prevents the empty string, i.e. there is at least one `uc` or `{s}`.
 
-##### 7.1.2.3.7 IdentifierType
+##### 7.1.2.3.8 IdentifierType
 
 A value of the `IdentifierType` simple type refers to a specific attribute category, attribute, data type, function, notice, status code, combining algorithm.
 
 UML definition (class diagram):
+<!-- TODO: Pattern needs to be improved as this allows the empty string and other undesirable identifiers. See proposals on issue #56.  -->
 ```plantuml
 @startuml
 hide empty members 
@@ -1780,7 +1885,7 @@ Note that the three cases can be distinguished from each other syntactically in 
 
 The conversion of a value of the `IdentifierType` simple type into an absolute URI is detailed in [Section 8.3](#83-identifier-evaluation).
 
-##### 7.1.2.3.8 LocalIdentifierType
+##### 7.1.2.3.9 LocalIdentifierType
 
 `LocalIdentifierType` values are local identifiers, i.e. identifiers that are unique only within a limited scope. Examples of local identifiers are Request-local identifiers (e.g. the `Id` properties of `RequestEntity` and `RequestEntityReference`), Policy-local identifiers (e.g. the `VariableId` of a policy's variable or the `ParameterName` of a policy parameter or the `RuleId` of a policy's rule), Rule-local identifiers (e.g. the `VariableId` of a rule's variable), etc.
 
@@ -1794,7 +1899,7 @@ UML definition (class diagram):
 @startuml
 hide empty members 
 hide circle
-class IdentifierType <<primitive>> <<restrictedString>> {
+class LocalIdentifierType <<primitive>> <<restrictedString>> {
    <<restrictedString>>
    pattern='^_*[A-Za-z][A-Za-z_0-9]*([-.]_*[A-Za-z][A-Za-z_0-9]*)*$'
    --
@@ -1802,7 +1907,7 @@ class IdentifierType <<primitive>> <<restrictedString>> {
 @enduml
 ```
 
-##### 7.1.2.3.9 AttributeSelectorPathType
+##### 7.1.2.3.10 AttributeSelectorPathType
 
 The `AttributeSelectorPathType` defines valid values for the `Path` property of `BaseAttributeSelectorType` objects (non-empty strings without leading/trailing whitespace).
 
@@ -1819,7 +1924,7 @@ class AttributeSelectorPathType <<primitive>> <<restrictedString>> {
 @enduml
 ```
 
-##### 7.1.2.3.10 Name
+##### 7.1.2.3.11 Name
 
 The `Name` type is the same as [XSD standard](#xs) `Name` datatype.
 
@@ -1840,7 +1945,7 @@ Although an XML representations may use the standard XSD `Name` datatype as is f
 | \c | `[-.0-9:A-Z_a-z\u00B7\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u037D\u037F-\u1FFF\u200C-\u200D\u203F\u2040\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD\u{10000}-\u{EFFFF}]`     | `[-._:A-Za-z0-9]` |
 
 
-##### 7.1.2.3.11 EffectType
+##### 7.1.2.3.12 EffectType
 
 The `EffectType` simple type defines the values allowed for the `Effect` property of a `RuleType` object and for the `AppliesTo` property of the `NoticeExpressionType` objects; either `Permit` or `Deny`.
 
@@ -1856,7 +1961,7 @@ class EffectType <<enumeration>> {
 @enduml
 ```
 
-##### 7.1.2.3.12 DecisionType
+##### 7.1.2.3.13 DecisionType
 
 A `DecisionType` value indicates the result of policy evaluation.
 
@@ -1902,10 +2007,13 @@ UML definition (class diagram):
 @startuml
 hide empty members 
 hide circle
+/' 
+OCL v2.4, section 11.2.3: "by virtue of the implicit conversion to a collection literal, an expression evaluating to null can be used as source of collection operations [...]. If the source is the null literal, it is implicitly converted to an empty Set by invoking oclAsSet()." Therefore no need for null check on multi-valued properties before calling notEmpty, isUnique, etc.
+'/
 class ShortIdSetType <<dataType>> {
    + Id: URI [1]
    + ShortIdSetReference: URI [*] {unordered, unique}
-   + ShortId: ShortIdType [*] {unordered, unique}
+   + ShortId: ShortIdType [*] {ordered, unique} {{OCL} self->isUnique(Name)}
 }
 @enduml
 ```
@@ -1924,7 +2032,7 @@ A `ShortIdSetType` object contains the following properties:
 
 : A sequence of `ShortIdType` objects, each defining a short identifier in this set.
 
-A predefined set of short identifiers for the URIs defined in this specification is provided as a convenience, in both XML (`xacml-core-v4-identifiers.xml`) and JSON (`xacml-core-v4-identifiers.json`) representations. Use of this set is OPTIONAL.
+A predefined set of short identifiers for the URIs defined in this specification is provided as a convenience, in both XML (`xacml-core-v4.0-identifiers.xml`) and JSON (`xacml-core-v4.0-identifiers.json`) representations. Use of this set is OPTIONAL.
 
 <a name="shortidtype"/>
 
@@ -1990,20 +2098,29 @@ UML definition (class diagram):
 @startuml
 hide empty members 
 hide circle
+/' 
+OCL v2.4, section 11.2.3: "by virtue of the implicit conversion to a collection literal, an expression evaluating to null can be used as source of collection operations [...]. If the source is the null literal, it is implicitly converted to an empty Set by invoking oclAsSet()." Therefore no need for null check on multi-valued properties before calling notEmpty, isUnique, etc.
+'/
+'A CombinerInput is not always unique: there may be two PolicyReferences to the same parameterized Policy but with different arguments (so the same PolicyId occurs twice).
+/'
+A NoticeExpression is not always unique, e.g. a sequence of obligations that calls the same action twice (same Id) but with different arguments (AttributeAssignments): 
+1) mail to these recipients; (obligation Id = 'mail')
+2) mail to these other recipients with a different message (same obligation Id = 'mail').
+'/
 class PolicyType <<dataType>> extends CombinerInputType {
    + PolicyId: URI [1]
    + Version: VersionType [1]
    + Description: String [0..1]
    + ShortIdSetReference: URI [*] {unordered, unique}
-   + MaxDelegationDepth: Integer [0..1]
+   + MaxDelegationDepth: NonNegativeInteger [0..1]
    + PolicyIssuer: EntityType [0..1]
-   + PolicyDefaults: PolicyDefaultsType [*]
-   + PolicyParameter: PolicyParameterType [*] {ordered, unique}
-   + VariableDefinition: VariableDefinitionType [*] {ordered, unique}
+   + PolicyDefaults: PolicyDefaultsType [*] {unordered, unique} {{OCL} self->isUnique(oclType())}
+   + PolicyParameter: PolicyParameterType [*] {ordered, unique} {{OCL} self->isUnique(ParameterName)}
+   + VariableDefinition: VariableDefinitionType [*] {ordered, unique} {{OCL} self->isUnique(VariableId)}
    + Target: BooleanExpressionType [0..1]
    + CombiningAlgId: IdentifierType [1]
-   + CombinerInput: CombinerInputType [*] {ordered}
-   + NoticeExpression: NoticeExpressionType [*] {unordered, unique}
+   + CombinerInput: CombinerInputType [*] {ordered, nonunique}
+   + NoticeExpression: NoticeExpressionType [*] {ordered, nonunique}
 }
 
 abstract class CombinerInputType <<dataType>>
@@ -2032,7 +2149,7 @@ A `PolicyType` object contains the following properties:
 
 `ShortIdSetReference` [Any Number]
 
-: A sequence of `URI` values referencing short identifier sets. The short identifiers used by the policy MUST be ones defined in the referenced sets or in any further sets referenced by the referenced sets (recursively). The policy SHALL NOT directly or indirectly reference any short identifier set more than once.
+: A sequence of `URI` values referencing short identifier sets. Each value MUST be unique in the sequence. The short identifiers used by the policy MUST be ones defined in the referenced sets or in any further sets referenced by the referenced sets (recursively). The policy SHALL NOT directly or indirectly reference any short identifier set more than once.
 
 `Description` [Optional]
 
@@ -2044,19 +2161,20 @@ A `PolicyType` object contains the following properties:
 
 `PolicyDefaults` [Any Number]
 
-: sequence of `PolicyDefaultsType` objects containing each a set of default values specific to a particular ACAL Profile, applicable to the policy (e.g. ACAL XPath Profile's default XPath version). The scope of the `PolicyDefaults` property SHALL be the enclosing policy. The use of `PolicyDefaults` property is specified by particular ACAL Profiles (e.g. XPath Profile).
+: sequence of `PolicyDefaultsType` objects containing each a set of default values specific to a particular ACAL Profile, applicable to the policy (e.g. ACAL XPath Profile's default XPath version). In particular, each object SHALL have a different concrete type (per ACAL profile). The scope of the `PolicyDefaults` property SHALL be the enclosing policy. The use of `PolicyDefaults` property is specified by particular ACAL Profiles (e.g. XPath Profile).
 
 `PolicyParameter` [Any Number]
 
-: A sequence of `PolicyParameterType` objects declaring the parameters for a parameterized policy.
+: A sequence of `PolicyParameterType` objects declaring the parameters for a parameterized policy. Each object's `ParameterName` MUST be unique in this sequence.
 
 `VariableDefinition` [Any Number]
 
-: A sequence of `VariableDefinitionType` objects, each defining an expression that can be referenced from anywhere in a contained policy or rule where an expression can appear.
+: A sequence of `VariableDefinitionType` objects, each defining an expression that can be referenced from anywhere in a contained policy or rule where an expression can appear. Each object's `VariableId` must be unique in this sequence and in the list of `VariableDefinition`s in scope, i.e. already defined in an enclosing policy (parent or ancestor).
+
 
 `Target` [Optional]
 
-: A `BooleanExpressionType` object that determines the set of decision requests to which the parent policy is applicable. If this property is omitted from the `PolicyType` object, then the policy applies to all decision requests. Evaluation of the `Target` property is described in [Section 8.7](#87-target-evaluation).
+: A `BooleanExpressionType` object that determines the set of decision requests to which the parent policy is applicable. If this property is omitted from the `PolicyType` object, then the policy applies to all decision requests. Evaluation of the `Target` property is described in [Section 8.7](#87-target-evaluation). The Target expression MUST NOT be a literal boolean value (`ValueType` object).
 
 `NoticeExpression` [Any Number]
 
@@ -2135,7 +2253,7 @@ A `PolicyParameterType` object contains the following properties:
 
 `Expression` [Optional]
 
-: An expression that evaluates to a default value (`Isbag` is `false`) or bag of values (`IsBag` is true`) for the parameter that is used when a `PolicyReferenceType` object does not provide an argument for the parameter.
+: An expression that evaluates to a default value (`Isbag` is `false`) or bag of values (`IsBag` is true) for the parameter that is used when a `PolicyReferenceType` object does not provide an argument for the parameter. If the Expression value is a `ValueType` object, i.e. a literal value, the latter SHALL not redefine/override the DataType identifier already defined by the above `DataType` property, and SHOULD not have any DataType identifier property set at all, if possible.
 
 ## 7.7 BooleanExpressionType
 
@@ -2147,7 +2265,7 @@ UML definition (class diagram):
 hide empty members 
 hide circle
 class BooleanExpressionType <<dataType>> {
-   + Expression: ExpressionType [1]
+   + Expression: ExpressionType [1] {{OCL} not oclIsKindOf(ValueType)}
 }
 @enduml
 ```
@@ -2247,7 +2365,7 @@ The `PolicyReferenceType` object type extends the `PatternMatchIdReferenceType` 
 
 `Expression` [Any Number]
 
-: Arguments for a parameterized policy.
+: Arguments for a parameterized policy, in the same order as the `PolicyParameter` values in the referenced policy, and each argument number *n* MUST match the definition of the `PolicyParameter` number *n* (`DataType`, `isBag`). The number of arguments *N* may be less than the number of declared `PolicyParameter`s if and only if the `PolicyParameter`s number *N* and above have defined default values, in which case they are used as remaining arguments. If the Expression value is a `ValueType` object, i.e. a literal value, the latter SHALL not redefine/override the DataType identifier already defined by the matching PolicyParameter, and SHOULD not have any DataType identifier property set, if possible.
 
 ## 7.12 RuleType
 
@@ -2256,17 +2374,21 @@ A `RuleType` object defines an individual rule in a policy. The main components 
 A `RuleType` object may be evaluated, in which case the evaluation procedure defined in [Section 8.11](#811-rule-evaluation) SHALL be used.
 
 UML definition (class diagram):
+
 ```plantuml
 @startuml
 hide empty members 
 hide circle
+/'
+NoticeExpression (Id) is not unique for same reason as in PolicyType, and Notices may be in sequence (ordered).
+'/
 class RuleType <<dataType>> {
    + Id: LocalIdentifierType [1]
    + Description: String [0..1]
-   + VariableDefinition: VariableDefinitionType [*] {ordered, unique}
+   + VariableDefinition: VariableDefinitionType [*] {ordered, unique} {{OCL} self->isUnique(VariableId)}
    + Condition: BooleanExpressionType [0..1]
    + Effect: EffectType [1]
-   + NoticeExpression: NoticeExpressionType [*] {unordered, unique}
+   + NoticeExpression: NoticeExpressionType [*] {ordered, nonunique}
 }
 @enduml
 ```
@@ -2287,15 +2409,15 @@ A `RuleType` object contains the following properties:
 
 `VariableDefinition` [Any Number]
 
-: A sequence of `VariableDefinitionType` objects, each defining a variable - with a value expression - that can be referenced from anywhere in the rule where an Expression can appear.
+: A sequence of `VariableDefinitionType` objects, each defining a variable - with a value expression - that can be referenced from anywhere in the rule where an Expression can appear. Each object's `VariableId` must be unique in this sequence and in the set of `VariableDefinition`s in scope, i.e. MUST not override any other defined variable in an enclosing policy (parent or ancestor).
 
 `Condition` [Optional]
 
-: A `BooleanExpressionType` object holding an expression that MUST be satisfied for the rule to be assigned its `Effect` value. Evaluation of the `Condition` property is described in [Section 8.9](#89-condition-evaluation).
+: A `BooleanExpressionType` object holding an expression that MUST be satisfied for the rule to be assigned its `Effect` value. Evaluation of the `Condition` property is described in [Section 8.9](#89-condition-evaluation). The Condition expression MUST NOT be a literal boolean value (`ValueType` object).
 
 `NoticeExpression` [Any Number]
 
-: A sequence of `NoticeExpressionType` objects, each defining a notice expression potentially evaluated into a notice by the PDP. See [NoticeExpressionType](#noticeexpressiontype). See [Section 8.16](#816-notices) for a description of how the notices to be returned by the PDP shall be determined. See [Section 8.2](#82-policy-enforcement-point) about enforcement of obligation notices.
+: A sequence of `NoticeExpressionType` objects, each defining a notice expression potentially evaluated into a notice by the PDP. See [NoticeExpressionType](#noticeexpressiontype). Each object's `Id` MUST be unique in this sequence. See [Section 8.16](#816-notices) for a description of how the notices to be returned by the PDP shall be determined. See [Section 8.2](#82-policy-enforcement-point) about enforcement of obligation notices.
 
 ## 7.13 VariableDefinitionType
 
@@ -2311,8 +2433,6 @@ class VariableDefinitionType <<dataType>> {
    + VariableId: LocalIdentifierType [1]
    + Expression: ExpressionType [1]
 }
-note "{{OCL} not Expression.oclIsKindOf(ValueType) or Expression.DataType <> null}" as ValueDataTypeMustBeNonNull
-VariableDefinitionType .. ValueDataTypeMustBeNonNull
 @enduml
 ```
 
@@ -2324,7 +2444,9 @@ A `VariableDefinitionType` object has the following properties:
 
 `Expression` [Required]
 
-: An `ExpressionType` object. The value of the variable definition is the result of evaluating the `ExpressionType` object. The expression MAY contain `VariableReferenceType` objects referring to other `VariableDefinitionType` objects provided those objects are in the same `VariableDefinition` property or in the `VariableDefinition` property (list) of a `PolicyType` object enclosing the parent object. The expression SHALL NOT contain `VariableReferenceType` objects that refer to this `VariableDefinitionType` object or that refer to `VariableDefinitionType` objects that directly or indirectly refer to this `VariableDefinitionType` object. If the Expression is a `ValueType` or a subtype of `ValueType`, its `DataType` property must be set to a value (non-null).
+: An `ExpressionType` object. The value of the variable definition is the result of evaluating the `ExpressionType` object. The expression MAY contain `VariableReferenceType` objects referring to other `VariableDefinitionType` objects provided those objects are in the same `VariableDefinition` property or in the `VariableDefinition` property (list) of a `PolicyType` object enclosing the parent object. The expression SHALL NOT contain `VariableReferenceType` objects that refer to this `VariableDefinitionType` object or that refer to `VariableDefinitionType` objects that directly or indirectly refer to this `VariableDefinitionType` object. 
+
+: If the `Expression` value is a `ValueType` object (literal value), it SHALL be handled as String (with DataType identifier `urn:oasis:names:tc:acal:1.0:data-type:string`) by default. *Note that the way the DataType identifier is defined depends on the concrete type (subtype of `ValueType`) of that value. For example, `ValueType` subtypes stereotyped `<<fixedDatatype>>` have the `DataType` identifier globally defined and fixed as a Stereotype property (therefore implicitly predefined for every instance), whereas the `LiteralRestrictedStringType` have a UML attribute `DataType` that can be set to a different value (identifier) for each instance.*
 
 ## 7.13b SharedVariableDefinitionType
 
@@ -2363,9 +2485,11 @@ class SharedVariableDefinitionType <<dataType>> {
 
 `Expression` [Required]
 
-: An `ExpressionType` object. The value of the shared variable definition is the result of evaluating the `ExpressionType` object. The expression MAY contain `SharedVariableReferenceType` objects referring to other `SharedVariableDefinitionType` objects. The expression SHALL NOT contain `SharedVariableReferenceType` objects that refer to this `SharedVariableDefinitionType` object or that refer to `SharedVariableDefinitionType` objects that directly or indirectly refer to this `SharedVariableDefinitionType` object.
+: An `ExpressionType` object. The value of the shared variable definition is the result of evaluating this `ExpressionType` object. The expression MAY contain `SharedVariableReferenceType` objects referring to other `SharedVariableDefinitionType` objects. The expression SHALL NOT contain `SharedVariableReferenceType` objects that refer to this `SharedVariableDefinitionType` object or that refer to `SharedVariableDefinitionType` objects that directly or indirectly refer to this `SharedVariableDefinitionType` object.
 
 : Note that the expression cannot contain `VariableReferenceType` objects since the `SharedVariableDefinitionType` object is not in the scope of any `VariableDefinitionType` object.
+
+: If the `Expression` value is a `ValueType` object (literal value) without a defined `DataType` identifier, it SHALL be handled as String (with DataType identifier `urn:oasis:names:tc:acal:1.0:data-type:string`) by default. *Note that the way the DataType identifier is defined depends on the concrete type (`ValueType` subtype) of that value. For example, `ValueType` subtypes stereotyped `<<fixedDatatype>>` have the `DataType` identifier globally defined and fixed as a Stereotype property (therefore implicitly predefined for every instance), whereas the `LiteralRestrictedStringType` have a UML attribute `DataType` that can be set to a different value (identifier) for each instance.*
 
 <a name="expressiontype"></a>
 
@@ -2487,7 +2611,7 @@ An `ApplyType` object contains the following properties:
 
 `Expression` [Any Number]
 
-: A sequence of `ExpressionType` objects, each defining an expression as an argument to the function. If one of these is a `Value` and the function's signature defines explicitly the data-type of the corresponding argument, then the `Value`'s DataType should be omitted as it is already defined accordingly.
+: A sequence of `ExpressionType` objects, each defining an expression as an argument to the function. If one of these is a `ValueType` object and the function's signature defines explicitly the data-type of the corresponding argument, then this object does not need to (re)declare any `DataType` identifier as it is already defined accordingly. In particular, if the concrete type (`ValueType` subtype) of the value has an (optional) `DataType` identifier property (e.g. `LiteralRestrictedStringType`), then the value SHALL leave this attribute unset.
 
 ## 7.16 FunctionType
 
@@ -2720,8 +2844,7 @@ hide circle
 
 abstract class ExpressionType
 abstract class ValueType extends ExpressionType
-abstract class SimpleValueType extends ValueType
-abstract class PrimitiveValueType extends SimpleValueType
+abstract class PrimitiveValueType extends ValueType
 class LiteralBooleanType <<fixedDatatype>> extends PrimitiveValueType {
     <<fixedDatatype>>
     DataType='urn:oasis:names:tc:acal:1.0:data-type:boolean'
@@ -2746,16 +2869,16 @@ class LiteralStringType <<fixedDatatype>> extends PrimitiveValueType {
     __
     +Value: String [1]
 }
-class LiteralRestrictedStringValueType <<restrictedString>> extends PrimitiveValueType {
+class LiteralRestrictedStringType <<restrictedString>> extends PrimitiveValueType {
     +DataType: IdentifierType [0..1]
     +Value: String [1]
 }
 
-note bottom of LiteralRestrictedStringValueType: Other ACAL datatypes with lexical representation can be derived from this type, such as the standard time, date, dateTime, anyURI, hexBinary, base64Binary, \ndayTimeDuration, yearMonthDuration, x50Name, rfc822Name, ipAddress, dnsName.
- 
-note bottom of SimpleValueType: an ACAL datatype which is not a primitive type but represent a primitive value with only properties of primitive type (like simple metadata, no hierarchical content), such as ACAL XPath Profile's xpathExpression, may be considered a SimpleValueType.
+note bottom of LiteralRestrictedStringType: Other ACAL datatypes with lexical representation can be derived from this type,\n e.g. standard time, date, dateTime, anyURI, hexBinary, base64Binary, \ndayTimeDuration, yearMonthDuration, x50Name, rfc822Name, ipAddress, dnsName.
 
 abstract class StructuredValueType extends ValueType
+
+note bottom of StructuredValueType: Structured data-types, either user-defined or defined by an ACAL Profile\n (e.g. XPath Profile's 'xpathExpression' datatype), may derive this type.
 
 class DataType <<Metaclass>>
 class FixedDatatype <<Stereotype>> extends DataType {
@@ -2819,7 +2942,7 @@ The `SharedVariableReferenceType` object type contains the following properties:
 
 `Version` [Optional]
 
-: Specifies a matching expression for selecting an acceptable version of the referenced shared variable. The matching operation is defined in [Section 7.12](#versionmatchtype). If this property is present, then the selected version of the shared variable MUST match the expression. If the property is absent, then any version of the shared variable is acceptable. In the case that more than one version matches, then the most recent one SHOULD be used.
+: Specifies a matching expression for selecting an acceptable version of the referenced shared variable. The matching operation is defined in [Section 7.12](#71235-versionmatchtype). If this property is present, then the selected version of the shared variable MUST match the expression. If the property is absent, then any version of the shared variable is acceptable. In the case that more than one version matches, then the most recent one SHOULD be used.
 
 ## 7.25 QuantifiedExpressionType
 
@@ -2833,7 +2956,7 @@ hide circle
 abstract class ExpressionType <<datatype>>
 class QuantifiedExpressionType <<dataType>> extends ExpressionType {
    + VariableId: LocalIdentifierType [1]
-   + Domain: ExpressionType [1]
+   + Domain: ExpressionType [1] {{OCL} not oclIsKindOf(ValueType) }
    + Iterant: ExpressionType [1]
 }
 @enduml
@@ -2874,7 +2997,7 @@ class ForAnyType <<dataType>> extends QuantifiedExpressionType
 @enduml
 ```
 
-The iterant expression of a ForAny expression SHALL be an expression that evaluates to a value of the `urn:oasis:names:tc:acal:1.0:data-type:boolean` data type.
+The iterant expression of a ForAny expression SHALL be an expression that evaluates to a value of the `urn:oasis:names:tc:acal:1.0:data-type:boolean` data type. If the expression is a literal value - `ValueType` object - without a defined DataType, it SHALL be handled as boolean (DataType identifier `urn:oasis:names:tc:acal:1.0:data-type:boolean`).
 
 The result of a ForAny expression SHALL be a value of the `urn:oasis:names:tc:acal:1.0:data-type:boolean` data type or `Indeterminate`.
 
@@ -2895,7 +3018,7 @@ class ForAllType <<dataType>> extends QuantifiedExpressionType
 @enduml
 ```
 
-The iterant expression of a ForAll expression SHALL be an expression that evaluates to a value of the `urn:oasis:names:tc:acal:1.0:data-type:boolean` data type.
+The iterant expression of a ForAll expression SHALL be an expression that evaluates to a value of the `urn:oasis:names:tc:acal:1.0:data-type:boolean` data type. If the expression is a literal value - `ValueType` object - without a defined DataType, it SHALL be handled as boolean (DataType identifier `urn:oasis:names:tc:acal:1.0:data-type:boolean`).
 
 The result of a ForAll expression SHALL be a value of the `urn:oasis:names:tc:acal:1.0:data-type:boolean` data type or `Indeterminate`.
 
@@ -2903,7 +3026,7 @@ The ForAll expression evaluates to `false` if the iterant expression evaluates t
 
 ### 7.25.3 Map Expression
 
-The Map quantified expression converts a bag of values to another bag of values. It is represented by the `Map` property, which is of the `QuantifiedExpressionType` object type.
+The Map quantified expression converts a bag of values to another bag of values. It is represented by the `Map` property, which is of the `QuantifiedExpressionType` object type. If the expression is a literal value - `ValueType` object - without a defined DataType, it SHALL be handled as string (DataType identifier `urn:oasis:names:tc:acal:1.0:data-type:string`) by default.
 
 UML definition (class diagram):
 ```plantuml
@@ -2936,7 +3059,7 @@ class SelectType <<dataType>> extends QuantifiedExpressionType
 @enduml
 ```
 
-The iterant expression of a Select expression SHALL be an expression that evaluates to a value of the `urn:oasis:names:tc:acal:1.0:data-type:boolean` data type.
+The iterant expression of a Select expression SHALL be an expression that evaluates to a value of the `urn:oasis:names:tc:acal:1.0:data-type:boolean` data type. If the expression is a literal value - `ValueType` object - without a defined DataType, it SHALL be handled as boolean (DataType identifier `urn:oasis:names:tc:acal:1.0:data-type:boolean`).
 
 The result of a Select expression SHALL be a bag of values of the same data type as the values from the domain or `Indeterminate`.
 
@@ -2956,7 +3079,7 @@ hide circle
 class NoticeType <<dataType>> {
    + Id: IdentifierType [1]
    + IsObligation: Boolean [0..1] = false
-   + AttributeAssignment: AttributeAssignmentType [*] {ordered, unique}
+   + AttributeAssignment: AttributeAssignmentType [*] {ordered, unique} {{OCL} self->isUnique(Sequence{AttributeId, Category})}
 }
 @enduml
 ```
@@ -2995,8 +3118,6 @@ class AttributeType <<dataType>> {
    + DataType: IdentifierType [0..1] = 'urn:oasis:names:tc:acal:1.0:data-type:string'
    + Value: ValueType [1..*] {unordered, nonunique}
 }
-note "{{OCL} Value->forAll(DataType = null)}" as DataTypeForbiddenInValues
-AttributeType .. DataTypeForbiddenInValues
 @enduml
 ```
 
@@ -3016,7 +3137,7 @@ An `AttributeType` object contains the following properties:
 
 `Value` [One to Many]
 
-: A sequence of `ValueType` objects, each denoting an ACAL attribute value. Duplicated attribute values are permitted. None of these `Value`s may have a `DataType` property since it is already defined by the above `DataType` property.
+: A sequence of `ValueType` objects, each denoting an ACAL attribute value. Duplicated attribute values are permitted. None of these objects SHALL redefine/override the DataType identifier already defined by the above `DataType` property, and SHOULD not have any DataType identifier property set at all, if possible.
 
 ## 7.28 AttributeAssignmentType
 
@@ -3060,7 +3181,7 @@ class NoticeExpressionType <<dataType>> {
    + IsObligation: Boolean [0..1]
    + AppliesTo: EffectType [0..1]
    + Condition: BooleanExpressionType [0..1]
-   + AttributeAssignmentExpression: AttributeAssignmentExpressionType [*] {ordered, unique}
+   + AttributeAssignmentExpression: AttributeAssignmentExpressionType [*] {ordered, unique} {{OCL} self->isUnique(Sequence{AttributeId, Category})}
 }
 @enduml
 ```
@@ -3103,8 +3224,6 @@ class AttributeAssignmentExpressionType <<dataType>> {
    + Issuer: Name [0..1]
    + Expression: ExpressionType [1] 
 }
-note "{{OCL} not Expression.oclIsKindOf(ValueType) or Expression.DataType <> null}" as ValueDataTypeMustBeNonNull
-AttributeAssignmentExpressionType .. ValueDataTypeMustBeNonNull
 @enduml
 ```
 
@@ -3112,7 +3231,7 @@ An `AttributeAssignmentExpressionType` object contains the following properties:
 
 `Expression` [Required]
 
-: An `ExpressionType` object defining an expression which evaluates to a constant attribute value or a bag of zero or more attribute values. See [Section 7.14](#expressiontype). If the expression is a `ValueType` or subtype of `ValueType`, its `DataType` property must have a non-null value.
+: An `ExpressionType` object defining an expression which evaluates to a constant attribute value or a bag of zero or more attribute values. See [Section 7.14](#expressiontype). If the `Expression` value is a `ValueType` object (literal value) without a defined `DataType` identifier, it SHALL be handled as String (with DataType identifier `urn:oasis:names:tc:acal:1.0:data-type:string`) by default. *Note that the way the DataType identifier is defined depends on the concrete type (subtype of `ValueType`) of that value. For example, `ValueType` subtypes stereotyped `<<fixedDatatype>>` have the `DataType` identifier globally defined and fixed as a Stereotype property (therefore implicitly predefined for every instance), whereas the `LiteralRestrictedStringType` have a UML attribute `DataType` that can be set to a different value (identifier) for each instance.*
 
 `AttributeId` [Required]
 
@@ -3138,9 +3257,9 @@ UML definition (class diagram):
 hide empty members 
 hide circle
 class RequestType <<dataType>> {
-   + ShortIdSetReference: URI [*] {unordered, unique}
-   + RequestDefaults: RequestDefaultsType [*]
-   + RequestEntity: RequestEntityType [1..*] {unordered, unique}
+   + ShortIdSetReference: URI [*] {unique}
+   + RequestDefaults: RequestDefaultsType [*] {unordered, unique} {{OCL} self->isUnique(oclType())}
+   + RequestEntity: RequestEntityType [1..*] {unordered, unique} {{OCL} self->select(Id <> null)->isUnique(Id)}
    + MultiRequests: MultiRequestsType [0..1]
    + ReturnPolicyIdList: Boolean [0..1] = false
    + CombinedDecision: Boolean [0..1] = false
@@ -3164,7 +3283,8 @@ A `RequestType` object contains the following properties:
 
 `RequestDefaults` [Any Number]
 
-: sequence of `RequestDefaultsType` objects; each contains default values specific to an ACAL Profile, for processing the request (e.g. ACAL XPath Profile defines the default XPath version). See [Section 7.32](#requestdefaultstype).
+: sequence of `RequestDefaultsType` objects; each contains default values specific to an ACAL Profile, for processing the request (e.g. ACAL XPath Profile defines the default XPath version). In particular, each object SHALL have a different concrete type (per ACAL profile). See [Section 7.32](#requestdefaultstype).
+
 
 `RequestEntity` [One to Many]
 
@@ -3205,7 +3325,7 @@ class RequestEntityType <<dataType>> {
    + Category: IdentifierType [1]
    + Id: LocalIdentifierType [0..1]
    + Content: ContentType [0..1]
-   + RequestAttribute: RequestAttributeType [*] {unordered, unique}
+   + RequestAttribute: RequestAttributeType [*] {unordered, unique} {{OCL} self->isUnique(AttributeId)}
 }
 @enduml
 ```
@@ -3332,9 +3452,9 @@ hide circle
 class ResultType <<dataType>> {
    + Decision: DecisionType [1]
    + Status: StatusType [0..1]
-   + Notice: NoticeType [*] {unordered, unique}
-   + ResultEntity: ResultEntityType [*] {unordered, unique}
-   + ApplicablePolicyReference: ExactMatchIdReferenceType [*] {unordered, unique}
+   + Notice: NoticeType [*] {ordered, nonunique}
+   + ResultEntity: ResultEntityType [*] {unordered, unique} {{OCL} self->isUnique(Category)}
+   + ApplicablePolicyReference: ExactMatchIdReferenceType [*] {unordered, unique} {{OCL} self->isUnique(Id)}
 }
 @enduml
 ```
@@ -3351,7 +3471,7 @@ A `ResultType` object contains the following properties:
 
 `Notice` [any Number]
 
-: A sequence of `NoticeType` objects, each a notice to be interpreted by the PEP. See [Section 7.26](#noticetype). If the PEP does not understand or cannot fulfill an obligation notice, then the action of the PEP is determined by its bias, see [Section 8.2](#82-policy-enforcement-point). If the PEP does not understand an advice notice, the PEP may safely ignore the notice. See [Section 8.16](#816-notices) for a description of how the list of notices to be returned by the PDP is determined.
+: A sequence of `NoticeType` objects, each a notice to be interpreted by the PEP. Each object's `Id` MUST be unique in the sequence. See [Section 7.26](#noticetype). If the PEP does not understand or cannot fulfill an obligation notice, then the action of the PEP is determined by its bias, see [Section 8.2](#82-policy-enforcement-point). If the PEP does not understand an advice notice, the PEP may safely ignore the notice. See [Section 8.16](#816-notices) for a description of how the list of notices to be returned by the PDP is determined.
 
 `ResultEntity` [Optional]
 
@@ -3375,7 +3495,7 @@ UML definition (class diagram):
 hide empty members 
 hide circle
 class MultiRequestsType <<dataType>> {
-   + RequestReference: RequestReferenceType [1..*] {unordered, unique}
+   + RequestReference: RequestReferenceType [1..*] {unordered, unique} {{OCL} self->isUnique(RequestEntityReference->collect(Id)->asSet())}
 }
 @enduml
 ```
@@ -3400,7 +3520,7 @@ UML definition (class diagram):
 hide empty members 
 hide circle
 class RequestReferenceType <<dataType>> {
-   + RequestEntityReference: RequestEntityReferenceType [1..*] {unordered, unique}
+   + RequestEntityReference: RequestEntityReferenceType [1..*] {unordered, unique} {{OCL} self->isUnique(Id)}
 }
 @enduml
 ```
@@ -3424,9 +3544,12 @@ UML definition (class diagram):
 @startuml
 hide empty members 
 hide circle
+class RequestEntityType <<dataType>> 
 class RequestEntityReferenceType <<dataType>> {
    + Id: LocalIdentifierType [1]
 }
+
+RequestEntityReferenceType "Id *" --> "Id 1" RequestEntityType: reference
 @enduml
 ```
 
@@ -3505,7 +3628,7 @@ The following UML definition (class diagram) is provided for information purpose
 hide empty members 
 hide circle
 class StatusDetailType <<dataType>> {
-   + <any>: AnyType [*]
+   + <any>: AnyType [*] {unordered, nonunique}
 }
 @enduml
 ```
@@ -3569,8 +3692,6 @@ class MissingAttributeDetailType <<dataType>> {
    + DataType: IdentifierType [1]
    + Value: ValueType [*] {unordered, nonunique}
 }
-note "{{OCL} Value->forAll(DataType = null)}" as DataTypeForbiddenInValues
-MissingAttributeDetailType -[dotted] DataTypeForbiddenInValues
 @enduml
 ```
 
@@ -3578,7 +3699,7 @@ A `MissingAttributeDetailType` object contains the following properties:
 
 `Value` [Any Number]
 
-: A sequence of `ValueType` objects specifying the required value(s) of the missing attribute. The DataType must be omitted from each Value since already defined by the `DataType` property below.
+: A sequence of `ValueType` objects specifying the required value(s) of the missing attribute. None of these objects SHALL redefine/override the DataType identifier already defined by the `DataType` property below, and SHOULD not have any DataType identifier property set at all, if possible.
 
 `Category` [Required]
 
@@ -3610,7 +3731,7 @@ hide circle
 class ResultEntityType <<dataType>> {
    + Category: IdentifierType [1]
    + Id: LocalIdentifierType [0..1]
-   + Attribute: AttributeType [1..*] {unique, unordered}
+   + Attribute: AttributeType [1..*] {unordered, unique} {{OCL} self->isUnique(AttributeId)}
 }
 @enduml
 ```
@@ -3643,10 +3764,10 @@ hide empty members
 hide circle
 class EntityType <<dataType>> {
    + Content: ContentType [0..1]
-   + Attribute: AttributeType [*] {unique, unordered}
+   + Attribute: AttributeType [*] {unordered, unique} {{OCL} self->isUnique(AttributeId)}
 }
-note "{{OCL} Content <> null or Attribute->notEmpty()}" as NotEmpty
-EntityType .. NotEmpty
+note "{{OCL} Content <> null or Attribute->notEmpty()}" as constraint
+EntityType .. constraint
 @enduml
 ```
 
@@ -3673,13 +3794,16 @@ skinparam style strictuml
 hide empty members 
 hide circle
 class BundleType <<dataType>> {
-   + ShortIdSet: ShortIdSetType [*] {unique, ordered}
-   + SharedVariableDefinition: SharedVariableDefinitionType [*] {unique, ordered}
-   + Policy: PolicyType [*] {unique, ordered}
+   + ShortIdSet: ShortIdSetType [*] {ordered, unique} {{OCL} self->isUnique(Id)}
+   + SharedVariableDefinition: SharedVariableDefinitionType [*] {ordered, unique} {{OCL} self->isUnique(Id)}
+   + Policy: PolicyType [*] {ordered, unique} {{OCL} self->isUnique(PolicyId)}
    + PolicyReference: PolicyReferenceType [0..1]
 }
-note "{{OCL} PolicyReference = null or Policy->notEmpty()}" as PolicyNotEmptyIfPolicyRef
-BundleType .. PolicyNotEmptyIfPolicyRef
+/' 
+OCL v2.4, section 11.2.3: "by virtue of the implicit conversion to a collection literal, an expression evaluating to null can be used as source of collection operations [...]. If the source is the null literal, it is implicitly converted to an empty Set by invoking oclAsSet()." Therefore no need for null check on multi-valued properties before calling notEmpty, isUnique, etc.
+'/
+note "{{OCL} PolicyReference = null or Policy->notEmpty()}" as constraint
+BundleType .. constraint
 @enduml
 ```
 
@@ -3687,15 +3811,15 @@ A `BundleType` object contains the following properties:
 
 `ShortIdSet` [Any Number]
 
-: A sequence of `ShortIdSetType` objects each defining a set of short identifiers that can be referenced by the policies, shared variable definitions and other short identifier sets in the `BundleType` object.
+: A sequence of `ShortIdSetType` objects each defining a set of short identifiers that can be referenced by the policies, shared variable definitions and other short identifier sets in the `BundleType` object. Each object's `Id` MUST be unique within the sequence.
 
 `SharedVariableDefinition` [Any Number]
 
-: A sequence of `SharedVariableDefinitionType` objects, each defining an expression that can be referenced from anywhere in the `BundleType` object where an expression can appear.
+: A sequence of `SharedVariableDefinitionType` objects, each defining an expression that can be referenced from anywhere in the `BundleType` object where an expression can appear. Each object's `Id` MUST be unique within the sequence.
 
 `Policy` [Any Number]
 
-: A sequence of `PolicyType` objects.
+: A sequence of `PolicyType` objects. Each object's `PolicyId` MUST be unique within the sequence.
 
 `PolicyReference` [Optional]
 
@@ -4901,6 +5025,10 @@ Martin J. Dürst et al, eds., Character Model for the World Wide Web 1.0: Fundam
 
 D. Eastlake et al., XML-Signature Syntax and Processing, https://www.w3.org/TR/xmldsig-core/, World Wide Web Consortium.
 
+###### [ENTITIES]
+
+_XACML v3.0 Related and Nested Entities Profile Version 1.0_. Edited by Steven Legg. 16 February 2021. OASIS Committee Specification 02. https://docs.oasis-open.org/xacml/xacml-3.0-related-entities/v1.0/cs02/xacml-3.0-related-entities-v1.0-cs02.html. Latest stage: https://docs.oasis-open.org/xacml/xacml-3.0-related-entities/v1.0/xacml-3.0-related-entities-v1.0.html.
+
 ###### [exc-c14n]
 
 J. Boyer et al, eds., Exclusive XML Canonicalization, Version 1.0, W3C Recommendation 18 July 2002, https://www.w3.org/TR/2002/REC-xml-exc-c14n-20020718/
@@ -4945,6 +5073,10 @@ Mathematical Markup Language (MathML), Version 2.0, W3C Recommendation, 21 Octob
 
 OASIS Committee Draft 03, XACML v3.0 Multiple Decision Profile Version 1.0, 11 March 2010, https://docs.oasis-open.org/xacml/3.0/xacml-3.0-multiple-v1-spec-cd-03-en.doc
 
+###### [OCL]
+
+OMG, Object Constraint Language (OCL) Version 2.4 (also ISO/IEC 19507), 2014. Available online: https://www.omg.org/spec/OCL/2.4 
+
 ###### [Perritt93]
 
 Perritt, H. Knowbots, Permissions Headers and Contract Law, Conference on Technological Strategies for Protecting Intellectual Property in the Networked Multimedia Environment, April 1993. Available at: https://www.cni.org/resources/historical-resources/technological-strategies-for-protecting-intellectual-property-in-the-networked-multimedia-environment/permission-headers-and-contract-law
@@ -4976,6 +5108,10 @@ IETF RFC 3198: Terminology for Policy-Based Management, November 2001. https://w
 ###### [UAX15]
 
 Mark Davis, Martin Dürst, Unicode Standard Annex #15: Unicode Normalization Forms, Unicode 5.1, https://unicode.org/reports/tr15/
+
+###### [UML]
+
+OMG, Unified Modeling Language (UML) Version 2.5.1 (also ISO/IEC 19505), 2017. Available online: https://www.omg.org/spec/UML/2.5.1/ 
 
 ###### [UTR36]
 
@@ -5034,10 +5170,6 @@ Sloman, M. Policy Driven Management for Distributed Systems. Journal of Network 
 ###### [XACML]
 
 _eXtensible Access Control Markup Language (XACML) Version 3.0 Plus Errata 01_. Edited by Erik Rissanen. OASIS Standard incorporating Approved Errata. https://docs.https:xacml/3.0/xacml-3.0-core-spec-en.html.
-
-###### [ENTITIES]
-
-_XACML v3.0 Related and Nested Entities Profile Version 1.0_. Edited by Steven Legg. 16 February 2021. OASIS Committee Specification 02. https://docs.oasis-open.org/xacml/xacml-3.0-related-entities/v1.0/cs02/xacml-3.0-related-entities-v1.0-cs02.html. Latest stage: https://docs.oasis-open.org/xacml/xacml-3.0-related-entities/v1.0/xacml-3.0-related-entities-v1.0.html.
 
 
 ---
@@ -6915,7 +7047,7 @@ ACAL 1.0 is a successor to XACML 3.0. ACAL 1.0 differs from XACML 3.0 in the fol
 
 ## Revision History
 
-Latest revision history can be obtain from [OASIS XACML TC's github repository](https://github.com/oasis-tcs/xacml-spec/commits/main/acal-v1.0.md).
+Latest revision history can be obtained from [OASIS XACML TC's github repository](https://github.com/oasis-tcs/xacml-spec/commits/main/acal-v1.0.md).
 
 - \< Date in yyyy-mm-dd format \>, \< Revision number \>  
 - \< Date in yyyy-mm-dd format \>, \< Revision number \>

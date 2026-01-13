@@ -80,9 +80,6 @@ Edited by Steven Legg and Cyril Dangerville. 20 December 2025. OASIS Committee S
 This document is related to:
 
 - _Attribute-Centric Authorization Language (ACAL) Version 1.0_.
-- _JACAL: The JSON representation of the Attribute-Centric Authorization Language (ACAL) Version 1.0_.
-- _XACML Version 4.0: The XML representation of the Attribute-Centric Authorization Language (ACAL)_.
-- _YACAL: The YAML representation of the Attribute-Centric Authorization Language (ACAL) Version 1.0_.
 
 
 ## License, Document Status, and Notices

@@ -7,7 +7,7 @@
 	elementFormDefault="qualified" attributeFormDefault="unqualified">
 
 	<xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="https://www.w3.org/2001/xml.xsd"/>
-	<xs:import namespace="urn:oasis:names:tc:xacml:4.0:core:schema"	schemaLocation="xacml-core-v4-schema.xsd" />
+	<xs:import namespace="urn:oasis:names:tc:xacml:4.0:core:schema"	schemaLocation="xacml-core-v4.0-schema.xsd" />
 
 	<!-- Issue #5: adding support for JSONPath (RFC 9535) in AttributeSelector -->
 	<xs:element name="JSONPathAttributeSelector" type="JSONPathAttributeSelectorType" substitutionGroup="xacml:AttributeSelector" />
@@ -19,8 +19,7 @@
 		</xs:complexContent>
 	</xs:complexType>
 
-	<xs:element name="JSONPathEntityAttributeSelector" type="JSONPathEntityAttributeSelectorType"
-		substitutionGroup="xacml:EntityAttributeSelector" />
+	<xs:element name="JSONPathEntityAttributeSelector" type="JSONPathEntityAttributeSelectorType" substitutionGroup="xacml:EntityAttributeSelector" />
 	<xs:complexType name="JSONPathEntityAttributeSelectorType">
 		<xs:complexContent>
 			<xs:extension base="xacml:EntityAttributeSelectorType">
