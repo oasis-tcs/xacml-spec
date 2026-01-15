@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright OASIS Open 2025. All Rights Reserved. -->
+<!-- Copyright OASIS Open 2026. All Rights Reserved. -->
 <xs:schema xmlns:xacml="urn:oasis:names:tc:xacml:4.0:core:schema"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	targetNamespace="urn:oasis:names:tc:xacml:4.0:core:schema"

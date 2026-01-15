@@ -6,7 +6,7 @@
 
 ## Committee Specification Draft 01
 
-## 20 December 2025
+## 15 January 2026
 
 ### This version:
 
@@ -79,12 +79,12 @@ This specification replaces or supersedes:
 * _eXtensible Access Control Markup Language (XACML) Version 3.0 Plus Errata 01_. Edited by Erik Rissanen. OASIS Standard incorporating Approved Errata. https://docs.https:xacml/3.0/xacml-3.0-core-spec-en.html.
 
 This specification is related to:
-* _Attribute-Centric Authorization Language (ACAL) Version 1.0_. Edited by Steven Legg and Cyril Dangerville. 16 December 2025. OASIS Committee Specification Draft 01.
+* _Attribute-Centric Authorization Language (ACAL) Version 1.0_. Edited by Steven Legg and Cyril Dangerville. 15 January 2026. OASIS Committee Specification Draft 01.
 
 
 ## License, Document Status, and Notices
 
-Copyright © OASIS Open 2025. All Rights Reserved.  For license and copyright information, and complete status, please see Annex A which contains the License, Document Status and Notices.
+Copyright © OASIS Open 2026. All Rights Reserved.  For license and copyright information, and complete status, please see Annex A which contains the License, Document Status and Notices.
 
 ## How to generate HTML and PDF versions
 
@@ -908,7 +908,7 @@ NOTE: any machine-readable content (Computer Language Definitions) declared Norm
 ## A.2 License and Notices
 
 
-Copyright © OASIS Open 2025. All Rights Reserved.
+Copyright © OASIS Open 2026. All Rights Reserved.
 
 
 All capitalized terms in the following text have the meanings assigned to them in the OASIS Intellectual Property Rights Policy (the "OASIS IPR Policy"). The full Policy, which governs the licensure of this document, may be found at the OASIS website: [[https://www.oasis-open.org/policies-guidelines/ipr/](https://www.oasis-open.org/policies-guidelines/ipr/)]
@@ -967,7 +967,7 @@ The following documents are referenced in such a way that some or all of their c
 
 ######  [ACAL]
 
-Attribute-Centric Authorization Language (ACAL) Version 1.0. Edited by Steven Legg and Cyril Dangerville. 17 December 2025. OASIS Committee Specification Draft 01.
+Attribute-Centric Authorization Language (ACAL) Version 1.0. Edited by Steven Legg and Cyril Dangerville. 15 January 2026. OASIS Committee Specification Draft 01.
 
 ###### [CMF]
 
