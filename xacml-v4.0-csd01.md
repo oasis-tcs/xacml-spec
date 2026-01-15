@@ -730,8 +730,7 @@ _*This section is non-normative.*_
 The following kinds of OCL-defined UML constraints in the [ACAL](#acal) model do not have any equivalent in [[XSD 1.0](#xs)]:
 - Some of the OCL-defined property-level constraints in [ACAL] section 7.1.1.1.1.2:
   - Multivalued-property-based uniqueness constraint;
-  - Value type uniqueness constraint;
-  - Type exclusion constraint.
+  - Value type uniqueness constraint.
 - All object-level constraints in [ACAL] section 7.1.1.1.2.
 
 This document does not mandate a particular method to map and/or implement these more complex constraints, and leaves this part of the specification implementation-defined. Instead, this document provides only an implementation guidance that recommends to possible options described in the next sections:
@@ -750,10 +749,9 @@ Moreover, implementers MAY choose to replace some of the assertions with possibl
 For information only, the following table suggests generic mappings for some of the aforementioned complex UML constraints used in ACAL model:
 
 **Table 2:** ACAL/UML constraints mapped to [[XSD 1.1](#xs11)] assertions
-| ACAL constraint (OCL) | XSD 1.1 assertion's `test` XPath expression |
+| ACAL constraint's OCL expression | XSD 1.1 assertion's XPath expression |
 | :--- | :--- |
-| `X or Y` | `X or Y` |
-| `not oclIsKindOf(FooSubType)` (Type exclusion constraint) | `not(FooSub)` (i.e. no FooSub element occurs, where FooSub is the global XML element declared of type FooSubType) |
+| `X or Y` (X, Y can be any of the predicates below) | `X or Y` |
 | `prop <> null` *(*prop* is single-valued)* | `prop` *(the *prop* element occurs)* |
 | `prop = null` *(*prop* is single-valued)* | `not(prop)` *(no *prop* element occurs)* |
 | `prop->notEmpty()` *(*prop* is multivalued)* | `prop` *(at least one *prop* element occurs)* |

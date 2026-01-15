@@ -85,22 +85,6 @@
 	  <assert test="xacml:Content or xacml:Attribute"></assert>
 	</rule>
  </pattern>
- <pattern id="ACAL_constraint_on_BooleanExpressionType">
- <title>ACAL constraint on BooleanExpressionType: {OCL} not oclIsKindOf(ValueType)</title>
-	<rule context="xacml:Condition|xacml:Target">
-	<!-- If your implementation uses a XSD-aware Schematron/XSLT processor, you may use the following more generic context instead of the previous one: -->
-	<!-- <rule context="element(*, xacml:BooleanExpressionType)"> -->
-	  <assert test="not(xacml:Value)"></assert>
-	</rule>
- </pattern>
- <pattern id="ACAL_constraint_on_QuantifiedExpressionType_Domain_property">
- 	<title>ACAL constraint on QuantifiedExpressionType's Domain property: {OCL} not oclIsKindOf(ValueType)</title>
-	<rule context="xacml:ForAny|xacml:ForAll|xacml:Map|xacml:Select">
-	<!-- If your implementation uses a schema-aware Schematron/XSLT processor, you should use the following more generic context instead of the previous one: -->
-	<!--<rule context="element(*, xacml:QuantifiedExpressionType)">-->
-	  <assert test="not(*[position() = 1 and namespace-uri() = 'urn:oasis:names:tc:xacml:4.0:core:schema' and local-name() = 'Value'])"></assert>
-	</rule>
- </pattern>
  <pattern id="ACAL_constraint_on_BundleType"> 
  	<title>ACAL constraint on BundleType: {OCL} PolicyReference = null or Policy-&gt;notEmpty()</title>
 	<rule context="xacml:Bundle"> 

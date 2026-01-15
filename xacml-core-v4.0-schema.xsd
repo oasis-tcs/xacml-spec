@@ -653,8 +653,6 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 		
 		Then add the namespace declarations to the xs:schema root element as necessary for each RequestDefaults element, e.g. xmlns:xpath="urn:oasis:names:tc:xacml:4.0:xpath:schema"
 		-->
-		<!-- Literal boolean value not allowed in Target -->
-		<xs:assert vc:minVersion="1.1" test="not(xacml:Target/xacml:Value)" />
 	</xs:complexType>
 
 	<xs:element name="Description" type="xs:string" />
@@ -684,9 +682,6 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 		<!-- Change to XACML 3.0 (issue #55): renamed RuleId to Id -->
 		<xs:attribute name="Id" type="xacml:LocalIdentifierType" use="required" />
 		<xs:attribute name="Effect" type="xacml:EffectType" use="required" />
-		<!-- Literal boolean value not allowed in Condition -->
-		<xs:assert vc:minVersion="1.1"
-			test="not(xacml:Condition) or not(xacml:Condition/xacml:Value)" />
 	</xs:complexType>
 
 	<xs:element name="Target" type="xacml:BooleanExpressionType" />
@@ -705,12 +700,20 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 
 	<xs:element name="Expression" type="xacml:ExpressionType" abstract="true" />
 	<xs:complexType name="ExpressionType" abstract="true" />
-
-	<xs:element name="VariableReference" type="xacml:VariableReferenceType"
-		substitutionGroup="xacml:Expression" />
-	<xs:complexType name="VariableReferenceType">
+	<xs:element name="NonLiteralExpression" type="xacml:NonLiteralExpressionType" abstract="true" substitutionGroup="xacml:Expression" />
+	<!-- NonLiteralExpressionType is an ExpressionType that is neither ValueType or FunctionType. -->
+	<xs:complexType name="NonLiteralExpressionType" abstract="true">
 		<xs:complexContent>
 			<xs:extension base="xacml:ExpressionType">
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:element name="VariableReference" type="xacml:VariableReferenceType"
+		substitutionGroup="xacml:NonLiteralExpression" />
+	<xs:complexType name="VariableReferenceType">
+		<xs:complexContent>
+			<xs:extension base="xacml:NonLiteralExpressionType">
 				<!-- Change to XACML 3.0 (issue #42): changed VariableId type to more restrictive
 				LocalIdentifierType
 				(agreed with ALFA working group). -->
@@ -729,7 +732,7 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 
 	<xs:complexType name="BaseAttributeSelectorType" abstract="true">
 		<xs:complexContent>
-			<xs:extension base="xacml:ExpressionType">
+			<xs:extension base="xacml:NonLiteralExpressionType">
 				<!-- Change to XACML 3.0 (issue #33): XPath-specific ContextSelectorId attribute
 				moved to XPath Profile's XSD (AttributeSelectorType / EntityAttributeDesignatorType
 				extension)  -->
@@ -746,7 +749,7 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 	</xs:complexType>
 
 	<xs:element name="AttributeSelector" type="xacml:AttributeSelectorType" abstract="true"
-		substitutionGroup="xacml:Expression" />
+		substitutionGroup="xacml:NonLiteralExpression" />
 	<!-- 
 	Change to XACML 3.0 (issues #5 and #33: new JSONPath profile and moving XPath-related features out
 	of ACAL core spec): AttributeSelectorType becomes abstract, concrete types to be defined in ACAL
@@ -765,7 +768,7 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 	</xs:complexType>
 
 	<xs:element name="EntityAttributeSelector" type="xacml:EntityAttributeSelectorType"
-		abstract="true" substitutionGroup="xacml:Expression" />
+		abstract="true" substitutionGroup="xacml:NonLiteralExpression" />
 	<!-- 
 	Change to XACML 3.0 (issues #5 and #33): EntityAttributeSelectorType becomes abstract, concrete
 	types to be
@@ -785,7 +788,7 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 
 	<xs:complexType name="NamedAttributeDesignatorType" abstract="true">
 		<xs:complexContent>
-			<xs:extension base="xacml:ExpressionType">
+			<xs:extension base="xacml:NonLiteralExpressionType">
 				<!-- Change to XACML 3.0 (issue #48): Category / AttributeId / DataType attribute
 				types changed to IdentifierType for supporting Short Identifiers -->
 				<xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required" />
@@ -801,7 +804,7 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 	</xs:complexType>
 
 	<xs:element name="AttributeDesignator" type="xacml:AttributeDesignatorType"
-		substitutionGroup="xacml:Expression" />
+		substitutionGroup="xacml:NonLiteralExpression" />
 	<xs:complexType name="AttributeDesignatorType">
 		<xs:complexContent>
 			<xs:extension base="xacml:NamedAttributeDesignatorType">
@@ -813,7 +816,7 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 	</xs:complexType>
 
 	<xs:element name="EntityAttributeDesignator" type="xacml:EntityAttributeDesignatorType"
-		substitutionGroup="xacml:Expression" />
+		substitutionGroup="xacml:NonLiteralExpression" />
 	<xs:complexType name="EntityAttributeDesignatorType">
 		<xs:complexContent>
 			<xs:extension base="xacml:NamedAttributeDesignatorType">
@@ -869,16 +872,14 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 	<xs:element name="Condition" type="xacml:BooleanExpressionType" />
 	<xs:complexType name="BooleanExpressionType">
 		<xs:sequence>
-			<xs:element ref="xacml:Expression" />
+			<xs:element ref="xacml:NonLiteralExpression" />
 		</xs:sequence>
-		<!-- Not to be used as literal boolean constant -->
-		<xs:assert vc:minVersion="1.1" test="not(xacml:Value)" />
 	</xs:complexType>
 
-	<xs:element name="Apply" type="xacml:ApplyType" substitutionGroup="xacml:Expression" />
+	<xs:element name="Apply" type="xacml:ApplyType" substitutionGroup="xacml:NonLiteralExpression" />
 	<xs:complexType name="ApplyType">
 		<xs:complexContent>
-			<xs:extension base="xacml:ExpressionType">
+			<xs:extension base="xacml:NonLiteralExpressionType">
 				<xs:sequence>
 					<xs:element ref="xacml:Description" minOccurs="0" />
 					<!-- The datatype of each function argument here must be known from the
@@ -896,23 +897,21 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 
 	<!-- Change to XACML 3.0 (issue #21): added normative parts of the Entities Profile -->
 	<xs:element name="ForAny" type="xacml:QuantifiedExpressionType"
-		substitutionGroup="xacml:Expression" />
+		substitutionGroup="xacml:NonLiteralExpression" />
 	<xs:element name="ForAll" type="xacml:QuantifiedExpressionType"
-		substitutionGroup="xacml:Expression" />
+		substitutionGroup="xacml:NonLiteralExpression" />
 	<xs:element name="Map" type="xacml:QuantifiedExpressionType"
-		substitutionGroup="xacml:Expression" />
+		substitutionGroup="xacml:NonLiteralExpression" />
 	<xs:element name="Select" type="xacml:QuantifiedExpressionType"
-		substitutionGroup="xacml:Expression" />
+		substitutionGroup="xacml:NonLiteralExpression" />
 	<xs:complexType name="QuantifiedExpressionType">
 		<xs:complexContent>
-			<xs:extension base="xacml:ExpressionType">
+			<xs:extension base="xacml:NonLiteralExpressionType">
 				<xs:sequence>
-					<xs:element ref="xacml:Expression" />
+					<xs:element ref="xacml:NonLiteralExpression" />
 					<xs:element ref="xacml:Expression" />
 				</xs:sequence>
 				<xs:attribute name="VariableId" type="xacml:LocalIdentifierType" use="required" />
-				<xs:assert vc:minVersion="1.1"
-					test="not(*[position() = 1 and namespace-uri() = 'urn:oasis:names:tc:xacml:4.0:core:schema' and local-name() = 'Value'])" />
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -1006,7 +1005,7 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 	<xs:element name="SharedVariableReference" type="xacml:SharedVariableReferenceType" />
 	<xs:complexType name="SharedVariableReferenceType">
 		<xs:complexContent>
-			<xs:extension base="xacml:ExpressionType">
+			<xs:extension base="xacml:NonLiteralExpressionType">
 				<xs:attribute name="Id" type="xs:anyURI" use="required" />
 				<xs:attribute name="Version" type="xacml:VersionMatchType" use="optional" />
 			</xs:extension>

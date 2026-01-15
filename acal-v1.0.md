@@ -297,7 +297,7 @@ $ pandoc -f gfm+definition_lists -t pdf acal-v1.0.md -c styles/markdown-styles-v
   - [7.23 ValueType](#723-valuetype)
   - [7.24 VariableReferenceType](#724-variablereferencetype)
   - [7.24b SharedVariableReferenceType](#724b-sharedvariablereferencetype)
-  - [7.25 QuantifiedExpressionType](#725-quantifiedexpressiontype)
+  - [7.25 QuantifiedExpressionType](#725-quantifiedexpressiontype-optional)
     - [7.25.1 ForAny Expression](#7251-forany-expression)
     - [7.25.2 ForAll Expression](#7252-forall-expression)
     - [7.25.3 Map Expression](#7253-map-expression)
@@ -1655,13 +1655,6 @@ Let refer to *prop* as the property to which the constraint is applied. In each 
   self->isUnique(oclType())
   ```
 
-**Type exclusion constraint:**
-
-: For a property *prop* of type *FooType*, this constraint excludes a specific subtype *FooSubType* from all possible subtypes of *FooType*, to be used as *prop*'s value type. The OCL expression goes as follows:
-  ```
-  not oclIsKindOf(FooSubType)
-  ```
-
 
 ##### 7.1.1.1.2 Object-level constraints
 
@@ -2265,7 +2258,7 @@ UML definition (class diagram):
 hide empty members 
 hide circle
 class BooleanExpressionType <<dataType>> {
-   + Expression: ExpressionType [1] {{OCL} not oclIsKindOf(ValueType)}
+   + Expression: NonLiteralExpressionType [1]
 }
 @enduml
 ```
@@ -2289,6 +2282,9 @@ abstract class IdReferenceType <<dataType>> {
    + Id: URI [1]
 }
 @enduml
+
+class ExactMatchIdReferenceType <<dataType>> extends IdReferenceType
+class PatternMatchIdReferenceType <<dataType>> extends IdReferenceType
 ```
 
 The `IdReferenceType` object type contains the following property:
@@ -2503,39 +2499,48 @@ UML definition (class diagram):
 hide empty members 
 hide circle
 abstract class ExpressionType <<dataType>>
-class ApplyType <<dataType>> extends ExpressionType
 
-abstract class BaseAttributeSelectorType <<dataType>> extends ExpressionType
+abstract class NonLiteralExpressionType extends ExpressionType
+class ApplyType <<dataType>> extends NonLiteralExpressionType
+
+abstract class BaseAttributeSelectorType <<dataType>> extends NonLiteralExpressionType
 class AttributeSelectorType <<dataType>> extends BaseAttributeSelectorType
 class EntityAttributeSelectorType <<dataType>> extends BaseAttributeSelectorType
 
 class FunctionType <<dataType>> extends ExpressionType
 
-abstract class NamedAttributeDesignatorType <<dataType>> extends ExpressionType
+abstract class NamedAttributeDesignatorType <<dataType>> extends NonLiteralExpressionType
 class AttributeDesignatorType <<dataType>> extends NamedAttributeDesignatorType
 class EntityAttributeDesignatorType <<dataType>> extends NamedAttributeDesignatorType
 
-class QuantifiedExpressionType <<dataType>> extends ExpressionType
+abstract class QuantifiedExpressionType <<dataType>> extends NonLiteralExpressionType
 class ForAnyType <<dataType>> extends QuantifiedExpressionType
 class ForAllType <<dataType>> extends QuantifiedExpressionType
 class MapType <<dataType>> extends QuantifiedExpressionType
 class SelectType <<dataType>> extends QuantifiedExpressionType
 
-class SharedVariableReferenceType <<dataType>> extends ExpressionType
+class SharedVariableReferenceType <<dataType>> extends NonLiteralExpressionType
 class ValueType <<dataType>> extends ExpressionType
-class VariableReferenceType <<dataType>> extends ExpressionType
+class VariableReferenceType <<dataType>> extends NonLiteralExpressionType
 @enduml
 ```
 
-An `ExpressionType` object contains exactly one of the following properties:
-
-`Apply`
-
-: An `ApplyType` object specifying a function call.
+An `ExpressionType` object is either a `NonLiteralExpressionType` object or an object that contains exactly one of the following properties:
 
 `Function`
 
 : A `FunctionType` object identifying a function.
+
+
+`Value`
+
+: A `ValueType` object specifying a literal ACAL value.
+
+An `NonLiteralExpressionType` object contains exactly one of the following properties:
+
+`Apply`
+
+: An `ApplyType` object specifying a function call.
 
 `AttributeDesignator`
 
@@ -2552,10 +2557,6 @@ An `ExpressionType` object contains exactly one of the following properties:
 `EntityAttributeSelector`
 
 : An `EntityAttributeSelectorType` object specifying an Path expression - depending on the content type (e.g. XPath for XML content) - to apply to the structured content either in the request context or in a value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type.
-
-`Value`
-
-: A `ValueType` object specifying a literal ACAL value.
 
 `VariableReference`
 
@@ -2590,8 +2591,8 @@ UML definition (class diagram):
 @startuml
 hide empty members 
 hide circle
-abstract class ExpressionType <<datatype>>
-class ApplyType <<dataType>> extends ExpressionType {
+abstract class NonLiteralExpressionType <<datatype>>
+class ApplyType <<dataType>> extends NonLiteralExpressionType {
    + Description: String [0..1]
    + FunctionId: IdentifierType [1]
    + Expression: ExpressionType [*] {ordered, nonunique}
@@ -2648,8 +2649,8 @@ UML definition (class diagram):
 @startuml
 hide empty members 
 hide circle
-abstract class ExpressionType <<datatype>>
-abstract class NamedAttributeDesignatorType <<dataType>> extends ExpressionType {
+abstract class NonLiteralExpressionType <<datatype>>
+abstract class NamedAttributeDesignatorType <<dataType>> extends NonLiteralExpressionType {
    + AttributeId: IdentifierType [1]
    + DataType: IdentifierType [0..1] = 'urn:oasis:names:tc:acal:1.0:data-type:string'
    + Issuer: Name [0..1]
@@ -2752,8 +2753,8 @@ UML definition (class diagram):
 skinparam style strictuml
 hide empty members 
 hide circle
-abstract class ExpressionType <<datatype>>
-abstract class BaseAttributeSelectorType <<dataType>> extends ExpressionType {
+abstract class NonLiteralExpressionType <<datatype>>
+abstract class BaseAttributeSelectorType <<dataType>> extends NonLiteralExpressionType {
    + Path: AttributeSelectorPathType [1]
    + DataType: IdentifierType [0..1] = 'urn:oasis:names:tc:acal:1.0:data-type:string'
    + MustBePresent: Boolean [0..1] = false
@@ -2904,8 +2905,8 @@ UML definition (class diagram):
 @startuml
 hide empty members 
 hide circle
-abstract class ExpressionType <<datatype>>
-class VariableReferenceType <<dataType>> extends ExpressionType {
+abstract class NonLiteralExpressionType <<datatype>>
+class VariableReferenceType <<dataType>> extends NonLiteralExpressionType {
    + VariableId: LocalIdentifierType [1]
 }
 @enduml
@@ -2926,8 +2927,8 @@ UML definition (class diagram):
 @startuml
 hide empty members 
 hide circle
-abstract class ExpressionType <<datatype>>
-class SharedVariableReferenceType <<dataType>> extends ExpressionType {
+abstract class NonLiteralExpressionType <<datatype>>
+class SharedVariableReferenceType <<dataType>> extends NonLiteralExpressionType {
    + Id: URI [1]
    + Version: VersionMatchType [0..1]
 }
@@ -2944,7 +2945,7 @@ The `SharedVariableReferenceType` object type contains the following properties:
 
 : Specifies a matching expression for selecting an acceptable version of the referenced shared variable. The matching operation is defined in [Section 7.12](#71235-versionmatchtype). If this property is present, then the selected version of the shared variable MUST match the expression. If the property is absent, then any version of the shared variable is acceptable. In the case that more than one version matches, then the most recent one SHOULD be used.
 
-## 7.25 QuantifiedExpressionType
+## 7.25 QuantifiedExpressionType (optional)
 
 A `QuantifiedExpressionType` object is a kind of expression that represents one of four kinds of quantified expression. The kind of quantified expression is determined by the name of the property that holds the object, either `ForAny`, `ForAll`, `Select` or `Map`. There are some common requirements for all four kinds of quantified expressions.
 
@@ -2953,10 +2954,10 @@ UML definition (class diagram):
 @startuml
 hide empty members 
 hide circle
-abstract class ExpressionType <<datatype>>
-class QuantifiedExpressionType <<dataType>> extends ExpressionType {
+abstract class NonLiteralExpressionType <<datatype>>
+abstract class QuantifiedExpressionType <<dataType>> extends NonLiteralExpressionType {
    + VariableId: LocalIdentifierType [1]
-   + Domain: ExpressionType [1] {{OCL} not oclIsKindOf(ValueType) }
+   + Domain: NonLiteralExpressionType [1]
    + Iterant: ExpressionType [1]
 }
 @enduml
@@ -2991,8 +2992,7 @@ UML definition (class diagram):
 @startuml
 hide empty members 
 hide circle
-abstract class ExpressionType <<dataType>>
-class QuantifiedExpressionType <<dataType>> extends ExpressionType
+abstract class QuantifiedExpressionType <<dataType>> extends NonLiteralExpressionType
 class ForAnyType <<dataType>> extends QuantifiedExpressionType
 @enduml
 ```
@@ -3012,8 +3012,7 @@ UML definition (class diagram):
 @startuml
 hide empty members 
 hide circle
-abstract class ExpressionType <<dataType>>
-class QuantifiedExpressionType <<dataType>> extends ExpressionType
+abstract class QuantifiedExpressionType <<dataType>> extends NonLiteralExpressionType
 class ForAllType <<dataType>> extends QuantifiedExpressionType
 @enduml
 ```
@@ -3033,8 +3032,7 @@ UML definition (class diagram):
 @startuml
 hide empty members 
 hide circle
-abstract class ExpressionType <<dataType>>
-class QuantifiedExpressionType <<dataType>> extends ExpressionType
+abstract class QuantifiedExpressionType <<dataType>> extends NonLiteralExpressionType
 class MapType <<dataType>> extends QuantifiedExpressionType
 @enduml
 ```
@@ -3053,8 +3051,7 @@ UML definition (class diagram):
 @startuml
 hide empty members 
 hide circle
-abstract class ExpressionType <<dataType>>
-class QuantifiedExpressionType <<dataType>> extends ExpressionType
+abstract class QuantifiedExpressionType <<dataType>> extends NonLiteralExpressionType
 class SelectType <<dataType>> extends QuantifiedExpressionType
 @enduml
 ```
