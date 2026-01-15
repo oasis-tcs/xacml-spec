@@ -127,7 +127,6 @@ $ pandoc -f gfm+definition_lists -t pdf acal-v1.0-json.md -c styles/markdown-sty
          -o acal-v1.0-json.pdf 
 ```
 
-
 -------
 
 # Table of Contents
@@ -584,7 +583,10 @@ For a given concrete subtype of `StructuredValueType` named `FooStructValueType`
 1. If the `DataType` property is already present at an upper level, i.e. in the parent or an ancestor object (e.g. an `AttributeType` object), then this object may be represented as a JSON object compliant with `FooStructValueType`'s JSON schema. The ACAL data-type is inferred from the aforementioned `DataType` property.
 2. Else it is wrapped in a JSON object made of the string property `DataType` and the JSON object property `$` holding the actual value compliant with `FooStructValueType`'s JSON schema:
    ```json
-   {"DataType": "<FooStructValueType's DataType identifier>", "$": {<JSON object compliant with FooStructValueType's JSON schema>} }
+   {
+    "DataType": "<FooStructValueType's DataType identifier>", 
+    "$": {<JSON object compliant with FooStructValueType's JSON schema>} 
+   }
    ```
 
 A subtype of `StructuredValueType` SHALL NOT (re)define any `DataType` property in its JSON representation.
@@ -908,12 +910,13 @@ For each of an ACAL Datatype's property *Prop* with value type *PropType*, the c
 ACAL object-level constraints defined in [ACAL] section 7.1.1.1.2 may be translated into JSON subschema(s) to be added the corresponding JSON schema definition of the ACAL Datatype, according to the table below:
 
 **Table 2:** ACAL/UML constraints mapped to JSON schema
-ACAL - UML constraint (OCL) | JSON schema equivalent |
+
+|ACAL - UML constraint (OCL) | JSON schema equivalent |
 | :--- | :--- |
 | `X or Y` (X, Y can be any of the predicates below) | `"if": {"not": <X_subschema>}, "then": <Y_subschema>` |
 | `prop <> null` *(*prop* is single-valued)* | `{"required": ["prop"]}` |
 | `prop = null` *(*prop* is single-valued)* | `{"not": {"required": ["prop"]}}` *(any resulting `{"not": {"not": <X_subschema>}}` in a `X or Y` expressoin is replaced with `<X_subschema>`)* |
-| `prop->notEmpty()` *(*prop* is multivalued)* | `{"required": ["prop"]}` *(`"minItems" is already set by rule 2.2.2 (previous section) to 1 or greater in the property's subschema (array type))* |
+| `prop->notEmpty()` *(*prop* is multivalued)* | `{"required": ["prop"]}` *(`minItems` is already set by rule 2.2.2 (previous section) to 1 or greater in the property's subschema (array type))* |
 
 
 -------

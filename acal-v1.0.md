@@ -1932,6 +1932,7 @@ class Name <<primitive>>
 
 Although an XML representations may use the standard XSD `Name` datatype as is for this type, other ACAL representation formats need an alternative representatio. One suggestion is to use the string type restricted by a pattern (regular expression) matching the XSD `Name`'s definition, i.e. matching XSD pattern `\i\c*`. Non-XML representation formats do not usually use the XSD regex (regular expression) flavor but other flavors such as ECMA 262 (Javascript) flavor in the case of JSON, therefore the pattern - the character classes `\i` and ``c` in particular - must be translated to the corresponding regex flavor. The following equivalence table may be used as a convenience to build the full pattern in non-XML ACAL representation formats:
 
+<!-- FIXME: the table does not fit the page in the PDF. -->
 | XSD character class    | Javascript regex for full Unicode support | Javascript regex for plain ASCII support only|
 | -------- | ------- | -----------|
 | \i  | `[:A-Z_a-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD\u{10000}-\u{EFFFF}]`   | `[_:A-Za-z]` |
@@ -4604,6 +4605,8 @@ The implementation MUST support the attributes associated with the following ide
 ### 11.2.6 Attributes and Categories
 
 The implementation MUST use the attributes or attribute categories associated with the following identifiers in the way ACAL has defined. This requirement pertains primarily to implementations of a PAP or PEP that uses ACAL, since the semantics of the attributes are transparent to the PDP.
+
+<!-- FIXME: The tables in this section do not fit on a A4 PDF page. -->
 
 | Identifier | M/O | Deprecated Identifier |
 | :--- | :--- | :--- |

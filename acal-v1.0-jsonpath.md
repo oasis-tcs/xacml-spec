@@ -121,8 +121,8 @@ Run the following command line to generate HTML from this markdown file (named `
 $ pandoc -f gfm+definition_lists -t html acal-v1.0-jsonpath.md -c styles/markdown-styles-v1.7.3a.css \ 
          -s --lua-filter diagram.lua --embed-resources \
          --metadata title="ACAL v1.0 JSONPath Profile Version 1.0" \
-         -o acal-v1.0.html
- ```
+         -o acal-v1.0-jsonpath.html
+```
 
 Note this command generates a Table of Contents (TOC) in HTML which is located at the top of the HTML document, and which requires additional editing in order to be published in the expected OASIS style. This editing will be handled by OASIS staff during publication.
 

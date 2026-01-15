@@ -118,10 +118,10 @@ The generation command uses a CSS stylesheet file (`-c` argument) provided by OA
 Run the following command line to generate HTML from this markdown file (named `acal-v1.0-csd01.md`), :
 
 ```console
-$ pandoc -f gfm+definition_lists -t html acal-v1.0.md -c styles/markdown-styles-v1.7.3a.css \ 
+$ pandoc -f gfm+definition_lists -t html xacml-v4.0-csd01.md -c styles/markdown-styles-v1.7.3a.css \ 
          -s --lua-filter diagram.lua --embed-resources \
          --metadata title="eXtensible Access Control Markup Language (XACML) Version 4.0 (XML Representation of ACAL Version 1.0)" \
-         -o acal-v1.0.html
+         -o xacml-v4.0-csd01.html
  ```
 
 Note this command generates a Table of Contents (TOC) in HTML which is located at the top of the HTML document, and which requires additional editing in order to be published in the expected OASIS style. This editing will be handled by OASIS staff during publication.
@@ -131,10 +131,10 @@ Note this command generates a Table of Contents (TOC) in HTML which is located a
 For PDF output, the command line is the following (different `-t` and `-H` arguments):
 
 ```console
-$ pandoc -f gfm+definition_lists -t pdf acal-v1.0.md -c styles/markdown-styles-v1.7.3a.css \
+$ pandoc -f gfm+definition_lists -t pdf xacml-v4.0-csd01.md -c styles/markdown-styles-v1.7.3a.css \
          -H custom_latex_header_for_pandoc_pdf_output.tex -s -L diagram.lua \
          --metadata title="eXtensible Access Control Markup Language (XACML) Version 4.0 (XML Representation of ACAL Version 1.0)" --embed-resources \
-         -o acal-v1.0.pdf 
+         -o xacml-v4.0-csd01.pdf 
 ```
 
 

@@ -121,7 +121,7 @@ Run the following command line to generate HTML from this markdown file (named `
 $ pandoc -f gfm+definition_lists -t html acal-v1.0-xpath.md -c styles/markdown-styles-v1.7.3a.css \ 
          -s --lua-filter diagram.lua --embed-resources \
          --metadata title="ACAL v1.0 XPath Profile Version 1.0" \
-         -o acal-v1.0.html
+         -o acal-v1.0-xpath.html
  ```
 
 Note this command generates a Table of Contents (TOC) in HTML which is located at the top of the HTML document, and which requires additional editing in order to be published in the expected OASIS style. This editing will be handled by OASIS staff during publication.
@@ -462,7 +462,11 @@ More importantly, in the context of this profile, the value of the `Path` proper
 For example, in the following `XPathAttributeSelectorType` object in XML representation format:
 
    ```xml
-   <XPathAttributeSelector Path="if ($classif_name = 'SECRET') then 3 else if ($classif_name = 'CONFIDENTIAL') then 2 else if ($classif_name = 'RESTRICTED ') then 1 else 0" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" DataType="http://www.w3.org/2001/XMLSchema#integer" MustBePresent="true" />
+   <XPathAttributeSelector 
+    Path="if ($classif_name = 'SECRET') then 3 else if ($classif_name = 'CONFIDENTIAL') then 2 else if ($classif_name = 'RESTRICTED ') then 1 else 0" 
+    Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" 
+    DataType="http://www.w3.org/2001/XMLSchema#integer" 
+    MustBePresent="true" />
    ```
    the XPath expression references the XPath variable `classif_name`, which requires a `<VariableDefinition VariableId="classif_name">some_expression</VariableDefinition>` to be defined in the enclosing `Policy`, where `some_expression` is any Expression of returning a value of type `http://www.w3.org/2001/XMLSchema#string`.
 
