@@ -1,0 +1,45 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "urn:example:implementation:specific:root:schema",
+    "$defs": {
+        "EnabledRequestDefaultsExtensions": {
+            "$dynamicAnchor": "RequestDefaultsTypeExtensions",
+            "anyOf": [
+                {
+                    "$ref": "urn:oasis:names:tc:jacal:1.0:xpath:schema#/$defs/XPathDefaultsTypeTree"
+                }
+            ]
+        },
+        "EnabledPolicyDefaultsExtensions": {
+            "$dynamicAnchor": "PolicyDefaultsTypeExtensions",
+            "anyOf": [
+                {
+                    "$ref": "urn:oasis:names:tc:jacal:1.0:xpath:schema#/$defs/XPathDefaultsTypeTree"
+                }
+            ]
+        },
+        "EnabledAttributeSelectorExtensions": {
+            "$dynamicAnchor": "AttributeSelectorTypeExtensions",
+            "anyOf": [
+                {
+                    "$ref": "urn:oasis:names:tc:jacal:1.0:xpath:schema#/$defs/XPathAttributeSelectorTypeTree"
+                },
+                {
+                    "$ref": "urn:oasis:names:tc:jacal:1.0:jsonpath:schema#/$defs/JSONPathAttributeSelectorTypeTree"
+                }
+            ]
+        },
+        "EnabledEntityAttributeSelectorExtensions": {
+            "$dynamicAnchor": "EntityAttributeSelectorTypeExtensions",
+            "anyOf": [
+                {
+                    "$ref": "urn:oasis:names:tc:jacal:1.0:xpath:schema#/$defs/XPathEntityAttributeSelectorTypeTree"
+                },
+                {
+                    "$ref": "urn:oasis:names:tc:jacal:1.0:jsonpath:schema#/$defs/JSONPathEntityAttributeSelectorTypeTree"
+                }
+            ]
+        }
+    },
+    "$ref": "urn:oasis:names:tc:jacal:1.0:core:schema"
+}

@@ -159,28 +159,14 @@
 			},
 			"additionalProperties": false
 		},
-		"XPathDefaultsType": {
-			"type": "object",
-			"required": [
-				"XPathVersion"
-			],
-			"properties": {
-				"XPathVersion": {
-					"$ref": "#/$defs/IdentifierType"
-				}
-			},
-			"additionalProperties": false
-		},
 		"PolicyDefaultsTypeTree": {
 			"$comment": "Using object type to have one and only one property per type of PolicyDefaults (i.e. one per ACAL profile). TODO: add similar properties for other PolicyDefaults extensions defined by other JACAL Profiles supported by the implementation (one property per profile), if there is any.",
-			"type": "object",
-			"properties": {
-				"XPathDefaults": {
-					"$comment": "TODO: remove this property if your implementation does not support the XPath Profile of ACAL",
-					"$ref": "#/$defs/XPathDefaultsType"
-				}
-			},
-			"additionalProperties": false
+			"$dynamicRef": "#PolicyDefaultsTypeExtensions"
+		},
+		"PolicyDefaultsTypeTreeEmpty": {
+			"$dynamicAnchor": "PolicyDefaultsTypeExtensions",
+			"$comment": "No PolicyDefaults extension supported by default. Create your own implementation-specific schema that overrides this $dynamicAnchor to support extensions (e.g. XPathDefaults from XPath Profile). See jacal-root-schema-example.json for example.",
+			"not": true
 		},
 		"PolicyParameterType": {
 			"type": "object",
@@ -670,7 +656,6 @@
 		},
 		"NamedAttributeDesignatorTypeTree": {
 			"$comment": "NamedAttributeDesignatorType's direct subtypes",
-			"type": "object",
 			"anyOf": [
 				{
 					"type": "object",
@@ -758,7 +743,6 @@
 		},
 		"BaseAttributeSelectorTypeTree": {
 			"$comment": "BaseAttributeSelectorType's direct subtypes",
-			"type": "object",
 			"anyOf": [
 				{
 					"$ref": "#/$defs/AttributeSelectorTypeTree"
@@ -768,103 +752,21 @@
 				}
 			]
 		},
-		"XPathAttributeSelectorType": {
-			"allOf": [
-				{
-					"$ref": "#/$defs/AttributeSelectorType"
-				},
-				{
-					"type": "object",
-					"required": [],
-					"properties": {
-						"ContextSelectorId": {
-							"$ref": "#/$defs/IdentifierType"
-						}
-					}
-				}
-			],
-			"unevaluatedProperties": false
-		},
-		"XPathEntityAttributeSelectorType": {
-			"allOf": [
-				{
-					"$ref": "#/$defs/EntityAttributeSelectorType"
-				},
-				{
-					"type": "object",
-					"required": [],
-					"properties": {
-						"ContextSelectorId": {
-							"$ref": "#/$defs/IdentifierType"
-						}
-					}
-				}
-			],
-			"unevaluatedProperties": false
-		},
 		"AttributeSelectorTypeTree": {
-			"$comment": "TODO: other kinds of AttributeSelector supported by your implementation must be added to the anyOf array below",
-			"type": "object",
-			"anyOf": [
-				{
-					"$comment": "TODO: remove this subschema if your implementation does not support the XPath Profile",
-					"type": "object",
-					"required": [
-						"XPathAttributeSelector"
-					],
-					"properties": {
-						"XPathAttributeSelector": {
-							"$ref": "#/$defs/XPathAttributeSelectorType"
-						}
-					},
-					"additionalProperties": false
-				},
-				{
-					"$comment": "TODO: remove this subschema if your implementation does not support the JSONPath Profile",
-					"type": "object",
-					"required": [
-						"JSONPathAttributeSelector"
-					],
-					"properties": {
-						"JSONPathAttributeSelector": {
-							"$ref": "#/$defs/AttributeSelectorType"
-						}
-					},
-					"additionalProperties": false
-				}
-			]
+			"$dynamicRef": "#AttributeSelectorTypeExtensions"
+		},
+		"AttributeSelectorTypeTreeEmpty": {
+			"$dynamicAnchor": "AttributeSelectorTypeExtensions",
+			"$comment": "No AttributeSelector extension supported by default. Create your own implementation-specific schema that overrides this $dynamicAnchor to support extensions (e.g. XPathAttributeSelector). See jacal-root-schema-example.json for example.",
+			"not": true
 		},
 		"EntityAttributeSelectorTypeTree": {
-			"$comment": "TODO: other kinds of EntityAttributeSelector supported by your implementation must be added to the anyOf array below",
-			"type": "object",
-			"anyOf": [
-				{
-					"$comment": "TODO: remove this subschema if your implementation does not support the XPath Profile",
-					"type": "object",
-					"required": [
-						"XPathEntityAttributeSelector"
-					],
-					"properties": {
-						"XPathEntityAttributeSelector": {
-							"$ref": "#/$defs/XPathEntityAttributeSelectorType"
-						}
-					},
-					"additionalProperties": false
-				},
-				{
-					"$comment": "TODO: remove this subschema if your implementation does not support the JSONPath Profile",
-					"type": "object",
-					"required": [
-						"JSONPathEntityAttributeSelector"
-					],
-					"properties": {
-						"JSONPathEntityAttributeSelector": {
-							"$ref": "#/$defs/EntityAttributeSelectorType"
-						}
-					},
-					"additionalProperties": false
-				}
-			]
+			"$dynamicRef": "#EntityAttributeSelectorTypeExtensions"
+		},
+		"EntityAttributeSelectorTypeTreeEmpty": {
+			"$dynamicAnchor": "EntityAttributeSelectorTypeExtensions",
+			"$comment": "No EntityAttributeSelector extension supported by default. Create your own implementation-specific schema that overrides this $dynamicAnchor to support extensions (e.g. XPathAttributeSelector). See jacal-root-schema-example.json for example.",
+			"not": true
 		},
 		"QuantifiedExpressionType": {
 			"type": "object",
@@ -954,6 +856,17 @@
 					"additionalProperties": false
 				},
 				{
+					"type": "object",
+					"required": [
+						"Function"
+					],
+					"properties": {
+						"Function": {
+							"$ref": "#/$defs/FunctionType"
+						}
+					}
+				},
+				{
 					"$ref": "#/$defs/NonLiteralExpressionTypeTree"
 				}
 			]
@@ -988,17 +901,6 @@
 				{
 					"type": "object",
 					"required": [
-						"Function"
-					],
-					"properties": {
-						"Function": {
-							"$ref": "#/$defs/FunctionType"
-						}
-					}
-				},
-				{
-					"type": "object",
-					"required": [
 						"Apply"
 					],
 					"properties": {
@@ -1011,11 +913,11 @@
 					"$ref": "#/$defs/NamedAttributeDesignatorTypeTree"
 				},
 				{
-					"$comment": "TODO: remove this if (Entity)AttributeSelectorType is not supported",
+					"$comment": "TODO: remove this subschema if (Entity)AttributeSelectorType is not supported by the implementation",
 					"$ref": "#/$defs/BaseAttributeSelectorTypeTree"
 				},
 				{
-					"$comment": "TODO: remove this if QuantifiedExpressionType is not supported",
+					"$comment": "TODO: remove this subschema if QuantifiedExpressionType is not supported by the implementation",
 					"$ref": "#/$defs/QuantifiedExpressionTypeTree"
 				}
 			]
@@ -1162,15 +1064,13 @@
 			}
 		},
 		"RequestDefaultsTypeTree": {
-			"$comment": "Using object type to have one and only one property per type of PolicyDefaults (i.e. one per ACAL profile). TODO: add similar properties for other PolicyDefaults extensions defined by other JACAL Profiles supported by the implementation (one property per profile), if there is any.",
-			"type": "object",
-			"properties": {
-				"XPathDefaults": {
-					"$comment": "TODO: remove this property if your implementation does not support the XPath Profile of ACAL",
-					"$ref": "#/$defs/XPathDefaultsType"
-				}
-			},
-			"additionalProperties": false
+			"$comment": "Using object type to have one and only one property per type of RequestDefaults (i.e. one per ACAL profile). TODO: add similar properties for other RequestDefaults extensions defined by other JACAL Profiles supported by the implementation (one property per profile), if there is any.",
+			"$dynamicRef": "#RequestDefaultsTypeExtensions"
+		},
+		"RequestDefaultsTypeTreeEmpty": {
+			"$dynamicAnchor": "RequestDefaultsTypeExtensions",
+			"$comment": "No RequestDefaults extension supported by default. Create your own implementation-specific schema that overrides this $dynamicAnchor to support extensions (e.g. XPathDefaults from XPath Profile). See jacal-root-schema-example.json for example.",
+			"not": true
 		},
 		"RequestType": {
 			"type": "object",
@@ -1344,10 +1244,10 @@
 			"additionalProperties": false
 		},
 		"RequestReferenceType": {
-			"$comment": "TODO: remove this if your implementation does not support MultiRequests (the Multiple Decision Profile)",
+			"$comment": "TODO: remove this subschema if your implementation does not support MultiRequests (the Multiple Decision Profile)",
 			"type": "object",
 			"required": [
-				"RequestReference"
+				"RequestEntityReference"
 			],
 			"properties": {
 				"RequestEntityReference": {

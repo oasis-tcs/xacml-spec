@@ -386,7 +386,7 @@ A `XPathDefaultsType` object contains the following property:
 
 `XPathVersion` [Required]
 
-: An `IdentifierType` value specifying the XPath version for XPath expressions occurring in the policy. XPath expressions are used by attribute selectors and as arguments to XPath-based functions.
+: An `IdentifierType` value specifying the XPath version for XPath expressions occurring in the policy. XPath expressions are used by attribute selectors and as arguments to XPath-based functions. See the section 6 for the supported `XPathVersion` values.
 
 ## 5.2.2 Single inheritance alternative - XPathPolicyDefaultsType and XPathRequestDefaultsType
 

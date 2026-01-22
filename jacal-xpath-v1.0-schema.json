@@ -1,0 +1,88 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "urn:oasis:names:tc:jacal:1.0:xpath:schema",
+	"$defs": {
+		"XPathDefaultsType": {
+			"type": "object",
+			"required": [
+				"XPathVersion"
+			],
+			"properties": {
+				"XPathVersion": {
+					"$ref": "urn:oasis:names:tc:jacal:1.0:core:schema#/$defs/IdentifierType"
+				}
+			},
+			"additionalProperties": false
+		},
+		"XPathDefaultsTypeTree": {
+			"type": "object",
+			"required": [
+				"XPathDefaults"
+			],
+			"properties": {
+				"XPathDefaults": {
+					"$ref": "#/$defs/XPathDefaultsType"
+				}
+			},
+			"additionalProperties": false
+		},
+		"XPathAttributeSelectorType": {
+			"allOf": [
+				{
+					"$ref": "urn:oasis:names:tc:jacal:1.0:core:schema#/$defs/AttributeSelectorType"
+				},
+				{
+					"type": "object",
+					"required": [],
+					"properties": {
+						"ContextSelectorId": {
+							"$ref": "urn:oasis:names:tc:jacal:1.0:core:schema#/$defs/IdentifierType"
+						}
+					}
+				}
+			],
+			"unevaluatedProperties": false
+		},
+		"XPathEntityAttributeSelectorType": {
+			"allOf": [
+				{
+					"$ref": "urn:oasis:names:tc:jacal:1.0:core:schema#/$defs/EntityAttributeSelectorType"
+				},
+				{
+					"type": "object",
+					"required": [],
+					"properties": {
+						"ContextSelectorId": {
+							"$ref": "urn:oasis:names:tc:jacal:1.0:core:schema#/$defs/IdentifierType"
+						}
+					}
+				}
+			],
+			"unevaluatedProperties": false
+		},
+		"XPathAttributeSelectorTypeTree": {
+			"type": "object",
+			"required": [
+				"XPathAttributeSelector"
+			],
+			"properties": {
+				"XPathAttributeSelector": {
+					"$ref": "#/$defs/XPathAttributeSelectorType"
+				}
+			},
+			"additionalProperties": false
+		},
+		"XPathEntityAttributeSelectorTypeTree": {
+			"type": "object",
+			"required": [
+				"XPathEntityAttributeSelector"
+			],
+			"properties": {
+				"XPathEntityAttributeSelector": {
+					"$ref": "#/$defs/XPathEntityAttributeSelectorType"
+				}
+			},
+			"additionalProperties": false
+		}
+	}
+}

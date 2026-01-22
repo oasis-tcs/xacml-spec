@@ -1,0 +1,23 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "urn:example:root:schema:with:jsonpath:profile",
+    "$defs": {
+        "EnabledAttributeSelectorExtensions": {
+            "$dynamicAnchor": "AttributeSelectorTypeExtensions",
+            "anyOf": [
+                {
+                    "$ref": "urn:oasis:names:tc:jacal:1.0:jsonpath:schema#/$defs/JSONPathAttributeSelectorTypeTree"
+                }
+            ]
+        },
+        "EnabledEntityAttributeSelectorExtensions": {
+            "$dynamicAnchor": "EntityAttributeSelectorTypeExtensions",
+            "anyOf": [
+                {
+                    "$ref": "urn:oasis:names:tc:jacal:1.0:jsonpath:schema#/$defs/JSONPathEntityAttributeSelectorTypeTree"
+                }
+            ]
+        }
+    },
+    "$ref": "urn:oasis:names:tc:jacal:1.0:core:schema"
+}
