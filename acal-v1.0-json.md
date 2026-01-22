@@ -421,7 +421,6 @@ We consider `PolicyType`, `BundleType`, `RequestType` and `ResponseType` as the 
 	"$id": "urn:oasis:names:tc:jacal:1.0:core:schema",
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
 	"title": "JSON schema of ACAL Version 1.0 (JACAL)",
-	"type": "object",
 	"anyOf": [
 		{
 			"$ref": "#/$defs/PolicyType"
