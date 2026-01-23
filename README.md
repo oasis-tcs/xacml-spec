@@ -25,7 +25,7 @@ Please send questions or comments about <a href="https://www.oasis-open.org/reso
 
 *All the Java commands below have been tested with Java 21 LTS.*
 
-### How do I validate XACML documents with the XACML schemas (when I support XML Schema 1.1)?
+### How to validate XACML documents with the XACML schemas (when I support XML Schema 1.1)?
 
 Since XACML 4.0, XACML schemas exist in [XSD version 1.1](https://www.w3.org/TR/xmlschema11-1/) to provide more advanced validation and especially an equivalence for the UML constraints (OCL) defined in ACAL agnostic model, in form of XSD 1.1 assertions (`xs:assert`). One way to validate against a XSD 1.1 schema is to use [Apache Xerces2 Java XML Parser](https://xerces.apache.org/xerces2-j/), more specifically its [binary distribution](https://xerces.apache.org/mirrors.cgi#binary) called _**Xerces2 Java 2.12.2 (XML Schema 1.1)**_. 
 
@@ -39,7 +39,7 @@ In order to validate a XACML document, say `MyPolicy.xml`, run the following com
 $ java -cp "xerces-2_12_2-xml-schema-1.1/*" jaxp.SourceValidator -i MyPolicy.xml -a ./xacml-core-v4.0-schema.xsd -a ./xacml-xpath-v4.0-schema.xsd -a ./xacml-jsonpath-v4.0-schema.xsd -f -fx -xsd11
 ```
 
-### If I do not support the XML Schema 1.1, how do I validate XACML documents with the XACML schemas (using only Xml Schema 1.0 and Schematron)?
+### If the implementation does not support XML Schema 1.1, how to validate XACML documents with the XACML schemas (using only XML Schema 1.0 and Schematron)?
 
 As an alternative to the XSD 1.1 core schema (with XSD 1.1 assertions) previously mentioned, implementers that only support XSD 1.0 may use an XSD 1.0 version of the core schema - obtained by filtering out all the schema elements with attribute `vc:minVersion="1.1"` according to the [XML Schema Versioning standard](https://www.w3.org/2007/XMLSchema-versioning/) (e.g. using a [XSLT](https://www.w3.org/TR/xslt20/) stylesheet) - in combination with the core [Schematron](https://www.iso.org/standard/85625.html) [schema](xacml-core-v4.0-schematron.sch), which provides an equivalent for XSD 1.1 assertions.
 
@@ -71,3 +71,69 @@ Here is an example of how to do that with the **XML schema 1.0-only version of X
     ```
 
     This last command will output a [Schematron Validation Report (SVRL)](https://schematron.com/document/3427.html).
+
+
+### How to validate JACAL (JSON) documents with the JACAL schemas ?
+
+JACAL is the JSON representation of ACAL, in other words the JSON variant of XACML. JACAL core model is defined by the Core JSON schema, corresponding to ACAL core model. Certain structures of the core model (ACAL structured Datatypes) are extensible and may have standard extensions already defined in ACAL *Profiles*, e.g. the JSONPath and XPath Profiles which extend the `AttributeSelectorType` among others. Depending on whether your ACAL implementation supports such Profiles or not, the way to validate JACAL documents properly against the JSON schema(s) differs. Let us go other the different cases. For each case, we'll show an example of command-line to validate a JACAL (JSON) document using [Sourcemeta's open source JSON schema CLI](https://github.com/sourcemeta/jsonschema).
+
+**Case 1: the implementation does not support any Profile or extension to ACAL model, only the core model:**
+
+In this case, you simply use [JACAL core schema](jacal-core-v1.0-schema.json) for validation. Here is an example of [jsonschema validate command](https://github.com/sourcemeta/jsonschema/blob/main/docs/validate.markdown) that validates a JACAL document in a file `policy.json`:
+```console
+$ jsonschema validate jacal-core-v1.0-schema.json policy.json
+```
+
+**Case 2: the implementation supports one or more Profiles extending the ACAL core model (i.e. extending JACAL core schema):**
+
+Each extensible type *FooType* has a JSON subschema *FooTypeTree* defined in the core schema as follows (using the special keyword `$dynamicRef` introduced in JSON schema Draft 2020-12 specification):
+
+*Core schema:*
+```json
+"FooTypeTree": { "$dynamicRef": "#FooTypeExtensions" }
+```
+This enables you to extend *FooType* with the concrete subtypes from the JACAL Profiles you want to support, by defining a matching `$dynamicAnchor` in your implementation-specific schema (the core schema must be imported last):
+
+*New schema for a particular implementation supporting two ACAL Profiles extending FooType:*
+```json
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "urn:my:implementation:specific:combining:schema",
+    "$defs": {
+        "SupportedFooTypeExtensions": {
+            "$dynamicAnchor": "FooTypeExtensions",
+            "anyOf": [
+                {
+                    "$ref": "urn:some:profile:schema#/$defs/SomeFooSubTypeTree"
+                },
+                {
+                    "$ref": "urn:some:other:profile:schema#/$defs/SomeOtherFooSubTypeTree"
+                }
+            ]
+        },
+        ...
+    },
+    "$ref": "urn:oasis:names:tc:jacal:1.0:core:schema"
+}
+```
+This schema is also called a *combining schema* as it combines the core schema with the specific Profiles' to be supported by your implementation.
+
+We provide two concrete examples of combining schemas on this Github repository to illustrate this case and get you started using JACAL Profiles:
+
+1. **Example 1:** let's say you want to support JSONPath-based AttributeSelectors, i.e. the `AttributeSelectorType` extensions from the JSONPath Profile's. In this case, you may use the example of [combining schema for JSONPath Profile support](jacal-root-schema-example-using-jsonpath-profile-only.json) for your implementation. This schema makes a reference (`$ref`) to the [core schema](jacal-core-v1.0-schema.json) and [JSONPath Profile's schema](jacal-jsonpath-v1.0-schema.json).
+
+   To use this schema, the previous JSON schema validation command is modified as follows:
+   ```console
+   $ jsonschema validate --resolve jacal-core-v1.0-schema.json --resolve jacal-jsonpath-v1.0-schema.json jacal-root-schema-example-using-jsonpath-profile-only.json policy.json
+   ```
+   
+2. **Example 2:** you want to support both JSONPath and XPath based AttributeSelectors, i.e. JSONPath and XPath Profiles, then you may use the example of [combining schema for JSONPath and XPath Profile support](jacal-root-schema-example-using-xpath-and-jsonpath-profiles.json). This schema makes a reference (`$ref`) to the [core schema](jacal-core-v1.0-schema.json), [JSONPath Profile's schema](jacal-jsonpath-v1.0-schema.json) and [XPath Profile's schema](jacal-xpath-v1.0-schema.json).
+
+   To use this schema, the previous JSON schema validation command is modified as follows:
+   ```console
+   $ jsonschema validate --resolve jacal-core-v1.0-schema.json --resolve jacal-jsonpath-v1.0-schema.json --resolve jacal-xpath-v1.0-schema.json jacal-root-schema-example-using-xpath-and-jsonpath-profiles.json policy.json
+   ```
+
+
+
+
