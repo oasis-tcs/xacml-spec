@@ -47,8 +47,8 @@ https://docs.oasis-open.org/xacml/v4.0/xacml-v4.0.pdf
 ### Additional artifacts:
 
 This document is one component of a Work Product that also includes:
-<!-- TODO: check this URL -->
-* Core XML schema:  https://docs.oasis-open.org/xacml/4.0/csd01/schema/xacml-core-v4.0-schema.xsd
+
+* Core XML schema: <!-- TODO: check this URL -->  https://docs.oasis-open.org/xacml/4.0/csd01/schema/xacml-core-v4.0-schema.xsd
 * Core Schematron rules: [xacml-core-v4.0-schematron.sch](xacml-core-v4.0-schematron.sch)
 * Short identifier set: [xacml-core-v4.0-identifiers.xml](xacml-core-v4.0-identifiers.xml)
 * XPath Profile XML schema: [xacml-xpath-v4.0-schema.xsd](xacml-xpath-v4.0-schema.xsd)
@@ -76,9 +76,11 @@ Latest stage: https://docs.oasis-open.org/xacml/xacml/v4.0/xacml-v4.0.html.
 ### Related work:
 
 This specification replaces or supersedes:
+
 * _eXtensible Access Control Markup Language (XACML) Version 3.0 Plus Errata 01_. Edited by Erik Rissanen. OASIS Standard incorporating Approved Errata. https://docs.https:xacml/3.0/xacml-3.0-core-spec-en.html.
 
 This specification is related to:
+
 * _Attribute-Centric Authorization Language (ACAL) Version 1.0_. Edited by Steven Legg and Cyril Dangerville. 15 January 2026. OASIS Committee Specification Draft 01.
 
 
@@ -96,11 +98,15 @@ HTML/PDF versions are generated automatically online via Github Actions after ea
 
 #### Prerequisites
 
-Install Pandoc, Graphviz and PlantUML on your system; or simply use Docker with the following shell alias:
+The following tools are required:
+
+- [Pandoc](https://pandoc.org/);
+- [Pandoc-include filter](https://github.com/DCsunset/pandoc-include).
+
+Either install them on your system or, if you have Docker installed already, simply use the following shell alias:
 ```
-$ alias pandoc='docker run --rm --volume "$(pwd):/data" cdang/pandoc-plantuml'
+$ alias pandoc='docker run --rm --volume "$(pwd):/data" pandoc/extra'
 ```
-_The Dockerfile (named `Dockerfile`) of the docker image used in the alias above is provided in the same folder as this markdown file for your convenience if you wish to build it yourself._  
 
 OASIS staff are currently using pandoc 3.0 from https://github.com/jgm/pandoc/releases/tag/3.0.
 
@@ -109,32 +115,32 @@ Git clone or get a local copy of [OASIS XACML TC code repository](https://github
 #### CSS stylesheet
 
 The generation command uses a CSS stylesheet file (`-c` argument) provided by OASIS. It may be changed to one of these (or the local version in the `styles` folder) to get a different style of output:
+
 - https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3.css
 - https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3a.css (this one produces HTML that resembles the github display more closely, especially for blocks of code) This template already includes a reference (in HTML code) to this .css file.
 - https://docs.oasis-open.org/templates/css/markdown-styles-v1.8.1-cn_final.css
 
 #### HTML generation
 
-Run the following command line to generate HTML from this markdown file (named `acal-v1.0-csd01.md`), :
+Run the following command line to generate HTML from this markdown file (named `xacml-v4.0-csd01.md`) to an output file `/tmp/xacml-v4.0-csd01.html` :
 
 ```console
-$ pandoc -f gfm+definition_lists -t html xacml-v4.0-csd01.md -c styles/markdown-styles-v1.7.3a.css \ 
-         -s --lua-filter diagram.lua --embed-resources \
-         --metadata title="eXtensible Access Control Markup Language (XACML) Version 4.0 (XML Representation of ACAL Version 1.0)" \
-         -o xacml-v4.0-csd01.html
+$ pandoc -s --verbose --embed-resources -f gfm+definition_lists -c styles/markdown-styles-v1.7.3a.css -F pandoc-include \
+         -M lang=en -M title="eXtensible Access Control Markup Language (XACML) Version 4.0 (XML Representation of ACAL Version 1.0)" \
+         -t html -o /tmp/xacml-v4.0-csd01.html xacml-v4.0-csd01.md
  ```
 
-Note this command generates a Table of Contents (TOC) in HTML which is located at the top of the HTML document, and which requires additional editing in order to be published in the expected OASIS style. This editing will be handled by OASIS staff during publication.
+Note this command generates a document which may require additional editing in order to be published in the expected OASIS style. This editing will be handled by OASIS staff during publication.
 
 #### PDF generation
 
-For PDF output, the command line is the following (different `-t` and `-H` arguments):
+For PDF output, the command line is the following (different `-t` and `-H` arguments, and output goes to file `/tmp/xacml-v4.0-csd01.pdf`):
 
 ```console
-$ pandoc -f gfm+definition_lists -t pdf xacml-v4.0-csd01.md -c styles/markdown-styles-v1.7.3a.css \
-         -H custom_latex_header_for_pandoc_pdf_output.tex -s -L diagram.lua \
-         --metadata title="eXtensible Access Control Markup Language (XACML) Version 4.0 (XML Representation of ACAL Version 1.0)" --embed-resources \
-         -o xacml-v4.0-csd01.pdf 
+$ pandoc -s --embed-resources -f gfm+definition_lists -c styles/markdown-styles-v1.7.3a.css -F pandoc-include \
+         -H pandoc/custom_latex_header_for_pandoc_pdf_output.tex \
+         --metadata title="eXtensible Access Control Markup Language (XACML) Version 4.0 (XML Representation of ACAL Version 1.0)" \
+         -t pdf -o /tmp/xacml-v4.0-csd01.pdf xacml-v4.0-csd01.md
 ```
 
 
@@ -232,6 +238,7 @@ $ pandoc -f gfm+definition_lists -t pdf xacml-v4.0-csd01.md -c styles/markdown-s
   - [B.2 Informative References](#b2-informative-references)
 - [Annex C. XACML identifiers (normative)](#annex-c-xacml-identifiers-normative)
   - [C.1 XACML namespaces](#c1-xacml-namespaces)
+- [Annex D. XML Schema (normative)](#annex-d-xml-schema-normative)
 - [Appendix 1. Acknowledgments](#appendix-1-acknowledgments)
   - [Leadership](#leadership)
   - [Special Thanks](#special-thanks)
@@ -351,6 +358,7 @@ This specification uses the following typographical conventions in text: `<XACML
 ## 3.3 Schema organization and namespaces
 
 The XACML syntax is defined in a schema associated with the following XML namespace:
+
 <!-- Newline to fit on PDF page -->
 `urn:oasis:names:tc:xacml:4.0:core:schema`
 
@@ -419,9 +427,9 @@ The list of changes from the previous version and any revision history can be fo
 # 5 Syntax (normative, with the exception of the schema fragments)
 
 The next sections describe the rules that SHALL be applied for mapping the [ACAL](#acal) agnostic model (UML-based) to [XML schema](#XS) definitions for this XML representation (XACML).
-These rules have been applied to produce the [XACML XML schema](xacml-core-v4.0-schema.xsd) accompanying this document.
+These rules have been applied to produce XACML's core XML schema in [Annex D](#annex-d-xml-schema-normative) (also in the [Core XML schema file](xacml-core-v4.0-schema.xsd) accompanying this document) from the [ACAL] core model.
 
-In all XSD definitions from now, the XACML core namespace ``urn:oasis:names:tc:xacml:4.0:core:schema` is the default namespace.
+In all XSD definitions from now, the XACML core namespace `urn:oasis:names:tc:xacml:4.0:core:schema` is the default namespace.
 
 
 ## 5.1 Mapping ACAL primitive types 
@@ -543,64 +551,70 @@ As an exception, if the ACAL complex type is `ValueType` from [ACAL](#ACAL) sect
 If a complex ACAL type `FooType` is not in the previous cases (section 5.2.1 and 5.2.2), then:
 
 1. If `FooType` is abstract (italicized title in the UML diagram), then:
-   - If `FooType` is empty (no class inheritance, no property), then:
-     - If and only if `FooType` is used by more than one property in ACAL model (e.g. `ExpressionType`), then map it to the following XSD definition:
-         ```xml 
-         <xs:complexType name="FooType" abstract="true"/>
-         ```
-     - Else (it is single-used) skip it as instructed in section 5.2.1.
+   * 1.1. If `FooType` is empty (no class inheritance, no property), then:
+     - 1.1.1. If and only if `FooType` is used by more than one property in ACAL model (e.g. `ExpressionType`), then map it to the following XSD definition:
+       ```xml 
+       <xs:complexType name="FooType" abstract="true"/>
+       ```
+     - 1.1.2. Else (it is single-used) skip it as instructed in section 5.2.1.
   
-   - Else (`FooType` is not empty, i.e. inherits a type and/or has at least one property)
-     If  `FooType` inherits from a Datatype `BarType` (Generalization relationship), then:
-     - If `BarType` is a single-use empty type as defined in section 5.2.1, `BarType` is not mapped to any XSD type (mapping is done only at the property level), therefore `FooType` (e.g. `PolicyType`) SHALL be mapped to the following XSD definition (not inheriting from `BarType`):
-         ```xml
-         <xs:complexType name="FooType" abstract="true">
+   * 1.2. Else (`FooType` is not empty, i.e. inherits a type and/or has at least one property):
+     - 1.2.1. If  `FooType` inherits from a Datatype `BarType` (Generalization relationship), then:
+       + 1.2.1.1. If `BarType` is a single-use empty type as defined in section 5.2.1, `BarType` is not mapped to any XSD type (mapping is done only at the property level), therefore `FooType` (e.g. `PolicyType`) SHALL be mapped to the following XSD definition (not inheriting from `BarType`):
+  
+          ```xml
+          <xs:complexType name="FooType" abstract="true">
             ...property mapping rules (5.2.4) apply...
-         </xs:complexType>
-         ```
-     - Else (`BarType` is not a single-use empty type, therefore is mapped to a dedicated XML type)
-       - If `FooType` has no property (e.g. `ForAnyType`), map it to the following XSD element definition (no need for an XSD type) :
+          </xs:complexType>
+          ```
+
+       + 1.2.1.2. Else (`BarType` is not a single-use empty type, therefore is mapped to a dedicated XML type) if `FooType` has no property (e.g. `ForAnyType`), map it to the following XSD element definition (no need for an XSD type):
+         
          ```xml
          <xs:element name="Foo" type="BarType" substitutionGroup="Super" abstract="true"/>
          ```
+         
          where `Super` is the name of the `SuperType` element and `SuperType` is the closest datatype to `BarType` in `BarType`'s class hierachy (including `BarType` itself) that is used as at least one property's datatype in ACAL model.
 
-	    - Else (`FooType` has at least one property)
+	    + 1.2.1.3. Else (`FooType` has at least one property):
+  
             ```xml
             <xs:complexType name="FooType" abstract="true">
-               <xs:complexContent>
-                  <xs:extension base="BarType">
-                     ...property mapping rules (5.2.4) apply...
-                  </xs:extension>
-               </xs:complexContent>
+              <xs:complexContent>
+                <xs:extension base="BarType">
+                  ...property mapping rules (5.2.4) apply...
+                </xs:extension>
+              </xs:complexContent>
             </xs:complexType>
             ```
-   - Else (`FooType` has no class inheritance) map `FooType` to the following XSD definition:
-      ```xml
-      <xs:complexType name="FooType" abstract="true">
+
+     - 1.2.2. Else (`FooType` does not inherit any type) map `FooType` to the following XSD definition:
+
+       ```xml
+       <xs:complexType name="FooType" abstract="true">
          ...property mapping rules (5.2.4) apply...
-      </xs:complexType>
-      ```
+       </xs:complexType>
+       ```
 2. Else (`FooType` is not abstract) apply the same mapping rules as in the first case, except remove `abstract="true"` from the `xs:complexType` and `xs:element` definitions.
 
 3. If `FooType` has a UML *link* (kind of *Association*) via its property *keyRefProp* to another type `BarType`'s property *keyProp* (e.g. a reference to a BarType instance via its identifier), then add a `<xs:keyRef>` element as defined in section 3.11.2 of [[XS](#xs11)] (Identity-constraint Definitions), into the XML element declaration of the root object type (*RootObjectType*) enclosing the property(ies) of type *FooType* and *BarType* (created previously), as follows:
-     ```xml
-     <xs:element name="RootObject" ...>
-        ...
-        <!-- The xs:key should already be declared from mapping BarType before FooType.  -->
-        <xs:key name="RootObject_Bar_keyProp">
-          <xs:selector xpath="<XPath_to_Bar_element>" />
-          <xs:field xpath="@keyProp" />
-        </xs:key>
+   ```xml
+   <xs:element name="RootObject" ...>
+     ...
+     <!-- The xs:key should already be declared from mapping BarType before FooType.  -->
+     <xs:key name="RootObject_Bar_keyProp">
+       <xs:selector xpath="<XPath_to_Bar_element>" />
+       <xs:field xpath="@keyProp" />
+     </xs:key>
 
-        <!-- New keyRef -->
-        <xs:keyref name="RootObject_Foo_keyRefProp" refer="RootObject_Bar_keyProp">
-          <xs:selector xpath="<XPath_to_Foo_element>" />
-          <xs:field xpath="@keyRefProp" />
-        </xs:keyref>
-     </xs:element>
-     ```
-     where `<XPath_to_Foo_element>` is the XPath expression to select the *Foo* element of `FooType`.
+     <!-- New keyRef -->
+     <xs:keyref name="RootObject_Foo_keyRefProp" refer="RootObject_Bar_keyProp">
+       <xs:selector xpath="<XPath_to_Foo_element>" />
+       <xs:field xpath="@keyRefProp" />
+     </xs:keyref>
+   </xs:element>
+   ```
+   where `<XPath_to_Foo_element>` is the XPath expression to select the *Foo* element of `FooType`.
    
 4. If `FooType` has *Object-level constraints* as defined in section 7.1.1.1.2 of [[ACAL](#acal)], implementers SHOULD apply the recommended mappings in the section [5.2.5](#525-mapping-complex-acal-constraints-ocl), or they MAY also apply alternative implementation-specific mapping mechanisms as they see fit.
 
@@ -629,12 +643,16 @@ Inside the `xs:complexType` or `xs:extension` element created by the previous ma
      ```
    - 2.3. Else (if *PropType* is `String` (unrestricted, i.e. not a derived type) or multi-valued), then:
         
-        Define a global element named *Prop* in XACML namespace:
-        ```xml
-        <xs:element name="Prop" type="PropXsdType"/>
-        ```
-        If this is the first property in the datatype, then create  a `<xs:sequence>`. 
-        Add an element reference to the above element inside the `<xs:sequence>` as follows (replace `$min` with the lower bound and `$max` with the upper bound of *Prop*'s multiplicity in the ACAL (UML) model, using `unbounded` as equivalent for `*`):
+     Define a global element named *Prop* in XACML namespace:
+
+     ```xml
+     <xs:element name="Prop" type="PropXsdType"/>
+     ```
+     
+     If this is the first property in the datatype, then create  a `<xs:sequence>`. 
+
+     Add an element reference to the *Prop* global element above inside the `<xs:sequence>` as follows (replace `$min` with the lower bound and `$max` with the upper bound of *Prop*'s multiplicity in the ACAL (UML) model, using `unbounded` as equivalent for `*`):
+
         ```xml
         <xs:sequence>
            ...other properties mapped to elements...
@@ -642,7 +660,9 @@ Inside the `xs:complexType` or `xs:extension` element created by the previous ma
            ...other properties mapped to elements...
         </xs:sequence>
         ```
+
    - 2.4. If *Prop* is multivalued and has a *simple uniqueness constraint* as defined in section 7.1.1.1.1.1 of [ACAL], i.e. a UML `unique` annotation, then add an `<xs:key>` element as defined in section 3.11.2 of [[XS](#xs11)] (Identity-constraint Definitions), into the XML element declaration of the root object type enclosing *Prop* (created previously), as follows:
+  
      ```xml
      <xs:element name="RootAncestorOfProp" ...>
         ...
@@ -652,9 +672,11 @@ Inside the `xs:complexType` or `xs:extension` element created by the previous ma
         </xs:key>
      </xs:element>
      ```
+
      where `<XPath_to_Prop>` is the XPath expression to select the *Prop* element from `RootAncestorOfProp` element.
    
 3. Else if *PropType* is a *single-use empty type* as defined in Section 5.2.1 (e.g.`CombinerInputType`), i.e. an empty abstract type only used by *Prop* in the ACAL model, with subtypes *Sub1Type, Sub2Type, etc.*, then for each subtype *SubXType* of *PropType*, apply the mapping rules in the previous section and this section to *SubXType*, and create an element `<xs:element name="SubX" type="SubXType" />` in XACML namespace if it does not already exist (`<xs:element name="SubX" type="SubXType" abstract="true"/>` if *SubXType* is abstract). Then *PropType* maps to the following XSD definition (replace `$min` with the lower bound of *Prop*'s multiplicity in the ACAL (UML) model, and `$max` with the upper bound, using `unbounded` as equivalent for `*`):
+   
    ```xml
    <xs:choice minOccurs="$min" maxOccurs="$max">
       <xs:element ref="Sub1"/>
@@ -664,29 +686,36 @@ Inside the `xs:complexType` or `xs:extension` element created by the previous ma
    ``` 
 
 4. Else (*PropType* is not a single-use empty type), apply the mapping rules in the previous section and this section to *PropType*, then:
+   
    - 4.1. Define a global element named `Prop` of type `PropType` in XACML namespace if it does not already exist:
+  
      ```xml
      <xs:element name="Prop" type="PropType"/>
      ```
      If `PropType` is abstract, add the `abstract="true"` attribute:
+
      ```xml
      <xs:element name="Prop" type="PropType" abstract="true"/>
      ``` 
 
      If `PropType` inherits from a type `BarType`, apply the mapping rules in the previous section and this section to `BarType` if the XSD type `BarType` is not already defined, then create a global element named `Bar` of type `BarType` in XACML namespace by re-appling this same rule 4.1 with `Bar` as *Prop* and `BarType` as *PropType*, if the element `Bar` does not already exist. Then add *Prop* element to `Bar` substitution group:
+
      ```xml
      <xs:element name="Prop" type="PropType" substitutionGroup="Bar"/>
      ```
         
    - 4.2. Map *Prop* to the following XSD definition (replace `$min` with the lower bound of *Prop*'s multiplicity in the ACAL (UML) model, and `$max` with the upper bound, using `unbounded` as equivalent for `*`):
+  
      ```xml
      <xs:sequence>
        ...other properties mapped to elements...
        <xs:element ref="Prop" minOccurs="$min" maxOccurs="$max"/>
        ...other properties mapped to elements...
      </xs:sequence>
-     `
+     ```
+
    - 4.3. If *Prop* has a *mandatory-property-based uniqueness constraint* as defined in section 7.1.1.1.1.2 of [ACAL], i.e. `self->isUnique(itemProp)`, then add an `<xs:key>` element as defined in section 3.11.2 of [[XS](#xs11)] (Identity-constraint Definitions), into the XML element of the root object type enclosing *Prop* (created previously), as follows (such `itemProp` is always mapped to an XML attribute in this case):
+  
      ```xml
      <xs:element name="RootAncestorOfProp" ...>
         <xs:key name="RootAncestorOfProp_Prop">
@@ -698,6 +727,7 @@ Inside the `xs:complexType` or `xs:extension` element created by the previous ma
      where `<XPath_to_Prop>` is the XPath expression to select the *Prop* element from `RootAncestorOfProp` element.
 
    - 4.4 Else if *Prop* has a *optional-property-based uniqueness constraint* as defined in section 7.1.1.1.1.2 of [ACAL], i.e. `self->select(itemProp <> null)->isUnique(itemProp)`, then add an `<xs:unique>` element as defined in section 3.11.2 of [[XS](#xs11)] (Identity-constraint Definitions), into the XML element of the root object type enclosing *Prop* (created previously), as follows (such `itemProp` is always mapped to an XML attribute in this case):
+  
      ```xml
      <xs:element name="RootAncestorOfProp" ...>
         <xs:unique name="RootAncestorOfProp_Prop">
@@ -706,9 +736,11 @@ Inside the `xs:complexType` or `xs:extension` element created by the previous ma
         </xs:unique>
      </xs:element> 
      ```
+
      where `<XPath_to_Prop>` is the XPath expression to select the *Prop* element from `RootAncestorOfProp` element.
 
    - 4.5. Else if *Prop* has a *multi-property-based uniqueness constraint* as defined in section 7.1.1.1.1.2 of [ACAL], i.e. ` self->isUnique(Sequence{itemProp1, itemProp2, ...})`, then add an `<xs:unique>` element as defined in section 3.11.2 of [[XS](#xs11)] (Identity-constraint Definitions), into the XML element of the root object type enclosing *Prop* (created previously), as follows (such `itemProp1`, `itemProp2`, etc. are always mapped to XML attributes in this case):
+  
      ```xml
      <xs:element name="RootAncestorOfProp" ...>
         <xs:unique name="RootAncestorOfProp_Prop">
@@ -719,6 +751,7 @@ Inside the `xs:complexType` or `xs:extension` element created by the previous ma
         </xs:unique>
      </xs:element> 
      ```
+
      where `<XPath_to_Prop>` is the XPath expression to select the *Prop* element from `RootAncestorOfProp` element.
 
    - 4.6. Else if *Prop* has other kinds of constraints defined in section 7.1.1.1.1.2 of [ACAL] not mentioned previously, implementers SHOULD apply the recommended mappings in the next section, or they MAY also apply alternative implementation-specific mapping mechanisms as they see fit.
@@ -728,12 +761,14 @@ Inside the `xs:complexType` or `xs:extension` element created by the previous ma
 _*This section is non-normative.*_ 
 
 The following kinds of OCL-defined UML constraints in the [ACAL](#acal) model do not have any equivalent in [[XSD 1.0](#xs)]:
+
 - Some of the OCL-defined property-level constraints in [ACAL] section 7.1.1.1.1.2:
   - Multivalued-property-based uniqueness constraint;
   - Value type uniqueness constraint.
 - All object-level constraints in [ACAL] section 7.1.1.1.2.
 
 This document does not mandate a particular method to map and/or implement these more complex constraints, and leaves this part of the specification implementation-defined. Instead, this document provides only an implementation guidance that recommends to possible options described in the next sections:
+
 - Option 1: [[XSD 1.1](#xs11)] schema with XML Schema 1.1 *assertions*;
 - Option 2: [[XSD 1.0](#xs)] schema with [ISO Schematron](#schematron) rules.
 
@@ -749,12 +784,13 @@ Moreover, implementers MAY choose to replace some of the assertions with possibl
 For information only, the following table suggests generic mappings for some of the aforementioned complex UML constraints used in ACAL model:
 
 **Table 2:** ACAL/UML constraints mapped to [[XSD 1.1](#xs11)] assertions
+
 | ACAL constraint's OCL expression | XSD 1.1 assertion's XPath expression |
 | :--- | :--- |
-| `X or Y` (X, Y can be any of the predicates below) | `X or Y` |
-| `prop <> null` *(*prop* is single-valued)* | `prop` *(the *prop* element occurs)* |
-| `prop = null` *(*prop* is single-valued)* | `not(prop)` *(no *prop* element occurs)* |
-| `prop->notEmpty()` *(*prop* is multivalued)* | `prop` *(at least one *prop* element occurs)* |
+| `X or Y` <br> *(X, Y can be any of the predicates below)* | `X or Y` |
+| `prop <> null` <br> *(`prop` is single-valued)* | `prop` <br> *(the `prop` element occurs)* |
+| `prop = null` <br> *(`prop` is single-valued)* | `not(prop)` <br> *(no `prop` element occurs)* |
+| `prop->notEmpty()` <br> *(`prop` is multivalued)* | `prop` <br> *(at least one `prop` element occurs)* |
 
 You may find further guidance about XSD-1.1-based validation on [OASIS XACML TC's code repository](https://github.com/oasis-tcs/xacml-spec/).
 
@@ -762,6 +798,7 @@ You may find further guidance about XSD-1.1-based validation on [OASIS XACML TC'
 #### 5.2.5.2 Option 2: Schematron rules
 
 Due to the current general lack of adoption of XSD 1.1 (and limited availability of implementations), implementations only supporting XSD 1.0 MAY achieve the same result by combining the following: 
+
 - An XSD 1.0 version of the *Core XML Schema*, obtained by filtering out all the schema elements with attribute `vc:minVersion="1.1"` (according to [XSV]) from the XSD 1.1 schema (e.g. with an [XSLT] stylesheet);
 - [ISO Schematron](#schematron) rules provided with this document (file with `.sch` extension), that implement the complex OCL constraints with similar - if not the same - XPath expressions as the XSD 1.1 assertions in the previous Option 1. Therefore, like XSD 1.1 assertions, certain generic Schematron assertions may be problematic for certain XSLT / XPath engines or use cases, in which case alternative assertions are suggested in XML comments before or after each possibly problematic `<assert>` element currently in use in the schema. Implementers SHOULD review these before use. Moreover, implementers MAY choose to replace some of the assertions with possibly more optimal implementations as long as they provide equivalent constraint enforcement. Each Schematron `pattern` element has the corresponding  [ACAL] model's UML constraint (with OCL expression) reminded in the child `title` element. You may find further guidance about Schematron-based validation on [OASIS XACML TC's code repository](https://github.com/oasis-tcs/xacml-spec/).
 
@@ -829,8 +866,8 @@ The implementation MUST follow [Section 5](#5-syntax-normative-with-the-exceptio
 
 The implementation MUST support those schema elements in the XACML core namespace (`urn:oasis:names:tc:xacml:4.0:core:schema`) that are marked `M`.
 
-| Element name                        | M/O |
-|:------------------------------------|:----|
+| Element name                  | M/O |
+|:------------------------------|:----|
 | Apply                         | M   |
 | ApplicablePolicyReference     | O   |
 | Attribute                     | M   |
@@ -1136,9 +1173,19 @@ This section defines standard identifiers for commonly used entities.
 
 ## C.1 XACML namespaces
 
-XACML is defined using this identifier.
+XACML is defined using this identifier:
 
 `urn:oasis:names:tc:xacml:4.0:core:schema`
+
+-------
+
+# Annex D. XML Schema (normative)
+
+This section includes the XML Schema for the XACML syntax defined in this specification, more particularly in section 5 (i.e. obtained by applying the ACAL-to-XML mapping rules):
+
+```xml 
+!include`xslt="pandoc/remove-comments.xsl"` xacml-core-v4.0-schema.xsd
+```
 
 -------
 
@@ -1162,15 +1209,11 @@ All parts in this appendix are optional to the TC. Individuals or companies, pas
 
 The following individuals have had significant leadership positions during the development of this document, not just this version of the document, and they are gratefully acknowledged:
 
-
 <!-- From OASIS Open Specification Template Instructions:
-
 
 This section **SHOULD** include the leadership (chairs, sub committees chairs, secretaries, editors, etc.) of this document, and not just for this version of the document, even if they are no longer members of the TC.
 
-
 -->
-
 
 - Chairs
   - Bill | Parducci, Individual
@@ -1405,8 +1448,10 @@ currentMax ← A[0]
 **Figures and Tables**: All figures **MUST** be numbered and **MAY** use a section number followed by a hyphen which is then followed by a figure number (see example below) to track the figures within a particular section. When referencing a figure or table please use the abbreviation "Fig." for figures and "Table" for tables. Tables **SHOULD** be numbered with Roman numerals.
 
 
-Figure 2-1  
+Figure 2-1
+```
 ![FIG2-1](figure2-1.png)
+```
 **Fig. 2-1.** This is a sample of a figure caption.
 
 
