@@ -427,7 +427,7 @@ The list of changes from the previous version and any revision history can be fo
 # 5 Syntax (normative, with the exception of the schema fragments)
 
 The next sections describe the rules that SHALL be applied for mapping the [ACAL](#acal) agnostic model (UML-based) to [XML schema](#XS) definitions for this XML representation (XACML).
-These rules have been applied to produce XACML's core XML schema in [Annex D](#annex-d-xml-schema-normative) (also in the [Core XML schema file](xacml-core-v4.0-schema.xsd) accompanying this document) from the [ACAL] core model.
+These rules have been applied to produce XACML's core XML schema in [Annex D](#annex-d-xml-schema-normative) (also in the [Core XML schema file](xacml-core-v4.0-schema.xsd) accompanying this document) from [ACAL] core model.
 
 In all XSD definitions from now, the XACML core namespace `urn:oasis:names:tc:xacml:4.0:core:schema` is the default namespace.
 
@@ -734,7 +734,7 @@ Inside the `xs:complexType` or `xs:extension` element created by the previous ma
           <xs:selector xpath="<XPath_to_Prop>" />
           <xs:field xpath="@itemProp" />
         </xs:unique>
-     </xs:element> 
+     </xs:element>
      ```
 
      where `<XPath_to_Prop>` is the XPath expression to select the *Prop* element from `RootAncestorOfProp` element.

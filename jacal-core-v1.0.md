@@ -86,11 +86,10 @@ Copyright © OASIS Open 2026. All Rights Reserved.  For license and copyright in
 
 ### Prerequisites
 
-Install Pandoc, Graphviz and PlantUML on your system; or simply use Docker with the following shell alias:
+Install Pandoc on your system; or simply use Docker with the following shell alias:
 ```
-$ alias pandoc='docker run --rm --volume "$(pwd):/data" cdang/pandoc-plantuml'
+$ alias pandoc='docker run --rm --volume "$(pwd):/data" pandoc/extra'
 ```
-_The Dockerfile (named `Dockerfile`) of the docker image used in the alias above is provided in the same folder as this markdown file for your convenience if you wish to build it yourself._  
 
 OASIS staff are currently using pandoc 3.0 from https://github.com/jgm/pandoc/releases/tag/3.0.
 
@@ -105,26 +104,25 @@ The generation command uses a CSS stylesheet file (`-c` argument) provided by OA
 
 ### HTML generation
 
-Run the following command line to generate HTML from this markdown file (named `acal-v1.0-json.md`), :
+Run the following command line to generate HTML from this markdown file (named `jacal-core-v1.0.md`) to an output file `/tmp/jacal-core-v1.0.html` :
 
 ```console
-$ pandoc -f gfm+definition_lists -t html acal-v1.0-json.md -c styles/markdown-styles-v1.7.3a.css \ 
-         -s --lua-filter diagram.lua --embed-resources \
-         --metadata title="JSON Representation of ACAL Version 1.0 (JACAL)" \
-         -o acal-v1.0-json.html
+$ pandoc -s --embed-resources -f gfm+definition_lists -c styles/markdown-styles-v1.7.3a.css -F pandoc-include \
+         -M lang=en -M title="JSON Representation of ACAL Version 1.0 (JACAL)" \
+         -t html -o /tmp/jacal-core-v1.0.html jacal-core-v1.0.md
  ```
 
 Note this command generates a Table of Contents (TOC) in HTML which is located at the top of the HTML document, and which requires additional editing in order to be published in the expected OASIS style. This editing will be handled by OASIS staff during publication.
 
 ### PDF generation
 
-For PDF output, the command line is the following (different `-t` and `-H` arguments):
+For PDF output, the command line is the following (different `-t` and `-H` arguments, and output file `/tmp/jacal-core-v1.0.pdf`):
 
 ```console
-$ pandoc -f gfm+definition_lists -t pdf acal-v1.0-json.md -c styles/markdown-styles-v1.7.3a.css \
-         -H custom_latex_header_for_pandoc_pdf_output.tex -s -L diagram.lua \
-         --metadata title="JSON Representation of ACAL Version 1.0 (JACAL)" --embed-resources \
-         -o acal-v1.0-json.pdf 
+$ pandoc -s --embed-resources -f gfm+definition_lists -c styles/markdown-styles-v1.7.3a.css -F pandoc-include \
+         -H pandoc/custom_latex_header_for_pandoc_pdf_output.tex \
+         -M lang=en -M title="JSON Representation of ACAL Version 1.0 (JACAL)" \
+         -t pdf -o /tmp/jacal-core-v1.0.pdf jacal-core-v1.0.md
 ```
 
 -------
@@ -220,6 +218,7 @@ $ pandoc -f gfm+definition_lists -t pdf acal-v1.0-json.md -c styles/markdown-sty
   - [B.2 Informative References](#b2-informative-references)
 - [Annex C. JACAL identifiers (normative)](#annex-c-jacal-identifiers-normative)
   - [C.1 JACAL schema identifier](#c1-jacal-schema-identifier)
+- [Annex D. JACAL schema (normative)](#annex-c-jacal-identifiers-normative)
 - [Appendix 1. Acknowledgments](#appendix-1-acknowledgments)
   - [Leadership](#leadership)
   - [Special Thanks](#special-thanks)
@@ -373,11 +372,11 @@ The following short-identifier set defines an JSON representation of short ident
 
 ```json
 {
-  "Id":"urn:oasis:names:tc:acal:1.0:example:identifiers",
-  "ShortIdSetReference":["urn:oasis:names:tc:acal:1.0:core:identifiers"],
-  "ShortId":[
-    { "Name":"patient-number", "Value":"urn:oasis:names:tc:acal:1.0:example:attribute:patient-number" },
-    { "Name":"collection", "Value":"urn:oasis:names:tc:acal:1.0:example:attribute:collection" }
+  "Id": "urn:oasis:names:tc:acal:1.0:example:identifiers",
+  "ShortIdSetReference": ["urn:oasis:names:tc:acal:1.0:core:identifiers"],
+  "ShortId": [
+    { "Name": "patient-number", "Value": "urn:oasis:names:tc:acal:1.0:example:attribute:patient-number" },
+    { "Name": "collection", "Value": "urn:oasis:names:tc:acal:1.0:example:attribute:collection" }
   ]
 }
 ```
@@ -412,7 +411,7 @@ The list of changes from the previous version and any revision history can be fo
 # 5 Syntax (normative, with the exception of the schema fragments)
 
 The next sections describe the rules that SHALL be applied for mapping the [ACAL](#acal) agnostic model (UML-based) to [JSON schema Draft 2020-12](#jsonschemacore) definitions for this JSON representation (JACAL).
-These rules have been applied to produce the [JACAL JSON schema](jacal-core-v1.0-schema.json) accompanying this document.
+These rules have been applied to produce JACAL's core JSON schema in [Annex D](#annex-d-json-schema-normative) (also in the [Core JSON schema file](jacal-core-v1.0-schema.json) accompanying this document) from [ACAL] core model.
 
 We consider `PolicyType`, `BundleType`, `RequestType` and `ResponseType` as the root JSON objects to be used by JACAL users, therefore the final JACAL core schema has the following structure:
 
@@ -514,20 +513,24 @@ For example, ACAL `VersionType` translates to the following subschema definition
 Each ACAL enumerated type `FooType` (stereotyped `<<enumeration>>`) with enum values *V1, V2, ... Vn* is mapped to the following subschema:
 
 ```json
-"$defs": {
+{
+  "$defs": {
     ...
-    "FooType": { enum": ["V1", "V2", ..., "Vn"] }
+    "FooType": { "enum": ["V1", "V2", ..., "Vn"] }
     ...
+  }
 }
 ```
 
 For example, ACAL `DecisionType` translates to the following subschema:
 
 ```json
-"$defs": {
+{
+  "$defs": {
     ...
     "DecisionType": { "enum": ["Permit", "Deny", "Indeterminate", "NotApplicable"] }
     ...
+  }
 }
 ```
 
@@ -556,12 +559,12 @@ If no support for structured data-types is needed, the following JSON subschema 
 ```json
 "ValueType":
 {
-	"anyOf": [
-		{"type": "boolean"},
+  "anyOf": [
+    {"type": "boolean"},
     {"type": "integer"},
-  	{"type": "number"},
-		{"type": "string"},
-		{
+    {"type": "number"},
+    {"type": "string"},
+    {
       "type": "object",
       "properties": {
         "DataType": {"$ref": "#/$defs/IdentifierType"},
@@ -570,7 +573,7 @@ If no support for structured data-types is needed, the following JSON subschema 
       "required": ["DataType", "$"],
       "additionalProperties": false
     }
-	]
+  ]
 }
 ```
 
@@ -595,31 +598,31 @@ Therefore, the `ValueType`'s JSON schema SHALL be modified to include references
 ```json
 "ValueType":
 {
-	"anyOf": [
-		{"type": "boolean"},
-        {"type": "integer"},
-  	    {"type": "number"},
-		{"type": "string"},
-        {"$ref": "<URI of StructValueType1's JSON schema>" },
-        {"$ref": "<URI of StructValueType2's JSON schema>" },
+  "anyOf": [
+    {"type": "boolean"},
+    {"type": "integer"},
+    {"type": "number"},
+    {"type": "string"},
+    {"$ref": "<URI of StructValueType1's JSON schema>" },
+    {"$ref": "<URI of StructValueType2's JSON schema>" },
     ...
-		{
-          "type": "object",
-          "properties": {
-            "DataType": {"$ref": "#/$defs/IdentifierType"},
-            "$": {
-              "anyOf": [
-                {"type": "string"}, 
-                {"$ref": "<URI of StructValueType1's JSON schema>" },
-                {"$ref": "<URI of StructValueType2's JSON schema>" },
-                ...
-              ]
-            }
-          },
-          "required": ["DataType", "$"],
-          "additionalProperties": false
+    {
+      "type": "object",
+      "properties": {
+        "DataType": {"$ref": "#/$defs/IdentifierType"},
+        "$": {
+          "anyOf": [
+            {"type": "string"}, 
+            {"$ref": "<URI of StructValueType1's JSON schema>" },
+            {"$ref": "<URI of StructValueType2's JSON schema>" },
+            ...
+          ]
         }
-	]
+      },
+      "required": ["DataType", "$"],
+      "additionalProperties": false
+    }
+  ]
 }
 ```
 
@@ -798,7 +801,7 @@ For each complex ACAL type `FooType` that does not fall under any of the previou
         "FooTypeTree": {
           "anyOf": [
             {
-              "type": "object"
+              "type": "object",
               "properties":
               {
                 "Foo": {
@@ -873,18 +876,18 @@ For each of an ACAL Datatype's property *Prop* with value type *PropType*, the c
      ```
    - 2.2. Else (*Prop* is multivalued):
      - 2.2.1. If the property has a **Value type uniqueness constraint** as defined in [ACAL] section 7.1.1.1.1.2 (`self->isUnique(oclType())`), then map to the following subschema:
- -     ```json
-        {
-            "type": "object",
-            "properties" {
-                "Item1": <Item1TypeSchema>,
-                "Item2": <Item2TypeSchema>
-                ...
-            },
-            "additionalProperties": false
-          }
-        ```
-        where *Item1Type*, *Item2Type*, etc. are all possible (and distinct) concrete subtypes of *PropType* ( *ItemXTypeSchema* is the JSON subschema corresponding to the item's type *ItemXType*).
+       ```json
+       {
+         "type": "object",
+         "properties": {
+           "Item1": <Item1TypeSchema>,
+           "Item2": <Item2TypeSchema>
+           ...
+         },
+         "additionalProperties": false
+       }
+       ```
+       where *Item1Type*, *Item2Type*, etc. are all possible (and distinct) concrete subtypes of *PropType* ( *ItemXTypeSchema* is the JSON subschema corresponding to the item's type *ItemXType*).
 
      - 2.2.2. Else (no *Value type uniqueness constraint*), map to an array type as follows:
         ```json
@@ -893,7 +896,7 @@ For each of an ACAL Datatype's property *Prop* with value type *PropType*, the c
             "items": <PropTypeSchema>,
             "minItems": <min>,
             "uniqueItems": <is_unique>
-          }
+        }
         ```
         where:
         - `<min>` is set to the lower bound of *Prop*'s multiplicity unless the lower bound is zero, in which case `<min>` is set 1 regardless, since the lower bound zero is already achieved by making the JSON property optional;
@@ -912,10 +915,10 @@ ACAL object-level constraints defined in [ACAL] section 7.1.1.1.2 may be transla
 
 |ACAL - UML constraint (OCL) | JSON schema equivalent |
 | :--- | :--- |
-| `X or Y` (X, Y can be any of the predicates below) | `"if": {"not": <X_subschema>}, "then": <Y_subschema>` |
-| `prop <> null` *(*prop* is single-valued)* | `{"required": ["prop"]}` |
-| `prop = null` *(*prop* is single-valued)* | `{"not": {"required": ["prop"]}}` *(any resulting `{"not": {"not": <X_subschema>}}` in a `X or Y` expressoin is replaced with `<X_subschema>`)* |
-| `prop->notEmpty()` *(*prop* is multivalued)* | `{"required": ["prop"]}` *(`minItems` is already set by rule 2.2.2 (previous section) to 1 or greater in the property's subschema (array type))* |
+| `X or Y` <br> *(`X`, `Y` can be any of the predicates below)* | `"if": {"not": <X_subschema>}, "then": <Y_subschema>` |
+| `prop <> null`<br> *(`prop` is single-valued)* | `{"required": ["prop"]}` |
+| `prop = null` <br>*(`prop` is single-valued)* | `{"not": {"required": ["prop"]}}` <br> *(any resulting `{"not": {"not": <X_subschema>}}` in a `X or Y` expressoin is replaced with `<X_subschema>`)* |
+| `prop->notEmpty()` <br>*(`prop` is multivalued)* | `{"required": ["prop"]}` <br> *(`minItems` is already set by rule 2.2.2 (previous section) to 1 or greater in the property's subschema (array type))* |
 
 
 -------
@@ -1265,9 +1268,19 @@ This section defines standard identifiers for commonly used entities.
 
 ## C.1 JACAL schema identifier
 
-The JACAL core schema is defined using this identifier (`$id`).
+The JACAL core schema is defined using this identifier (`$id`):
 
 `urn:oasis:names:tc:jacal:1.0:core:schema`
+
+-------
+
+# Annex D. JSON Schema (normative)
+
+This section includes the JSON Schema for the JACAL syntax defined in this specification, more particularly in section 5 (i.e. obtained by applying the ACAL-to-JSON mapping rules):
+
+```json
+!include jacal-core-v1.0-schema.json
+```
 
 -------
 
@@ -1349,7 +1362,7 @@ None. This is the first version of the document.
 
 ## Revision History
 
-Latest revision history can be obtained from [OASIS XACML TC's github repository](https://github.com/oasis-tcs/xacml-spec/commits/main/acal-v1.0-json.md).
+Latest revision history can be obtained from [OASIS XACML TC's github repository](https://github.com/oasis-tcs/xacml-spec/commits/main/jacal-core-v1.0.md).
 
 | Revision | Date | Editor | Changes Made |
 | :--- | :--- | :--- | :--- |
@@ -1463,8 +1476,10 @@ currentMax ← A[0]
 **Figures and Tables**: All figures **MUST** be numbered and **MAY** use a section number followed by a hyphen which is then followed by a figure number (see example below) to track the figures within a particular section. When referencing a figure or table please use the abbreviation "Fig." for figures and "Table" for tables. Tables **SHOULD** be numbered with Roman numerals.
 
 
-Figure 2-1  
+Figure 2-1
+```  
 ![FIG2-1](figure2-1.png)
+```
 **Fig. 2-1.** This is a sample of a figure caption.
 
 
