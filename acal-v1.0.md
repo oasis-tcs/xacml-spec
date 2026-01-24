@@ -2505,8 +2505,8 @@ abstract class NonLiteralExpressionType extends ExpressionType
 class ApplyType <<dataType>> extends NonLiteralExpressionType
 
 abstract class BaseAttributeSelectorType <<dataType>> extends NonLiteralExpressionType
-class AttributeSelectorType <<dataType>> extends BaseAttributeSelectorType
-class EntityAttributeSelectorType <<dataType>> extends BaseAttributeSelectorType
+abstract class AttributeSelectorType <<dataType>> extends BaseAttributeSelectorType
+abstract class EntityAttributeSelectorType <<dataType>> extends BaseAttributeSelectorType
 
 class FunctionType <<dataType>> extends ExpressionType
 

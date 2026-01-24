@@ -712,7 +712,21 @@ For each complex ACAL type `FooType` that does not fall under any of the previou
 
    *The case when `FooType` is empty and inherits a non-empty (abstract) class should not occur in the ACAL model, and therefore it is ignored here.*
 
-   - 1.2. *Iff* there is at least one ACAL type with a property of type `FooType` or `FooSuperType` where `FooSuperType` may be any supertype of `FooType`, then add also the following JSON subschema to the *`$defs` object*:
+   - 1.2. *Iff* there is at least one ACAL type with a property of type `FooType` or `FooSuperType` where `FooSuperType` may be any supertype of `FooType`, then:
+     - 1.2.1. If `FooType` does not have any subtype (defined in ACAL core model), then add also the following JSON subschemas to the *`$defs` object*:
+       ```json
+       "FooTypeTree": {
+          "$dynamicRef": "#FooTypeExtensions"
+       },
+       "FooTypeTreeEmpty": {
+         "$dynamicAnchor": "FooTypeExtensions",
+         "$comment": "No FooType extension by default in the core schema. But one may define an implementation-specific schema that overrides this $dynamicAnchor to import FooType extensions (subtypes) typically from ACAL profiles, depending on which profiles the implementation supports.",
+         "not": true
+       }
+       ```
+       This enables ACAL implementers to extend `FooType` with concrete subtypes of their own or from standard JACAL Profiles, by overriding the `$dynamicAnchor` with the same name in a new (implementation-specific) JSON schema. See section 5.3 for more information.
+  
+     - 1.2.2. Else (`FooType` has one or more subtypes in ACAL core model), then add also the following JSON subschema to the *`$defs` object*:
       ```json 
       "FooTypeTree": {
         "$comment": "FooType's subtypes",
@@ -920,6 +934,76 @@ ACAL object-level constraints defined in [ACAL] section 7.1.1.1.2 may be transla
 | `prop = null` <br>*(`prop` is single-valued)* | `{"not": {"required": ["prop"]}}` <br> *(any resulting `{"not": {"not": <X_subschema>}}` in a `X or Y` expressoin is replaced with `<X_subschema>`)* |
 | `prop->notEmpty()` <br>*(`prop` is multivalued)* | `{"required": ["prop"]}` <br> *(`minItems` is already set by rule 2.2.2 (previous section) to 1 or greater in the property's subschema (array type))* |
 
+
+## 5.3 Extending JACAL syntax
+
+Extending JACAL syntax means extending JACAL core JSON schema obtained from the mapping rules in the previous section. As explained in the mapping rule 1.2.1 of section 5.2.2, JACAL core schema uses a `$dynamicRef` for any extensible ACAL type that may be extended by a separate JSON schema (overriding a matching `$dynamicAnchor`), depending on which extensions the ACAL implementation shall support. Let us look at different cases to illustrate this extension mechanism in more details:
+
+* Case 1 - the implementation does not support any extension: in this case, use the JACAL core schema as is.
+* Case 2 - the implementation supports two extensions of some type `FooType` in the core schema: one custom extension `CustomFooSubType` and another extension `SomeProfileFooSubType` defined in an existing JACAL Profile with a schema identified `urn:some:profile:schema`. In this case, the implementer shall create a combining schema for the implementation, which combines the extensions' schemas with the core schema like this:
+  
+  ```json
+  {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "urn:my:implementation:specific:root:schema",
+    "$defs": {
+        "SupportedFooTypeExtensions": {
+            "$dynamicAnchor": "FooTypeExtensions",
+            "anyOf": [
+                {
+                  "$ref": "#/$defs/CustomFooSubTypeTree"
+                },
+                {
+                  "$ref": "urn:some:profile:schema#/$defs/SomeProfileFooSubTypeTree"
+                }
+            ]
+        },
+        "CustomFooSubType": {...},
+        "CustomFooSubTypeTree": {...}
+        ...
+    },
+    "$ref": "urn:oasis:names:tc:jacal:1.0:core:schema"
+  }
+  ```
+  
+  Here is a concrete example for an ACAL implementation supporting the RequestDefaultsType, PolicyDefaultsType and AttributeSelectorType extensions from the XPath Profile of ACAL and AttributeSelectorType extension from the JSONPath Profile of ACAL:
+
+  ```json
+  {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "urn:example:implementation:specific:root:schema",
+    "$defs": {
+        "EnabledRequestDefaultsExtensions": {
+            "$dynamicAnchor": "RequestDefaultsTypeExtensions",
+            "anyOf": [
+                {
+                    "$ref": "urn:oasis:names:tc:jacal:1.0:xpath:schema#/$defs/XPathDefaultsTypeTree"
+                }
+            ]
+        },
+        "EnabledPolicyDefaultsExtensions": {
+            "$dynamicAnchor": "PolicyDefaultsTypeExtensions",
+            "anyOf": [
+                {
+                    "$ref": "urn:oasis:names:tc:jacal:1.0:xpath:schema#/$defs/XPathDefaultsTypeTree"
+                }
+            ]
+        },
+        "EnabledAttributeSelectorExtensions": {
+            "$dynamicAnchor": "AttributeSelectorTypeExtensions",
+            "anyOf": [
+                {
+                    "$ref": "urn:oasis:names:tc:jacal:1.0:xpath:schema#/$defs/XPathAttributeSelectorTypeTree"
+                },
+                {
+                    "$ref": "urn:oasis:names:tc:jacal:1.0:jsonpath:schema#/$defs/JSONPathAttributeSelectorTypeTree"
+                }
+            ]
+        }
+    },
+    "$ref": "urn:oasis:names:tc:jacal:1.0:core:schema"
+  }
+  ```
 
 -------
 
