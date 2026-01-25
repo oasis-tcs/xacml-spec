@@ -5,6 +5,33 @@
        -->
  <ns prefix="xacml" uri="urn:oasis:names:tc:xacml:4.0:core:schema"/>
  <ns prefix="xpath" uri="urn:oasis:names:tc:xacml:4.0:xpath:schema"/>
+
+ <!-- Uncomment the let elements below if you wishes to use the pattern 'IdentifierType_advanced_validation': -->
+ <!--
+ <let name="URI_CHAR_PATTERN" value="'[!#-;=?-\[\]_a-z~]'"/>
+ <let name="URI_CHARS_ANCHORED_PATTERN" value="concat('^', $URI_CHAR_PATTERN, '*$')"/>
+ <let name="ABSOLUTE_URI_PATTERN" value="concat('^[A-Za-z][A-Za-z0-9+\-.]*:', $URI_CHAR_PATTERN, '+$')"/>
+ <let name="SHORTNAME_PATTERN" value="'[A-Za-z][0-9A-Za-z]*(-[0-9A-Za-z]+)*'"/>
+ <let name="SHORTNAME_ANCHORED_PATTERN" value="concat('^', $SHORTNAME_PATTERN, '$')"/>
+ <let name="SHORTNAME_BRACKETED_PATTERN" value="concat('\{', $SHORTNAME_PATTERN, '\}')"/>
+ -->
+ <!-- Uncomment the pattern below if you want stricter syntax validation of IdentifierType values.
+ However, if your ACAL implementation is parsing such values properly while validating them against the same regular expressions, your implementation-specific validation is probably more optimal, in which case you may consider this for information / guidance only. -->
+ <!--
+ <pattern id="IdentifierType_advanced_validation">
+	<title>IdentifierType advanced validation</title>
+	-->
+	<!--
+	If you have a schema-aware Schematron/XSLT processor (e.g. Saxon-EE), the rule's context (XPath) expression below can be simplified to: context="attribute(*, xacml:IdentifierType)"
+	in which case, you need to pass the XACML core schema - xacml-core-v4.0-schema.xsd - as XSD argument to the processor.
+	-->
+	<!--
+	<rule context="@Category|@AttributeId|@DataType|@CombiningAlgId|xacml:Function/@Id|@FunctionId|xacml:Notice/@Id|xacml:NoticeExpression/@Id|xacml:StatusCode/@Value">
+		<assert test="matches(., $SHORTNAME_ANCHORED_PATTERN) or matches(., $ABSOLUTE_URI_PATTERN) or ( let $tokens := tokenize(., $SHORTNAME_BRACKETED_PATTERN) return count($tokens) > 1 and (every $token in $tokens satisfies matches($token, $URI_CHARS_ANCHORED_PATTERN)) )">Invalid IdentifierType value</assert>
+	</rule>
+ </pattern>
+ -->
+
  <pattern id="ACAL_constraint_on_RequestDefaults_property">
  	<title>ACAL constraint on RequestDefaults property: {OCL} self-gt;isUnique(oclType())</title>	
 	<rule context="xacml:Request">

@@ -979,10 +979,28 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 	identifiers -->
 	<xs:simpleType name="IdentifierType">
 		<xs:restriction base="xs:string">
-			<!-- Pattern needs to be improved as this allows undesirable identifiers. See proposals on issue #56.  -->
+			<!-- The pattern needs some improvement as this allows undesirable identifiers. See proposals on issue #56 and the XSD 1.1 assertion in the comment down below.  -->
 			<xs:pattern value="[^{}]*(\{[A-Za-z][0-9A-Za-z]*(-[0-9A-Za-z]+)*\}[^{}]*)*"/>
 			<xs:minLength value="1" />
 			<xs:whiteSpace value="collapse" />
+			<!--								
+			As an alternative, if and only if your XSD 1.1 / XPath processor supports XPath 3.0 or later (for supporting let expressions or fn:environment-variable() function), you may use the XSD 1.1 assertion below for stricter validation (if your ACAL implementation is already parsing such values properly while validating them against the same regular expressions, then your implementation-specific validation is probably more optimal, in which case you may consider this XSD assertion for information / guidance only): 
+								
+				<xs:assert test="let $URI_CHAR_PATTERN := '[!#-;=?-\[\]_a-z~]', 
+					$URI_CHARS_ANCHORED_PATTERN := concat('^', $URI_CHAR_PATTERN, '*$'), 
+					$ABSOLUTE_URI_PATTERN := concat('^[A-Za-z][A-Za-z0-9+\-.]*:', $URI_CHAR_PATTERN, '+$'), 
+					$SHORTNAME_PATTERN := '[A-Za-z][0-9A-Za-z]*(-[0-9A-Za-z]+)*', 
+					$SHORTNAME_ANCHORED_PATTERN := concat('^', $SHORTNAME_PATTERN, '$'), 
+					$SHORTNAME_BRACKETED_PATTERN := concat('\{', $SHORTNAME_PATTERN, '\}') 
+					return matches($value, $SHORTNAME_ANCHORED_PATTERN) or matches($value, $ABSOLUTE_URI_PATTERN) or ( let $tokens := tokenize($value, $SHORTNAME_BRACKETED_PATTERN) return count($tokens) > 1 and (every $token in $tokens satisfies matches($token, $URI_CHARS_ANCHORED_PATTERN)) )"/>
+			
+			Simplified/optimized version: 
+				The variables used in the XPath expression above are constants as you can see, therefore your XSD 1.1 / XPath processor may optimize the XPath expression by either pre-evaluating them at compilation or initialization time, or caching their computed values at runtime. If this is not the case, you should set the variables SHORTNAME_ANCHORED_PATTERN, ABSOLUTE_URI_PATTERN, SHORTNAME_BRACKETED_PATTERN and URI_CHARS_ANCHORED_PATTERN as environment variables instead, and use the fn:environment-variable() function in the expression (provided that your XPath processor supports those). In which case, the assertion can be reduced to this:
+			
+				<xs:assert test="matches($value, environment-variable($SHORTNAME_ANCHORED_PATTERN)) or matches($value, environment-variable($ABSOLUTE_URI_PATTERN)) or ( let $tokens := tokenize($value, environment-variable($SHORTNAME_BRACKETED_PATTERN)) return count($tokens) > 1 and (every $token in $tokens satisfies matches($token, environment-variable($URI_CHARS_ANCHORED_PATTERN))) )"/>
+								
+			As mentioned earlier, the assertions above require support for XPath 3.0 minimum, despite the fact that the XML Schema 1.1 standard requires only support for XPath 2.0. Therefore, the possibility to enable support for XPath 3.0 or later in XSD 1.1 assertion is implementation-dependent (e.g. Saxon EE has a configuration option for that).
+			-->
 		</xs:restriction>
 	</xs:simpleType>
 
