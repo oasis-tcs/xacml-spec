@@ -6,7 +6,7 @@
             "$dynamicAnchor": "RequestDefaultsTypeExtensions",
             "anyOf": [
                 {
-                    "$ref": "urn:oasis:names:tc:jacal:1.0:xpath:schema#/$defs/XPathDefaultsTypeTree"
+                    "$ref": "urn:oasis:names:tc:jacal:1.0:xpath:schema#/$defs/XPatRequesthDefaultsTypeTree"
                 }
             ]
         },
@@ -14,7 +14,7 @@
             "$dynamicAnchor": "PolicyDefaultsTypeExtensions",
             "anyOf": [
                 {
-                    "$ref": "urn:oasis:names:tc:jacal:1.0:xpath:schema#/$defs/XPathDefaultsTypeTree"
+                    "$ref": "urn:oasis:names:tc:jacal:1.0:xpath:schema#/$defs/XPathPolicyDefaultsTypeTree"
                 }
             ]
         },

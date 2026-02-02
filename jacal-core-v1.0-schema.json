@@ -165,7 +165,7 @@
 		},
 		"PolicyDefaultsTypeTreeEmpty": {
 			"$dynamicAnchor": "PolicyDefaultsTypeExtensions",
-			"$comment": "No PolicyDefaults extension supported by default. Create your own implementation-specific schema that overrides this $dynamicAnchor to support extensions (e.g. XPathDefaults from XPath Profile). See jacal-root-schema-example.json for example.",
+			"$comment": "No PolicyDefaults extension supported by default. Create your own implementation-specific schema that overrides this $dynamicAnchor to support extensions (e.g. XPathPolicyDefaults from XPath Profile). See jacal-root-schema-example.json for example.",
 			"not": true
 		},
 		"PolicyParameterType": {
@@ -1069,7 +1069,7 @@
 		},
 		"RequestDefaultsTypeTreeEmpty": {
 			"$dynamicAnchor": "RequestDefaultsTypeExtensions",
-			"$comment": "No RequestDefaults extension supported by default. Create your own implementation-specific schema that overrides this $dynamicAnchor to support extensions (e.g. XPathDefaults from XPath Profile). See jacal-root-schema-example.json for example.",
+			"$comment": "No RequestDefaults extension supported by default. Create your own implementation-specific schema that overrides this $dynamicAnchor to support extensions (e.g. XPathRequestDefaults from XPath Profile). See jacal-root-schema-example.json for example.",
 			"not": true
 		},
 		"RequestType": {

@@ -14,13 +14,25 @@
 			},
 			"additionalProperties": false
 		},
-		"XPathDefaultsTypeTree": {
+		"XPathRequestDefaultsTypeTree": {
 			"type": "object",
 			"required": [
-				"XPathDefaults"
+				"XPathRequestDefaults"
 			],
 			"properties": {
-				"XPathDefaults": {
+				"XPathRequestDefaults": {
+					"$ref": "#/$defs/XPathDefaultsType"
+				}
+			},
+			"additionalProperties": false
+		},
+		"XPathPolicyDefaultsTypeTree": {
+			"type": "object",
+			"required": [
+				"XPathPolicyDefaults"
+			],
+			"properties": {
+				"XPathPolicyDefaults": {
 					"$ref": "#/$defs/XPathDefaultsType"
 				}
 			},

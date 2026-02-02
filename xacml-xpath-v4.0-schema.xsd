@@ -3,6 +3,7 @@
 <xs:schema xmlns:xacml="urn:oasis:names:tc:xacml:4.0:core:schema"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:xml="http://www.w3.org/XML/1998/namespace"
+	xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
 	targetNamespace="urn:oasis:names:tc:xacml:4.0:xpath:schema"
 	xmlns="urn:oasis:names:tc:xacml:4.0:xpath:schema"
 	elementFormDefault="qualified" attributeFormDefault="unqualified">
@@ -48,6 +49,6 @@
 	<xs:element name="XPathPolicyDefaults" type="XPathDefaultsType" substitutionGroup="xacml:PolicyDefaults"/>
 	<xs:element name="XPathRequestDefaults" type="XPathDefaultsType" substitutionGroup="xacml:RequestDefaults"/>
 	<!-- In XSD 1.1, the 2 lines above may be replaced with:   
-	<xs:element name="XPathDefaults" type="XPathDefaultsType" substitutionGroup="xacml:PolicyDefaults xacml:RequestDefaults"/>
+	<xs:element vc:minVersion="1.1" name="XPathDefaults" type="XPathDefaultsType" substitutionGroup="xacml:PolicyDefaults xacml:RequestDefaults"/>
 	-->
 </xs:schema>

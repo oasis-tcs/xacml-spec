@@ -977,7 +977,7 @@ Extending JACAL syntax means extending JACAL core JSON schema obtained from the 
             "$dynamicAnchor": "RequestDefaultsTypeExtensions",
             "anyOf": [
                 {
-                    "$ref": "urn:oasis:names:tc:jacal:1.0:xpath:schema#/$defs/XPathDefaultsTypeTree"
+                    "$ref": "urn:oasis:names:tc:jacal:1.0:xpath:schema#/$defs/XPathRequestDefaultsTypeTree"
                 }
             ]
         },
@@ -985,7 +985,7 @@ Extending JACAL syntax means extending JACAL core JSON schema obtained from the 
             "$dynamicAnchor": "PolicyDefaultsTypeExtensions",
             "anyOf": [
                 {
-                    "$ref": "urn:oasis:names:tc:jacal:1.0:xpath:schema#/$defs/XPathDefaultsTypeTree"
+                    "$ref": "urn:oasis:names:tc:jacal:1.0:xpath:schema#/$defs/XPathPolicyDefaultsTypeTree"
                 }
             ]
         },
