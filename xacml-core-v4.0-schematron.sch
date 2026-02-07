@@ -82,19 +82,25 @@
  </pattern>
  <pattern id="ACAL_constraint_on_AttributeType_Value_property">
     <title>ACAL constraint (textual) on AttributeType's Value property (DataType already specified as AttributeType's property)</title>
-	<rule context="xacml:RequestAttribute|xacml:Attribute|xacml:AttributeAssignment">
+	<rule context="xacml:Attribute|xacml:RequestAttribute|xacml:AttributeAssignment">
 	  <assert test="not(xacml:Value/@DataType)"></assert>
 	</rule>
  </pattern>
- <pattern id="ACAL_constraint_on_PolicyParameterType_Expression_property">
-	<title>ACAL constraint (textual) on PolicyParameterType's Expression property (DataType already specified as PolicyParameterType's property)</title>
-	<rule context="xacml:PolicyParameter">
+ <pattern id="ACAL_constraint_on_ParameterType_Expression_property">
+	<title>ACAL constraint (textual) on ParameterType's Expression property (DataType already specified as ParameterType's property)</title>
+	<rule context="xacml:Parameter">
 	  <assert test="not(xacml:Value/@DataType)"></assert>
 	</rule>
  </pattern>
  <pattern id="ACAL_constraint_on_PolicyReferenceType_Expression_property">
-	<title>ACAL constraint (textual) on PolicyReference's Expression property (DataType already specified in the corresponding PolicyParameter of the referenced Policy)</title>
+	<title>ACAL constraint (textual) on PolicyReference's Expression property (DataType already specified in the corresponding Parameter of the referenced element SHALL not be redefined)</title>
 	<rule context="xacml:PolicyReference">
+	  <assert test="not(xacml:Value/@DataType)"></assert>
+	</rule>
+ </pattern>
+ <pattern id="ACAL_constraint_on_SharedVariableReferenceType_Expression_property">
+	<title>ACAL constraint (textual) on SharedVariableReference's Expression property (DataType already specified in the corresponding Parameter of the referenced element SHALL not be redefined)</title>
+	<rule context="xacml:SharedVariableReference">
 	  <assert test="not(xacml:Value/@DataType)"></assert>
 	</rule>
  </pattern>

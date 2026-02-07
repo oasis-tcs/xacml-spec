@@ -15,23 +15,21 @@
 
 ### This version
 
-
-- [ link to authoritative version of the published document ] (Authoritative)  
-- [ links to one or more other versions of the published document (e.g., MD, PDF, Word, HTML, etc.) ] 
+<!-- TODO: update the links according to OASIS requirements -->
+- https://docs.oasis-open.org/xacml/acal/v1.0/csd01/acal-v1.0-csd01.html (Authoritative)
+- https://docs.oasis-open.org/xacml/acal/v1.0/csd01/acal-v1.0-csd01.pdf
+- https://docs.oasis-open.org/xacml/acal/v1.0/csd01/acal-v1.0-csd01.md
 
 
 ### Previous version
 
-
-- [ link to authoritative version of the published document ] (Authoritative)  
-- [ links to one or more other versions of the published document (e.g., MD, PDF, Word, HTML, etc.) ] 
-
+None.
 
 ### Latest version
 
-
-- [ link to authoritative version of the published document ] (Authoritative)  
-- [ links to one or more other versions of the published document (e.g., MD, PDF, Word, HTML, etc.) ] 
+- https://docs.oasis-open.org/xacml/acal/v1.0/csd01/acal-v1.0-csd01.html (Authoritative)
+- https://docs.oasis-open.org/xacml/acal/v1.0/csd01/acal-v1.0-csd01.pdf
+- https://docs.oasis-open.org/xacml/acal/v1.0/csd01/acal-v1.0-csd01.md
 
 
 ### Technical Committee
@@ -276,7 +274,7 @@ $ pandoc -f gfm+definition_lists -t pdf acal-v1.0.md -c styles/markdown-styles-v
   - [7.3 ShortIdType](#73-shortidtype)
   - [7.4 PolicyType](#74-policytype)
   - [7.5 PolicyDefaultsType (optional)](#75-policydefaultstype-optional)
-  - [7.6 PolicyParameterType](#76-policyparametertype)
+  - [7.6 ParameterType](#76-parametertype)
   - [7.7 BooleanExpressionType](#77-booleanexpressiontype)
   - [7.8 IdReferenceType](#78-idreferencetype)
   - [7.9 ExactMatchIdReferenceType (optional)](#79-exactmatchidreferencetype-optional)
@@ -1285,7 +1283,7 @@ When a PDP evaluates a policy containing notice expressions, it evaluates the no
 
 This section contains two examples of the use of ACAL for illustrative purposes. The first example is a relatively simple one to illustrate the use of target, context, matching functions and subject attributes. The second example additionally illustrates the use of the combining algorithm, conditions and notices.
 
-<!-- TODO -->
+<!-- TODO: Steven. No XPath here. All XPath-based examples go to the XPath Profile. -->
 
 ## 6.1 Example One
 
@@ -2109,7 +2107,7 @@ class PolicyType <<dataType>> extends CombinerInputType {
    + MaxDelegationDepth: NonNegativeInteger [0..1]
    + PolicyIssuer: EntityType [0..1]
    + PolicyDefaults: PolicyDefaultsType [*] {unordered, unique} {{OCL} self->isUnique(oclType())}
-   + PolicyParameter: PolicyParameterType [*] {ordered, unique} {{OCL} self->isUnique(ParameterName)}
+   + Parameter: ParameterType [*] {ordered, unique} {{OCL} self->isUnique(Name)}
    + VariableDefinition: VariableDefinitionType [*] {ordered, unique} {{OCL} self->isUnique(VariableId)}
    + Target: BooleanExpressionType [0..1]
    + CombiningAlgId: IdentifierType [1]
@@ -2157,9 +2155,9 @@ A `PolicyType` object contains the following properties:
 
 : sequence of `PolicyDefaultsType` objects containing each a set of default values specific to a particular ACAL Profile, applicable to the policy (e.g. ACAL XPath Profile's default XPath version). In particular, each object SHALL have a different concrete type (per ACAL profile). The scope of the `PolicyDefaults` property SHALL be the enclosing policy. The use of `PolicyDefaults` property is specified by particular ACAL Profiles (e.g. XPath Profile).
 
-`PolicyParameter` [Any Number]
+`Parameter` [Any Number]
 
-: A sequence of `PolicyParameterType` objects declaring the parameters for a parameterized policy. Each object's `ParameterName` MUST be unique in this sequence.
+: A sequence of `ParameterType` objects declaring the parameters of the policy if the policy is parameterized. Each object's `Name` MUST be unique in this sequence.
 
 `VariableDefinition` [Any Number]
 
@@ -2208,17 +2206,17 @@ abstract class PolicyDefaultsType <<dataType>>
 @enduml
 ```
 
-## 7.6 PolicyParameterType
+## 7.6 ParameterType
 
-A `PolicyParameterType` object declares a single parameter for a parameterized policy. Policy parameters specify arguments that may be passed to the Policy from a PolicyReference. This enables other Policies to pass dynamic (Expression-based) values to the Policy during evaluation, and make sure those values match the Policy Parameter definitions (`PolicyParameterType` objects), in the same way as calling a function according to the function signature.
+A `ParameterType` object declares a single parameter for a parameterized policy or shared variable. Parameters specify arguments that may be passed to either a Policy from a PolicyReference, or a Shared Variable from a SharedVariableReference. This enables other Policies (respectively Expressions) to pass dynamic (Expression-based) values to another Policy (respectively SharedVariable) during the evaluation, according to its Parameter definitions (`ParameterType` objects), in the same way as calling a function according to the function signature.
 
 UML definition (class diagram):
 ```plantuml
 @startuml
 hide empty members 
 hide circle
-class PolicyParameterType <<dataType>> {
-   + ParameterName: LocalIdentifierType [1]
+class ParameterType <<dataType>> {
+   + Name: LocalIdentifierType [1]
    + DataType: IdentifierType [0..1] = 'urn:oasis:names:tc:acal:1.0:data-type:string'
    + isBag: Boolean [0..1] = false
    + Description: String [0..1]
@@ -2227,9 +2225,9 @@ class PolicyParameterType <<dataType>> {
 @enduml
 ```
 
-A `PolicyParameterType` object contains the following properties:
+A `ParameterType` object contains the following properties:
 
-`ParameterName` [Required]
+`Name` [Required]
 
 : A `LocalIdentifierType` value to name the parameter. The value of the parameter MAY be referenced within an expression contained within the policy using a `VariableReferenceType` object with its `VariableId` property set to this name.
 
@@ -2247,7 +2245,7 @@ A `PolicyParameterType` object contains the following properties:
 
 `Expression` [Optional]
 
-: An expression that evaluates to a default value (`Isbag` is `false`) or bag of values (`IsBag` is true) for the parameter that is used when a `PolicyReferenceType` object does not provide an argument for the parameter. If the Expression value is a `ValueType` object, i.e. a literal value, the latter SHALL not redefine/override the DataType identifier already defined by the above `DataType` property, and SHOULD not have any DataType identifier property set at all, if possible.
+: An expression that evaluates to a default value (if `Isbag` is `false`) or bag of values (if `IsBag` is true) for the parameter. This default value is used only if no argument is provided as input for this parameter (from a `PolicyReference` or `SharedVariableReference`). If the Expression value is a `ValueType` object, i.e. a literal value, the latter SHALL not redefine/override the DataType identifier already defined by the above `DataType` property, and SHOULD not have any DataType identifier property set at all, if possible.
 
 ## 7.7 BooleanExpressionType
 
@@ -2353,7 +2351,7 @@ hide empty members
 hide circle
 class PatternMatchIdReferenceType <<dataType>>
 class PolicyReferenceType <<dataType>> extends PatternMatchIdReferenceType {
-   +  Expression: ExpressionType [*] {ordered, nonunique}
+   + Expression: ExpressionType [*] {ordered, nonunique}
 }
 @enduml
 ```
@@ -2362,7 +2360,7 @@ The `PolicyReferenceType` object type extends the `PatternMatchIdReferenceType` 
 
 `Expression` [Any Number]
 
-: Arguments for a parameterized policy, in the same order as the `PolicyParameter` values in the referenced policy, and each argument number *n* MUST match the definition of the `PolicyParameter` number *n* (`DataType`, `isBag`). The number of arguments *N* may be less than the number of declared `PolicyParameter`s if and only if the `PolicyParameter`s number *N* and above have defined default values, in which case they are used as remaining arguments. If the Expression value is a `ValueType` object, i.e. a literal value, the latter SHALL not redefine/override the DataType identifier already defined by the matching PolicyParameter, and SHOULD not have any DataType identifier property set, if possible.
+: Arguments for a parameterized policy, in the same order as the `Parameter` values in the referenced policy, and each argument number *n* MUST match the definition of the `Parameter` number *n* (`DataType`, `isBag`). The number of arguments *N* may be less than the number of declared `Parameter`s if and only if the `Parameter`s number *N* (starting at zero) and above have defined default values, in which case they are used as remaining arguments. If the Expression value is a `ValueType` object, i.e. a literal value, the latter SHALL not redefine/override the DataType identifier already defined by the matching Parameter, and SHOULD not have any DataType identifier property set, if possible.
 
 ## 7.12 RuleType
 
@@ -2459,6 +2457,7 @@ class SharedVariableDefinitionType <<dataType>> {
    + Version: VersionType [1]
    + Description: String [0..1]
    + ShortIdSetReference: URI [*] {ordered, unique}
+   + Parameter: ParameterType [*] {ordered, unique} {{OCL} self->isUnique(Name)}
    + Expression: ExpressionType [1]
 }
 @enduml
@@ -2479,6 +2478,10 @@ class SharedVariableDefinitionType <<dataType>> {
 `ShortIdSetReference` [Any Number]
 
 : A sequence of `URI` values referencing short identifier sets. The short identifiers used by the shared variable MUST be ones defined in the referenced sets or in any further sets referenced by the referenced sets (recursively). The shared variable SHALL NOT directly or indirectly reference any short identifier set more than once.
+
+`Parameter` [Any Number]
+
+: A sequence of `ParameterType` objects declaring the parameters of the shared variable if the variable is parameterized. Each object's `Name` MUST be unique in this sequence.
 
 `Expression` [Required]
 
@@ -2932,6 +2935,7 @@ abstract class NonLiteralExpressionType <<datatype>>
 class SharedVariableReferenceType <<dataType>> extends NonLiteralExpressionType {
    + Id: URI [1]
    + Version: VersionMatchType [0..1]
+   + Expression: ExpressionType [*] {ordered, nonunique}
 }
 @enduml
 ```
@@ -2945,6 +2949,10 @@ The `SharedVariableReferenceType` object type contains the following properties:
 `Version` [Optional]
 
 : Specifies a matching expression for selecting an acceptable version of the referenced shared variable. The matching operation is defined in [Section 7.12](#71235-versionmatchtype). If this property is present, then the selected version of the shared variable MUST match the expression. If the property is absent, then any version of the shared variable is acceptable. In the case that more than one version matches, then the most recent one SHOULD be used.
+
+`Expression` [Any Number]
+
+: Arguments for a parameterized shared variable (`SharedVariableType` object), in the same order as the `Parameter` declarations in the referenced shared variable, and each argument number *n* MUST match the definition of the `Parameter` number *n* (`DataType`, `isBag`). The number of arguments *N* may be less than the number of declared `Parameter`s if and only if the `Parameter`s number *N* (starting at zero) and above have defined default values, in which case they are used as remaining arguments. If the Expression value is a `ValueType` object, i.e. a literal value, the latter SHALL not redefine/override the DataType identifier already defined by the matching Parameter, and SHOULD not have any DataType identifier property set, if possible.
 
 ## 7.25 QuantifiedExpressionType (optional)
 
@@ -3371,7 +3379,7 @@ abstract class AnyType <<dataType>>
 The `AnyType` data-type above represents *any type* (e.g. [XSD](#xs) `anyType` in XML), preferably any structured data-type (according to the previous recommendation), and the `<any>` name is only a placeholder for any property name. 
 This UML definition is for information only, and it is the responsibility of each ACAL representation format (ACAL Profile) to either define the correct representation for arbitrary structured content in their own format, or simply state that *`ContentType` objects are not supported at all* in that representation format.
 
-For example, this can be represented in XML as follows:
+For example, this can be represented in XML schema as follows:
 
 ```xml
 <xs:element name="Content" type="xacml:ContentType"/>
@@ -4530,7 +4538,7 @@ The implementation MUST support the object types that are marked `M`.
 | NoticeType | M |
 | PolicyDefaultsType | O |
 | PolicyIssuerType | O |
-| PolicyParameterType | M |
+| ParameterType | M |
 | PolicyReferenceType | M |
 | PolicyType | M |
 | QuantifiedExpressionType | O |

@@ -555,7 +555,7 @@ The `ValueType` and subtypes from [ACAL](#ACAL) section 7.23 are mapped to JSON 
       {"DataType": "<LiteralRestrictedStringType object's DataType>", "$": "<LiteralRestrictedStringType object's Value>" }
       ```
 
-If no support for structured data-types is needed, the following JSON subschema MAY be used for `ValueType` objects in general and added to the *`$defs` object* of the JACAL schema:
+If no support for structured data-types is needed, the following JSON subschema SHALL be used for `ValueType` objects in general and added to the *`$defs` object* of the JACAL schema:
 ```json
 "ValueType":
 {
@@ -570,7 +570,7 @@ If no support for structured data-types is needed, the following JSON subschema 
         "DataType": {"$ref": "#/$defs/IdentifierType"},
         "$": {"type": "string"}
       },
-      "required": ["DataType", "$"],
+      "required": ["$"],
       "additionalProperties": false
     }
   ]

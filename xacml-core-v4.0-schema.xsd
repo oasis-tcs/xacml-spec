@@ -100,7 +100,7 @@
 	</xs:complexType>
 
 	<xs:element name="Content" type="xacml:ContentType"/>
-	<xs:complexType name="ContentType" mixed="true">
+	<xs:complexType name="ContentValueType" mixed="true">
 		<xs:sequence>
 			<xs:any namespace="##any" processContents="lax"/>
 		</xs:sequence>
@@ -508,13 +508,14 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 					<xs:element ref="xacml:Expression" minOccurs="0" maxOccurs="unbounded">
 						<xs:annotation>
 							<xs:documentation xml:lang="en">
-								Optional argument(s) to the referenced policy (parameterized policy)
-								(If the Expression is a Value without a defined DataType identifier,
-								it is assumed to be String
-								(urn:oasis:names:tc:acal:1.0:data-type:string) by default.)
+								Optional argument(s) to the referenced
+								Policy The arguments SHALL match the
+								Policy's Parameter definitions in the same order
+								of declaration.
+								If one of the argument Expressions is a Value element, it SHALL not set the DataType attribute value.
 							</xs:documentation>
 						</xs:annotation>
-						</xs:element>
+					</xs:element>
 				</xs:sequence>
 				<xs:assert vc:minVersion="1.1" test="not(xacml:Value/@DataType)"/>
 			</xs:extension>
@@ -578,8 +579,8 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 
 	<!-- Change to XACML 3.0 (issue #4): Parameter passed via PolicyReference to parameterized
 	policy -->
-	<xs:element name="PolicyParameter" type="xacml:PolicyParameterType"/>
-	<xs:complexType name="PolicyParameterType">
+	<xs:element name="Parameter" type="xacml:ParameterType"/>
+	<xs:complexType name="ParameterType">
 		<xs:sequence>
 			<xs:element ref="xacml:Description" minOccurs="0">
 				<xs:annotation>
@@ -597,7 +598,7 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 				</xs:annotation>
 			</xs:element>
 		</xs:sequence>
-		<xs:attribute name="ParameterName" type="xacml:LocalIdentifierType" use="required"/>
+		<xs:attribute name="Name" type="xacml:LocalIdentifierType" use="required"/>
 		<xs:attribute name="DataType" type="xacml:IdentifierType" use="optional"
 			default="urn:oasis:names:tc:acal:1.0:data-type:string"/>
 		<xs:attribute name="IsBag" type="xs:boolean" use="optional" default="false"/>
@@ -609,9 +610,9 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 			<xs:selector xpath="xacml:ShortIdSetReference"/>
 			<xs:field xpath="."/>
 		</xs:key>
-		<xs:key name="Policy_PolicyParameter_ParameterName">
-			<xs:selector xpath="xacml:PolicyParameter"/>
-			<xs:field xpath="@ParameterName"/>
+		<xs:key name="Policy_Parameter_Name">
+			<xs:selector xpath="xacml:Parameter"/>
+			<xs:field xpath="@Name"/>
 		</xs:key>
 		<xs:key name="Policy_VariableDefinition_VariableId">
 			<xs:selector xpath="xacml:VariableDefinition"/>
@@ -647,7 +648,7 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 			<xs:element ref="xacml:PolicyDefaults" minOccurs="0" maxOccurs="unbounded"/>
 			<!-- Change to XACML 3.0 (issue #4 - Parameterized Policies): Parameters that may be
 			passed to the Policy via PolicyReference -->
-			<xs:element ref="xacml:PolicyParameter" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="xacml:Parameter" minOccurs="0" maxOccurs="unbounded"/>
 			<!-- Change to XACML 3.0 (issue #11): VariableDefinition elements moved before the
 			Target to allow using these variables in the Target condition  -->
 			<xs:element ref="xacml:VariableDefinition" minOccurs="0" maxOccurs="unbounded"/>
@@ -1069,11 +1070,16 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 			<xs:selector xpath="xacml:ShortIdSetReference"/>
 			<xs:field xpath="."/>
 		</xs:key>
+		<xs:key name="SharedVariableDefinition_Parameter_Name">
+			<xs:selector xpath="xacml:Parameter" />
+			<xs:field xpath="@Name" />
+		</xs:key>
 	</xs:element>
 	<xs:complexType name="SharedVariableDefinitionType">
 		<xs:sequence>
 			<xs:element ref="xacml:Description" minOccurs="0"/>
 			<xs:element ref="xacml:ShortIdSetReference" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="xacml:Parameter" minOccurs="0" maxOccurs="unbounded" />
 			<xs:element ref="xacml:Expression">
 				<xs:annotation>
 					<xs:documentation xml:lang="en">
@@ -1092,8 +1098,23 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 	<xs:complexType name="SharedVariableReferenceType">
 		<xs:complexContent>
 			<xs:extension base="xacml:NonLiteralExpressionType">
+				<xs:sequence>
+					<xs:element ref="xacml:Expression" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation xml:lang="en">
+								Optional argument(s) to the referenced
+								SharedVariableDefinition. The arguments SHALL match the
+								SharedVariableDefinition's Parameter definitions in the same order
+								of declaration.
+								If one of the argument Expressions is a Value element, it SHALL not
+								set the DataType attribute value.
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
 				<xs:attribute name="Id" type="xs:anyURI" use="required"/>
 				<xs:attribute name="Version" type="xacml:VersionMatchType" use="optional"/>
+				<xs:assert vc:minVersion="1.1" test="not(xacml:Value/@DataType)" />
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>

@@ -168,13 +168,13 @@
 			"$comment": "No PolicyDefaults extension supported by default. Create your own implementation-specific schema that overrides this $dynamicAnchor to support extensions (e.g. XPathPolicyDefaults from XPath Profile). See jacal-root-schema-example.json for example.",
 			"not": true
 		},
-		"PolicyParameterType": {
+		"ParameterType": {
 			"type": "object",
 			"required": [
-				"ParameterName"
+				"Name"
 			],
 			"properties": {
-				"ParameterName": {
+				"Name": {
 					"$ref": "#/$defs/LocalIdentifierType"
 				},
 				"DataType": {
@@ -189,7 +189,21 @@
 					"type": "string"
 				},
 				"Expression": {
-					"$ref": "#/$defs/ExpressionTypeTree"
+					"$ref": "#/$defs/ExpressionTypeTree",
+					"dependentSchemas": {
+						"Value": {
+							"$comment": "ACAL constraint (textual) on ParameterType's Expression property (DataType already specified as ParameterType's property)",
+							"properties": {
+								"Value": {
+									"dependentSchemas": {
+										"DataType": {
+											"not": true
+										}
+									}
+								}
+							}
+						}
+					}
 				}
 			},
 			"additionalProperties": false
@@ -259,7 +273,21 @@
 							"minItems": 1,
 							"uniqueItems": false,
 							"items": {
-								"$ref": "#/$defs/ExpressionTypeTree"
+								"$ref": "#/$defs/ExpressionTypeTree",
+								"dependentSchemas": {
+									"Value": {
+										"$comment": "ACAL constraint (textual) on PolicyReference's Expression property (DataType already specified in the corresponding Parameter of the referenced element SHALL not be redefined)",
+										"properties": {
+											"Value": {
+												"dependentSchemas": {
+													"DataType": {
+														"not": true
+													}
+												}
+											}
+										}
+									}
+								}
 							}
 						}
 					}
@@ -322,6 +350,14 @@
 						"format": "uri-reference"
 					}
 				},
+				"Parameter": {
+					"$comment": "TODO: add 'uniqueKeys': ['/Name'] from ArrayExt vocabulary - https://docs.json-everything.net/schema/vocabs/array-ext/",
+					"type": "array",
+					"minItems": 1,
+					"items": {
+						"$ref": "#/$defs/ParameterType"
+					}
+				},
 				"Expression": {
 					"$ref": "#/$defs/ExpressionTypeTree"
 				}
@@ -340,6 +376,28 @@
 				},
 				"Version": {
 					"$ref": "#/$defs/VersionMatchType"
+				},
+				"Expression": {
+					"type": "array",
+					"minItems": 1,
+					"uniqueItems": false,
+					"items": {
+						"$ref": "#/$defs/ExpressionTypeTree",
+						"dependentSchemas": {
+							"Value": {
+								"$comment": "ACAL constraint (textual) on SharedVariableReference's Expression property (DataType already specified in the corresponding Parameter of the referenced element SHALL not be redefined)",
+								"properties": {
+									"Value": {
+										"dependentSchemas": {
+											"DataType": {
+												"not": true
+											}
+										}
+									}
+								}
+							}
+						}
+					}
 				}
 			},
 			"additionalProperties": false
@@ -418,12 +476,12 @@
 				"PolicyDefaults": {
 					"$ref": "#/$defs/PolicyDefaultsTypeTree"
 				},
-				"PolicyParameter": {
-					"$comment": "TODO: add 'uniqueKeys': ['/ParameterName'] from ArrayExt vocabulary - https://docs.json-everything.net/schema/vocabs/array-ext/",
+				"Parameter": {
+					"$comment": "TODO: add 'uniqueKeys': ['/Name'] from ArrayExt vocabulary - https://docs.json-everything.net/schema/vocabs/array-ext/",
 					"type": "array",
 					"minItems": 1,
 					"items": {
-						"$ref": "#/$defs/PolicyParameterType"
+						"$ref": "#/$defs/ParameterType"
 					}
 				},
 				"VariableDefinition": {
@@ -534,7 +592,6 @@
 				{
 					"type": "object",
 					"required": [
-						"DataType",
 						"$"
 					],
 					"properties": {
@@ -1018,7 +1075,13 @@
 					"type": "array",
 					"minItems": 1,
 					"items": {
-						"$ref": "#/$defs/ValueType"
+						"$ref": "#/$defs/ValueType",
+						"dependentSchemas": {
+							"DataType": {
+								"$comment": "ACAL constraint (textual) on AttributeType's Value property (DataType already specified as AttributeType's property)",
+								"not": true
+							}
+						}
 					}
 				}
 			}
@@ -1343,7 +1406,13 @@
 					"type": "array",
 					"minItems": 1,
 					"items": {
-						"$ref": "#/$defs/ValueType"
+						"$ref": "#/$defs/ValueType",
+						"dependentSchemas": {
+							"DataType": {
+								"$comment": "ACAL constraint (textual) on MissingAttributeDetailType's Value property (DataType already specified as MissingAttributeDetail's property)",
+								"not": true
+							}
+						}
 					}
 				}
 			}
@@ -1410,13 +1479,8 @@
 					"$ref": "#/$defs/PolicyReferenceType"
 				}
 			},
-			"if": {
-				"required": [
-					"PolicyReference"
-				]
-			},
-			"then": {
-				"required": [
+			"dependentRequired": {
+				"PolicyReference": [
 					"Policy"
 				]
 			}
