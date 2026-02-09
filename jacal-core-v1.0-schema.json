@@ -113,6 +113,17 @@
 				"NotApplicable"
 			]
 		},
+		"MediaType": {
+			"description": "Content media type (RFC 6838). The standard MediaType values defined in JACAL core specification should be used whenever applicable: 'application/xml' for XML document, and 'application/json' for JSON object (default). Or else use a name registered at IANA (RFC 6838 - https://www.iana.org/assignments/media-types/media-types.xhtml).",
+			"$comment": "The pattern is based on the ABNF syntax from section 4.2 of RFC 6838 (with the recommendation that <type-name> and <subtype-name> SHOULD be limited to 64 characters).",
+			"type": "string",
+			"pattern": "^[A-Za-z0-9][A-Za-z0-9!#$&\\-\\^_.+]{0,63}/[A-Za-z0-9][A-Za-z0-9!#$&\\-\\^_.+]{0,63}$"
+		},
+		"ContentEncodingType": {
+			"description": "Content encoding name (RFC 2045). The standard ContentEncodingType value(s) defined in JACAL core specification should be used whenever applicable: 'base64' for complex XML content. For other cases, either use one of the standard Transfer Encodings registered at IANA (RFC 4289 - https://www.iana.org/assignments/transfer-encodings/transfer-encodings.xhtml), or else, if a custom content encoding is really needed, as suggested by RFC 2045 Section 6.3, define a new one prefixed with 'x-'.",
+			"type": "string",
+			"pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+		},
 		"ShortIdType": {
 			"type": "object",
 			"required": [
@@ -575,16 +586,12 @@
 		"ValueType": {
 			"anyOf": [
 				{
-					"type": "boolean"
-				},
-				{
-					"type": "integer"
-				},
-				{
-					"type": "number"
-				},
-				{
-					"type": "string"
+					"type": [
+						"boolean",
+						"integer",
+						"number",
+						"string"
+					]
 				},
 				{
 					"$ref": "#/$defs/XPathExpressionValueType"
@@ -1202,10 +1209,28 @@
 			"additionalProperties": false
 		},
 		"ContentType": {
-			"$comment": "TODO: supporting this is optional. Remove this subschema if your implementation does not support 'ContentType' objects. Or else, for safety/security reasons, in production, ACAL system users and/or implementers should add further restrictions to this schema and/or enforce security measures in the JSON processor to mitigate possible security issues that may occur when allowing any JSON object like this as input",
+			"$comment": "TODO: supporting this is optional. Remove this subschema if your implementation does not support 'ContentType' objects. Or else, for safety/security reasons, in production, ACAL system users and/or implementers should add further restrictions to the schema of the Body property and/or enforce security measures in the JSON processor to mitigate possible security issues that may occur when allowing any JSON object like this as Body input.",
 			"type": "object",
-			"maxProperties": 1,
-			"minProperties": 1
+			"properties": {
+				"MediaType": {
+					"$ref": "#/$defs/MediaType",
+					"default": "application/json"
+				},
+				"Encoding": {
+					"$ref": "#/$defs/ContentEncodingType"
+				},
+				"Body": {
+					"$comment": "'object' type is used for JSON object, 'string' for others - e.g. XML - possibly escaped or encoded depending on the Encoding property",
+					"type": [
+						"string",
+						"object"
+					]
+				}
+			},
+			"required": [
+				"Body"
+			],
+			"additionalProperties": false
 		},
 		"RequestAttributeType": {
 			"allOf": [

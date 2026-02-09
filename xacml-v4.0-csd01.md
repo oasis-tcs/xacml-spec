@@ -214,13 +214,15 @@ $ pandoc -s --embed-resources -f gfm+definition_lists -c styles/markdown-styles-
     - [5.1.2 Restricted String types (UML stereotype `<<restrictedString>>`)](#512-restricted-string-types-uml-stereotype-restrictedstring)
     - [5.1.3 Enum types (UML stereotype `<<enumeration>>`)](#513-enum-types-uml-stereotype-enumeration)
   - [5.2 Mapping complex ACAL types (UML stereotype `<<dataType>>`)](#52-mapping-complex-acal-types-uml-stereotype-datatype)
-    - [5.2.1 Single-use empty datatypes](#521-single-use-empty-datatypes)
-    - [5.2.2 ValueType mapping rules](#522-valuetype-mapping-rules)
-    - [5.2.3 Default mapping rules for complex ACAL types (other than ValueType)](#523-default-mapping-rules-for-complex-acal-types-other-than-valuetype)
-    - [5.2.4 Property mapping rules](#524-property-mapping-rules)
-    - [5.2.5 Mapping complex ACAL constraints (OCL)](#525-mapping-complex-acal-constraints-ocl)
-      - [5.2.5.1 Option 1: XML Schema 1.1 assertions](#5251-option-1-xml-schema-11-assertions)
-      - [5.2.5.2 Option 2: Schematron rules](#5252-option-2-schematron-rules)
+    - [5.2.1 AnyType mapping rule](#521-anytype-mapping-rule)
+    - [5.2.2 Single-use empty datatypes](#522-single-use-empty-datatypes)
+    - [5.2.3 ValueType mapping rules](#523-valuetype-mapping-rules)
+    - [5.2.4 Default mapping rules for complex ACAL types (other than ValueType)](#524-default-mapping-rules-for-complex-acal-types-other-than-valuetype)
+    - [5.2.5 Property mapping rules](#525-property-mapping-rules)
+    - [5.2.6 Mapping complex ACAL constraints (OCL)](#526-mapping-complex-acal-constraints-ocl)
+      - [5.2.6.1 Option 1: XML Schema 1.1 assertions](#5261-option-1-xml-schema-11-assertions)
+      - [5.2.6.2 Option 2: Schematron rules](#5262-option-2-schematron-rules)
+  - [5.3 Content Types and Body representations (optional)](#53-content-types-and-body-representations-optional)
 - [6 Safety, Security and Privacy Considerations (non-normative)](#6-safety-security-and-privacy-considerations-non-normative)
   - [6.1 Threat model](#61-threat-model)
   - [6.2 Safeguards](#62-safeguards)
@@ -413,7 +415,6 @@ The following `IdentifierType` values are all equivalent and evaluate to the URI
 "{xs}string"
 ```
 
-
 ## 4.4 Changes From the Previous Version
 
 <!-- From OASIS Open Specification Template Instructions: This section is **REQUIRED** and **MUST** be the last numbered subsection in this section. -->
@@ -518,17 +519,23 @@ For example, ACAL `DecisionType` translates to the following XSD definition:
 
 For each complex type (stereotyped `<<dataType>>`) in [ACAL](#ACAL) model, apply the mapping rules in the next subsections.
 
-The expression `xs:foo` means a `foo` element in W3C [XML schema](#XS) standard.
+The expression *`xs:foo` type (respectively element)* means the `foo` type (respectively element) defined in W3C [XML schema](#XS) standard.
 
 <a name="anonymized-datatypes"></a>
 
-### 5.2.1 Single-use empty datatypes
+### 5.2.1 AnyType mapping rule
+
+The ACAL `AnyType` is mapped to the `xs:anyType` type in XML.
+
+**WARNING:** for safety/security reasons, in production, ACAL implementers should add further restrictions to the XML schema and/or enforce security measures in the XML processor to mitigate possible security issues that may occur when allowing any XML type as input. 
+
+### 5.2.2 Single-use empty datatypes
 
 There are complex ACAL datatypes playing the role of *Union* datatype, such as `CombinerInputType`, which are *empty* (no property and no class inheritance) and have as many subtypes as possible types in the *union*. These are usually used once for a property that can take one of multiple alternative types, such as `CombinerInput`. 
 
-A single-use empty ACAL datatype `FooType` (i.e. used only for one property `P` in the whole ACAL model (e.g. `CombinerInput`) and not to be used in any ACAL extension) SHALL not be mapped to any dedicated XML type, element or attribute in the XSD. The mapping is done only at the level of property `P` (section 5.2.4) to a `xs:choice` of XSD elements corresponding to the subtypes of `FooType`. 
+Except the `AnyType` already addressed in the previous section, a single-use empty ACAL datatype `FooType` (i.e. used only for one property `P` in the whole ACAL model (e.g. `CombinerInput`) and not to be used in any ACAL extension) SHALL not be mapped to any dedicated XML type, element or attribute in the XSD. The mapping is done only at the level of property `P` (section 5.2.5) to a `xs:choice` of XSD elements corresponding to the subtypes of `FooType`. 
 
-### 5.2.2 ValueType mapping rules
+### 5.2.3 ValueType mapping rules
 
 As an exception, if the ACAL complex type is `ValueType` from [ACAL](#ACAL) section 7.23, it is always mapped to the following XSD: 
 
@@ -546,9 +553,9 @@ As an exception, if the ACAL complex type is `ValueType` from [ACAL](#ACAL) sect
 </xs:complexType>
 ```
 
-### 5.2.3 Default mapping rules for complex ACAL types (other than ValueType)
+### 5.2.4 Default mapping rules for complex ACAL types (other than ValueType)
 
-If a complex ACAL type `FooType` is not in the previous cases (section 5.2.1 and 5.2.2), then:
+If a complex ACAL type `FooType` is not in the previous cases (section 5.2.1, 5.2.2 and 5.2.3), then:
 
 1. If `FooType` is abstract (italicized title in the UML diagram), then:
    * 1.1. If `FooType` is empty (no class inheritance, no property), then:
@@ -556,15 +563,15 @@ If a complex ACAL type `FooType` is not in the previous cases (section 5.2.1 and
        ```xml 
        <xs:complexType name="FooType" abstract="true"/>
        ```
-     - 1.1.2. Else (it is single-used) skip it as instructed in section 5.2.1.
+     - 1.1.2. Else (it is single-used) skip it as instructed in section 5.2.2.
   
    * 1.2. Else (`FooType` is not empty, i.e. inherits a type and/or has at least one property):
      - 1.2.1. If  `FooType` inherits from a Datatype `BarType` (Generalization relationship), then:
-       + 1.2.1.1. If `BarType` is a single-use empty type as defined in section 5.2.1, `BarType` is not mapped to any XSD type (mapping is done only at the property level), therefore `FooType` (e.g. `PolicyType`) SHALL be mapped to the following XSD definition (not inheriting from `BarType`):
+       + 1.2.1.1. If `BarType` is a single-use empty type as defined in section 5.2.2, `BarType` is not mapped to any XSD type (mapping is done only at the property level), therefore `FooType` (e.g. `PolicyType`) SHALL be mapped to the following XSD definition (not inheriting from `BarType`):
   
           ```xml
           <xs:complexType name="FooType" abstract="true">
-            ...property mapping rules (5.2.4) apply...
+            ...property mapping rules (5.2.5) apply...
           </xs:complexType>
           ```
 
@@ -582,7 +589,7 @@ If a complex ACAL type `FooType` is not in the previous cases (section 5.2.1 and
             <xs:complexType name="FooType" abstract="true">
               <xs:complexContent>
                 <xs:extension base="BarType">
-                  ...property mapping rules (5.2.4) apply...
+                  ...property mapping rules (5.2.5) apply...
                 </xs:extension>
               </xs:complexContent>
             </xs:complexType>
@@ -592,7 +599,7 @@ If a complex ACAL type `FooType` is not in the previous cases (section 5.2.1 and
 
        ```xml
        <xs:complexType name="FooType" abstract="true">
-         ...property mapping rules (5.2.4) apply...
+         ...property mapping rules (5.2.5) apply...
        </xs:complexType>
        ```
 2. Else (`FooType` is not abstract) apply the same mapping rules as in the first case, except remove `abstract="true"` from the `xs:complexType` and `xs:element` definitions.
@@ -616,9 +623,9 @@ If a complex ACAL type `FooType` is not in the previous cases (section 5.2.1 and
    ```
    where `<XPath_to_Foo_element>` is the XPath expression to select the *Foo* element of `FooType`.
    
-4. If `FooType` has *Object-level constraints* as defined in section 7.1.1.1.2 of [[ACAL](#acal)], implementers SHOULD apply the recommended mappings in the section [5.2.5](#525-mapping-complex-acal-constraints-ocl), or they MAY also apply alternative implementation-specific mapping mechanisms as they see fit.
+4. If `FooType` has *Object-level constraints* as defined in section 7.1.1.1.2 of [[ACAL](#acal)], implementers SHOULD apply the recommended mappings in the section [5.2.6](#526-mapping-complex-acal-constraints-ocl), or they MAY also apply alternative implementation-specific mapping mechanisms as they see fit.
 
-### 5.2.4 Property mapping rules
+### 5.2.5 Property mapping rules
 
 Inside the `xs:complexType` or `xs:extension` element created by the previous mapping rules, go the property mappings for each property *Prop* of the complex ACAL type. Let *PropType* be *Prop*'s datatype.
 
@@ -675,7 +682,7 @@ Inside the `xs:complexType` or `xs:extension` element created by the previous ma
 
      where `<XPath_to_Prop>` is the XPath expression to select the *Prop* element from `RootAncestorOfProp` element.
    
-3. Else if *PropType* is a *single-use empty type* as defined in Section 5.2.1 (e.g.`CombinerInputType`), i.e. an empty abstract type only used by *Prop* in the ACAL model, with subtypes *Sub1Type, Sub2Type, etc.*, then for each subtype *SubXType* of *PropType*, apply the mapping rules in the previous section and this section to *SubXType*, and create an element `<xs:element name="SubX" type="SubXType" />` in XACML namespace if it does not already exist (`<xs:element name="SubX" type="SubXType" abstract="true"/>` if *SubXType* is abstract). Then *PropType* maps to the following XSD definition (replace `$min` with the lower bound of *Prop*'s multiplicity in the ACAL (UML) model, and `$max` with the upper bound, using `unbounded` as equivalent for `*`):
+3. Else if *PropType* is a *single-use empty type* as defined in Section 5.2.2 (e.g.`CombinerInputType`), i.e. an empty abstract type only used by *Prop* in the ACAL model, with subtypes *Sub1Type, Sub2Type, etc.*, then for each subtype *SubXType* of *PropType*, apply the mapping rules in the previous section and this section to *SubXType*, and create an element `<xs:element name="SubX" type="SubXType" />` in XACML namespace if it does not already exist (`<xs:element name="SubX" type="SubXType" abstract="true"/>` if *SubXType* is abstract). Then *PropType* maps to the following XSD definition (replace `$min` with the lower bound of *Prop*'s multiplicity in the ACAL (UML) model, and `$max` with the upper bound, using `unbounded` as equivalent for `*`):
    
    ```xml
    <xs:choice minOccurs="$min" maxOccurs="$max">
@@ -756,7 +763,7 @@ Inside the `xs:complexType` or `xs:extension` element created by the previous ma
 
    - 4.6. Else if *Prop* has other kinds of constraints defined in section 7.1.1.1.1.2 of [ACAL] not mentioned previously, implementers SHOULD apply the recommended mappings in the next section, or they MAY also apply alternative implementation-specific mapping mechanisms as they see fit.
 
-### 5.2.5 Mapping complex ACAL constraints (OCL)
+### 5.2.6 Mapping complex ACAL constraints (OCL)
 
 _*This section is non-normative.*_ 
 
@@ -773,7 +780,7 @@ This document does not mandate a particular method to map and/or implement these
 - Option 2: [[XSD 1.0](#xs)] schema with [ISO Schematron](#schematron) rules.
 
 
-#### 5.2.5.1 Option 1: XML Schema 1.1 assertions
+#### 5.2.6.1 Option 1: XML Schema 1.1 assertions
 
 Implementations supporting [W3C XML Schema 1.1](#xs11) standard SHOULD use XSD 1.1 assertions as defined in section 3.13 of XSD 1.1 standard to implement the aforementioned constraints. The general mapping rule consists for each constraint specified on a ACAL Datatype `FooType` or one of its properties, to define an equivalent XSD 1.1 assertion `<xs:assert test="expression"/>` - where *expression* is the XPath equivalent of the OCL constraint expression - inside the `xs:complexType` definition of `FooType`.
 
@@ -795,13 +802,36 @@ For information only, the following table suggests generic mappings for some of 
 You may find further guidance about XSD-1.1-based validation on [OASIS XACML TC's code repository](https://github.com/oasis-tcs/xacml-spec/).
 
 
-#### 5.2.5.2 Option 2: Schematron rules
+#### 5.2.6.2 Option 2: Schematron rules
 
 Due to the current general lack of adoption of XSD 1.1 (and limited availability of implementations), implementations only supporting XSD 1.0 MAY achieve the same result by combining the following: 
 
 - An XSD 1.0 version of the *Core XML Schema*, obtained by filtering out all the schema elements with attribute `vc:minVersion="1.1"` (according to [XSV]) from the XSD 1.1 schema (e.g. with an [XSLT] stylesheet);
 - [ISO Schematron](#schematron) rules provided with this document (file with `.sch` extension), that implement the complex OCL constraints with similar - if not the same - XPath expressions as the XSD 1.1 assertions in the previous Option 1. Therefore, like XSD 1.1 assertions, certain generic Schematron assertions may be problematic for certain XSLT / XPath engines or use cases, in which case alternative assertions are suggested in XML comments before or after each possibly problematic `<assert>` element currently in use in the schema. Implementers SHOULD review these before use. Moreover, implementers MAY choose to replace some of the assertions with possibly more optimal implementations as long as they provide equivalent constraint enforcement. Each Schematron `pattern` element has the corresponding  [ACAL] model's UML constraint (with OCL expression) reminded in the child `title` element. You may find further guidance about Schematron-based validation on [OASIS XACML TC's code repository](https://github.com/oasis-tcs/xacml-spec/).
 
+## 5.3 Content Types and Body representations (optional)
+
+Although this specification defines an XML representation, both XML and non-XML data may be represented in a `<Content>` element (corresponding to an ACAL `ContentType` object).
+This specification defines the following `Content` types in order to support ACAL Profiles with AttributeSelector and/or DataType extensions based on such Content (e.g. XPath and JSONPath Profiles):
+
+- XML document:
+  - `MediaType` attribute SHALL be set to `application/xml` (default value);
+  - `Encoding` attribute unused;
+  - `Body` element has only a single child element that is the XML document itself.
+
+- JSON object *(note that a JSON array can be wrapped in a JSON object if there is a need to support JSON arrays)*:
+  - `MediaType` attribute SHALL be `application/json`;
+  - `Encoding` attribute unused;
+  - `Body` element has only a text node that contains the JSON object, either escaped to fit in a simple XML string, or unescaped in a XML CDATA section as follows:
+    ```xml
+    <Body>
+      <![CDATA[
+        ... JSON object ...
+      ]]>
+    </Body>
+    ```
+
+The implementation SHALL support a given content type in this list if and only if there is an ACAL Profile that makes it mandatory (refer to the Profile's specification for more information).
 
 -------
 
@@ -1294,6 +1324,8 @@ XACML 4.0 differs from XACML 3.0 in the following ways:
 - `Attribute` has a new optional `DataType` attribute (set to the standard string type as default), to have a common data-type for all the attribute values. In XACML 3.0, defining the data-type for each `AttributeValue` individually led to the risk of mixing different datatypes in the same attribute. We consider this bad practice (one may simply split in different attributes if using different data-types).
 
 - `AttributeValue` is replaced with more generic `Value` whose `DataType` is now optional, i.e. it may be omitted when it is already defined by at the parent or ancestor level, which simplifies expressions with literal values. In particular, as a result of the previous change, in an `Attribute`, the `Value`'s `DataType` is now omitted since defined at the `Attribute` level already.
+
+- `Content` may now contain XML, JSON and possibly other content types in the future, and therefore has a new data model - more generic - that consists of a `Body` element (content body which is similar to former Content value) and two attributes: `MediaType` (Content media type which indicates whether it is XML, JSON or some other content type) and `Encoding` (indicates whether the body is encoded with a particular mechanism, e.g. Base64-encoded data).
 
 - `AttributeSelector` changes:
   

@@ -99,11 +99,62 @@
 		</xs:sequence>
 	</xs:complexType>
 
+	<xs:simpleType name="MediaType">
+		<xs:restriction base="xs:string">
+			<xs:pattern
+				value="[A-Za-z0-9][A-Za-z0-9!#$&amp;\-\^_.+]{0,63}/[A-Za-z0-9][A-Za-z0-9!#$&amp;\-\^_.+]{0,63}">
+				<xs:annotation>
+					<xs:documentation xml:lang="en">Pattern based on the ABNF syntax from section
+						4.2 of RFC 6838 (with the recommendation that &lt;type-name&gt; and
+						&lt;subtype-name&gt; SHOULD be limited to 64 characters).
+						The standard MediaType values defined in XACML core specification should be used whenever applicable: 
+						- 'application/xml' for XML document (default);
+						- 'application/json' for JSON object.
+						For other cases, you may use
+					</xs:documentation>
+				</xs:annotation>
+			</xs:pattern>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="ContentEncodingType">
+		<xs:restriction base="xs:string">
+			<xs:pattern
+				value="[a-z0-9]+(-[a-z0-9]+)*">
+				<xs:annotation>
+					<xs:documentation xml:lang="en">
+						No special encoding is needed for XML/JSON data. 
+						However, if other (custom) content types are used and require specific encoding,
+						the standard identifiers specified in [Annex D.11](#d11-content-encodings)
+						SHOULD be used whenever applicable, e.g. 'base64' or else one of the standard [*Transfer
+						Encodings* names registered at
+						IANA](https://www.iana.org/assignments/transfer-encodings/transfer-encodings.xhtml).
+						Or else, if a custom content encoding is really needed, as suggested by
+						RFC 2045 Section 6.3, define a new one prefixed with `x-`,
+						e.g. `x-my-new-encoding`.	
+					</xs:documentation>
+				</xs:annotation>
+			</xs:pattern>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:element name="Body" type="xs:anyType">
+		<xs:annotation>
+			<xs:documentation>
+				<xs:documentation xml:lang="en">
+					Content body. For safety/security reasons, in production, ACAL implementers shall add further restrictions to this type definition and/or enforce security measures in the XML processor to mitigate
+					possible security issues when allowing any XML content like this.
+				</xs:documentation>
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
 	<xs:element name="Content" type="xacml:ContentType"/>
-	<xs:complexType name="ContentValueType" mixed="true">
+	<xs:complexType name="ContentType">
 		<xs:sequence>
-			<xs:any namespace="##any" processContents="lax"/>
+			<xs:element ref="xacml:Body"/>
 		</xs:sequence>
+		<xs:attribute name="MediaType" type="xacml:MediaType" use="optional" default="application/xml" />
+		<xs:attribute name="Encoding" type="xacml:ContentEncodingType" use="optional" />
 	</xs:complexType>
 
 	<xs:element name="Result" type="xacml:ResultType">

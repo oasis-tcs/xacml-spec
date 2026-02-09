@@ -195,12 +195,14 @@ $ pandoc -s --embed-resources -f gfm+definition_lists -c styles/markdown-styles-
     - [5.1.2 Restricted String types (UML stereotype `<<restrictedString>>`)](#512-restricted-string-types-uml-stereotype-restrictedstring)
     - [5.1.3 Enum types (UML stereotype `<<enumeration>>`)](#513-enum-types-uml-stereotype-enumeration)
   - [5.2 Mapping complex ACAL types (UML stereotype `<<dataType>>`)](#52-mapping-complex-acal-types-uml-stereotype-datatype)
-    - [5.2.1 ValueType mapping rules](#521-valuetype-mapping-rules)
-      - [5.2.1.1 Primitive value mappings](#5211-primitive-value-mappings)
-      - [5.2.1.2 Structured value mappings](#5212-structured-value-mappings)
-    - [5.2.2 Default mapping rules for complex ACAL types (other than ValueType)](#522-default-mapping-rules-for-complex-acal-types-other-than-valuetype)
-    - [5.2.3 Property mapping rules](#523-property-mapping-rules)
-    - [5.2.4 Mapping ACAL object-level constraints (OCL)](#524-mapping-acal-object-level-constraints-ocl)
+    - [5.2.1 AnyType mapping rule](#521-anytype-mapping-rule) 
+    - [5.2.2 ValueType mapping rules](#522-valuetype-mapping-rules)
+      - [5.2.2.1 Primitive value mappings](#5221-primitive-value-mappings)
+      - [5.2.2.2 Structured value mappings](#5222-structured-value-mappings)
+    - [5.2.3 Default mapping rules for complex ACAL types (other than ValueType)](#523-default-mapping-rules-for-complex-acal-types-other-than-valuetype)
+    - [5.2.4 Property mapping rules](#524-property-mapping-rules)
+    - [5.2.5 Mapping ACAL object-level constraints (OCL)](#525-mapping-acal-object-level-constraints-ocl)
+  - [5.3 Content Types and Body representations (optional)](#53-content-types-and-body-representations-optional)
 - [6 Safety, Security and Privacy Considerations (non-normative)](#6-safety-security-and-privacy-considerations-non-normative)
   - [6.1 Threat model](#61-threat-model)
   - [6.2 Safeguards](#62-safeguards)
@@ -538,11 +540,21 @@ For example, ACAL `DecisionType` translates to the following subschema:
 
 For each complex type (stereotyped `<<dataType>>`) in [ACAL](#ACAL) model, apply the mapping rules in the next subsections.
 
-### 5.2.1 ValueType mapping rules
+### 5.2.1 AnyType mapping rule
+
+The ACAL `AnyType` is mapped to the following subschema:
+```json
+{"type": ["string", "object"]}
+```
+The `object` type is used for JSON object (which can be used to wrap a JSON array as well), and the `string` type for non-JSON structured data, e.g. XML, possibly escaped or encoded to fit in a JSON string. See the [Content Types section](#53-content-types-and-body-representations-optional) for examples.
+
+**WARNING:** for safety/security reasons, in production, ACAL implementers should add further restrictions to this JSON schema and/or enforce security measures in the JSON processor to mitigate possible security issues that may occur when allowing any JSON object as input.
+
+### 5.2.2 ValueType mapping rules
 
 The `ValueType` and subtypes from [ACAL](#ACAL) section 7.23 are mapped to JSON as described in the next subsections.
 
-#### 5.2.1.1 Primitive value mappings
+#### 5.2.2.1 Primitive value mappings
 
 1. A `LiteralBooleanType` object is represented as a JSON boolean. The ACAL data-type is implicitly set to `urn:oasis:names:tc:acal:1.0:data-type:boolean`.
 2. A `LiteralIntegerType` object is represented as a JSON integer as defined by [JsonSchemaValidation](#jsonschemavalidation) section 6.1.1 (JSON number with a zero fractional part). The ACAL data-type is implicitly set to `urn:oasis:names:tc:acal:1.0:data-type:integer`.
@@ -560,10 +572,7 @@ If no support for structured data-types is needed, the following JSON subschema 
 "ValueType":
 {
   "anyOf": [
-    {"type": "boolean"},
-    {"type": "integer"},
-    {"type": "number"},
-    {"type": "string"},
+    {"type": ["boolean", "integer", "number", "string"]},
     {
       "type": "object",
       "properties": {
@@ -578,7 +587,7 @@ If no support for structured data-types is needed, the following JSON subschema 
 ```
 
 
-#### 5.2.1.2 Structured value mappings
+#### 5.2.2.2 Structured value mappings
 
 `StructuredValueType` objects, which are used for structured values, are represented as a JSON objects. Since `StructuredValueType` is an abstract type, it is the responsibility of ACAL profiles (e.g. XPath profile) or ACAL users / implementers to define concrete subtypes as needed, with their own ACAL data-type identifier; and also to define their respective **JSON schema** if they need to have a JSON representation. 
 For a given concrete subtype of `StructuredValueType` named `FooStructValueType`, a `FooStructValueType` object is represented in JSON in one of two forms (with a `DataType` property or not):
@@ -599,10 +608,7 @@ Therefore, the `ValueType`'s JSON schema SHALL be modified to include references
 "ValueType":
 {
   "anyOf": [
-    {"type": "boolean"},
-    {"type": "integer"},
-    {"type": "number"},
-    {"type": "string"},
+    {"type": ["boolean", "integer", "number", "string"]},
     {"$ref": "<URI of StructValueType1's JSON schema>" },
     {"$ref": "<URI of StructValueType2's JSON schema>" },
     ...
@@ -631,10 +637,7 @@ Here is an example with `XPathExpressionValueType` (DataType `urn:oasis:names:tc
 "ValueType":
 {
 	"anyOf": [
-      {"type": "boolean"},
-      {"type": "integer"},
-  	  {"type": "number"},
-      {"type": "string"},
+      {"type": ["boolean", "integer", "number", "string"]},
       {"$ref": "#/$defs/XPathExpressionValueType" },
       {
         "type": "object",
@@ -658,9 +661,9 @@ The `StructValueXType` may be defined in a separate JSON schema file such as `ja
 `{"$ref": "jacal-xxx-v1.0-schema.json#/$defs/StructValueXType" }`.
 
 
-### 5.2.2 Default mapping rules for complex ACAL types (other than ValueType)
+### 5.2.3 Default mapping rules for complex ACAL types (other than ValueType)
 
-For each complex ACAL type `FooType` that does not fall under any of the previous cases (section 5.1 and 5.2.1), apply the mappings rules defined in this section.
+For each complex ACAL type `FooType` that does not fall under any of the previous cases (section 5.2.1 and 5.2.2), apply the mappings rules defined in this section.
 
 **Definitions**:
 - The term *concrete type* is used as synonym for *non-abstract type*.
@@ -671,7 +674,7 @@ For each complex ACAL type `FooType` that does not fall under any of the previou
 - Let `FooSub1FinalType`, `FooSub2FinalType`, etc. be referred to as the final subtypes of `FooType` if there is any.
 - Let `FooSub1NonFinalType`, `FooSub2NonFinalType`, etc. be referred to as the non-final subtypes of `FooType` if there is any.
 - Let *p<sub>n</sub>* be the n-th property defined in *FooType* class model specifically (not already defined in a supertype of *FooType* if any).
-- Let *\<s<sub>i</sub>\>* be the JSON subschema obtained by applying Property mapping rules of section 5.2.3 to the property *p<sub>n</sub>*.
+- Let *\<s<sub>i</sub>\>* be the JSON subschema obtained by applying Property mapping rules of section 5.2.4 to the property *p<sub>n</sub>*.
 - Let *\<LR>* be the list of all required properties *p<sub>n</sub>*, i.e. such that the lower bound of *p<sub>n</sub>*'s multiplicity is 1.
 
 **Mapping rules**:
@@ -867,61 +870,49 @@ For each complex ACAL type `FooType` that does not fall under any of the previou
         ```
     
 
-### 5.2.3 Property mapping rules
+### 5.2.4 Property mapping rules
 
 For each of an ACAL Datatype's property *Prop* with value type *PropType*, the corresponding JSON subschema is obtained as follows:
 
-1. If *Prop* has special name `<any>` (and special type `AnyType`) in ACAL, then:
-   - 1.1. If its multiplicity's upper bound is `*`, then map the property to the following JSON schema definition (replace `<min>` with the lower bound of *Prop*'s multiplicity):
-      ```json
-      { "type": "object", "minProperties": <min> } 
-      ```
-   - 1.2. Else map to the following instead (replace `<max>` with the upper bound of the property's multiplicity):
-      ```json
-      { "type": "object", "minProperties": <min>,  "maxProperties": <max> } 
-      ```
-    **WARNING:** for safety/security reasons, in production, ACAL system users and/or implementers should add further restrictions to this schema and/or enforce security measures in the JSON processor to mitigate possible security issues that may occur when allowing any JSON object as input. 
+- Map *PropType* to a JSON subschema *<PropTypeSchema>* according to the mapping rules of previous sections 5.1, 5.2.1, 5.2.2 and 5.2.3.
+- 1. If *Prop* is single-valued, the final JSON subschema of the property value is the *<PropTypeSchema>* obtained previously, unless it has a defined default primitive value, represented in JSON as `<DEFAULT>`, in which case the final schema is:
+  ```json
+  { <PropTypeSchema_without_opening_and_closing_braces>, "default": <DEFAULT> }
+  ```
+- 2. Else (*Prop* is multivalued):
+  - 2.1. If the property has a **Value type uniqueness constraint** as defined in [ACAL] section 7.1.1.1.1.2 (`self->isUnique(oclType())`), then map to the following subschema:
+    ```json
+    {
+      "type": "object",
+      "properties": {
+        "Item1": <Item1TypeSchema>,
+        "Item2": <Item2TypeSchema>
+        ...
+      },
+      "additionalProperties": false
+    }
+    ```
+    where *Item1Type*, *Item2Type*, etc. are all possible (and distinct) concrete subtypes of *PropType* ( *ItemXTypeSchema* is the JSON subschema corresponding to the item's type *ItemXType*).
 
-2. Else:
-   - Map *PropType* to a JSON subschema *<PropTypeSchema>* according to the mapping rules of previous sections 5.1, 5.2.1 and 5.2.2.
-   - 2.1. If *Prop* is single-valued, the final JSON subschema of the property value is the *<PropTypeSchema>* obtained previously, unless it has a defined default primitive value, represented in JSON as `<DEFAULT>`, in which case the final schema is:
+  - 2.2. Else (no *Value type uniqueness constraint*), map to an array type as follows:
      ```json
-     { <PropTypeSchema_without_opening_and_closing_braces>, "default": <DEFAULT> }
+     {
+         "type": "array",
+         "items": <PropTypeSchema>,
+         "minItems": <min>,
+         "uniqueItems": <is_unique>
+     }
      ```
-   - 2.2. Else (*Prop* is multivalued):
-     - 2.2.1. If the property has a **Value type uniqueness constraint** as defined in [ACAL] section 7.1.1.1.1.2 (`self->isUnique(oclType())`), then map to the following subschema:
-       ```json
-       {
-         "type": "object",
-         "properties": {
-           "Item1": <Item1TypeSchema>,
-           "Item2": <Item2TypeSchema>
-           ...
-         },
-         "additionalProperties": false
-       }
-       ```
-       where *Item1Type*, *Item2Type*, etc. are all possible (and distinct) concrete subtypes of *PropType* ( *ItemXTypeSchema* is the JSON subschema corresponding to the item's type *ItemXType*).
+     where:
+     - `<min>` is set to the lower bound of *Prop*'s multiplicity unless the lower bound is zero, in which case `<min>` is set 1 regardless, since the lower bound zero is already achieved by making the JSON property optional;
+     - `<is_unique>` is set to `true` if and only if the `unique` constraint is specified on the ACAL property, else `false`.
 
-     - 2.2.2. Else (no *Value type uniqueness constraint*), map to an array type as follows:
-        ```json
-        {
-            "type": "array",
-            "items": <PropTypeSchema>,
-            "minItems": <min>,
-            "uniqueItems": <is_unique>
-        }
-        ```
-        where:
-        - `<min>` is set to the lower bound of *Prop*'s multiplicity unless the lower bound is zero, in which case `<min>` is set 1 regardless, since the lower bound zero is already achieved by making the JSON property optional;
-        - `<is_unique>` is set to `true` if and only if the `unique` constraint is specified on the ACAL property, else `false`.
-  
-       **The standard `uniqueItems` keyword does not allow to enforce uniqueness of array items based on a specific key when such items are JSON objects, in the current latest JSON schema draft (version 2020-12).** 
+    **The standard `uniqueItems` keyword does not allow to enforce uniqueness of array items based on a specific key when such items are JSON objects, in the current latest JSON schema draft (version 2020-12).** 
 
-       Therefore, the mapping of **property-based uniqueness constraints** - defined in [ACAL] section 7.1.1.1.1.2 - on properties of complex/structured type (mapped to JSON object) is left implementation-defined by this specification, since there is no standard mechanism in the current latest JSON schema standard to enforce the such constraints. However, as a general guidance, implementations MAY use the third-party [ArrayExt extension vocabulary](https://github.com/json-schema-org/json-schema-vocabularies) and more particulary the `uniqueKeys` keyword (instead of `uniqueItems`) to implement this feature. 
+    Therefore, the mapping of **property-based uniqueness constraints** - defined in [ACAL] section 7.1.1.1.1.2 - on properties of complex/structured type (mapped to JSON object) is left implementation-defined by this specification, since there is no standard mechanism in the current latest JSON schema standard to enforce the such constraints. However, as a general guidance, implementations MAY use the third-party [ArrayExt extension vocabulary](https://github.com/json-schema-org/json-schema-vocabularies) and more particulary the `uniqueKeys` keyword (instead of `uniqueItems`) to implement this feature. 
 
 
-### 5.2.4 Mapping ACAL object-level constraints (OCL)
+### 5.2.5 Mapping ACAL object-level constraints (OCL)
 
 ACAL object-level constraints defined in [ACAL] section 7.1.1.1.2 may be translated into JSON subschema(s) to be added the corresponding JSON schema definition of the ACAL Datatype, according to the table below:
 
@@ -935,9 +926,41 @@ ACAL object-level constraints defined in [ACAL] section 7.1.1.1.2 may be transla
 | `prop->notEmpty()` <br>*(`prop` is multivalued)* | `{"required": ["prop"]}` <br> *(`minItems` is already set by rule 2.2.2 (previous section) to 1 or greater in the property's subschema (array type))* |
 
 
-## 5.3 Extending JACAL syntax
+## 5.3 Content Types and Body representations (optional)
 
-Extending JACAL syntax means extending JACAL core JSON schema obtained from the mapping rules in the previous section. As explained in the mapping rule 1.2.1 of section 5.2.2, JACAL core schema uses a `$dynamicRef` for any extensible ACAL type that may be extended by a separate JSON schema (overriding a matching `$dynamicAnchor`), depending on which extensions the ACAL implementation shall support. Let us look at different cases to illustrate this extension mechanism in more details:
+Although this specification defines an JSON representation, both JSON and non-JSON data may be represented in a `Content` object (corresponding to an ACAL `ContentType` object).
+This specification defines the following `Content` types in order to support ACAL Profiles with AttributeSelector and/or DataType extensions based on such Content (e.g. XPath and JSONPath Profiles):
+
+- JSON object *(note that a JSON array can be wrapped in a JSON object if there is a need to support JSON arrays)*:
+  - `MediaType` property SHALL be set to `application/json` (default value);
+  - `Encoding` attribute unused;
+  - `Body` property is set to the JSON object itself.
+
+- XML document:
+  - `MediaType` attribute SHALL be set to `application/xml`;
+  - `Encoding` attribute is either unused/undefined or set to `base64`.
+  - `Body` property is set to a JSON string containing the XML document in one of the following forms:
+     1) **Escaped:** if `Encoding` is undefined, the XML is escaped to be a valid JSON string using escaping rules described in section 7 of [[RFC8259](#rfc8259)], i.e. in particular the double quote (`"`), backslash (`\`) and control characters are escaped with a backslash `\` (the new line escaped as `\n`, the carriage return as `\r`, and the horizontal tab as `\t`). For example:
+     ```json
+     {
+      "MediaType": "application/xml",
+      "Body": "<?xml version=\"1.0\"?><catalog><book id=\"bk101\"><author>Gambardella, Matthew</author><title>XML Developer's Guide</title><genre>Computer</genre><price>44.95</price><publish_date>2000-10-01</publish_date><description>An in-depth look at creating applications with XML.</description></book></catalog>"
+     }
+     ```
+     2) **Base64-encoded:** if `Encoding` is `base64`, the XML is Base64-encoded as per [BASE64]. For example:
+     ```json
+     {
+      "MediaType": "application/xml",
+      "Encoding": "base64",
+      "Body": "PD94bWwgdmVyc2lvbj0iMS4wIj8+DQo8Y2F0YWxvZz48Ym9vayBpZD0iYmsxMDEiPjxhdXRob3I+R2FtYmFyZGVsbGEsIE1hdHRoZXc8L2F1dGhvcj48dGl0bGU+WE1MIERldmVsb3BlcidzIEd1aWRlPC90aXRsZT48Z2VucmU+Q29tcHV0ZXI8L2dlbnJlPjxwcmljZT40NC45NTwvcHJpY2U+PHB1Ymxpc2hfZGF0ZT4yMDAwLTEwLTAxPC9wdWJsaXNoX2RhdGU+PGRlc2NyaXB0aW9uPkFuIGluLWRlcHRoIGxvb2sgYXQgY3JlYXRpbmcgYXBwbGljYXRpb25zIHdpdGggWE1MLjwvZGVzY3JpcHRpb24+PC9ib29rPjwvY2F0YWxvZz4="
+     }
+     ```
+
+The implementation SHALL support a given content type in this list if and only if there is an ACAL Profile that makes it mandatory (refer to the Profile's specification for more information).
+
+## 5.4 Extending JACAL syntax
+
+Extending JACAL syntax means extending JACAL core JSON schema obtained from the mapping rules in the previous section. As explained in the mapping rule 1.2.1 of section 5.2.3, JACAL core schema uses a `$dynamicRef` for any extensible ACAL type that may be extended by a separate JSON schema (overriding a matching `$dynamicAnchor`), depending on which extensions the ACAL implementation shall support. Let us look at different cases to illustrate this extension mechanism in more details:
 
 * Case 1 - the implementation does not support any extension: in this case, use the JACAL core schema as is.
 * Case 2 - the implementation supports two extensions of some type `FooType` in the core schema: one custom extension `CustomFooSubType` and another extension `SomeProfileFooSubType` defined in an existing JACAL Profile with a schema identified `urn:some:profile:schema`. In this case, the implementer shall create a combining schema for the implementation, which combines the extensions' schemas with the core schema like this:

@@ -269,6 +269,8 @@ $ pandoc -f gfm+definition_lists -t pdf acal-v1.0.md -c styles/markdown-styles-v
         - [7.1.2.3.11 Name](#712311-name)
         - [7.1.2.3.12 EffectType](#712312-effecttype)
         - [7.1.2.3.13 DecisionType](#712313-decisiontype)
+        - [7.1.2.3.14 MediaType (optional)](#712314-mediatype-optional)
+        - [7.1.2.3.15 ContentEncodingType (optional)](#712315-contentencodingtype-optional) 
     - [7.1.3 Relationship to Concrete Representations](#713-relationship-to-concrete-representations)
   - [7.2 ShortIdSetType](#72-shortidsettype)
   - [7.3 ShortIdType](#73-shortidtype)
@@ -437,6 +439,8 @@ $ pandoc -f gfm+definition_lists -t pdf acal-v1.0.md -c styles/markdown-styles-v
   - [D.7 Environment Attributes](#d7-environment-attributes)
   - [D.8 Status Codes](#d8-status-codes)
   - [D.9 Combining Algorithms](#d9-combining-algorithms)
+  - [D.10 Content Types](#d10-content-types)
+  - [D.11 Content Encodings](#d11-content-encodings) 
 - [Annex E. Combining Algorithms](#annex-e-combining-algorithms)
   - [E.1 Extended Indeterminate Values](#e1-extended-indeterminate-values)
   - [E.2 Deny Overrides](#e2-deny-overrides)
@@ -1981,6 +1985,51 @@ The values of `DecisionType` have the following meanings:
 
 : `NotApplicable`: the PDP does not have any policy that applies to this decision request.
 
+##### 7.1.2.3.14 MediaType (optional)
+
+_**Support for this type is optional, required only if `ContentType` objects MUST be supported.**_
+
+`MediaType` is the primitive type for `ContentType` objects' `MediaType` property (see [Section 7.34](#734-contenttype-optional) ).
+
+The regular expression below follows the ABNF syntax from section 4.2 of [[RFC6838]](#rfc6838) (with the recommendation that `<type-name>` and `<subtype-name>` SHOULD be limited to 64 characters).
+
+UML definition:
+```plantuml
+@startuml
+hide empty members
+hide circle
+class MediaType <<primitive>> <<restrictedString>> {
+   <<restrictedString>>
+   pattern='^[A-Za-z0-9][A-Za-z0-9!#$&\-\^_.+]{0,63}/[A-Za-z0-9][A-Za-z0-9!#$&\-\^_.+]{0,63}$'
+   --
+}
+@enduml
+```
+
+This is the generic type definition. However, the exact possible values SHALL be defined explicitly by the `AttributeSelector` Profile(s) of ACAL, e.g. the XPath and/or JSONPath Profiles, depending on the Content Type(s) they support. In any case, the standard identifiers specified in [Annex D.10](#d10-content-types) SHOULD be used whenever applicable, or else a [media type registered at IANA](https://www.iana.org/assignments/media-types/media-types.xhtml) according to [[RFC6838]](#rfc6838).
+
+
+##### 7.1.2.3.15 ContentEncodingType (optional)
+
+_**Support for this type is optional, required only if `ContentType` objects MUST be supported.**_
+
+`ContentEncodingType` is the primitive type for `ContentType` objects' `Encoding` property (see [Section 7.34](#734-contenttype-optional) ).
+
+UML definition:
+```plantuml
+@startuml
+hide empty members
+hide circle
+class ContentEncodingType <<primitive>> <<restrictedString>> {
+   <<restrictedString>>
+   pattern='^[a-z0-9]+(-[a-z0-9]+)*$'
+   --
+}
+@enduml
+```
+
+This is the generic type definition. However, the exact possible values SHALL be defined explicitly by the Representation Profile(s) of ACAL (XACML, JACAL, etc.) for each supported Content type. In any case, the standard identifiers specified in [Annex D.11](#d11-content-encodings) SHOULD be used whenever applicable, or else one of the standard [*Transfer Encodings* names registered at IANA](https://www.iana.org/assignments/transfer-encodings/transfer-encodings.xhtml) according to [[RFC4289](#rfc4289)]. Or else, if a custom content encoding is really needed, as suggested by [[RFC2045](#rfc2045)] Section 6.3, define a new one prefixed with `x-`, e.g. `x-my-new-encoding` (and matching the pattern above).
+
 
 ### 7.1.3 Relationship to Concrete Representations
 
@@ -3356,12 +3405,12 @@ A `RequestEntityType` object contains the following properties:
 
 ## 7.34 ContentType (optional)
 
-_**Support for this object type is optional. It is required only if AttributeSelectors and/or xpathExpression values (optional) are to be supported.**_
+_**Support for this object type is optional. It is required only if the implementation must support extensions of AttributeSelectors and/or DataTypes depending on this object type.**_ Such extensions are typically defined in ACAL Profiles (e.g. XPath and JSONPath Profiles).
 
 A `ContentType` object is a notional placeholder for additional attributes, typically the content of the resource.
-A `ContentType` object has exactly one child element of arbitrary type .
+A `ContentType` object has a *body* property of arbitrary type.
 
-`ContentType` objects should be used only for structured data that cannot be handled by named attributes, i.e. the child element's type should be a structured data-type.
+`ContentType` objects should be used only for structured data that cannot be handled by named attributes, i.e. the *body* type should be a structured data-type.
 
 The following UML definition (class diagram) is provided for information purposes only:
 ```plantuml
@@ -3369,29 +3418,31 @@ The following UML definition (class diagram) is provided for information purpose
 hide empty members 
 hide circle
 class ContentType <<dataType>> {
-   + <any>: AnyType [1]
+   + MediaType: MediaType [0..1]
+   + Encoding: ContentEncodingType [0..1]
+   + Body: AnyType [1]
 }
 
 abstract class AnyType <<dataType>>
 @enduml
 ```
 
-The `AnyType` data-type above represents *any type* (e.g. [XSD](#xs) `anyType` in XML), preferably any structured data-type (according to the previous recommendation), and the `<any>` name is only a placeholder for any property name. 
-This UML definition is for information only, and it is the responsibility of each ACAL representation format (ACAL Profile) to either define the correct representation for arbitrary structured content in their own format, or simply state that *`ContentType` objects are not supported at all* in that representation format.
+A `ContentType` object contains the following properties:
 
-For example, this can be represented in XML schema as follows:
+`MediaType` [Optional]
 
-```xml
-<xs:element name="Content" type="xacml:ContentType"/>
-<xs:complexType name="ContentType">
-   <xs:sequence>
-      <xs:any namespace="##any" processContents="lax"/>
-   </xs:sequence>
-</xs:complexType>
-```
+: Content *media type* as defined by [[RFC 2046]](#rfc2046). The exact possible values for this property SHALL be defined by the `AttributeSelector` Profile(s) of ACAL, e.g. the XPath and/or JSONPath Profiles, that your implementation supports. Indeed, each of these profiles supports one or more specific Content Type(s), and for each one, defines the acceptable `MediaType` property value. In any case, the value(s) SHOULD be among the standard identifiers specified in [Annex D.10](#d10-content-types) whenever applicable. More information in the [MediaType section](#712314-mediatype-optional).
 
-<!-- TODO -->
-_This needs to be aligned with the way the JSON profile handles the Content member of a category._
+: A default value for this property SHALL be defined by each ACAL representation format supporting this object type, and this default value SHALL be one of the standard identifiers specified in [Annex D.10](#d10-content-types).
+
+`Body` [Required]
+
+The content body which may be any data-type representable in the ACAL representation format in use (XML, JSON, etc.). In other words, each ACAL representation format SHALL define the correct representation for `AnyType` in their own format (e.g. [XSD](#xs) `xs:anyType` in XML), or simply state that *the `ContentType` is not supported at all* in that representation.
+
+`Encoding` [Optional]
+
+: This property (similar to [JSON schema's `contentEncoding`](https://json-schema.org/draft/2020-12/json-schema-validation#name-contentencoding) property) applies when the `Body` value is a string that SHALL be interpreted as encoded binary data and decoded using the encoding named by this property. The exact possible value(s) SHALL be defined by each ACAL representation format supporting this object type (e.g. `base64` encoding for the JSON representation of complex XML content). In any case, the value(s) SHOULD be among the standard identifiers specified in [Annex D.11](#d11-content-encodings) whenever applicable (more information in the [ContentEncodingType section](#712315-contentencodingtype-optional) ). If this property is undefined, this indicates that no encoding was needed in order to represent the content in a UTF-8 string.
+
 
 ## 7.35 RequestAttributeType
 
@@ -3988,7 +4039,7 @@ If the `Expression` property of an `EntityAttributeSelectorType` object evaluate
 
 If the designated attribute category or entity value has a `Content` property, then follow the steps below:
 
-1. Parse the value of the `Content` property into the data structure suitable for processing by the concrete type of AttributeSelector/EntityAttributeSelector defined by the ACAL Profile in use (e.g. XML content for the XPath Profile). If it is not a valid data structure according to the ACAL Profile, then the attribute selector MUST return `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`.
+1. Parse the value of the `Content`'s `Body` property into the data structure suitable for processing by the concrete type of AttributeSelector/EntityAttributeSelector defined by the ACAL Profile in use (e.g. XML content for the XPath Profile). If it is not a valid data structure according to the ACAL Profile, then the attribute selector MUST return `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`.
 
 2. Evaluate the expression given in the `Path` property against the data structure obtained in the previous step, according to the syntax and semantics of the respective ACAL Profile in use (as indicated by the concrete subtype of `AttributeSelectorType` being used).
 
@@ -4043,7 +4094,7 @@ If the designated attribute category or entity value has a `Content` property, t
 : If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:dayTimeDuration`, then convert the string value of each node using the `xs:dayTimeDuration()` constructor function from [[XF](#xf)] Section 18.1.
 
 &nbsp;
-: If the result is a node-set and every node is an element node and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:entity`, then convert each node to an `EntityType` object. Each object SHALL have a `Content` property and SHALL NOT have an `Attribute` property. The child element of the `Content` property SHALL be a copy of the element corresponding to the node, along with its entire content, plus whatever namespace declarations from ancestor elements as are required to define namespace prefixes used in the content. Namespace declarations from ancestor elements that are not visibly used in the content MAY be added.
+: If the result is a node-set and every node is an element node and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:entity`, then convert each node to an `EntityType` object. Each object SHALL have a `Content` property and SHALL NOT have an `Attribute` property. The child element of the `Content`'s `Body` property SHALL be a copy of the element corresponding to the node, along with its entire content, plus whatever namespace declarations from ancestor elements as are required to define namespace prefixes used in the content. Namespace declarations from ancestor elements that are not visibly used in the content MAY be added.
 
 &nbsp;
 : If the data type is one of the types referred to above and the result of step 3 does not satisfy any of the cases, then the attribute selector MUST return `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`.
@@ -5018,6 +5069,8 @@ This section contains the normative and informative references that are used in 
 
 Normative references are specific (identified by date of publication and/or edition number or version number) and Informative references are either specific or non-specific. For specific references, only the cited version applies. For non-specific references, the latest version of the reference document (including any amendments) applies. While any hyperlinks included in this section were valid at the time of publication, OASIS cannot guarantee their long term validity.
 
+<!-- For IETF RFCs, refer to https://docs.oasis-open.org/templates/ietf-rfc-list/ietf-rfc-list.html -->
+
 
 ## B.1 Normative References
 
@@ -5093,6 +5146,14 @@ Perritt, H. Knowbots, Permissions Headers and Contract Law, Conference on Techno
 
 David Ferraiolo and Richard Kuhn, Role-Based Access Controls, 15th National Computer Security Conference, 1992.
 
+###### [RFC2045]
+
+Freed, N. and N. Borenstein, "Multipurpose Internet Mail Extensions (MIME) Part One: Format of Internet Message Bodies", RFC 2045, DOI 10.17487/RFC2045, November 1996, <https://www.rfc-editor.org/info/rfc2045>.
+
+###### [RFC2046]
+
+Freed, N. and N. Borenstein, "Multipurpose Internet Mail Extensions (MIME) Part Two: Media Types", RFC 2046, DOI 10.17487/RFC2046, November 1996, <https://www.rfc-editor.org/info/rfc2046>.
+
 ###### [RFC2119]
 
 *Key Words for Use in RFCs to Indicate Requirement Levels*, BCP 14, RFC 2119, March 1997. [Online]. Available: https://www.rfc-editor.org/info/rfc2119
@@ -5108,6 +5169,14 @@ RFC 2732, Hinden R, Carpenter B, Masinter L, Format for Literal IPv6 Addresses i
 ###### [RFC3198]
 
 IETF RFC 3198: Terminology for Policy-Based Management, November 2001. https://www.ietf.org/rfc/rfc3198.txt
+
+###### [RFC4289]
+
+Freed, N. and J. Klensin, "Multipurpose Internet Mail Extensions (MIME) Part Four: Registration Procedures", BCP 13, RFC 4289, DOI 10.17487/RFC4289, December 2005, <https://www.rfc-editor.org/info/rfc4289>.
+
+###### [RFC6838]
+
+Freed, N., Klensin, J., and T. Hansen, "Media Type Specifications and Registration Procedures", BCP 13, RFC 6838, DOI 10.17487/RFC6838, January 2013, <https://www.rfc-editor.org/info/rfc6838>.
 
 ###### [RFC8174]
 
@@ -6306,7 +6375,8 @@ These functions operate on various types and evaluate to `urn:oasis:names:tc:aca
 
 `urn:oasis:names:tc:acal:1.0:function:access-permitted`
 
-: _This function should be redesigned to take a value of the entity data type as the second argument. An entity value already has the structure of an attribute category in the same representation (XML, JSON or YAML), including a `Content` property to hold arbitrary XML or JSON._
+<!-- TODO -->
+: _This function should be redesigned to take a value of the entity data type as the second argument. An entity value already has the structure of an attribute category in the same representation (XML, JSON or YAML), including a `Content`'s `Body` property to hold arbitrary XML or JSON._
 
 : This function SHALL take an `urn:oasis:names:tc:acal:1.0:data-type:anyURI` and an <!-- Line break added for the previous line to fit on a PDF page -->
 `urn:oasis:names:tc:acal:1.0:data-type:string` as arguments. The first argument SHALL be interpreted as an attribute category. The second argument SHALL be interpreted as the XML content of a `RequestEntityType` object with `Category` property equal to the first argument. The function evaluates to an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. This function SHALL return `true` if and only if the policy evaluation described below returns the value of `Permit`.
@@ -6417,47 +6487,47 @@ These identifiers indicate attributes of a subject. When used, it is RECOMMENDED
 
 At most one of each of these attributes is associated with each subject. Each attribute associated with authentication included within a single `RequestEntityType` object relates to the same authentication event.
 
-This identifier indicates the name of the subject.
+This identifier indicates the name of the subject:
 
 `urn:oasis:names:tc:acal:1.0:subject:subject-id`
 
-This identifier indicates the security domain of the subject. It identifies the administrator and policy that manages the name-space in which the subject id is administered.
+This identifier indicates the security domain of the subject. It identifies the administrator and policy that manages the name-space in which the subject id is administered:
 
 `urn:oasis:names:tc:acal:1.0:subject:subject-id-qualifier`
 
-This identifier indicates a public key used to confirm the subject's identity.
+This identifier indicates a public key used to confirm the subject's identity:
 
 `urn:oasis:names:tc:acal:1.0:subject:key-info`
 
-This identifier indicates the time at which the subject was authenticated.
+This identifier indicates the time at which the subject was authenticated:
 
 `urn:oasis:names:tc:acal:1.0:subject:authentication-time`
 
-This identifier indicates the method used to authenticate the subject.
+This identifier indicates the method used to authenticate the subject:
 
 `urn:oasis:names:tc:acal:1.0:subject:authentication-method`
 
-This identifier indicates the time at which the subject initiated the access request, according to the PEP.
+This identifier indicates the time at which the subject initiated the access request, according to the PEP:
 
 `urn:oasis:names:tc:acal:1.0:subject:request-time`
 
-This identifier indicates the time at which the subject's current session began, according to the PEP.
+This identifier indicates the time at which the subject's current session began, according to the PEP:
 
 `urn:oasis:names:tc:acal:1.0:subject:session-start-time`
 
-The following identifiers indicate the location where authentication credentials were activated.
+The following identifiers indicate the location where authentication credentials were activated:
 
-This identifier indicates that the location is expressed as an IP address.
+- This identifier indicates that the location is expressed as an IP address:
 
-`urn:oasis:names:tc:acal:1.0:subject:authn-locality:ip-address`
+  `urn:oasis:names:tc:acal:1.0:subject:authn-locality:ip-address`
 
-The corresponding attribute SHALL be of data type `urn:oasis:names:tc:acal:1.0:data-type:ipAddress`.
+  The corresponding attribute SHALL be of data type `urn:oasis:names:tc:acal:1.0:data-type:ipAddress`.
 
-This identifier indicates that the location is expressed as a DNS name.
+- This identifier indicates that the location is expressed as a DNS name.
 
-`urn:oasis:names:tc:acal:1.0:subject:authn-locality:dns-name`
+  `urn:oasis:names:tc:acal:1.0:subject:authn-locality:dns-name`
 
-The corresponding attribute SHALL be of data type `urn:oasis:names:tc:acal:1.0:data-type:dnsName`.
+  The corresponding attribute SHALL be of data type `urn:oasis:names:tc:acal:1.0:data-type:dnsName`.
 
 Where a suitable attribute is already defined in LDAP [LDAP-1], [LDAP-2], the ACAL identifier SHALL be the OID of the LDAP attribute represented as a URN. For example, the ACAL attribute identifier for the LDAP `title` attribute defined in RFC 2256 with the OID `2.5.4.12` would be `urn:oid:2.5.4.12`.
 
@@ -6468,19 +6538,21 @@ Short identifiers can be used to improve readability. For example `title` could 
 These identifiers indicate attributes of the resource. When used, it is RECOMMENDED they appear within the `RequestEntityType` object of the request context with the `Category` property that evaluates to <!-- Line break added for the previous line to fit on a PDF page -->
 `urn:oasis:names:tc:acal:1.0:attribute-category:resource`.
 
-This attribute identifies the resource to which access is requested.
+This attribute identifies the resource to which access is requested:
 
 `urn:oasis:names:tc:acal:1.0:resource:resource-id`
 
-This attribute identifies the namespace of the top element(s) of the contents of the `ContentType` object. In the case where the resource content is supplied in the request context and the resource namespaces are defined in the resource, the PEP MAY provide this attribute in the request to indicate the namespaces of the resource content. In this case there SHALL be one value of this attribute for each unique namespace of the top level elements in the `ContentType` object. The data type of the corresponding attribute SHALL be `urn:oasis:names:tc:acal:1.0:data-type:anyURI`.
+This attribute identifies the namespace of the top element(s) of the contents of the `ContentType` object's `Body`:
 
-`urn:oasis:names:tc:acal:1.0:resource:target-namespace`
+: `urn:oasis:names:tc:acal:1.0:resource:target-namespace`
 
-This attribute is used to identify the location of a resource, such as a file path or a network address.
+: In the case where the resource content is supplied in the request context and the resource namespaces are defined in the resource, the PEP MAY provide this attribute in the request to indicate the namespaces of the resource content. In this case there SHALL be one value of this attribute for each unique namespace of the top level elements in the `ContentType` object's `Body`. The data type of the corresponding attribute SHALL be `urn:oasis:names:tc:acal:1.0:data-type:anyURI`.
+
+This attribute is used to identify the location of a resource, such as a file path or a network address:
 
 `urn:oasis:names:tc:acal:1.0:resource:resource-location`
 
-This attribute indicates the last (rightmost) component of a file name identifying the resource. For example, if the URI is `file://home/my/status#pointer`, then the simple file name is "status".
+This attribute indicates the last (rightmost) component of a file name identifying the resource. For example, if the URI is `file://home/my/status#pointer`, then the simple file name is "status":
 
 `urn:oasis:names:tc:acal:1.0:resource:simple-file-name`
 
@@ -6488,15 +6560,15 @@ This attribute indicates the last (rightmost) component of a file name identifyi
 
 These identifiers indicate attributes of the action being requested. When used, it is RECOMMENDED they appear within the `RequestEntityType` object of the request context with the `Category` property that evaluates to `urn:oasis:names:tc:acal:1.0:attribute-category:action`.
 
-This attribute identifies the action for which access is requested.
+This attribute identifies the action for which access is requested:
 
 `urn:oasis:names:tc:acal:1.0:action:action-id`
 
-Where the action is implicit, the value of the action-id attribute SHALL be
+Where the action is implicit, the value of the action-id attribute SHALL be:
 
 `urn:oasis:names:tc:acal:1.0:action:implied-action`
 
-This attribute identifies the namespace in which the action-id attribute is defined.
+This attribute identifies the namespace in which the action-id attribute is defined:
 
 `urn:oasis:names:tc:acal:1.0:action:action-namespace`
 
@@ -6504,37 +6576,43 @@ This attribute identifies the namespace in which the action-id attribute is defi
 
 These identifiers indicate attributes of the environment within which the decision request is to be evaluated. When used in the decision request, it is RECOMMENDED they appear in the `RequestEntityType` object of the request context with the `Category` property that evaluates to `urn:oasis:names:tc:acal:1.0:attribute-category:environment`.
 
-This identifier indicates the current time at the context handler. In practice it is the time at which the request context was created. For this reason, if these identifiers appear in multiple places within a policy, then the same value SHALL be assigned to each occurrence in the evaluation procedure, regardless of how much time elapses between the processing of the occurrences.
+This identifier indicates the current time at the context handler:
 
-`urn:oasis:names:tc:acal:1.0:environment:current-time`
+: `urn:oasis:names:tc:acal:1.0:environment:current-time`
 
-The corresponding attribute SHALL be of data type `urn:oasis:names:tc:acal:1.0:data-type:time`.
+: In practice it is the time at which the request context was created. For this reason, if these identifiers appear in multiple places within a policy, then the same value SHALL be assigned to each occurrence in the evaluation procedure, regardless of how much time elapses between the processing of the occurrences.
 
-`urn:oasis:names:tc:acal:1.0:environment:current-date`
+: The corresponding attribute SHALL be of data type `urn:oasis:names:tc:acal:1.0:data-type:time`.
 
-The corresponding attribute SHALL be of data type `urn:oasis:names:tc:acal:1.0:data-type:date`.
+This identifier indicates the current date at the context handler:
 
-`urn:oasis:names:tc:acal:1.0:environment:current-dateTime`
+: `urn:oasis:names:tc:acal:1.0:environment:current-date`
 
-The corresponding attribute SHALL be of data type `urn:oasis:names:tc:acal:1.0:data-type:dateTime`.
+: The corresponding attribute SHALL be of data type `urn:oasis:names:tc:acal:1.0:data-type:date`.
+
+This identifier indicates the current date and time at the context handler:
+
+: `urn:oasis:names:tc:acal:1.0:environment:current-dateTime`
+
+: The corresponding attribute SHALL be of data type `urn:oasis:names:tc:acal:1.0:data-type:dateTime`.
 
 ## D.8 Status Codes
 
 The following status code values are defined.
 
-This identifier indicates success.
+This identifier indicates success:
 
 `urn:oasis:names:tc:acal:1.0:status:ok`
 
-This identifier indicates that all the attributes necessary to make a policy decision were not available (see [Section 7.44](#missingattributedetailtype)).
+This identifier indicates that all the attributes necessary to make a policy decision were not available (see [Section 7.44](#missingattributedetailtype)):
 
 `urn:oasis:names:tc:acal:1.0:status:missing-attribute`
 
-This identifier indicates that some attribute value contained a syntax error, such as a letter in a numeric field.
+This identifier indicates that some attribute value contained a syntax error, such as a letter in a numeric field:
 
 `urn:oasis:names:tc:acal:1.0:status:syntax-error`
 
-This identifier indicates that an error occurred during policy evaluation. An example would be division by zero.
+This identifier indicates that an error occurred during policy evaluation (an example would be division by zero):
 
 `urn:oasis:names:tc:acal:1.0:status:processing-error`
 
@@ -6568,6 +6646,19 @@ The permit-unless-deny combining algorithm has the following value for the `Comb
 
 `urn:oasis:names:tc:acal:1.0:combining-algorithm:permit-unless-deny`
 
+
+## D.10 Content Types
+
+These standard *Media Type* identifiers ([[RFC 2046]](#rfc2046)) - registered at IANA ( [[RFC6838]](#rfc6838) ) - SHALL be used as values for the `MediaType` property of `ContentType` objects, whenever applicable to the Content type: 
+
+- For XML content: `application/xml`;
+- For JSON content: `application/json`.
+
+## D.11 Content Encodings
+
+This standard *Encoding mechanism* identifier ([[RFC 2045]](#rfc2045) Section 6) - registered at IANA ( [[RFC4289]](#rfc4289) ) - SHALL be used as values for the `Encoding` property of `ContentType` objects, whenever applicable to the Content type: 
+
+- `base64`.
 
 ---
 
@@ -7023,6 +7114,8 @@ ACAL 1.0 is a successor to XACML 3.0. ACAL 1.0 differs from XACML 3.0 in the fol
 - `Attribute` has a new optional `DataType` attribute (set to the standard string type as default), to have a common data-type for all the attribute values. In XACML 3.0, defining the data-type for each `AttributeValue` individually led to the risk of mixing different datatypes in the same attribute. We consider this bad practice (one may simply split in different attributes if using different data-types).
 
 - `AttributeValue` is replaced with more generic `Value` whose `DataType` is now optional, i.e. it may be omitted when it is already defined by at the parent or ancestor level, which simplifies expressions with literal values. In particular, as a result of the previous change, in an `Attribute`, the `Value`'s `DataType` is now omitted since defined at the `Attribute` level already.
+
+- A `Content` may now contain XML, JSON and possibly other content types in the future, and therefore has a new data model - more generic - that consists of three properties: `Body` (content body which is similar to former Content value), `MediaType` (Content media type which indicates whether it is XML, JSON or some other content type) and `Encoding` which indicates whether the body is encoded with a particular mechanism, e.g. Base64-encoded data.
 
 - `AttributeSelector` changes:
   
