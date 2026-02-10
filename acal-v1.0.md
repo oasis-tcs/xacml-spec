@@ -96,7 +96,7 @@ Copyright © OASIS Open 2026. All Rights Reserved.  For license and copyright in
 
 ### Online generation
 
-HTML/PDF versions are generated automatically online via Github Actions after each update pushed to the main branch of [OASIS XACML TC Github repository](https://github.com/oasis-tcs/xacml-spec/). Go to  Github Actions on the github repository, then go to the latest workflow run, and, if the run succeeded, the summary should display the links to the generated HTML/PDF documents.
+HTML/PDF versions are generated automatically online via Github Actions after each update pushed to the main branch of [OASIS XACML TC Github repository](https://github.com/oasis-tcs/xacml-spec/). Go to Github Actions on the github repository, then go to the latest workflow run, and, if the run succeeded, the summary should display the links to the generated HTML/PDF documents.
 
 ### Offline generation
 
@@ -1380,8 +1380,8 @@ Rule 1 illustrates a policy with a simple rule containing a condition. It also i
 [02] <Policy
 [03]   xmlns="urn:oasis:names:tc:xacml:4.0:core:schema"
 [04]   PolicyId="urn:oasis:names:tc:acal:1.0:example:policyid:1"
-[05]   CombiningAlgId="deny-overrides"
-[06]   Version="1.0">
+[05]   Version="1.0">
+[06]   CombiningAlgId="deny-overrides"
 [07]   <ShortIdSetReference>urn:oasis:names:tc:acal:1.0:example:identifiers</ShortIdSetReference>
 [08]   <VariableDefinition VariableId="patient_number_match">
 [11]     <Apply FunctionId="string-equal">
@@ -1399,7 +1399,7 @@ Rule 1 illustrates a policy with a simple rule containing a condition. It also i
 [34]       </Apply>
 [36]     </Apply>
 [38]   </VariableDefinition>
-[41]   <Rule Id="Rule 1" Effect="Permit">
+[41]   <Rule Id="Rule1" Effect="Permit">
 [44]     <Description>A person may read any medical record in the http://www.med.example.com/springfield-hospital collection for which he or she is the designated patient.</Description>
 [45]     <Condition>
 [46]       <Apply FunctionId="and">
@@ -1429,8 +1429,8 @@ Rule 1 illustrates a policy with a simple rule containing a condition. It also i
 ```
 [02] {
 [04]   "PolicyId":"urn:oasis:names:tc:acal:1.0:example:policyid:1",
-[05]   "CombiningAlgId":"deny-overrides",
-[06]   "Version":"1.0",
+[05]   "Version":"1.0",
+[06]   "CombiningAlgId":"deny-overrides",
 [07]   "ShortIdSetReference":["urn:oasis:names:tc:acal:1.0:example:identifiers"],
 [08]   "VariableDefinition":[{
 [09]     "VariableId":"patient_number_match",
@@ -1465,7 +1465,7 @@ Rule 1 illustrates a policy with a simple rule containing a condition. It also i
 [38]   }],
 [39]   "CombinerInput":[{
 [41]     "Rule":{
-[42]       "Id":"Rule 1",
+[42]       "Id":"Rule1",
 [43]       "Effect":"Permit",
 [44]       "Description":"A person may read any medical record in the http://www.med.example.com/springfield-hospital collection for which he or she is the designated patient",
 [45]       "Condition":{
@@ -1476,7 +1476,7 @@ Rule 1 illustrates a policy with a simple rule containing a condition. It also i
 [50]               "FunctionId":"any-of",
 [51]               "Argument":[{
 [52]                 "Function":{
-[54]                   "Id":"anyURI-equal"
+[53]                   "Id":"anyURI-equal"
 [54]                 }
 [55]               },{
 [56]                 "Value":{
@@ -1555,7 +1555,7 @@ Rule 1 illustrates a policy with a simple rule containing a condition. It also i
 
 [49] - [57] The first term is a function.
 
-[49] - [50] The `FunctionId` component specifies the `urn:oasis:names:tc:acal:1.0:function:any-of` function using the short identifier name `any-of`. This function compares a attribute value to each of the attribute values in a bag according to a matching function that is specified in the first argument. The bag of values can be either the second or third argument. In this case it is the third argument. The function evaluates to `true` if any value in the bag matches the second argument according to the matching function.
+[49] - [50] The `FunctionId` component specifies the `urn:oasis:names:tc:acal:1.0:function:any-of` function using the short identifier name `any-of`. This function compares an attribute value to each of the attribute values in a bag according to a matching function that is specified in the first argument. The bag of values can be either the second or third argument. In this case it is the third argument. The function evaluates to `true` if any value in the bag matches the second argument according to the matching function.
 
 [52] - [54] The first argument: the matching function. The `Id` component specifies that the matching function is `urn:oasis:names:tc:acal:1.0:function:anyURI-equal` using the short identifier name `anyURI-equal`.
 

@@ -365,7 +365,7 @@ In the context of this profile, the required `Path` property inherited from the 
 
 ## 5.2.2 EntityAttributeSelectorType extension - JSONPathEntityAttributeSelectorType
 
-An `JSONPathEntityAttributeSelectorType` object is a concrete type of `EntityAttributeSelectorType` [ACAL](#acal) that uses JSONPath [RFC9535](#rfc9535) for `Path` expressions and expects a JSON object in the value returned by the attribute selector's `Expression` property. In other words, the values shall be constructed from the node(s) selected by applying the JSONPath expression given by the entity attribute selector's `Path` property to the JSON object of the `Body` property of the `Content` object in either an attribute category in the request context (`RequestEntity`) or the value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type returned by its `Expression` evaluation. 
+A `JSONPathEntityAttributeSelectorType` object is a concrete type of `EntityAttributeSelectorType` [ACAL](#acal) that uses JSONPath [RFC9535](#rfc9535) for `Path` expressions and expects a JSON object in the value returned by the attribute selector's `Expression` property. In other words, the values shall be constructed from the node(s) selected by applying the JSONPath expression given by the entity attribute selector's `Path` property to the JSON object of the `Body` property of the `Content` object in either an attribute category in the request context (`RequestEntity`) or the value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type returned by its `Expression` evaluation.
 
 See the Section 9 for details of entity attribute selector evaluation.
 
@@ -387,7 +387,7 @@ The `Path` property is also defined the same as in `JSONPathAttributeSelectorTyp
 # 6 Attribute Selector Evaluation
 
 
-An `JSONPathAttributeSelectorType` or `JSONPathEntityAttributeSelector` object SHALL be evaluated according to the following processing model.
+A `JSONPathAttributeSelectorType` or `JSONPathEntityAttributeSelector` object SHALL be evaluated according to the following processing model.
 
 : Note: It is not necessary for an implementation to exactly follow this model. It is only necessary to produce results identical to those that would be produced by following this model.
 
@@ -401,77 +401,79 @@ The first steps are already described in [ACAL] section 9.4.7 and provided here 
 
 If the designated attribute category or entity value has a `Content` property, then follow the steps below:
 
-1. Construct a JSON object (RFC 8259) from the value of the `Body` property of the `Content`. If it is not a valid JSON object, then the attribute selector MUST return `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`.
+1. Construct a JSON object (RFC 8259) from the value of the `Body` property of the `Content` property. If the content is not a valid JSON object, then the attribute selector MUST return `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`.
 
 2. The root node of the data structure (JSON object) shall be used as context node of evaluation (JSONPath *query argument*).
 
-3. Evaluate the expression given in the `Path` property against the context node selected in the previous step, according to the syntax and semantics of the JSONPath standard [RFC9535].
-   
+3. Evaluate the JSONPath expression given in the `Path` property against the context node selected in the previous step, according to the syntax and semantics of the JSONPath standard [RFC9535].
 
-1. The result of the previous step is converted to a bag of values of the data type specified by the `DataType` property as follows:
+4. The result of the previous step is a nodelist that is converted to a bag of values of the data type specified by the `DataType` property. In most cases the conversion depends on the string value of a node's JSON value, defined as follows:
 
-&nbsp;
-: If the result is a Boolean and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:boolean`, then convert the result using the `xs:boolean()` constructor function from [[XF](#xf)] Section 18.1.
+    * The string value of a JSON string value is the sequence of Unicode characters represented by the text _between_ the surrounding double quotes, i.e., with each escape sequence replaced with its equivalent Unicode character.
 
-&nbsp;
-: If the result is a string and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:string`, then convert the result using the `xs:string()` constructor function from [[XF](#xf)] Section 18.1.
+    * The string value of the special JSON value `true`, `false` or `null` is the equivalent sequence of Unicode characters.
 
-&nbsp;
-: If the result is a number and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:integer`, then convert the result using the `xs:integer()` constructor function from [[XF](#xf)] Section 18.1.
+    * The string value of a JSON number is the equivalent sequence of Unicode characters.
 
-&nbsp;
-: If the result is a number and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:double`, then convert the result using the `xs:double()` constructor function from [[XF](#xf)] Section 18.1.
+    * The string value of a JSON array is the empty string.
+
+    * The string value of a JSON object is the empty string.
 
 &nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:boolean`, then convert the string value of each node using the `xs:boolean()` constructor function from [[XF](#xf)] Section 18.1.
+: The nodelist is converted to a bag of values of the data type specified by the `DataType` property as follows:
 
 &nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:string`, then convert the string value of each node using the `xs:string()` constructor function from [[XF](#xf)] Section 18.1.
+: If the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:boolean`, then convert the string value of each node using the `xs:boolean()` constructor function from [[XF](#xf)] Section 18.1.
 
 &nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:integer`, then convert the string value of each node using the `xs:integer()` constructor function from [[XF](#xf)] Section 18.1.
+: If the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:string`, then convert the string value of each node using the `xs:string()` constructor function from [[XF](#xf)] Section 18.1.
 
 &nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:double`, then convert the string value of each node using the `xs:double()` constructor function from [[XF](#xf)] Section 18.1.
+: If the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:integer`, then convert the string value of each node using the `xs:integer()` constructor function from [[XF](#xf)] Section 18.1.
 
 &nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:dateTime`, then convert the string value of each node using the `xs:dateTime()` constructor function from [[XF](#xf)] Section 18.1.
+: If the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:double`, then convert the string value of each node using the `xs:double()` constructor function from [[XF](#xf)] Section 18.1.
 
 &nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:date`, then convert the string value of each node using the `xs:date()` constructor function from [[XF](#xf)] Section 18.1.
+: If the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:dateTime`, then convert the string value of each node using the `xs:dateTime()` constructor function from [[XF](#xf)] Section 18.1.
 
 &nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:time`, then convert the string value of each node using the `xs:time()` constructor function from [[XF](#xf)] Section 18.1.
+: If the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:date`, then convert the string value of each node using the `xs:date()` constructor function from [[XF](#xf)] Section 18.1.
 
 &nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:hexBinary`, then convert the string value of each node using the `xs:hexBinary()` constructor function from [[XF](#xf)] Section 18.1.
+: If the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:time`, then convert the string value of each node using the `xs:time()` constructor function from [[XF](#xf)] Section 18.1.
 
 &nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:base64Binary`, then convert the string value of each node using the `xs:base64Binary()` constructor function from [[XF](#xf)] Section 18.1.
+: If the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:hexBinary`, then convert the string value of each node using the `xs:hexBinary()` constructor function from [[XF](#xf)] Section 18.1.
 
 &nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:anyURI`, then convert the string value of each node using the `xs:anyURI()` constructor function from [[XF](#xf)] Section 18.1.
+: If the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:base64Binary`, then convert the string value of each node using the `xs:base64Binary()` constructor function from [[XF](#xf)] Section 18.1.
 
 &nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:yearMonthDuration`, then convert the string value of each node using the `xs:yearMonthDuration()` constructor function from [[XF](#xf)] Section 18.1.
+: If the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:anyURI`, then convert the string value of each node using the `xs:anyURI()` constructor function from [[XF](#xf)] Section 18.1.
 
 &nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:dayTimeDuration`, then convert the string value of each node using the `xs:dayTimeDuration()` constructor function from [[XF](#xf)] Section 18.1.
+: If the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:yearMonthDuration`, then convert the string value of each node using the `xs:yearMonthDuration()` constructor function from [[XF](#xf)] Section 18.1.
 
 &nbsp;
-: If the result is a node-set and every node is an element node and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:entity`, then convert each node to an `EntityType` object. Each object SHALL have a `Content` property and SHALL NOT have an `Attribute` property. The `Content` property SHALL have a `MediaType` property set to `application/json` and a `Body` property set to a copy of the element corresponding to the node, along with its entire content.
+: If the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:dayTimeDuration`, then convert the string value of each node using the `xs:dayTimeDuration()` constructor function from [[XF](#xf)] Section 18.1.
+
+&nbsp;
+: If the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:entity` and the value of every node in the nodelist is a JSON object, then convert each node to an ACAL `EntityType` object. Each `EntityType` object SHALL have a `Content` property and SHALL NOT have an `Attribute` property. The `Content` property SHALL have a `MediaType` property set to `application/json` and the value of the `Body` property SHALL be a copy of the JSON object.
 
 &nbsp;
 : If the data type is one of the types referred to above and the result of step 3 does not satisfy any of the cases, then the attribute selector MUST return `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`.
 
 &nbsp;
-: If the data type is not one of the types referred to above, then the return values shall be constructed from the node-set in a manner specified by the particular data type extension specification. If the data type extension does not specify an appropriate constructor function, then the attribute selector MUST return `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`.
+: If the data type is not one of the types referred to above, then the return values shall be constructed from the nodelist in a manner specified by the particular data type extension specification. If the data type extension does not specify an appropriate conversion function, then the attribute selector MUST return `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`.
 
 &nbsp;
 : If an error occurs when converting the values returned by the expression to the specified data type, then the result of the attribute selector MUST be `Indeterminate`, with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`
 
 &nbsp;
-: If the result of step 3 is an empty node-set, then the return value is either `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`, or an empty bag, as determined by the `MustBePresent` property.
+: If the result of step 3 is an empty nodelist, then the return value is either `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`, or an empty bag, as determined by the `MustBePresent` property.
+
+An implementation can be optimized to emit errors without going to the effort of generating the string value of node values. For example, the string value of a JSON number will never have the correct format for a `urn:oasis:names:tc:acal:1.0:data-type:dateTime` ACAL value, so this combination will always produce an error.
 
 ---
 
