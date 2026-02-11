@@ -125,10 +125,8 @@ The generation command uses a CSS stylesheet file (`-c` argument) provided by OA
 Run the following command line to generate HTML from this markdown file (named `xacml-v4.0-csd01.md`) to an output file `/tmp/xacml-v4.0-csd01.html` :
 
 ```console
-$ pandoc -s --verbose --embed-resources -f gfm+definition_lists -c styles/markdown-styles-v1.7.3a.css -F pandoc-include \
-         -M lang=en -M title="eXtensible Access Control Markup Language (XACML) Version 4.0 (XML Representation of ACAL Version 1.0)" \
-         -t html -o /tmp/xacml-v4.0-csd01.html xacml-v4.0-csd01.md
- ```
+$ pandoc -s --verbose --embed-resources -f gfm+definition_lists -c styles/markdown-styles-v1.7.3a.css -F pandoc-include -M lang=en -M title="eXtensible Access Control Markup Language (XACML) Version 4.0 (XML Representation of ACAL Version 1.0)" -t html -o /tmp/xacml-v4.0-csd01.html xacml-v4.0-csd01.md
+```
 
 Note this command generates a document which may require additional editing in order to be published in the expected OASIS style. This editing will be handled by OASIS staff during publication.
 
@@ -137,10 +135,7 @@ Note this command generates a document which may require additional editing in o
 For PDF output, the command line is the following (different `-t` and `-H` arguments, and output goes to file `/tmp/xacml-v4.0-csd01.pdf`):
 
 ```console
-$ pandoc -s --embed-resources -f gfm+definition_lists -c styles/markdown-styles-v1.7.3a.css -F pandoc-include \
-         -H pandoc/custom_latex_header_for_pandoc_pdf_output.tex \
-         --metadata title="eXtensible Access Control Markup Language (XACML) Version 4.0 (XML Representation of ACAL Version 1.0)" \
-         -t pdf -o /tmp/xacml-v4.0-csd01.pdf xacml-v4.0-csd01.md
+$ pandoc -s --embed-resources -f gfm+definition_lists -c styles/markdown-styles-v1.7.3a.css -F pandoc-include -H pandoc/custom_latex_header_for_pandoc_pdf_output.tex --metadata title="eXtensible Access Control Markup Language (XACML) Version 4.0 (XML Representation of ACAL Version 1.0)" -t pdf -o /tmp/xacml-v4.0-csd01.pdf xacml-v4.0-csd01.md
 ```
 
 

@@ -107,10 +107,8 @@ The generation command uses a CSS stylesheet file (`-c` argument) provided by OA
 Run the following command line to generate HTML from this markdown file (named `jacal-core-v1.0.md`) to an output file `/tmp/jacal-core-v1.0.html` :
 
 ```console
-$ pandoc -s --embed-resources -f gfm+definition_lists -c styles/markdown-styles-v1.7.3a.css -F pandoc-include \
-         -M lang=en -M title="JSON Representation of ACAL Version 1.0 (JACAL)" \
-         -t html -o /tmp/jacal-core-v1.0.html jacal-core-v1.0.md
- ```
+$ pandoc -s --embed-resources -f gfm+definition_lists -c styles/markdown-styles-v1.7.3a.css -F pandoc-include -M lang=en -M title="JSON Representation of ACAL Version 1.0 (JACAL)" -t html -o /tmp/jacal-core-v1.0.html jacal-core-v1.0.md
+```
 
 Note this command generates a Table of Contents (TOC) in HTML which is located at the top of the HTML document, and which requires additional editing in order to be published in the expected OASIS style. This editing will be handled by OASIS staff during publication.
 
@@ -119,10 +117,7 @@ Note this command generates a Table of Contents (TOC) in HTML which is located a
 For PDF output, the command line is the following (different `-t` and `-H` arguments, and output file `/tmp/jacal-core-v1.0.pdf`):
 
 ```console
-$ pandoc -s --embed-resources -f gfm+definition_lists -c styles/markdown-styles-v1.7.3a.css -F pandoc-include \
-         -H pandoc/custom_latex_header_for_pandoc_pdf_output.tex \
-         -M lang=en -M title="JSON Representation of ACAL Version 1.0 (JACAL)" \
-         -t pdf -o /tmp/jacal-core-v1.0.pdf jacal-core-v1.0.md
+$ pandoc -s --embed-resources -f gfm+definition_lists -c styles/markdown-styles-v1.7.3a.css -F pandoc-include -H pandoc/custom_latex_header_for_pandoc_pdf_output.tex -M lang=en -M title="JSON Representation of ACAL Version 1.0 (JACAL)" -t pdf -o /tmp/jacal-core-v1.0.pdf jacal-core-v1.0.md
 ```
 
 -------

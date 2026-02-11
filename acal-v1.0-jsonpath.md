@@ -115,26 +115,20 @@ The generation command uses a CSS stylesheet file (`-c` argument) provided by OA
 
 #### HTML generation
 
-Run the following command line to generate HTML from this markdown file (named `acal-v1.0-jsonpath.md`), :
+Run the following command line to generate HTML from this markdown file (`acal-v1.0-jsonpath.md`) to an output file `/tmp/acal-v1.0-jsonpath.html`:
 
 ```console
-$ pandoc -f gfm+definition_lists -t html acal-v1.0-jsonpath.md -c styles/markdown-styles-v1.7.3a.css \ 
-         -s --lua-filter diagram.lua --embed-resources \
-         --metadata title="ACAL v1.0 JSONPath Profile Version 1.0" \
-         -o acal-v1.0-jsonpath.html
+$ pandoc -f gfm+definition_lists -t html -c styles/markdown-styles-v1.7.3a.css -s --lua-filter pandoc/diagram.lua --defaults pandoc/defaults.yaml --embed-resources --metadata title="ACAL v1.0 JSONPath Profile Version 1.0" -o /tmp/acal-v1.0-jsonpath.html acal-v1.0-jsonpath.md 
 ```
 
 Note this command generates a Table of Contents (TOC) in HTML which is located at the top of the HTML document, and which requires additional editing in order to be published in the expected OASIS style. This editing will be handled by OASIS staff during publication.
 
 #### PDF generation
 
-For PDF output, the command line is the following (different `-t` and `-H` arguments):
+For PDF output (file `/tmp/acal-v1.0-jsonpath.pdf`), the command line is the following (different `-t` and `-H` arguments):
 
 ```console
-$ pandoc -f gfm+definition_lists -t pdf acal-v1.0-jsonpath.md -c styles/markdown-styles-v1.7.3a.css \
-         -H custom_latex_header_for_pandoc_pdf_output.tex -s -L diagram.lua \
-         --metadata title="ACAL v1.0 JSONPath Profile Version 1.0" --embed-resources \
-         -o acal-v1.0-jsonpath.pdf 
+$ pandoc -f gfm+definition_lists -t pdf -c styles/markdown-styles-v1.7.3a.css -H custom_latex_header_for_pandoc_pdf_output.tex -s -L pandoc/diagram.lua --defaults pandoc/defaults.yaml --metadata title="ACAL v1.0 JSONPath Profile Version 1.0" --embed-resources -o /tmp/acal-v1.0-jsonpath.pdf acal-v1.0-jsonpath.md 
 ```
 
 ---

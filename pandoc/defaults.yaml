@@ -1,0 +1,9 @@
+metadata:
+  diagram:
+    cache: true
+    # cache-dir: $HOME/.cache
+    engine:
+      plantuml: 
+        mime-type:
+          image/svg+xml: true
+      dot: true
