@@ -6,4 +6,5 @@ metadata:
       plantuml: 
         mime-type:
           image/svg+xml: true
+          image/png: true
       dot: true
