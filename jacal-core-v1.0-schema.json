@@ -176,7 +176,7 @@
 		},
 		"PolicyDefaultsTypeTreeEmpty": {
 			"$dynamicAnchor": "PolicyDefaultsTypeExtensions",
-			"$comment": "No PolicyDefaults extension supported by default. Create your own implementation-specific schema that overrides this $dynamicAnchor to support extensions (e.g. XPathPolicyDefaults from XPath Profile). See jacal-root-schema-example.json for example.",
+			"$comment": "No PolicyDefaults extension supported by default. Create your own implementation-specific schema that overrides this $dynamicAnchor to support extensions (e.g. XPathPolicyDefaults from XPath Profile). See jacal-root-schema-example-using-xpath-and-jsonpath-profiles.json for example.",
 			"not": true
 		},
 		"ParameterType": {
@@ -567,25 +567,10 @@
 				}
 			]
 		},
-		"XPathExpressionValueType": {
-			"type": "object",
-			"required": [
-				"Value",
-				"XPathCategory"
-			],
-			"properties": {
-				"Value": {
-					"type": "string"
-				},
-				"XPathCategory": {
-					"$ref": "#/$defs/IdentifierType"
-				}
-			},
-			"additionalProperties": false
-		},
 		"ValueType": {
 			"anyOf": [
 				{
+					"$comment": "Case when the DataType property is unnecessary (implicit or already defined by parent) and the value is primitive",
 					"type": [
 						"boolean",
 						"integer",
@@ -594,31 +579,53 @@
 					]
 				},
 				{
-					"$ref": "#/$defs/XPathExpressionValueType"
+					"$comment": "Same case as above but for structured values",
+					"$ref": "#/$defs/StructuredValueTypeTree"
 				},
 				{
-					"type": "object",
-					"required": [
-						"$"
-					],
-					"properties": {
-						"DataType": {
-							"$ref": "#/$defs/IdentifierType"
+					"$comment": "Case when the DataType property is required (not the case for boolean / integer / number which have a fixed implicit DataType)",
+					"allOf": [
+						{
+							"type": "object",
+							"properties": {
+								"DataType": {
+									"$ref": "#/$defs/IdentifierType"
+								}
+							},
+							"required": [
+								"DataType"
+							]
 						},
-						"$": {
+						{
 							"anyOf": [
 								{
-									"type": "string"
+									"properties": {
+										"Value": {
+											"$comment": "For DataTypes represented as string (besides the standard string type itself).",
+											"type": "string"
+										}
+									},
+									"required": [
+										"Value"
+									]
 								},
 								{
-									"$ref": "#/$defs/XPathExpressionValueType"
+									"$ref": "#/$defs/StructuredValueTypeTree"
 								}
 							]
 						}
-					},
-					"additionalProperties": false
+					],
+					"unevaluatedProperties": false
 				}
 			]
+		},
+		"StructuredValueTypeTree": {
+			"$dynamicRef": "#StructuredValueTypeExtensions"
+		},
+		"StructuredValueTypeTreeEmpty": {
+			"$dynamicAnchor": "StructuredValueTypeExtensions",
+			"$comment": "No StructuredValueType extension supported by default. Create your own implementation-specific schema that overrides this $dynamicAnchor to support such extensions (e.g. XPathExpressionValueType from XPath Profile). See jacal-root-schema-example-using-xpath-and-jsonpath-profiles.json for example.",
+			"not": true
 		},
 		"ApplyType": {
 			"$comment": "ApplyType's inheritance relationship to ExpressionType is implemented in ExpressionTypeTree subschema",
@@ -821,7 +828,7 @@
 		},
 		"AttributeSelectorTypeTreeEmpty": {
 			"$dynamicAnchor": "AttributeSelectorTypeExtensions",
-			"$comment": "No AttributeSelector extension supported by default. Create your own implementation-specific schema that overrides this $dynamicAnchor to support extensions (e.g. XPathAttributeSelector). See jacal-root-schema-example.json for example.",
+			"$comment": "No AttributeSelector extension supported by default. Create your own implementation-specific schema that overrides this $dynamicAnchor to support extensions (e.g. XPathAttributeSelector). See jacal-root-schema-example-using-jsonpath-profile-only.json for example.",
 			"not": true
 		},
 		"EntityAttributeSelectorTypeTree": {
@@ -829,7 +836,7 @@
 		},
 		"EntityAttributeSelectorTypeTreeEmpty": {
 			"$dynamicAnchor": "EntityAttributeSelectorTypeExtensions",
-			"$comment": "No EntityAttributeSelector extension supported by default. Create your own implementation-specific schema that overrides this $dynamicAnchor to support extensions (e.g. XPathAttributeSelector). See jacal-root-schema-example.json for example.",
+			"$comment": "No EntityAttributeSelector extension supported by default. Create your own implementation-specific schema that overrides this $dynamicAnchor to support extensions (e.g. XPathAttributeSelector). See jacal-root-schema-example-using-jsonpath-profile-only.json for example.",
 			"not": true
 		},
 		"QuantifiedExpressionType": {
@@ -1139,7 +1146,7 @@
 		},
 		"RequestDefaultsTypeTreeEmpty": {
 			"$dynamicAnchor": "RequestDefaultsTypeExtensions",
-			"$comment": "No RequestDefaults extension supported by default. Create your own implementation-specific schema that overrides this $dynamicAnchor to support extensions (e.g. XPathRequestDefaults from XPath Profile). See jacal-root-schema-example.json for example.",
+			"$comment": "No RequestDefaults extension supported by default. Create your own implementation-specific schema that overrides this $dynamicAnchor to support extensions (e.g. XPathRequestDefaults from XPath Profile). See jacal-root-schema-example-using-xpath-and-jsonpath-profiles.json for example.",
 			"not": true
 		},
 		"RequestType": {

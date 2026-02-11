@@ -4,19 +4,11 @@
     "$defs": {
         "EnabledAttributeSelectorExtensions": {
             "$dynamicAnchor": "AttributeSelectorTypeExtensions",
-            "anyOf": [
-                {
-                    "$ref": "urn:oasis:names:tc:jacal:1.0:jsonpath:schema#/$defs/JSONPathAttributeSelectorTypeTree"
-                }
-            ]
+            "$ref": "urn:oasis:names:tc:jacal:1.0:jsonpath:schema#/$defs/JSONPathAttributeSelectorTypeTree"
         },
         "EnabledEntityAttributeSelectorExtensions": {
             "$dynamicAnchor": "EntityAttributeSelectorTypeExtensions",
-            "anyOf": [
-                {
-                    "$ref": "urn:oasis:names:tc:jacal:1.0:jsonpath:schema#/$defs/JSONPathEntityAttributeSelectorTypeTree"
-                }
-            ]
+            "$ref": "urn:oasis:names:tc:jacal:1.0:jsonpath:schema#/$defs/JSONPathEntityAttributeSelectorTypeTree"
         }
     },
     "$ref": "urn:oasis:names:tc:jacal:1.0:core:schema"

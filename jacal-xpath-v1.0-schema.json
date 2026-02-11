@@ -95,6 +95,22 @@
 				}
 			},
 			"additionalProperties": false
+		},
+		"XPathExpressionValueType": {
+			"type": "object",
+			"required": [
+				"Value",
+				"XPathCategory"
+			],
+			"properties": {
+				"Value": {
+					"type": "string"
+				},
+				"XPathCategory": {
+					"$ref": "urn:oasis:names:tc:jacal:1.0:core:schema#/$defs/IdentifierType"
+				}
+			},
+			"unevaluatedProperties": false
 		}
 	}
 }

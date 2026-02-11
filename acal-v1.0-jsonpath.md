@@ -101,7 +101,7 @@ Install Pandoc, Graphviz and PlantUML on your system; or simply use Docker with 
 ```
 $ alias pandoc='docker run --rm --volume "$(pwd):/data" cdang/pandoc-plantuml'
 ```
-_The Dockerfile (named `Dockerfile`) of the docker image used in the alias above is provided in the same folder as this markdown file for your convenience if you wish to build it yourself._  
+_The Dockerfile (named `Dockerfile`) of the docker image used in the alias above is provided in the [pandoc](pandoc) folder next to this markdown file for your convenience if you wish to build it yourself._  
 
 OASIS staff are currently using pandoc 3.0 from https://github.com/jgm/pandoc/releases/tag/3.0.
 

@@ -542,7 +542,7 @@ For each complex type (stereotyped `<<dataType>>`) in [ACAL](#ACAL) model, apply
 
 ### 5.2.1 AnyType mapping rule
 
-The ACAL `AnyType` is mapped to the following subschema:
+The ACAL `AnyType` used in `ContentType` objects is mapped to the following subschema:
 ```json
 {"type": ["string", "object"]}
 ```
@@ -564,101 +564,103 @@ The `ValueType` and subtypes from [ACAL](#ACAL) section 7.23 are mapped to JSON 
    1. If the `DataType` property is already present at an upper level, i.e. in the parent or an ancestor object (e.g. an `AttributeType` object), then this object may be represented simply as a JSON string. The ACAL data-type is inferred from the aforementioned `DataType` property.
    2. Else it is wrapped in a JSON object made of two string properties `DataType` and `$` holding the actual value:
       ```json
-      {"DataType": "<LiteralRestrictedStringType object's DataType>", "$": "<LiteralRestrictedStringType object's Value>" }
+      {"DataType": "<LiteralRestrictedStringType object's DataType>", "Value": "<LiteralRestrictedStringType object's Value>" }
       ```
 
-If no support for structured data-types is needed, the following JSON subschema SHALL be used for `ValueType` objects in general and added to the *`$defs` object* of the JACAL schema:
+If no support for structured data-types is needed, the following JSON subschema MAY be used for `ValueType` objects in general and added to the *`$defs` object* of the JACAL schema:
 ```json
 "ValueType":
 {
   "anyOf": [
-    {"type": ["boolean", "integer", "number", "string"]},
     {
+      "$comment": "Case when the DataType property is unnecessary because implicit or already defined by the parent object",
+      "type": ["boolean", "integer", "number", "string"]
+    },
+    {
+      "$comment": "Case when the DataType property is required (not the case for boolean / integer / number which have a fixed implicit DataType)",
       "type": "object",
       "properties": {
         "DataType": {"$ref": "#/$defs/IdentifierType"},
-        "$": {"type": "string"}
+        "Value": {"type": "string"}
       },
-      "required": ["$"],
-      "additionalProperties": false
+      "required": ["DataType", "Value"],
+      "unevaluatedProperties": false
     }
   ]
 }
 ```
+
+For supporting structured data-types (as schema extensions), a more generic subschema is provided in the next section.
 
 
 #### 5.2.2.2 Structured value mappings
 
-`StructuredValueType` objects, which are used for structured values, are represented as a JSON objects. Since `StructuredValueType` is an abstract type, it is the responsibility of ACAL profiles (e.g. XPath profile) or ACAL users / implementers to define concrete subtypes as needed, with their own ACAL data-type identifier; and also to define their respective **JSON schema** if they need to have a JSON representation. 
-For a given concrete subtype of `StructuredValueType` named `FooStructValueType`, a `FooStructValueType` object is represented in JSON in one of two forms (with a `DataType` property or not):
+`StructuredValueType` objects, which are used for structured values, are represented as JSON objects. Since `StructuredValueType` is an abstract type, it is the responsibility of ACAL profiles (e.g. XPath profile) or ACAL users / implementers to define concrete subtypes as needed, with their own ACAL data-type identifier; and also to define their respective **JSON schema** if they need to have a JSON representation. 
+For a given concrete subtype of `StructuredValueType` named `FooStructValueType`, a `FooStructValueType` object is represented in JSON in one of two forms of JSON objects (with a `DataType` property or not):
 1. If the `DataType` property is already present at an upper level, i.e. in the parent or an ancestor object (e.g. an `AttributeType` object), then this object may be represented as a JSON object compliant with `FooStructValueType`'s JSON schema. The ACAL data-type is inferred from the aforementioned `DataType` property.
-2. Else it is wrapped in a JSON object made of the string property `DataType` and the JSON object property `$` holding the actual value compliant with `FooStructValueType`'s JSON schema:
+2. Else a string property `DataType` is added to the FooStructValueType's JSON object:
    ```json
    {
     "DataType": "<FooStructValueType's DataType identifier>", 
-    "$": {<JSON object compliant with FooStructValueType's JSON schema>} 
+    <Properties according to FooStructValueType's JSON schema>
    }
    ```
 
-A subtype of `StructuredValueType` SHALL NOT (re)define any `DataType` property in its JSON representation.
+The subtype `FooStructValueType` of `StructuredValueType` SHALL NOT (re)define any `DataType` property in its JSON representation, as the property is already defined in the core schema. 
 
-Therefore, the `ValueType`'s JSON schema SHALL be modified to include references to the JSON schemas of the concrete subtypes of `StructuredValueType` supported by the ACAL system, say `StructValueType1`, `StructValueType2`, etc. as follows (to be added to the *`$defs` object* of the JACAL schema):
+Therefor, the `ValueType`'s JSON schema SHALL be enhanced as follows in order to support structured data-types:
 
 ```json
-"ValueType":
-{
-  "anyOf": [
-    {"type": ["boolean", "integer", "number", "string"]},
-    {"$ref": "<URI of StructValueType1's JSON schema>" },
-    {"$ref": "<URI of StructValueType2's JSON schema>" },
-    ...
-    {
-      "type": "object",
-      "properties": {
-        "DataType": {"$ref": "#/$defs/IdentifierType"},
-        "$": {
-          "anyOf": [
-            {"type": "string"}, 
-            {"$ref": "<URI of StructValueType1's JSON schema>" },
-            {"$ref": "<URI of StructValueType2's JSON schema>" },
-            ...
-          ]
-        }
-      },
-      "required": ["DataType", "$"],
-      "additionalProperties": false
-    }
-  ]
-}
-```
-
-Here is an example with `XPathExpressionValueType` (DataType `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression`) for an ACAL system supporting the XPath Profile (`jacal-xpath-v1.0-schema.json` is the name of XPath Profile's JSON schema file):
-```json
-"ValueType":
-{
-	"anyOf": [
-      {"type": ["boolean", "integer", "number", "string"]},
-      {"$ref": "#/$defs/XPathExpressionValueType" },
+"ValueType": {
+    "anyOf": [
       {
-        "type": "object",
-        "properties": {
-        "DataType": {"$ref": "#/$defs/IdentifierType"},
-        "$": {
-          "anyOf": [
-            {"type": "string"}, 
-            {"$ref": "#/$defs/XPathExpressionValueType" }
-          ]
-        }
+        "$comment": "Case when the DataType property is unnecessary (implicit or already defined by parent) and the value is primitive",
+        "type": ["boolean", "integer", "number", "string"]
       },
-      "required": ["DataType", "$"],
-      "additionalProperties": false
-    }
-	]
-}
+      {
+        "$comment": "Same case as above but for structured values",
+        "$ref": "#/$defs/StructuredValueTypeTree"
+      },
+      {
+        "$comment": "Case when DataType property is required (not the case for boolean / integer / number which have a fixed implicit DataType)",
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "DataType": { "$ref": "#/$defs/IdentifierType" }
+            },
+            "required": ["DataType"]
+          },
+          {
+            "anyOf": [
+              {
+                "properties": {
+                  "Value": {
+                    "$comment": "For DataTypes represented as string (besides the standard string type itself).",
+                    "type": "string"
+                  }
+                },
+                "required": ["Value"]
+              },
+              { "$ref": "#/$defs/StructuredValueTypeTree" }
+            ]
+          }
+        ],
+        "unevaluatedProperties": false
+      }
+    ]
+  },
+  "StructuredValueTypeTree": {
+    "$dynamicRef": "#StructuredValueTypeExtensions"
+  },
+  "StructuredValueTypeTreeEmpty": {
+    "$dynamicAnchor": "StructuredValueTypeExtensions",
+    "$comment": "No StructuredValueType extension by default. Create your own implementation-specific schema that overrides this $dynamicAnchor to support such extensions (e.g. XPathExpressionValueType from XPath Profile). See jacal-root-schema-example-using-xpath-and-jsonpath-profiles.json for example.",
+    "not": true
+  }
 ```
 
-The `StructValueXType` may be defined in a separate JSON schema file such as `jacal-xxx-v1.0-schema.json` (for some profile `xxx`) in which case the schema reference would be:
-`{"$ref": "jacal-xxx-v1.0-schema.json#/$defs/StructValueXType" }`.
+ This enables ACAL implementers to extend `StructuredValueType` with new concrete subtypes of their own or from standard JACAL Profiles, by overriding the `$dynamicAnchor` (redeclare with the same name) in a implementation-specific JSON schema, as described in section [5.4](#54-extending-jacal-syntax). That section gives an example where `StructuredValueType` is extended with the `XPathExpressionValueType` (`urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` data-type) from the XPath Profile.
 
 
 ### 5.2.3 Default mapping rules for complex ACAL types (other than ValueType)
@@ -727,7 +729,7 @@ For each complex ACAL type `FooType` that does not fall under any of the previou
          "not": true
        }
        ```
-       This enables ACAL implementers to extend `FooType` with concrete subtypes of their own or from standard JACAL Profiles, by overriding the `$dynamicAnchor` with the same name in a new (implementation-specific) JSON schema. See section 5.3 for more information.
+       This enables ACAL implementers to extend `FooType` with concrete subtypes of their own or from standard JACAL Profiles, by overriding the `$dynamicAnchor` with the same name in a new (implementation-specific) JSON schema. See section [5.4](#54-extending-jacal-syntax) for more information.
   
      - 1.2.2. Else (`FooType` has one or more subtypes in ACAL core model), then add also the following JSON subschema to the *`$defs` object*:
       ```json 
@@ -806,7 +808,7 @@ For each complex ACAL type `FooType` that does not fall under any of the previou
             ...
           },
           "required": [ <LR> ],
-          "additionalProperties": false
+          "unevaluatedProperties": false
         }
         ```
    
@@ -889,7 +891,7 @@ For each of an ACAL Datatype's property *Prop* with value type *PropType*, the c
         "Item2": <Item2TypeSchema>
         ...
       },
-      "additionalProperties": false
+      "unevaluatedProperties": false
     }
     ```
     where *Item1Type*, *Item2Type*, etc. are all possible (and distinct) concrete subtypes of *PropType* ( *ItemXTypeSchema* is the JSON subschema corresponding to the item's type *ItemXType*).
@@ -982,14 +984,25 @@ Extending JACAL syntax means extending JACAL core JSON schema obtained from the 
             ]
         },
         "CustomFooSubType": {...},
-        "CustomFooSubTypeTree": {...}
+        "CustomFooSubTypeTree": {
+          "type": "object",
+          "required": [
+            "CustomFooSub"
+          ],
+          "properties": {
+            "CustomFooSub": {
+              "$ref": "#/$defs/CustomFooSubType"
+            }
+          },
+          "unevaluatedProperties": false
+        }
         ...
     },
     "$ref": "urn:oasis:names:tc:jacal:1.0:core:schema"
   }
   ```
   
-  Here is a concrete example for an ACAL implementation supporting the RequestDefaultsType, PolicyDefaultsType and AttributeSelectorType extensions from the XPath Profile of ACAL and AttributeSelectorType extension from the JSONPath Profile of ACAL:
+  Here is a concrete example for an ACAL implementation supporting the RequestDefaultsType, PolicyDefaultsType, and AttributeSelectorType extensions from the XPath Profile of ACAL, and also the AttributeSelectorType extension from the JSONPath Profile of ACAL:
 
   ```json
   {
@@ -998,19 +1011,11 @@ Extending JACAL syntax means extending JACAL core JSON schema obtained from the 
     "$defs": {
         "EnabledRequestDefaultsExtensions": {
             "$dynamicAnchor": "RequestDefaultsTypeExtensions",
-            "anyOf": [
-                {
-                    "$ref": "urn:oasis:names:tc:jacal:1.0:xpath:schema#/$defs/XPathRequestDefaultsTypeTree"
-                }
-            ]
+            "$ref": "urn:oasis:names:tc:jacal:1.0:xpath:schema#/$defs/XPathRequestDefaultsTypeTree"
         },
         "EnabledPolicyDefaultsExtensions": {
             "$dynamicAnchor": "PolicyDefaultsTypeExtensions",
-            "anyOf": [
-                {
-                    "$ref": "urn:oasis:names:tc:jacal:1.0:xpath:schema#/$defs/XPathPolicyDefaultsTypeTree"
-                }
-            ]
+            "$ref": "urn:oasis:names:tc:jacal:1.0:xpath:schema#/$defs/XPathPolicyDefaultsTypeTree"
         },
         "EnabledAttributeSelectorExtensions": {
             "$dynamicAnchor": "AttributeSelectorTypeExtensions",
@@ -1027,6 +1032,10 @@ Extending JACAL syntax means extending JACAL core JSON schema obtained from the 
     "$ref": "urn:oasis:names:tc:jacal:1.0:core:schema"
   }
   ```
+
+For your convenience, more concrete examples are provided in the following files accompanying this specification:
+- `jacal-root-schema-example-using-jsonpath-profile-only.json`: for implementations that support only extensions from the JSONPath Profile;
+- `jacal-root-schema-example-using-xpath-and-jsonpath-profiles.json`: for implementations that support all extensions from both the JSONPath and XPath Profiles.
 
 -------
 

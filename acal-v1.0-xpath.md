@@ -101,7 +101,7 @@ Install Pandoc, Graphviz and PlantUML on your system; or simply use Docker with 
 ```
 $ alias pandoc='docker run --rm --volume "$(pwd):/data" cdang/pandoc-plantuml'
 ```
-_The Dockerfile (named `Dockerfile`) of the docker image used in the alias above is provided in the same folder as this markdown file for your convenience if you wish to build it yourself._  
+_The Dockerfile (named `Dockerfile`) of the docker image used in the alias above is provided in the [pandoc](pandoc) folder next to this markdown file for your convenience if you wish to build it yourself._  
 
 OASIS staff are currently using pandoc 3.0 from https://github.com/jgm/pandoc/releases/tag/3.0.
 
@@ -207,7 +207,7 @@ $ pandoc -f gfm+definition_lists -t pdf acal-v1.0-xpath.md -c styles/markdown-st
     - [5.2.2 RequestDefaultsType extension - XPathRequestDefaultsType](#522-requestdefaultstype-extension---xpathrequestdefaultstype)
     - [5.2.3 AttributeSelectorType extension - XPathAttributeSelectorType](#523-attributeselectortype-extension---xpathattributeselectortype)
     - [5.2.4 EntityAttributeSelectorType extension -XPathEntityAttributeSelectorType](#524-entityattributeselectortype-extension---xpathentityattributeselectortype)
-    - [5.2.5 DataType extension - XpathExpressionValueType](#525-datatype-extension---xpathexpressionvaluetype)
+    - [5.2.5 DataType extension - XPathExpressionValueType](#525-datatype-extension---xpathexpressionvaluetype)
 - [6 XPath Definitions](#6-xpath-definitions)
   - [Supported XPath versions](#supported-xpath-versions)
   - [XPath 2.0 Implementation-Defined Items](#xpath-20-implementation-defined-items)
@@ -499,9 +499,9 @@ class XPathEntityAttributeSelectorType <<dataType>> extends EntityAttributeSelec
 The `XPathEntityAttributeSelectorType` object type extends the `EntityAttributeSelectorType` object type with the same `ContextSelectorId` property as `XPathAttributeSelectorType`. 
 The `Path` property is also defined the same as in `XPathAttributeSelectorType`.
 
-## 5.2.5 DataType extension - XpathExpressionValueType
+## 5.2.5 DataType extension - XPathExpressionValueType
 
-The `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` values (Annex C) can be modeled as a subtype of `SimpleValueType` [ACAL] called `XpathExpressionValueType`.
+The `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` values (Annex C) can be modeled as a subtype of `SimpleValueType` [ACAL] called `XPathExpressionValueType`.
 
 UML model (class diagram):
 ```plantuml
@@ -510,24 +510,24 @@ hide empty members
 hide circle
 
 abstract class ValueType
-abstract class SimpleValueType extends ValueType 
-class XpathExpressionValueType <<fixedDatatype>> extends SimpleValueType {
+abstract class StructuredValueType extends ValueType
+class XPathExpressionValueType <<fixedDatatype>> extends StructuredValueType {
     <<fixedDatatype>>
     DataType='urn:oasis:names:tc:acal:1.0:data-type:xpathExpression'
     __
-    +Value: String [1]
-    +XPathCategory: IdentifierType [1]
+    + Value: String [1]
+    + XPathCategory: IdentifierType [1]
 }
 @enduml 
 ```
 
-A `XpathExpressionValueType` object has the following properties:
+A `XPathExpressionValueType` object has the following properties:
 
-`Value` [1]
+`Value` [Required]
 
 : The XPath expression
 
-`XPathCategory` [1]
+`XPathCategory` [Required]
 
 : The `Category` of the `RequestEntityType` object containing the XML `Content` to which the XPath expression applies.
 

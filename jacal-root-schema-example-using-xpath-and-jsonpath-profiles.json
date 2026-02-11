@@ -4,19 +4,11 @@
     "$defs": {
         "EnabledRequestDefaultsExtensions": {
             "$dynamicAnchor": "RequestDefaultsTypeExtensions",
-            "anyOf": [
-                {
-                    "$ref": "urn:oasis:names:tc:jacal:1.0:xpath:schema#/$defs/XPatRequesthDefaultsTypeTree"
-                }
-            ]
+            "$ref": "urn:oasis:names:tc:jacal:1.0:xpath:schema#/$defs/XPathRequestDefaultsTypeTree"
         },
         "EnabledPolicyDefaultsExtensions": {
             "$dynamicAnchor": "PolicyDefaultsTypeExtensions",
-            "anyOf": [
-                {
-                    "$ref": "urn:oasis:names:tc:jacal:1.0:xpath:schema#/$defs/XPathPolicyDefaultsTypeTree"
-                }
-            ]
+            "$ref": "urn:oasis:names:tc:jacal:1.0:xpath:schema#/$defs/XPathPolicyDefaultsTypeTree"
         },
         "EnabledAttributeSelectorExtensions": {
             "$dynamicAnchor": "AttributeSelectorTypeExtensions",
@@ -39,6 +31,10 @@
                     "$ref": "urn:oasis:names:tc:jacal:1.0:jsonpath:schema#/$defs/JSONPathEntityAttributeSelectorTypeTree"
                 }
             ]
+        },
+        "EnabledStructuredValueTypeExtensions": {
+            "$dynamicAnchor": "StructuredValueTypeExtensions",
+            "$ref": "urn:oasis:names:tc:jacal:1.0:xpath:schema#/$defs/XPathExpressionValueType"
         }
     },
     "$ref": "urn:oasis:names:tc:jacal:1.0:core:schema"

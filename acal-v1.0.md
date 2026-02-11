@@ -106,7 +106,7 @@ Install Pandoc, Graphviz and PlantUML on your system; or simply use Docker with 
 ```
 $ alias pandoc='docker run --rm --volume "$(pwd):/data" cdang/pandoc-plantuml'
 ```
-_The Dockerfile (named `Dockerfile`) of the docker image used in the alias above is provided in the same folder as this markdown file for your convenience if you wish to build it yourself._  
+_The Dockerfile (named `Dockerfile`) of the docker image used in the alias above is provided in the [pandoc](pandoc) folder next to this markdown file for your convenience if you wish to build it yourself._  
 
 OASIS staff are currently using pandoc 3.0 from https://github.com/jgm/pandoc/releases/tag/3.0.
 
@@ -2947,7 +2947,7 @@ A `ValueType` object has the following properties:
 
 : An `IdentifierType` value specifying the data type of the attribute value. If this property is omitted and the DataType is not defined by the parent object (e.g. `AttributeType` object), then it is treated as being set to `urn:oasis:names:tc:acal:1.0:data-type:string`.
 
-A ValueType is abstract and maybe either the primitive LiteralXXXType (LiteralStringType, LiteralIntegerType) etc. or StructuredValueType (XACML 3.0 7.3.1 structured attribute)
+A ValueType is abstract and subtypes may be either primitive types - i.e. subtypes of `PrimitiveValueType` in the above diagram (LiteralStringType, LiteralIntegerType, etc.) - or structured types (see [section 8.4.1](#841-structured-attributes)) -  i.e. subtypes of `StructuredValueType` in the above diagram.
 
 ## 7.24 VariableReferenceType
 
