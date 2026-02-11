@@ -1431,10 +1431,10 @@ Rule 1 illustrates a policy with a simple rule containing a condition. It also i
 [10]     "Expression":{
 [11]       "Apply":{
 [12]         "FunctionId":"string-equal",
-[13]         "Argument":[{
+[13]         "Expression":[{
 [14]           "Apply":{
 [15]             "FunctionId":"string-one-and-only",
-[16]             "Argument":[{
+[16]             "Expression":[{
 [17]               "AttributeDesignator":{
 [18]                 "Category":"access-subject",
 [19]                 "AttributeId":"patient-number",
@@ -1445,7 +1445,7 @@ Rule 1 illustrates a policy with a simple rule containing a condition. It also i
 [24]         },{
 [25]           "Apply":{
 [26]             "FunctionId":"string-one-and-only",
-[27]             "Argument":[{
+[27]             "Expression":[{
 [28]               "AttributeDesignator":{
 [29]                 "Category":"resource",
 [30]                 "AttributeId":"patient-number",
@@ -1465,10 +1465,10 @@ Rule 1 illustrates a policy with a simple rule containing a condition. It also i
 [45]       "Condition":{
 [46]         "Apply":{
 [47]           "FunctionId":"and",
-[48]           "Argument":[{
+[48]           "Expression":[{
 [49]             "Apply":{
 [50]               "FunctionId":"any-of",
-[51]               "Argument":[{
+[51]               "Expression":[{
 [52]                 "Function":{
 [53]                   "Id":"anyURI-equal"
 [54]                 }
@@ -1488,7 +1488,7 @@ Rule 1 illustrates a policy with a simple rule containing a condition. It also i
 [68]           },{
 [69]             "Apply":{
 [70]               "FunctionId":"any-of",
-[71]               "Argument":[{
+[71]               "Expression":[{
 [72]                 "Function":{
 [73]                   "Id":"string-equal"
 [74]                 }
@@ -5908,12 +5908,12 @@ Examples in this section are presented in both the XML and JSON representations 
   ```json
   "Apply":{
     "FunctionId":"any-of",
-    "Argument":[
+    "Expression":[
       { "Function":{ "Id":"string-equal" } },
       { "Value":{ "Value":"Paul" } },
       { "Apply":{
         "FunctionId":"string-bag",
-        "Argument":[
+        "Expression":[
           { "Value":{ "Value":"John" } },
           { "Value":{ "Value":"Paul" } },
           { "Value":{ "Value":"George" } },
@@ -5951,12 +5951,12 @@ Examples in this section are presented in both the XML and JSON representations 
   ```json
   "Apply":{
     "FunctionId":"all-of",
-    "Argument":[
+    "Expression":[
       { "Function":{ "Id":"integer-greater-than" } },
       { "Value":{ "Value":10 } },
       { "Apply":{
         "FunctionId":"integer-bag",
-        "Argument":[
+        "Expression":[
           { "Value":{ "Value":9 } },
           { "Value":{ "Value":3 } },
           { "Value":{ "Value":4 } },
@@ -5997,18 +5997,18 @@ Examples in this section are presented in both the XML and JSON representations 
   ```json
   "Apply":{
     "FunctionId":"any-of-any",
-    "Argument":[
+    "Expression":[
       { "Function":{ "Id":"string-equal" } },
       { "Apply":{
         "FunctionId":"string-bag",
-        "Argument":[
+        "Expression":[
           { "Value":{ "Value":"Ringo" } },
           { "Value":{ "Value":"Mary" } }
         ]
       }},
       { "Apply":{
         "FunctionId":"string-bag",
-        "Argument":[
+        "Expression":[
           { "Value":{ "Value":"John" } },
           { "Value":{ "Value":"Paul" } },
           { "Value":{ "Value":"George" } },
@@ -6049,18 +6049,18 @@ Examples in this section are presented in both the XML and JSON representations 
   ```json
   "Apply":{
     "FunctionId":"all-of-any",
-    "Argument":[
+    "Expression":[
       { "Function":{ "Id":"integer-greater-than" } },
       { "Apply":{
         "FunctionId":"integer-bag",
-        "Argument":[
+        "Expression":[
           { "Value":{ "Value":10 } },
           { "Value":{ "Value":20 } }
         ]
       }},
       { "Apply":{
         "FunctionId":"integer-bag",
-        "Argument":[
+        "Expression":[
           { "Value":{ "Value":1 } },
           { "Value":{ "Value":3 } },
           { "Value":{ "Value":5 } },
@@ -6101,18 +6101,18 @@ Examples in this section are presented in both the XML and JSON representations 
   ```json
   "Apply":{
     "FunctionId":"any-of-all",
-    "Argument":[
+    "Expression":[
       { "Function":{ "Id":"integer-greater-than" } },
       { "Apply":{
         "FunctionId":"integer-bag",
-        "Argument":[
+        "Expression":[
           { "Value":{ "Value":3 } },
           { "Value":{ "Value":5 } }
         ]
       }},
       { "Apply":{
         "FunctionId":"integer-bag",
-        "Argument":[
+        "Expression":[
           { "Value":{ "Value":1 } },
           { "Value":{ "Value":2 } },
           { "Value":{ "Value":3 } },
@@ -6153,18 +6153,18 @@ Examples in this section are presented in both the XML and JSON representations 
   ```json
   "Apply":{
     "FunctionId":"all-of-all",
-    "Argument":[
+    "Expression":[
       { "Function":{ "Id":"integer-greater-than" } },
       { "Apply":{
         "FunctionId":"integer-bag",
-        "Argument":[
+        "Expression":[
           { "Value":{ "Value":6 } },
           { "Value":{ "Value":5 } }
         ]
       }},
       { "Apply":{
         "FunctionId":"integer-bag",
-        "Argument":[
+        "Expression":[
           { "Value":{ "Value":1 } },
           { "Value":{ "Value":2 } },
           { "Value":{ "Value":3 } },
@@ -6199,11 +6199,11 @@ Examples in this section are presented in both the XML and JSON representations 
   ```json
   "Apply":{
     "FunctionId":"map",
-    "Argument":[
+    "Expression":[
       { "Function":{ "Id":"string-normalize-to-lower-case" } },
       { "Apply":{
         "FunctionId":"string-bag",
-        "Argument":[
+        "Expression":[
           { "Value":{ "Value":"Hello" } },
           { "Value":{ "Value":"World!" } }
         ]
