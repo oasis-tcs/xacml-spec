@@ -2630,7 +2630,9 @@ The `PolicyReferenceType` object type extends the `PatternMatchIdReferenceType` 
 
 `Expression` [Any Number]
 
-: Arguments for a parameterized policy, in the same order as the `Parameter` values in the referenced policy, and each argument number *n* MUST match the definition of the `Parameter` number *n* (`DataType`, `isBag`). The number of arguments *N* may be less than the number of declared `Parameter`s if and only if the `Parameter`s number *N* (starting at zero) and above have defined default values, in which case they are used as remaining arguments. If the Expression value is a `ValueType` object, i.e. a literal value, the latter SHALL not redefine/override the DataType identifier already defined by the matching Parameter, and SHOULD not have any DataType identifier property set, if possible.
+: Arguments for a parameterized policy, in the same order as the `Parameter` values in the referenced policy, and each argument number *n* MUST match the definition of the `Parameter` number *n* (`DataType`, `isBag`). The number of arguments *N* may be less than the number of declared `Parameter`s if and only if the `Parameter`s number *N* (starting at zero) and above have defined default values, in which case they are used as remaining arguments. 
+
+**DataType inference rule**: if an Expression has an (optional) `DataType` property (statically-typed Expression), i.e. its type is `ValueType`, `NamedAttributeDesignatorType`, `BaseAttributeSelectorType` or any subtype thereof, then the Expression's `DataType` property SHOULD be omitted in this case as it is already defined by the corresponding `Parameter`'s definition in the referenced `PolicyType` object. Else it SHALL match that `Parameter`'s `DataType`.
 
 ## 7.12 RuleType
 
@@ -2759,7 +2761,9 @@ class SharedVariableDefinitionType <<dataType>> {
 
 : Note that the expression cannot contain `VariableReferenceType` objects since the `SharedVariableDefinitionType` object is not in the scope of any `VariableDefinitionType` object.
 
-: If the `Expression` value is a `ValueType` object (literal value) without a defined `DataType` identifier, it SHALL be handled as String (with DataType identifier `urn:oasis:names:tc:acal:1.0:data-type:string`) by default. *Note that the way the DataType identifier is defined depends on the concrete type (`ValueType` subtype) of that value. For example, `ValueType` subtypes stereotyped `<<fixedDatatype>>` have the `DataType` identifier globally defined and fixed as a Stereotype property (therefore implicitly predefined for every instance), whereas the `LiteralRestrictedStringType` have a UML attribute `DataType` that can be set to a different value (identifier) for each instance.*
+: If an Expression has an (optional) `DataType` property (statically-typed Expression), i.e. its type is `ValueType`, `NamedAttributeDesignatorType`, `BaseAttributeSelectorType` or any subtype thereof, and its `DataType` property is omitted, it is set implicitly to `urn:oasis:names:tc:acal:1.0:data-type:string` by default.
+
+*Note that the way the DataType identifier is defined on a `ValueType` depends on the concrete type (`ValueType` subtype) of that value. For example, `ValueType` subtypes stereotyped `<<fixedDatatype>>` have the `DataType` identifier globally defined and fixed as a Stereotype property (therefore implicitly predefined for every instance), whereas the `LiteralRestrictedStringType` have a UML attribute `DataType` that can be set to a different value (identifier) for each instance.*
 
 <a name="expressiontype"></a>
 
@@ -2886,7 +2890,10 @@ An `ApplyType` object contains the following properties:
 
 `Expression` [Any Number]
 
-: A sequence of `ExpressionType` objects, each defining an expression as an argument to the function. If one of these is a `ValueType` object and the function's signature defines explicitly the data-type of the corresponding argument, then this object does not need to (re)declare any `DataType` identifier as it is already defined accordingly. In particular, if the concrete type (`ValueType` subtype) of the value has an (optional) `DataType` identifier property (e.g. `LiteralRestrictedStringType`), then the value SHALL leave this attribute unset.
+: A sequence of `ExpressionType` objects, each defining an expression as an argument to the function. **DataType inference rule**: if an Expression has an (optional) `DataType` property (statically-typed Expression), i.e. its type is `ValueType`, `NamedAttributeDesignatorType`, `BaseAttributeSelectorType` or any subtype thereof, then the Expression's `DataType` property MAY be omitted in this case if the corresponding parameter's definition in the function's signature (the function identified by `FunctionId`) has a fixed DataType (which is the case for most ACAL functions). Else it SHALL match the function parameter's DataType.
+
+
+If one of these is a `ValueType` object and the function's signature defines explicitly the data-type of the corresponding argument, then this object does not need to (re)declare any `DataType` identifier as it is already defined accordingly. In particular, if the concrete type (`ValueType` subtype) of the value has an (optional) `DataType` identifier property (e.g. `LiteralRestrictedStringType`), then the value SHALL leave this attribute unset.
 
 ## 7.16 FunctionType
 
@@ -2939,9 +2946,9 @@ A `NamedAttributeDesignatorType` object contains the following properties:
 
 : An `IdentifierType` value specifying the `AttributeId` of the named attribute.
 
-`DataType` [Required, Default `urn:oasis:names:tc:acal:1.0:data-type:string`]
+`DataType` [Optional]
 
-: An `IdentifierType` value specifying the `DataType` of the named attribute. The bag returned by the designator SHALL contain values of this data type. If this property is omitted, then it is treated as being set to `urn:oasis:names:tc:acal:1.0:data-type:string`.
+: An `IdentifierType` value specifying the `DataType` of the named attribute. The bag returned by the designator SHALL contain values of this data type. If this property is omitted, the DataType inference rule(s) of the parent object SHALL apply first, if there is any rule defined in this specification in the parent object type's section (either [ApplyType](#715-applytype), [PolicyReferenceType](#711-policyreferencetype), [SharedVariableReferenceType](#724b-sharedvariablereferencetype), or one of the [QuantifiedExpressionTypes](#725-quantifiedexpressiontype-optional) ); if there is not any, or if the DataType is still undefined after applying the rule(s), then it is treated as being set to `urn:oasis:names:tc:acal:1.0:data-type:string` by default.
 
 `Issuer` [Optional]
 
@@ -3043,9 +3050,9 @@ A `BaseAttributeSelectorType` object has the following properties:
 : A restricted `String` value that contains an expression to be evaluated against the specified content. The concrete syntax and semantics of the expression is separate ACAL Profiles (e.g. XPath / JSONPath Profiles). See [Section 8.4.7](#847-selector-evaluation) for details of the expression evaluation during attribute selector and entity attribute selector processing.
 
 
-`DataType` [Optional, Default `urn:oasis:names:tc:acal:1.0:data-type:string`]
+`DataType` [Optional]
 
-: An `IdentifierType` value specifying the data type of the values returned from the evaluation of the attribute selector or entity attribute selector. If this property is omitted, then it is treated as being set to `urn:oasis:names:tc:acal:1.0:data-type:string`.
+: An `IdentifierType` value specifying the data type of the values returned from the evaluation of the attribute selector or entity attribute selector. If this property is omitted, the DataType inference rule(s) of the parent object SHALL apply first, if there is any rule defined in this specification in the parent object type's section (either [ApplyType](#715-applytype), [PolicyReferenceType](#711-policyreferencetype), [SharedVariableReferenceType](#724b-sharedvariablereferencetype), or one of the [QuantifiedExpressionTypes](#725-quantifiedexpressiontype-optional) ); if there is not any, or if the DataType is still undefined after applying the rule(s), then it is treated as being set to `urn:oasis:names:tc:acal:1.0:data-type:string` by default.
 
 `MustBePresent` [Optional, Default false]
 
@@ -3166,7 +3173,7 @@ A `ValueType` object has the following properties:
 
 `DataType` [Optional]
 
-: An `IdentifierType` value specifying the data type of the attribute value. If this property is omitted and the DataType is not defined by the parent object (e.g. `AttributeType` object), then it is treated as being set to `urn:oasis:names:tc:acal:1.0:data-type:string`.
+: An `IdentifierType` value specifying the data type of the attribute value. If this property is omitted, the DataType inference rule(s) of the parent object SHALL apply first, if there is any rule defined in this specification in the parent object type's section (either [ApplyType](#715-applytype), [PolicyReferenceType](#711-policyreferencetype), [SharedVariableReferenceType](#724b-sharedvariablereferencetype), or one of the [QuantifiedExpressionTypes](#725-quantifiedexpressiontype-optional) ); if there is not any, or if the DataType is still undefined after applying the rule(s), then it is treated as being set to `urn:oasis:names:tc:acal:1.0:data-type:string` by default.
 
 A ValueType is abstract and subtypes may be either primitive types - i.e. subtypes of `PrimitiveValueType` in the above diagram (LiteralStringType, LiteralIntegerType, etc.) - or structured types (see [section 8.4.1](#841-structured-attributes)) -  i.e. subtypes of `StructuredValueType` in the above diagram.
 
@@ -3222,7 +3229,10 @@ The `SharedVariableReferenceType` object type contains the following properties:
 
 `Expression` [Any Number]
 
-: Arguments for a parameterized shared variable (`SharedVariableType` object), in the same order as the `Parameter` declarations in the referenced shared variable, and each argument number *n* MUST match the definition of the `Parameter` number *n* (`DataType`, `isBag`). The number of arguments *N* may be less than the number of declared `Parameter`s if and only if the `Parameter`s number *N* (starting at zero) and above have defined default values, in which case they are used as remaining arguments. If the Expression value is a `ValueType` object, i.e. a literal value, the latter SHALL not redefine/override the DataType identifier already defined by the matching Parameter, and SHOULD not have any DataType identifier property set, if possible.
+: Arguments for a parameterized shared variable (`SharedVariableDefinitionType` object), in the same order as the `Parameter` declarations in the referenced shared variable, and each argument number *n* MUST match the definition of the `Parameter` number *n* (`DataType`, `isBag`). The number of arguments *N* may be less than the number of declared `Parameter`s if and only if the `Parameter`s number *N* (starting at zero) and above have defined default values, in which case they are used as remaining arguments. 
+
+**DataType inference rule**: if an Expression has an (optional) `DataType` property (statically-typed Expression), i.e. its type is `ValueType`, `NamedAttributeDesignatorType`, `BaseAttributeSelectorType` or any subtype thereof, then the Expression's `DataType` property SHOULD be omitted in this case as it is already defined by the corresponding `Parameter`'s definition in the referenced `SharedVariableDefinitionType` object. Else it SHALL match that `Parameter`'s `DataType`.
+
 
 ## 7.25 QuantifiedExpressionType (optional)
 
@@ -3276,7 +3286,9 @@ class ForAnyType <<dataType>> extends QuantifiedExpressionType
 @enduml
 ```
 
-The iterant expression of a ForAny expression SHALL be an expression that evaluates to a value of the `urn:oasis:names:tc:acal:1.0:data-type:boolean` data type. If the expression is a literal value - `ValueType` object - without a defined DataType, it SHALL be handled as boolean (DataType identifier `urn:oasis:names:tc:acal:1.0:data-type:boolean`).
+The iterant expression of a ForAny expression SHALL be an expression that evaluates to a value of the `urn:oasis:names:tc:acal:1.0:data-type:boolean` data type. 
+
+**DataType inference rule**: if the `Iterant` Expression has an (optional) `DataType` property (statically-typed Expression), i.e. its type is `ValueType`, `NamedAttributeDesignatorType`, `BaseAttributeSelectorType` or any subtype thereof, then its `DataType` property SHALL be omitted as the DataType is already fixed to be `urn:oasis:names:tc:acal:1.0:data-type:boolean` by this definition.
 
 The result of a ForAny expression SHALL be a value of the `urn:oasis:names:tc:acal:1.0:data-type:boolean` data type or `Indeterminate`.
 
@@ -3296,7 +3308,9 @@ class ForAllType <<dataType>> extends QuantifiedExpressionType
 @enduml
 ```
 
-The iterant expression of a ForAll expression SHALL be an expression that evaluates to a value of the `urn:oasis:names:tc:acal:1.0:data-type:boolean` data type. If the expression is a literal value - `ValueType` object - without a defined DataType, it SHALL be handled as boolean (DataType identifier `urn:oasis:names:tc:acal:1.0:data-type:boolean`).
+The iterant expression of a ForAll expression SHALL be an expression that evaluates to a value of the `urn:oasis:names:tc:acal:1.0:data-type:boolean` data type. 
+
+**DataType inference rule**: if the `Iterant` Expression has an (optional) `DataType` property (statically-typed Expression), i.e. its type is `ValueType`, `NamedAttributeDesignatorType`, `BaseAttributeSelectorType` or any subtype thereof, then its `DataType` property SHALL be omitted as the DataType is already fixed to be `urn:oasis:names:tc:acal:1.0:data-type:boolean` by this definition.
 
 The result of a ForAll expression SHALL be a value of the `urn:oasis:names:tc:acal:1.0:data-type:boolean` data type or `Indeterminate`.
 
@@ -3335,7 +3349,9 @@ class SelectType <<dataType>> extends QuantifiedExpressionType
 @enduml
 ```
 
-The iterant expression of a Select expression SHALL be an expression that evaluates to a value of the `urn:oasis:names:tc:acal:1.0:data-type:boolean` data type. If the expression is a literal value - `ValueType` object - without a defined DataType, it SHALL be handled as boolean (DataType identifier `urn:oasis:names:tc:acal:1.0:data-type:boolean`).
+The iterant expression of a Select expression SHALL be an expression that evaluates to a value of the `urn:oasis:names:tc:acal:1.0:data-type:boolean` data type. 
+
+**DataType inference rule**: if the `Iterant` Expression has an (optional) `DataType` property (statically-typed Expression), i.e. its type is `ValueType`, `NamedAttributeDesignatorType`, `BaseAttributeSelectorType` or any subtype thereof, then its `DataType` property SHALL be omitted as the DataType is already fixed to be `urn:oasis:names:tc:acal:1.0:data-type:boolean` by this definition.
 
 The result of a Select expression SHALL be a bag of values of the same data type as the values from the domain or `Indeterminate`.
 
@@ -4903,9 +4919,9 @@ The implementation MUST use the attributes or attribute categories associated wi
 | urn:oasis:names:tc:acal:1.0:resource:resource-id | M | urn:oasis:names:tc:xacml:1.0:resource:resource-id |
 | urn:oasis:names:tc:acal:1.0:resource:simple-file-name | O | urn:oasis:names:tc:xacml:1.0:resource:simple-file-name |
 | urn:oasis:names:tc:acal:1.0:resource:target-namespace | O | urn:oasis:names:tc:xacml:2.0:resource:target-namespace |
-| urn:oasis:names:tc:xacml:1.0:action:action-id | O | urn:oasis:names:tc:xacml:1.0:action:action-id |
-| urn:oasis:names:tc:xacml:1.0:action:action-namespace | O | urn:oasis:names:tc:xacml:1.0:action:action-namespace |
-| urn:oasis:names:tc:xacml:1.0:action:implied-action | O | urn:oasis:names:tc:xacml:1.0:action:implied-action |
+| urn:oasis:names:tc:acal:1.0:action:action-id | O | urn:oasis:names:tc:xacml:1.0:action:action-id |
+| urn:oasis:names:tc:acal:1.0:action:action-namespace | O | urn:oasis:names:tc:xacml:1.0:action:action-namespace |
+| urn:oasis:names:tc:acal:1.0:action:implied-action | O | urn:oasis:names:tc:xacml:1.0:action:implied-action |
 
 | Identifier | M/O | Deprecated Identifier |
 | :--- | :--- | :--- |
@@ -5051,7 +5067,7 @@ The implementation MUST properly process those functions associated with the ide
 | urn:oasis:names:tc:acal:1.0:function:hexBinary-bag | M | urn:oasis:names:tc:xacml:1.0:function:hexBinary-bag |
 | urn:oasis:names:tc:acal:1.0:function:base64Binary-one-and-only | M | urn:oasis:names:tc:xacml:1.0:function:base64Binary-one-and-only |
 | urn:oasis:names:tc:acal:1.0:function:base64Binary-bag-size | M | urn:oasis:names:tc:xacml:1.0:function:base64Binary-bag-size |
-| urn:oasis:names:tc:xacml:1.0:function:base64Binary-is-in | M | urn:oasis:names:tc:xacml:1.0:function:base64Binary-is-in |
+| urn:oasis:names:tc:acal:1.0:function:base64Binary-is-in | M | urn:oasis:names:tc:xacml:1.0:function:base64Binary-is-in |
 | urn:oasis:names:tc:acal:1.0:function:base64Binary-bag | M | urn:oasis:names:tc:xacml:1.0:function:base64Binary-bag |
 | urn:oasis:names:tc:acal:1.0:function:dayTimeDuration-one-and-only | M | urn:oasis:names:tc:xacml:3.0:function:dayTimeDuration-one-and-only |
 | urn:oasis:names:tc:acal:1.0:function:dayTimeDuration-bag-size | M | urn:oasis:names:tc:xacml:3.0:function:dayTimeDuration-bag-size |
@@ -5176,7 +5192,7 @@ The implementation MUST properly process those functions associated with the ide
 | urn:oasis:names:tc:acal:1.0:function:hexBinary-subset | M | urn:oasis:names:tc:xacml:1.0:function:hexBinary-subset |
 | urn:oasis:names:tc:acal:1.0:function:hexBinary-set-equals | M | urn:oasis:names:tc:xacml:1.0:function:hexBinary-set-equals |
 | urn:oasis:names:tc:acal:1.0:function:base64Binary-intersection | M | urn:oasis:names:tc:xacml:1.0:function:base64Binary-intersection |
-| urn:oasis:names:tc:acal:1.0:function:base64Binary-at-least-one-member-of | M | urn:oasis:names:tc:xacml:1.0:function:base64Binary-at-least-one-member-of |
+| urn:oasis:names:tc:acal:1.0:function:base64Binary-at-least-one-member-of | M | urn:oasis:names:tc:acal:1.0:function:base64Binary-at-least-one-member-of |
 | urn:oasis:names:tc:acal:1.0:function:base64Binary-union | M | urn:oasis:names:tc:xacml:1.0:function:base64Binary-union |
 | urn:oasis:names:tc:acal:1.0:function:base64Binary-subset | M | urn:oasis:names:tc:xacml:1.0:function:base64Binary-subset |
 | urn:oasis:names:tc:acal:1.0:function:base64Binary-set-equals | M | urn:oasis:names:tc:xacml:1.0:function:base64Binary-set-equals |
