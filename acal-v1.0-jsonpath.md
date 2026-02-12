@@ -128,7 +128,7 @@ Note this command generates a Table of Contents (TOC) in HTML which is located a
 For PDF output (file `/tmp/acal-v1.0-jsonpath.pdf`), the command line is the following (different `-t` and `-H` arguments):
 
 ```console
-$ pandoc -f gfm+definition_lists -t pdf -c styles/markdown-styles-v1.7.3a.css -H custom_latex_header_for_pandoc_pdf_output.tex -s -L pandoc/diagram.lua --defaults pandoc/defaults.yaml --metadata title="ACAL v1.0 JSONPath Profile Version 1.0" --embed-resources -o /tmp/acal-v1.0-jsonpath.pdf acal-v1.0-jsonpath.md 
+$ pandoc -f gfm+definition_lists -t pdf -c styles/markdown-styles-v1.7.3a.css -H pandoc/custom_latex_header_for_pandoc_pdf_output.tex -s -L pandoc/diagram.lua --defaults pandoc/defaults.yaml --metadata title="ACAL v1.0 JSONPath Profile Version 1.0" --embed-resources -o /tmp/acal-v1.0-jsonpath.pdf acal-v1.0-jsonpath.md 
 ```
 
 ---
