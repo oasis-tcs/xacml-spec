@@ -7377,9 +7377,10 @@ ACAL 1.0 is a successor to XACML 3.0. ACAL 1.0 differs from XACML 3.0 in the fol
 
 Latest revision history can be obtained from [OASIS XACML TC's github repository](https://github.com/oasis-tcs/xacml-spec/commits/main/acal-v1.0.md).
 
+<!--
 - \< Date in yyyy-mm-dd format \>, \< Revision number \>  
 - \< Date in yyyy-mm-dd format \>, \< Revision number \>
-
+-->
 
 ---
 
