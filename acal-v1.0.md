@@ -1279,25 +1279,244 @@ When a PDP evaluates a policy containing notice expressions, it evaluates the no
 
 # 6 Examples (non-normative)
 
-This section contains two examples of the use of ACAL for illustrative purposes. The first example is a relatively simple one to illustrate the use of target, context, matching functions and subject attributes. The second example additionally illustrates the use of the combining algorithm, conditions and notices.
-
-<!-- TODO: Steven. No XPath here. All XPath-based examples go to the XPath Profile. -->
+This section contains two examples of the use of ACAL for illustrative purposes. The first example is a relatively simple one to illustrate the use of rules, conditions, matching functions and subject attributes. The second example additionally illustrates the use of the combining algorithm and notices.
 
 ## 6.1 Example One
 
-_To be provided._
-
 ### 6.1.1 Example Policy
 
-_To be provided._
+Assume that a corporation named Medi Corp (identified by its domain name: med.example.com) has an access control policy that states, in English:
 
-### 6.1.2 Example Request Context
+: _Any user with an e-mail name in the `med.example.com` domain is allowed to perform any action on any resource._
 
-_To be provided._
+The following XACML policy, respectively in XML and JSON, contains a rule instance expressing this access control policy (the numbers in square brackets on the left-hand side are for referencing purposes and are not part of the policy in either representation):
 
-### 6.1.3 Example Response Context
+```
+[01] <?xml version="1.0" encoding="UTF-8"?>
+[02] <Policy
+[03]   xmlns="urn:oasis:names:tc:xacml:4.0:core:schema"
+[04]   PolicyId="urn:oasis:names:tc:acal:3.0:example:SimplePolicy1"
+[05]   Version="1.0"
+[06]   CombiningAlgId="deny-overrides">
+[07]   <ShortIdSetReference>urn:oasis:names:tc:acal:1.0:core:identifiers</ShortIdSetReference>
+[08]   <Description>Medi Corp access control policy.</Description>
+[10]   <Rule
+[11]     Id="Rule1"
+[12]     Effect="Permit">
+[13]     <Description>Any subject with an e-mail name in the med.example.com domain can perform any action on any resource.</Description>
+[14]     <Condition>
+[15]       <Apply
+[16]         FunctionId="any-of">
+[18]         <Function Id="rfc822Name-match"/>
+[22]         <AttributeDesignator
+[23]           Category="access-subject"
+[24]           AttributeId="subject-id"
+[25]           DataType="rfc822Name"/>
+[28]         <Value DataType="string">med.example.com</Value>
+[33]       </Apply>
+[34]     </Condition>
+[35]   </Rule>
+[37] </Policy>
+```
 
-_To be provided._
+```
+[02] {
+[04]   "PolicyId":"urn:oasis:names:tc:xacml:3.0:example:SimplePolicy1",
+[05]   "Version":"1.0",
+[06]   "CombiningAlgId":"deny-overrides".
+[07]   "ShortIdSetReference":["urn:oasis:names:tc:acal:1.0:core:identifiers"],
+[08]   "Description":"Medi Corp access control policy.",
+[09]   "CombinerInput":[{
+[10]     "Rule":{
+[11]       "Id":"Rule1",
+[12]       "Effect":"Permit",
+[13]       "Description":"Any subject with an e-mail name in the med.example.com domain can perform any action on any resource.",
+[14]       "Condition":{
+[15]         "Apply":{
+[16]           "FunctionId":"any-of",
+[17]           "Expression":[{
+[18]             "Function":{
+[19]               "Id":"rfc822Name-match"
+[20]             }
+[21]           },{
+[22]             "AttributeDesignator":{
+[23]               "Category":"access-subject",
+[24]               "AttributeId":"subject-id",
+[25]               "DataType":"rfc822Name"
+[26]             }
+[27]           },{
+[28]             "Value":{
+[29]               "DataType":"string",
+[30]               "Value":"med.example.com"
+[31]             }
+[32]           }]
+[33]         }
+[34]       }
+[35]     }
+[36]   }]
+[37] }
+```
+
+[01] A standard XML document tag indicating which version of XML is being used and what the character encoding is.
+
+[02] The beginning of the ACAL Policy.
+
+[03] An XML namespace declaration.
+
+[04] An identifier for this policy. Different policy instances with the same identifier must have different version numbers.
+
+[05] The version of this instance of the policy. The combination of identifier and version has to be unique for a given policy instance so that there is no ambiguity if one policy is referenced from another policy.
+
+[06] The algorithm that will be used to combine the results of the various rules and policies that may be contained in the policy. The deny-overrides combining algorithm specified here says that, if any rule evaluates to `Deny`, then the policy must return `Deny`; otherwise, if any rule evaluates to `Permit`, then the policy must return `Permit`. The combining algorithm, which is fully described in Appendix Appendix C, also says what to do if an error were to occur when evaluating any rule, and what to do with rules that do not apply to a particular decision request.
+
+[07] A reference to a short identifier set imported into the policy. The names of the short identifiers in the set are available to use in this policy.
+
+[08] An optional text description of the policy.
+
+This policy does not specify a target so the policy is applicable to any decision request.
+
+[10] The beginning of the one and only rule in this simple policy.
+
+[11] An identifier for the rule. Each rule in a policy must have a distinct identifier.
+
+[12] The result the rule will produce if its condition is satisfied. Rules can have an effect of either `Permit` or `Deny`. In this case, if the rule is satisfied, it will evaluate to `Permit`, meaning that, as far as this one rule is concerned, the requested access should be permitted. If the rule's condition is not satisfied, then the rule returns a result of `NotApplicable`. If an error occurs when evaluating the condition, then the rule returns a result of `Indeterminate`. As mentioned above, the combining algorithm for the policy specifies how various rule results are combined into a single policy result.
+
+[13] An optional text description of the rule.
+
+[14] - [34] The condition of the rule. The condition determines the decision requests to which this rule applies.
+
+[15] - [33] The expression that defines the condition to be satisfied, in this case a function is applied.
+
+[16]  The `FunctionId` property specifies the function to be applied. In this case, the function is nominated with the short identifier name `any-of`, which evaluates to `urn:oasis:names:tc:acal:1.0:function:any-of` using the imported short identifier set. This function compares an attribute value to each of the attribute values in a bag according to a matching function that is specified in the first argument. The bag of values can be either the second or third argument. In this case it is the second argument. The function evaluates to `true` if any value in the bag matches the third argument according to the matching function.
+
+[18] - [20] The first argument: the matching function. The `Id` property specifies that the matching function is `urn:oasis:names:tc:acal:1.0:function:rfc822Name-match` using the short identifier name `rfc822Name-match`. This function returns `true` if an email address as its first argument belongs to a domain nominated by its second argument.
+
+[22] - [26] The second argument: the bag of values. It is an attribute designator that selects a bag of `urn:oasis:names:tc:acal:1.0:data-type:rfc822Name` values from the `urn:oasis:names:tc:acal:1.0:subject:subject-id` (short identifier name `subject-id`) attribute in the `urn:oasis:names:tc:acal:1.0:subject-category:access-subject` category.
+
+[28] - [31] The third argument: an attribute value. It is the email address domain to be matched, specifically, the character string `med.example.com`. The `DataType` property indicates that the data type of the value is `urn:oasis:names:tc:acal:1.0:data-type:string` using the short identifier name `string`.
+
+[35] The end of the rule.
+
+[37] The end of the policy. As mentioned above, this policy has only one rule, but more complex policies may have any number of rules.
+
+### 6.1.2 Example Decision Request
+
+Let's examine a hypothetical decision request that might be submitted to a PDP that executes the policy above. In English, the access request that generates the decision request may be stated as follows:
+
+: Bart Simpson, with e-mail name "bs@simpsons.com", wants to read his medical record at Medi Corp.
+
+The following request, respectively in XML and JSON, expresses this decision request (the numbers in square brackets on the left-hand side are for referencing purposes and are not part of the request in either representation):
+
+```
+[01] <?xml version="1.0" encoding="UTF-8"?>
+[02] <Request xmlns="urn:oasis:names:tc:xacml:4.0:core:schema"
+[03]   <ShortIdSetReference>urn:oasis:names:tc:acal:1.0:core:identifiers</ShortIdSetReference>
+[04]   <RequestEntity
+[05]     Category="access-subject">
+[06]     <RequestAttribute
+[07]       AttributeId="subject-id">
+[08]       <Value DataType="rfc822Name">bs@simpsons.com</Value>
+[12]     </RequestAttribute>
+[13]   </RequestEntity>
+[14]   <RequestEntity
+[15]     Category="resource">
+[16]     <RequestAttribute
+[17]       AttributeId="resource-id">
+[18]       <Value DataType="anyURI">file://example/med/record/patient/BartSimpson</Value>
+[22]     </RequestAttribute>
+[23]   </RequestEntity>
+[24]   <RequestEntity
+[25]     Category="action">
+[26]     <RequestAttribute
+[27]       AttributeId="action-id">
+[28]       <Value DataType="string">read</Value>
+[32]     </RequestAttribute>
+[33]   </RequestEntity>
+[34] </Request>
+```
+
+```
+[02] {
+[03]   "ShortIdSetReference":["urn:oasis:names:tc:acal:1.0:core:identifiers"],
+[04]   "RequestEntity":[{
+[05]     "Category":"access-subject",
+[06]     "RequestAttribute":[{
+[07]       "AttributeId":"subject-id",
+[08]       "Value":[{
+[09]         "DataType":"rfc822Name",
+[10]         "Value":"bs@simpsons.com"
+[11]       }]
+[12]     }]
+[13]   },{
+[15]     "Category":"resource",
+[16]     "RequestAttribute":[{
+[17]       "AttributeId":"resource-id",
+[18]       "Value":[{
+[19]         "DataType":"anyURI",
+[20]         "Value":"file://example/med/record/patient/BartSimpson"
+[21]       }]
+[22]     }]
+[23]   },{
+[25]     "Category":"action",
+[26]     "RequestAttribute":[{
+[27]       "AttributeId":"action-id",
+[28]       "Value":[{
+[29]         "DataType":"string",
+[30]         "Value":"read"
+[31]       }]
+[32]     }]
+[33]   }
+[34] }
+```
+
+[01] A standard XML document tag.
+
+[03] A reference to a short identifier set imported into the request. The names of the short identifiers in the set are available to use in this request. This short identifier set is defined by ACAL.
+
+[04] - [33] The attributes describing the request separated into three categories.
+
+[04] - [13] The first category of attributes.
+
+[05] The `Category` property nominates the category using the short identifier name `access-subject`, which evaluates to `urn:oasis:names:tc:acal:1.0:subject-category:access-subject` using the imported short identifier set. The access subject category contains attributes of the entity making the access request. This category has only one attribute: the subject's identity, expressed as an e-mail name, is `bs@simpsons.com`.
+
+[14] - [23] The second category of attributes is identified as `urn:oasis:names:tc:acal:1.0:attribute-category:resource` using the short identifier name `resource`. The resource category contains attributes of the resource to which access is being requested. This category has only one attribute: Bart Simpson's medical record, identified by its file URI, which is `file://medico/record/patient/BartSimpson`.
+
+[24] - [33] The third category of attributes is identified as `urn:oasis:names:tc:acal:1.0:attribute-category:action` using the short identifier name `action`. The action category contains attributes that describe the action that the subject wishes to take on the resource. In this case the action is `read`.
+
+[34] The end of the request.
+
+A more complex decision request may have contained some attributes not associated with the subject, the resource or the action. Environment would be an example of such an attribute category. These would have been placed in additional `RequestEntity` objects. Examples of such attributes are attributes describing the environment or some application specific category of attributes.
+
+The PDP processing this decision request locates the policy in its policy repository. It compares the attributes in the request with the policy target. Since the example policy's target is empty, the policy is applicable to this request.
+
+The PDP now compares the attributes in the request with the condition of the one rule in this policy. The requesting `subject-id` attribute does not match `med.example.com`.
+
+### 6.1.3 Example Response
+
+As a result of evaluating the policy, there is no rule in this policy that returns a "Permit" result for this request. The combining algorithm for the policy specifies that, in this case, a result of "NotApplicable" should be returned. The response looks as follows, respectively in XML and JSON:
+
+```
+[01] <?xml version="1.0" encoding="UTF-8"?>
+[02] <Response xmlns="urn:oasis:names:tc:xacml:4.0:core:schema">
+[03]   <Result Decision="NotApplicable"/>
+[06] </Response>
+```
+
+```
+[02] {
+[03]   "Result":[{
+[04]     "Decision":"NotApplicable"
+[05]   }]
+[06] }
+```
+
+[01] A standard XML document tag.
+
+[02] The beginning of the response.
+
+[03] - [05] The `Result` property contains the result of evaluating the decision request against the policy. In this case, the decision is `NotApplicable`. Therefore, a deny-biased PEP will deny access. A policy can return `Permit`, `Deny`, `NotApplicable` or `Indeterminate`.
+
+[06] The end of the response.
 
 ## 6.2 Example Two
 
@@ -1305,7 +1524,7 @@ _To be provided._
 
 _To be provided._
 
-### 6.2.2 Example Request Context
+### 6.2.2 Example Decision Request
 
 _To be provided._
 
@@ -1348,6 +1567,10 @@ The following short-identifier set, in both the XML and JSON representations, de
   <!-- Attributes -->
   <ShortId Name="patient-number" Value="urn:oasis:names:tc:acal:1.0:example:attribute:patient-number"/>
   <ShortId Name="collection" Value="urn:oasis:names:tc:acal:1.0:example:attribute:collection"/>
+  <ShortId Name="patient-date-of-birth" Value="urn:oasis:names:tc:acal:1.0:example:attribute:patient-date-of-birth"/>
+  <ShortId Name="parent-guardian-id" Value="urn:oasis:names:tc:acal:1.0:example:attribute:parent-guardian-id"/>
+  <ShortId Name="physician-id" Value="urn:oasis:names:tc:acal:1.0:example:attribute:physician-id"/>
+  <ShortId Name="role" Value="urn:oasis:names:tc:acal:1.0:example:attribute:role"/>
 
 </ShortIdSet>
 ```
@@ -1358,7 +1581,11 @@ The following short-identifier set, in both the XML and JSON representations, de
   "ShortIdSetReference":["urn:oasis:names:tc:acal:1.0:core:identifiers"],
   "ShortId":[
     { "Name":"patient-number", "Value":"urn:oasis:names:tc:acal:1.0:example:attribute:patient-number" },
-    { "Name":"collection", "Value":"urn:oasis:names:tc:acal:1.0:example:attribute:collection" }
+    { "Name":"collection", "Value":"urn:oasis:names:tc:acal:1.0:example:attribute:collection" },
+	{ "Name":"patient-date-of-birth", "Value":"urn:oasis:names:tc:acal:1.0:example:attribute:patient-date-of-birth" },
+    { "Name":"parent-guardian-id", "Value":"urn:oasis:names:tc:acal:1.0:example:attribute:parent-guardian-id" },
+    { "Name":"physician-id", "Value":"urn:oasis:names:tc:acal:1.0:example:attribute:physician-id" },
+    { "Name":"role", "Value":"urn:oasis:names:tc:acal:1.0:example:attribute:role" }
   ]
 }
 ```
@@ -1521,23 +1748,23 @@ Rule 1 illustrates a policy with a simple rule containing a condition. It also i
 
 [08] - [38] A variable definition. It defines an expression that evaluates the truth of the statement: the patient-number subject attribute is equal to the patient-number attribute in the resource.
 
-[11] - [12] The `FunctionId` component names the function to be used for comparison. In this case, the function is nominated with the short identifier name `string-equal`, which evaluates to `urn:oasis:names:tc:acal:1.0:function:string-equal` using the imported short identifier set. This function takes two arguments of type `urn:oasis:names:tc:acal:1.0:data-type:string`.
+[11] - [12] The `FunctionId` property names the function to be used for comparison. In this case, the function is nominated with the short identifier name `string-equal`, which evaluates to `urn:oasis:names:tc:acal:1.0:function:string-equal` using the imported short identifier set. This function takes two arguments of type `urn:oasis:names:tc:acal:1.0:data-type:string`.
 
 [17] - [21] An attribute designator that selects a bag of values for the patient-number subject attribute in the request context.
 
-[18] The `Category` component names the category from which the desired attribute will be obtained. In this case, the category is nominated with the short identifier name `access-subject`, which evaluates to `urn:oasis:names:tc:acal:1.0:subject-category:access-subject` using the imported short identifier set.
+[18] The `Category` property names the category from which the desired attribute will be obtained. In this case, the category is nominated with the short identifier name `access-subject`, which evaluates to `urn:oasis:names:tc:acal:1.0:subject-category:access-subject` using the imported short identifier set.
 
-[19] The `AttributeId` component nominates the patient-number attribute with the short identifier name `patient-number`, which evaluates to `urn:oasis:names:tc:acal:1.0:example:attribute:patient-number` using the imported short identifier set.
+[19] The `AttributeId` property nominates the patient-number attribute with the short identifier name `patient-number`, which evaluates to `urn:oasis:names:tc:acal:1.0:example:attribute:patient-number` using the imported short identifier set.
 
-[20] The `DataType` component specifies the data type of the attribute. In this case, the data type is nominated with the short identifier name `string`, which evaluates to `urn:oasis:names:tc:acal:1.0:data-type:string` using the imported short identifier set.
+[20] The `DataType` property specifies the data type of the attribute. In this case, the data type is nominated with the short identifier name `string`, which evaluates to `urn:oasis:names:tc:acal:1.0:data-type:string` using the imported short identifier set.
 
-[14] - [15] The attribute designator returns a bag of attribute values but the `urn:oasis:names:tc:acal:1.0:function:string-equal` function takes arguments that are single attribute values. The `FunctionId` component here names a function to convert the bag of values to a single value. The function is nominated with the short identifier name `string-one-and-only`, which evaluates to `urn:oasis:names:tc:acal:1.0:function:string-one-and-only` using the imported short identifier set. This function generates an `Indeterminate` result if its argument is not a bag with exactly one value.
+[14] - [15] The attribute designator returns a bag of attribute values but the `urn:oasis:names:tc:acal:1.0:function:string-equal` function takes arguments that are single attribute values. The `FunctionId` property here names a function to convert the bag of values to a single value. The function is nominated with the short identifier name `string-one-and-only`, which evaluates to `urn:oasis:names:tc:acal:1.0:function:string-one-and-only` using the imported short identifier set. This function generates an `Indeterminate` result if its argument is not a bag with exactly one value.
 
 [28] - [32] An attribute designator that selects a bag of values for the patient-number resource attribute in the request context. This attribute designator differs from the previous one in that it selects the attribute from the resource category, `urn:oasis:names:tc:acal:1.0:attribute-category:resource`, nominated with the short identifier name `resource`.
 
 [25] - [26] The result of the second attribute designator must also be converted to a single value for comparison.
 
-[41] - [43] The beginning of a rule definition. The `Id` component assigns a string identifier for the rule. The `Effect` component specifies the value the rule emits when it evaluates to `true`.
+[41] - [43] The beginning of a rule definition. The `Id` property assigns a string identifier for the rule. The `Effect` property specifies the value the rule emits when it evaluates to `true`.
 
 [44] A free-form description of the rule.
 
@@ -1545,15 +1772,15 @@ Rule 1 illustrates a policy with a simple rule containing a condition. It also i
 
 [46] - [93] The expression for the condition.
 
-[46] - [47] The expression for the condition is a conjunction of three terms. The `FunctionId` component specifies a conjunction using the `urn:oasis:names:tc:acal:1.0:function:and` function nominated with the short identifier name `and`.
+[46] - [47] The expression for the condition is a conjunction of three terms. The `FunctionId` property specifies a conjunction using the `urn:oasis:names:tc:acal:1.0:function:and` function nominated with the short identifier name `and`.
 
 [49] - [57] The first term is a function.
 
-[49] - [50] The `FunctionId` component specifies the `urn:oasis:names:tc:acal:1.0:function:any-of` function using the short identifier name `any-of`. This function compares an attribute value to each of the attribute values in a bag according to a matching function that is specified in the first argument. The bag of values can be either the second or third argument. In this case it is the third argument. The function evaluates to `true` if any value in the bag matches the second argument according to the matching function.
+[49] - [50] The `FunctionId` property specifies the `urn:oasis:names:tc:acal:1.0:function:any-of` function using the short identifier name `any-of`. This function compares an attribute value to each of the attribute values in a bag according to a matching function that is specified in the first argument. The bag of values can be either the second or third argument. In this case it is the third argument. The function evaluates to `true` if any value in the bag matches the second argument according to the matching function.
 
-[52] - [54] The first argument: the matching function. The `Id` component specifies that the matching function is `urn:oasis:names:tc:acal:1.0:function:anyURI-equal` using the short identifier name `anyURI-equal`.
+[52] - [54] The first argument: the matching function. The `Id` property specifies that the matching function is `urn:oasis:names:tc:acal:1.0:function:anyURI-equal` using the short identifier name `anyURI-equal`.
 
-[56] - [59] The second argument: an attribute value. It is a literal URI to be matched, specifically `http://www.med.example.com/springfield-hospital`. The `DataType` component indicates that the data type of the value is `urn:oasis:names:tc:acal:1.0:data-type:anyURI` using the short identifier name `anyURI`.
+[56] - [59] The second argument: an attribute value. It is a literal URI to be matched, specifically `http://www.med.example.com/springfield-hospital`. The `DataType` property indicates that the data type of the value is `urn:oasis:names:tc:acal:1.0:data-type:anyURI` using the short identifier name `anyURI`.
 
 [61] - [65] The third argument: the bag of values. It is an attribute designator that selects a bag of `urn:oasis:names:tc:acal:1.0:data-type:anyURI` values from the `urn:oasis:names:tc:acal:1.0:example:attribute:collection` (short identifier name `collection`) attribute in the `urn:oasis:names:tc:acal:1.0:attribute-category:resource` category.
 
