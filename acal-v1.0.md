@@ -1465,7 +1465,7 @@ The following request, respectively in XML and JSON, expresses this decision req
 [30]         "Value":"read"
 [31]       }]
 [32]     }]
-[33]   }
+[33]   }]
 [34] }
 ```
 
@@ -1520,15 +1520,7 @@ As a result of evaluating the policy, there is no rule in this policy that retur
 
 ## 6.2 Example Two
 
-### 6.2.1 Example Medical Record Instance
-
-_To be provided._
-
-### 6.2.2 Example Decision Request
-
-_To be provided._
-
-### 6.2.3 Example Plain-Language Rules
+### 6.2.1 Example Plain-Language Rules
 
 The following plain-language rules are to be enforced.
 
@@ -1550,7 +1542,7 @@ Rule 4:
 
 These rules may be written by different PAPs operating independently, or by a single PAP.
 
-### 6.2.4 Example Short Identifier Set
+### 6.2.2 Example Short Identifier Set
 
 Policy writers are able to define sets of short identifiers to provide simple alias names to use in place of URIs. A set with the identifier `urn:oasis:names:tc:acal:1.0:core:identifiers` is defined by ACAL for the various identifiers assigned by this specification. However, a deployment will usually have need for additional identifiers, especially for locally-defined attributes, so it is usually desirable to define a set of additional short identifiers to use in the deployment, that may import the first set.
 
@@ -1571,6 +1563,7 @@ The following short-identifier set, in both the XML and JSON representations, de
   <ShortId Name="parent-guardian-id" Value="urn:oasis:names:tc:acal:1.0:example:attribute:parent-guardian-id"/>
   <ShortId Name="physician-id" Value="urn:oasis:names:tc:acal:1.0:example:attribute:physician-id"/>
   <ShortId Name="role" Value="urn:oasis:names:tc:acal:1.0:example:attribute:role"/>
+  <ShortId Name="patient-contact" Value="urn:oasis:names:tc:acal:1.0:example:attribute:patient-contact"/>
 
 </ShortIdSet>
 ```
@@ -1585,14 +1578,173 @@ The following short-identifier set, in both the XML and JSON representations, de
 	{ "Name":"patient-date-of-birth", "Value":"urn:oasis:names:tc:acal:1.0:example:attribute:patient-date-of-birth" },
     { "Name":"parent-guardian-id", "Value":"urn:oasis:names:tc:acal:1.0:example:attribute:parent-guardian-id" },
     { "Name":"physician-id", "Value":"urn:oasis:names:tc:acal:1.0:example:attribute:physician-id" },
-    { "Name":"role", "Value":"urn:oasis:names:tc:acal:1.0:example:attribute:role" }
+    { "Name":"role", "Value":"urn:oasis:names:tc:acal:1.0:example:attribute:role" },
+	{ "Name":"patient-contact", "Value":"urn:oasis:names:tc:acal:1.0:example:attribute:patient-contact" }
   ]
 }
 ```
 
-### 6.2.5 Example ACAL Rule Instances
+### 6.2.3 Example Decision Request
 
-#### 6.2.5.1 Rule 1
+The following example illustrates a decision request to which the example rules may be applicable. It represents a request by the physician Julius Hibbert, in both the XML and JSON representations, to read the patient record of Bartholomew Simpson:
+
+```
+[01] <?xml version="1.0" encoding="UTF-8"?>
+[02] <Request xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17">
+[03]   <ShortIdSetReference>urn:oasis:names:tc:acal:1.0:example:identifiers</ShortIdSetReference>
+[04]   <RequestEntity
+[05]     Category="access-subject">
+[06]     <RequestAttribute
+[07]       AttributeId="subject-id"
+[08]       Issuer="med.example.com">
+[09]       <Value DataType="rfc822Name">Julius.Hibbert@med.example.com</Value>
+[13]     </RequestAttribute>
+[14]     <RequestAttribute
+[15]       AttributeId="role"
+[16]       Issuer="med.example.com">
+[17]       <Value DataType="string">physician</Value>
+[21]     </RequestAttribute>
+[22]     <RequestAttribute
+[23]       AttributeId="physician-id"
+[24]       Issuer="med.example.com">
+[25]       <Value DataType="string">jh1234</Value>
+[29]     </RequestAttribute>
+[30]   </RequestEntity>
+[31]   <RequestEntity
+[32]     Category="resource">
+[33]     <RequestAttribute
+[34]       AttributeId="patient-date-of-birth"
+[35]       Issuer="med.example.com">
+[36]       <Value DataType="date">1992-03-21</Value>
+[40]     </RequestAttribute>
+[41]     <RequestAttribute
+[42]       AttributeId="patient-number"
+[43]       Issuer="med.example.com">
+[44]       <Value DataType="integer">555555</Value>
+[48]     </RequestAttribute>
+[49]     <RequestAttribute
+[50]       AttributeId="patient-contact"
+[51]       Issuer="med.example.com">
+[52]       <Value DataType="rfc822Name">b.simpson@example.com</Value>
+[56]     </RequestAttribute>
+[57]   </RequestEntity>
+[58]   <RequestEntity
+[59]     Category="action">
+[60]     <RequestAttribute
+[61]       AttributeId="action-id">
+[62]       <Value DataType="string">read</Value>
+[66]     </RequestAttribute>
+[67]   </RequestEntity>
+[68]   <RequestEntity
+[69]     Category="environment">
+[70]     <RequestAttribute
+[71]       AttributeId="current-date">
+[72]       <Value DataType="date">2010-01-11</Value>
+[76]     </RequestAttribute>
+[77]   </RequestEntity>
+[78] </Request>
+```
+
+```
+[02] {
+[03]   "ShortIdSetReference":["urn:oasis:names:tc:acal:1.0:example:identifiers"],
+[04]   "RequestEntity":[{
+[05]     "Category":"access-subject",
+[06]     "RequestAttribute":[{
+[07]       "AttributeId":"subject-id",
+[08]       "Issuer":"med.example.com",
+[09]       "Value":[{
+[10]         "DataType":"rfc822Name",
+[11]         "Value":"Julius.Hibbert@med.example.com"
+[12]       }]
+[13]     },{
+[15]       "AttributeId":"role",
+[16]       "Issuer":"med.example.com",
+[17]       "Value":[{
+[18]         "DataType":"string",
+[19]         "Value":"physician"
+[20]       }]
+[21]     },{
+[23]       "AttributeId":"physician-id",
+[24]       "Issuer":"med.example.com",
+[25]       "Value":[{
+[26]         "DataType":"string",
+[27]         "Value":"jh1234"
+[28]       }]
+[29]     }]
+[30]   },{
+[32]     "Category":"resource",
+[33]     "RequestAttribute":[{
+[34]       "AttributeId":"patient-date-of-birth",
+[35]       "Issuer":"med.example.com",
+[36]       "Value":[{
+[37]         "DataType":"date",
+[38]         "Value":"1992-03-21"
+[39]       }]
+[40]     },{
+[42]       "AttributeId":"patient-number",
+[43]       "Issuer":"med.example.com",
+[44]       "Value":[{
+[45]         "DataType":"integer",
+[46]         "Value":555555
+[47]       }]
+[48]     },{
+[50]       "AttributeId":"patient-contact",
+[51]       "Issuer":"med.example.com",
+[52]       "Value":[{
+[53]         "DataType":"rfc822Name",
+[54]         "Value":"b.simpson@example.com"
+[55]       }]
+[56]     }]
+[57]   },{
+[59]     "Category":"action",
+[60]     "RequestAttribute":[{
+[61]       "AttributeId":"action-id",
+[62]       "Value":[{
+[63]         "DataType":"string",
+[64]         "Value":"read"
+[65]       }]
+[66]     }]
+[67]   },{
+[69]     "Category":"environment",
+[70]     "RequestAttribute":[{
+[71]       "AttributeId":"current-date",
+[72]       "Value":[{
+[73]         "DataType":"date",
+[74]         "Value":"2010-01-11"
+[75]       }]
+[76]     }]
+[77]   }]
+[78] }
+```
+
+[01] A standard XML document tag.
+
+[03] A reference to a short identifier set imported into the request. The names of the short identifiers in the set are available to use in this request. The referenced short identifier set is customized for this example.
+
+[04] - [30] Access subject attributes are placed in the `urn:oasis:names:tc:acal:1.0:subject-category:access-subject` attribute category of the decision request. Each attribute consists of the attribute meta-data and the attribute value.
+
+[06] - [13] The subject's `urn:oasis:names:tc:acal:1.0:subject:subject-id` attribute denoting the identity for which the request was issued.
+
+[14] - [21] The subject's `urn:oasis:names:tc:acal:1.0:example:attribute:role` attribute.
+
+[22] - [29] The subject's `urn:oasis:names:tc:acal:1.0:example:attribute:physician-id` attribute.
+
+[31] - [57] Resource attributes representing the patient's medical record are placed in the `urn:oasis:names:tc:acal:1.0:attribute-category:resource` attribute category of the decision request. Each attribute consists of attribute meta-data and an attribute value.
+
+[33] - [40] The patient's `urn:oasis:names:tc:acal:1.0:example:attribute:patient-date-of-birth` attribute.
+
+[41] - [48] The patient's `urn:oasis:names:tc:acal:1.0:example:attribute:patient-number` attribute.
+
+[49] - [57] The patient's `urn:oasis:names:tc:acal:1.0:example:attribute:patient-contact` attribute.
+
+[58] - [67] Action attributes are placed in the `urn:oasis:names:tc:acal:1.0:attribute-category:action` attribute category of the decision request.
+
+[60] - [66] The `urn:oasis:names:tc:acal:1.0:action:action-id` attribute indicates that the requested action is `read`.
+
+### 6.2.4 Example ACAL Rule Instances
+
+#### 6.2.4.1 Rule 1
 
 Rule 1 illustrates a policy with a simple rule containing a condition. It also illustrates the use of a variable definition to define an expression that may be used throughout the policy. The following ACAL policy, represented in XML and JSON, contains a rule instance expressing Rule 1 (the numbers in square brackets on the left-hand side are for referencing purposes and are not part of the policy in either representation):
 
@@ -1788,15 +1940,15 @@ Rule 1 illustrates a policy with a simple rule containing a condition. It also i
 
 [89] - [91] The third term is a reference to a variable definition defined elsewhere in the policy.
 
-#### 6.2.5.2 Rule 2
+#### 6.2.4.2 Rule 2
 
-#### 6.2.5.3 Rule 3
+#### 6.2.4.3 Rule 3
 
 _Note: this section is referenced._
 
-#### 6.2.5.4 Rule 4
+#### 6.2.4.4 Rule 4
 
-#### 6.2.5.5 Example Policy with Nested Policies
+#### 6.2.4.5 Example Policy with Nested Policies
 
 
 ---
