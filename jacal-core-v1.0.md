@@ -1480,7 +1480,7 @@ Latest revision history can be obtained from [OASIS XACML TC's github repository
 
 
 -------
-
+<!--
 # Appendix 3 OASIS Open Specification Template Instructions
 
 (This appendix does not form an integral part of this Specification and is informational.)
@@ -1649,7 +1649,7 @@ Under the heading of each Appendix the following text **MUST** be present:
 
 
 ### Sub-subsection
-
+-->
 
 <!-- The following centered line represents the end of the document -->  
 \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
