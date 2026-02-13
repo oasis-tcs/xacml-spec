@@ -10,7 +10,7 @@
 ## Committee Specification Draft 01
 
 
-## 15 January 2026
+## 17 February 2026
 
 
 ### This version
@@ -72,7 +72,7 @@ When referencing this document, the following citation format should be used:
 
 
 _ACAL v1.0 JSONPath Profile Version 1.0_.
-Edited by Steven Legg and Cyril Dangerville. 15 January 2026. OASIS Committee Specification Draft 01.
+Edited by Steven Legg and Cyril Dangerville. 17 February 2026. OASIS Committee Specification Draft 01.
 
 
 ### Related Work
@@ -604,7 +604,7 @@ The following documents are referenced in such a way that some or all of their c
 
 ######  [ACAL]
 
-Attribute-Centric Authorization Language (ACAL) Version 1.0. Edited by Steven Legg and Cyril Dangerville. 15 January 2026. OASIS Committee Specification Draft 01.
+Attribute-Centric Authorization Language (ACAL) Version 1.0. Edited by Steven Legg and Cyril Dangerville. 17 February 2026. OASIS Committee Specification Draft 01.
 
 
 ###### [CMF]
@@ -866,180 +866,12 @@ This is the first version of this profile.
 
 ## Revision History
 
+Latest revision history can be obtained from [OASIS XACML TC's github repository](https://github.com/oasis-tcs/xacml-spec/commits/main/acal-v1.0-jsonpath.md).
 
+<!--
 - \< Date in yyyy-mm-dd format \>, \< Revision number \>  
 - \< Date in yyyy-mm-dd format \>, \< Revision number \>
-
-
----
-
-# Appendix 3 OASIS Open Specification Template Instructions
-
-(This appendix does not form an integral part of this Specification and is informational.)
-
-
-## General Template Instructions
-
-
-**Template Instructions:** All template instructions are included within angle brackets and need to be deleted prior to publication. This includes these five pages.
-
-
-**Square Brackets**: Nearly all text within square brackets needs to be updated or replaced, except for any reference tokens that also use square brackets. For formats that support it, this text will be highlighted in yellow to make it easier to see.
-
-
-**Additional Versions**: The editors of the document **MUST** produce all additional desired or required formats (HTML, PDF, etc) before sending this for publication.
-
-
-**Names, Organizations, and Emails**: Individuals or companies, past or present, may request that their name and/or affiliation and/or email address be not included in any of the acknowledgments and or leadership positions. 
-
-
-## Formatting Instructions
-
-
-**Paragraph Spacing**: There **SHOULD** be a single empty line between paragraphs. In some cases, editors may add additional spacing to improve readability and the cosmetic look of the section, especially around figures, tables, and charts.
-
-
-**Quotes:** Straight "quotes" **SHOULD** be used, not “smart quotes” or curly quotes. This can be set as a persistent preference in most writing tools.
-
-
-**Document Date**: At the top of the document on the first page is a date, this date **MUST** be the date that the document was approved. 
-
-
-**Document Title and Subtitle:** The title of the document **SHOULD** be written in title case, meaning all words that have four or more letters **SHOULD** be capitalized.
-
-
-**Headings**: While various editors and formats support up to 6 levels of nested headers it is generally advised to structure the document to minimize the number of nested sections. A best practice is to try and keep nesting to no greater than 3 levels of headings. All headings **SHOULD** be written in title case, meaning all words that have four or more letters **SHOULD** be capitalized. 
-
-
-**Tables**: Text presented in tables **SHOULD** be no smaller in font size than the body copy text.
-
-
-## Extra Items Instructions
-
-
-All equations, listings, code snippets, figures (Fig. 1), tables (Table I), etc., need to be referenced in the text (preferably before their appearance).
-
-
-**Mathematical Syntax and Equations:** Editors **SHOULD** consider using simple text (with the Markdown Blockquotes feature designated by the following angle bracket \>) or images to create mathematical representations. All equations, listings, code snippets, figures (Fig. 1), tables (Table 1), etc., need to be referenced in the text (preferably before their appearance). 
-
-
-**Equations:** All equations **MUST** use the Markdown Blockquotes feature, **MUST** be numbered, **MAY** use a section number dot equation number (see example below) to track the equations within a particular section, and **SHOULD** be numbered consecutively where the number is in parentheses and appears after the formula. All symbols in the equation **SHOULD** be defined before the equation appears in the text. When referring to an equation or formula, use for example "Eq. 1.1".
-
-
-> y2 \= x3 \+ ax \+ b (Eq. 1.1)
-
-
-**Listings:** All algorithms and pseudo code **MUST** use the Markdown Fenced Code Blocks feature, **MUST** be numbered, **MAY** use a section number dot listing number (see example below) to track the listing within a particular section, **SHOULD** be numbered consecutively, and **SHOULD** include a short title forming a header. There **SHOULD** be a line above and below the header and a line at the bottom of the algorithm. Editors **SHOULD** use the markdown 
-
-
----
-
-
-**Listing 1.1** Sample Title  
----
-
-
-```
-currentMax ← A[0]  
-    for i ← 1 to n \-1 do  
-        if A[i] \> currentMax then  
-            currentMax ← A[i]  
-    { increment counter i }  
-    return currentMax  
-```
-
-
----
-
-
-**Code Snippets**: Actual code samples and snippets **MUST** be numbered, **MAY** use a section number followed by a dot which is then followed by a code sample number (see example below) to track the code samples within a particular section, **SHOULD** be numbered consecutively, and **SHOULD** include a short title forming a header. There **SHOULD** be a line above and below the header. A single header **MAY** be used for multiple code samples in a block, but in this case, each sample **SHOULD** individually be numbered as shown below. The code itself **SHOULD** use the Markdown Fenced Code Blocks feature and programming language designator to style the code snippet. Meaning that the first code line will start with three back tick characters (\`\`\`) followed by the language (e.g., json, yaml, cpp, go, etc) and the last line starts with three back tick characters (\`\`\`).
-
-
----
-
-
-**Code 1.1** Sample Title  
----
-
-
-*Some subheading (e.g., Example 1.1.1 \- Some example code)*  
-```json  
-{  
-  "Some key": "some value"  
-}  
-```
-
-
-*Some subheading (e.g., Example 1.1.2 \- Some other example code)*  
-```xml 
-<your xml> 
-```
-
-
-**Figures and Tables**: All figures **MUST** be numbered and **MAY** use a section number followed by a hyphen which is then followed by a figure number (see example below) to track the figures within a particular section. When referencing a figure or table please use the abbreviation "Fig." for figures and "Table" for tables. Tables **SHOULD** be numbered with Roman numerals.
-
-
-Figure 2-1  
-![FIG2-1](figure2-1.png)
-**Fig. 2-1.** This is a sample of a figure caption.
-
-
-Table I  
-This is a Sample of a Table Title
-
-
-|  Name  | \#1 | \#2 | \#3 | \#4 | \#5 |
-|:------:|:---:|:---:|:---:|:---:|:---:|
-| **AB** |  3  |  3  |  6  | 11  |  9  |
-| **BC** |  7  |  7  |  4  | 12  |  9  |
-| **CD** | 10  |  3  |  3  |  9  |  7  |
-| **DE** |  3  |  7  | 10  |  5  |  6  |
-| **DF** |  7  |  1  | 12  |  1  |  3  |
-| **ZZ** |  5  | 12  | 11  |  9  |  8  |
-
-
-**Table I:** This table contains information about x and y and z.
-
-
-## Other Instructions
-
-
-**References:** OASIS uses the IEEE Reference format for citations. However, unlike the IEEE Reference format the in-line tokens can be either named or a number; in either case they are enclosed in square braces. Editors **SHOULD** be consistent in the body of the document and use either named tokens "[RFC2119]" or numbered "[1]" tokens, but not both. Any named tokens that are used in the template front matter do not impact the decision about named or numbered in the body of the document. All other rules about in-line use and style **MUST** follow the IEEE Reference format found here: [https://journals.ieeeauthorcenter.ieee.org/wp-content/uploads/sites/7/IEEE\_Reference\_Guide.pdf](https://journals.ieeeauthorcenter.ieee.org/wp-content/uploads/sites/7/IEEE_Reference_Guide.pdf)
-
-
-**Definitions and Terms:** It is generally more consistent to refer to an existing official definition in other open standards or readily-available nonproprietary reference documents, rather than to redefine a term. It is a best practice to refer to the specific version or date of the source document for a definition, either explicitly or by a reference link to the specific version (not a ‘current version’ link). Normally, terms defined elsewhere will simply refer to the defining document. In certain cases, it may be desirable to quote the definition to allow for a stand-alone document. Before defining a new term, verify whether it has already been defined in an official document elsewhere such as in another OASIS Standard, the ITU terminology database ([https://www.itu.int/br\_tsb\_terms/\#/](https://www.itu.int/br_tsb_terms/#/)), ISO terms ([https://www.iso.org/obp/ui](https://www.iso.org/obp/ui)), IEEE/IEC electropedia ([https://www.electropedia.org/IEEE](https://www.electropedia.org/IEEE)), IETF, CEN/CENELEC, or NIST ([https://csrc.nist.gov/glossary](https://csrc.nist.gov/glossary)).
-
-
-**Annex vs Appendix:** An annex is considered normative, meaning that it **MUST** be included with the document and its contents form an integral part of the document. Whereas an Appendix is purely informational content and is not required to be included with the document.
-
-
-Under the heading of each Annex the following text **MUST** be present:  
-(This annex forms an integral part of this Specification.)
-
-
-Under the heading of each Appendix the following text **MUST** be present:  
-(This appendix does not form an integral part of this Specification and is informational.)
-
-
-- Annex A **MUST** be the License, Document Status and Notices information.  
-- Annex B **MUST** be the References information.  
-- Annex C+ can be whatever is needed  
-- Appendix 1 **MUST** be the Acknowledgments information  
-- Appendix 2 **MUST** be the Changes From Previous Version information  
-- Appendix 3+ can be whatever is needed
-
-
-# Appendix 4 Additional Appendix as Needed
-
-
-(This appendix does not form an integral part of this Specification and is informational.)
-
-
-## Subsection Title
-
-
-### Sub-subsection
-
+-->
 
 <!-- The following centered line represents the end of the document -->  
 \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_

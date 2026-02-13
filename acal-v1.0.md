@@ -7281,7 +7281,7 @@ The following individuals were members of this committee during the creation of 
 
 **XACML TC Members:**
 
-- Hal Lochhart, Individual
+- Hal Lockhart, Individual
 - Bill Parducci, Individual
 - Steven Legg, ViewDS Identity Solutions
 - Cyril Dangerville, THALES

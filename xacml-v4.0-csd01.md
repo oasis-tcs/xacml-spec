@@ -1240,9 +1240,9 @@ This section **SHOULD** include the leadership (chairs, sub committees chairs, s
 -->
 
 - Chairs
-  - Bill | Parducci, Individual
+  - Bill Parducci, Individual
 - Secretaries
-  - Bill | Parducci, Individual
+  - Bill Parducci, Individual
 - Editors
   - Steven Legg, ViewDS Identity Solutions
   - Cyril Dangerville, THALES
