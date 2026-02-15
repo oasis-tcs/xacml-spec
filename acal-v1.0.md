@@ -2015,7 +2015,7 @@ Rule 2 illustrates the use of a mathematical function, i.e., `urn:oasis:names:tc
 [004]   "PolicyId":"urn:oasis:names:tc:xacml:3.0:example:policyid:2",
 [005]   "Version":"1.0",
 [006]   "CombiningAlgId":"deny-overrides",
-[007]   "ShortIdSetReference":"urn:oasis:names:tc:acal:1.0:example:identifiers",
+[007]   "ShortIdSetReference":["urn:oasis:names:tc:acal:1.0:example:identifiers"],
 [008]   "VariableDefinition":[{
 [009]     "VariableId":"patient-under-16",
 [010]     "Expression":{
@@ -2155,7 +2155,7 @@ Rule 2 illustrates the use of a mathematical function, i.e., `urn:oasis:names:tc
 
 [055] - [120] The expression for the condition is the conjunction of four terms using the `urn:oasis:names:tc:acal:1.0:function:and` function.
 
-[058] - [072] The first term checks that the request is accessing a medical record belonging to the Springfield Hospital.
+[058] - [072] The first term checks that the request is accessing a medical record belonging to Springfield Hospital.
 
 [074] - [087] The second term is satisfied if the requested access is `read`.
 
@@ -2173,7 +2173,244 @@ Rule 2 illustrates the use of a mathematical function, i.e., `urn:oasis:names:tc
 
 #### 6.2.4.3 Rule 3
 
-_Note: this section is referenced._
+Rule 3 illustrates the use of a notice expression.
+
+```
+[001] <?xml version="1.0" encoding="UTF-8"?>
+[002] <Policy
+[003]   xmlns="urn:oasis:names:tc:xacml:4.0:core:schema"
+[004]   PolicyId="urn:oasis:names:tc:xacml:3.0:example:policyid:3"
+[005]   Version="1.0"
+[006]   CombiningAlgId="deny-overrides">
+[007]   <ShortIdSetReference>urn:oasis:names:tc:acal:1.0:example:identifiers</ShortIdSetReference>
+[008]   <Description>Policy for any medical record in the Springfield Hospital collection.</Description>
+[010]   <Rule Id="Rule3" Effect="Permit">
+[013]     <Description>A physician may write any medical element in a record for which he or she is the designated primary care physician, provided an email is sent to the patient.</Description>
+[014]     <Condition>
+[015]       <Apply FunctionId="and">
+[018]         <Apply FunctionId="string-is-in">
+[021]           <Value DataType="string">physician</Value>
+[026]           <AttributeDesignator
+[027]             Category="access-subject"
+[028]             AttributeId="role"
+[029]             DataType="string"/>
+[032]         </Apply>
+[034]         <Apply FunctionId="anyURI-is-in">
+[037]           <Value DataType="anyURI">http://www.med.example.com/springfield-hospital</Value>
+[042]           <AttributeDesignator
+[043]             Category="resource"
+[044]             AttributeId="collection"
+[045]             DataType="anyURI"/>
+[048]         </Apply>
+[050]         <Apply FunctionId="string-is-in">
+[053]           <Value DataType="string">write</Value>
+[058]           <AttributeDesignator
+[059]             Category="action"
+[060]             AttributeId="action-id"
+[061]             DataType="string"/>
+[064]         </Apply>
+[066]	      <Apply FunctionId="string-equal">
+[069]	        <Apply FunctionId="string-one-and-only">
+[072]	          <AttributeDesignator
+[073]	            Category="access-subject"
+[074]	            AttributeId="physician-id"
+[075]	            DataType="string"/>
+[078]	        </Apply>
+[080]	        <Apply FunctionId="string-one-and-only">
+[083]	          <AttributeDesignator
+[084]	            Category="resource"
+[085]	            AttributeId="primary-care-physician"
+[086]	            DataType="string"/>
+[089]	        </Apply>
+[091]	      </Apply>
+[093]	    </Apply>
+[094]	  </Condition>
+[095]   </Rule>
+[097]   <NoticeExpression
+[098]      IsObligation="true"
+[099]      Id="email"
+[100]      AppliesTo="Permit">
+[101]      <AttributeAssignmentExpression
+[102]        AttributeId="mailto">
+[104]        <AttributeDesignator
+[105]          Category="resource"
+[106]          AttributeId="patient-contact"
+[107]          DataType="rfc822Name"/>
+[110]      </AttributeAssignmentExpression>
+[111]      <AttributeAssignmentExpression
+[112]        AttributeId="text">
+[114]        <Value DataType="string">Your medical record has been accessed by: </Value>
+[119]      </AttributeAssignmentExpression>
+[120]      <AttributeAssignmentExpression
+[121]        AttributeId="text">
+[123]        <AttributeDesignator
+[124]          Category="access-subject"
+[125]          AttributeId="subject-id"
+[126]          DataType="string"/>
+[129]      </AttributeAssignmentExpression>
+[130]   </NoticeExpression>
+[131] </Policy>
+```
+
+```
+[002] {
+[004]   "PolicyId":"urn:oasis:names:tc:xacml:3.0:example:policyid:3",
+[005]   "Version":"1.0",
+[006]   "CombiningAlgId":"deny-overrides",
+[007]   "ShortIdSetReference":["urn:oasis:names:tc:acal:1.0:example:identifiers"],
+[008]   "Description":"Policy for any medical record in the Springfield Hospital collection.",
+[009]   "CombinerInput":[{
+[010]     "Rule":{
+[011]       "Id":"Rule3",
+[012]       "Effect":"Permit",
+[013]       "Description":"A physician may write any medical element in a record for which he or she is the designated primary care physician, provided an email is sent to the patient.",
+[014]       "Condition":{
+[015]         "Apply":{
+[016]           "FunctionId":"and",
+[017]           "Expression":[{
+[018]             "Apply":{
+[019]               "FunctionId":"string-is-in",
+[020]               "Expression":[{
+[021]                 "Value":{
+[022]                   "DataType":"string",
+[023]                   "Value":"physician"
+[024]                 }
+[025]               },{
+[026]                 "AttributeDesignator":{
+[027]                   "Category":"access-subject",
+[028]                   "AttributeId":"role",
+[029]                   "DataType":"string"
+[030]                 }
+[031]               }]
+[032]             }
+[033]           },{
+[034]             "Apply":{
+[035]               "FunctionId":"anyURI-is-in",
+[036]               "Expression":[{
+[037]                 "Value":{
+[038]                   "DataType":"anyURI",
+[039]                   "Value":"http://www.med.example.com/springfield-hospital"
+[040]                 }
+[041]               },{
+[042]                 "AttributeDesignator":{
+[043]                   "Category":"resource",
+[044]                   "AttributeId":"collection",
+[045]                   "DataType="anyURI"
+[046]                 }
+[047]               }]
+[048]             }
+[049]           },{
+[050]             "Apply":{
+[051]               "FunctionId":"string-is-in",
+[052]               "Expression":[{
+[053]                 "Value":{
+[054]                   "DataType":"string",
+[055]                   "Value":"write"
+[056]                 }
+[057]               },{
+[058]                 "AttributeDesignator":{
+[059]                   "Category":"action",
+[060]                   "AttributeId":"action-id",
+[061]                   "DataType":"string"
+[062]                 }
+[063]               }]
+[064]             }
+[065]           },{
+[066]	          "Apply:{
+[067]               "FunctionId":"string-equal",
+[068]               "Expression":[{
+[069]	              "Apply":{
+[070]                   "FunctionId":"string-one-and-only",
+[071]                   "Expression":[{
+[072]	                  "AttributeDesignator":{
+[073]	                    "Category":"access-subject",
+[074]	                    "AttributeId":"physician-id",
+[075]	                    "DataType":"string"
+[076]                     }
+[077]                   }]
+[078]	              }
+[079]               },{
+[080]	              "Apply":{
+[081]	                "FunctionId":"string-one-and-only",
+[082]                   "Expression":[{
+[083]	                  "AttributeDesignator":{
+[084]	                    "Category":"resource",
+[085]	                    "AttributeId":"primary-care-physician",
+[086]	                    "DataType":"string"
+[087]                     }
+[088]                   }]
+[089]	              }
+[090]               }]
+[091]	          }
+[092]           }]
+[093]         }
+[094]	    }
+[095]     }
+[096]   }],
+[097]   "NoticeExpression":[{
+[098]      "IsObligation":true,
+[099]      "Id":"email",
+[100]      "AppliesTo":"Permit",
+[101]      "AttributeAssignmentExpression":[{
+[102]        "AttributeId":"mailto",
+[103]        "Expression":{
+[104]          "AttributeDesignator":{
+[105]            "Category":"resource",
+[106]            "AttributeId":"patient-contact",
+[107]            "DataType":"rfc822Name"
+[108]          }
+[109]        }
+[110]      },{
+[112]        "AttributeId":"text",
+[113]        "Expression":{
+[114]          "Value":{
+[115]            "DataType":"string",
+[116]            "Value":"Your medical record has been accessed by: "
+[117]          }
+[118]        }
+[119]      },{
+[121]        "AttributeId":"text",
+[122]        "Expression":{
+[123]          "AttributeDesignator":{
+[124]            "Category":"access-subject"
+[125]            "AttributeId":"subject-id"
+[126]            "DataType":"string"
+[127]          }
+[128]        }
+[129]      }]
+[130]   }]
+[131] }
+```
+
+[010] - [095] The rule that assesses the decision request.
+
+[014] - [094] The rule's condition, which must evaluate to `true` for the rule to be applicable.
+
+[015] - [093] The expression for the condition is the conjunction of four terms using the `urn:oasis:names:tc:acal:1.0:function:and` function.
+
+[018] - [032] The first term is satisfied if the subject's `urn:oasis:names:tc:acal:1.0:example:attribute:role` attribute contains the string value `physician`.
+
+[034] - [048] The second term checks that the request is accessing a medical record belonging to Springfield Hospital.
+
+[050] - [064] The third term is satisfied if the requested access is `write`.
+
+[066] - [091] The fourth term is satisfied if the accessing physician is the patient's primary physician, i.e., if the `urn:oasis:names:tc:acal:1.0:example:attribute:physician-id` attribute of the access subject is equal to the `urn:oasis:names:tc:acal:1.0:example:attribute:primary-care-physician` attribute of the resource.
+
+[097] - [130] A notice expression.
+
+[098] The `IsObligation` property indicates that this notice is an obligation rather than advice. Obligations are a set of operations that must be performed by the PEP in conjunction with an authorization decision. An obligation may be associated with a `Permit` or `Deny` authorization decision. The policy contains a single notice expression, which will be evaluated into an obligation notice when the policy is evaluated.
+
+[099] The `Id` property indicates the kind of obligation. The PEP associates the identifier with particular processing requirements. In this case, the obligation requires the PEP to send an email.
+
+[100] The `AppliesTo` property specifies the authorization decision value for which the obligation notice derived from the notice expression must be fulfilled. In this case, the obligation must be fulfilled when access is permitted.
+
+[101] - [129] Additional information may be provided in a notice by evaluating attribute assignment expressions.
+
+[101] - [110] The first attribute assignment indicates the recipient email address, which is obtained from the `urn:oasis:names:tc:acal:1.0:example:attribute:patient-contact` resource attribute using an attribute designator.
+
+[111] - [119] The second attribute assignment contains literal text for the email body.
+
+[120] - [129] The third attribute assignment provides additional text for the email body, specifically the identity of the physician, which is obtained from the `urn:oasis:names:tc:acal:1.0:subject:subject-id` subject attribute using an attribute designator.
 
 #### 6.2.4.4 Rule 4
 
@@ -3883,7 +4120,7 @@ A `NoticeExpressionType` object contains the following properties:
 
 ## 7.30 AttributeAssignmentExpressionType
 
-An `AttributeAssignmentExpressionType` object is used to include an argument in a notice. It SHALL contain an `AttributeId` property and an expression which SHALL be evaluated into the corresponding attribute value. The value specified SHALL be understood by the PEP, but it is not further specified by ACAL. See [Section 8.16](#816-notices). [Section 6.2.5.3](#6253-rule-3) provides a number of examples of attribute assignment expressions included in notice expressions.
+An `AttributeAssignmentExpressionType` object is used to include an argument in a notice. It SHALL contain an `AttributeId` property and an expression which SHALL be evaluated into the corresponding attribute value. The value specified SHALL be understood by the PEP, but it is not further specified by ACAL. See [Section 8.16](#816-notices). [Section 6.2.4.3](#6243-rule-3) provides a number of examples of attribute assignment expressions included in notice expressions.
 
 UML definition (class diagram):
 ```plantuml
