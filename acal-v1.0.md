@@ -1942,6 +1942,235 @@ Rule 1 illustrates a policy with a simple rule containing a condition. It also i
 
 #### 6.2.4.2 Rule 2
 
+Rule 2 illustrates the use of a mathematical function, i.e., `urn:oasis:names:tc:acal:1.0:function:date-add-yearMonthDuration`, to calculate the date of the patient’s sixteenth birthday. The following ACAL policy, represented in XML and JSON, contains a rule instance expressing Rule 2 (the numbers in square brackets on the left-hand side are for referencing purposes and are not part of the policy in either representation):
+
+```
+[001] <?xml version="1.0" encoding="UTF-8"?>
+[002] <Policy
+[003]   xmlns="urn:oasis:names:tc:xacml:4.0:core:schema"
+[004]   PolicyId="urn:oasis:names:tc:xacml:3.0:example:policyid:2"
+[005]   Version="1.0"
+[006]   CombiningAlgId="deny-overrides">
+[007]   <ShortIdSetReference>urn:oasis:names:tc:acal:1.0:example:identifiers</ShortIdSetReference>
+[008]   <VariableDefinition VariableId="patient-under-16">
+[011]     <Apply FunctionId="date-less-than-or-equal">
+[014]       <Apply FunctionId="date-one-and-only">
+[017]         <AttributeDesignator
+[018]           Category="environment"
+[019]           AttributeId="current-date"
+[020]           DataType="date"/>
+[023]       </Apply>
+[025]       <Apply FunctionId="date-add-yearMonthDuration">
+[028]         <Apply FunctionId="date-one-and-only">
+[031]           <AttributeDesignator
+[032]             Category="resource"
+[033]             AttributeId="patient-date-of-birth"
+[034]             DataType="date"/>
+[037]         </Apply>
+[039]         <Value DataType="yearMonthDuration">P16Y</Value>
+[044]       </Apply>
+[046]     </Apply>
+[048]   </VariableDefinition>
+[050]   <Rule Id="Rule2" Effect="Permit">
+[053]     <Description>A person may read any medical record in the http://www.med.example.com/records.xsd namespace for which he or she is the designated parent or guardian, and for which the patient is under 16 years of age.</Description>
+[054]     <Condition>
+[055]       <Apply FunctionId="and">
+[058]         <Apply FunctionId="anyURI-is-in">
+[061]           <Value DataType="anyURI">http://www.med.example.com/springfield-hospital</Value>
+[066]           <AttributeDesignator
+[067]             Category="resource"
+[068]             AttributeId="collection"
+[069]             DataType="anyURI"/>
+[072]         </Apply>
+[074]         <Apply FunctionId="string-is-in">
+[077]           <Value>read</Value>
+[081]           <AttributeDesignator
+[082]             Category="action"
+[083]             AttributeId="action-id"
+[084]             DataType="string"/>
+[087]         </Apply>
+[089]         <Apply FunctionId="rfc822Name-equal">
+[092]           <Apply FunctionId="rfc822Name-one-and-only">
+[095]             <AttributeDesignator
+[096]               Category="access-subject"
+[097]               AttributeId="subject-id"
+[098]               DataType="rfc822Name"/>
+[101]           </Apply>
+[103]           <Apply FunctionId="rfc822Name-one-and-only">
+[106]             <AttributeDesignator
+[107]               Category="resource"
+[108]               AttributeId="parent-guardian-id"
+[109]               DataType="rfc822Name"/>
+[112]           </Apply>
+[114]         </Apply>
+[116]         <VariableReference VariableId="patient-under-16"/>
+[120]       </Apply>
+[121]     </Condition>
+[122]   </Rule>
+[124] </Policy>
+```
+
+```
+[002] {
+[004]   "PolicyId":"urn:oasis:names:tc:xacml:3.0:example:policyid:2",
+[005]   "Version":"1.0",
+[006]   "CombiningAlgId":"deny-overrides",
+[007]   "ShortIdSetReference":"urn:oasis:names:tc:acal:1.0:example:identifiers",
+[008]   "VariableDefinition":[{
+[009]     "VariableId":"patient-under-16",
+[010]     "Expression":{
+[011]       "Apply":{
+[012]         "FunctionId":"date-less-than-or-equal",
+[013]         "Expression":[{
+[014]           "Apply":{
+[015]             "FunctionId":"date-one-and-only",
+[016]             "Expression":[{
+[017]               "AttributeDesignator":{
+[018]                 "Category":"environment",
+[019]                 "AttributeId":"current-date",
+[020]                 "DataType":"date"
+[021]               }
+[022]             }]
+[023]           }
+[024]         },{
+[025]           "Apply":{
+[026]             "FunctionId":"date-add-yearMonthDuration",
+[027]             "Expression":[{
+[028]               "Apply":{
+[029]                 "FunctionId":"date-one-and-only",
+[030]                 "Expression":[{
+[031]                   "AttributeDesignator":{
+[032]                     "Category":"resource",
+[033]                     "AttributeId":"patient-date-of-birth",
+[034]                     "DataType":"date"
+[035]                   }
+[036]                 }]
+[037]               }
+[038]             },{
+[039]               "Value":{
+[040]                 "DataType":"yearMonthDuration",
+[041]                 "Value":"P16Y"
+[042]               }
+[043]             }]
+[044]           }
+[045]         }]
+[046]       }
+[047]     }
+[048]   }],
+[049]   "CombinerInput":[{
+[050]     "Rule":{
+[051]       "Id":"Rule2"
+[052]       "Effect":"Permit",
+[053]       "Description":"A person may read any medical record in the http://www.med.example.com/records.xsd namespace for which he or she is the designated parent or guardian, and for which the patient is under 16 years of age.",
+[054]       "Condition":{
+[055]         "Apply":{
+[056]           "FunctionId":"and",
+[057]           "Expression":[{
+[058]             "Apply":{
+[059]               "FunctionId":"anyURI-is-in",
+[060]               "Expression":[{
+[061]                 "Value":{
+[062]                   "DataType":"anyURI",
+[063]                   "Value":"http://www.med.example.com/springfield-hospital"
+[064]                 }
+[065]               },{
+[066]                 "AttributeDesignator":{
+[067]                   "Category":"resource",
+[068]                   "AttributeId":"collection",
+[069]                   "DataType":"anyURI"
+[070]                 }
+[071]               }]
+[072]             }
+[073]           },{
+[074]             "Apply":{
+[075]               "FunctionId":"string-is-in",
+[076]               "Expression":[{
+[077]                 "Value":{
+[078]                   "Value":"read"
+[079]                 }
+[080]               },{
+[081]                 "AttributeDesignator":{
+[082]                   "Category":"action",
+[083]                   "AttributeId":"action-id",
+[084]                   "DataType":"string"
+[085]                 }
+[086]               }]
+[087]             }
+[088]           },{
+[089]             "Apply":{
+[090]               "FunctionId":"rfc822Name-equal",
+[091]               "Expression":[{
+[092]                 "Apply":{
+[093]                   "FunctionId":"rfc822Name-one-and-only",
+[094]                   "Expression":[{
+[095]                     "AttributeDesignator":{
+[096]                       "Category":"access-subject",
+[097]                       "AttributeId":"subject-id",
+[098]                       "DataType":"rfc822Name"
+[099]                     }
+[100]                   }]
+[101]                 }
+[102]               },{
+[103]                 "Apply":{
+[104]                   "FunctionId":"rfc822Name-one-and-only",
+[105]                   "Expression":[{
+[106]                     "AttributeDesignator":{
+[107]                       "Category":"resource",
+[108]                       "AttributeId":"parent-guardian-id",
+[109]                       "DataType":"rfc822Name"
+[110]                     }
+[111]                   }]
+[112]                 }
+[113]               }]
+[114]             }
+[115]           },{
+[116]             "VariableReference":{
+[117]               "VariableId":"patient-under-16"
+[118]             }
+[119]           }]
+[120]         }
+[121]       }
+[122]     }
+[123]   }]
+[124] }
+```
+
+[008] - [048] A variable definition containing part of the condition (i.e. is the patient under 16 years of age?).  The patient is under 16 years of age if the current date is less than the date computed by adding 16 years to the patient’s date of birth.
+
+[011] - [012] The `urn:oasis:names:tc:acal:1.0:function:date-less-than-or-equal` function (short identifier name `date-less-than-or-equal`) is used to compare the two date arguments.
+
+[014] - [023] The first date argument uses the `urn:oasis:names:tc:acal:1.0:function:date-one-and-only` function (short identifier name `date-one-and-only`) to ensure that the bag of values selected by its argument contains exactly one value of type `urn:oasis:names:tc:acal:1.0:data-type:date` (short identifier name `date`).
+
+[017] - [21] The current date is evaluated with an attribute designator selecting the `urn:oasis:names:tc:acal:1.0:environment:current-date` environment attribute (short identifier name `current-date`).
+
+[025] - [044] The second date argument uses the `urn:oasis:names:tc:acal:1.0:function:date-add-yearMonthDuration` function (short identifier name `date-add-yearMonthDuration`) to compute the date of the patient’s sixteenth birthday by adding 16 years to the patient’s date of birth. The first of its arguments is of type `urn:oasis:names:tc:acal:1.0:data-type:date` and the second is of type `urn:oasis:names:tc:acal:1.0:data-type:yearMonthDuration` (short identifier name `yearMonthDuration`).
+
+[031] - [035] An attribute designator that selects a bag of `urn:oasis:names:tc:acal:1.0:data-type:date` values from the `urn:oasis:names:tc:acal:1.0:example:attribute:patient-date-of-birth` attribute (short identifier name `patient-date-of-birth`) in the `urn:oasis:names:tc:acal:1.0:attribute-category:resource` category.
+
+[039] - [042] A literal `urn:oasis:names:tc:acal:1.0:function:date-add-yearMonthDuration` value that specifies a duration of 16 years.
+
+[050] - [122] The rule that assesses the decision request.
+
+[054] - [121] The rule's condition, which must evaluate to `true` for the rule to be applicable. This condition evaluates, in part, the truth of the statement: the requestor is the designated parent or guardian and the patient is under 16 years of age.
+
+[055] - [120] The expression for the condition is the conjunction of four terms using the `urn:oasis:names:tc:acal:1.0:function:and` function.
+
+[058] - [072] The first term checks that the request is accessing a medical record belonging to the Springfield Hospital.
+
+[074] - [087] The second term is satisfied if the requested access is `read`.
+
+[089] - [114] The third term tests whether the subject is the designated parent or guardian of the patient according to the resource. The function is `urn:oasis:names:tc:acal:1.0:function:rfc822Name-equal` and it takes two arguments of type `urn:oasis:names:tc:acal:1.0:data-type:rfc822Name`.
+
+[092] - [101] Since `urn:oasis:names:tc:acal:1.0:function:rfc822Name-equal` takes arguments of type `urn:oasis:names:tc:acal:1.0:data-type:rfc822Name`, the `urn:oasis:names:tc:acal:1.0:function:rfc822Name-one-and-only` function is used to ensure that the subject attribute `urn:oasis:names:tc:acal:1.0:subject:subject-id` in the decision request contains exactly one value.
+
+[095] - [099] The value of the subject attribute `urn:oasis:names:tc:acal:1.0:subject:subject-id` is selected from the decision request using an attribute designator.
+
+[103] - [112] As above, the `urn:oasis:names:tc:acal:1.0:function:rfc822Name-one-and-only` function is used to ensure that the bag of values selected by its argument contains exactly one value of type `urn:oasis:names:tc:acal:1.0:data-type:rfc822Name`.
+
+[106] - [110] The value of the resource attribute `urn:oasis:names:tc:acal:1.0:example:attribute:parent-guardian-id` (short identifier name `parent-guardian-id`) is selected from the decision request using an attribute designator.
+
+[116] - [118] The fourth term is a reference to the variable definition that tests whether the patient is under 16 years of age.
+
 #### 6.2.4.3 Rule 3
 
 _Note: this section is referenced._
