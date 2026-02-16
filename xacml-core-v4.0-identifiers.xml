@@ -30,7 +30,6 @@
 	<ShortId Name="rfc822Name" Value="urn:oasis:names:tc:acal:1.0:data-type:rfc822Name"/>
 	<ShortId Name="ipAddress" Value="urn:oasis:names:tc:acal:1.0:data-type:ipAddress"/>
 	<ShortId Name="dnsName" Value="urn:oasis:names:tc:acal:1.0:data-type:dnsName"/>
-	<ShortId Name="xpathExpression" Value="urn:oasis:names:tc:acal:1.0:data-type:xpathExpression" />
 	<ShortId Name="entity" Value="urn:oasis:names:tc:acal:1.0:data-type:entity"/>
 
 	<!-- Subject Attributes -->
@@ -264,9 +263,6 @@
 	<ShortId Name="dnsName-regexp-match" Value="urn:oasis:names:tc:acal:1.0:function:dnsName-regexp-match"/>
 	<ShortId Name="rfc822Name-regexp-match" Value="urn:oasis:names:tc:acal:1.0:function:rfc822Name-regexp-match"/>
 	<ShortId Name="x500Name-regexp-match" Value="urn:oasis:names:tc:acal:1.0:function:x500Name-regexp-match"/>
-	<ShortId Name="xpath-node-count" Value="urn:oasis:names:tc:acal:1.0:function:xpath-node-count"/>
-	<ShortId Name="xpath-node-equal" Value="urn:oasis:names:tc:acal:1.0:function:xpath-node-equal"/>
-	<ShortId Name="xpath-node-match" Value="urn:oasis:names:tc:acal:1.0:function:xpath-node-match"/>
 	<ShortId Name="string-intersection" Value="urn:oasis:names:tc:acal:1.0:function:string-intersection"/>
 	<ShortId Name="string-at-least-one-member-of" Value="urn:oasis:names:tc:acal:1.0:function:string-at-least-one-member-of"/>
 	<ShortId Name="string-union" Value="urn:oasis:names:tc:acal:1.0:function:string-union"/>
@@ -351,13 +347,5 @@
 	<ShortId Name="dateTime-maximum" Value="urn:oasis:names:tc:acal:1.0:function:dateTime-maximum"/>
 	<ShortId Name="date-minimum" Value="urn:oasis:names:tc:acal:1.0:function:date-minimum"/>
 	<ShortId Name="date-maximum" Value="urn:oasis:names:tc:acal:1.0:function:date-maximum"/>
-	<ShortId Name="time-minimum" Value="urn:oasis:names:tc:acal:1.0:function:time-minimum"/>
-	<ShortId Name="time-maximum" Value="urn:oasis:names:tc:acal:1.0:function:time-maximum"/>
 	<ShortId Name="access-permitted" Value="urn:oasis:names:tc:acal:1.0:function:access-permitted"/>
-
-	<!-- XPath Versions -->
-
-	<ShortId Name="xpath10" Value="https://www.w3.org/TR/1999/REC-xpath-19991116/"/>
-	<ShortId Name="xpath20" Value="https://www.w3.org/TR/2007/REC-xpath20-20070123/"/>
-
 </ShortIdSet>

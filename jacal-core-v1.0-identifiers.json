@@ -1,6 +1,6 @@
 {
 	"Id":"urn:oasis:names:tc:acal:1.0:core:identifiers",
-	"ShortIdentifier":[
+	"ShortId":[
 		{ "Name":"resource", "Value":"urn:oasis:names:tc:acal:1.0:attribute-category:resource" },
 		{ "Name":"action", "Value":"urn:oasis:names:tc:acal:1.0:attribute-category:action" },
 		{ "Name":"environment", "Value":"urn:oasis:names:tc:acal:1.0:attribute-category:environment" },
@@ -26,7 +26,6 @@
 		{ "Name":"rfc822Name", "Value":"urn:oasis:names:tc:acal:1.0:data-type:rfc822Name" },
 		{ "Name":"ipAddress", "Value":"urn:oasis:names:tc:acal:1.0:data-type:ipAddress" },
 		{ "Name":"dnsName", "Value":"urn:oasis:names:tc:acal:1.0:data-type:dnsName" },
-		{ "Name":"xpathExpression", "Value":"urn:oasis:names:tc:acal:1.0:data-type:xpathExpression" },
 		{ "Name":"entity", "Value":"urn:oasis:names:tc:acal:1.0:data-type:entity" },
 
 		{ "Name":"subject-id", "Value":"urn:oasis:names:tc:acal:1.0:subject:subject-id" },
@@ -246,9 +245,6 @@
 		{ "Name":"dnsName-regexp-match", "Value":"urn:oasis:names:tc:acal:1.0:function:dnsName-regexp-match" },
 		{ "Name":"rfc822Name-regexp-match", "Value":"urn:oasis:names:tc:acal:1.0:function:rfc822Name-regexp-match" },
 		{ "Name":"x500Name-regexp-match", "Value":"urn:oasis:names:tc:acal:1.0:function:x500Name-regexp-match" },
-		{ "Name":"xpath-node-count", "Value":"urn:oasis:names:tc:acal:1.0:function:xpath-node-count" },
-		{ "Name":"xpath-node-equal", "Value":"urn:oasis:names:tc:acal:1.0:function:xpath-node-equal" },
-		{ "Name":"xpath-node-match", "Value":"urn:oasis:names:tc:acal:1.0:function:xpath-node-match" },
 		{ "Name":"string-intersection", "Value":"urn:oasis:names:tc:acal:1.0:function:string-intersection" },
 		{ "Name":"string-at-least-one-member-of", "Value":"urn:oasis:names:tc:acal:1.0:function:string-at-least-one-member-of" },
 		{ "Name":"string-union", "Value":"urn:oasis:names:tc:acal:1.0:function:string-union" },
@@ -333,11 +329,6 @@
 		{ "Name":"dateTime-maximum", "Value":"urn:oasis:names:tc:acal:1.0:function:dateTime-maximum" },
 		{ "Name":"date-minimum", "Value":"urn:oasis:names:tc:acal:1.0:function:date-minimum" },
 		{ "Name":"date-maximum", "Value":"urn:oasis:names:tc:acal:1.0:function:date-maximum" },
-		{ "Name":"time-minimum", "Value":"urn:oasis:names:tc:acal:1.0:function:time-minimum" },
-		{ "Name":"time-maximum", "Value":"urn:oasis:names:tc:acal:1.0:function:time-maximum" },
-		{ "Name":"access-permitted", "Value":"urn:oasis:names:tc:acal:1.0:function:access-permitted" },
-
-		{ "Name":"xpath10", "Value":"https://www.w3.org/TR/1999/REC-xpath-19991116/" },
-		{ "Name":"xpath20", "Value":"https://www.w3.org/TR/2007/REC-xpath20-20070123/" }
+		{ "Name":"access-permitted", "Value":"urn:oasis:names:tc:acal:1.0:function:access-permitted" }
 	]
 }
