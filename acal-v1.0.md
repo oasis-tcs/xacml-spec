@@ -60,7 +60,10 @@ None.
 ### Abstract
 
 
-This specification defines Version 1.0 of the Attribute-Centric Authorization Language.
+This specification defines Version 1.0 of the Attribute-Centric Authorization Language, *aka* ACAL (Core Specification), which is an evolution of [XACML v3.0](#xacml) towards an XML-agnostic language (generalization), with various concrete representation formats (syntaxes), and XACML becomes one of them. This is illustrated by the figure below:
+
+![ACAL](images/acal_big.svg)
+
 
 
 ### Citation Format
@@ -450,8 +453,6 @@ $ pandoc -f gfm+definition_lists -t pdf -c styles/markdown-styles-v1.7.3a.css -H
   - [Participants](#participants)
 - [Appendix 2 Changes From Previous Version](#appendix-2-changes-from-previous-version)
   - [Revision History](#revision-history)
-- [Appendix 3 OASIS Open Specification Template Instructions](#appendix-3-oasis-open-specification-template-instructions)
-
 
 ---
 
@@ -848,10 +849,14 @@ In some applications it is helpful to specify supplemental information about a d
 
 ## 4.14 Changes From the Previous Version
 
-
 <!-- From OASIS Open Specification Template Instructions: This section is **REQUIRED** and **MUST** be the last numbered subsection in this section. -->
 
-The list of changes from the previous version and any revision history can be found in [Appendix 2](#appendix-2-changes-from-previous-version).
+As illustrated in the figure below, compared to [XACML v3](#xacml), this ACAL specification is a generalization of XACML model (syntax and processing model), aiming to be XML-agnostic, therefore laying the ground for other (non-XML) concrete representations to be added. In addition, ACAL benefits from extra enhancements including model simplifications and optimizations as well as new features. For purpuses of simplifying this specification, all XPath features - originally from XACML - are kept in a separate ACAL Profile. 
+
+![ACAL](images/acal_small.svg)
+
+
+The detailed list of changes from the previous version and any revision history can be found in [Appendix 2](#appendix-2-changes-from-previous-version).
 
 
 ---
@@ -1323,7 +1328,7 @@ The following XACML policy, respectively in XML and JSON, contains a rule instan
 [02] {
 [04]   "PolicyId":"urn:oasis:names:tc:xacml:3.0:example:SimplePolicy1",
 [05]   "Version":"1.0",
-[06]   "CombiningAlgId":"deny-overrides".
+[06]   "CombiningAlgId":"deny-overrides",
 [07]   "ShortIdSetReference":["urn:oasis:names:tc:acal:1.0:core:identifiers"],
 [08]   "Description":"Medi Corp access control policy.",
 [09]   "CombinerInput":[{
@@ -1409,27 +1414,27 @@ The following request, respectively in XML and JSON, expresses this decision req
 
 ```
 [01] <?xml version="1.0" encoding="UTF-8"?>
-[02] <Request xmlns="urn:oasis:names:tc:xacml:4.0:core:schema"
+[02] <Request xmlns="urn:oasis:names:tc:xacml:4.0:core:schema">
 [03]   <ShortIdSetReference>urn:oasis:names:tc:acal:1.0:core:identifiers</ShortIdSetReference>
 [04]   <RequestEntity
 [05]     Category="access-subject">
 [06]     <RequestAttribute
-[07]       AttributeId="subject-id">
-[08]       <Value DataType="rfc822Name">bs@simpsons.com</Value>
+[07]       AttributeId="subject-id" DataType="rfc822Name">
+[08]       <Value>bs@simpsons.com</Value>
 [12]     </RequestAttribute>
 [13]   </RequestEntity>
 [14]   <RequestEntity
 [15]     Category="resource">
 [16]     <RequestAttribute
-[17]       AttributeId="resource-id">
-[18]       <Value DataType="anyURI">file://example/med/record/patient/BartSimpson</Value>
+[17]       AttributeId="resource-id" DataType="anyURI">
+[18]       <Value>file://example/med/record/patient/BartSimpson</Value>
 [22]     </RequestAttribute>
 [23]   </RequestEntity>
 [24]   <RequestEntity
 [25]     Category="action">
 [26]     <RequestAttribute
-[27]       AttributeId="action-id">
-[28]       <Value DataType="string">read</Value>
+[27]       AttributeId="action-id" DataType="string">
+[28]       <Value>read</Value>
 [32]     </RequestAttribute>
 [33]   </RequestEntity>
 [34] </Request>
@@ -1442,28 +1447,28 @@ The following request, respectively in XML and JSON, expresses this decision req
 [05]     "Category":"access-subject",
 [06]     "RequestAttribute":[{
 [07]       "AttributeId":"subject-id",
-[08]       "Value":[{
-[09]         "DataType":"rfc822Name",
-[10]         "Value":"bs@simpsons.com"
-[11]       }]
+[08]       "DataType":"rfc822Name",
+[09]       "Value":[  
+[10]         "bs@simpsons.com"
+[11]       ]
 [12]     }]
 [13]   },{
 [15]     "Category":"resource",
 [16]     "RequestAttribute":[{
 [17]       "AttributeId":"resource-id",
-[18]       "Value":[{
-[19]         "DataType":"anyURI",
-[20]         "Value":"file://example/med/record/patient/BartSimpson"
-[21]       }]
+[18]       "DataType":"anyURI",
+[19]       "Value":[  
+[20]         "file://example/med/record/patient/BartSimpson"
+[21]       ]
 [22]     }]
 [23]   },{
 [25]     "Category":"action",
 [26]     "RequestAttribute":[{
 [27]       "AttributeId":"action-id",
-[28]       "Value":[{
-[29]         "DataType":"string",
-[30]         "Value":"read"
-[31]       }]
+[28]       "DataType":"string",
+[29]       "Value":[  
+[30]         "read"
+[31]       ]
 [32]     }]
 [33]   }]
 [34] }
@@ -1550,7 +1555,7 @@ The following short-identifier set, in both the XML and JSON representations, de
 
 ```xml
 <ShortIdSet xmlns="urn:oasis:names:tc:xacml:4.0:core:schema"
-  Id="urn:oasis:names:tc:acal:1.0:example:identifiers"/>
+  Id="urn:oasis:names:tc:acal:1.0:example:identifiers">
 
   <!-- Include the short identifiers for standard URIs. -->
   <ShortIdSetReference>urn:oasis:names:tc:acal:1.0:core:identifiers</ShortIdSetReference>
@@ -1575,11 +1580,11 @@ The following short-identifier set, in both the XML and JSON representations, de
   "ShortId":[
     { "Name":"patient-number", "Value":"urn:oasis:names:tc:acal:1.0:example:attribute:patient-number" },
     { "Name":"collection", "Value":"urn:oasis:names:tc:acal:1.0:example:attribute:collection" },
-	{ "Name":"patient-date-of-birth", "Value":"urn:oasis:names:tc:acal:1.0:example:attribute:patient-date-of-birth" },
+	  { "Name":"patient-date-of-birth", "Value":"urn:oasis:names:tc:acal:1.0:example:attribute:patient-date-of-birth" },
     { "Name":"parent-guardian-id", "Value":"urn:oasis:names:tc:acal:1.0:example:attribute:parent-guardian-id" },
     { "Name":"physician-id", "Value":"urn:oasis:names:tc:acal:1.0:example:attribute:physician-id" },
     { "Name":"role", "Value":"urn:oasis:names:tc:acal:1.0:example:attribute:role" },
-	{ "Name":"patient-contact", "Value":"urn:oasis:names:tc:acal:1.0:example:attribute:patient-contact" }
+	  { "Name":"patient-contact", "Value":"urn:oasis:names:tc:acal:1.0:example:attribute:patient-contact" }
   ]
 }
 ```
@@ -1590,56 +1595,56 @@ The following example illustrates a decision request to which the example rules 
 
 ```
 [01] <?xml version="1.0" encoding="UTF-8"?>
-[02] <Request xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17">
+[02] <Request xmlns="urn:oasis:names:tc:xacml:4.0:core:schema">
 [03]   <ShortIdSetReference>urn:oasis:names:tc:acal:1.0:example:identifiers</ShortIdSetReference>
 [04]   <RequestEntity
 [05]     Category="access-subject">
 [06]     <RequestAttribute
 [07]       AttributeId="subject-id"
-[08]       Issuer="med.example.com">
-[09]       <Value DataType="rfc822Name">Julius.Hibbert@med.example.com</Value>
+[08]       Issuer="med.example.com" DataType="rfc822Name">
+[09]       <Value>Julius.Hibbert@med.example.com</Value>
 [13]     </RequestAttribute>
 [14]     <RequestAttribute
 [15]       AttributeId="role"
-[16]       Issuer="med.example.com">
-[17]       <Value DataType="string">physician</Value>
+[16]       Issuer="med.example.com" DataType="string">
+[17]       <Value>physician</Value>
 [21]     </RequestAttribute>
 [22]     <RequestAttribute
 [23]       AttributeId="physician-id"
-[24]       Issuer="med.example.com">
-[25]       <Value DataType="string">jh1234</Value>
+[24]       Issuer="med.example.com" DataType="string">
+[25]       <Value>jh1234</Value>
 [29]     </RequestAttribute>
 [30]   </RequestEntity>
 [31]   <RequestEntity
 [32]     Category="resource">
 [33]     <RequestAttribute
 [34]       AttributeId="patient-date-of-birth"
-[35]       Issuer="med.example.com">
-[36]       <Value DataType="date">1992-03-21</Value>
+[35]       Issuer="med.example.com" DataType="date">
+[36]       <Value>1992-03-21</Value>
 [40]     </RequestAttribute>
 [41]     <RequestAttribute
 [42]       AttributeId="patient-number"
-[43]       Issuer="med.example.com">
-[44]       <Value DataType="integer">555555</Value>
+[43]       Issuer="med.example.com" DataType="integer">
+[44]       <Value>555555</Value>
 [48]     </RequestAttribute>
 [49]     <RequestAttribute
 [50]       AttributeId="patient-contact"
-[51]       Issuer="med.example.com">
-[52]       <Value DataType="rfc822Name">b.simpson@example.com</Value>
+[51]       Issuer="med.example.com" DataType="rfc822Name">
+[52]       <Value>b.simpson@example.com</Value>
 [56]     </RequestAttribute>
 [57]   </RequestEntity>
 [58]   <RequestEntity
 [59]     Category="action">
 [60]     <RequestAttribute
-[61]       AttributeId="action-id">
-[62]       <Value DataType="string">read</Value>
+[61]       AttributeId="action-id" DataType="string">
+[62]       <Value>read</Value>
 [66]     </RequestAttribute>
 [67]   </RequestEntity>
 [68]   <RequestEntity
 [69]     Category="environment">
 [70]     <RequestAttribute
-[71]       AttributeId="current-date">
-[72]       <Value DataType="date">2010-01-11</Value>
+[71]       AttributeId="current-date" DataType="date">
+[72]       <Value>2010-01-11</Value>
 [76]     </RequestAttribute>
 [77]   </RequestEntity>
 [78] </Request>
@@ -1653,66 +1658,66 @@ The following example illustrates a decision request to which the example rules 
 [06]     "RequestAttribute":[{
 [07]       "AttributeId":"subject-id",
 [08]       "Issuer":"med.example.com",
-[09]       "Value":[{
-[10]         "DataType":"rfc822Name",
-[11]         "Value":"Julius.Hibbert@med.example.com"
-[12]       }]
+[09]       "DataType":"rfc822Name",
+[10]       "Value":[  
+[11]         "Julius.Hibbert@med.example.com"
+[12]       ]
 [13]     },{
 [15]       "AttributeId":"role",
 [16]       "Issuer":"med.example.com",
-[17]       "Value":[{
-[18]         "DataType":"string",
-[19]         "Value":"physician"
-[20]       }]
+[17]       "DataType":"string",
+[18]       "Value":[  
+[19]         "physician"
+[20]       ]
 [21]     },{
 [23]       "AttributeId":"physician-id",
 [24]       "Issuer":"med.example.com",
-[25]       "Value":[{
-[26]         "DataType":"string",
-[27]         "Value":"jh1234"
-[28]       }]
+[25]       "DataType":"string",
+[26]       "Value":[  
+[27]         "jh1234"
+[28]       ]
 [29]     }]
 [30]   },{
 [32]     "Category":"resource",
 [33]     "RequestAttribute":[{
 [34]       "AttributeId":"patient-date-of-birth",
 [35]       "Issuer":"med.example.com",
-[36]       "Value":[{
-[37]         "DataType":"date",
-[38]         "Value":"1992-03-21"
-[39]       }]
+[36]       "DataType":"date",
+[37]       "Value":[  
+[38]         "1992-03-21"
+[39]       ]
 [40]     },{
 [42]       "AttributeId":"patient-number",
 [43]       "Issuer":"med.example.com",
-[44]       "Value":[{
-[45]         "DataType":"integer",
-[46]         "Value":555555
-[47]       }]
+[44]       "DataType":"integer",
+[45]       "Value":[  
+[46]         555555
+[47]       ]
 [48]     },{
 [50]       "AttributeId":"patient-contact",
 [51]       "Issuer":"med.example.com",
-[52]       "Value":[{
-[53]         "DataType":"rfc822Name",
-[54]         "Value":"b.simpson@example.com"
-[55]       }]
+[52]       "DataType":"rfc822Name",
+[53]       "Value":[  
+[54]         "b.simpson@example.com"
+[55]       ]
 [56]     }]
 [57]   },{
 [59]     "Category":"action",
 [60]     "RequestAttribute":[{
 [61]       "AttributeId":"action-id",
-[62]       "Value":[{
-[63]         "DataType":"string",
-[64]         "Value":"read"
-[65]       }]
+[62]      "DataType":"string",
+[63]       "Value":[   
+[64]         "read"
+[65]       ]
 [66]     }]
 [67]   },{
 [69]     "Category":"environment",
 [70]     "RequestAttribute":[{
 [71]       "AttributeId":"current-date",
-[72]       "Value":[{
-[73]         "DataType":"date",
-[74]         "Value":"2010-01-11"
-[75]       }]
+[72]       "DataType":"date",
+[73]       "Value":[  
+[74]         "2010-01-11"
+[75]       ]
 [76]     }]
 [77]   }]
 [78] }
@@ -1753,8 +1758,8 @@ Rule 1 illustrates a policy with a simple rule containing a condition. It also i
 [02] <Policy
 [03]   xmlns="urn:oasis:names:tc:xacml:4.0:core:schema"
 [04]   PolicyId="urn:oasis:names:tc:acal:1.0:example:policyid:1"
-[05]   Version="1.0">
-[06]   CombiningAlgId="deny-overrides"
+[05]   Version="1.0"
+[06]   CombiningAlgId="deny-overrides">
 [07]   <ShortIdSetReference>urn:oasis:names:tc:acal:1.0:example:identifiers</ShortIdSetReference>
 [08]   <VariableDefinition VariableId="patient_number_match">
 [11]     <Apply FunctionId="string-equal">
@@ -2059,7 +2064,7 @@ Rule 2 illustrates the use of a mathematical function, i.e., `urn:oasis:names:tc
 [048]   }],
 [049]   "CombinerInput":[{
 [050]     "Rule":{
-[051]       "Id":"Rule2"
+[051]       "Id":"Rule2",
 [052]       "Effect":"Permit",
 [053]       "Description":"A person may read any medical record in the http://www.med.example.com/records.xsd namespace for which he or she is the designated parent or guardian, and for which the patient is under 16 years of age.",
 [054]       "Condition":{
@@ -2084,16 +2089,16 @@ Rule 2 illustrates the use of a mathematical function, i.e., `urn:oasis:names:tc
 [073]           },{
 [074]             "Apply":{
 [075]               "FunctionId":"string-is-in",
-[076]               "Expression":[{
-[077]                 "Value":{
+[076]               "Expression":[
+[077]                 {
 [078]                   "Value":"read"
-[079]                 }
-[080]               },{
-[081]                 "AttributeDesignator":{
-[082]                   "Category":"action",
-[083]                   "AttributeId":"action-id",
-[084]                   "DataType":"string"
-[085]                 }
+[079]                 },
+[080]                 {
+[081]                   "AttributeDesignator":{
+[082]                     "Category":"action",
+[083]                     "AttributeId":"action-id",
+[084]                     "DataType":"string"
+[085]                   }
 [086]               }]
 [087]             }
 [088]           },{
@@ -2295,7 +2300,7 @@ Rule 3 illustrates the use of a notice expression.
 [042]                 "AttributeDesignator":{
 [043]                   "Category":"resource",
 [044]                   "AttributeId":"collection",
-[045]                   "DataType="anyURI"
+[045]                   "DataType:"anyURI"
 [046]                 }
 [047]               }]
 [048]             }
@@ -2316,7 +2321,7 @@ Rule 3 illustrates the use of a notice expression.
 [063]               }]
 [064]             }
 [065]           },{
-[066]	          "Apply:{
+[066]	          "Apply":{
 [067]               "FunctionId":"string-equal",
 [068]               "Expression":[{
 [069]	              "Apply":{
@@ -2372,8 +2377,8 @@ Rule 3 illustrates the use of a notice expression.
 [121]        "AttributeId":"text",
 [122]        "Expression":{
 [123]          "AttributeDesignator":{
-[124]            "Category":"access-subject"
-[125]            "AttributeId":"subject-id"
+[124]            "Category":"access-subject",
+[125]            "AttributeId":"subject-id",
 [126]            "DataType":"string"
 [127]          }
 [128]        }
@@ -2726,6 +2731,8 @@ The conversion of a value of the `IdentifierType` simple type into an absolute U
 <!-- WARNING: for ALFA compatibility, the pattern should not be more restrictive than ALFA identifiers. 
    Pattern agreed with ALFA working group, except the hypen is allowed as separator in addition to the dot: 
 			<name>.<name>.<name>... or <name>-<name>-<name>... where <name> is at least a letter possibly preceded by underscore(s) and/or followed by letter(s)/digit(s)/underscore(s).
+
+Also the pattern should allow the identifiers used in the Examples section, e.g. 'patient-under-16' (or 'patient_under_16'). -->
 -->
 
 UML definition (class diagram):
@@ -2735,7 +2742,7 @@ hide empty members
 hide circle
 class LocalIdentifierType <<primitive>> <<restrictedString>> {
    <<restrictedString>>
-   pattern='^_*[A-Za-z][A-Za-z_0-9]*([-.]_*[A-Za-z][A-Za-z_0-9]*)*$'
+   pattern='^_*[A-Za-z][A-Za-z_0-9]*([-.]_*[A-Za-z_0-9]*)*$'
    --
 }
 @enduml
@@ -2891,9 +2898,9 @@ hide circle
 OCL v2.4, section 11.2.3: "by virtue of the implicit conversion to a collection literal, an expression evaluating to null can be used as source of collection operations [...]. If the source is the null literal, it is implicitly converted to an empty Set by invoking oclAsSet()." Therefore no need for null check on multi-valued properties before calling notEmpty, isUnique, etc.
 '/
 class ShortIdSetType <<dataType>> {
-   + Id: URI [1]
-   + ShortIdSetReference: URI [*] {unordered, unique}
-   + ShortId: ShortIdType [*] {ordered, unique} {{OCL} self->isUnique(Name)}
+  {field} + Id: URI [1]
+  {field} + ShortIdSetReference: URI [*] {unordered, unique}
+  {field} + ShortId: ShortIdType [*] {ordered, unique} {{OCL} self->isUnique(Name)}
 }
 @enduml
 ```
@@ -2988,19 +2995,19 @@ A NoticeExpression is not always unique, e.g. a sequence of obligations that cal
 2) mail to these other recipients with a different message (same obligation Id = 'mail').
 '/
 class PolicyType <<dataType>> extends CombinerInputType {
-   + PolicyId: URI [1]
-   + Version: VersionType [1]
-   + Description: String [0..1]
-   + ShortIdSetReference: URI [*] {unordered, unique}
-   + MaxDelegationDepth: NonNegativeInteger [0..1]
-   + PolicyIssuer: EntityType [0..1]
-   + PolicyDefaults: PolicyDefaultsType [*] {unordered, unique} {{OCL} self->isUnique(oclType())}
-   + Parameter: ParameterType [*] {ordered, unique} {{OCL} self->isUnique(Name)}
-   + VariableDefinition: VariableDefinitionType [*] {ordered, unique} {{OCL} self->isUnique(VariableId)}
-   + Target: BooleanExpressionType [0..1]
-   + CombiningAlgId: IdentifierType [1]
-   + CombinerInput: CombinerInputType [*] {ordered, nonunique}
-   + NoticeExpression: NoticeExpressionType [*] {ordered, nonunique}
+  {field} + PolicyId: URI [1]
+  {field} + Version: VersionType [1]
+  {field} + Description: String [0..1]
+  {field} + ShortIdSetReference: URI [*] {unordered, unique}
+  {field} + MaxDelegationDepth: NonNegativeInteger [0..1]
+  {field} + PolicyIssuer: EntityType [0..1]
+  {field} + PolicyDefaults: PolicyDefaultsType [*] {unordered, unique} {{OCL} self->isUnique(oclType())}
+  {field} + Parameter: ParameterType [*] {ordered, unique} {{OCL} self->isUnique(Name)}
+  {field} + VariableDefinition: VariableDefinitionType [*] {ordered, unique} {{OCL} self->isUnique(VariableId)}
+  {field} + Target: BooleanExpressionType [0..1]
+  {field} + CombiningAlgId: IdentifierType [1]
+  {field} + CombinerInput: CombinerInputType [*] {ordered, nonunique}
+  {field} + NoticeExpression: NoticeExpressionType [*] {ordered, nonunique}
 }
 
 abstract class CombinerInputType <<dataType>>
@@ -3268,12 +3275,12 @@ hide circle
 NoticeExpression (Id) is not unique for same reason as in PolicyType, and Notices may be in sequence (ordered).
 '/
 class RuleType <<dataType>> {
-   + Id: LocalIdentifierType [1]
-   + Description: String [0..1]
-   + VariableDefinition: VariableDefinitionType [*] {ordered, unique} {{OCL} self->isUnique(VariableId)}
-   + Condition: BooleanExpressionType [0..1]
-   + Effect: EffectType [1]
-   + NoticeExpression: NoticeExpressionType [*] {ordered, nonunique}
+  {field} + Id: LocalIdentifierType [1]
+  {field} + Description: String [0..1]
+  {field} + VariableDefinition: VariableDefinitionType [*] {ordered, unique} {{OCL} self->isUnique(VariableId)}
+  {field} + Condition: BooleanExpressionType [0..1]
+  {field} + Effect: EffectType [1]
+  {field} + NoticeExpression: NoticeExpressionType [*] {ordered, nonunique}
 }
 @enduml
 ```
@@ -3343,12 +3350,12 @@ UML definition (class diagram):
 hide empty members 
 hide circle
 class SharedVariableDefinitionType <<dataType>> {
-   + Id: URI [1]
-   + Version: VersionType [1]
-   + Description: String [0..1]
-   + ShortIdSetReference: URI [*] {ordered, unique}
-   + Parameter: ParameterType [*] {ordered, unique} {{OCL} self->isUnique(Name)}
-   + Expression: ExpressionType [1]
+  {field} + Id: URI [1]
+  {field} + Version: VersionType [1]
+  {field} + Description: String [0..1]
+  {field} + ShortIdSetReference: URI [*] {ordered, unique}
+  {field} + Parameter: ParameterType [*] {ordered, unique} {{OCL} self->isUnique(Name)}
+  {field} + Expression: ExpressionType [1]
 }
 @enduml
 ```
@@ -3987,9 +3994,9 @@ UML definition (class diagram):
 hide empty members 
 hide circle
 class NoticeType <<dataType>> {
-   + Id: IdentifierType [1]
-   + IsObligation: Boolean [0..1] = false
-   + AttributeAssignment: AttributeAssignmentType [*] {ordered, unique} {{OCL} self->isUnique(Sequence{AttributeId, Category})}
+   {field} + Id: IdentifierType [1]
+   {field} + IsObligation: Boolean [0..1] = false
+   {field} + AttributeAssignment: AttributeAssignmentType [*] {ordered, unique} {{OCL} self->isUnique(Sequence{AttributeId, Category})}
 }
 @enduml
 ```
@@ -4087,11 +4094,11 @@ UML definition (class diagram):
 hide empty members 
 hide circle
 class NoticeExpressionType <<dataType>> {
-   + Id: IdentifierType [1]
-   + IsObligation: Boolean [0..1]
-   + AppliesTo: EffectType [0..1]
-   + Condition: BooleanExpressionType [0..1]
-   + AttributeAssignmentExpression: AttributeAssignmentExpressionType [*] {ordered, unique} {{OCL} self->isUnique(Sequence{AttributeId, Category})}
+  {field} + Id: IdentifierType [1]
+  {field} + IsObligation: Boolean [0..1]
+  {field} + AppliesTo: EffectType [0..1]
+  {field} + Condition: BooleanExpressionType [0..1]
+  {field} + AttributeAssignmentExpression: AttributeAssignmentExpressionType [*] {ordered, unique} {{OCL} self->isUnique(Sequence{AttributeId, Category})}
 }
 @enduml
 ```
@@ -4167,12 +4174,12 @@ UML definition (class diagram):
 hide empty members 
 hide circle
 class RequestType <<dataType>> {
-   + ShortIdSetReference: URI [*] {unique}
-   + RequestDefaults: RequestDefaultsType [*] {unordered, unique} {{OCL} self->isUnique(oclType())}
-   + RequestEntity: RequestEntityType [1..*] {unordered, unique} {{OCL} self->select(Id <> null)->isUnique(Id)}
-   + MultiRequests: MultiRequestsType [0..1]
-   + ReturnPolicyIdList: Boolean [0..1] = false
-   + CombinedDecision: Boolean [0..1] = false
+  {field} + ShortIdSetReference: URI [*] {unique}
+  {field} + RequestDefaults: RequestDefaultsType [*] {unordered, unique} {{OCL} self->isUnique(oclType())}
+  {field} + RequestEntity: RequestEntityType [1..*] {unordered, unique} {{OCL} self->select(Id <> null)->isUnique(Id)}
+  {field} + MultiRequests: MultiRequestsType [0..1]
+  {field} + ReturnPolicyIdList: Boolean [0..1] = false
+  {field} + CombinedDecision: Boolean [0..1] = false
 }
 @enduml
 ```
@@ -4232,10 +4239,10 @@ UML definition (class diagram):
 hide empty members 
 hide circle
 class RequestEntityType <<dataType>> {
-   + Category: IdentifierType [1]
-   + Id: LocalIdentifierType [0..1]
-   + Content: ContentType [0..1]
-   + RequestAttribute: RequestAttributeType [*] {unordered, unique} {{OCL} self->isUnique(AttributeId)}
+  {field} + Category: IdentifierType [1]
+  {field} + Id: LocalIdentifierType [0..1]
+  {field} + Content: ContentType [0..1]
+  {field} + RequestAttribute: RequestAttributeType [*] {unordered, unique} {{OCL} self->isUnique(AttributeId)}
 }
 @enduml
 ```
@@ -4362,11 +4369,11 @@ UML definition (class diagram):
 hide empty members 
 hide circle
 class ResultType <<dataType>> {
-   + Decision: DecisionType [1]
-   + Status: StatusType [0..1]
-   + Notice: NoticeType [*] {ordered, nonunique}
-   + ResultEntity: ResultEntityType [*] {unordered, unique} {{OCL} self->isUnique(Category)}
-   + ApplicablePolicyReference: ExactMatchIdReferenceType [*] {unordered, unique} {{OCL} self->isUnique(Id)}
+  {field} + Decision: DecisionType [1]
+  {field} + Status: StatusType [0..1]
+  {field} + Notice: NoticeType [*] {ordered, nonunique}
+  {field} + ResultEntity: ResultEntityType [*] {unordered, unique} {{OCL} self->isUnique(Category)}
+  {field} + ApplicablePolicyReference: ExactMatchIdReferenceType [*] {unordered, unique} {{OCL} self->isUnique(Id)}
 }
 @enduml
 ```
@@ -4641,9 +4648,9 @@ UML definition (class diagram):
 hide empty members 
 hide circle
 class ResultEntityType <<dataType>> {
-   + Category: IdentifierType [1]
-   + Id: LocalIdentifierType [0..1]
-   + Attribute: AttributeType [1..*] {unordered, unique} {{OCL} self->isUnique(AttributeId)}
+  {field} + Category: IdentifierType [1]
+  {field} + Id: LocalIdentifierType [0..1]
+  {field} + Attribute: AttributeType [1..*] {unordered, unique} {{OCL} self->isUnique(AttributeId)}
 }
 @enduml
 ```
@@ -4675,8 +4682,8 @@ skinparam style strictuml
 hide empty members 
 hide circle
 class EntityType <<dataType>> {
-   + Content: ContentType [0..1]
-   + Attribute: AttributeType [*] {unordered, unique} {{OCL} self->isUnique(AttributeId)}
+  {field} + Content: ContentType [0..1]
+  {field} + Attribute: AttributeType [*] {unordered, unique} {{OCL} self->isUnique(AttributeId)}
 }
 note "{{OCL} Content <> null or Attribute->notEmpty()}" as constraint
 EntityType .. constraint
@@ -4706,10 +4713,10 @@ skinparam style strictuml
 hide empty members 
 hide circle
 class BundleType <<dataType>> {
-   + ShortIdSet: ShortIdSetType [*] {ordered, unique} {{OCL} self->isUnique(Id)}
-   + SharedVariableDefinition: SharedVariableDefinitionType [*] {ordered, unique} {{OCL} self->isUnique(Id)}
-   + Policy: PolicyType [*] {ordered, unique} {{OCL} self->isUnique(PolicyId)}
-   + PolicyReference: PolicyReferenceType [0..1]
+  {field} + ShortIdSet: ShortIdSetType [*] {ordered, unique} {{OCL} self->isUnique(Id)}
+  {field} + SharedVariableDefinition: SharedVariableDefinitionType [*] {ordered, unique} {{OCL} self->isUnique(Id)}
+  {field} + Policy: PolicyType [*] {ordered, unique} {{OCL} self->isUnique(PolicyId)}
+  {field} + PolicyReference: PolicyReferenceType [0..1]
 }
 /' 
 OCL v2.4, section 11.2.3: "by virtue of the implicit conversion to a collection literal, an expression evaluating to null can be used as source of collection operations [...]. If the source is the null literal, it is implicitly converted to an empty Set by invoking oclAsSet()." Therefore no need for null check on multi-valued properties before calling notEmpty, isUnique, etc.

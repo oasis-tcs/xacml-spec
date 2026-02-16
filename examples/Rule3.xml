@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Policy xmlns="urn:oasis:names:tc:xacml:4.0:core:schema"
+    xmlns:xpath="urn:oasis:names:tc:xacml:4.0:xpath:schema"
+    xmlns:md="urn:example:med:schemas:record"
+    PolicyId="urn:oasis:names:tc:acal:1.0:example:policyid:3" Version="1.0"
+    CombiningAlgId="urn:oasis:names:tc:acal:1.0:combining-algorithm:deny-overrides">
+    <Description>Policy for any medical record in the urn:example:med:schemas:record namespace</Description>
+    <xpath:XPathPolicyDefaults XPathVersion="https://www.w3.org/TR/xpath20/" />
+    <Target>
+        <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:anyURI-is-in">
+            <Value>urn:example:med:schemas:record</Value>
+            <AttributeDesignator
+                Category="urn:oasis:names:tc:acal:1.0:attribute-category:resource"
+                AttributeId="urn:oasis:names:tc:acal:2.0:resource:target-namespace"/>
+        </Apply>
+    </Target>
+    <Rule Id="example_rule_3" Effect="Permit">
+        <Description>A physician may write any medical element in a record for which he or she is
+            the designated primary care physician, provided an email is sent to the patient.</Description>
+        <Condition>
+            <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:and">
+                <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:string-is-in">
+                    <Value>physician</Value>
+                    <AttributeDesignator
+                        Category="urn:oasis:names:tc:acal:1.0:subject-category:access-subject"
+                        AttributeId="urn:oasis:names:tc:acal:1.0:example:attribute:role"/>
+                </Apply>
+                <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:any-of">
+                    <Function Id="urn:oasis:names:tc:acal:1.0:function:xpath-node-match" />
+                    <Value
+                        XPathCategory="urn:oasis:names:tc:acal:1.0:attribute-category:resource" XPath="md:record/md:medical"/>
+                    <AttributeDesignator
+                        Category="urn:oasis:names:tc:acal:1.0:attribute-category:resource"
+                        AttributeId="urn:oasis:names:tc:acal:1.0:content-selector" />
+                </Apply>
+                <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:string-is-in">
+                    <Value>write</Value>
+                    <AttributeDesignator
+                        Category="urn:oasis:names:tc:acal:1.0:attribute-category:action"
+                        AttributeId="urn:oasis:names:tc:acal:1.0:action:action-id"/>
+                </Apply>
+                <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:string-equal">
+                    <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:string-one-and-only">
+                        <AttributeDesignator
+                            Category="urn:oasis:names:tc:acal:1.0:subject-category:access-subject"
+                            AttributeId="urn:oasis:names:tc:acal:1.0:example:attribute:physician-id"/>
+                    </Apply>
+                    <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:string-one-and-only">
+                        <xpath:XPathAttributeSelector
+                            Category="urn:oasis:names:tc:acal:1.0:attribute-category:resource"
+                            Path="md:record/md:primaryCarePhysician/md:registrationID/text()" />
+                    </Apply>
+                </Apply>
+            </Apply>
+        </Condition>
+    </Rule>
+    <NoticeExpression Id="urn:oasis:names:tc:acal:example:obligation:email"
+        AppliesTo="Permit" IsObligation="true">
+        <AttributeAssignmentExpression
+            AttributeId="urn:oasis:names:tc:acal:1.0:example:attribute:mailto">
+            <xpath:XPathAttributeSelector MustBePresent="true"
+                Category="urn:oasis:names:tc:acal:1.0:attribute-category:resource"
+                Path="md:record/md:patient/md:patientContact/md:email/text()" />
+        </AttributeAssignmentExpression>
+        <AttributeAssignmentExpression
+            AttributeId="urn:oasis:names:tc:acal:1.0:example:attribute:text">
+            <Value>Your medical record has been accessed by: </Value>
+        </AttributeAssignmentExpression>
+        <AttributeAssignmentExpression
+            AttributeId="urn:oasis:names:tc:acal:1.0:example:attribute:text">
+            <AttributeDesignator
+                Category="urn:oasis:names:tc:acal:1.0:subject-category:access-subject"
+                AttributeId="urn:oasis:names:tc:acal:1.0:subject:subject-id" />
+        </AttributeAssignmentExpression>
+    </NoticeExpression>
+</Policy>

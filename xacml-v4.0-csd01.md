@@ -241,8 +241,6 @@ $ pandoc -s --embed-resources -f gfm+definition_lists -c styles/markdown-styles-
   - [Participants](#participants)
 - [Appendix 2 Changes From Previous Version](#appendix-2-changes-from-previous-version)
   - [Revision History](#revision-history)
-- [Appendix 3 OASIS Open Specification Template Instructions](#appendix-3-oasis-open-specification-template-instructions)
-
 
 
 -------
@@ -1265,7 +1263,7 @@ The following individuals were members of this committee during the creation of 
 
 **XACML TC Members:**
 
-- Bill | Parducci, Individual
+- Bill Parducci, Individual
 - Steven Legg, ViewDS Identity Solutions
 - Cyril Dangerville, THALES
 
@@ -1345,7 +1343,7 @@ XACML 4.0 differs from XACML 3.0 in the following ways:
 
 ## Revision History
 
-Latest revision history can be obtained from [OASIS XACML TC's code repository](https://github.com/oasis-tcs/xacml-spec/commits/main/xacml-v4.0-csd01.md).
+Latest revision history can be obtained from [OASIS XACML TC's code repository](https://github.com/oasis-tcs/xacml-spec/commits/main/xacml-v4.0.md).
 
 | Revision | Date | Editor | Changes Made |
 | :--- | :--- | :--- | :--- |

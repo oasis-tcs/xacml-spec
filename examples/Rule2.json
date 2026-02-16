@@ -1,0 +1,176 @@
+{
+    "Policy": {
+        "PolicyId": "urn:oasis:names:tc:acal:1.0:example:policyid:2",
+        "Version": "1.0",
+        "CombiningAlgId": "urn:oasis:names:tc:acal:1.0:combining-algorithm:deny-overrides",
+        "PolicyDefaults": {
+            "XPathPolicyDefaults": {
+                "XPathVersion": "https://www.w3.org/TR/xpath20/",
+                "Namespace": [
+                    {
+                        "Prefix": "md",
+                        "Name": "urn:example:med:schemas:record"
+                    }
+                ]
+            }
+        },
+        "VariableDefinition": [
+            {
+                "VariableId": "patient_under_16",
+                "Expression": {
+                    "Apply": {
+                        "FunctionId": "urn:oasis:names:tc:acal:1.0:function:date-less-or-equal",
+                        "Expression": [
+                            {
+                                "Apply": {
+                                    "FunctionId": "urn:oasis:names:tc:acal:1.0:function:date-one-and-only",
+                                    "Expression": [
+                                        {
+                                            "AttributeDesignator": {
+                                                "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:environment",
+                                                "AttributeId": "urn:oasis:names:tc:acal:1.0:environment:current-date"
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                "Apply": {
+                                    "FunctionId": "urn:oasis:names:tc:acal:1.0:function:date-add-yearMonthDuration",
+                                    "Expression": [
+                                        {
+                                            "Apply": {
+                                                "FunctionId": "urn:oasis:names:tc:acal:1.0:function:date-one-and-only",
+                                                "Expression": [
+                                                    {
+                                                        "XPathAttributeSelector": {
+                                                            "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
+                                                            "Path": "md:record/md:patient/md:patientDoB/text()"
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        },
+                                        {
+                                            "Value": "P16Y"
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+        ],
+        "CombinerInput": [
+            {
+                "Rule": {
+                    "Id": "example_rule_2",
+                    "Effect": "Permit",
+                    "Description": "A person may read any medical record in the urn:example:med:schemas:record namespace for which he or she is the designated parent or guardian, and for which the patient is under 16 years of age",
+                    "Condition": {
+                        "Apply": {
+                            "FunctionId": "urn:oasis:names:tc:acal:1.0:function:and",
+                            "Expression": [
+                                {
+                                    "VariableReference": {
+                                        "VariableId": "patient_under_16"
+                                    }
+                                },
+                                {
+                                    "Apply": {
+                                        "FunctionId": "urn:oasis:names:tc:acal:1.0:function:string-is-in",
+                                        "Expression": [
+                                            {
+                                                "Value": "read"
+                                            },
+                                            {
+                                                "AttributeDesignator": {
+                                                    "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:action",
+                                                    "AttributeId": "urn:oasis:names:tc:acal:1.0:action:action-id"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "Apply": {
+                                        "FunctionId": "urn:oasis:names:tc:acal:1.0:function:anyURI-is-in",
+                                        "Expression": [
+                                            {
+                                                "Value": "urn:example:med:schemas:record"
+                                            },
+                                            {
+                                                "AttributeDesignator": {
+                                                    "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
+                                                    "AttributeId": "urn:oasis:names:tc:acal:1.0:resource:target-namespace"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "Apply": {
+                                        "FunctionId": "urn:oasis:names:tc:acal:1.0:function:any-of",
+                                        "Expression": [
+                                            {
+                                                "Function": {
+                                                    "Id": "urn:oasis:names:tc:acal:1.0:function:xpath-node-match"
+                                                }
+                                            },
+                                            {
+                                                "Value": {
+                                                    "XPathCategory": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
+                                                    "XPath": "md:record"
+                                                }
+                                            },
+                                            {
+                                                "AttributeDesignator": {
+                                                    "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
+                                                    "AttributeId": "urn:oasis:names:tc:acal:1.0:content-selector"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "Apply": {
+                                        "FunctionId": "urn:oasis:names:tc:acal:1.0:function:string-equal",
+                                        "Expression": [
+                                            {
+                                                "Apply": {
+                                                    "FunctionId": "urn:oasis:names:tc:acal:1.0:function:string-one-and-only",
+                                                    "Expression": [
+                                                        {
+                                                            "AttributeDesignator": {
+                                                                "Category": "urn:oasis:names:tc:acal:1.0:subject-category:access-subject",
+                                                                "AttributeId": "urn:oasis:names:tc:acal:1.0:example:attribute:physician-id"
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                "Apply": {
+                                                    "FunctionId": "urn:oasis:names:tc:acal:1.0:function:string-one-and-only",
+                                                    "Expression": [
+                                                        {
+                                                            "XPathAttributeSelector": {
+                                                                "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
+                                                                "Path": "md:record/md:parentGuardian/md:parentGuardianId/text()"
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

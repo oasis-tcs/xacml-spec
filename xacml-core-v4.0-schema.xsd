@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright OASIS Open 2026. All Rights Reserved. -->
 <xs:schema xmlns:xacml="urn:oasis:names:tc:xacml:4.0:core:schema"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
 	targetNamespace="urn:oasis:names:tc:xacml:4.0:core:schema"
 	elementFormDefault="qualified"
 	attributeFormDefault="unqualified">
-
+	<xs:annotation>
+		<xs:documentation>
+			XACML v4.0 (XML Representation of ACAL Version 1.0) Core schema.
+			Copyright (c) OASIS Open 2026. All Rights Reserved.
+			For more license and copyright information,
+			and complete status, please see Annex A of XACML v4.0 (XML Representation of ACAL
+			Version 1.0) specification, which contains the License, Document Status and Notices.
+		</xs:documentation>
+	</xs:annotation>
+	
 	<xs:import namespace="http://www.w3.org/XML/1998/namespace"
 		schemaLocation="https://www.w3.org/2001/xml.xsd"/>
 	<xs:element name="Request" type="xacml:RequestType">
@@ -511,10 +519,12 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 	identifiers that are unique only locally, such as Request-local identifiers (e.g.
 	RequestEntity/@Id and RequestEntityReference/@Id), Policy-local identifiers (e.g. a policy's
 	variable ID (VariableId) or
-	parameter name, or RuleId), Rule-local identifiers (e.g. a rule's variable ID), etc. -->
+	parameter name, or RuleId), Rule-local identifiers (e.g. a rule's variable ID), etc. 
+	-->
 	<xs:simpleType name="LocalIdentifierType">
 		<xs:restriction base="xs:string">
-			<xs:pattern value="_*[A-Za-z][A-Za-z_0-9]*([-.]_*[A-Za-z][A-Za-z_0-9]*)*">
+			<!-- In particular, the pattern should allow the identifiers used in the Examples section ACAL Core spec, in particular 'patient-under-16' (or 'patient_under_16'). -->
+			<xs:pattern value="_*[A-Za-z][A-Za-z_0-9]*([-.]_*[A-Za-z_0-9]*)*">
 				<xs:annotation>
 					<xs:documentation xml:lang="en">
 						Pattern agreed with ALFA working group, except the hypen is allowed as

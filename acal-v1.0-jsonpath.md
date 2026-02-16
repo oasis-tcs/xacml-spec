@@ -218,18 +218,6 @@ $ pandoc -f gfm+definition_lists -t pdf -c styles/markdown-styles-v1.7.3a.css -H
   - [Participants](#participants)
 - [Appendix 2 Changes From Previous Version](#appendix-2-changes-from-previous-version)
   - [Revision History](#revision-history)
-- [Appendix 3 OASIS Open Specification Template Instructions](#appendix-3-oasis-open-specification-template-instructions)
-  - [General Template Instructions](#general-template-instructions)
-  - [Formatting Instructions](#formatting-instructions)
-  - [Extra Items Instructions](#extra-items-instructions)
-  - [**Listing 1.1** Sample Title](#listing-11-sample-title)
-  - [**Code 1.1** Sample Title](#code-11-sample-title)
-  - [Other Instructions](#other-instructions)
-- [Appendix 4 Additional Appendix as Needed](#appendix-4-additional-appendix-as-needed)
-  - [Subsection Title](#subsection-title)
-    - [Sub-subsection](#sub-subsection)
-
-
 
 ---
 
@@ -813,9 +801,9 @@ This section **SHOULD** include the leadership (chairs, sub committees chairs, s
 
 
 - Chairs
-  - Bill | Parducci, Individual
+  - Bill Parducci, Individual
 - Secretaries
-  - Bill | Parducci, Individual
+  - Bill Parducci, Individual
 - Editors
   - Steven Legg, ViewDS Identity Solutions
   - Cyril Dangerville, THALES
@@ -843,7 +831,7 @@ The following individuals were members of this committee during the creation of 
 
 **XACML TC Members:**
 
-- Bill | Parducci, Individual
+- Bill Parducci, Individual
 - Steven Legg, ViewDS Identity Solutions
 - Cyril Dangerville, THALES
 

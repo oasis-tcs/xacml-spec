@@ -1,0 +1,174 @@
+{
+    "Policy": {
+        "PolicyId": "urn:oasis:names:tc:acal:1.0:example:policyid:3",
+        "Version": "1.0",
+        "CombiningAlgId": "urn:oasis:names:tc:acal:1.0:combining-algorithm:deny-overrides",
+        "Description": "Policy for any medical record in the urn:example:med:schemas:record namespace",
+        "PolicyDefaults": {
+            "XPathPolicyDefaults": {
+                "XPathVersion": "https://www.w3.org/TR/xpath20/",
+                "Namespace": [
+                    {
+                        "Prefix": "md",
+                        "Name": "urn:example:med:schemas:record"
+                    }
+                ]
+            }
+        },
+        "Target": {
+            "Apply": {
+                "FunctionId": "urn:oasis:names:tc:acal:1.0:function:anyURI-is-in",
+                "Expression": [
+                    {
+                        "Value": "urn:example:med:schemas:record"
+                    },
+                    {
+                        "AttributeDesignator": {
+                            "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
+                            "AttributeId": "urn:oasis:names:tc:acal:1.0:resource:target-namespace"
+                        }
+                    }
+                ]
+            }
+        },
+        "CombinerInput": [
+            {
+                "Rule": {
+                    "Id": "example_rule_3",
+                    "Effect": "Permit",
+                    "Description": "A physician may write any medical element in a record for which he or she is the designated primary care physician, provided an email is sent to the patient.",
+                    "Condition": {
+                        "Apply": {
+                            "FunctionId": "urn:oasis:names:tc:acal:1.0:function:and",
+                            "Expression": [
+                                {
+                                    "Apply": {
+                                        "FunctionId": "urn:oasis:names:tc:acal:1.0:function:string-is-in",
+                                        "Expression": [
+                                            {
+                                                "Value": "physician"
+                                            },
+                                            {
+                                                "AttributeDesignator": {
+                                                    "Category": "urn:oasis:names:tc:acal:1.0:subject-category:access-subject",
+                                                    "AttributeId": "urn:oasis:names:tc:acal:1.0:example:attribute:role"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "Apply": {
+                                        "FunctionId": "urn:oasis:names:tc:acal:1.0:function:any-of",
+                                        "Expression": [
+                                            {
+                                                "Function": {
+                                                    "Id": "urn:oasis:names:tc:acal:1.0:function:xpath-node-match"
+                                                }
+                                            },
+                                            {
+                                                "Value": {
+                                                    "XPathCategory": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
+                                                    "XPath": "md:record/md:medical"
+                                                }
+                                            },
+                                            {
+                                                "AttributeDesignator": {
+                                                    "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
+                                                    "AttributeId": "urn:oasis:names:tc:acal:1.0:content-selector"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "Apply": {
+                                        "FunctionId": "urn:oasis:names:tc:acal:1.0:function:string-is-in",
+                                        "Expression": [
+                                            {
+                                                "Value": "write"
+                                            },
+                                            {
+                                                "AttributeDesignator": {
+                                                    "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:action",
+                                                    "AttributeId": "urn:oasis:names:tc:acal:1.0:action:action-id"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "Apply": {
+                                        "FunctionId": "urn:oasis:names:tc:acal:1.0:function:string-equal",
+                                        "Expression": [
+                                            {
+                                                "Apply": {
+                                                    "FunctionId": "urn:oasis:names:tc:acal:1.0:function:string-one-and-only",
+                                                    "Expression": [
+                                                        {
+                                                            "AttributeDesignator": {
+                                                                "Category": "urn:oasis:names:tc:acal:1.0:subject-category:access-subject",
+                                                                "AttributeId": "urn:oasis:names:tc:acal:1.0:example:attribute:physician-id"
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                "Apply": {
+                                                    "FunctionId": "urn:oasis:names:tc:acal:1.0:function:string-one-and-only",
+                                                    "Expression": [
+                                                        {
+                                                            "XPathAttributeSelector": {
+                                                                "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
+                                                                "Path": "md:record/md:primaryCarePhysician/md:registrationID/text()"
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        ],
+        "NoticeExpression": [
+            {
+                "Id": "urn:oasis:names:tc:acal:example:obligation:email",
+                "AppliesTo": "Permit",
+                "IsObligation": true,
+                "AttributeAssignmentExpression": [
+                    {
+                        "AttributeId": "urn:oasis:names:tc:acal:1.0:example:attribute:mailto",
+                        "Expression": {
+                            "XPathAttributeSelector": {
+                                "MustBePresent": true,
+                                "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
+                                "Path": "md:record/md:patient/md:patientContact/md:email/text()"
+                            }
+                        }
+                    },
+                    {
+                        "AttributeId": "urn:oasis:names:tc:acal:1.0:example:attribute:text",
+                        "Expression": {
+                            "Value": "Your medical record has been accessed by: "
+                        }
+                    },
+                    {
+                        "AttributeId": "urn:oasis:names:tc:acal:1.0:example:attribute:text",
+                        "Expression": {
+                            "AttributeDesignator": {
+                                "Category": "urn:oasis:names:tc:acal:1.0:subject-category:access-subject",
+                                "AttributeId": "urn:oasis:names:tc:acal:1.0:subject:subject-id"
+                            }
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}

@@ -198,6 +198,7 @@ $ pandoc -s --embed-resources -f gfm+definition_lists -c styles/markdown-styles-
     - [5.2.4 Property mapping rules](#524-property-mapping-rules)
     - [5.2.5 Mapping ACAL object-level constraints (OCL)](#525-mapping-acal-object-level-constraints-ocl)
   - [5.3 Content Types and Body representations (optional)](#53-content-types-and-body-representations-optional)
+  - [5.4 JACAL Extension Mechanism](#54-jacal-extension-mechanism)
 - [6 Safety, Security and Privacy Considerations (non-normative)](#6-safety-security-and-privacy-considerations-non-normative)
   - [6.1 Threat model](#61-threat-model)
   - [6.2 Safeguards](#62-safeguards)
@@ -222,9 +223,6 @@ $ pandoc -s --embed-resources -f gfm+definition_lists -c styles/markdown-styles-
   - [Participants](#participants)
 - [Appendix 2 Changes From Previous Version](#appendix-2-changes-from-previous-version)
   - [Revision History](#revision-history)
-- [Appendix 3 OASIS Open Specification Template Instructions](#appendix-3-oasis-open-specification-template-instructions)
-
-
 
 -------
 
@@ -955,19 +953,45 @@ This specification defines the following `Content` types in order to support ACA
 
 The implementation SHALL support a given content type in this list if and only if there is an ACAL Profile that makes it mandatory (refer to the Profile's specification for more information).
 
-## 5.4 Extending JACAL syntax
+## 5.4 JACAL Extension Mechanism
 
-Extending JACAL syntax means extending JACAL core JSON schema obtained from the mapping rules in the previous section. As explained in the mapping rule 1.2.1 of section 5.2.3, JACAL core schema uses a `$dynamicRef` for any extensible ACAL type that may be extended by a separate JSON schema (overriding a matching `$dynamicAnchor`), depending on which extensions the ACAL implementation shall support. Let us look at different cases to illustrate this extension mechanism in more details:
+**If the implementation does not support any extension, you may use the JACAL core schema (provided with this specification) as is, and ignore this section.**
 
-* Case 1 - the implementation does not support any extension: in this case, use the JACAL core schema as is.
-* Case 2 - the implementation supports two extensions of some type `FooType` in the core schema: one custom extension `CustomFooSubType` and another extension `SomeProfileFooSubType` defined in an existing JACAL Profile with a schema identified `urn:some:profile:schema`. In this case, the implementer shall create a combining schema for the implementation, which combines the extensions' schemas with the core schema like this:
+Extending JACAL syntax means extending JACAL core JSON schema (obtained from the mapping rules in the previous section). As explained in the mapping rule 1.2.1 of section 5.2.3, JACAL core schema uses a `$dynamicRef` for any extensible ACAL type that may be extended by a separate JSON schema (overriding a matching `$dynamicAnchor`), depending on which extensions the ACAL implementation shall support. 
+
+To explain how to use this extension mechanism, we go through various concrete examples in the next sections.
+
+### 5.4.1 Example using extensions from a single ACAL Profile
+
+In this example, we consider an ACAL implementation that supports the `AttributeSelectorType` extension from the standard JSONPath Profile of ACAL. In this case, the implementation may use as root schema the following combining schema, which combines the core schema with the supported extension's schema:
+
+```xml
+!include examples/jacal-root-schema-example-using-jsonpath-profile-only.json
+```
+
+This schema refers to (and therefore depends on) the [JSONPath Profile's JSON schema](jacal-jsonpath-v1.0-schema.json) by its identifier `urn:oasis:names:tc:jacal:1.0:jsonpath:schema`, which is also provided by the XACML TC with the core schema.
+
+
+### 5.4.2 Example using extensions from multiple ACAL Profiles
+
+In this example, we consider an ACAL implementation that supports various extensions (RequestDefaultsType, PolicyDefaultsType, AttributeSelectorType, StructuredValueType) from the XPath Profile of ACAL, and the `AttributeSelectorType` extension from the JSONPath Profile of ACAL. In this case, the implementation should use as root schema the following combining schema, which combines the core schema with the supported extensions' schemas:
+
+```xml
+!include examples/jacal-root-schema-example-using-xpath-and-jsonpath-profiles.json
+```
+
+This schema refers to (and therefore depends on) to both the [JSONPath Profile's JSON schema](jacal-jsonpath-v1.0-schema.json) by its identifier `urn:oasis:names:tc:jacal:1.0:jsonpath:schema` and [XPath Profile's JSON schema](jacal-xpath-v1.0-schema.json) by its identifier `urn:oasis:names:tc:jacal:1.0:xpath:schema`, which are also provided by the XACML TC with the core schema.
+
+### 5.4.3 Example combining a custom extension with a standard profile-defined extension
+
+In this example, we consider an ACAL implementation that supports two extensions of some type `FooType` defined in the core schema: one custom extension `CustomFooSubType` and another extension `SomeProfileFooSubType` defined in an existing JACAL Profile with a schema identified `urn:some:profile:schema`. In this case, the implementation should use as root schema the following combining schema, which combines the core schema with the supported extensions' schemas:
   
   ```json
   {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "urn:my:implementation:specific:root:schema",
     "$defs": {
-        "SupportedFooTypeExtensions": {
+        "EnabledFooTypeExtensions": {
             "$dynamicAnchor": "FooTypeExtensions",
             "anyOf": [
                 {
@@ -996,41 +1020,6 @@ Extending JACAL syntax means extending JACAL core JSON schema obtained from the 
     "$ref": "urn:oasis:names:tc:jacal:1.0:core:schema"
   }
   ```
-  
-  Here is a concrete example for an ACAL implementation supporting the RequestDefaultsType, PolicyDefaultsType, and AttributeSelectorType extensions from the XPath Profile of ACAL, and also the AttributeSelectorType extension from the JSONPath Profile of ACAL:
-
-  ```json
-  {
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "urn:example:implementation:specific:root:schema",
-    "$defs": {
-        "EnabledRequestDefaultsExtensions": {
-            "$dynamicAnchor": "RequestDefaultsTypeExtensions",
-            "$ref": "urn:oasis:names:tc:jacal:1.0:xpath:schema#/$defs/XPathRequestDefaultsTypeTree"
-        },
-        "EnabledPolicyDefaultsExtensions": {
-            "$dynamicAnchor": "PolicyDefaultsTypeExtensions",
-            "$ref": "urn:oasis:names:tc:jacal:1.0:xpath:schema#/$defs/XPathPolicyDefaultsTypeTree"
-        },
-        "EnabledAttributeSelectorExtensions": {
-            "$dynamicAnchor": "AttributeSelectorTypeExtensions",
-            "anyOf": [
-                {
-                    "$ref": "urn:oasis:names:tc:jacal:1.0:xpath:schema#/$defs/XPathAttributeSelectorTypeTree"
-                },
-                {
-                    "$ref": "urn:oasis:names:tc:jacal:1.0:jsonpath:schema#/$defs/JSONPathAttributeSelectorTypeTree"
-                }
-            ]
-        }
-    },
-    "$ref": "urn:oasis:names:tc:jacal:1.0:core:schema"
-  }
-  ```
-
-For your convenience, more concrete examples are provided in the following files accompanying this specification:
-- `jacal-root-schema-example-using-jsonpath-profile-only.json`: for implementations that support only extensions from the JSONPath Profile;
-- `jacal-root-schema-example-using-xpath-and-jsonpath-profiles.json`: for implementations that support all extensions from both the JSONPath and XPath Profiles.
 
 -------
 
