@@ -1300,7 +1300,7 @@ The following XACML policy, respectively in XML and JSON, contains a rule instan
 [01] <?xml version="1.0" encoding="UTF-8"?>
 [02] <Policy
 [03]   xmlns="urn:oasis:names:tc:xacml:4.0:core:schema"
-[04]   PolicyId="urn:oasis:names:tc:acal:3.0:example:SimplePolicy1"
+[04]   PolicyId="urn:oasis:names:tc:acal:1.0:example:SimplePolicy1"
 [05]   Version="1.0"
 [06]   CombiningAlgId="deny-overrides">
 [07]   <ShortIdSetReference>urn:oasis:names:tc:acal:1.0:core:identifiers</ShortIdSetReference>
@@ -1326,7 +1326,7 @@ The following XACML policy, respectively in XML and JSON, contains a rule instan
 
 ```
 [02] {
-[04]   "PolicyId":"urn:oasis:names:tc:xacml:3.0:example:SimplePolicy1",
+[04]   "PolicyId":"urn:oasis:names:tc:acal:1.0:example:SimplePolicy1",
 [05]   "Version":"1.0",
 [06]   "CombiningAlgId":"deny-overrides",
 [07]   "ShortIdSetReference":["urn:oasis:names:tc:acal:1.0:core:identifiers"],
@@ -1953,7 +1953,7 @@ Rule 2 illustrates the use of a mathematical function, i.e., `urn:oasis:names:tc
 [001] <?xml version="1.0" encoding="UTF-8"?>
 [002] <Policy
 [003]   xmlns="urn:oasis:names:tc:xacml:4.0:core:schema"
-[004]   PolicyId="urn:oasis:names:tc:xacml:3.0:example:policyid:2"
+[004]   PolicyId="urn:oasis:names:tc:acal:1.0:example:policyid:2"
 [005]   Version="1.0"
 [006]   CombiningAlgId="deny-overrides">
 [007]   <ShortIdSetReference>urn:oasis:names:tc:acal:1.0:example:identifiers</ShortIdSetReference>
@@ -2017,7 +2017,7 @@ Rule 2 illustrates the use of a mathematical function, i.e., `urn:oasis:names:tc
 
 ```
 [002] {
-[004]   "PolicyId":"urn:oasis:names:tc:xacml:3.0:example:policyid:2",
+[004]   "PolicyId":"urn:oasis:names:tc:acal:1.0:example:policyid:2",
 [005]   "Version":"1.0",
 [006]   "CombiningAlgId":"deny-overrides",
 [007]   "ShortIdSetReference":["urn:oasis:names:tc:acal:1.0:example:identifiers"],
@@ -2184,7 +2184,7 @@ Rule 3 illustrates the use of a notice expression.
 [001] <?xml version="1.0" encoding="UTF-8"?>
 [002] <Policy
 [003]   xmlns="urn:oasis:names:tc:xacml:4.0:core:schema"
-[004]   PolicyId="urn:oasis:names:tc:xacml:3.0:example:policyid:3"
+[004]   PolicyId="urn:oasis:names:tc:acal:1.0:example:policyid:3"
 [005]   Version="1.0"
 [006]   CombiningAlgId="deny-overrides">
 [007]   <ShortIdSetReference>urn:oasis:names:tc:acal:1.0:example:identifiers</ShortIdSetReference>
@@ -2259,7 +2259,7 @@ Rule 3 illustrates the use of a notice expression.
 
 ```
 [002] {
-[004]   "PolicyId":"urn:oasis:names:tc:xacml:3.0:example:policyid:3",
+[004]   "PolicyId":"urn:oasis:names:tc:acal:1.0:example:policyid:3",
 [005]   "Version":"1.0",
 [006]   "CombiningAlgId":"deny-overrides",
 [007]   "ShortIdSetReference":["urn:oasis:names:tc:acal:1.0:example:identifiers"],
@@ -2425,7 +2425,7 @@ Rule 4 illustrates the use of the `Deny` effect value.
 [01] <?xml version="1.0" encoding="UTF-8"?>
 [02] <Policy
 [03]   xmlns="urn:oasis:names:tc:xacml:4.0:core:schema"
-[04]   PolicyId="urn:oasis:names:tc:xacml:3.0:example:policyid:4"
+[04]   PolicyId="urn:oasis:names:tc:acal:1.0:example:policyid:4"
 [05]   Version="1.0"
 [06]   CombiningAlgId="deny-overrides">
 [07]   <ShortIdSetReference>urn:oasis:names:tc:acal:1.0:example:identifiers</ShortIdSetReference>
@@ -2473,7 +2473,7 @@ Rule 4 illustrates the use of the `Deny` effect value.
 
 ```
 [02] {
-[04]   "PolicyId":"urn:oasis:names:tc:xacml:3.0:example:policyid:4",
+[04]   "PolicyId":"urn:oasis:names:tc:acal:1.0:example:policyid:4",
 [05]   "Version":"1.0",
 [06]   "CombiningAlgId":"deny-overrides",
 [07]   "ShortIdSetReference":["urn:oasis:names:tc:acal:1.0:example:identifiers"],
