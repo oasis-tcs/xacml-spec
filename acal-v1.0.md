@@ -1372,9 +1372,9 @@ The following XACML policy, respectively in XML and JSON, contains a rule instan
 
 [05] The version of this instance of the policy. The combination of identifier and version has to be unique for a given policy instance so that there is no ambiguity if one policy is referenced from another policy.
 
-[06] The algorithm that will be used to combine the results of the various rules and policies that may be contained in the policy. The deny-overrides combining algorithm specified here says that, if any rule evaluates to `Deny`, then the policy must return `Deny`; otherwise, if any rule evaluates to `Permit`, then the policy must return `Permit`. The combining algorithm, which is fully described in Appendix Appendix C, also says what to do if an error were to occur when evaluating any rule, and what to do with rules that do not apply to a particular decision request.
-
 [07] A reference to a short identifier set imported into the policy. The names of the short identifiers in the set are available to use in this policy.
+
+[06] The algorithm that will be used to combine the results of the various rules and policies that may be contained in the policy. In this case the algorithm is nominated with the short identifier name `deny-overrides` which evaluates to `urn:oasis:names:tc:acal:1.0:combining-algorithm:deny-overrides` using the imported short identifier set. This combining algorithm specifies that, if any rule evaluates to `Deny`, then the policy must return `Deny`; otherwise, if any rule evaluates to `Permit`, then the policy must return `Permit`. The combining algorithm, which is fully described in Appendix Appendix C, also says what to do if an error were to occur when evaluating any rule, and what to do with rules that do not apply to a particular decision request.
 
 [08] An optional text description of the policy.
 
@@ -2160,7 +2160,7 @@ Rule 2 illustrates the use of a mathematical function, i.e., `urn:oasis:names:tc
 
 [055] - [120] The expression for the condition is the conjunction of four terms using the `urn:oasis:names:tc:acal:1.0:function:and` function.
 
-[058] - [072] The first term checks that the request is accessing a medical record belonging to Springfield Hospital.
+[058] - [072] The first term checks that the request is to access a medical record belonging to Springfield Hospital.
 
 [074] - [087] The second term is satisfied if the requested access is `read`.
 
@@ -2395,7 +2395,7 @@ Rule 3 illustrates the use of a notice expression.
 
 [018] - [032] The first term is satisfied if the subject's `urn:oasis:names:tc:acal:1.0:example:attribute:role` attribute contains the string value `physician`.
 
-[034] - [048] The second term checks that the request is accessing a medical record belonging to Springfield Hospital.
+[034] - [048] The second term checks that the request is to access a medical record belonging to Springfield Hospital.
 
 [050] - [064] The third term is satisfied if the requested access is `write`.
 
@@ -2418,6 +2418,169 @@ Rule 3 illustrates the use of a notice expression.
 [120] - [129] The third attribute assignment provides additional text for the email body, specifically the identity of the physician, which is obtained from the `urn:oasis:names:tc:acal:1.0:subject:subject-id` subject attribute using an attribute designator.
 
 #### 6.2.4.4 Rule 4
+
+Rule 4 illustrates the use of the `Deny` effect value.
+
+```
+[01] <?xml version="1.0" encoding="UTF-8"?>
+[02] <Policy
+[03]   xmlns="urn:oasis:names:tc:xacml:4.0:core:schema"
+[04]   PolicyId="urn:oasis:names:tc:xacml:3.0:example:policyid:4"
+[05]   Version="1.0"
+[06]   CombiningAlgId="deny-overrides">
+[07]   <ShortIdSetReference>urn:oasis:names:tc:acal:1.0:example:identifiers</ShortIdSetReference>
+[09]   <Rule
+[10]     Id="Rule4"
+[11]     Effect="Deny">
+[12]     <Description>An Administrator shall not be permitted to read or write medical elements of a patient record in the Springfield Hospital collection.</Description>
+[13]     <Condition>
+[14]       <Apply FunctionId="and">
+[17]         <Apply FunctionId="string-is-in">
+[20]           <Value DataType="string">administrator</Value>
+[25]           <AttributeDesignator
+[26]             Category="access-subject"
+[27]             AttributeId="role"
+[28]             DataType="string"/>
+[31]         </Apply>
+[33]         <Apply FunctionId="anyURI-is-in">
+[36]           <Value DataType="anyURI">http://www.med.example.com/springfield-hospital</Value>
+[41]           <AttributeDesignator
+[42]             Category="resource"
+[43]             AttributeId="collection"
+[44]             DataType="anyURI"/>
+[47]         </Apply>
+[49]         <Apply FunctionId="or">
+[52]           <Apply FunctionId="string-is-in">
+[55]             <Value DataType="string">read</Value>
+[60]             <AttributeDesignator
+[61]                 Category="action"
+[62]                 AttributeId="action-id"
+[63]                 DataType="string"/>
+[66]           </Apply>
+[68]           <Apply FunctionId="string-is-in">
+[71]             <Value DataType="string">write</Value>
+[76]             <AttributeDesignator
+[77]               Category="action"
+[78]               AttributeId="action-id"
+[79]               DataType="string"/>
+[82]           </Apply>
+[84]         </Apply>
+[86]       </Apply>
+[87]     </Condition>
+[88]   </Rule>
+[90] </Policy>
+```
+
+```
+[02] {
+[04]   "PolicyId":"urn:oasis:names:tc:xacml:3.0:example:policyid:4",
+[05]   "Version":"1.0",
+[06]   "CombiningAlgId":"deny-overrides",
+[07]   "ShortIdSetReference":["urn:oasis:names:tc:acal:1.0:example:identifiers"],
+[08]   "CombinerInput":[{
+[09]     "Rule":{
+[10]       "Id":"Rule4",
+[11]       "Effect":"Deny",
+[12]       "Description":"An Administrator shall not be permitted to read or write medical elements of a patient record in the Springfield Hospital collection.",
+[13]       "Condition":{
+[14]         "Apply":{
+[15]           "FunctionId":"and",
+[16]           "Expression":[{
+[17]             "Apply":{
+[18]               "FunctionId":"string-is-in",
+[19]               "Expression":[{
+[20]                 "Value":{
+[21]                   "DataType":"string",
+[22]                   "Value":"administrator"
+[23]                 }
+[24]               },{
+[25]                 "AttributeDesignator":{
+[26]                   "Category":"access-subject",
+[27]                   "AttributeId":"role",
+[28]                   "DataType":"string"
+[29]                 }
+[30]               }]
+[31]             }
+[32]           },{
+[33]             "Apply":{
+[34]               "FunctionId":"anyURI-is-in",
+[35]               "Expression":[{
+[36]                 "Value":{
+[37]                   "DataType":"anyURI",
+[38]                   "Value":"http://www.med.example.com/springfield-hospital"
+[39]                 }
+[40]               },{
+[41]                 "AttributeDesignator":{
+[42]                   "Category":"resource",
+[43]                   "AttributeId":"collection",
+[44]                   "DataType="anyURI"
+[45]                 }
+[46]               }]
+[47]             }
+[48]           },{
+[49]             "Apply":{
+[50]               "FunctionId":"or",
+[51]               "Expression":[{
+[52]                 "Apply":{
+[53]                   "FunctionId":"string-is-in",
+[54]                   "Expression":[{
+[55]                     "Value":{
+[56]                       "DataType":"string",
+[57]                       "Value":"read"
+[58]                     }
+[59]                   },{
+[60]                     "AttributeDesignator":{
+[61]                       "Category":"action",
+[62]                       "AttributeId":"action-id",
+[63]                       "DataType":"string"
+[64]                     }
+[65]                   }]
+[66]                 }
+[67]               },{
+[68]                 "Apply":{
+[69]                   "FunctionId":"string-is-in",
+[70]                   "Expression":[{
+[71]                     "Value":{
+[72]                       "DataType":"string",
+[73]                       "Value":"write"
+[74]                     }
+[75]                   },{
+[76]                     "AttributeDesignator
+[77]                       "Category":"action",
+[78]                       "AttributeId":"action-id",
+[79]                       "DataType":"string"
+[80]                     }
+[81]                   }]
+[82]                 }
+[83]               }]
+[84]             }
+[85]           }]
+[86]         }
+[87]       }
+[88]     }
+[89]   }]
+[90] }
+```
+
+[09] - [72] The rule that assesses the decision request.
+
+[11] The rule effect is `Deny`. If the rule's condition is `true` then the rule evaluates to `Deny`.
+
+[13] - [71] The rule's condition, which must evaluate to `true` for the rule to be applicable.
+
+[14] - [70] The expression for the condition is the conjunction of three terms using the `urn:oasis:names:tc:acal:1.0:function:and` function.
+
+[17] - [31] The first term is satisfied if the subject's `urn:oasis:names:tc:acal:1.0:example:attribute:role` attribute contains the string value `administrator`.
+
+[33] - [47] The second term checks that the request is to access a medical record belonging to Springfield Hospital.
+
+[49] - [84] The third term is a disjunction of two terms using the `urn:oasis:names:tc:acal:1.0:function:or` function  (short identifier name `or`).
+
+[52] - [66] The first term of the disjunction is satisfied if the requested access is `read`.
+
+[68] - [82] The second term of the disjunction is satisfied if the requested access is `write`.
+
+If an administrator attempts to read or write a patient record, then the condition is satisfied and the rule evaluates to `Deny`. According to the policy's `urn:oasis:names:tc:acal:1.0:combining-algorithm:deny-overrides` combining algorithm, if any of the policy's rules (there is only one here) evaluates to `Deny` then the policy evaluates to `Deny` and the administrator is prevented from accessing the patient record.
 
 #### 6.2.4.5 Example Policy with Nested Policies
 
