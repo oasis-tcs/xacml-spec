@@ -60,7 +60,7 @@ None.
 ### Abstract
 
 
-This specification defines Version 1.0 of the Attribute-Centric Authorization Language, *aka* ACAL (Core Specification), which is an evolution of [XACML v3.0](#xacml) towards an XML-agnostic language (generalization), with various concrete representation formats (syntaxes), and XACML becomes one of them. This is illustrated by the figure below:
+This specification defines Version 1.0 of the Attribute-Centric Authorization Language, *aka* ACAL (Core Specification), which is an evolution of [XACML v3.0](#xacml) towards an XML-agnostic language (generalization), with various concrete representation formats (syntaxes), including XACML as one of them. This is illustrated by the figure below:
 
 ![ACAL](images/acal_big.svg)
 
