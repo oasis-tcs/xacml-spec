@@ -2513,7 +2513,7 @@ Rule 4 illustrates the use of the `Deny` effect value.
 [41]                 "AttributeDesignator":{
 [42]                   "Category":"resource",
 [43]                   "AttributeId":"collection",
-[44]                   "DataType="anyURI"
+[44]                   "DataType":"anyURI"
 [45]                 }
 [46]               }]
 [47]             }
@@ -2545,7 +2545,7 @@ Rule 4 illustrates the use of the `Deny` effect value.
 [73]                       "Value":"write"
 [74]                     }
 [75]                   },{
-[76]                     "AttributeDesignator
+[76]                     "AttributeDesignator": {
 [77]                       "Category":"action",
 [78]                       "AttributeId":"action-id",
 [79]                       "DataType":"string"
