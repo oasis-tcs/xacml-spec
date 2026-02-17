@@ -16,20 +16,19 @@
 ### This version
 
 <!-- TODO: update the links according to OASIS requirements -->
-- https://docs.oasis-open.org/xacml/acal/v1.0/csd01/acal-v1.0-csd01.html (Authoritative)
-- https://docs.oasis-open.org/xacml/acal/v1.0/csd01/acal-v1.0-csd01.pdf
-- https://docs.oasis-open.org/xacml/acal/v1.0/csd01/acal-v1.0-csd01.md
-
+- https://docs.oasis-open.org/xacml/acal/acal/core/v1.0/csd01/acal-core-v1.0-csd01.html (Authoritative)
+- https://docs.oasis-open.org/xacml/acal/acal/core/v1.0/csd01/acal-core-v1.0-csd01.pdf
+- https://docs.oasis-open.org/xacml/acal/acal/core/v1.0/csd01/acal-core-v1.0-csd01.md
 
 ### Previous version
 
-None.
+N/A
 
 ### Latest version
 
-- https://docs.oasis-open.org/xacml/acal/v1.0/csd01/acal-v1.0-csd01.html (Authoritative)
-- https://docs.oasis-open.org/xacml/acal/v1.0/csd01/acal-v1.0-csd01.pdf
-- https://docs.oasis-open.org/xacml/acal/v1.0/csd01/acal-v1.0-csd01.md
+- https://docs.oasis-open.org/xacml/acal/acal/core/v1.0/acal-core-v1.0.html (Authoritative)
+- https://docs.oasis-open.org/xacml/acal/acal/core/v1.0/acal-core-v1.0.pdf
+- https://docs.oasis-open.org/xacml/acal/acal/core/v1.0/acal-core-v1.0.md
 
 
 ### Technical Committee
@@ -39,25 +38,21 @@ None.
 
 ### Chairs
 
-
 - Bill Parducci (bill@parducci.net), Individual
 
 
 ### Secretaries
-
 
 - Bill Parducci (bill@parducci.net), Individual 
 
 
 ### Editors
 
-
 - Steven Legg (steven.legg@viewds.com), [ViewDS Identity Solutions](https://www.viewds.com/)
 - Cyril Dangerville (cyril.dangerville@thalesgroup.com), [THALES](https://www.thalesgroup.com/)
 
 
 ### Abstract
-
 
 This specification defines Version 1.0 of the Attribute-Centric Authorization Language, *aka* ACAL (Core Specification), which is an evolution of [XACML v3.0](#xacml) towards an XML-agnostic language (generalization), with various concrete representation formats (syntaxes), including XACML as one of them. This is illustrated by the Figure A-1  below:
 
@@ -66,18 +61,16 @@ This specification defines Version 1.0 of the Attribute-Centric Authorization La
 **Fig. A-1.** ACAL Specifications Overview
 
 
-
 ### Citation Format
-
 
 When referencing this document, the following citation format should be used:
 
+**[ACAL-v1.0-core]**
 _Attribute-Centric Authorization Language (ACAL) Version 1.0_.
-Edited by Steven Legg and Cyril Dangerville. 17 February 2026. OASIS Committee Specification Draft 01.
+Edited by Steven Legg and Cyril Dangerville. 17 February 2026. OASIS Committee Specification Draft 01. https://docs.oasis-open.org/xacml/acal/acal/core/v1.0/csd01/acal-core-v1.0-csd01.html Latest version: https://docs.oasis-open.org/xacml/acal/acal/core/v1.0/acal-core-v1.0.html
 
 
 ### Related Work
-
 
 This document replaces or supersedes:
 
@@ -95,51 +88,6 @@ This document is related to:
 
 
 Copyright © OASIS Open 2026. All Rights Reserved.  For license and copyright information, and complete status, please see Annex A which contains the License, Document Status and Notices.
-
-## How to generate HTML and PDF versions
-
-### Online generation
-
-HTML/PDF versions are generated automatically online via Github Actions after each update pushed to the main branch of [OASIS XACML TC Github repository](https://github.com/oasis-tcs/xacml-spec/). Go to Github Actions on the github repository, then go to the latest workflow run, and, if the run succeeded, the summary should display the links to the generated HTML/PDF documents.
-
-### Offline generation
-
-#### Prerequisites
-
-Install Pandoc, Graphviz and PlantUML on your system; or simply use Docker with the following shell alias:
-```
-$ alias pandoc='docker run --rm --volume "$(pwd):/data" cdang/pandoc-plantuml'
-```
-_The Dockerfile (named `Dockerfile`) of the docker image used in the alias above is provided in the [pandoc](pandoc) folder next to this markdown file for your convenience if you wish to build it yourself._  
-
-OASIS staff are currently using pandoc 3.0 from https://github.com/jgm/pandoc/releases/tag/3.0.
-
-Git clone or get a local copy of [OASIS XACML TC Github repository](https://github.com/oasis-tcs/xacml-spec/), open a terminal and **change your working directory to the root directory of your local copy of the repository**.
-
-#### CSS stylesheet
-
-The generation command uses a CSS stylesheet file (`-c` argument) provided by OASIS. It may be changed to one of these (or the local version in the `styles` folder) to get a different style of output:
-- https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3.css
-- https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3a.css (this one produces HTML that resembles the github display more closely, especially for blocks of code) This template already includes a reference (in HTML code) to this .css file.
-- https://docs.oasis-open.org/templates/css/markdown-styles-v1.8.1-cn_final.css
-
-#### HTML generation
-
-Run the following command line to generate HTML from this markdown file (named `acal-v1.0.md`) to an output file `/tmp/acal-v1.0.html`:
-
-```console
-$ pandoc -f gfm+definition_lists -t html -c styles/markdown-styles-v1.7.3a.css -s --lua-filter pandoc/diagram.lua --defaults pandoc/defaults.yaml --embed-resources --metadata title="Attribute-Centric Authorization Language (ACAL) Version 1.0" -o /tmp/acal-v1.0-csd01.html acal-v1.0.md
-```
-
-Note this command generates a Table of Contents (TOC) in HTML which is located at the top of the HTML document, and which requires additional editing in order to be published in the expected OASIS style. This editing will be handled by OASIS staff during publication.
-
-#### PDF generation
-
-For PDF output (file `/tmp/acal-v1.0.pdf`), the command line is the following (different `-t` and `-H` arguments):
-
-```console
-$ pandoc -f gfm+definition_lists -t pdf -c styles/markdown-styles-v1.7.3a.css -H pandoc/custom_latex_header_for_pandoc_pdf_output.tex -s -L pandoc/diagram.lua --defaults pandoc/defaults.yaml --metadata title="Attribute-Centric Authorization Language (ACAL) Version 1.0" --embed-resources -o /tmp/acal-v1.0.pdf acal-v1.0.md
-```
 
 ---
 
@@ -447,6 +395,8 @@ $ pandoc -f gfm+definition_lists -t pdf -c styles/markdown-styles-v1.7.3a.css -H
   - [E.6 Deny Unless Permit](#e6-deny-unless-permit)
   - [E.7 Permit Unless Deny](#e7-permit-unless-deny)
   - [E.8 First Applicable](#e8-first-applicable)
+- [Annex F. How to generate HTML and PDF Versions](#f1-html-pdf-generation)
+  - [F.1 HTML/PDF Generation](#XXXX)
 - [Appendix 1 Acknowledgments](#appendix-1-acknowledgments)
   - [Leadership](#leadership)
   - [Special Thanks](#special-thanks)
@@ -8146,6 +8096,52 @@ Notices SHALL be combined as described in [Section 8.16](#816-notices).
 
 ---
 
+# Annex F.  How to generate HTML and PDF Versions
+### Online generation
+
+HTML/PDF versions are generated automatically online via Github Actions after each update pushed to the main branch of [OASIS XACML TC Github repository](https://github.com/oasis-tcs/xacml-spec/). Go to Github Actions on the github repository, then go to the latest workflow run, and, if the run succeeded, the summary should display the links to the generated HTML/PDF documents.
+
+### Offline generation
+
+#### Prerequisites
+
+Install Pandoc, Graphviz and PlantUML on your system; or simply use Docker with the following shell alias:
+```
+$ alias pandoc='docker run --rm --volume "$(pwd):/data" cdang/pandoc-plantuml'
+```
+_The Dockerfile (named `Dockerfile`) of the docker image used in the alias above is provided in the [pandoc](pandoc) folder next to this markdown file for your convenience if you wish to build it yourself._  
+
+OASIS staff are currently using pandoc 3.0 from https://github.com/jgm/pandoc/releases/tag/3.0.
+
+Git clone or get a local copy of [OASIS XACML TC Github repository](https://github.com/oasis-tcs/xacml-spec/), open a terminal and **change your working directory to the root directory of your local copy of the repository**.
+
+#### CSS stylesheet
+
+The generation command uses a CSS stylesheet file (`-c` argument) provided by OASIS. It may be changed to one of these (or the local version in the `styles` folder) to get a different style of output:
+- https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3.css
+- https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3a.css (this one produces HTML that resembles the github display more closely, especially for blocks of code) This template already includes a reference (in HTML code) to this .css file.
+- https://docs.oasis-open.org/templates/css/markdown-styles-v1.8.1-cn_final.css
+
+#### HTML generation
+
+Run the following command line to generate HTML from this markdown file (named `acal-v1.0.md`) to an output file `/tmp/acal-v1.0.html`:
+
+```console
+$ pandoc -f gfm+definition_lists -t html -c styles/markdown-styles-v1.7.3a.css -s --lua-filter pandoc/diagram.lua --defaults pandoc/defaults.yaml --embed-resources --metadata title="Attribute-Centric Authorization Language (ACAL) Version 1.0" -o /tmp/acal-v1.0-csd01.html acal-v1.0.md
+```
+
+Note this command generates a Table of Contents (TOC) in HTML which is located at the top of the HTML document, and which requires additional editing in order to be published in the expected OASIS style. This editing will be handled by OASIS staff during publication.
+
+#### PDF generation
+
+For PDF output (file `/tmp/acal-v1.0.pdf`), the command line is the following (different `-t` and `-H` arguments):
+
+```console
+$ pandoc -f gfm+definition_lists -t pdf -c styles/markdown-styles-v1.7.3a.css -H pandoc/custom_latex_header_for_pandoc_pdf_output.tex -s -L pandoc/diagram.lua --defaults pandoc/defaults.yaml --metadata title="Attribute-Centric Authorization Language (ACAL) Version 1.0" --embed-resources -o /tmp/acal-v1.0.pdf acal-v1.0.md
+```
+
+
+---
 
 # Appendix 1 Acknowledgments
 
@@ -8308,8 +8304,6 @@ Latest revision history can be obtained from [OASIS XACML TC's github repository
 - \< Date in yyyy-mm-dd format \>, \< Revision number \>  
 - \< Date in yyyy-mm-dd format \>, \< Revision number \>
 -->
-
-
 
 <!-- The following centered line represents the end of the document -->  
 \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
