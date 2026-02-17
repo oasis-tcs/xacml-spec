@@ -54,15 +54,15 @@ None.
 
 - Steven Legg (steven.legg@viewds.com), [ViewDS Identity Solutions](https://www.viewds.com/)
 - Cyril Dangerville (cyril.dangerville@thalesgroup.com), [THALES](https://www.thalesgroup.com/)
-- Bill Parducci (bill@parducci.net), Individual
 
 
 ### Abstract
 
 
-This specification defines Version 1.0 of the Attribute-Centric Authorization Language, *aka* ACAL (Core Specification), which is an evolution of [XACML v3.0](#xacml) towards an XML-agnostic language (generalization), with various concrete representation formats (syntaxes), including XACML as one of them. This is illustrated by the figure below:
+This specification defines Version 1.0 of the Attribute-Centric Authorization Language, *aka* ACAL (Core Specification), which is an evolution of [XACML v3.0](#xacml) towards an XML-agnostic language (generalization), with various concrete representation formats (syntaxes), including XACML as one of them. This is illustrated by the Figure A-1  below:
 
 ![ACAL](images/acal_big.svg)
+**Fig. A-1.** ACAL Specifications Overview
 
 
 
@@ -80,7 +80,7 @@ Edited by Steven Legg and Cyril Dangerville. 17 February 2026. OASIS Committee S
 
 This document replaces or supersedes:
 
-- _eXtensible Access Control Markup Language (XACML) Version 3.0 Plus Errata 01_. Edited by Erik Rissanen. OASIS Standard incorporating Approved Errata. https://docs.https:xacml/3.0/xacml-3.0-core-spec-en.html.
+- _eXtensible Access Control Markup Language (XACML) Version 3.0 Plus Errata 01_. Edited by Erik Rissanen. OASIS Standard incorporating Approved Errata. https://docs.oasis-open.org/xacml/3.0/xacml-3.0-core-spec-en.html.
 
 
 This document is related to:
@@ -228,19 +228,18 @@ $ pandoc -f gfm+definition_lists -t pdf -c styles/markdown-styles-v1.7.3a.css -H
 - [6 Examples (non-normative)](#6-examples-non-normative)
   - [6.1 Example One](#61-example-one)
     - [6.1.1 Example Policy](#611-example-policy)
-    - [6.1.2 Example Request Context](#612-example-request-context)
-    - [6.1.3 Example Response Context](#613-example-response-context)
+    - [6.1.2 Example Decision Request](#612-example-decision-request)
+    - [6.1.3 Example Decision Response](#613-example-response)
   - [6.2 Example Two](#62-example-two)
-    - [6.2.1 Example Medical Record Instance](#621-example-medical-record-instance)
-    - [6.2.2 Example Request Context](#622-example-request-context)
-    - [6.2.3 Example Plain-Language Rules](#623-example-plain-language-rules)
-    - [6.2.4 Example Short Identifier Set](#624-example-short-identifier-set)
-    - [6.2.5 Example ACAL Rule Instances](#625-example-acal-rule-instances)
-      - [6.2.5.1 Rule 1](#6251-rule-1)
-      - [6.2.5.2 Rule 2](#6252-rule-2)
-      - [6.2.5.3 Rule 3](#6253-rule-3)
-      - [6.2.5.4 Rule 4](#6254-rule-4)
-      - [6.2.5.5 Example Policy with Nested Policies](#6255-example-policy-with-nested-policies)
+    - [6.2.1 Example Plain-Language Rules](#621-example-plain-language-rules)
+    - [6.2.2 Example Short Identifier Set](#622-example-short-identifier-set)
+    - [6.2.3 Example Decision Request](#623-example-decision-request)
+    - [6.2.4 Example ACAL Rule Instances](#624-example-acal-rule-instances)
+      - [6.2.4.1 Rule 1](#6241-rule-1)
+      - [6.2.4.2 Rule 2](#6242-rule-2)
+      - [6.2.4.3 Rule 3](#6243-rule-3)
+      - [6.2.4.4 Rule 4](#6244-rule-4)
+      - [6.2.4.5 Example Policy with Nested Policies](#6245-example-policy-with-nested-policies)
 - [7 Structures](#7-structures)
   - [7.1 Introduction](#71-introduction)
     - [7.1.1 Object Type](#711-object-type)
@@ -851,9 +850,10 @@ In some applications it is helpful to specify supplemental information about a d
 
 <!-- From OASIS Open Specification Template Instructions: This section is **REQUIRED** and **MUST** be the last numbered subsection in this section. -->
 
-As illustrated in the figure below, compared to [XACML v3](#xacml), this ACAL specification is a generalization of XACML model (syntax and processing model), aiming to be XML-agnostic, therefore laying the ground for other (non-XML) concrete representations to be added. In addition, ACAL benefits from extra enhancements including model simplifications and optimizations as well as new features. For purpuses of simplifying this specification, all XPath features - originally from XACML - are kept in a separate ACAL Profile. 
+As illustrated in the **Figure 4-1** below, compared to [XACML v3](#xacml), this ACAL specification is a generalization of XACML model (syntax and processing model), aiming to be XML-agnostic, therefore laying the ground for other (non-XML) concrete representations to be added. In addition, ACAL benefits from extra enhancements including model simplifications and optimizations as well as new features. For purpuses of simplifying this specification, all XPath features - originally from XACML - are kept in a separate ACAL Profile. 
 
 ![ACAL](images/acal_small.svg)
+**Fig. 4-1.** Evolution from XACML v3 to ACAL 
 
 
 The detailed list of changes from the previous version and any revision history can be found in [Appendix 2](#appendix-2-changes-from-previous-version).
@@ -870,9 +870,7 @@ The data-flow model and language model of ACAL are described in the following su
 
 ## 5.1 Data-Flow Model
 
-The major actors in the ACAL domain are shown in the data-flow diagram of Figure 1.
-
-**Figure 1.** Data-Flow Diagram
+The major actors in the ACAL domain are shown in the data-flow diagram of **Figure 5-1**.
 
 <!-- ![data-flow diagram](images/DataFlowDiagram.png) -->
 
@@ -1073,6 +1071,7 @@ digraph Fig1 {
     
 }
 ```
+**Fig. 5-1.** Data-Flow Diagram
 
 <span> </span>
 : Note: some of the data-flows shown in the diagram may be facilitated by a repository. For instance, the communications between the context handler and the PIP or the communications between the PDP and the PAP may be facilitated by a repository. The ACAL specification is not intended to place restrictions on the location of any such repository, or indeed to prescribe a particular communication protocol for any of the data-flows.
@@ -1096,9 +1095,8 @@ The model operates by the following steps.
 
 ## 5.2 ACAL Context
 
-ACAL is intended to be suitable for a variety of application environments. The core language is insulated from the application environment by the ACAL context, as shown in Figure 2, in which the scope of the ACAL specification is indicated by the shaded area. In the figure, the ACAL context represents the inputs and outputs of the PDP decision. An ACAL Policy references attributes in the ACAL context via content-specific path expressions (e.g. XPath for XML content, JSONPath for JSON content) over the `ContentType` objects of the context, or *named* attribute designators that identify the attribute by its category, identifier, data type and (optionally) its issuer. Implementations MUST convert between the attribute representations in the application environment (e.g., SAML, J2SE, CORBA, and so on) and the attribute representations in the ACAL context. How this is achieved is outside the scope of the ACAL specification. In some cases, such as SAML, this conversion may be accomplished in an automated way through the use of an XSLT transformation.
+ACAL is intended to be suitable for a variety of application environments. The core language is insulated from the application environment by the ACAL context, as shown in **Figure 5-2**, in which the scope of the ACAL specification is indicated by the shaded area. In the Figure 5-2, the ACAL context represents the inputs and outputs of the PDP decision. An ACAL Policy references attributes in the ACAL context via content-specific path expressions (e.g. XPath for XML content, JSONPath for JSON content) over the `ContentType` objects of the context, or *named* attribute designators that identify the attribute by its category, identifier, data type and (optionally) its issuer. Implementations MUST convert between the attribute representations in the application environment (e.g., SAML, J2SE, CORBA, and so on) and the attribute representations in the ACAL context. How this is achieved is outside the scope of the ACAL specification. In some cases, such as SAML, this conversion may be accomplished in an automated way through the use of an XSLT transformation.
 
-**Figure 2.** ACAL Context
 
 <!-- ![context](images/Context.png) -->
 ```dot
@@ -1151,6 +1149,7 @@ digraph Fig1 {
     {rank=same; inputs; inputs_to_request; request; request_to_pdp; pdp; pdp_to_response; response; response_to_outputs; outputs}
 }
 ```
+**Figure 5-2.** ACAL Context
 
 <span> </span>
 : Note: The PDP is not required to operate directly on the ACAL representation of a policy. It may operate directly on an alternative representation.
@@ -1161,7 +1160,7 @@ See [Section 8.4.5](#845-attribute-retrieval) for a more detailed discussion of 
 
 ## 5.3 Policy Language Model
 
-The policy language model is shown in Figure 3. The main components of the model are:
+The policy language model is shown in **Figure 5-3**. The main components of the model are:
 
 * Rule; and
 
@@ -1169,9 +1168,8 @@ The policy language model is shown in Figure 3. The main components of the model
 
 These are described in the following sub-sections.
 
-**Figure 3.** Policy Language Model
 
-<div style="text-align: center;">
+<div style="text-align: left;">
 
 ```plantuml
 @startuml
@@ -1203,6 +1201,7 @@ Rule "*" *-right- "1" NoticeExpression: \t
 Rule "1" *-- "1" Effect 
 @enduml
 ```
+**Figure 5-3.** Policy Language Model
 </div>
 
 ### 5.3.1 Rule
@@ -2584,7 +2583,96 @@ If an administrator attempts to read or write a patient record, then the conditi
 
 #### 6.2.4.5 Example Policy with Nested Policies
 
+This section uses the examples of the previous sections to illustrate the process of combining policies. The policy governing read and write access to medical elements of a record is formed from each of the four rules described in Section 6.2.1. In plain language, the combined policy is:
 
+- Either the requestor is the patient (Rule 1); or
+- The requestor is the parent or guardian and the patient is under 16 (Rule 2); or
+- The requestor is the primary care physician and a notification is sent to the patient (Rule 3); and
+- The requestor is not an administrator (Rule 4). 
+
+The following policy combines multiple policies: Policies 1, 2, 3 are included by reference and policy 4 explicitly included inline.
+
+```
+[01] <?xml version="1.0" encoding="UTF-8"?>
+[02] <Policy
+[03]    xmlns="urn:oasis:names:tc:xacml:4.0:core:schema"
+[04]   PolicyId="urn:oasis:names:tc:acal:1.0:example:policyid:5"
+[05]    Version="1.0"
+[06]   CombiningAlgId="deny-overrides">
+[07]   <ShortIdSetReference>urn:oasis:names:tc:acal:1.0:example:identifiers</ShortIdSetReference>
+[08]   <Description>
+[09]     Example policy with nested policies, showing both policy references and inline.
+[10]     First 3 elements are PolicyReferences to the policies defined in sections 6.2.4.1 (contains Rule
+[11]     1), 6.2.4.2 (contains Rule 2) and 6.2.4.3 (contains Rule 3).
+[12]     The last element is an inline policy that is the copy of the policy from section 6.2.4.4 (contains Rule 4). 
+[13]   </Description>
+[14]   <PolicyReference Id="urn:oasis:names:tc:acal:1.0:example:policyid:1" />
+[15]   <PolicyReference Id="urn:oasis:names:tc:acal:1.0:example:policyid:2" />
+[16]   <PolicyReference Id="urn:oasis:names:tc:acal:1.0:example:policyid:3"/>
+[17]   <Policy  
+[18]     PolicyId="urn:oasis:names:tc:acal:1.0:example:policyid:4"
+[19]     Version="1.0"
+[20]     CombiningAlgId="deny-overrides">
+[21]     <!--  
+[22]          ... Content of the Policy from section 6.2.4.4 goes here... 
+[23]     -->
+[24]   </Policy>
+[25] </Policy>
+```
+
+[02] - [06] The root Policy element declaration, including the standard XML namespace declaration.
+
+[04] The PolicyId attribute is used for identifying this policy for possible inclusion in another one.
+
+[06] The policy/rule combining algorithm identifier. Policies nested inside this policy (child elements) are combined according to this combining algorithm when the authorization decision is computed.
+
+[08] - [13] Free form description of the root policy.
+
+[14] - [16] Each PolicyReference includes a policy by ID.
+
+[17] - [24] Policy 4 is explicitly included in this policy. The rule in Policy 4 is omitted for brevity but supposed to be same as in the Policy of section 6.2.4.4.
+
+The same Policy represented in JSON:
+```
+[1]{
+[2]    "PolicyId": "urn:oasis:names:tc:acal:1.0:example:policyid:5",
+[3]    "Version": "1.0",
+[4]    "CombiningAlgId": "deny-overrides",
+[5]    "ShortIdSetReference": [
+[6]        "urn:oasis:names:tc:acal:1.0:example:identifiers"
+[7]    ],
+[8]    "Description": "Example policy with nested policies, showing both policy references and inline.",
+[9]    "CombinerInput": [
+[10]        {
+[11]            "PolicyReference": {
+[12]                "Id": "urn:oasis:names:tc:acal:1.0:example:policyid:1"
+[13]            }
+[14]        },
+[15]        {
+[16]            "PolicyReference": {
+[17]                "Id": "urn:oasis:names:tc:acal:1.0:example:policyid:2"
+[18]            }
+[19]        },
+[20]        {
+[21]            "PolicyReference": {
+[22]                "Id": "urn:oasis:names:tc:acal:1.0:example:policyid:3"
+[23]            }
+[24]        },
+[25]        {
+[26]            "Policy": {
+[27]                "PolicyId": "urn:oasis:names:tc:acal:1.0:example:policyid:4",
+[28]                "Version": "1.0",
+[29]                "CombiningAlgId": "deny-overrides",
+[30]                "CombinerInput": [
+[31]                    {
+[32]                        ...Rule from the Policy in section 6.2.4.4 goes here... 
+[33]                    }
+[34]                ]
+[35]            }
+[36]        }
+[37]    ]
+[38]}
+```
 ---
 
 
@@ -4223,7 +4311,7 @@ An `AttributeType` object contains the following properties:
 
 An `AttributeAssignmentType` object is used in a notice expression to include an attribute in a notice. The `AttributeAssignmentType` object type extends the `AttributeType` definition by adding a `Category` property.
 
-The attribute specified SHALL be understood by the PEP, but it is not further specified by ACAL. See [Section 8.16](#816-notices). [Section 6.2.5.3](#6253-rule-3) provides a number of examples of attribute assignments included in notices.
+The attribute specified SHALL be understood by the PEP, but it is not further specified by ACAL. See [Section 8.16](#816-notices). [Section 6.2.4.3](#6243-rule-3) provides a number of examples of attribute assignments included in notices.
 
 UML definition (class diagram):
 ```plantuml
@@ -6269,7 +6357,7 @@ Sloman, M. Policy Driven Management for Distributed Systems. Journal of Network 
 
 ###### [XACML]
 
-_eXtensible Access Control Markup Language (XACML) Version 3.0 Plus Errata 01_. Edited by Erik Rissanen. OASIS Standard incorporating Approved Errata. https://docs.https:xacml/3.0/xacml-3.0-core-spec-en.html.
+_eXtensible Access Control Markup Language (XACML) Version 3.0 Plus Errata 01_. Edited by Erik Rissanen. OASIS Standard incorporating Approved Errata. https://docs.oasis-open.org/xacml/3.0/xacml-3.0-core-spec-en.html.
 
 
 ---
@@ -8036,7 +8124,6 @@ This section **SHOULD** include the leadership (chairs, sub committees chairs, s
 - Position, First Name Last Name, Company, [optional time frames] 
 
 -->
-
 
 - Chairs
   - Bill Parducci, Individual
