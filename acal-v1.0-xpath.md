@@ -1230,7 +1230,7 @@ For PDF output (file `/tmp/acal-v1.0-xpath.pdf`), the command line is the follow
 
 <!-- fenced_code_attributes pandoc extension is used for numberine lines in code blocks; fenced_code_attributes is not supported for 'gfm' format. Using 'markdown' instead. -->
 ```console
-$ pandoc -f markdown+definition_lists+fenced_code_attributes -c styles/markdown-styles-v1.7.3a.css -H custom_latex_header_for_pandoc_pdf_output.tex --standalone --filter pandoc-include --lua-filter pandoc/diagram.lua --defaults pandoc/defaults.yaml --embed-resources --metadata title=" " -t pdf -o /tmp/acal-v1.0-xpath.pdf acal-v1.0-xpath.md
+$ pandoc -f markdown+definition_lists+fenced_code_attributes -c styles/markdown-styles-v1.7.3a.css -H pandoc/custom_latex_header_for_pandoc_pdf_output.tex --standalone --filter pandoc-include --lua-filter pandoc/diagram.lua --defaults pandoc/defaults.yaml --embed-resources --metadata title=" " -t pdf -o /tmp/acal-v1.0-xpath.pdf acal-v1.0-xpath.md
 ```
 
 # Appendix 1 Acknowledgments
