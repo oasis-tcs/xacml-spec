@@ -1398,7 +1398,7 @@ This policy does not specify a target so the policy is applicable to any decisio
 
 [18] - [20] The first argument: the matching function. The `Id` property specifies that the matching function is `urn:oasis:names:tc:acal:1.0:function:rfc822Name-match` using the short identifier name `rfc822Name-match`. This function returns `true` if an email address as its first argument belongs to a domain nominated by its second argument.
 
-[22] - [26] The second argument: the bag of values. It is an attribute designator that selects a bag of `urn:oasis:names:tc:acal:1.0:data-type:rfc822Name` values from the `urn:oasis:names:tc:acal:1.0:subject:subject-id` (short identifier name `subject-id`) attribute in the `urn:oasis:names:tc:acal:1.0:subject-category:access-subject` category.
+[22] - [26] The second argument: the bag of values. It is an attribute designator that selects a bag of `urn:oasis:names:tc:acal:1.0:data-type:rfc822Name` values from the `urn:oasis:names:tc:acal:1.0:subject:subject-id` attribute (short identifier name `subject-id`) in the `urn:oasis:names:tc:acal:1.0:subject-category:access-subject` category.
 
 [28] - [31] The third argument: an attribute value. It is the email address domain to be matched, specifically, the character string `med.example.com`. The `DataType` property indicates that the data type of the value is `urn:oasis:names:tc:acal:1.0:data-type:string` using the short identifier name `string`.
 
@@ -1582,11 +1582,11 @@ The following short-identifier set, in both the XML and JSON representations, de
   "ShortId":[
     { "Name":"patient-number", "Value":"urn:oasis:names:tc:acal:1.0:example:attribute:patient-number" },
     { "Name":"collection", "Value":"urn:oasis:names:tc:acal:1.0:example:attribute:collection" },
-	  { "Name":"patient-date-of-birth", "Value":"urn:oasis:names:tc:acal:1.0:example:attribute:patient-date-of-birth" },
+    { "Name":"patient-date-of-birth", "Value":"urn:oasis:names:tc:acal:1.0:example:attribute:patient-date-of-birth" },
     { "Name":"parent-guardian-id", "Value":"urn:oasis:names:tc:acal:1.0:example:attribute:parent-guardian-id" },
     { "Name":"physician-id", "Value":"urn:oasis:names:tc:acal:1.0:example:attribute:physician-id" },
     { "Name":"role", "Value":"urn:oasis:names:tc:acal:1.0:example:attribute:role" },
-	  { "Name":"patient-contact", "Value":"urn:oasis:names:tc:acal:1.0:example:attribute:patient-contact" }
+    { "Name":"patient-contact", "Value":"urn:oasis:names:tc:acal:1.0:example:attribute:patient-contact" }
   ]
 }
 ```
@@ -1779,31 +1779,32 @@ Rule 1 illustrates a policy with a simple rule containing a condition. It also i
 [34]       </Apply>
 [36]     </Apply>
 [38]   </VariableDefinition>
-[41]   <Rule Id="Rule1" Effect="Permit">
-[44]     <Description>A person may read any medical record in the http://www.med.example.com/springfield-hospital collection for which he or she is the designated patient.</Description>
-[45]     <Condition>
-[46]       <Apply FunctionId="and">
-[49]         <Apply FunctionId="any-of">
-[52]           <Function Id="anyURI-equal"/>
-[56]           <Value>http://www.med.example.com/springfield-hospital</Value>
-[61]           <AttributeDesignator
-[62]             Category="resource"
-[63]             AttributeId="collection"
-[64]             DataType="anyURI"/>
-[67]         </Apply>
-[69]         <Apply FunctionId="any-of">
-[72]           <Function Id="string-equal"/>
-[76]           <Value>read</Value>
-[81]           <AttributeDesignator
-[82]             Category="action"
-[83]             AttributeId="action-id"
-[84]             DataType="string"/>
-[87]         </Apply>
-[89]         <VariableReference VariableId="patient_number_match"/>
-[93]       </Apply>
-[94]     </Condition>
-[95]   </Rule>
-[97] </Policy>
+[39]   <Target>
+[40]     <Apply FunctionId="anyURI-is-in">
+[43]       <Value DataType="anyURI">http://www.med.example.com/springfield-hospital</Value>
+[48]       <AttributeDesignator
+[49]         Category="resource"
+[50]         AttributeId="collection"
+[51]         DataType="anyURI"/>
+[54]     </Apply>
+[55]   </Target>
+[57]   <Rule Id="Rule1" Effect="Permit">
+[60]     <Description>A person may read any medical record for which he or she is the designated patient.</Description>
+[61]     <Condition>
+[62]       <Apply FunctionId="and">
+[65]         <Apply FunctionId="any-of">
+[68]           <Function Id="string-equal"/>
+[72]           <Value>read</Value>
+[77]           <AttributeDesignator
+[78]             Category="action"
+[79]             AttributeId="action-id"
+[80]             DataType="string"/>
+[83]         </Apply>
+[85]         <VariableReference VariableId="patient_number_match"/>
+[89]       </Apply>
+[90]     </Condition>
+[91]   </Rule>
+[93] </Policy>
 ```
 
 ```
@@ -1843,64 +1844,61 @@ Rule 1 illustrates a policy with a simple rule containing a condition. It also i
 [36]       }
 [37]     }
 [38]   }],
-[39]   "CombinerInput":[{
-[41]     "Rule":{
-[42]       "Id":"Rule1",
-[43]       "Effect":"Permit",
-[44]       "Description":"A person may read any medical record in the http://www.med.example.com/springfield-hospital collection for which he or she is the designated patient",
-[45]       "Condition":{
-[46]         "Apply":{
-[47]           "FunctionId":"and",
-[48]           "Expression":[{
-[49]             "Apply":{
-[50]               "FunctionId":"any-of",
-[51]               "Expression":[{
-[52]                 "Function":{
-[53]                   "Id":"anyURI-equal"
-[54]                 }
-[55]               },{
-[56]                 "Value":{
-[57]                   "DataType":"anyURI",
-[58]                   "Value":"http://www.med.example.com/springfield-hospital"
-[59]                 }
-[60]               },{
-[61]                 "AttributeDesignator":{
-[62]                   "Category":"resource",
-[63]                   "AttributeId":"collection",
-[64]                   "DataType":"anyURI"
-[65]                 }
-[66]               }]
-[67]             }
-[68]           },{
-[69]             "Apply":{
-[70]               "FunctionId":"any-of",
-[71]               "Expression":[{
-[72]                 "Function":{
-[73]                   "Id":"string-equal"
-[74]                 }
-[75]               },{
-[76]                 "Value":{
-[77]                   "DataType":"string",
-[78]                   "Value":"read"
-[79]                 }
-[80]               },{
-[81]                 "AttributeDesignator":{
-[82]                   "Category":"action",
-[83]                   "AttributeId":"action-id",
-[84]                   "DataType":"string"
-[85]                 }
-[86]               }]
+[39]   "Target":{
+[40]     "Apply":{
+[41]       "FunctionId":"anyURI-is-in",
+[42]       "Expression":[{
+[43]         "Value":{
+[44]           "DataType":"anyURI",
+[45]           "Value":"http://www.med.example.com/springfield-hospital"
+[46]         }
+[47]       },{
+[48]         "AttributeDesignator":{
+[49]           "Category":"resource",
+[50]           "AttributeId":"collection",
+[51]           "DataType:"anyURI"
+[52]         }
+[53]       }]
+[54]     }
+[55]   },
+[56]   "CombinerInput":[{
+[57]     "Rule":{
+[58]       "Id":"Rule1",
+[59]       "Effect":"Permit",
+[60]       "Description":"A person may read any medical record for which he or she is the designated patient",
+[61]       "Condition":{
+[62]         "Apply":{
+[63]           "FunctionId":"and",
+[64]           "Expression":[{
+[65]             "Apply":{
+[66]               "FunctionId":"any-of",
+[67]               "Expression":[{
+[68]                 "Function":{
+[69]                   "Id":"string-equal"
+[70]                 }
+[71]               },{
+[72]                 "Value":{
+[73]                   "DataType":"string",
+[74]                   "Value":"read"
+[75]                 }
+[76]               },{
+[77]                 "AttributeDesignator":{
+[78]                   "Category":"action",
+[79]                   "AttributeId":"action-id",
+[80]                   "DataType":"string"
+[81]                 }
+[82]               }]
+[83]             }
+[84]           },{
+[85]             "VariableReference":{
+[86]               "VariableId":"patient_number_match"
 [87]             }
-[88]           },{
-[89]             "VariableReference":{
-[90]               "VariableId":"patient_number_match"
-[91]             }
-[92]           }]
-[93]         }
-[94]       }
-[95]     }
-[96]   }]
-[97] }
+[88]           }]
+[89]         }
+[90]       }
+[91]     }
+[92]   }]
+[93] }
 ```
 
 [07] A reference to a short identifier set imported into the policy. The names of the short identifiers in the set are available to use in this policy.
@@ -1923,29 +1921,37 @@ Rule 1 illustrates a policy with a simple rule containing a condition. It also i
 
 [25] - [26] The result of the second attribute designator must also be converted to a single value for comparison.
 
-[41] - [43] The beginning of a rule definition. The `Id` property assigns a string identifier for the rule. The `Effect` property specifies the value the rule emits when it evaluates to `true`.
+[39] - [55] A target, which must evaluate to `true` for the policy to be applicable. This target restricts the applicability of the policy to decision requests for access to medical records belonging to Springfield Hospital.
 
-[44] A free-form description of the rule.
+[40] - [54] The expression for the target, which applies a function.
 
-[45] - [94] A condition, which must evaluate to `true` for the rule to be applicable.
+[41] The `FunctionId` property specifies the `urn:oasis:names:tc:acal:1.0:function:anyURI-is-in` function using the short identifier name `anyURI-is-in`. This function takes an attribute value as its first argument and a bag of values as its second argument. The function evaluates to `true` if the first argument is equal to any value in the bag.
 
-[46] - [93] The expression for the condition.
+[43] - [46] The first argument: an attribute value. It is a literal URI to be matched, specifically `http://www.med.example.com/springfield-hospital`. The `DataType` property indicates that the data type of the value is `urn:oasis:names:tc:acal:1.0:data-type:anyURI` using the short identifier name `anyURI`.
 
-[46] - [47] The expression for the condition is a conjunction of three terms. The `FunctionId` property specifies a conjunction using the `urn:oasis:names:tc:acal:1.0:function:and` function nominated with the short identifier name `and`.
+[48] - [52] The second argument: the bag of values. It is an attribute designator that selects a bag of `urn:oasis:names:tc:acal:1.0:data-type:anyURI` values from the `urn:oasis:names:tc:acal:1.0:example:attribute:collection` attribute (short identifier name `collection`) in the `urn:oasis:names:tc:acal:1.0:attribute-category:resource` category.
 
-[49] - [57] The first term is a function.
+[57] - [59] The beginning of a rule definition. The `Id` property assigns a string identifier for the rule. The `Effect` property specifies the value the rule emits when it evaluates to `true`.
 
-[49] - [50] The `FunctionId` property specifies the `urn:oasis:names:tc:acal:1.0:function:any-of` function using the short identifier name `any-of`. This function compares an attribute value to each of the attribute values in a bag according to a matching function that is specified in the first argument. The bag of values can be either the second or third argument. In this case it is the third argument. The function evaluates to `true` if any value in the bag matches the second argument according to the matching function.
+[60] A free-form description of the rule.
 
-[52] - [54] The first argument: the matching function. The `Id` property specifies that the matching function is `urn:oasis:names:tc:acal:1.0:function:anyURI-equal` using the short identifier name `anyURI-equal`.
+[61] - [90] A condition, which must evaluate to `true` for the rule to be applicable.
 
-[56] - [59] The second argument: an attribute value. It is a literal URI to be matched, specifically `http://www.med.example.com/springfield-hospital`. The `DataType` property indicates that the data type of the value is `urn:oasis:names:tc:acal:1.0:data-type:anyURI` using the short identifier name `anyURI`.
+[62] - [89] The expression for the condition.
 
-[61] - [65] The third argument: the bag of values. It is an attribute designator that selects a bag of `urn:oasis:names:tc:acal:1.0:data-type:anyURI` values from the `urn:oasis:names:tc:acal:1.0:example:attribute:collection` (short identifier name `collection`) attribute in the `urn:oasis:names:tc:acal:1.0:attribute-category:resource` category.
+[62] - [63] The expression for the condition is a conjunction of two terms. The `FunctionId` property specifies a conjunction using the `urn:oasis:names:tc:acal:1.0:function:and` function nominated with the short identifier name `and`.
 
-[69] - [87] The second term is another instance of the `urn:oasis:names:tc:acal:1.0:function:any-of`. The matching function is `urn:oasis:names:tc:acal:1.0:function:string-equal`. The second argument is the literal value `read` of the `urn:oasis:names:tc:acal:1.0:data-type:string` data type. The third argument is an attribute designator that selects a bag of `urn:oasis:names:tc:acal:1.0:data-type:string` values from the `urn:oasis:names:tc:acal:1.0:action:action-id` attribute in the `urn:oasis:names:tc:acal:1.0:attribute-category:action` category.
+[65] - [83] The first term is a function.
 
-[89] - [91] The third term is a reference to a variable definition defined elsewhere in the policy.
+[65] - [66] The `FunctionId` property specifies the `urn:oasis:names:tc:acal:1.0:function:any-of` function using the short identifier name `any-of`. This function compares an attribute value to each of the attribute values in a bag according to a matching function that is specified in the first argument. The bag of values can be either the second or third argument. In this case it is the third argument. The function evaluates to `true` if any value in the bag matches the second argument according to the matching function.
+
+[68] - [70] The first argument: the matching function. The `Id` property specifies that the matching function is `urn:oasis:names:tc:acal:1.0:function:string-equal` using the short identifier name `string-equal`.
+
+[72] - [75] The second argument: an attribute value. It is a literal string to be matched, specifically `read`. The `DataType` property indicates that the data type of the value is `urn:oasis:names:tc:acal:1.0:data-type:string` using the short identifier name `string`.
+
+[77] - [81] The third argument: the bag of values. It is an attribute designator that selects a bag of `urn:oasis:names:tc:acal:1.0:data-type:string` values from the `urn:oasis:names:tc:acal:1.0:action:action-id` attribute (short identifier name `action-id`) in the `urn:oasis:names:tc:acal:1.0:attribute-category:action` category.
+
+[85] - [87] The second term is a reference to a variable definition defined elsewhere in the policy.
 
 #### 6.2.4.2 Rule 2
 
@@ -1978,43 +1984,45 @@ Rule 2 illustrates the use of a mathematical function, i.e., `urn:oasis:names:tc
 [044]       </Apply>
 [046]     </Apply>
 [048]   </VariableDefinition>
-[050]   <Rule Id="Rule2" Effect="Permit">
-[053]     <Description>A person may read any medical record in the http://www.med.example.com/records.xsd namespace for which he or she is the designated parent or guardian, and for which the patient is under 16 years of age.</Description>
-[054]     <Condition>
-[055]       <Apply FunctionId="and">
-[058]         <Apply FunctionId="anyURI-is-in">
-[061]           <Value DataType="anyURI">http://www.med.example.com/springfield-hospital</Value>
-[066]           <AttributeDesignator
-[067]             Category="resource"
-[068]             AttributeId="collection"
-[069]             DataType="anyURI"/>
-[072]         </Apply>
-[074]         <Apply FunctionId="string-is-in">
-[077]           <Value>read</Value>
-[081]           <AttributeDesignator
-[082]             Category="action"
-[083]             AttributeId="action-id"
-[084]             DataType="string"/>
-[087]         </Apply>
-[089]         <Apply FunctionId="rfc822Name-equal">
-[092]           <Apply FunctionId="rfc822Name-one-and-only">
-[095]             <AttributeDesignator
-[096]               Category="access-subject"
-[097]               AttributeId="subject-id"
-[098]               DataType="rfc822Name"/>
-[101]           </Apply>
-[103]           <Apply FunctionId="rfc822Name-one-and-only">
-[106]             <AttributeDesignator
-[107]               Category="resource"
-[108]               AttributeId="parent-guardian-id"
-[109]               DataType="rfc822Name"/>
-[112]           </Apply>
-[114]         </Apply>
-[116]         <VariableReference VariableId="patient-under-16"/>
-[120]       </Apply>
-[121]     </Condition>
-[122]   </Rule>
-[124] </Policy>
+[049]   <Target>
+[050]     <Apply FunctionId="anyURI-is-in">
+[053]       <Value DataType="anyURI">http://www.med.example.com/springfield-hospital</Value>
+[058]       <AttributeDesignator
+[059]         Category="resource"
+[060]         AttributeId="collection"
+[061]         DataType="anyURI"/>
+[064]     </Apply>
+[065]   </Target>
+[067]   <Rule Id="Rule2" Effect="Permit">
+[070]     <Description>A person may read any medical record in the http://www.med.example.com/records.xsd namespace for which he or she is the designated parent or guardian, and for which the patient is under 16 years of age.</Description>
+[071]     <Condition>
+[072]       <Apply FunctionId="and">
+[075]         <Apply FunctionId="string-is-in">
+[078]           <Value DataType="string">read</Value>
+[082]           <AttributeDesignator
+[083]             Category="action"
+[084]             AttributeId="action-id"
+[085]             DataType="string"/>
+[088]         </Apply>
+[090]         <Apply FunctionId="rfc822Name-equal">
+[093]           <Apply FunctionId="rfc822Name-one-and-only">
+[096]             <AttributeDesignator
+[097]               Category="access-subject"
+[098]               AttributeId="subject-id"
+[099]               DataType="rfc822Name"/>
+[102]           </Apply>
+[104]           <Apply FunctionId="rfc822Name-one-and-only">
+[107]             <AttributeDesignator
+[108]               Category="resource"
+[109]               AttributeId="parent-guardian-id"
+[110]               DataType="rfc822Name"/>
+[113]           </Apply>
+[115]         </Apply>
+[117]         <VariableReference VariableId="patient-under-16"/>
+[121]       </Apply>
+[122]     </Condition>
+[123]   </Rule>
+[125] </Policy>
 ```
 
 ```
@@ -2064,82 +2072,83 @@ Rule 2 illustrates the use of a mathematical function, i.e., `urn:oasis:names:tc
 [046]       }
 [047]     }
 [048]   }],
-[049]   "CombinerInput":[{
-[050]     "Rule":{
-[051]       "Id":"Rule2",
-[052]       "Effect":"Permit",
-[053]       "Description":"A person may read any medical record in the http://www.med.example.com/records.xsd namespace for which he or she is the designated parent or guardian, and for which the patient is under 16 years of age.",
-[054]       "Condition":{
-[055]         "Apply":{
-[056]           "FunctionId":"and",
-[057]           "Expression":[{
-[058]             "Apply":{
-[059]               "FunctionId":"anyURI-is-in",
-[060]               "Expression":[{
-[061]                 "Value":{
-[062]                   "DataType":"anyURI",
-[063]                   "Value":"http://www.med.example.com/springfield-hospital"
-[064]                 }
-[065]               },{
-[066]                 "AttributeDesignator":{
-[067]                   "Category":"resource",
-[068]                   "AttributeId":"collection",
-[069]                   "DataType":"anyURI"
-[070]                 }
-[071]               }]
-[072]             }
-[073]           },{
-[074]             "Apply":{
-[075]               "FunctionId":"string-is-in",
-[076]               "Expression":[
-[077]                 {
-[078]                   "Value":"read"
-[079]                 },
-[080]                 {
-[081]                   "AttributeDesignator":{
-[082]                     "Category":"action",
-[083]                     "AttributeId":"action-id",
-[084]                     "DataType":"string"
-[085]                   }
-[086]               }]
-[087]             }
-[088]           },{
-[089]             "Apply":{
-[090]               "FunctionId":"rfc822Name-equal",
-[091]               "Expression":[{
-[092]                 "Apply":{
-[093]                   "FunctionId":"rfc822Name-one-and-only",
-[094]                   "Expression":[{
-[095]                     "AttributeDesignator":{
-[096]                       "Category":"access-subject",
-[097]                       "AttributeId":"subject-id",
-[098]                       "DataType":"rfc822Name"
-[099]                     }
-[100]                   }]
-[101]                 }
-[102]               },{
-[103]                 "Apply":{
-[104]                   "FunctionId":"rfc822Name-one-and-only",
-[105]                   "Expression":[{
-[106]                     "AttributeDesignator":{
-[107]                       "Category":"resource",
-[108]                       "AttributeId":"parent-guardian-id",
-[109]                       "DataType":"rfc822Name"
-[110]                     }
-[111]                   }]
-[112]                 }
-[113]               }]
-[114]             }
-[115]           },{
-[116]             "VariableReference":{
-[117]               "VariableId":"patient-under-16"
-[118]             }
-[119]           }]
-[120]         }
-[121]       }
-[122]     }
-[123]   }]
-[124] }
+[049]   "Target":{
+[050]     "Apply":{
+[051]       "FunctionId":"anyURI-is-in",
+[052]       "Expression":[{
+[053]         "Value":{
+[054]           "DataType":"anyURI",
+[055]           "Value":"http://www.med.example.com/springfield-hospital"
+[056]         }
+[057]       },{
+[058]         "AttributeDesignator":{
+[059]           "Category":"resource",
+[060]           "AttributeId":"collection",
+[061]           "DataType:"anyURI"
+[062]         }
+[063]       }]
+[064]     }
+[065]   },
+[066]   "CombinerInput":[{
+[067]     "Rule":{
+[068]       "Id":"Rule2",
+[069]       "Effect":"Permit",
+[070]       "Description":"A person may read any medical record in the http://www.med.example.com/records.xsd namespace for which he or she is the designated parent or guardian, and for which the patient is under 16 years of age.",
+[071]       "Condition":{
+[072]         "Apply":{
+[073]           "FunctionId":"and",
+[074]           "Expression":[{
+[075]             "Apply":{
+[076]               "FunctionId":"string-is-in",
+[077]               "Expression":[{
+[078]                 "Value":{
+[079]                   "DataType":"string",
+[080]                   "Value":"read"
+[081]                 },{
+[082]                   "AttributeDesignator":{
+[083]                     "Category":"action",
+[084]                     "AttributeId":"action-id",
+[085]                     "DataType":"string"
+[086]                   }
+[087]               }]
+[088]             }
+[089]           },{
+[090]             "Apply":{
+[091]               "FunctionId":"rfc822Name-equal",
+[092]               "Expression":[{
+[093]                 "Apply":{
+[094]                   "FunctionId":"rfc822Name-one-and-only",
+[095]                   "Expression":[{
+[096]                     "AttributeDesignator":{
+[097]                       "Category":"access-subject",
+[098]                       "AttributeId":"subject-id",
+[099]                       "DataType":"rfc822Name"
+[100]                     }
+[101]                   }]
+[102]                 }
+[103]               },{
+[104]                 "Apply":{
+[105]                   "FunctionId":"rfc822Name-one-and-only",
+[106]                   "Expression":[{
+[107]                     "AttributeDesignator":{
+[108]                       "Category":"resource",
+[109]                       "AttributeId":"parent-guardian-id",
+[110]                       "DataType":"rfc822Name"
+[111]                     }
+[112]                   }]
+[113]                 }
+[114]               }]
+[115]             }
+[116]           },{
+[117]             "VariableReference":{
+[118]               "VariableId":"patient-under-16"
+[119]             }
+[120]           }]
+[121]         }
+[122]       }
+[123]     }
+[124]   }]
+[125] }
 ```
 
 [008] - [048] A variable definition containing part of the condition (i.e. is the patient under 16 years of age?).  The patient is under 16 years of age if the current date is less than the date computed by adding 16 years to the patient’s date of birth.
@@ -2156,27 +2165,27 @@ Rule 2 illustrates the use of a mathematical function, i.e., `urn:oasis:names:tc
 
 [039] - [042] A literal `urn:oasis:names:tc:acal:1.0:function:date-add-yearMonthDuration` value that specifies a duration of 16 years.
 
-[050] - [122] The rule that assesses the decision request.
+[049] - [065] The target restricts the applicability of the policy to decision requests for access to medical records belonging to Springfield Hospital.
 
-[054] - [121] The rule's condition, which must evaluate to `true` for the rule to be applicable. This condition evaluates, in part, the truth of the statement: the requestor is the designated parent or guardian and the patient is under 16 years of age.
+[067] - [123] The rule that assesses the decision request.
 
-[055] - [120] The expression for the condition is the conjunction of four terms using the `urn:oasis:names:tc:acal:1.0:function:and` function.
+[071] - [122] The rule's condition, which must evaluate to `true` for the rule to be applicable. This condition evaluates, in part, the truth of the statement: the requestor is the designated parent or guardian and the patient is under 16 years of age.
 
-[058] - [072] The first term checks that the request is to access a medical record belonging to Springfield Hospital.
+[072] - [121] The expression for the condition is the conjunction of three terms using the `urn:oasis:names:tc:acal:1.0:function:and` function.
 
-[074] - [087] The second term is satisfied if the requested access is `read`.
+[075] - [088] The first term is satisfied if the requested access is `read`.
 
-[089] - [114] The third term tests whether the subject is the designated parent or guardian of the patient according to the resource. The function is `urn:oasis:names:tc:acal:1.0:function:rfc822Name-equal` and it takes two arguments of type `urn:oasis:names:tc:acal:1.0:data-type:rfc822Name`.
+[090] - [115] The second term tests whether the subject is the designated parent or guardian of the patient according to the resource. The function is `urn:oasis:names:tc:acal:1.0:function:rfc822Name-equal` and it takes two arguments of type `urn:oasis:names:tc:acal:1.0:data-type:rfc822Name`.
 
-[092] - [101] Since `urn:oasis:names:tc:acal:1.0:function:rfc822Name-equal` takes arguments of type `urn:oasis:names:tc:acal:1.0:data-type:rfc822Name`, the `urn:oasis:names:tc:acal:1.0:function:rfc822Name-one-and-only` function is used to ensure that the subject attribute `urn:oasis:names:tc:acal:1.0:subject:subject-id` in the decision request contains exactly one value.
+[093] - [102] Since `urn:oasis:names:tc:acal:1.0:function:rfc822Name-equal` takes arguments of type `urn:oasis:names:tc:acal:1.0:data-type:rfc822Name`, the `urn:oasis:names:tc:acal:1.0:function:rfc822Name-one-and-only` function is used to ensure that the subject attribute `urn:oasis:names:tc:acal:1.0:subject:subject-id` in the decision request contains exactly one value.
 
-[095] - [099] The value of the subject attribute `urn:oasis:names:tc:acal:1.0:subject:subject-id` is selected from the decision request using an attribute designator.
+[096] - [100] The value of the subject attribute `urn:oasis:names:tc:acal:1.0:subject:subject-id` is selected from the decision request using an attribute designator.
 
-[103] - [112] As above, the `urn:oasis:names:tc:acal:1.0:function:rfc822Name-one-and-only` function is used to ensure that the bag of values selected by its argument contains exactly one value of type `urn:oasis:names:tc:acal:1.0:data-type:rfc822Name`.
+[104] - [113] As above, the `urn:oasis:names:tc:acal:1.0:function:rfc822Name-one-and-only` function is used to ensure that the bag of values selected by its argument contains exactly one value of type `urn:oasis:names:tc:acal:1.0:data-type:rfc822Name`.
 
-[106] - [110] The value of the resource attribute `urn:oasis:names:tc:acal:1.0:example:attribute:parent-guardian-id` (short identifier name `parent-guardian-id`) is selected from the decision request using an attribute designator.
+[107] - [111] The value of the resource attribute `urn:oasis:names:tc:acal:1.0:example:attribute:parent-guardian-id` (short identifier name `parent-guardian-id`) is selected from the decision request using an attribute designator.
 
-[116] - [118] The fourth term is a reference to the variable definition that tests whether the patient is under 16 years of age.
+[117] - [119] The third term is a reference to the variable definition that tests whether the patient is under 16 years of age.
 
 #### 6.2.4.3 Rule 3
 
@@ -2191,72 +2200,74 @@ Rule 3 illustrates the use of a notice expression.
 [006]   CombiningAlgId="deny-overrides">
 [007]   <ShortIdSetReference>urn:oasis:names:tc:acal:1.0:example:identifiers</ShortIdSetReference>
 [008]   <Description>Policy for any medical record in the Springfield Hospital collection.</Description>
-[010]   <Rule Id="Rule3" Effect="Permit">
-[013]     <Description>A physician may write any medical element in a record for which he or she is the designated primary care physician, provided an email is sent to the patient.</Description>
-[014]     <Condition>
-[015]       <Apply FunctionId="and">
-[018]         <Apply FunctionId="string-is-in">
-[021]           <Value DataType="string">physician</Value>
-[026]           <AttributeDesignator
-[027]             Category="access-subject"
-[028]             AttributeId="role"
-[029]             DataType="string"/>
-[032]         </Apply>
-[034]         <Apply FunctionId="anyURI-is-in">
-[037]           <Value DataType="anyURI">http://www.med.example.com/springfield-hospital</Value>
-[042]           <AttributeDesignator
-[043]             Category="resource"
-[044]             AttributeId="collection"
-[045]             DataType="anyURI"/>
-[048]         </Apply>
-[050]         <Apply FunctionId="string-is-in">
-[053]           <Value DataType="string">write</Value>
-[058]           <AttributeDesignator
-[059]             Category="action"
-[060]             AttributeId="action-id"
-[061]             DataType="string"/>
-[064]         </Apply>
-[066]	      <Apply FunctionId="string-equal">
-[069]	        <Apply FunctionId="string-one-and-only">
-[072]	          <AttributeDesignator
-[073]	            Category="access-subject"
-[074]	            AttributeId="physician-id"
-[075]	            DataType="string"/>
-[078]	        </Apply>
-[080]	        <Apply FunctionId="string-one-and-only">
-[083]	          <AttributeDesignator
-[084]	            Category="resource"
-[085]	            AttributeId="primary-care-physician"
-[086]	            DataType="string"/>
-[089]	        </Apply>
-[091]	      </Apply>
-[093]	    </Apply>
-[094]	  </Condition>
-[095]   </Rule>
-[097]   <NoticeExpression
-[098]      IsObligation="true"
-[099]      Id="email"
-[100]      AppliesTo="Permit">
-[101]      <AttributeAssignmentExpression
-[102]        AttributeId="mailto">
-[104]        <AttributeDesignator
-[105]          Category="resource"
-[106]          AttributeId="patient-contact"
-[107]          DataType="rfc822Name"/>
-[110]      </AttributeAssignmentExpression>
-[111]      <AttributeAssignmentExpression
-[112]        AttributeId="text">
-[114]        <Value DataType="string">Your medical record has been accessed by: </Value>
-[119]      </AttributeAssignmentExpression>
-[120]      <AttributeAssignmentExpression
-[121]        AttributeId="text">
-[123]        <AttributeDesignator
-[124]          Category="access-subject"
-[125]          AttributeId="subject-id"
-[126]          DataType="string"/>
-[129]      </AttributeAssignmentExpression>
-[130]   </NoticeExpression>
-[131] </Policy>
+[009]   <Target>
+[010]     <Apply FunctionId="anyURI-is-in">
+[013]       <Value DataType="anyURI">http://www.med.example.com/springfield-hospital</Value>
+[018]       <AttributeDesignator
+[019]         Category="resource"
+[020]         AttributeId="collection"
+[021]         DataType="anyURI"/>
+[024]     </Apply>
+[025]   </Target>
+[027]   <Rule Id="Rule3" Effect="Permit">
+[030]     <Description>A physician may write any medical element in a record for which he or she is the designated primary care physician, provided an email is sent to the patient.</Description>
+[031]     <Condition>
+[032]       <Apply FunctionId="and">
+[035]         <Apply FunctionId="string-is-in">
+[038]           <Value DataType="string">physician</Value>
+[043]           <AttributeDesignator
+[044]             Category="access-subject"
+[045]             AttributeId="role"
+[046]             DataType="string"/>
+[049]         </Apply>
+[051]         <Apply FunctionId="string-is-in">
+[054]           <Value DataType="string">write</Value>
+[059]           <AttributeDesignator
+[060]             Category="action"
+[061]             AttributeId="action-id"
+[062]             DataType="string"/>
+[065]         </Apply>
+[067]         <Apply FunctionId="string-equal">
+[070]           <Apply FunctionId="string-one-and-only">
+[073]             <AttributeDesignator
+[074]               Category="access-subject"
+[075]               AttributeId="physician-id"
+[076]               DataType="string"/>
+[079]           </Apply>
+[081]           <Apply FunctionId="string-one-and-only">
+[084]             <AttributeDesignator
+[085]               Category="resource"
+[086]               AttributeId="primary-care-physician"
+[087]               DataType="string"/>
+[090]           </Apply>
+[092]         </Apply>
+[094]       </Apply>
+[095]     </Condition>
+[096]   </Rule>
+[098]   <NoticeExpression
+[099]     IsObligation="true"
+[100]     Id="email"
+[101]     AppliesTo="Permit">
+[102]     <AttributeAssignmentExpression
+[103]       AttributeId="mailto">
+[105]       <AttributeDesignator
+[106]         Category="resource"
+[107]         AttributeId="patient-contact"
+[108]         DataType="rfc822Name"/>
+[111]     </AttributeAssignmentExpression>
+[112]     <AttributeAssignmentExpression
+[113]       AttributeId="text">
+[115]       <Value DataType="string">Your medical record has been accessed by: </Value>
+[120]     </AttributeAssignmentExpression>
+[121]     <AttributeAssignmentExpression
+[122]       AttributeId="text">
+[124]       <AttributeDesignator
+[125]         Category="access-subject"
+[126]         AttributeId="subject-id"
+[127]         DataType="string"/>
+[130]     </AttributeAssignmentExpression>
+[131]   </NoticeExpression>
+[132] </Policy>
 ```
 
 ```
@@ -2266,158 +2277,159 @@ Rule 3 illustrates the use of a notice expression.
 [006]   "CombiningAlgId":"deny-overrides",
 [007]   "ShortIdSetReference":["urn:oasis:names:tc:acal:1.0:example:identifiers"],
 [008]   "Description":"Policy for any medical record in the Springfield Hospital collection.",
-[009]   "CombinerInput":[{
-[010]     "Rule":{
-[011]       "Id":"Rule3",
-[012]       "Effect":"Permit",
-[013]       "Description":"A physician may write any medical element in a record for which he or she is the designated primary care physician, provided an email is sent to the patient.",
-[014]       "Condition":{
-[015]         "Apply":{
-[016]           "FunctionId":"and",
-[017]           "Expression":[{
-[018]             "Apply":{
-[019]               "FunctionId":"string-is-in",
-[020]               "Expression":[{
-[021]                 "Value":{
-[022]                   "DataType":"string",
-[023]                   "Value":"physician"
-[024]                 }
-[025]               },{
-[026]                 "AttributeDesignator":{
-[027]                   "Category":"access-subject",
-[028]                   "AttributeId":"role",
-[029]                   "DataType":"string"
-[030]                 }
-[031]               }]
-[032]             }
-[033]           },{
-[034]             "Apply":{
-[035]               "FunctionId":"anyURI-is-in",
-[036]               "Expression":[{
-[037]                 "Value":{
-[038]                   "DataType":"anyURI",
-[039]                   "Value":"http://www.med.example.com/springfield-hospital"
-[040]                 }
-[041]               },{
-[042]                 "AttributeDesignator":{
-[043]                   "Category":"resource",
-[044]                   "AttributeId":"collection",
-[045]                   "DataType:"anyURI"
-[046]                 }
-[047]               }]
-[048]             }
-[049]           },{
-[050]             "Apply":{
-[051]               "FunctionId":"string-is-in",
-[052]               "Expression":[{
-[053]                 "Value":{
-[054]                   "DataType":"string",
-[055]                   "Value":"write"
-[056]                 }
-[057]               },{
-[058]                 "AttributeDesignator":{
-[059]                   "Category":"action",
-[060]                   "AttributeId":"action-id",
-[061]                   "DataType":"string"
-[062]                 }
-[063]               }]
-[064]             }
-[065]           },{
-[066]	          "Apply":{
-[067]               "FunctionId":"string-equal",
-[068]               "Expression":[{
-[069]	              "Apply":{
-[070]                   "FunctionId":"string-one-and-only",
-[071]                   "Expression":[{
-[072]	                  "AttributeDesignator":{
-[073]	                    "Category":"access-subject",
-[074]	                    "AttributeId":"physician-id",
-[075]	                    "DataType":"string"
-[076]                     }
-[077]                   }]
-[078]	              }
-[079]               },{
-[080]	              "Apply":{
-[081]	                "FunctionId":"string-one-and-only",
-[082]                   "Expression":[{
-[083]	                  "AttributeDesignator":{
-[084]	                    "Category":"resource",
-[085]	                    "AttributeId":"primary-care-physician",
-[086]	                    "DataType":"string"
-[087]                     }
-[088]                   }]
-[089]	              }
-[090]               }]
-[091]	          }
-[092]           }]
-[093]         }
-[094]	    }
-[095]     }
-[096]   }],
-[097]   "NoticeExpression":[{
-[098]      "IsObligation":true,
-[099]      "Id":"email",
-[100]      "AppliesTo":"Permit",
-[101]      "AttributeAssignmentExpression":[{
-[102]        "AttributeId":"mailto",
-[103]        "Expression":{
-[104]          "AttributeDesignator":{
-[105]            "Category":"resource",
-[106]            "AttributeId":"patient-contact",
-[107]            "DataType":"rfc822Name"
-[108]          }
-[109]        }
-[110]      },{
-[112]        "AttributeId":"text",
-[113]        "Expression":{
-[114]          "Value":{
-[115]            "DataType":"string",
-[116]            "Value":"Your medical record has been accessed by: "
-[117]          }
-[118]        }
-[119]      },{
-[121]        "AttributeId":"text",
-[122]        "Expression":{
-[123]          "AttributeDesignator":{
-[124]            "Category":"access-subject",
-[125]            "AttributeId":"subject-id",
-[126]            "DataType":"string"
-[127]          }
-[128]        }
-[129]      }]
-[130]   }]
-[131] }
+[009]   "Target":{
+[010]     "Apply":{
+[011]       "FunctionId":"anyURI-is-in",
+[012]       "Expression":[{
+[013]         "Value":{
+[014]           "DataType":"anyURI",
+[015]           "Value":"http://www.med.example.com/springfield-hospital"
+[016]         }
+[017]       },{
+[018]         "AttributeDesignator":{
+[019]           "Category":"resource",
+[020]           "AttributeId":"collection",
+[021]           "DataType:"anyURI"
+[022]         }
+[023]       }]
+[024]     }
+[025]   },
+[026]   "CombinerInput":[{
+[027]     "Rule":{
+[028]       "Id":"Rule3",
+[029]       "Effect":"Permit",
+[030]       "Description":"A physician may write any medical element in a record for which he or she is the designated primary care physician, provided an email is sent to the patient.",
+[031]       "Condition":{
+[032]         "Apply":{
+[033]           "FunctionId":"and",
+[034]           "Expression":[{
+[035]             "Apply":{
+[036]               "FunctionId":"string-is-in",
+[037]               "Expression":[{
+[038]                 "Value":{
+[039]                   "DataType":"string",
+[040]                   "Value":"physician"
+[041]                 }
+[042]               },{
+[043]                 "AttributeDesignator":{
+[044]                   "Category":"access-subject",
+[045]                   "AttributeId":"role",
+[046]                   "DataType":"string"
+[047]                 }
+[048]               }]
+[049]             }
+[050]           },{
+[051]             "Apply":{
+[052]               "FunctionId":"string-is-in",
+[053]               "Expression":[{
+[054]                 "Value":{
+[055]                   "DataType":"string",
+[056]                   "Value":"write"
+[057]                 }
+[058]               },{
+[059]                 "AttributeDesignator":{
+[060]                   "Category":"action",
+[061]                   "AttributeId":"action-id",
+[062]                   "DataType":"string"
+[063]                 }
+[064]               }]
+[065]             }
+[066]           },{
+[067]             "Apply":{
+[068]               "FunctionId":"string-equal",
+[069]               "Expression":[{
+[070]                 "Apply":{
+[071]                   "FunctionId":"string-one-and-only",
+[072]                   "Expression":[{
+[073]                     "AttributeDesignator":{
+[074]                       "Category":"access-subject",
+[075]                       "AttributeId":"physician-id",
+[076]                       "DataType":"string"
+[077]                     }
+[078]                   }]
+[079]                 }
+[080]               },{
+[081]                 "Apply":{
+[082]                   "FunctionId":"string-one-and-only",
+[083]                   "Expression":[{
+[084]                     "AttributeDesignator":{
+[085]                       "Category":"resource",
+[086]                       "AttributeId":"primary-care-physician",
+[087]                       "DataType":"string"
+[088]                     }
+[089]                   }]
+[090]                 }
+[091]               }]
+[092]             }
+[093]           }]
+[094]         }
+[095]       }
+[096]     }
+[097]   }],
+[098]   "NoticeExpression":[{
+[099]      "IsObligation":true,
+[100]      "Id":"email",
+[101]      "AppliesTo":"Permit",
+[102]      "AttributeAssignmentExpression":[{
+[103]        "AttributeId":"mailto",
+[104]        "Expression":{
+[105]          "AttributeDesignator":{
+[106]            "Category":"resource",
+[107]            "AttributeId":"patient-contact",
+[108]            "DataType":"rfc822Name"
+[109]          }
+[110]        }
+[111]      },{
+[113]        "AttributeId":"text",
+[114]        "Expression":{
+[115]          "Value":{
+[116]            "DataType":"string",
+[117]            "Value":"Your medical record has been accessed by: "
+[118]          }
+[119]        }
+[120]      },{
+[122]        "AttributeId":"text",
+[123]        "Expression":{
+[124]          "AttributeDesignator":{
+[125]            "Category":"access-subject",
+[126]            "AttributeId":"subject-id",
+[127]            "DataType":"string"
+[128]          }
+[129]        }
+[130]      }]
+[131]   }]
+[132] }
 ```
 
-[010] - [095] The rule that assesses the decision request.
+[009] - [025] The target restricts the applicability of the policy to decision requests for access to medical records belonging to Springfield Hospital.
 
-[014] - [094] The rule's condition, which must evaluate to `true` for the rule to be applicable.
+[027] - [096] The rule that assesses the decision request.
 
-[015] - [093] The expression for the condition is the conjunction of four terms using the `urn:oasis:names:tc:acal:1.0:function:and` function.
+[031] - [095] The rule's condition, which must evaluate to `true` for the rule to be applicable.
 
-[018] - [032] The first term is satisfied if the subject's `urn:oasis:names:tc:acal:1.0:example:attribute:role` attribute contains the string value `physician`.
+[032] - [094] The expression for the condition is the conjunction of three terms using the `urn:oasis:names:tc:acal:1.0:function:and` function.
 
-[034] - [048] The second term checks that the request is to access a medical record belonging to Springfield Hospital.
+[035] - [049] The first term is satisfied if the subject's `urn:oasis:names:tc:acal:1.0:example:attribute:role` attribute contains the string value `physician`.
 
-[050] - [064] The third term is satisfied if the requested access is `write`.
+[051] - [065] The second term is satisfied if the requested access is `write`.
 
-[066] - [091] The fourth term is satisfied if the accessing physician is the patient's primary physician, i.e., if the `urn:oasis:names:tc:acal:1.0:example:attribute:physician-id` attribute of the access subject is equal to the `urn:oasis:names:tc:acal:1.0:example:attribute:primary-care-physician` attribute of the resource.
+[067] - [092] The third term is satisfied if the accessing physician is the patient's primary physician, i.e., if the `urn:oasis:names:tc:acal:1.0:example:attribute:physician-id` attribute of the access subject is equal to the `urn:oasis:names:tc:acal:1.0:example:attribute:primary-care-physician` attribute of the resource.
 
-[097] - [130] A notice expression.
+[098] - [131] A notice expression.
 
-[098] The `IsObligation` property indicates that this notice is an obligation rather than advice. Obligations are a set of operations that must be performed by the PEP in conjunction with an authorization decision. An obligation may be associated with a `Permit` or `Deny` authorization decision. The policy contains a single notice expression, which will be evaluated into an obligation notice when the policy is evaluated.
+[099] The `IsObligation` property indicates that this notice is an obligation rather than advice. Obligations are a set of operations that must be performed by the PEP in conjunction with an authorization decision. An obligation may be associated with a `Permit` or `Deny` authorization decision. The policy contains a single notice expression, which will be evaluated into an obligation notice when the policy is evaluated.
 
-[099] The `Id` property indicates the kind of obligation. The PEP associates the identifier with particular processing requirements. In this case, the obligation requires the PEP to send an email.
+[100] The `Id` property indicates the kind of obligation. The PEP associates the identifier with particular processing requirements. In this case, the obligation requires the PEP to send an email.
 
-[100] The `AppliesTo` property specifies the authorization decision value for which the obligation notice derived from the notice expression must be fulfilled. In this case, the obligation must be fulfilled when access is permitted.
+[101] The `AppliesTo` property specifies the authorization decision value for which the obligation notice derived from the notice expression must be fulfilled. In this case, the obligation must be fulfilled when access is permitted.
 
-[101] - [129] Additional information may be provided in a notice by evaluating attribute assignment expressions.
+[102] - [130] Additional information may be provided in a notice by evaluating attribute assignment expressions.
 
-[101] - [110] The first attribute assignment indicates the recipient email address, which is obtained from the `urn:oasis:names:tc:acal:1.0:example:attribute:patient-contact` resource attribute using an attribute designator.
+[102] - [111] The first attribute assignment indicates the recipient email address, which is obtained from the `urn:oasis:names:tc:acal:1.0:example:attribute:patient-contact` resource attribute using an attribute designator.
 
-[111] - [119] The second attribute assignment contains literal text for the email body.
+[112] - [120] The second attribute assignment contains literal text for the email body.
 
-[120] - [129] The third attribute assignment provides additional text for the email body, specifically the identity of the physician, which is obtained from the `urn:oasis:names:tc:acal:1.0:subject:subject-id` subject attribute using an attribute designator.
+[121] - [130] The third attribute assignment provides additional text for the email body, specifically the identity of the physician, which is obtained from the `urn:oasis:names:tc:acal:1.0:subject:subject-id` subject attribute using an attribute designator.
 
 #### 6.2.4.4 Rule 4
 
@@ -2576,7 +2588,7 @@ Rule 4 illustrates the use of the `Deny` effect value.
 
 [33] - [47] The second term checks that the request is to access a medical record belonging to Springfield Hospital.
 
-[49] - [84] The third term is a disjunction of two terms using the `urn:oasis:names:tc:acal:1.0:function:or` function  (short identifier name `or`).
+[49] - [84] The third term is a disjunction of two terms using the `urn:oasis:names:tc:acal:1.0:function:or` function (short identifier name `or`).
 
 [52] - [66] The first term of the disjunction is satisfied if the requested access is `read`.
 
@@ -2586,96 +2598,136 @@ If an administrator attempts to read or write a patient record, then the conditi
 
 #### 6.2.4.5 Example Policy with Nested Policies
 
-This section uses the examples of the previous sections to illustrate the process of combining policies. The policy governing read and write access to medical elements of a record is formed from each of the four rules described in Section 6.2.1. In plain language, the combined policy is:
+This section uses the examples of the previous sections to illustrate the process of combining policies.  The policy governing access to medical elements of a record is formed from each of the four rules described in Section 6.2.4. In plain language, the combined rule is:
 
 - Either the requestor is the patient (Rule 1); or
-- The requestor is the parent or guardian and the patient is under 16 (Rule 2); or
-- The requestor is the primary care physician and a notification is sent to the patient (Rule 3); and
-- The requestor is not an administrator (Rule 4). 
 
-The following policy combines multiple policies: Policies 1, 2, 3 are included by reference and policy 4 explicitly included inline.
+- the requestor is the parent or guardian and the patient is under 16 (Rule 2); or
+
+- the requestor is the primary care physician and a notification is sent to the patient (Rule 3); and
+
+- the requestor is not an administrator (Rule 4).
+
+The following policy illustrates the combined policies. Rule 1, Rule 2 and Rule 3 are duplicated in a new nested policy. The policy containing Rule 4 is included by reference.
 
 ```
 [01] <?xml version="1.0" encoding="UTF-8"?>
 [02] <Policy
-[03]    xmlns="urn:oasis:names:tc:xacml:4.0:core:schema"
+[03]   xmlns="urn:oasis:names:tc:xacml:4.0:core:schema"
 [04]   PolicyId="urn:oasis:names:tc:acal:1.0:example:policyid:5"
-[05]    Version="1.0"
+[05]   Version="1.0"
 [06]   CombiningAlgId="deny-overrides">
 [07]   <ShortIdSetReference>urn:oasis:names:tc:acal:1.0:example:identifiers</ShortIdSetReference>
-[08]   <Description>
-[09]     Example policy with nested policies, showing both policy references and inline.
-[10]     First 3 elements are PolicyReferences to the policies defined in sections 6.2.4.1 (contains Rule
-[11]     1), 6.2.4.2 (contains Rule 2) and 6.2.4.3 (contains Rule 3).
-[12]     The last element is an inline policy that is the copy of the policy from section 6.2.4.4 (contains Rule 4). 
-[13]   </Description>
-[14]   <PolicyReference Id="urn:oasis:names:tc:acal:1.0:example:policyid:1" />
-[15]   <PolicyReference Id="urn:oasis:names:tc:acal:1.0:example:policyid:2" />
-[16]   <PolicyReference Id="urn:oasis:names:tc:acal:1.0:example:policyid:3"/>
-[17]   <Policy  
-[18]     PolicyId="urn:oasis:names:tc:acal:1.0:example:policyid:4"
-[19]     Version="1.0"
-[20]     CombiningAlgId="deny-overrides">
-[21]     <!--  
-[22]          ... Content of the Policy from section 6.2.4.4 goes here... 
-[23]     -->
-[24]   </Policy>
-[25] </Policy>
+[08]   <Description>Collected policies.</Description>
+[10]   <Policy
+[11]     PolicyId="urn:oasis:names:tc:acal:1.0:example:policyid:6"
+[12]     Version="1.0"
+[13]     CombiningAlgId="deny-overrides">
+[14]     <Target>
+[15]       <Apply FunctionId="anyURI-is-in">
+[18]         <Value DataType="anyURI">http://www.med.example.com/springfield-hospital</Value>
+[23]         <AttributeDesignator
+[24]           Category="resource"
+[25]           AttributeId="collection"
+[26]           DataType="anyURI"/>
+[29]       </Apply>
+[30]     </Target>
+[32]     <Rule
+[33]       RuleId="Rule1"
+[34]       Effect="Permit">
+[35]       ...
+[36]     </Rule>
+[38]     <Rule
+[39]       RuleId="Rule2"
+[40]       Effect="Permit">
+[41]       ...
+[42]     </Rule>
+[44]     <Rule
+[45]       RuleId="Rule3"
+[46]       Effect="Permit">
+[47]       ...
+[48]     </Rule>
+[50]   </Policy>
+[52]   <PolicyReference Id="urn:oasis:names:tc:acal:1.0:example:policyid:4"/>
+[56] </Policy>
 ```
 
-[02] - [06] The root Policy element declaration, including the standard XML namespace declaration.
-
-[04] The PolicyId attribute is used for identifying this policy for possible inclusion in another one.
-
-[06] The policy/rule combining algorithm identifier. Policies nested inside this policy (child elements) are combined according to this combining algorithm when the authorization decision is computed.
-
-[08] - [13] Free form description of the root policy.
-
-[14] - [16] Each PolicyReference includes a policy by ID.
-
-[17] - [24] Policy 4 is explicitly included in this policy. The rule in Policy 4 is omitted for brevity but supposed to be same as in the Policy of section 6.2.4.4.
-
-The same Policy represented in JSON:
 ```
-[1]{
-[2]    "PolicyId": "urn:oasis:names:tc:acal:1.0:example:policyid:5",
-[3]    "Version": "1.0",
-[4]    "CombiningAlgId": "deny-overrides",
-[5]    "ShortIdSetReference": [
-[6]        "urn:oasis:names:tc:acal:1.0:example:identifiers"
-[7]    ],
-[8]    "Description": "Example policy with nested policies, showing both policy references and inline.",
-[9]    "CombinerInput": [
-[10]        {
-[11]            "PolicyReference": {
-[12]                "Id": "urn:oasis:names:tc:acal:1.0:example:policyid:1"
-[13]            }
-[14]        },
-[15]        {
-[16]            "PolicyReference": {
-[17]                "Id": "urn:oasis:names:tc:acal:1.0:example:policyid:2"
-[18]            }
-[19]        },
-[20]        {
-[21]            "PolicyReference": {
-[22]                "Id": "urn:oasis:names:tc:acal:1.0:example:policyid:3"
-[23]            }
-[24]        },
-[25]        {
-[26]            "Policy": {
-[27]                "PolicyId": "urn:oasis:names:tc:acal:1.0:example:policyid:4",
-[28]                "Version": "1.0",
-[29]                "CombiningAlgId": "deny-overrides",
-[30]                "CombinerInput": [
-[31]                    {
-[32]                        ...Rule from the Policy in section 6.2.4.4 goes here... 
-[33]                    }
-[34]                ]
-[35]            }
-[36]        }
-[37]    ]
-[38]}
+[02] {
+[04]   "PolicyId":"urn:oasis:names:tc:acal:1.0:example:policyid:5",
+[05]   "Version":"1.0",
+[06]   "CombiningAlgId":"deny-overrides",
+[07]   "ShortIdSetReference":["urn:oasis:names:tc:acal:1.0:example:identifiers"],
+[08]   "Description":"Collected policies.",
+[09]   "CombinerInput":[{
+[10]     "Policy":{
+[11]       "PolicyId":"urn:oasis:names:tc:acal:1.0:example:policyid:6",
+[12]       "Version":"1.0",
+[13]       "CombiningAlgId":"deny-overrides",
+[14]       "Target":{
+[15]         "Apply":{
+[16]           "FunctionId":"anyURI-is-in",
+[17]           "Expression":[{
+[18]             "Value":{
+[19]               "DataType":"anyURI",
+[20]               "Value":"http://www.med.example.com/springfield-hospital"
+[21]             }
+[22]           },{
+[23]             "AttributeDesignator":{
+[24]               "Category":"resource",
+[25]               "AttributeId":"collection",
+[26]               "DataType":"anyURI"
+[27]             }
+[28]           }]
+[29]         }
+[30]       },
+[31]       "CombinerInput":[{
+[32]         "Rule":{
+[33]           "RuleId":"Rule1",
+[34]           "Effect":"Permit",
+[35]           ...
+[36]         }
+[37]       },{
+[38]         "Rule":{
+[39]           "RuleId":"Rule2",
+[40]           "Effect":"Permit",
+[41]           ...
+[42]         }
+[43]       },{
+[44]         "Rule":{
+[45]           "RuleId":"Rule3",
+[46]           "Effect":"Permit",
+[47]           ...
+[48]         }
+[49]       }]
+[50]     }
+[51]   },{
+[52]     "PolicyReference":{
+[53]       "Id":"urn:oasis:names:tc:acal:1.0:example:policyid:4"
+[54]     }
+[55]   }]
+[56] }
 ```
+
+[06] The nested policies are combined according to the `urn:oasis:names:tc:acal:1.0:combining-algorithm:deny-overrides` combining algorithm. This combining algorithm specifies that, if any nested policy evaluates to `Deny`, then the outer policy must return `Deny`; otherwise, if any policy evaluates to `Permit`, then the outer policy must return `Permit`.
+
+[10] - [50] A nested policy that combines Rule 1, Rule 2 and Rule 3. Most of the content of the rules is omitted for clarity.
+
+[13] The rules in the nested policy are also combined according to the `urn:oasis:names:tc:acal:1.0:combining-algorithm:deny-overrides` combining algorithm.
+
+[14] - [30] The target restricts the applicability of the nested policy to decision requests for access to medical records belonging to Springfield Hospital.
+
+[32] - [36] A copy of Rule 1.
+
+[38] - [42] A copy of Rule 2.
+
+[44] - [48] A copy of Rule 3.
+
+[50] The end of the nested policy.
+
+[52] - [54] The policy containing Rule 4 is included by reference.
+
+
 ---
 
 
@@ -6109,7 +6161,7 @@ The implementation MUST properly process those functions associated with the ide
 | urn:oasis:names:tc:acal:1.0:function:dateTime-maximum | O | |
 | urn:oasis:names:tc:acal:1.0:function:date-minimum | O | |
 | urn:oasis:names:tc:acal:1.0:function:date-maximum | O | |
-| urn:oasis:names:tc:acal:1.0:function:access-permitted | O | urn:oasis:names:tc:xacml:3.0:function:access-permitted |
+| urn:oasis:names:tc:acal:1.0:function:access-permitted | O | |
 
 
 ---
@@ -7481,17 +7533,14 @@ These functions operate on various types and evaluate to `urn:oasis:names:tc:aca
 
 `urn:oasis:names:tc:acal:1.0:function:access-permitted`
 
-<!-- TODO -->
-: _This function should be redesigned to take a value of the entity data type as the second argument. An entity value already has the structure of an attribute category in the same representation (XML, JSON or YAML), including a `Content`'s `Body` property to hold arbitrary XML or JSON._
-
 : This function SHALL take an `urn:oasis:names:tc:acal:1.0:data-type:anyURI` and an <!-- Line break added for the previous line to fit on a PDF page -->
-`urn:oasis:names:tc:acal:1.0:data-type:string` as arguments. The first argument SHALL be interpreted as an attribute category. The second argument SHALL be interpreted as the XML content of a `RequestEntityType` object with `Category` property equal to the first argument. The function evaluates to an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. This function SHALL return `true` if and only if the policy evaluation described below returns the value of `Permit`.
+`urn:oasis:names:tc:acal:1.0:data-type:entity` as arguments. The first argument SHALL be interpreted as an attribute category. The second argument SHALL be interpreted as a `RequestEntityType` object with the `Category` property set to the value of first argument. The function evaluates to an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. This function SHALL return `true` if and only if the policy evaluation described below returns the value of `Permit`.
 
 : The following evaluation is described as if the context is actually instantiated, but it is only required that an equivalent result be obtained.
 
-: The function SHALL construct a new context, by copying all the information from the current context, omitting any `RequestEntityType` object with `Category` property equal to the first argument. The second function argument SHALL be added to the context as the content of a `RequestEntityType` object with `Category` property equal to the first argument.
+: The function SHALL construct a new context, by copying all the information from the current context, omitting any `RequestEntityType` object with `Category` property equal to the first argument. The second function argument SHALL be added to the context as a `RequestEntityType` object with the `Category` property set to the value of first argument.
 
-: The function SHALL invoke a complete policy evaluation using the newly constructed context. This evaluation SHALL be completely isolated from the evaluation which invoked the function, but shall use all current policies and combining algorithms, including any per request policies.
+: The function SHALL invoke a complete policy evaluation using the newly constructed context. This evaluation SHALL be completely isolated from the evaluation which invoked the function, but shall use all current policies and combining algorithms, including any per-request policies.
 
 : The PDP SHALL detect any loop which may occur if successive evaluations invoke this function by counting the number of total invocations of any instance of this function during any single initial invocation of the PDP. If the total number of invocations exceeds the bound for such invocations, the initial invocation of this function evaluates to `Indeterminate` with a `urn:oasis:names:tc:acal:1.0:status:processing-error` status code. Also, see the security considerations in [Section 10.1.8](#1018-denial-of-service).
 
