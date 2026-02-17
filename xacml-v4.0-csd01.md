@@ -64,8 +64,7 @@ This specification defines Version 4.0 of the eXtensible Access Control Markup L
 
 When referencing this specification the following citation format should be used:
 
-**[XACML-v4.0]**
-
+**[XACML-Core-4.0]**
 _eXtensible Access Control Markup Language (XACML) Version 4.0_.
 Edited by Steven Legg and Cyril Dangerville. 17 February 2026. OASIS Committee Specification Draft 01.
 https://docs.oasis-open.org/xacml/v4.0/csd01/xacml-v4.0-csd01.html.
@@ -85,57 +84,6 @@ This specification is related to:
 ## License, Document Status, and Notices
 
 Copyright © OASIS Open 2026. All Rights Reserved.  For license and copyright information, and complete status, please see Annex A which contains the License, Document Status and Notices.
-
-## How to generate HTML and PDF versions
-
-### Online generation
-
-HTML/PDF versions are generated automatically online via Github Actions after each update pushed to the main branch of [OASIS XACML TC code repository](https://github.com/oasis-tcs/xacml-spec/). Go to  Github Actions on the repository, then go to the latest workflow run, and, if the run succeeded, the summary should display the links to the generated HTML/PDF documents.
-
-### Offline generation
-
-#### Prerequisites
-
-The following tools are required:
-
-- [Pandoc](https://pandoc.org/);
-- [Pandoc-include filter](https://github.com/DCsunset/pandoc-include).
-
-Either install them on your system or, if you have Docker installed already, simply use the following shell alias:
-```
-$ alias pandoc='docker run --rm --volume "$(pwd):/data" pandoc/extra'
-```
-
-OASIS staff are currently using pandoc 3.0 from https://github.com/jgm/pandoc/releases/tag/3.0.
-
-Git clone or get a local copy of [OASIS XACML TC code repository](https://github.com/oasis-tcs/xacml-spec/), open a terminal and **change your working directory to the root directory of your local copy of the repository**.
-
-#### CSS stylesheet
-
-The generation command uses a CSS stylesheet file (`-c` argument) provided by OASIS. It may be changed to one of these (or the local version in the `styles` folder) to get a different style of output:
-
-- https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3.css
-- https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3a.css (this one produces HTML that resembles the github display more closely, especially for blocks of code) This template already includes a reference (in HTML code) to this .css file.
-- https://docs.oasis-open.org/templates/css/markdown-styles-v1.8.1-cn_final.css
-
-#### HTML generation
-
-Run the following command line to generate HTML from this markdown file (named `xacml-v4.0-csd01.md`) to an output file `/tmp/xacml-v4.0-csd01.html` :
-
-```console
-$ pandoc -s --verbose --embed-resources -f gfm+definition_lists -c styles/markdown-styles-v1.7.3a.css -F pandoc-include -M lang=en -M title="eXtensible Access Control Markup Language (XACML) Version 4.0 (XML Representation of ACAL Version 1.0)" -t html -o /tmp/xacml-v4.0-csd01.html xacml-v4.0-csd01.md
-```
-
-Note this command generates a document which may require additional editing in order to be published in the expected OASIS style. This editing will be handled by OASIS staff during publication.
-
-#### PDF generation
-
-For PDF output, the command line is the following (different `-t` and `-H` arguments, and output goes to file `/tmp/xacml-v4.0-csd01.pdf`):
-
-```console
-$ pandoc -s --embed-resources -f gfm+definition_lists -c styles/markdown-styles-v1.7.3a.css -F pandoc-include -H pandoc/custom_latex_header_for_pandoc_pdf_output.tex --metadata title="eXtensible Access Control Markup Language (XACML) Version 4.0 (XML Representation of ACAL Version 1.0)" -t pdf -o /tmp/xacml-v4.0-csd01.pdf xacml-v4.0-csd01.md
-```
-
 
 -------
 
@@ -231,9 +179,10 @@ $ pandoc -s --embed-resources -f gfm+definition_lists -c styles/markdown-styles-
 - [Annex B References](#annex-b-references)
   - [B.1 Normative References](#b1-normative-references)
   - [B.2 Informative References](#b2-informative-references)
-- [Annex C. XACML identifiers (normative)](#annex-c-xacml-identifiers-normative)
+- [Annex C XACML identifiers (normative)](#annex-c-xacml-identifiers-normative)
   - [C.1 XACML namespaces](#c1-xacml-namespaces)
-- [Annex D. XML Schema (normative)](#annex-d-xml-schema-normative)
+- [Annex D XML Schema (normative)](#annex-d-xml-schema-normative)
+- [Annex E How to generate HTML and PDF Versions](#annex-e-how-to-generate-html-and-pdf-versions)
 - [Appendix 1. Acknowledgments](#appendix-1-acknowledgments)
   - [Leadership](#leadership)
   - [Special Thanks](#special-thanks)
@@ -259,7 +208,7 @@ Best practices:
 
 -->
 
-This specification defines the XML representation format of the [ACAL] model and any XML-specific syntax, semantics and processing instructions that are not already specified by [ACAL]. For more information on the scope, please refer to [ACAL].
+This specification defines the XML representation format of the [[ACAL-Core-1.0](#acal-core-10)] model and any XML-specific syntax, semantics and processing instructions that are not already specified by [[ACAL-Core-1.0](#acal-core-10)]. For more information on the scope, please refer to [[ACAL-Core-1.0](#acal-core-10)].
 
 ---
 
@@ -418,15 +367,15 @@ The list of changes from the previous version and any revision history can be fo
 
 # 5 Syntax (normative, with the exception of the schema fragments)
 
-The next sections describe the rules that SHALL be applied for mapping the [ACAL](#acal) agnostic model (UML-based) to [XML schema](#XS) definitions for this XML representation (XACML).
-These rules have been applied to produce XACML's core XML schema in [Annex D](#annex-d-xml-schema-normative) (also in the [Core XML schema file](xacml-core-v4.0-schema.xsd) accompanying this document) from [ACAL] core model.
+The next sections describe the rules that SHALL be applied for mapping the [[ACAL-Core-1.0](#acal-core-10)] agnostic model (UML-based) to [XML schema](#XS) definitions for this XML representation (XACML).
+These rules have been applied to produce XACML's core XML schema in [Annex D](#annex-d-xml-schema-normative) (also in the [Core XML schema file](xacml-core-v4.0-schema.xsd) accompanying this document) from [[ACAL-Core-1.0](#acal-core-10)] core model.
 
 In all XSD definitions from now, the XACML core namespace `urn:oasis:names:tc:xacml:4.0:core:schema` is the default namespace.
 
 
 ## 5.1 Mapping ACAL primitive types 
 
-For each primitive type (stereotyped `<<primitive>>` or `<<enumeration>>`) in [ACAL](#ACAL) model, apply the mapping rules in the next subsections.
+For each primitive type (stereotyped `<<primitive>>` or `<<enumeration>>`) in [[ACAL-Core-1.0](#acal-core-10)] model, apply the mapping rules in the next subsections.
 
 ### 5.1.1 Primitive types mapped to standard XSD data-types
 
@@ -508,7 +457,7 @@ For example, ACAL `DecisionType` translates to the following XSD definition:
 
 ## 5.2 Mapping complex ACAL types (UML stereotype `<<dataType>>`)
 
-For each complex type (stereotyped `<<dataType>>`) in [ACAL](#ACAL) model, apply the mapping rules in the next subsections.
+For each complex type (stereotyped `<<dataType>>`) in [[ACAL-Core-1.0](#acal-core-10)] model, apply the mapping rules in the next subsections.
 
 The expression *`xs:foo` type (respectively element)* means the `foo` type (respectively element) defined in W3C [XML schema](#XS) standard.
 
@@ -528,7 +477,7 @@ Except the `AnyType` already addressed in the previous section, a single-use emp
 
 ### 5.2.3 ValueType mapping rules
 
-As an exception, if the ACAL complex type is `ValueType` from [ACAL](#ACAL) section 7.23, it is always mapped to the following XSD: 
+As an exception, if the ACAL complex type is `ValueType` from [[ACAL-Core-1.0](#acal-core-10)] section 7.23, it is always mapped to the following XSD: 
 
 ```xml
 <xs:complexType name="ValueType" mixed="true">
@@ -614,7 +563,7 @@ If a complex ACAL type `FooType` is not in the previous cases (section 5.2.1, 5.
    ```
    where `<XPath_to_Foo_element>` is the XPath expression to select the *Foo* element of `FooType`.
    
-4. If `FooType` has *Object-level constraints* as defined in section 7.1.1.1.2 of [[ACAL](#acal)], implementers SHOULD apply the recommended mappings in the section [5.2.6](#526-mapping-complex-acal-constraints-ocl), or they MAY also apply alternative implementation-specific mapping mechanisms as they see fit.
+4. If `FooType` has *Object-level constraints* as defined in section 7.1.1.1.2 of [[ACAL-Core-1.0](#acal-core-10)], implementers SHOULD apply the recommended mappings in the section [5.2.6](#526-mapping-complex-acal-constraints-ocl), or they MAY also apply alternative implementation-specific mapping mechanisms as they see fit.
 
 ### 5.2.5 Property mapping rules
 
@@ -659,7 +608,7 @@ Inside the `xs:complexType` or `xs:extension` element created by the previous ma
         </xs:sequence>
         ```
 
-   - 2.4. If *Prop* is multivalued and has a *simple uniqueness constraint* as defined in section 7.1.1.1.1.1 of [ACAL], i.e. a UML `unique` annotation, then add an `<xs:key>` element as defined in section 3.11.2 of [[XS](#xs11)] (Identity-constraint Definitions), into the XML element declaration of the root object type enclosing *Prop* (created previously), as follows:
+   - 2.4. If *Prop* is multivalued and has a *simple uniqueness constraint* as defined in section 7.1.1.1.1.1 of [[ACAL-Core-1.0](#acal-core-10)], i.e. a UML `unique` annotation, then add an `<xs:key>` element as defined in section 3.11.2 of [[XS](#xs11)] (Identity-constraint Definitions), into the XML element declaration of the root object type enclosing *Prop* (created previously), as follows:
   
      ```xml
      <xs:element name="RootAncestorOfProp" ...>
@@ -712,7 +661,7 @@ Inside the `xs:complexType` or `xs:extension` element created by the previous ma
      </xs:sequence>
      ```
 
-   - 4.3. If *Prop* has a *mandatory-property-based uniqueness constraint* as defined in section 7.1.1.1.1.2 of [ACAL], i.e. `self->isUnique(itemProp)`, then add an `<xs:key>` element as defined in section 3.11.2 of [[XS](#xs11)] (Identity-constraint Definitions), into the XML element of the root object type enclosing *Prop* (created previously), as follows (such `itemProp` is always mapped to an XML attribute in this case):
+   - 4.3. If *Prop* has a *mandatory-property-based uniqueness constraint* as defined in section 7.1.1.1.1.2 of [[ACAL-Core-1.0](#acal-core-10)], i.e. `self->isUnique(itemProp)`, then add an `<xs:key>` element as defined in section 3.11.2 of [[XS](#xs11)] (Identity-constraint Definitions), into the XML element of the root object type enclosing *Prop* (created previously), as follows (such `itemProp` is always mapped to an XML attribute in this case):
   
      ```xml
      <xs:element name="RootAncestorOfProp" ...>
@@ -724,7 +673,7 @@ Inside the `xs:complexType` or `xs:extension` element created by the previous ma
      ```
      where `<XPath_to_Prop>` is the XPath expression to select the *Prop* element from `RootAncestorOfProp` element.
 
-   - 4.4 Else if *Prop* has a *optional-property-based uniqueness constraint* as defined in section 7.1.1.1.1.2 of [ACAL], i.e. `self->select(itemProp <> null)->isUnique(itemProp)`, then add an `<xs:unique>` element as defined in section 3.11.2 of [[XS](#xs11)] (Identity-constraint Definitions), into the XML element of the root object type enclosing *Prop* (created previously), as follows (such `itemProp` is always mapped to an XML attribute in this case):
+   - 4.4 Else if *Prop* has a *optional-property-based uniqueness constraint* as defined in section 7.1.1.1.1.2 of [[ACAL-Core-1.0](#acal-core-10)], i.e. `self->select(itemProp <> null)->isUnique(itemProp)`, then add an `<xs:unique>` element as defined in section 3.11.2 of [[XS](#xs11)] (Identity-constraint Definitions), into the XML element of the root object type enclosing *Prop* (created previously), as follows (such `itemProp` is always mapped to an XML attribute in this case):
   
      ```xml
      <xs:element name="RootAncestorOfProp" ...>
@@ -737,7 +686,7 @@ Inside the `xs:complexType` or `xs:extension` element created by the previous ma
 
      where `<XPath_to_Prop>` is the XPath expression to select the *Prop* element from `RootAncestorOfProp` element.
 
-   - 4.5. Else if *Prop* has a *multi-property-based uniqueness constraint* as defined in section 7.1.1.1.1.2 of [ACAL], i.e. ` self->isUnique(Sequence{itemProp1, itemProp2, ...})`, then add an `<xs:unique>` element as defined in section 3.11.2 of [[XS](#xs11)] (Identity-constraint Definitions), into the XML element of the root object type enclosing *Prop* (created previously), as follows (such `itemProp1`, `itemProp2`, etc. are always mapped to XML attributes in this case):
+   - 4.5. Else if *Prop* has a *multi-property-based uniqueness constraint* as defined in section 7.1.1.1.1.2 of [[ACAL-Core-1.0](#acal-core-10)], i.e. ` self->isUnique(Sequence{itemProp1, itemProp2, ...})`, then add an `<xs:unique>` element as defined in section 3.11.2 of [[XS](#xs11)] (Identity-constraint Definitions), into the XML element of the root object type enclosing *Prop* (created previously), as follows (such `itemProp1`, `itemProp2`, etc. are always mapped to XML attributes in this case):
   
      ```xml
      <xs:element name="RootAncestorOfProp" ...>
@@ -752,18 +701,18 @@ Inside the `xs:complexType` or `xs:extension` element created by the previous ma
 
      where `<XPath_to_Prop>` is the XPath expression to select the *Prop* element from `RootAncestorOfProp` element.
 
-   - 4.6. Else if *Prop* has other kinds of constraints defined in section 7.1.1.1.1.2 of [ACAL] not mentioned previously, implementers SHOULD apply the recommended mappings in the next section, or they MAY also apply alternative implementation-specific mapping mechanisms as they see fit.
+   - 4.6. Else if *Prop* has other kinds of constraints defined in section 7.1.1.1.1.2 of [[ACAL-Core-1.0](#acal-core-10)] not mentioned previously, implementers SHOULD apply the recommended mappings in the next section, or they MAY also apply alternative implementation-specific mapping mechanisms as they see fit.
 
 ### 5.2.6 Mapping complex ACAL constraints (OCL)
 
 _*This section is non-normative.*_ 
 
-The following kinds of OCL-defined UML constraints in the [ACAL](#acal) model do not have any equivalent in [[XSD 1.0](#xs)]:
+The following kinds of OCL-defined UML constraints in the [[ACAL-Core-1.0](#acal-core-10)] model do not have any equivalent in [[XSD 1.0](#xs)]:
 
-- Some of the OCL-defined property-level constraints in [ACAL] section 7.1.1.1.1.2:
+- Some of the OCL-defined property-level constraints in [[ACAL-Core-1.0](#acal-core-10)] section 7.1.1.1.1.2:
   - Multivalued-property-based uniqueness constraint;
   - Value type uniqueness constraint.
-- All object-level constraints in [ACAL] section 7.1.1.1.2.
+- All object-level constraints in [[ACAL-Core-1.0](#acal-core-10)] section 7.1.1.1.2.
 
 This document does not mandate a particular method to map and/or implement these more complex constraints, and leaves this part of the specification implementation-defined. Instead, this document provides only an implementation guidance that recommends to possible options described in the next sections:
 
@@ -798,7 +747,7 @@ You may find further guidance about XSD-1.1-based validation on [OASIS XACML TC'
 Due to the current general lack of adoption of XSD 1.1 (and limited availability of implementations), implementations only supporting XSD 1.0 MAY achieve the same result by combining the following: 
 
 - An XSD 1.0 version of the *Core XML Schema*, obtained by filtering out all the schema elements with attribute `vc:minVersion="1.1"` (according to [XSV]) from the XSD 1.1 schema (e.g. with an [XSLT] stylesheet);
-- [ISO Schematron](#schematron) rules provided with this document (file with `.sch` extension), that implement the complex OCL constraints with similar - if not the same - XPath expressions as the XSD 1.1 assertions in the previous Option 1. Therefore, like XSD 1.1 assertions, certain generic Schematron assertions may be problematic for certain XSLT / XPath engines or use cases, in which case alternative assertions are suggested in XML comments before or after each possibly problematic `<assert>` element currently in use in the schema. Implementers SHOULD review these before use. Moreover, implementers MAY choose to replace some of the assertions with possibly more optimal implementations as long as they provide equivalent constraint enforcement. Each Schematron `pattern` element has the corresponding  [ACAL] model's UML constraint (with OCL expression) reminded in the child `title` element. You may find further guidance about Schematron-based validation on [OASIS XACML TC's code repository](https://github.com/oasis-tcs/xacml-spec/).
+- [ISO Schematron](#schematron) rules provided with this document (file with `.sch` extension), that implement the complex OCL constraints with similar - if not the same - XPath expressions as the XSD 1.1 assertions in the previous Option 1. Therefore, like XSD 1.1 assertions, certain generic Schematron assertions may be problematic for certain XSLT / XPath engines or use cases, in which case alternative assertions are suggested in XML comments before or after each possibly problematic `<assert>` element currently in use in the schema. Implementers SHOULD review these before use. Moreover, implementers MAY choose to replace some of the assertions with possibly more optimal implementations as long as they provide equivalent constraint enforcement. Each Schematron `pattern` element has the corresponding  [[ACAL-Core-1.0](#acal-core-10)] model's UML constraint (with OCL expression) reminded in the child `title` element. You may find further guidance about Schematron-based validation on [OASIS XACML TC's code repository](https://github.com/oasis-tcs/xacml-spec/).
 
 ## 5.3 Content Types and Body representations (optional)
 
@@ -843,11 +792,11 @@ This section identifies possible security and privacy compromise scenarios that 
 
 ## 6.1 Threat model
 
-Refer to [ACAL](#acal) section 11.1.
+Refer to [[ACAL-Core-1.0](#acal-core-10)] section 11.1.
 
 ## 6.2 Safeguards
 
-Refer to [ACAL](#acal) section 11.2 for general considerations.
+Refer to [[ACAL-Core-1.0](#acal-core-10)] section 11.2 for general considerations.
 
 ### 6.2.1 Policy confidentiality
 
@@ -1023,7 +972,7 @@ Remove this note before submitting for publication.
 
 The following documents are referenced in such a way that some or all of their content constitutes requirements of this document.
 
-######  [ACAL]
+###### [ACAL-Core-1.0]
 
 Attribute-Centric Authorization Language (ACAL) Version 1.0. Edited by Steven Legg and Cyril Dangerville. 17 February 2026. OASIS Committee Specification Draft 01.
 
@@ -1188,7 +1137,7 @@ Sloman, M. Policy Driven Management for Distributed Systems. Journal of Network 
 -------
 
 
-# Annex C. XACML identifiers (normative)
+# Annex C XACML identifiers (normative)
 
 This section defines standard identifiers for commonly used entities.
 
@@ -1200,7 +1149,7 @@ XACML is defined using this identifier:
 
 -------
 
-# Annex D. XML Schema (normative)
+# Annex D XML Schema (normative)
 
 This section includes the XML Schema for the XACML syntax defined in this specification, more particularly in section 5 (i.e. obtained by applying the ACAL-to-XML mapping rules):
 
@@ -1209,6 +1158,57 @@ This section includes the XML Schema for the XACML syntax defined in this specif
 ```
 
 -------
+
+# Annex E How to generate HTML and PDF versions
+
+## Online generation
+
+HTML/PDF versions are generated automatically online via Github Actions after each update pushed to the main branch of [OASIS XACML TC code repository](https://github.com/oasis-tcs/xacml-spec/). Go to  Github Actions on the repository, then go to the latest workflow run, and, if the run succeeded, the summary should display the links to the generated HTML/PDF documents.
+
+## Offline generation
+
+### Prerequisites
+
+The following tools are required:
+
+- [Pandoc](https://pandoc.org/);
+- [Pandoc-include filter](https://github.com/DCsunset/pandoc-include).
+
+Either install them on your system or, if you have Docker installed already, simply use the following shell alias:
+```
+$ alias pandoc='docker run --rm --volume "$(pwd):/data" pandoc/extra'
+```
+
+OASIS staff are currently using pandoc 3.0 from https://github.com/jgm/pandoc/releases/tag/3.0.
+
+Git clone or get a local copy of [OASIS XACML TC code repository](https://github.com/oasis-tcs/xacml-spec/), open a terminal and **change your working directory to the root directory of your local copy of the repository**.
+
+### CSS stylesheet
+
+The generation command uses a CSS stylesheet file (`-c` argument) provided by OASIS. It may be changed to one of these (or the local version in the `styles` folder) to get a different style of output:
+
+- https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3.css
+- https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3a.css (this one produces HTML that resembles the github display more closely, especially for blocks of code) This template already includes a reference (in HTML code) to this .css file.
+- https://docs.oasis-open.org/templates/css/markdown-styles-v1.8.1-cn_final.css
+
+### HTML generation
+
+Run the following command line to generate HTML from this markdown file (named `xacml-v4.0-csd01.md`) to an output file `/tmp/xacml-v4.0-csd01.html` :
+
+```console
+$ pandoc -s --verbose --embed-resources -f gfm+definition_lists -c styles/markdown-styles-v1.7.3a.css -F pandoc-include -M lang=en -M title=" " -t html -o /tmp/xacml-v4.0-csd01.html xacml-v4.0-csd01.md
+```
+
+Note this command generates a document which may require additional editing in order to be published in the expected OASIS style. This editing will be handled by OASIS staff during publication.
+
+### PDF generation
+
+For PDF output, the command line is the following (different `-t` and `-H` arguments, and output goes to file `/tmp/xacml-v4.0-csd01.pdf`):
+
+```console
+$ pandoc -s --embed-resources -f gfm+definition_lists -c styles/markdown-styles-v1.7.3a.css -F pandoc-include -H pandoc/custom_latex_header_for_pandoc_pdf_output.tex --metadata title=" " -t pdf -o /tmp/xacml-v4.0-csd01.pdf xacml-v4.0-csd01.md
+```
+
 
 
 # Appendix 1. Acknowledgments

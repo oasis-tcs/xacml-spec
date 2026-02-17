@@ -69,7 +69,7 @@ This specification is a profile of ACAL that provides ACAL extensions based on t
 
 When referencing this document, the following citation format should be used:
 
-
+**[ACAL-JSONPath-1.0]**
 _ACAL v1.0 JSONPath Profile Version 1.0_.
 Edited by Steven Legg and Cyril Dangerville. 17 February 2026. OASIS Committee Specification Draft 01.
 
@@ -85,50 +85,6 @@ This document is related to:
 
 
 Copyright © OASIS Open 2026. All Rights Reserved.  For license and copyright information, and complete status, please see Annex A which contains the License, Document Status and Notices.
-
-## How to generate HTML and PDF versions
-
-### Online generation
-
-HTML/PDF versions are generated automatically online via Github Actions after each update pushed to the main branch of [OASIS XACML TC Github repository](https://github.com/oasis-tcs/xacml-spec/). Go to  Github Actions on the github repository, then go to the latest workflow run, and, if the run succeeded, the summary should display the links to the generated HTML/PDF documents.
-
-### Offline generation
-
-#### Prerequisites
-
-Install Pandoc, Graphviz and PlantUML on your system; or simply use Docker with the following shell alias:
-```
-$ alias pandoc='docker run --rm --volume "$(pwd):/data" cdang/pandoc-plantuml'
-```
-_The Dockerfile (named `Dockerfile`) of the docker image used in the alias above is provided in the [pandoc](pandoc) folder next to this markdown file for your convenience if you wish to build it yourself._  
-
-OASIS staff are currently using pandoc 3.0 from https://github.com/jgm/pandoc/releases/tag/3.0.
-
-Git clone or get a local copy of [OASIS XACML TC Github repository](https://github.com/oasis-tcs/xacml-spec/), open a terminal and **change your working directory to the root directory of your local copy of the repository**.
-
-#### CSS stylesheet
-
-The generation command uses a CSS stylesheet file (`-c` argument) provided by OASIS. It may be changed to one of these (or the local version in the `styles` folder) to get a different style of output:
-- https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3.css
-- https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3a.css (this one produces HTML that resembles the github display more closely, especially for blocks of code) This template already includes a reference (in HTML code) to this .css file.
-
-#### HTML generation
-
-Run the following command line to generate HTML from this markdown file (`acal-v1.0-jsonpath.md`) to an output file `/tmp/acal-v1.0-jsonpath.html`:
-
-```console
-$ pandoc -f gfm+definition_lists -t html -c styles/markdown-styles-v1.7.3a.css -s --lua-filter pandoc/diagram.lua --defaults pandoc/defaults.yaml --embed-resources --metadata title="ACAL v1.0 JSONPath Profile Version 1.0" -o /tmp/acal-v1.0-jsonpath.html acal-v1.0-jsonpath.md 
-```
-
-Note this command generates a Table of Contents (TOC) in HTML which is located at the top of the HTML document, and which requires additional editing in order to be published in the expected OASIS style. This editing will be handled by OASIS staff during publication.
-
-#### PDF generation
-
-For PDF output (file `/tmp/acal-v1.0-jsonpath.pdf`), the command line is the following (different `-t` and `-H` arguments):
-
-```console
-$ pandoc -f gfm+definition_lists -t pdf -c styles/markdown-styles-v1.7.3a.css -H pandoc/custom_latex_header_for_pandoc_pdf_output.tex -s -L pandoc/diagram.lua --defaults pandoc/defaults.yaml --metadata title="ACAL v1.0 JSONPath Profile Version 1.0" --embed-resources -o /tmp/acal-v1.0-jsonpath.pdf acal-v1.0-jsonpath.md 
-```
 
 ---
 
@@ -209,8 +165,9 @@ $ pandoc -f gfm+definition_lists -t pdf -c styles/markdown-styles-v1.7.3a.css -H
 - [Annex B References](#annex-b-references)
   - [B.1 Normative References](#b1-normative-references)
   - [B.2 Informative References](#b2-informative-references)
-- [Annex C. ACAL Identifiers](#annex-c-acal-identifiers)
+- [Annex C ACAL Identifiers](#annex-c-acal-identifiers)
   - [C.1 ACAL Namespaces](#c1-acal-namespaces)
+- [Annex D How to generate HTML and PDF Versions](#annex-d-how-to-generate-html-and-pdf-versions)
 - [Appendix 1 Acknowledgments](#appendix-1-acknowledgments)
   - [Leadership](#leadership)
   - [Special Thanks](#special-thanks)
@@ -236,7 +193,7 @@ Best practices:
 
 -->
 
-This ACAL profile defines concrete types of [ACAL] `AttributeSelector` and `EntityAttributeSelector` using JSONPath [[RFC9535]](#rfc9535) expressions to extract attributes from ACAL Request's `Content`.
+This ACAL profile defines concrete types of [[ACAL-Core-1.0](#acal-core-10)] `AttributeSelector` and `EntityAttributeSelector` using JSONPath [[RFC9535]](#rfc9535) expressions to extract attributes from ACAL Request's `Content`.
 
 Concrete representations (data formats) are to be provided as separate specifications and therefore out of scope of this document.
 
@@ -255,7 +212,7 @@ Concrete representations (data formats) are to be provided as separate specifica
 This document uses the following terms defined elsewhere:
 
 <!-- The following syntax (: definition) for definition lists requires the 'definition_lists' extension enabled in the pandoc command (-f gfm+definition_lists) to be rendered properly. -->
-See Section 2 of [ACAL].
+See Section 2 of [[ACAL-Core-1.0](#acal-core-10)].
 
 ### 2.1.2 Terms Defined in this Document
 
@@ -299,7 +256,7 @@ JSON is a common format to represent structured objects that may be supplied by 
 
 ## 4.2 Policies Based on Subject and Resource Attributes
 
-Attribute selectors (`AttributeSelectorType` objects) defined by this profile use a JSONPath expression [RFC9535] over the `ContentType` object of the subject (resp. resource) to identify a particular subject (resp. resource) attribute value by its location in the context (see Section 4.11 of [ACAL] for an explanation of context).
+Attribute selectors (`AttributeSelectorType` objects) defined by this profile use a JSONPath expression [RFC9535] over the `ContentType` object of the subject (resp. resource) to identify a particular subject (resp. resource) attribute value by its location in the context (see Section 4.11 of [[ACAL-Core-1.0](#acal-core-10)] for an explanation of context).
 
 
 ## 4.3 Changes From the Previous Version
@@ -315,19 +272,19 @@ None. This is the first version of this profile.
 
 ## 5.1 ContentType restrictions
 
-This profile applies to a `Content` object (defined in [ACAL]) in the Request if and only if:
+This profile applies to a `Content` object (defined in [[ACAL-Core-1.0](#acal-core-10)]) in the Request if and only if:
 - The `MediaType` property is set to `application/json`.
 - The `Body` property value is a JSON object. *Note that it is always possible to encapsulate a JSON array inside a JSON object if a JSON array is really needed.*
 
 ## 5.2 ACAL extensions
 
-The structures in this profile are extensions to [ACAL] model and described here in abstract terms. The concrete representations of these structures are defined for a variety of syntaxes each in a separate profile.
+The structures in this profile are extensions to [[ACAL-Core-1.0](#acal-core-10)] model and described here in abstract terms. The concrete representations of these structures are defined for a variety of syntaxes each in a separate profile.
 
-The types `AttributeSelectorType` and `EntityAttributeSelectorType` used in the next UML models are defined in [ACAL].
+The types `AttributeSelectorType` and `EntityAttributeSelectorType` used in the next UML models are defined in [[ACAL-Core-1.0](#acal-core-10)].
 
 ### 5.2.1 AttributeSelectorType extension - JSONPathAttributeSelectorType
 
-A `JSONPathAttributeSelectorType` object is a concrete type of `AttributeSelectorType` from [ACAL](#acal) that uses JSONPath ([RFC9535](#rfc9535)) for `Path` expressions and expects a JSON object as value of the `Body` property of a `RequestEntityType` object's `Content` object. More precisely, the returned values shall be constructed from the node(s) selected by applying the JSONPath expression given by the attribute selector's `Path` property to the JSON object in the `Body` property of the `Content` object in the `RequestEntityType` object matching the attribute selector's `Category` property. 
+A `JSONPathAttributeSelectorType` object is a concrete type of `AttributeSelectorType` from [[ACAL-Core-1.0](#acal-core-10)] that uses JSONPath ([RFC9535](#rfc9535)) for `Path` expressions and expects a JSON object as value of the `Body` property of a `RequestEntityType` object's `Content` object. More precisely, the returned values shall be constructed from the node(s) selected by applying the JSONPath expression given by the attribute selector's `Path` property to the JSON object in the `Body` property of the `Content` object in the `RequestEntityType` object matching the attribute selector's `Category` property. 
 
 See the section 9 for details of attribute selector evaluation.
 
@@ -346,7 +303,7 @@ In the context of this profile, the required `Path` property inherited from the 
 
 ## 5.2.2 EntityAttributeSelectorType extension - JSONPathEntityAttributeSelectorType
 
-A `JSONPathEntityAttributeSelectorType` object is a concrete type of `EntityAttributeSelectorType` [ACAL](#acal) that uses JSONPath [RFC9535](#rfc9535) for `Path` expressions and expects a JSON object in the value returned by the attribute selector's `Expression` property. In other words, the values shall be constructed from the node(s) selected by applying the JSONPath expression given by the entity attribute selector's `Path` property to the JSON object of the `Body` property of the `Content` object in either an attribute category in the request context (`RequestEntity`) or the value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type returned by its `Expression` evaluation.
+A `JSONPathEntityAttributeSelectorType` object is a concrete type of `EntityAttributeSelectorType` [[ACAL-Core-1.0](#acal-core-10)] that uses JSONPath [RFC9535](#rfc9535) for `Path` expressions and expects a JSON object in the value returned by the attribute selector's `Expression` property. In other words, the values shall be constructed from the node(s) selected by applying the JSONPath expression given by the entity attribute selector's `Path` property to the JSON object of the `Body` property of the `Content` object in either an attribute category in the request context (`RequestEntity`) or the value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type returned by its `Expression` evaluation.
 
 See the Section 9 for details of entity attribute selector evaluation.
 
@@ -372,7 +329,7 @@ A `JSONPathAttributeSelectorType` or `JSONPathEntityAttributeSelector` object SH
 
 : Note: It is not necessary for an implementation to exactly follow this model. It is only necessary to produce results identical to those that would be produced by following this model.
 
-The first steps are already described in [ACAL] section 9.4.7 and provided here as a reminder:
+The first steps are already described in [[ACAL-Core-1.0](#acal-core-10)] section 9.4.7 and provided here as a reminder:
 
 - If the attribute category given by the `Category` property is not found or does not have a `Content` property, then the return value is either `Indeterminate` or an empty bag as determined by the `MustBePresent` property.
 
@@ -471,7 +428,7 @@ Please note that any specification that will need to register something with IAN
 
 -->
 
-Refer to [ACAL](#acal) section 10, and Section 4 (Security Considerations) of [RFC 9535](#rfc9535).
+Refer to [[ACAL-Core-1.0](#acal-core-10)] section 10, and Section 4 (Security Considerations) of [RFC 9535](#rfc9535).
 
 ---
 
@@ -589,7 +546,7 @@ Normative references are specific (identified by date of publication and/or edit
 
 The following documents are referenced in such a way that some or all of their content constitutes requirements of this document.
 
-######  [ACAL]
+###### [ACAL-Core-1.0]
 
 Attribute-Centric Authorization Language (ACAL) Version 1.0. Edited by Steven Legg and Cyril Dangerville. 17 February 2026. OASIS Committee Specification Draft 01.
 
@@ -752,7 +709,7 @@ _XACML v3.0 Related and Nested Entities Profile Version 1.0_. Edited by Steven L
 ---
 
 
-# Annex C. ACAL Identifiers
+# Annex C ACAL Identifiers
 
 
 (This annex forms an integral part of this Specification.)
@@ -767,6 +724,49 @@ This ACAL Profile is defined using this identifier.
 
 ---
 
+# Annex D How to generate HTML and PDF versions
+
+## Online generation
+
+HTML/PDF versions are generated automatically online via Github Actions after each update pushed to the main branch of [OASIS XACML TC Github repository](https://github.com/oasis-tcs/xacml-spec/). Go to  Github Actions on the github repository, then go to the latest workflow run, and, if the run succeeded, the summary should display the links to the generated HTML/PDF documents.
+
+## Offline generation
+
+### Prerequisites
+
+Install Pandoc, Graphviz and PlantUML on your system; or simply use Docker with the following shell alias:
+```
+$ alias pandoc='docker run --rm --volume "$(pwd):/data" cdang/pandoc-plantuml'
+```
+_The Dockerfile (named `Dockerfile`) of the docker image used in the alias above is provided in the [pandoc](pandoc) folder next to this markdown file for your convenience if you wish to build it yourself._  
+
+OASIS staff are currently using pandoc 3.0 from https://github.com/jgm/pandoc/releases/tag/3.0.
+
+Git clone or get a local copy of [OASIS XACML TC Github repository](https://github.com/oasis-tcs/xacml-spec/), open a terminal and **change your working directory to the root directory of your local copy of the repository**.
+
+### CSS stylesheet
+
+The generation command uses a CSS stylesheet file (`-c` argument) provided by OASIS. It may be changed to one of these (or the local version in the `styles` folder) to get a different style of output:
+- https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3.css
+- https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3a.css (this one produces HTML that resembles the github display more closely, especially for blocks of code) This template already includes a reference (in HTML code) to this .css file.
+
+### HTML generation
+
+Run the following command line to generate HTML from this markdown file (`acal-v1.0-jsonpath.md`) to an output file `/tmp/acal-v1.0-jsonpath.html`:
+
+```console
+$ pandoc -f gfm+definition_lists -t html -c styles/markdown-styles-v1.7.3a.css -s --lua-filter pandoc/diagram.lua --defaults pandoc/defaults.yaml --embed-resources --metadata title=" " -o /tmp/acal-v1.0-jsonpath.html acal-v1.0-jsonpath.md 
+```
+
+Note this command generates a Table of Contents (TOC) in HTML which is located at the top of the HTML document, and which requires additional editing in order to be published in the expected OASIS style. This editing will be handled by OASIS staff during publication.
+
+### PDF generation
+
+For PDF output (file `/tmp/acal-v1.0-jsonpath.pdf`), the command line is the following (different `-t` and `-H` arguments):
+
+```console
+$ pandoc -f gfm+definition_lists -t pdf -c styles/markdown-styles-v1.7.3a.css -H pandoc/custom_latex_header_for_pandoc_pdf_output.tex -s -L pandoc/diagram.lua --defaults pandoc/defaults.yaml --metadata title=" " --embed-resources -o /tmp/acal-v1.0-jsonpath.pdf acal-v1.0-jsonpath.md 
+```
 
 # Appendix 1 Acknowledgments
 

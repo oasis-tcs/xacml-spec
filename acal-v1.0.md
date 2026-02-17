@@ -54,20 +54,16 @@ N/A
 
 ### Abstract
 
-This specification defines Version 1.0 of the Attribute-Centric Authorization Language, *aka* ACAL (Core Specification), which is an evolution of [XACML v3.0](#xacml) towards an XML-agnostic language (generalization), with various concrete representation formats (syntaxes), including XACML as one of them. This is illustrated by the Figure A-1  below:
-
-![ACAL](images/acal_big.svg)
-
-**Fig. A-1.** ACAL Specifications Overview
+This specification defines Version 1.0 of the Attribute-Centric Authorization Language's core model. This model is essentially an XML-agnostic evolution of [XACML v3.0](#xacml) that provides a common foundation for other concrete representation formats to come (e.g. JSON).
 
 
 ### Citation Format
 
 When referencing this document, the following citation format should be used:
 
-**[ACAL-v1.0-core]**
+**[ACAL-Core-1.0]**
 _Attribute-Centric Authorization Language (ACAL) Version 1.0_.
-Edited by Steven Legg and Cyril Dangerville. 17 February 2026. OASIS Committee Specification Draft 01. https://docs.oasis-open.org/xacml/acal/acal/core/v1.0/csd01/acal-core-v1.0-csd01.html Latest version: https://docs.oasis-open.org/xacml/acal/acal/core/v1.0/acal-core-v1.0.html
+Edited by Steven Legg and Cyril Dangerville. 17 February 2026. OASIS Committee Specification Draft 01. https://docs.oasis-open.org/xacml/acal/acal/core/v1.0/csd01/acal-core-v1.0-csd01.html . Latest version: https://docs.oasis-open.org/xacml/acal/acal/core/v1.0/acal-core-v1.0.html
 
 
 ### Related Work
@@ -80,7 +76,7 @@ This document replaces or supersedes:
 This document is related to:
 
 - _JACAL: The JSON representation of the Attribute-Centric Authorization Language (ACAL) Version 1.0_.
-- _XACML Version 4.0: The XML representation of the Attribute-Centric Authorization Language (ACAL)_.
+- _XACML: The XML representation of the Attribute-Centric Authorization Language (ACAL) Version 4.0_.
 - _YACAL: The YAML representation of the Attribute-Centric Authorization Language (ACAL) Version 1.0_.
 
 
@@ -348,7 +344,7 @@ Copyright © OASIS Open 2026. All Rights Reserved.  For license and copyright in
 - [Annex B References](#annex-b-references)
   - [B.1 Normative References](#b1-normative-references)
   - [B.2 Informative References](#b2-informative-references)
-- [Annex C. Data Types and Functions](#annex-c-data-types-and-functions)
+- [Annex C Data Types and Functions](#annex-c-data-types-and-functions)
   - [C.1 Introduction](#c1-introduction)
   - [C.2 Data Types](#c2-data-types)
     - [C.2.1 X.500 Directory Name](#c21-x500-directory-name)
@@ -374,7 +370,7 @@ Copyright © OASIS Open 2026. All Rights Reserved.  For license and copyright in
     - [C.3.15 Special Match Functions](#c315-special-match-functions)
     - [C.3.16 Other Functions](#c316-other-functions)
     - [C.3.18 Extension Functions and Data Types](#c318-extension-functions-and-data-types)
-- [Annex D. ACAL Identifiers](#annex-d-acal-identifiers)
+- [Annex D ACAL Identifiers](#annex-d-acal-identifiers)
   - [D.1 ACAL Namespaces](#d1-acal-namespaces)
   - [D.2 Attribute Categories](#d2-attribute-categories)
   - [D.3 Data Types](#d3-data-types)
@@ -386,7 +382,7 @@ Copyright © OASIS Open 2026. All Rights Reserved.  For license and copyright in
   - [D.9 Combining Algorithms](#d9-combining-algorithms)
   - [D.10 Content Types](#d10-content-types)
   - [D.11 Content Encodings](#d11-content-encodings) 
-- [Annex E. Combining Algorithms](#annex-e-combining-algorithms)
+- [Annex E Combining Algorithms](#annex-e-combining-algorithms)
   - [E.1 Extended Indeterminate Values](#e1-extended-indeterminate-values)
   - [E.2 Deny Overrides](#e2-deny-overrides)
   - [E.3 Ordered Deny Overrides](#e3-ordered-deny-overrides)
@@ -395,8 +391,7 @@ Copyright © OASIS Open 2026. All Rights Reserved.  For license and copyright in
   - [E.6 Deny Unless Permit](#e6-deny-unless-permit)
   - [E.7 Permit Unless Deny](#e7-permit-unless-deny)
   - [E.8 First Applicable](#e8-first-applicable)
-- [Annex F. How to generate HTML and PDF Versions](#f1-html-pdf-generation)
-  - [F.1 HTML/PDF Generation](#XXXX)
+- [Annex F How to generate HTML and PDF Versions](#annex-f-how-to-generate-html-and-pdf-versions)
 - [Appendix 1 Acknowledgments](#appendix-1-acknowledgments)
   - [Leadership](#leadership)
   - [Special Thanks](#special-thanks)
@@ -803,7 +798,7 @@ In some applications it is helpful to specify supplemental information about a d
 
 As illustrated in the **Figure 4-1** below, compared to [XACML v3](#xacml), this ACAL specification is a generalization of XACML model (syntax and processing model), aiming to be XML-agnostic, therefore laying the ground for other (non-XML) concrete representations to be added. In addition, ACAL benefits from extra enhancements including model simplifications and optimizations as well as new features. For purpuses of simplifying this specification, all XPath features - originally from XACML - are kept in a separate ACAL Profile. 
 
-![ACAL](images/acal_small.svg)
+![ACAL](images/acal_big.svg)
 
 **Fig. 4-1.** Evolution from XACML v3 to ACAL 
 
@@ -6368,7 +6363,7 @@ _eXtensible Access Control Markup Language (XACML) Version 3.0 Plus Errata 01_. 
 ---
 
 
-# Annex C. Data Types and Functions
+# Annex C Data Types and Functions
 
 
 (This annex forms an integral part of this Specification.)
@@ -7501,7 +7496,7 @@ Functions and data types are specified by string identifiers allowing for the in
 In order to preserve the integrity of the ACAL evaluation strategy, the result of an extension function SHALL depend only on the values of its arguments. Global and hidden parameters SHALL NOT affect the evaluation of an expression. Functions SHALL NOT have side effects, as evaluation order cannot be guaranteed in a standard way.
 
 
-# Annex D. ACAL Identifiers
+# Annex D ACAL Identifiers
 
 
 (This annex forms an integral part of this Specification.)
@@ -7767,7 +7762,7 @@ This standard *Encoding mechanism* identifier ([[RFC 2045]](#rfc2045) Section 6)
 
 ---
 
-# Annex E. Combining Algorithms
+# Annex E Combining Algorithms
 
 
 (This annex forms an integral part of this Specification.)
@@ -8096,14 +8091,15 @@ Notices SHALL be combined as described in [Section 8.16](#816-notices).
 
 ---
 
-# Annex F.  How to generate HTML and PDF Versions
-### Online generation
+# Annex F How to generate HTML and PDF Versions
+
+## Online generation
 
 HTML/PDF versions are generated automatically online via Github Actions after each update pushed to the main branch of [OASIS XACML TC Github repository](https://github.com/oasis-tcs/xacml-spec/). Go to Github Actions on the github repository, then go to the latest workflow run, and, if the run succeeded, the summary should display the links to the generated HTML/PDF documents.
 
-### Offline generation
+## Offline generation
 
-#### Prerequisites
+### Prerequisites
 
 Install Pandoc, Graphviz and PlantUML on your system; or simply use Docker with the following shell alias:
 ```
@@ -8115,29 +8111,29 @@ OASIS staff are currently using pandoc 3.0 from https://github.com/jgm/pandoc/re
 
 Git clone or get a local copy of [OASIS XACML TC Github repository](https://github.com/oasis-tcs/xacml-spec/), open a terminal and **change your working directory to the root directory of your local copy of the repository**.
 
-#### CSS stylesheet
+### CSS stylesheet
 
 The generation command uses a CSS stylesheet file (`-c` argument) provided by OASIS. It may be changed to one of these (or the local version in the `styles` folder) to get a different style of output:
 - https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3.css
 - https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3a.css (this one produces HTML that resembles the github display more closely, especially for blocks of code) This template already includes a reference (in HTML code) to this .css file.
 - https://docs.oasis-open.org/templates/css/markdown-styles-v1.8.1-cn_final.css
 
-#### HTML generation
+### HTML generation
 
 Run the following command line to generate HTML from this markdown file (named `acal-v1.0.md`) to an output file `/tmp/acal-v1.0.html`:
 
 ```console
-$ pandoc -f gfm+definition_lists -t html -c styles/markdown-styles-v1.7.3a.css -s --lua-filter pandoc/diagram.lua --defaults pandoc/defaults.yaml --embed-resources --metadata title="Attribute-Centric Authorization Language (ACAL) Version 1.0" -o /tmp/acal-v1.0-csd01.html acal-v1.0.md
+$ pandoc -f gfm+definition_lists -t html -c styles/markdown-styles-v1.7.3a.css -s --lua-filter pandoc/diagram.lua --defaults pandoc/defaults.yaml --embed-resources --metadata title=" " -o /tmp/acal-v1.0-csd01.html acal-v1.0.md
 ```
 
 Note this command generates a Table of Contents (TOC) in HTML which is located at the top of the HTML document, and which requires additional editing in order to be published in the expected OASIS style. This editing will be handled by OASIS staff during publication.
 
-#### PDF generation
+### PDF generation
 
 For PDF output (file `/tmp/acal-v1.0.pdf`), the command line is the following (different `-t` and `-H` arguments):
 
 ```console
-$ pandoc -f gfm+definition_lists -t pdf -c styles/markdown-styles-v1.7.3a.css -H pandoc/custom_latex_header_for_pandoc_pdf_output.tex -s -L pandoc/diagram.lua --defaults pandoc/defaults.yaml --metadata title="Attribute-Centric Authorization Language (ACAL) Version 1.0" --embed-resources -o /tmp/acal-v1.0.pdf acal-v1.0.md
+$ pandoc -f gfm+definition_lists -t pdf -c styles/markdown-styles-v1.7.3a.css -H pandoc/custom_latex_header_for_pandoc_pdf_output.tex -s -L pandoc/diagram.lua --defaults pandoc/defaults.yaml --metadata title=" " --embed-resources -o /tmp/acal-v1.0.pdf acal-v1.0.md
 ```
 
 

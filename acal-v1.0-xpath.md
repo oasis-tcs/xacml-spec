@@ -69,7 +69,7 @@ This specification is a profile of ACAL that provides ACAL extensions based on t
 
 When referencing this document, the following citation format should be used:
 
-
+**[ACAL-XPath-1.0]**
 _ACAL v1.0 XPath Profile Version 1.0_.
 Edited by Steven Legg and Cyril Dangerville. 17 February 2026. OASIS Committee Specification Draft 01.
 
@@ -85,60 +85,6 @@ This document is related to:
 
 
 Copyright © OASIS Open 2026. All Rights Reserved.  For license and copyright information, and complete status, please see Annex A which contains the License, Document Status and Notices.
-
-## How to generate HTML and PDF versions
-
-### Online generation
-
-HTML/PDF versions are generated automatically online via Github Actions after each update pushed to the main branch of [OASIS XACML TC Github repository](https://github.com/oasis-tcs/xacml-spec/). Go to  Github Actions on the github repository, then go to the latest workflow run, and, if the run succeeded, the summary should display the links to the generated HTML/PDF documents.
-
-### Offline generation
-
-#### Prerequisites
-
-The following tools are required:
-
-- [Pandoc](https://pandoc.org/);
-- [Pandoc-include filter](https://github.com/DCsunset/pandoc-include).
-- [PlantUML](https://plantuml.com/starting)
-
-Either install them on your system or, if you have Docker installed already, simply use the following shell alias:
-
-Install Pandoc, Graphviz and PlantUML on your system; or simply use Docker with the following shell alias:
-```
-$ alias pandoc='docker run --rm --volume "$(pwd):/data" cdang/pandoc-plantuml'
-```
-_The Dockerfile (named `Dockerfile`) of the docker image used in the alias above is provided in the [pandoc](pandoc) folder next to this markdown file for your convenience if you wish to build it yourself._  
-
-OASIS staff are currently using pandoc 3.0 from https://github.com/jgm/pandoc/releases/tag/3.0.
-
-Git clone or get a local copy of [OASIS XACML TC Github repository](https://github.com/oasis-tcs/xacml-spec/), open a terminal and **change your working directory to the root directory of your local copy of the repository**.
-
-#### CSS stylesheet
-
-The generation command uses a CSS stylesheet file (`-c` argument) provided by OASIS. It may be changed to one of these (or the local version in the `styles` folder) to get a different style of output:
-- https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3.css
-- https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3a.css (this one produces HTML that resembles the github display more closely, especially for blocks of code) This template already includes a reference (in HTML code) to this .css file.
-
-#### HTML generation
-
-Run the following command line to generate HTML from this markdown file (`acal-v1.0-xpath.md`) to an output file `/tmp/acal-v1.0-xpath.html`:
-
-<!-- fenced_code_attributes pandoc extension is used for numberine lines in code blocks; fenced_code_attributes is not supported for 'gfm' format. Using 'markdown' instead. -->
-```console
-$ pandoc -f markdown+definition_lists+fenced_code_attributes -c styles/markdown-styles-v1.7.3a.css --standalone --filter pandoc-include --lua-filter pandoc/diagram.lua --defaults pandoc/defaults.yaml --embed-resources --metadata title="ACAL v1.0 XPath Profile Version 1.0" -t html -o /tmp/acal-v1.0-xpath.html acal-v1.0-xpath.md 
-```
-
-Note this command generates a Table of Contents (TOC) in HTML which is located at the top of the HTML document, and which requires additional editing in order to be published in the expected OASIS style. This editing will be handled by OASIS staff during publication.
-
-#### PDF generation
-
-For PDF output (file `/tmp/acal-v1.0-xpath.pdf`), the command line is the following (different `-t` and `-H` arguments):
-
-<!-- fenced_code_attributes pandoc extension is used for numberine lines in code blocks; fenced_code_attributes is not supported for 'gfm' format. Using 'markdown' instead. -->
-```console
-$ pandoc -f markdown+definition_lists+fenced_code_attributes -c styles/markdown-styles-v1.7.3a.css -H custom_latex_header_for_pandoc_pdf_output.tex --standalone --filter pandoc-include --lua-filter pandoc/diagram.lua --defaults pandoc/defaults.yaml --embed-resources --metadata title="ACAL v1.0 XPath Profile Version 1.0" -t pdf -o /tmp/acal-v1.0-xpath.pdf acal-v1.0-xpath.md
-```
 
 ---
 
@@ -241,6 +187,7 @@ $ pandoc -f markdown+definition_lists+fenced_code_attributes -c styles/markdown-
 - [Annex D ACAL Identifiers](#annex-d-acal-identifiers)
   - [D.1 ACAL Namespaces](#d.1-acal-namespaces)
   - [D.2 Data Types](#d.2-data-types)
+- [Annex E How to generate HTML and PDF Versions](#annex-e-how-to-generate-html-and-pdf-versions)
 - [Appendix 1 Acknowledgments](#appendix-1-acknowledgments)
   - [Leadership](#leadership)
   - [Special Thanks](#special-thanks)
@@ -285,7 +232,7 @@ Concrete representations (data formats) are to be provided as separate specifica
 This document uses the following terms defined elsewhere:
 
 <!-- The following syntax (: definition) for definition lists requires the 'definition_lists' extension enabled in the pandoc command (-f gfm+definition_lists) to be rendered properly. -->
-See Section 2 of [ACAL].
+See Section 2 of [[ACAL-Core-1.0](#acal-core-10)].
 
 ### 2.1.2 Terms Defined in this Document
 
@@ -329,7 +276,7 @@ XML is a common format to represent complex structured documents that may be sup
 
 ## 4.2 Policies Based on Subject and Resource Attributes
 
-Attribute selectors (`AttributeSelectorType` objects) defined by this profile use an XPath expression over the `ContentType` object of the subject (resp. resource) to identify a particular subject (resp. resource) attribute value by its location in the context (see Section 4.11 of [ACAL] for an explanation of context).
+Attribute selectors (`AttributeSelectorType` objects) defined by this profile use an XPath expression over the `ContentType` object of the subject (resp. resource) to identify a particular subject (resp. resource) attribute value by its location in the context (see Section 4.11 of [[ACAL-Core-1.0](#acal-core-10)] for an explanation of context).
 
 ## 4.3 Operators
 
@@ -449,7 +396,7 @@ None. This is the first version of this profile.
 
 ## 5.1 ContentType restrictions
 
-This profile applies to a `Content` object (defined in [ACAL]) in the Request if and only if:
+This profile applies to a `Content` object (defined in [[ACAL-Core-1.0](#acal-core-10)]) in the Request if and only if:
 - The `MediaType` property is set to `application/xml`.
 - The `Body` property value is a XML document.
 
@@ -477,17 +424,17 @@ A `NamespaceDeclarationType` object contains the following properties:
 
 `Name` [Required]
 
-: This property defines the namespace name (URI) itself to which the prefix is mapped. The `URI` datatype is defined in [ACAL].
+: This property defines the namespace name (URI) itself to which the prefix is mapped. The `URI` datatype is defined in [[ACAL-Core-1.0](#acal-core-10)].
 
 ## 5.3 ACAL extension types
 
-The structures in this section are extensions to [ACAL] model and described here in abstract terms. The concrete representations of these structures are defined for a variety of syntaxes each in a separate profile.
+The structures in this section are extensions to [[ACAL-Core-1.0](#acal-core-10)] model and described here in abstract terms. The concrete representations of these structures are defined for a variety of syntaxes each in a separate profile.
 
-The types `IdentifierType`, `ValueType`, `SimpleValueType`, `PolicyDefaultsType` and `RequestDefaultsType`, `AttributeSelectorType` and `EntityAttributeSelectorType` used in the next UML models are defined in [ACAL].
+The types `IdentifierType`, `ValueType`, `SimpleValueType`, `PolicyDefaultsType` and `RequestDefaultsType`, `AttributeSelectorType` and `EntityAttributeSelectorType` used in the next UML models are defined in [[ACAL-Core-1.0](#acal-core-10)].
 
 ### 5.3.1 PolicyDefaultsType extension - XPathPolicyDefaultsType
 
-A `XPathPolicyDefaultsType` object extends `PolicyDefaultsType` from [ACAL] to specify default XPath settings that apply to the evaluation of `XPathAttributeSelectorType` and `XPathEntityAttributeSelectorType` objects, `xpathExpression` values and XPath-based functions in the enclosing `PolicyType` object.
+A `XPathPolicyDefaultsType` object extends `PolicyDefaultsType` from [[ACAL-Core-1.0](#acal-core-10)] to specify default XPath settings that apply to the evaluation of `XPathAttributeSelectorType` and `XPathEntityAttributeSelectorType` objects, `xpathExpression` values and XPath-based functions in the enclosing `PolicyType` object.
 
 UML definition (class diagram):
 ```plantuml
@@ -515,7 +462,7 @@ A `XPathDefaultsType` object contains the following properties:
 
 ### 5.3.2 RequestDefaultsType extension - XPathRequestDefaultsType
 
-A `XPathRequestDefaultsType` object extends `RequestDefaultsType` from [ACAL] to specify default XPath settings that apply to the evaluation of `XPathAttributeSelectorType` and `XPathEntityAttributeSelectorType` objects, `xpathExpression` values and XPath-based functions in the enclosing `RequestType` object.
+A `XPathRequestDefaultsType` object extends `RequestDefaultsType` from [[ACAL-Core-1.0](#acal-core-10)] to specify default XPath settings that apply to the evaluation of `XPathAttributeSelectorType` and `XPathEntityAttributeSelectorType` objects, `xpathExpression` values and XPath-based functions in the enclosing `RequestType` object.
 
 UML definition (class diagram):
 ```plantuml
@@ -537,7 +484,7 @@ The alternative based on multiple-inheritance, i.e. `XPathDefaultsType` extendin
 
 ### 5.3.2 Multiple-inheritance alternative - XPathDefaultsType
 
-A `XPathDefaultsType` object extends `PolicyDefaultsType` and `RequestDefaultsType` from [ACAL] to specify default XPath settings that apply to the evaluation of `XPathAttributeSelectorType` and `XPathEntityAttributeSelectorType` objects, `xpathExpression` values and XPath-based functions in the enclosing `PolicyType` or `RequestType` object.
+A `XPathDefaultsType` object extends `PolicyDefaultsType` and `RequestDefaultsType` from [[ACAL-Core-1.0](#acal-core-10)] to specify default XPath settings that apply to the evaluation of `XPathAttributeSelectorType` and `XPathEntityAttributeSelectorType` objects, `xpathExpression` values and XPath-based functions in the enclosing `PolicyType` or `RequestType` object.
 
 UML definition (class diagram):
 ```plantuml
@@ -563,7 +510,7 @@ A `XPathDefaultsType` object contains the following property:
 
 ### 5.3.3 AttributeSelectorType extension - XPathAttributeSelectorType
 
-An `XPatAttributeSelectorType` object is a concrete type of `AttributeSelectorType` from [ACAL] that uses [XPath] for `Path` expressions and expect an XML document in the `Body` property of the `Content` object of the `RequestEntityType` object matching the `Category` property. More precisely, the returned values shall be constructed from the node(s) selected by applying the XPath expression given by the attribute selector's `Path` property to the XML document in the `Body` property of the `Content` object of the `RequestEntityType` object matching the attribute selector's `Category` property. 
+An `XPatAttributeSelectorType` object is a concrete type of `AttributeSelectorType` from [[ACAL-Core-1.0](#acal-core-10)] that uses [XPath] for `Path` expressions and expect an XML document in the `Body` property of the `Content` object of the `RequestEntityType` object matching the `Category` property. More precisely, the returned values shall be constructed from the node(s) selected by applying the XPath expression given by the attribute selector's `Path` property to the XML document in the `Body` property of the `Content` object of the `RequestEntityType` object matching the attribute selector's `Category` property. 
 
 See the section 9 for details of attribute selector evaluation.
 
@@ -585,7 +532,7 @@ The `XPathAttributeSelectorType` object type extends the `AttributeSelectorType`
 
 : An `IdentifierType` value specifying an ACAL attribute (by its `AttributeId`) in the attribute category (`RequestEntityType` object with `Category` matching this attribute selector's `Category`) containing the XML content. The referenced attribute MUST have a single value of data type `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` (see Annex C) and the XPath expression represented by that value must select a single node in the XML content. The `XPathCategory` property of the referenced ACAL attribute value SHALL be ignored.
 
-More importantly, in the context of this profile, the value of the `Path` property inherited from supertype `AttributeSelectorType` SHALL be an XPath expression [XPath]. In addition, this XPath expression may reference one or more XPath variables, in which case each XPath variable's value(s) is taken(s) from the corresponding so-called *ACAL variable*, i.e. the variable defined by a `<VariableDefinition>` with a `VariableId` matching the XPath variable name, in the scope of this element. Only XPath variables of primitive atomic type or array of primitive atomic type are allowed in this XPath expression; in the first case (respectively the second case), the corresponding ACAL variable must return a single value (respectively a bag) of a primitive datatype that is convertible to that XPath atomic type. How to do this conversion is described in section 8.4.7 of [ACAL].
+More importantly, in the context of this profile, the value of the `Path` property inherited from supertype `AttributeSelectorType` SHALL be an XPath expression [XPath]. In addition, this XPath expression may reference one or more XPath variables, in which case each XPath variable's value(s) is taken(s) from the corresponding so-called *ACAL variable*, i.e. the variable defined by a `<VariableDefinition>` with a `VariableId` matching the XPath variable name, in the scope of this element. Only XPath variables of primitive atomic type or array of primitive atomic type are allowed in this XPath expression; in the first case (respectively the second case), the corresponding ACAL variable must return a single value (respectively a bag) of a primitive datatype that is convertible to that XPath atomic type. How to do this conversion is described in section 8.4.7 of [[ACAL-Core-1.0](#acal-core-10)].
 
 For example, in the following `XPathAttributeSelectorType` object in XML representation format:
 
@@ -607,7 +554,7 @@ If no such variable is found (in the current scope) or the datatype is incompati
 
 ### 5.3.4 EntityAttributeSelectorType extension - XPathEntityAttributeSelectorType
 
-An `XPathEntityAttributeSelectorType` object is a concrete type of `EntityAttributeSelectorType` [ACAL] that uses [XPath] for `Path` expressions and expects XML content in the value returned by the attribute selector's `Expression` property. In other words, the values shall be constructed from the node(s) selected by applying the XPath expression given by the entity attribute selector's `Path` property to the XML document in the `Body` property of the `Content` property in either an attribute category in the request context (`RequestEntity`) or the value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type returned by its `Expression` evaluation. 
+An `XPathEntityAttributeSelectorType` object is a concrete type of `EntityAttributeSelectorType` [[ACAL-Core-1.0](#acal-core-10)] that uses [XPath] for `Path` expressions and expects XML content in the value returned by the attribute selector's `Expression` property. In other words, the values shall be constructed from the node(s) selected by applying the XPath expression given by the entity attribute selector's `Path` property to the XML document in the `Body` property of the `Content` property in either an attribute category in the request context (`RequestEntity`) or the value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type returned by its `Expression` evaluation. 
 
 See the Section 9 for details of entity attribute selector evaluation.
 
@@ -628,7 +575,7 @@ The `Path` property is also defined the same as in `XPathAttributeSelectorType`.
 
 ## 5.3.5 DataType extension - XPathExpressionValueType
 
-The `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` values (Annex C) can be modeled as a subtype of `SimpleValueType` [ACAL] called `XPathExpressionValueType`.
+The `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` values (Annex C) can be modeled as a subtype of `SimpleValueType` [[ACAL-Core-1.0](#acal-core-10)] called `XPathExpressionValueType`.
 
 UML model (class diagram):
 ```plantuml
@@ -652,7 +599,7 @@ A `XPathExpressionValueType` object has the following properties:
 
 `Value` [Required]
 
-: The XPath expression (the `AttributeSelectorPathType` is defined in [ACAL])
+: The XPath expression (the `AttributeSelectorPathType` is defined in [[ACAL-Core-1.0](#acal-core-10)])
 
 `XPathCategory` [Required]
 
@@ -820,7 +767,7 @@ An `XPathAttributeSelectorType` or `XPathEntityAttributeSelector` object SHALL b
 
 : Note: It is not necessary for an implementation to exactly follow this model. It is only necessary to produce results identical to those that would be produced by following this model.
 
-The first steps are already described in [ACAL] section 8.4.7 (Attribute selector evaluation) and provided here as a reminder:
+The first steps are already described in [[ACAL-Core-1.0](#acal-core-10)] section 8.4.7 (Attribute selector evaluation) and provided here as a reminder:
 
 - If the attribute category given by the `Category` property is not found or does not have a `Content` property, then the return value is either `Indeterminate` or an empty bag as determined by the `MustBePresent` property.
 
@@ -836,7 +783,7 @@ If the designated attribute category or entity value has a `Content` property, t
 
 3. Evaluate the XPath expression given in the `Path` property against the context node selected in the previous step, according to the [XPath] standard in the version indicated in the `PolicyDefaults` property for this profile. This XPath expression may reference one or more XPath variables, in which case each XPath variable's value(s) is taken(s) from the corresponding so-called *ACAL variable*, i.e. the variable defined by a `<VariableDefinition>` with a `VariableId` matching the XPath variable name, in the scope of this element. Only XPath variables of primitive atomic type or array of primitive atomic type are allowed in this XPath expression; in the first case (respectively the second case), the corresponding ACAL variable must return a single value (respectively a bag) of a primitive datatype that is convertible to that XPath atomic type. How to do this conversion is the same as in step 4 below. If no such variable is found (in the current scope) or the datatype is incompatible (ACAL-to-XPath type conversion is not possible), the XPath expression and therefore this `Path` attribute must be considered invalid and a syntax error returned (status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`).
 
-4. The result of step 3 is converted to ACAL value(s) according to the same rules as in the last step of [ACAL] section 8.4.7 (Attribute Selector evaluation).
+4. The result of step 3 is converted to ACAL value(s) according to the same rules as in the last step of [[ACAL-Core-1.0](#acal-core-10)] section 8.4.7 (Attribute Selector evaluation).
 
 ---
 
@@ -853,7 +800,7 @@ Please note that any specification that will need to register something with IAN
 
 -->
 
-Refer to [ACAL] section 11.
+Refer to [[ACAL-Core-1.0](#acal-core-10)] section 11.
 
 ---
 
@@ -992,7 +939,7 @@ Normative references are specific (identified by date of publication and/or edit
 
 The following documents are referenced in such a way that some or all of their content constitutes requirements of this document.
 
-######  [ACAL]
+###### [ACAL-Core-1.0]
 
 Attribute-Centric Authorization Language (ACAL) Version 1.0. Edited by Steven Legg and Cyril Dangerville. 17 February 2026. OASIS Committee Specification Draft 01.
 
@@ -1232,6 +1179,59 @@ The following identifiers indicate data types that are defined in [Annex C.2](#c
 
 ---
 
+# Annex E How to generate HTML and PDF versions
+
+## Online generation
+
+HTML/PDF versions are generated automatically online via Github Actions after each update pushed to the main branch of [OASIS XACML TC Github repository](https://github.com/oasis-tcs/xacml-spec/). Go to  Github Actions on the github repository, then go to the latest workflow run, and, if the run succeeded, the summary should display the links to the generated HTML/PDF documents.
+
+## Offline generation
+
+### Prerequisites
+
+The following tools are required:
+
+- [Pandoc](https://pandoc.org/);
+- [Pandoc-include filter](https://github.com/DCsunset/pandoc-include).
+- [PlantUML](https://plantuml.com/starting)
+
+Either install them on your system or, if you have Docker installed already, simply use the following shell alias:
+
+Install Pandoc, Graphviz and PlantUML on your system; or simply use Docker with the following shell alias:
+```
+$ alias pandoc='docker run --rm --volume "$(pwd):/data" cdang/pandoc-plantuml'
+```
+_The Dockerfile (named `Dockerfile`) of the docker image used in the alias above is provided in the [pandoc](pandoc) folder next to this markdown file for your convenience if you wish to build it yourself._  
+
+OASIS staff are currently using pandoc 3.0 from https://github.com/jgm/pandoc/releases/tag/3.0.
+
+Git clone or get a local copy of [OASIS XACML TC Github repository](https://github.com/oasis-tcs/xacml-spec/), open a terminal and **change your working directory to the root directory of your local copy of the repository**.
+
+### CSS stylesheet
+
+The generation command uses a CSS stylesheet file (`-c` argument) provided by OASIS. It may be changed to one of these (or the local version in the `styles` folder) to get a different style of output:
+- https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3.css
+- https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3a.css (this one produces HTML that resembles the github display more closely, especially for blocks of code) This template already includes a reference (in HTML code) to this .css file.
+
+### HTML generation
+
+Run the following command line to generate HTML from this markdown file (`acal-v1.0-xpath.md`) to an output file `/tmp/acal-v1.0-xpath.html`:
+
+<!-- fenced_code_attributes pandoc extension is used for numberine lines in code blocks; fenced_code_attributes is not supported for 'gfm' format. Using 'markdown' instead. -->
+```console
+$ pandoc -f markdown+definition_lists+fenced_code_attributes -c styles/markdown-styles-v1.7.3a.css --standalone --filter pandoc-include --lua-filter pandoc/diagram.lua --defaults pandoc/defaults.yaml --embed-resources --metadata title=" " -t html -o /tmp/acal-v1.0-xpath.html acal-v1.0-xpath.md 
+```
+
+Note this command generates a Table of Contents (TOC) in HTML which is located at the top of the HTML document, and which requires additional editing in order to be published in the expected OASIS style. This editing will be handled by OASIS staff during publication.
+
+### PDF generation
+
+For PDF output (file `/tmp/acal-v1.0-xpath.pdf`), the command line is the following (different `-t` and `-H` arguments):
+
+<!-- fenced_code_attributes pandoc extension is used for numberine lines in code blocks; fenced_code_attributes is not supported for 'gfm' format. Using 'markdown' instead. -->
+```console
+$ pandoc -f markdown+definition_lists+fenced_code_attributes -c styles/markdown-styles-v1.7.3a.css -H custom_latex_header_for_pandoc_pdf_output.tex --standalone --filter pandoc-include --lua-filter pandoc/diagram.lua --defaults pandoc/defaults.yaml --embed-resources --metadata title=" " -t pdf -o /tmp/acal-v1.0-xpath.pdf acal-v1.0-xpath.md
+```
 
 # Appendix 1 Acknowledgments
 
@@ -1317,7 +1317,7 @@ The appendix **SHOULD** contain any explanatory text about the reason for this v
 
 This ACAL Profile is a successor to the set of XPath-based features of XACML 3.0. This profile differs from XACML 3.0 original XPath features in the following ways:
 
-- Like [ACAL] core model, this profile's constructs can be represented in JSON, YAML or XML at the implementor's discretion.
+- Like [[ACAL-Core-1.0](#acal-core-10)] core model, this profile's constructs can be represented in JSON, YAML or XML at the implementor's discretion.
 
 - `AttributeSelector` has become abstract to support other kinds of AttributeSelector (e.g. JSONPath-based) and the former XPath-based AttributeSelectorType becomes the subtype `XPathAttributeSelectorType`
 - Compared to XACML 3.0 AttributeSelectorType, `XPathAttributeSelectorType` supports a new feature:

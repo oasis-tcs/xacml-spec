@@ -66,9 +66,10 @@ This specification defines Version 1.0 of the JSON Representation Profile of the
 ### Citation format:
 
 When referencing this specification the following citation format should be used:
-<!-- TODO: update version and date -->
+
+**[JACAL-Core-1.0]**
 _ACAL v1.0 JSON Representation Profile (JACAL) Version 1.0_.
-Edited by Steven Legg and Cyril Dangerville. 9 September 2024. OASIS Committee Specification Draft 01.
+Edited by Steven Legg and Cyril Dangerville. 17 February 2026. OASIS Committee Specification Draft 01.
 
 
 ### Related work:
@@ -81,44 +82,6 @@ This document is related to:
 ## License, Document Status, and Notices
 
 Copyright © OASIS Open 2026. All Rights Reserved.  For license and copyright information, and complete status, please see Annex A which contains the License, Document Status and Notices.
-
-## How to generate HTML and PDF versions
-
-### Prerequisites
-
-Install Pandoc on your system; or simply use Docker with the following shell alias:
-```
-$ alias pandoc='docker run --rm --volume "$(pwd):/data" pandoc/extra'
-```
-
-OASIS staff are currently using pandoc 3.0 from https://github.com/jgm/pandoc/releases/tag/3.0.
-
-Git clone or get a local copy of [OASIS XACML TC Github repository](https://github.com/oasis-tcs/xacml-spec/), open a terminal and **change your working directory to the root directory of your local copy of the repository**.
-
-### CSS stylesheet
-
-The generation command uses a CSS stylesheet file (`-c` argument) provided by OASIS. It may be changed to one of these (or the local version in the `styles` folder) to get a different style of output:
-- https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3.css
-- https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3a.css (this one produces HTML that resembles the github display more closely, especially for blocks of code) This template already includes a reference (in HTML code) to this .css file.
-- https://docs.oasis-open.org/templates/css/markdown-styles-v1.8.1-cn_final.css
-
-### HTML generation
-
-Run the following command line to generate HTML from this markdown file (named `jacal-core-v1.0.md`) to an output file `/tmp/jacal-core-v1.0.html` :
-
-```console
-$ pandoc -s --embed-resources -f gfm+definition_lists -c styles/markdown-styles-v1.7.3a.css -F pandoc-include -M lang=en -M title="JSON Representation of ACAL Version 1.0 (JACAL)" -t html -o /tmp/jacal-core-v1.0.html jacal-core-v1.0.md
-```
-
-Note this command generates a Table of Contents (TOC) in HTML which is located at the top of the HTML document, and which requires additional editing in order to be published in the expected OASIS style. This editing will be handled by OASIS staff during publication.
-
-### PDF generation
-
-For PDF output, the command line is the following (different `-t` and `-H` arguments, and output file `/tmp/jacal-core-v1.0.pdf`):
-
-```console
-$ pandoc -s --embed-resources -f gfm+definition_lists -c styles/markdown-styles-v1.7.3a.css -F pandoc-include -H pandoc/custom_latex_header_for_pandoc_pdf_output.tex -M lang=en -M title="JSON Representation of ACAL Version 1.0 (JACAL)" -t pdf -o /tmp/jacal-core-v1.0.pdf jacal-core-v1.0.md
-```
 
 -------
 
@@ -214,9 +177,10 @@ $ pandoc -s --embed-resources -f gfm+definition_lists -c styles/markdown-styles-
 - [Annex B References](#annex-b-references)
   - [B.1 Normative References](#b1-normative-references)
   - [B.2 Informative References](#b2-informative-references)
-- [Annex C. JACAL identifiers (normative)](#annex-c-jacal-identifiers-normative)
+- [Annex C JACAL identifiers (normative)](#annex-c-jacal-identifiers-normative)
   - [C.1 JACAL schema identifier](#c1-jacal-schema-identifier)
-- [Annex D. JACAL schema (normative)](#annex-c-jacal-identifiers-normative)
+- [Annex D JACAL schema (normative)](#annex-c-jacal-identifiers-normative)
+- [Annex E How to generate HTML and PDF Versions](#annex-e-how-to-generate-html-and-pdf-versions)
 - [Appendix 1. Acknowledgments](#appendix-1-acknowledgments)
   - [Leadership](#leadership)
   - [Special Thanks](#special-thanks)
@@ -241,7 +205,7 @@ Best practices:
 
 -->
 
-This specification defines the JSON syntax of the [ACAL](#acal) model and any JSON-specific syntax, semantics and processing instructions that are not already specified by [ACAL](#acal). For more information on the scope, please refer to [ACAL](#acal).
+This specification defines the JSON syntax of the [[ACAL-Core-1.0](#acal-core-10)] model and any JSON-specific syntax, semantics and processing instructions that are not already specified by [[ACAL-Core-1.0](#acal-core-10)]. For more information on the scope, please refer to [[ACAL-Core-1.0](#acal-core-10)].
 
 ---
 
@@ -351,7 +315,7 @@ The JACAL syntax is defined in a [JSON Schema](#JsonSchemaValidation) associated
 
 ## 4.1 Requirements
 
-The JSON representation (JACAL) should be as aligned as possible with [[ACAL](#acal)].
+The JSON representation (JACAL) should be as aligned as possible with [[ACAL-Core-1.0](#acal-core-10)].
 
 ## 4.2 Abstraction Layer
 
@@ -405,8 +369,8 @@ The list of changes from the previous version and any revision history can be fo
 
 # 5 Syntax (normative, with the exception of the schema fragments)
 
-The next sections describe the rules that SHALL be applied for mapping the [ACAL](#acal) agnostic model (UML-based) to [JSON schema Draft 2020-12](#jsonschemacore) definitions for this JSON representation (JACAL).
-These rules have been applied to produce JACAL's core JSON schema in [Annex D](#annex-d-json-schema-normative) (also in the [Core JSON schema file](jacal-core-v1.0-schema.json) accompanying this document) from [ACAL] core model.
+The next sections describe the rules that SHALL be applied for mapping the [[ACAL-Core-1.0](#acal-core-10)] agnostic model (UML-based) to [JSON schema Draft 2020-12](#jsonschemacore) definitions for this JSON representation (JACAL).
+These rules have been applied to produce JACAL's core JSON schema in [Annex D](#annex-d-json-schema-normative) (also in the [Core JSON schema file](jacal-core-v1.0-schema.json) accompanying this document) from [[ACAL-Core-1.0](#acal-core-10)] core model.
 
 We consider `PolicyType`, `BundleType`, `RequestType` and `ResponseType` as the root JSON objects to be used by JACAL users, therefore the final JACAL core schema has the following structure:
 
@@ -441,7 +405,7 @@ where `<subschema 1>`,`<subschema 2>`, etc. are the reusable JSON subschemas cre
 
 ## 5.1 Mapping ACAL primitive types 
 
-For each primitive type (stereotyped `<<primitive>>` or `<<enumeration>>`) in [ACAL](#ACAL) model, apply the mapping rules in the next subsections.
+For each primitive type (stereotyped `<<primitive>>` or `<<enumeration>>`) in [[ACAL-Core-1.0](#acal-core-10)] model, apply the mapping rules in the next subsections.
 
 ### 5.1.1 Primitive types mapped to native JSON schema definitions
 
@@ -531,7 +495,7 @@ For example, ACAL `DecisionType` translates to the following subschema:
 
 ## 5.2 Mapping complex ACAL types (UML stereotype `<<dataType>>`)
 
-For each complex type (stereotyped `<<dataType>>`) in [ACAL](#ACAL) model, apply the mapping rules in the next subsections.
+For each complex type (stereotyped `<<dataType>>`) in [[ACAL-Core-1.0](#acal-core-10)] model, apply the mapping rules in the next subsections.
 
 ### 5.2.1 AnyType mapping rule
 
@@ -545,7 +509,7 @@ The `object` type is used for JSON object (which can be used to wrap a JSON arra
 
 ### 5.2.2 ValueType mapping rules
 
-The `ValueType` and subtypes from [ACAL](#ACAL) section 7.23 are mapped to JSON as described in the next subsections.
+The `ValueType` and subtypes from [[ACAL-Core-1.0](#acal-core-10)] section 7.23 are mapped to JSON as described in the next subsections.
 
 #### 5.2.2.1 Primitive value mappings
 
@@ -875,7 +839,7 @@ For each of an ACAL Datatype's property *Prop* with value type *PropType*, the c
   { <PropTypeSchema_without_opening_and_closing_braces>, "default": <DEFAULT> }
   ```
 - 2. Else (*Prop* is multivalued):
-  - 2.1. If the property has a **Value type uniqueness constraint** as defined in [ACAL] section 7.1.1.1.1.2 (`self->isUnique(oclType())`), then map to the following subschema:
+  - 2.1. If the property has a **Value type uniqueness constraint** as defined in [[ACAL-Core-1.0](#acal-core-10)] section 7.1.1.1.1.2 (`self->isUnique(oclType())`), then map to the following subschema:
     ```json
     {
       "type": "object",
@@ -904,12 +868,12 @@ For each of an ACAL Datatype's property *Prop* with value type *PropType*, the c
 
     **The standard `uniqueItems` keyword does not allow to enforce uniqueness of array items based on a specific key when such items are JSON objects, in the current latest JSON schema draft (version 2020-12).** 
 
-    Therefore, the mapping of **property-based uniqueness constraints** - defined in [ACAL] section 7.1.1.1.1.2 - on properties of complex/structured type (mapped to JSON object) is left implementation-defined by this specification, since there is no standard mechanism in the current latest JSON schema standard to enforce the such constraints. However, as a general guidance, implementations MAY use the third-party [ArrayExt extension vocabulary](https://github.com/json-schema-org/json-schema-vocabularies) and more particulary the `uniqueKeys` keyword (instead of `uniqueItems`) to implement this feature. 
+    Therefore, the mapping of **property-based uniqueness constraints** - defined in [[ACAL-Core-1.0](#acal-core-10)] section 7.1.1.1.1.2 - on properties of complex/structured type (mapped to JSON object) is left implementation-defined by this specification, since there is no standard mechanism in the current latest JSON schema standard to enforce the such constraints. However, as a general guidance, implementations MAY use the third-party [ArrayExt extension vocabulary](https://github.com/json-schema-org/json-schema-vocabularies) and more particulary the `uniqueKeys` keyword (instead of `uniqueItems`) to implement this feature. 
 
 
 ### 5.2.5 Mapping ACAL object-level constraints (OCL)
 
-ACAL object-level constraints defined in [ACAL] section 7.1.1.1.2 may be translated into JSON subschema(s) to be added the corresponding JSON schema definition of the ACAL Datatype, according to the table below:
+ACAL object-level constraints defined in [[ACAL-Core-1.0](#acal-core-10)] section 7.1.1.1.2 may be translated into JSON subschema(s) to be added the corresponding JSON schema definition of the ACAL Datatype, according to the table below:
 
 **Table 2:** ACAL/UML constraints mapped to JSON schema
 
@@ -1040,11 +1004,11 @@ This section identifies possible security and privacy compromise scenarios that 
 
 ## 6.1 Threat model
 
-Refer to [ACAL](#acal) section 11.1.
+Refer to [[ACAL-Core-1.0](#acal-core-10)] section 11.1.
 
 ## 6.2 Safeguards
 
-Refer to [ACAL](#acal) section 11.2 for general considerations.
+Refer to [[ACAL-Core-1.0](#acal-core-10)] section 11.2 for general considerations.
 
 ### 6.2.1 Policy confidentiality
 
@@ -1220,7 +1184,7 @@ Remove this note before submitting for publication.
 
 The following documents are referenced in such a way that some or all of their content constitutes requirements of this document.
 
-###### [ACAL]
+###### [ACAL-Core-1.0]
 
 Attribute-Centric Authorization Language (ACAL) Version 1.0. Edited by Steven Legg and Cyril Dangerville. 17 February 2026. OASIS Committee Specification Draft 01.
 
@@ -1362,7 +1326,7 @@ Sloman, M. Policy Driven Management for Distributed Systems. Journal of Network 
 -------
 
 
-# Annex C. JACAL identifiers (normative)
+# Annex C JACAL identifiers (normative)
 
 This section defines standard identifiers for commonly used entities.
 
@@ -1374,12 +1338,50 @@ The JACAL core schema is defined using this identifier (`$id`):
 
 -------
 
-# Annex D. JSON Schema (normative)
+# Annex D JSON Schema (normative)
 
 This section includes the JSON Schema for the JACAL syntax defined in this specification, more particularly in section 5 (i.e. obtained by applying the ACAL-to-JSON mapping rules):
 
 ```json
 !include jacal-core-v1.0-schema.json
+```
+
+# Annex E How to generate HTML and PDF versions
+
+## Prerequisites
+
+Install Pandoc on your system; or simply use Docker with the following shell alias:
+```
+$ alias pandoc='docker run --rm --volume "$(pwd):/data" pandoc/extra'
+```
+
+OASIS staff are currently using pandoc 3.0 from https://github.com/jgm/pandoc/releases/tag/3.0.
+
+Git clone or get a local copy of [OASIS XACML TC Github repository](https://github.com/oasis-tcs/xacml-spec/), open a terminal and **change your working directory to the root directory of your local copy of the repository**.
+
+## CSS stylesheet
+
+The generation command uses a CSS stylesheet file (`-c` argument) provided by OASIS. It may be changed to one of these (or the local version in the `styles` folder) to get a different style of output:
+- https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3.css
+- https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3a.css (this one produces HTML that resembles the github display more closely, especially for blocks of code) This template already includes a reference (in HTML code) to this .css file.
+- https://docs.oasis-open.org/templates/css/markdown-styles-v1.8.1-cn_final.css
+
+## HTML generation
+
+Run the following command line to generate HTML from this markdown file (named `jacal-core-v1.0.md`) to an output file `/tmp/jacal-core-v1.0.html` :
+
+```console
+$ pandoc -s --embed-resources -f gfm+definition_lists -c styles/markdown-styles-v1.7.3a.css -F pandoc-include -M lang=en -M title=" " -t html -o /tmp/jacal-core-v1.0.html jacal-core-v1.0.md
+```
+
+Note this command generates a Table of Contents (TOC) in HTML which is located at the top of the HTML document, and which requires additional editing in order to be published in the expected OASIS style. This editing will be handled by OASIS staff during publication.
+
+## PDF generation
+
+For PDF output, the command line is the following (different `-t` and `-H` arguments, and output file `/tmp/jacal-core-v1.0.pdf`):
+
+```console
+$ pandoc -s --embed-resources -f gfm+definition_lists -c styles/markdown-styles-v1.7.3a.css -F pandoc-include -H pandoc/custom_latex_header_for_pandoc_pdf_output.tex -M lang=en -M title=" " -t pdf -o /tmp/jacal-core-v1.0.pdf jacal-core-v1.0.md
 ```
 
 -------
