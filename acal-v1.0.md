@@ -62,6 +62,7 @@ None.
 This specification defines Version 1.0 of the Attribute-Centric Authorization Language, *aka* ACAL (Core Specification), which is an evolution of [XACML v3.0](#xacml) towards an XML-agnostic language (generalization), with various concrete representation formats (syntaxes), including XACML as one of them. This is illustrated by the Figure A-1  below:
 
 ![ACAL](images/acal_big.svg)
+
 **Fig. A-1.** ACAL Specifications Overview
 
 
@@ -853,6 +854,7 @@ In some applications it is helpful to specify supplemental information about a d
 As illustrated in the **Figure 4-1** below, compared to [XACML v3](#xacml), this ACAL specification is a generalization of XACML model (syntax and processing model), aiming to be XML-agnostic, therefore laying the ground for other (non-XML) concrete representations to be added. In addition, ACAL benefits from extra enhancements including model simplifications and optimizations as well as new features. For purpuses of simplifying this specification, all XPath features - originally from XACML - are kept in a separate ACAL Profile. 
 
 ![ACAL](images/acal_small.svg)
+
 **Fig. 4-1.** Evolution from XACML v3 to ACAL 
 
 
@@ -1071,6 +1073,7 @@ digraph Fig1 {
     
 }
 ```
+
 **Fig. 5-1.** Data-Flow Diagram
 
 <span> </span>
@@ -7029,14 +7032,14 @@ Examples in this section are presented in both the XML and JSON representations 
     "FunctionId":"any-of",
     "Expression":[
       { "Function":{ "Id":"string-equal" } },
-      { "Value":{ "Value":"Paul" } },
+      { "Value": "Paul" },
       { "Apply":{
         "FunctionId":"string-bag",
         "Expression":[
-          { "Value":{ "Value":"John" } },
-          { "Value":{ "Value":"Paul" } },
-          { "Value":{ "Value":"George" } },
-          { "Value":{ "Value":"Ringo" } }
+          { "Value": "John" },
+          { "Value": "Paul" },
+          { "Value": "George" },
+          { "Value": "Ringo" }
         ]
       }}
     ]
@@ -7072,14 +7075,14 @@ Examples in this section are presented in both the XML and JSON representations 
     "FunctionId":"all-of",
     "Expression":[
       { "Function":{ "Id":"integer-greater-than" } },
-      { "Value":{ "Value":10 } },
+      { "Value": 10 },
       { "Apply":{
         "FunctionId":"integer-bag",
         "Expression":[
-          { "Value":{ "Value":9 } },
-          { "Value":{ "Value":3 } },
-          { "Value":{ "Value":4 } },
-          { "Value":{ "Value":2 } }
+          { "Value": 9 },
+          { "Value": 3 },
+          { "Value": 4 },
+          { "Value": 2 }
         ]
       }}
     ]
@@ -7121,17 +7124,17 @@ Examples in this section are presented in both the XML and JSON representations 
       { "Apply":{
         "FunctionId":"string-bag",
         "Expression":[
-          { "Value":{ "Value":"Ringo" } },
-          { "Value":{ "Value":"Mary" } }
+          { "Value": "Ringo" },
+          { "Value": "Mary" }
         ]
       }},
       { "Apply":{
         "FunctionId":"string-bag",
         "Expression":[
-          { "Value":{ "Value":"John" } },
-          { "Value":{ "Value":"Paul" } },
-          { "Value":{ "Value":"George" } },
-          { "Value":{ "Value":"Ringo" } }
+          { "Value": "John" },
+          { "Value": "Paul" },
+          { "Value": "George" },
+          { "Value": "Ringo" }
         ]
       }}
     ]
@@ -7173,17 +7176,17 @@ Examples in this section are presented in both the XML and JSON representations 
       { "Apply":{
         "FunctionId":"integer-bag",
         "Expression":[
-          { "Value":{ "Value":10 } },
-          { "Value":{ "Value":20 } }
+          { "Value": 10 },
+          { "Value": 20 }
         ]
       }},
       { "Apply":{
         "FunctionId":"integer-bag",
         "Expression":[
-          { "Value":{ "Value":1 } },
-          { "Value":{ "Value":3 } },
-          { "Value":{ "Value":5 } },
-          { "Value":{ "Value":19 } }
+          { "Value": 1 },
+          { "Value": 3 },
+          { "Value": 5 },
+          { "Value": 19 }
         ]
       }}
     ]
@@ -7225,17 +7228,17 @@ Examples in this section are presented in both the XML and JSON representations 
       { "Apply":{
         "FunctionId":"integer-bag",
         "Expression":[
-          { "Value":{ "Value":3 } },
-          { "Value":{ "Value":5 } }
+          { "Value": 3 },
+          { "Value": 5 }
         ]
       }},
       { "Apply":{
         "FunctionId":"integer-bag",
         "Expression":[
-          { "Value":{ "Value":1 } },
-          { "Value":{ "Value":2 } },
-          { "Value":{ "Value":3 } },
-          { "Value":{ "Value":4 } }
+          { "Value": 1 },
+          { "Value": 2 },
+          { "Value": 3 },
+          { "Value": 4 }
         ]
       }}
     ]
@@ -7277,17 +7280,17 @@ Examples in this section are presented in both the XML and JSON representations 
       { "Apply":{
         "FunctionId":"integer-bag",
         "Expression":[
-          { "Value":{ "Value":6 } },
-          { "Value":{ "Value":5 } }
+          { "Value":6 },
+          { "Value":5 }
         ]
       }},
       { "Apply":{
         "FunctionId":"integer-bag",
         "Expression":[
-          { "Value":{ "Value":1 } },
-          { "Value":{ "Value":2 } },
-          { "Value":{ "Value":3 } },
-          { "Value":{ "Value":4 } }
+          { "Value":1 },
+          { "Value":2 },
+          { "Value":3 },
+          { "Value":4 }
         ]
       }}
     ]
@@ -7323,8 +7326,8 @@ Examples in this section are presented in both the XML and JSON representations 
       { "Apply":{
         "FunctionId":"string-bag",
         "Expression":[
-          { "Value":{ "Value":"Hello" } },
-          { "Value":{ "Value":"World!" } }
+          { "Value": "Hello" },
+          { "Value": "World!" }
         ]
       }}
     ]
