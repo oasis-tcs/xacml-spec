@@ -16,7 +16,7 @@
 
 	<xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="https://www.w3.org/2001/xml.xsd"/>
 	<xs:import namespace="urn:oasis:names:tc:xacml:4.0:core:schema"
-		schemaLocation="acal-core-xacml-v4.0-schema.xsd" />
+		schemaLocation="acal-core-xml-v4.0-schema.xsd" />
 
 	<!-- Change to XACML 3.0 (issue #33): Moved XPath-specific features to separate XPath profile and XSD  -->
 	<xs:element name="XPathAttributeSelector" type="XPathAttributeSelectorType" substitutionGroup="xacml:AttributeSelector">

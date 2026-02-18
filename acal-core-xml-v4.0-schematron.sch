@@ -1,7 +1,7 @@
 <schema xmlns="http://purl.oclc.org/dsdl/schematron" queryBinding="xslt2">
  <title>A Schematron for validating XACML documents in combination with XSD 1.0 schema (alternative to XSD 1.1 assertions)</title>
 	<!--
- 	<xsl:import-schema xmlns:xsl="http://www.w3.org/1999/XSL/Transform" schema-location="acal-core-xacml-v4.0-schema.xsd"/>
+ 	<xsl:import-schema xmlns:xsl="http://www.w3.org/1999/XSL/Transform" schema-location="acal-core-xml-v4.0-schema.xsd"/>
        -->
  <ns prefix="xacml" uri="urn:oasis:names:tc:xacml:4.0:core:schema"/>
  <ns prefix="xpath" uri="urn:oasis:names:tc:xacml:4.0:xpath:schema"/>
@@ -23,7 +23,7 @@
 	-->
 	<!--
 	If you have a schema-aware Schematron/XSLT processor (e.g. Saxon-EE), the rule's context (XPath) expression below can be simplified to: context="attribute(*, xacml:IdentifierType)"
-	in which case, you need to pass the XACML core schema - acal-core-xacml-v4.0-schema.xsd - as XSD argument to the processor.
+	in which case, you need to pass the XACML core schema - acal-core-xml-v4.0-schema.xsd - as XSD argument to the processor.
 	-->
 	<!--
 	<rule context="@Category|@AttributeId|@DataType|@CombiningAlgId|xacml:Function/@Id|@FunctionId|xacml:Notice/@Id|xacml:NoticeExpression/@Id|xacml:StatusCode/@Value">
@@ -52,7 +52,7 @@
 		<assert test="every $elt in element(*, xacml:DefaultsType) satisfies (every $following in $elt/following-sibling::element(*, xacml:DefaultsType) satisfies $elt/name() != $following/name())">Duplicate RequestDefaults element</assert>
 		-->
 		<!--
-		AND uncomment the  <xsl:import-schema schema-location="acal-core-xacml-v4.0-schema.xsd" .../> at the beginning of this schema.
+		AND uncomment the  <xsl:import-schema schema-location="acal-core-xml-v4.0-schema.xsd" .../> at the beginning of this schema.
 		-->
 	</rule>
  </pattern>
@@ -76,7 +76,7 @@
 		<assert test="every $elt in element(*, xacml:DefaultsType) satisfies (every $following in $elt/following-sibling::element(*, xacml:DefaultsType) satisfies $elt/name() != $following/name())">Duplicate PolicyDefaults element</assert>
 		-->
 		<!--
-		AND uncomment the  <xsl:import-schema schema-location="acal-core-xacml-v4.0-schema.xsd" .../> at the beginning of this schema.
+		AND uncomment the  <xsl:import-schema schema-location="acal-core-xml-v4.0-schema.xsd" .../> at the beginning of this schema.
 		-->
 	</rule>
  </pattern>

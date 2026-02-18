@@ -10,7 +10,7 @@
 ## Committee Specification Draft 01
 
 
-## 17 February 2026
+## 18 February 2026
 
 
 ### This version
@@ -63,7 +63,7 @@ When referencing this document, the following citation format should be used:
 
 **[ACAL-Core-1.0]**
 _Attribute-Centric Authorization Language (ACAL) Version 1.0_.
-Edited by Steven Legg and Cyril Dangerville. 17 February 2026. OASIS Committee Specification Draft 01. https://docs.oasis-open.org/xacml/acal/acal/core/v1.0/csd01/acal-core-v1.0-csd01.html . Latest version: https://docs.oasis-open.org/xacml/acal/acal/core/v1.0/acal-core-v1.0.html
+Edited by Steven Legg and Cyril Dangerville. 18 February 2026. OASIS Committee Specification Draft 01. https://docs.oasis-open.org/xacml/acal/acal/core/v1.0/csd01/acal-core-v1.0-csd01.html . Latest version: https://docs.oasis-open.org/xacml/acal/acal/core/v1.0/acal-core-v1.0.html
 
 
 ### Related Work
@@ -3170,7 +3170,7 @@ A `ShortIdSetType` object contains the following properties:
 
 : A sequence of `ShortIdType` objects, each defining a short identifier in this set.
 
-A predefined set of short identifiers for the URIs defined in this specification is provided as a convenience, in both XML (`acal-core-xacml-v4.0-identifiers.xml`) and JSON (`acal-core-xacml-v4.0-identifiers.json`) representations. Use of this set is OPTIONAL.
+A predefined set of short identifiers for the URIs defined in this specification is provided as a convenience, in both XML (`acal-core-xml-v4.0-identifiers.xml`) and JSON (`acal-core-xml-v4.0-identifiers.json`) representations. Use of this set is OPTIONAL.
 
 <a name="shortidtype"/>
 

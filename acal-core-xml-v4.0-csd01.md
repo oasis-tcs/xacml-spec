@@ -6,14 +6,14 @@
 
 ## Committee Specification Draft 01
 
-## 17 February 2026
+## 18 February 2026
 
 ### This version:
 
 
-- https://docs.oasis-open.org/xacml/acal/xacml/core/v4.0/csd01/acal-core-xacml-v4.0-csd01.html (Authoritative) \
-- https://docs.oasis-open.org/xacml/acal/xacml/core/v4.0/csd01/acal-core-xacml-v4.0-csd01.pdf \
-- https://docs.oasis-open.org/xacml/acal/xacml/core/v4.0/csd01/acal-core-xacml-v4.0-csd01.md
+- https://docs.oasis-open.org/xacml/acal/xacml/core/v4.0/csd01/acal-core-xml-v4.0-csd01.html (Authoritative) \
+- https://docs.oasis-open.org/xacml/acal/xacml/core/v4.0/csd01/acal-core-xml-v4.0-csd01.pdf \
+- https://docs.oasis-open.org/xacml/acal/xacml/core/v4.0/csd01/acal-core-xml-v4.0-csd01.md
 
 ### Previous version:
 
@@ -23,9 +23,9 @@
 
 ### Latest version:
 
-- https://docs.oasis-open.org/xacml/acal/xacml/core/v4.0/csd01/acal-core-xacml-v4.0-csd01.html (Authoritative) \
-- https://docs.oasis-open.org/xacml/acal/xacml/core/v4.0/csd01/acal-core-xacml-v4.0-csd01.pdf \
-- https://docs.oasis-open.org/xacml/acal/xacml/core/v4.0/csd01/acal-core-xacml-v4.0-csd01.md
+- https://docs.oasis-open.org/xacml/acal/xacml/core/v4.0/csd01/acal-core-xml-v4.0-csd01.html (Authoritative) \
+- https://docs.oasis-open.org/xacml/acal/xacml/core/v4.0/csd01/acal-core-xml-v4.0-csd01.pdf \
+- https://docs.oasis-open.org/xacml/acal/xacml/core/v4.0/csd01/acal-core-xml-v4.0-csd01.md
 
 
 ### Technical Committee:
@@ -49,11 +49,11 @@
 
 This document is one component of a Work Product that also includes:
 
-* Core XML schema: [acal-core-xacml-v4.0-schema.xsd](acal-core-xacml-v4.0-schema.xsd)
-* Core Schematron rules: [acal-core-xacml-v4.0-schematron.sch](acal-core-xacml-v4.0-schematron.sch)
-* Short identifier set: [acal-core-xacml-v4.0-identifiers.xml](acal-core-xacml-v4.0-identifiers.xml)
-* XPath Profile XML schema: [acal-xpath-xacml-v4.0-schema.xsd](acal-xpath-xacml-v4.0-schema.xsd)
-* JSONPath Profile XML schema: [acal-jsonpath-xacml-v4.0-schema.xsd](acal-jsonpath-xacml-v4.0-schema.xsd)
+* Core XML schema: [acal-core-xml-v4.0-schema.xsd](acal-core-xml-v4.0-schema.xsd)
+* Core Schematron rules: [acal-core-xml-v4.0-schematron.sch](acal-core-xml-v4.0-schematron.sch)
+* Short identifier set: [acal-core-xml-v4.0-identifiers.xml](acal-core-xml-v4.0-identifiers.xml)
+* XPath Profile XML schema: [acal-xpath-xml-v4.0-schema.xsd](acal-xpath-xml-v4.0-schema.xsd)
+* JSONPath Profile XML schema: [acal-jsonpath-xml-v4.0-schema.xsd](acal-jsonpath-xml-v4.0-schema.xsd)
 
 <!-- Note: Any normative computer language definitions that are part of the Work Product, such as XML instances, schemas and Java(TM) code, including fragments of such, must be (a) well formed and valid, (b) provided in separate plain text files, (c) referenced from the Work Product; and (d) where any definition in these separate files disagrees with the definition found in the specification, the definition in the separate file prevails. Remove this note before submitting for publication.)
 -->
@@ -68,7 +68,7 @@ When referencing this specification the following citation format should be used
 
 **[XACML-Core-4.0]**
 _eXtensible Access Control Markup Language (XACML) Version 4.0_.
-Edited by Steven Legg and Cyril Dangerville. 17 February 2026. OASIS Committee Specification Draft 01. https://docs.oasis-open.org/xacml/acal/xacml/core/v4.0/csd01/acal-core-xacml-v4.0-csd01.html. Latest stage: https://docs.oasis-open.org/xacml/acal/xacml/core/v4.0/csd01/acal-core-xacml-v4.0-csd01.html.
+Edited by Steven Legg and Cyril Dangerville. 18 February 2026. OASIS Committee Specification Draft 01. https://docs.oasis-open.org/xacml/acal/xacml/core/v4.0/csd01/acal-core-xml-v4.0-csd01.html. Latest stage: https://docs.oasis-open.org/xacml/acal/xacml/core/v4.0/csd01/acal-core-xml-v4.0-csd01.html.
 
 ### Related work:
 
@@ -78,7 +78,7 @@ This specification replaces or supersedes:
 
 This specification is related to:
 
-* _Attribute-Centric Authorization Language (ACAL) Version 1.0_. Edited by Steven Legg and Cyril Dangerville. 17 February 2026. OASIS Committee Specification Draft 01.
+* _Attribute-Centric Authorization Language (ACAL) Version 1.0_. Edited by Steven Legg and Cyril Dangerville. 18 February 2026. OASIS Committee Specification Draft 01.
 
 
 ## License, Document Status, and Notices
@@ -368,7 +368,7 @@ The list of changes from the previous version and any revision history can be fo
 # 5 Syntax (normative, with the exception of the schema fragments)
 
 The next sections describe the rules that SHALL be applied for mapping the [[ACAL-Core-1.0](#acal-core-10)] agnostic model (UML-based) to [XML schema](#XS) definitions for this XML representation (XACML).
-These rules have been applied to produce XACML's core XML schema in [Annex D](#annex-d-xml-schema-normative) (also in the [Core XML schema file](acal-core-xacml-v4.0-schema.xsd) accompanying this document) from [[ACAL-Core-1.0](#acal-core-10)] core model.
+These rules have been applied to produce XACML's core XML schema in [Annex D](#annex-d-xml-schema-normative) (also in the [Core XML schema file](acal-core-xml-v4.0-schema.xsd) accompanying this document) from [[ACAL-Core-1.0](#acal-core-10)] core model.
 
 In all XSD definitions from now, the XACML core namespace `urn:oasis:names:tc:xacml:4.0:core:schema` is the default namespace.
 
@@ -974,7 +974,7 @@ The following documents are referenced in such a way that some or all of their c
 
 ###### [ACAL-Core-1.0]
 
-Attribute-Centric Authorization Language (ACAL) Version 1.0. Edited by Steven Legg and Cyril Dangerville. 17 February 2026. OASIS Committee Specification Draft 01.
+Attribute-Centric Authorization Language (ACAL) Version 1.0. Edited by Steven Legg and Cyril Dangerville. 18 February 2026. OASIS Committee Specification Draft 01.
 
 ###### [CMF]
 
@@ -1154,7 +1154,7 @@ XACML is defined using this identifier:
 This section includes the XML Schema for the XACML syntax defined in this specification, more particularly in section 5 (i.e. obtained by applying the ACAL-to-XML mapping rules):
 
 ```xml 
-!include`xslt="pandoc/remove-comments.xsl"` acal-core-xacml-v4.0-schema.xsd
+!include`xslt="pandoc/remove-comments.xsl"` acal-core-xml-v4.0-schema.xsd
 ```
 
 -------
@@ -1193,20 +1193,20 @@ The generation command uses a CSS stylesheet file (`-c` argument) provided by OA
 
 ### HTML generation
 
-Run the following command line to generate HTML from this markdown file (named `acal-core-xacml-v4.0-csd01.md`) to an output file `/tmp/acal-core-xacml-v4.0-csd01.html` :
+Run the following command line to generate HTML from this markdown file (named `acal-core-xml-v4.0-csd01.md`) to an output file `/tmp/acal-core-xml-v4.0-csd01.html` :
 
 ```console
-$ pandoc -s --verbose --embed-resources -f gfm+definition_lists -c styles/markdown-styles-v1.7.3a.css -F pandoc-include -M lang=en -M title=" " -t html -o /tmp/acal-core-xacml-v4.0-csd01.html acal-core-xacml-v4.0-csd01.md
+$ pandoc -s --verbose --embed-resources -f gfm+definition_lists -c styles/markdown-styles-v1.7.3a.css -F pandoc-include -M lang=en -M title=" " -t html -o /tmp/acal-core-xml-v4.0-csd01.html acal-core-xml-v4.0-csd01.md
 ```
 
 Note this command generates a document which may require additional editing in order to be published in the expected OASIS style. This editing will be handled by OASIS staff during publication.
 
 ### PDF generation
 
-For PDF output, the command line is the following (different `-t` and `-H` arguments, and output goes to file `/tmp/acal-core-xacml-v4.0-csd01.pdf`):
+For PDF output, the command line is the following (different `-t` and `-H` arguments, and output goes to file `/tmp/acal-core-xml-v4.0-csd01.pdf`):
 
 ```console
-$ pandoc -s --embed-resources -f gfm+definition_lists -c styles/markdown-styles-v1.7.3a.css -F pandoc-include -H pandoc/custom_latex_header_for_pandoc_pdf_output.tex --metadata title=" " -t pdf -o /tmp/acal-core-xacml-v4.0-csd01.pdf acal-core-xacml-v4.0-csd01.md
+$ pandoc -s --embed-resources -f gfm+definition_lists -c styles/markdown-styles-v1.7.3a.css -F pandoc-include -H pandoc/custom_latex_header_for_pandoc_pdf_output.tex --metadata title=" " -t pdf -o /tmp/acal-core-xml-v4.0-csd01.pdf acal-core-xml-v4.0-csd01.md
 ```
 
 
@@ -1343,7 +1343,7 @@ XACML 4.0 differs from XACML 3.0 in the following ways:
 
 ## Revision History
 
-Latest revision history can be obtained from [OASIS XACML TC's code repository](https://github.com/oasis-tcs/xacml-spec/blob/v1.0-csd01/acal-core-xacml-v4.0-csd01.md).
+Latest revision history can be obtained from [OASIS XACML TC's code repository](https://github.com/oasis-tcs/xacml-spec/blob/v1.0-csd01/acal-core-xml-v4.0-csd01.md).
 
 | Revision | Date | Editor | Changes Made |
 | :--- | :--- | :--- | :--- |
