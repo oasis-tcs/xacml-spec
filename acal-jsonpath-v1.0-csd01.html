@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title> </title>
+  <style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+</style>
+  <style type="text/css">
+
+
+
+
+
+
+
+
+
+
+
+
+
+body {
+margin-left: 3pc;
+margin-right: 3pc;
+font-family: LiberationSans, Arial, Helvetica, sans-serif;
+font-size:12pt;
+line-height:1.2;
+}
+html{overflow-x:auto}
+
+h1{font-size:18pt}h2{font-size:14pt}h3{font-size:13pt}h4{font-size:12pt}h5{font-size:11pt}
+h1big{font-size: 24pt}
+h1,h2,h3,h4,h5,h1big{font-family: LiberationSans, Arial, Helvetica, sans-serif;font-weight: bold;margin:8pt 0;color: #446CAA}
+
+h6{font-size:12pt; line-height:1.0}
+h6{font-family: LiberationSans, Arial, Helvetica, sans-serif;font-weight: bold;margin:0pt;}
+
+
+
+
+hr{page-break-before: always;}
+
+table {
+border-collapse: collapse;
+}
+table {
+border-collapse:collapse;
+border-spacing:0;
+width:100%;
+display:table;
+font-size:12pt;
+margin-top: 6pt;
+}
+table, th, td {
+border: 1pt solid black;
+padding:6pt 6pt;
+text-align:left;
+vertical-align:top;
+}
+th {
+color:#ffffff;
+background-color: #446CAA;
+}
+
+.table-striped tbody tr:nth-child(even){background-color:#d6f3ff}
+
+pre {
+background-color:#f0f0f0;
+padding: 6px;
+}
+code,kbd,samp{
+font-family:CourierNew, monospace;
+white-space: pre-wrap;
+font-size: 10pt;
+}
+
+blockquote {
+background-color:#f0f0f0;
+padding-left: 10px;
+border-left: solid lightgray 6px;
+}
+
+li {
+margin: 3px 0;
+}
+
+img {
+max-width: 100%;
+height: auto;
+}
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title"> </h1>
+</header>
+<p><img src="data:image/png;base64,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" alt="OASIS" /></p>
+<hr />
+<h1 id="acal-v10-jsonpath-profile-version-10">ACAL v1.0 JSONPath Profile
+Version 1.0</h1>
+<h2 id="committee-specification-draft-01">Committee Specification Draft
+01</h2>
+<h2 id="18-february-2026">18 February 2026</h2>
+<h3 id="this-version">This version:</h3>
+<ul>
+<li><a href="https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/csd01/acal-jsonpath-v1.0-csd01.html">https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/csd01/acal-jsonpath-v1.0-csd01.html</a>
+(Authoritative) \</li>
+<li><a href="https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/csd01/acal-jsonpath-v1.0-csd01.pdf">https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/csd01/acal-jsonpath-v1.0-csd01.pdf</a>
+\</li>
+<li><a href="https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/csd01/acal-jsonpath-v1.0-csd01.md">https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/csd01/acal-jsonpath-v1.0-csd01.md</a></li>
+</ul>
+<h3 id="previous-version">Previous version:</h3>
+<p>N/A</p>
+<h3 id="latest-version">Latest version:</h3>
+<ul>
+<li><a href="https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/csd01/acal-jsonpath-v1.0-csd01.html">https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/csd01/acal-jsonpath-v1.0-csd01.html</a>
+(Authoritative) \</li>
+<li><a href="https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/csd01/acal-jsonpath-v1.0-csd01.pdf">https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/csd01/acal-jsonpath-v1.0-csd01.pdf</a>
+\</li>
+<li><a href="https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/csd01/acal-jsonpath-v1.0-csd01.md">https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/csd01/acal-jsonpath-v1.0-csd01.md</a></li>
+</ul>
+<h3 id="technical-committee">Technical Committee</h3>
+<p><a href="https://groups.oasis-open.org/communities/tc-community-home2?CommunityKey=67afe552-0921-49b7-9a85-018dc7d3ef1d">OASIS
+eXtensible Access Control Markup Language (XACML) TC</a></p>
+<h3 id="chairs">Chairs</h3>
+<ul>
+<li>Bill Parducci (<a href="mailto:bill@parducci.net">bill@parducci.net</a>), Individual</li>
+</ul>
+<h3 id="secretaries">Secretaries</h3>
+<ul>
+<li>Bill Parducci (<a href="mailto:bill@parducci.net">bill@parducci.net</a>), Individual</li>
+</ul>
+<h3 id="editors">Editors</h3>
+<ul>
+<li>Steven Legg (<a href="mailto:steven.legg@viewds.com">steven.legg@viewds.com</a>), <a href="https://www.viewds.com/">ViewDS Identity Solutions</a></li>
+<li>Cyril Dangerville (<a href="mailto:cyril.dangerville@thalesgroup.com">cyril.dangerville@thalesgroup.com</a>),
+<a href="https://www.thalesgroup.com/">THALES</a></li>
+</ul>
+<h3 id="abstract">Abstract</h3>
+<p>This specification is a profile of ACAL that provides ACAL extensions
+based on the JSONPath standard, such as JSONPath-based
+AttributeSelector.</p>
+<h3 id="citation-format">Citation Format</h3>
+<p>When referencing this document, the following citation format should
+be used:</p>
+<p><strong>[ACAL-JSONPath-1.0]</strong> <em>ACAL v1.0 JSONPath Profile
+Version 1.0</em>. Edited by Steven Legg and Cyril Dangerville. 18
+February 2026. OASIS Committee Specification Draft 01. <a href="https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/csd01/acal-jsonpath-v1.0-csd01.html">https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/csd01/acal-jsonpath-v1.0-csd01.html</a>.
+Latest stage: <a href="https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/csd01/acal-jsonpath-v1.0-csd01.html">https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/csd01/acal-jsonpath-v1.0-csd01.html</a>.</p>
+<h3 id="related-work">Related Work</h3>
+<p>This document is related to:</p>
+<ul>
+<li><em>Attribute-Centric Authorization Language (ACAL) Version
+1.0</em>.</li>
+</ul>
+<h2 id="license-document-status-and-notices">License, Document Status,
+and Notices</h2>
+<p>Copyright © OASIS Open 2026. All Rights Reserved. For license and
+copyright information, and complete status, please see Annex A which
+contains the License, Document Status and Notices.</p>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<!-- ToC template from OASIS Open Specification Template Instructions:
+
+- [1 Scope](#1-scope)
+- [2 Definitions and Acronyms](#2-definitions-and-acronyms)
+  - [2.1 Definitions](#2.1-definitions)
+    - [2.1.1 Terms Defined Elsewhere](#2.1.1-terms-defined-elsewhere)
+    - [2.1.2 Terms Defined in this Document](#2.1.2-terms-defined-in-this-document)
+  - [2.2 Abbreviations and Acronyms](#2.2-abbreviations-and-acronyms)
+- [3 Document Conventions](#3-document-conventions)
+  - [3.1 Key Words](#3.1-key-words)
+  - [3.2 Typographical Conventions](#3.2-typographical-conventions)
+- [4 Introduction](#4-introduction)
+  - [4.1 Any Additional Introduction Subsections That are Needed](#4.1-any-additional-introduction-subsections-that-are-needed)
+  - [4.2 Changes From the Previous Version](#4.2-changes-from-the-previous-version)
+- [5 Level 1 Section Header](#5-level-1-section-header)
+  - [5.1 Level 2 Section Header](#5.1-level-2-section-header)
+    - [5.1.1 Level 3 Section Header](#5.1.1-level-3-section-header)
+      - [5.1.1.1 Level 4 Section Header](#5.1.1.1-level-4-section-header)
+        - [5.1.1.1.1 Level 5 Section Header](#5.1.1.1.1-level-5-section-header)
+          - [5.1.1.1.1.1 Level 6 Section Header](#5.1.1.1.1.1-level-6-section-header)
+- [6 Additional Sections as Needed](#6-additional-sections-as-needed)
+- [7 Safety, Security, and Data Protection Considerations](#7-safety,-security,-and-data-protection-considerations)
+- [8 Conformance](#8-conformance)
+- [Annex A License, Document Status and Notices](#annex-a-license,-document-status-and-notices)
+  - [A.1 Document Status](#a.1-document-status)
+  - [A.2 License and Notices](#a.2-license-and-notices)
+- [Annex B References](#annex-b-references)
+  - [B.1 Normative References](#b.1-normative-references)
+  - [B.2 Informative References](#b.2-informative-references)
+- [Annex C Additional Annex as Needed](#annex-c-additional-annex-as-needed)
+  - [C.1 Subsection Title](#c.1-subsection-title)
+  - [C.1.1 Sub-subsection](#c.1.1-sub-subsection)
+- [Appendix 1 Acknowledgments](#appendix-1-acknowledgments
+  - [Leadership](#leadership)
+  - [Special Thanks](#special-thanks)
+  - [Participants](#participants)
+- [Appendix 2 Changes From Previous Version](#appendix-2-changes-from-previous-version)
+  - [Revision History](#revision-history)
+- [Appendix 3 Additional Appendix as Needed](#appendix-3-additional-appendix-as-needed)
+  - [Subsection Title](#subsection-title)
+- [Sub-subsection](#sub-subsection)
+-->
+
+<!-- Generated ToC -->
+
+<ul>
+<li><a href="#1-scope">1 Scope</a></li>
+<li><a href="#2-definitions-and-acronyms">2 Definitions and Acronyms</a>
+<ul>
+<li><a href="#21-definitions">2.1 Definitions</a>
+<ul>
+<li><a href="#211-terms-defined-elsewhere">2.1.1 Terms Defined
+Elsewhere</a></li>
+<li><a href="#212-terms-defined-in-this-document">2.1.2 Terms Defined in
+this Document</a></li>
+<li><a href="#213-related-terms">2.1.3 Related terms</a></li>
+</ul></li>
+<li><a href="#22-abbreviations-and-acronyms">2.2 Abbreviations and
+Acronyms</a></li>
+</ul></li>
+<li><a href="#3-document-conventions">3 Document Conventions</a>
+<ul>
+<li><a href="#31-key-words">3.1 Key Words</a></li>
+<li><a href="#32-typographical-conventions">3.2 Typographical
+Conventions</a></li>
+</ul></li>
+<li><a href="#4-introduction-non-normative">4 Introduction
+(non-normative)</a>
+<ul>
+<li><a href="#41-requirements">4.1 Requirements</a></li>
+<li><a href="#42-policies-based-on-subject-and-resource-attributes">4.2
+Policies Based on Subject and Resource Attributes</a></li>
+<li><a href="#43-changes-from-the-previous-version">4.3 Changes From the
+Previous Version</a></li>
+</ul></li>
+<li><a href="#5-structures">5 Structures</a>
+<ul>
+<li><a href="#51-contenttype-restrictions">5.1 ContentType
+restrictions</a></li>
+<li><a href="#52-acal-extensions">5.2 ACAL extensions</a>
+<ul>
+<li><a href="#521-attributeselectortype-extension---jsonpathattributeselectortype">5.2.1
+AttributeSelectorType extension - JSONPathAttributeSelectorType</a></li>
+<li><a href="#522-entityattributeselectortype-extension---jsonpathentityattributeselectortype">5.2.2
+EntityAttributeSelectorType extension -
+JSONPathEntityAttributeSelectorType (optional)</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#6-attribute-selector-evaluation">6 Attribute Selector
+Evaluation</a></li>
+<li><a href="#7-safety-security-and-data-protection-considerations">7
+Safety, Security, and Data Protection Considerations</a></li>
+<li><a href="#8-conformance">8 Conformance</a>
+<ul>
+<li><a href="#81-introduction">8.1 Introduction</a></li>
+<li><a href="#82-conformance-tables">8.2 Conformance Tables</a>
+<ul>
+<li><a href="#821-object-types">8.2.1 Object Types</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#annex-a-license-document-status-and-notices">Annex A
+License, Document Status and Notices</a>
+<ul>
+<li><a href="#a1-document-status">A.1 Document Status</a></li>
+<li><a href="#a2-license-and-notices">A.2 License and Notices</a></li>
+</ul></li>
+<li><a href="#annex-b-references">Annex B References</a>
+<ul>
+<li><a href="#b1-normative-references">B.1 Normative References</a></li>
+<li><a href="#b2-informative-references">B.2 Informative
+References</a></li>
+</ul></li>
+<li><a href="#annex-c-acal-identifiers">Annex C ACAL Identifiers</a>
+<ul>
+<li><a href="#c1-acal-namespaces">C.1 ACAL Namespaces</a></li>
+</ul></li>
+<li><a href="#annex-d-how-to-generate-html-and-pdf-versions">Annex D How
+to generate HTML and PDF Versions</a></li>
+<li><a href="#appendix-1-acknowledgments">Appendix 1 Acknowledgments</a>
+<ul>
+<li><a href="#leadership">Leadership</a></li>
+<li><a href="#special-thanks">Special Thanks</a></li>
+<li><a href="#participants">Participants</a></li>
+</ul></li>
+<li><a href="#appendix-2-changes-from-previous-version">Appendix 2
+Changes From Previous Version</a>
+<ul>
+<li><a href="#revision-history">Revision History</a></li>
+</ul></li>
+</ul>
+<hr />
+<h1 id="1-scope">1 Scope</h1>
+<!-- OASIS Open Specification Template Instructions: 
+
+What is the purpose and scope of this document?   
+Best practices: 
+
+- Expect this text to be reused in multiple other places to explain the specification in summary form.  
+- This is not the TC or OP scope (which is an IPR and rules boundary);  rather, this section is the summary intended purpose of this specification.  
+- Short is better; four paragraphs or less is recommended.  
+- If use of this spec is deliberately created to rely on or complement another standard, consider briefly mentioning that here as context.  
+- To the extent that discussion of the larger context of the spec, or its history, or the circumstances that led to its creation or revision, are necessary, they belong in the Introduction, not here. 
+
+-->
+
+<p>This ACAL profile defines concrete types of [<a href="#acal-core-10">ACAL-Core-1.0</a>] <code>AttributeSelector</code>
+and <code>EntityAttributeSelector</code> using JSONPath <a href="#rfc9535">[RFC9535]</a> expressions to extract attributes from
+ACAL Request&#39;s <code>Content</code>.</p>
+<p>Concrete representations (data formats) are to be provided as
+separate specifications and therefore out of scope of this document.</p>
+<hr />
+<h1 id="2-definitions-and-acronyms">2 Definitions and Acronyms</h1>
+<h2 id="21-definitions">2.1 Definitions</h2>
+<h3 id="211-terms-defined-elsewhere">2.1.1 Terms Defined Elsewhere</h3>
+<p>This document uses the following terms defined elsewhere:</p>
+<!-- The following syntax (: definition) for definition lists requires the 'definition_lists' extension enabled in the pandoc command (-f gfm+definition_lists) to be rendered properly. -->
+
+<p>See Section 2 of [<a href="#acal-core-10">ACAL-Core-1.0</a>].</p>
+<h3 id="212-terms-defined-in-this-document">2.1.2 Terms Defined in this
+Document</h3>
+<p>None.</p>
+<h3 id="213-related-terms">2.1.3 Related terms</h3>
+<p>None.</p>
+<h2 id="22-abbreviations-and-acronyms">2.2 Abbreviations and
+Acronyms</h2>
+<p>None.</p>
+<hr />
+<h1 id="3-document-conventions">3 Document Conventions</h1>
+<h2 id="31-key-words">3.1 Key Words</h2>
+<p>The key words &quot;<strong>MUST</strong>&quot;, &quot;<strong>MUST NOT</strong>&quot;,
+&quot;<strong>REQUIRED</strong>&quot;, &quot;<strong>SHALL</strong>&quot;, &quot;<strong>SHALL
+NOT</strong>&quot;, &quot;<strong>SHOULD</strong>&quot;, &quot;<strong>SHOULD NOT</strong>&quot;,
+&quot;<strong>RECOMMENDED</strong>&quot;, &quot;<strong>NOT RECOMMENDED</strong>&quot;,
+&quot;<strong>MAY</strong>&quot;, and &quot;<strong>OPTIONAL</strong>&quot; in this document
+are to be interpreted as described in BCP 14 [RFC2119] [RFC8174] when,
+and only when, they appear in all capitals, as shown here.</p>
+<h2 id="32-typographical-conventions">3.2 Typographical Conventions</h2>
+<!-- From OASIS Open Specification Template Instructions: Describe any standards or typographical conventions that were followed when writing this document, such as fonts or highlighting that have special significance. If there are no typographical conventions than one is to put "None". -->
+
+<p>None.</p>
+<hr />
+<h1 id="4-introduction-non-normative">4 Introduction
+(non-normative)</h1>
+<h2 id="41-requirements">4.1 Requirements</h2>
+<p>JSON is a common format to represent structured objects that may be
+supplied by the PEP as subject attribute or resource attribute&#39;s Content
+inside the Request to the PDP, typically a JSON Web token (JWT) in the
+case of subject attributes (JWT is commonly used in OpenID Connect and
+OAuth protocols), or any JSON document as resource data. JSON is a
+common data exchange format used by Web APIs. For such cases, supporting
+JSONPath [RFC9535] expressions in ACAL is the standard way and therefore
+a must-have to extract the necessary values from the JSON content for
+policy evaluation. For instance, a common rule of a privacy policy is
+that a person should be allowed to read records (in JSON) for which he
+or she is the subject. The corresponding policy must contain a reference
+- JSONPath expression - to the subject identified in the information
+resource - JSON record - itself.</p>
+<h2 id="42-policies-based-on-subject-and-resource-attributes">4.2
+Policies Based on Subject and Resource Attributes</h2>
+<p>Attribute selectors (<code>AttributeSelectorType</code> objects)
+defined by this profile use a JSONPath expression [RFC9535] over the
+<code>ContentType</code> object of the subject (resp. resource) to
+identify a particular subject (resp. resource) attribute value by its
+location in the context (see Section 4.11 of [<a href="#acal-core-10">ACAL-Core-1.0</a>] for an explanation of
+context).</p>
+<h2 id="43-changes-from-the-previous-version">4.3 Changes From the
+Previous Version</h2>
+<!-- From OASIS Open Specification Template Instructions: This section is **REQUIRED** and **MUST** be the last numbered subsection in this section. -->
+
+<p>None. This is the first version of this profile.</p>
+<hr />
+<h1 id="5-structures">5 Structures</h1>
+<h2 id="51-contenttype-restrictions">5.1 ContentType restrictions</h2>
+<p>This profile applies to a <code>Content</code> object (defined in [<a href="#acal-core-10">ACAL-Core-1.0</a>]) in the Request if and only
+if:</p>
+<ul>
+<li>The <code>MediaType</code> property is set to
+<code>application/json</code>.</li>
+<li>The <code>Body</code> property value is a JSON object. <em>Note that
+it is always possible to encapsulate a JSON array inside a JSON object
+if a JSON array is really needed.</em></li>
+</ul>
+<h2 id="52-acal-extensions">5.2 ACAL extensions</h2>
+<p>The structures in this profile are extensions to [<a href="#acal-core-10">ACAL-Core-1.0</a>] model and described here in
+abstract terms. The concrete representations of these structures are
+defined for a variety of syntaxes each in a separate profile.</p>
+<p>The types <code>AttributeSelectorType</code> and
+<code>EntityAttributeSelectorType</code> used in the next UML models are
+defined in [<a href="#acal-core-10">ACAL-Core-1.0</a>].</p>
+<h3 id="521-attributeselectortype-extension---jsonpathattributeselectortype">5.2.1
+AttributeSelectorType extension - JSONPathAttributeSelectorType</h3>
+<p>A <code>JSONPathAttributeSelectorType</code> object is a concrete
+type of <code>AttributeSelectorType</code> from [<a href="#acal-core-10">ACAL-Core-1.0</a>] that uses JSONPath (<a href="#rfc9535">RFC9535</a>) for <code>Path</code> expressions and
+expects a JSON object as value of the <code>Body</code> property of a
+<code>RequestEntityType</code> object&#39;s <code>Content</code> object.
+More precisely, the returned values shall be constructed from the
+node(s) selected by applying the JSONPath expression given by the
+attribute selector&#39;s <code>Path</code> property to the JSON object in
+the <code>Body</code> property of the <code>Content</code> object in the
+<code>RequestEntityType</code> object matching the attribute selector&#39;s
+<code>Category</code> property.</p>
+<p>See the section 9 for details of attribute selector evaluation.</p>
+<p>UML definition (class diagram):</p>
+<img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiBjb250ZW50U2NyaXB0VHlwZT0iYXBwbGljYXRpb24vZWNtYXNjcmlwdCIgY29udGVudFN0eWxlVHlwZT0idGV4dC9jc3MiIGhlaWdodD0iMTU0cHgiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiIHN0eWxlPSJ3aWR0aDoxOTdweDtoZWlnaHQ6MTU0cHg7IiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCAxOTcgMTU0IiB3aWR0aD0iMTk3cHgiIHpvb21BbmRQYW49Im1hZ25pZnkiPjxkZWZzPjxmaWx0ZXIgaGVpZ2h0PSIzMDAlIiBpZD0iZjFkaHJwbzJlbTdzeXoiIHdpZHRoPSIzMDAlIiB4PSItMSIgeT0iLTEiPjxmZUdhdXNzaWFuQmx1ciByZXN1bHQ9ImJsdXJPdXQiIHN0ZERldmlhdGlvbj0iMi4wIi8+PGZlQ29sb3JNYXRyaXggaW49ImJsdXJPdXQiIHJlc3VsdD0iYmx1ck91dDIiIHR5cGU9Im1hdHJpeCIgdmFsdWVzPSIwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAuNCAwIi8+PGZlT2Zmc2V0IGR4PSI0LjAiIGR5PSI0LjAiIGluPSJibHVyT3V0MiIgcmVzdWx0PSJibHVyT3V0MyIvPjxmZUJsZW5kIGluPSJTb3VyY2VHcmFwaGljIiBpbjI9ImJsdXJPdXQzIiBtb2RlPSJub3JtYWwiLz48L2ZpbHRlcj48L2RlZnM+PGc+PCEtLU1ENT1bZWNjZWI2Nzg2MDQwMGRjYjUzMTAzYzg0N2UwODhlYjldCmNsYXNzIEF0dHJpYnV0ZVNlbGVjdG9yVHlwZS0tPjxyZWN0IGZpbGw9IiNGRUZFQ0UiIGZpbHRlcj0idXJsKCNmMWRocnBvMmVtN3N5eikiIGhlaWdodD0iMzcuNTk3NyIgaWQ9IkF0dHJpYnV0ZVNlbGVjdG9yVHlwZSIgc3R5bGU9InN0cm9rZTogI0E4MDAzNjsgc3Ryb2tlLXdpZHRoOiAxLjU7IiB3aWR0aD0iMTIzIiB4PSIzNC41IiB5PSI4Ii8+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtc3R5bGU9Iml0YWxpYyIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nQW5kR2x5cGhzIiB0ZXh0TGVuZ3RoPSI2MSIgeD0iNjUuNSIgeT0iMjQuMjU1OSI+wqtkYXRhdHlwZcK7PC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmb250LXN0eWxlPSJpdGFsaWMiIGxlbmd0aEFkanVzdD0ic3BhY2luZ0FuZEdseXBocyIgdGV4dExlbmd0aD0iMTE3IiB4PSIzNy41IiB5PSIzOC4wNTQ3Ij5BdHRyaWJ1dGVTZWxlY3RvclR5cGU8L3RleHQ+PCEtLU1ENT1bZWFjY2E4NDFjMjE0YzYxMTY4MjA4MGYyODY4YzM2MGNdCmNsYXNzIEpTT05QYXRoQXR0cmlidXRlU2VsZWN0b3JUeXBlLS0+PHJlY3QgZmlsbD0iI0ZFRkVDRSIgZmlsdGVyPSJ1cmwoI2YxZGhycG8yZW03c3l6KSIgaGVpZ2h0PSIzNy41OTc3IiBpZD0iSlNPTlBhdGhBdHRyaWJ1dGVTZWxlY3RvclR5cGUiIHN0eWxlPSJzdHJva2U6ICNBODAwMzY7IHN0cm9rZS13aWR0aDogMS41OyIgd2lkdGg9IjE4MCIgeD0iNiIgeT0iMTA2Ii8+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtc3R5bGU9Iml0YWxpYyIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nQW5kR2x5cGhzIiB0ZXh0TGVuZ3RoPSI2NSIgeD0iNjMuNSIgeT0iMTIyLjI1NTkiPsKrZGF0YVR5cGXCuzwvdGV4dD48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nQW5kR2x5cGhzIiB0ZXh0TGVuZ3RoPSIxNzQiIHg9IjkiIHk9IjEzNi4wNTQ3Ij5KU09OUGF0aEF0dHJpYnV0ZVNlbGVjdG9yVHlwZTwvdGV4dD48IS0tTUQ1PVs2ZDY4OWE4NjFjN2EwNWFjZjNmOGMzNjM3NGNmZTVhN10KcmV2ZXJzZSBsaW5rIEF0dHJpYnV0ZVNlbGVjdG9yVHlwZSB0byBKU09OUGF0aEF0dHJpYnV0ZVNlbGVjdG9yVHlwZS0tPjxwYXRoIGQ9Ik05Niw2Ni40MyBDOTYsNzkuOTggOTYsOTQuNTkgOTYsMTA1LjcgIiBmaWxsPSJub25lIiBpZD0iQXR0cmlidXRlU2VsZWN0b3JUeXBlJmx0Oy1KU09OUGF0aEF0dHJpYnV0ZVNlbGVjdG9yVHlwZSIgc3R5bGU9InN0cm9rZTogI0E4MDAzNjsgc3Ryb2tlLXdpZHRoOiAxLjA7Ii8+PHBvbHlnb24gZmlsbD0ibm9uZSIgcG9pbnRzPSI4OSw2Ni4wNiw5Niw0Ni4wNiwxMDMsNjYuMDYsODksNjYuMDYiIHN0eWxlPSJzdHJva2U6ICNBODAwMzY7IHN0cm9rZS13aWR0aDogMS4wOyIvPjwhLS1NRDU9WzgxNTUxMzJiMjcxNGE4OWY4ZTI3NTg5NWEwZGY0N2FkXQpAc3RhcnR1bWwNCmhpZGUgZW1wdHkgbWVtYmVycyANCmhpZGUgY2lyY2xlDQphYnN0cmFjdCBjbGFzcyBBdHRyaWJ1dGVTZWxlY3RvclR5cGUgPDxkYXRhdHlwZT4+DQpjbGFzcyBKU09OUGF0aEF0dHJpYnV0ZVNlbGVjdG9yVHlwZSA8PGRhdGFUeXBlPj4gZXh0ZW5kcyBBdHRyaWJ1dGVTZWxlY3RvclR5cGUNCkBlbmR1bWwNCgpQbGFudFVNTCB2ZXJzaW9uIDEuMjAyMC4wMihTdW4gTWFyIDAxIDExOjIyOjA3IENFVCAyMDIwKQooR1BMIHNvdXJjZSBkaXN0cmlidXRpb24pCkphdmEgUnVudGltZTogT3BlbkpESyBSdW50aW1lIEVudmlyb25tZW50CkpWTTogT3BlbkpESyA2NC1CaXQgU2VydmVyIFZNCkphdmEgVmVyc2lvbjogMjEuMC4xMCs3LVVidW50dS0xMjQuMDQKT3BlcmF0aW5nIFN5c3RlbTogTGludXgKRGVmYXVsdCBFbmNvZGluZzogVVRGLTgKTGFuZ3VhZ2U6IGVuCkNvdW50cnk6IFVTCi0tPjwvZz48L3N2Zz4=" />
+<p>In the context of this profile, the required <code>Path</code>
+property inherited from the supertype <code>AttributeSelectorType</code>
+SHALL be a JSONPath expression <a href="#rfc9535">RFC9535</a>.</p>
+<h2 id="522-entityattributeselectortype-extension---jsonpathentityattributeselectortype">5.2.2
+EntityAttributeSelectorType extension -
+JSONPathEntityAttributeSelectorType</h2>
+<p>A <code>JSONPathEntityAttributeSelectorType</code> object is a
+concrete type of <code>EntityAttributeSelectorType</code> [<a href="#acal-core-10">ACAL-Core-1.0</a>] that uses JSONPath <a href="#rfc9535">RFC9535</a> for <code>Path</code> expressions and
+expects a JSON object in the value returned by the attribute selector&#39;s
+<code>Expression</code> property. In other words, the values shall be
+constructed from the node(s) selected by applying the JSONPath
+expression given by the entity attribute selector&#39;s <code>Path</code>
+property to the JSON object of the <code>Body</code> property of the
+<code>Content</code> object in either an attribute category in the
+request context (<code>RequestEntity</code>) or the value of the
+<code>urn:oasis:names:tc:acal:1.0:data-type:entity</code> data type
+returned by its <code>Expression</code> evaluation.</p>
+<p>See the Section 9 for details of entity attribute selector
+evaluation.</p>
+<p>UML definition (class diagram):</p>
+<img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiBjb250ZW50U2NyaXB0VHlwZT0iYXBwbGljYXRpb24vZWNtYXNjcmlwdCIgY29udGVudFN0eWxlVHlwZT0idGV4dC9jc3MiIGhlaWdodD0iMTU0cHgiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiIHN0eWxlPSJ3aWR0aDoyMjdweDtoZWlnaHQ6MTU0cHg7IiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCAyMjcgMTU0IiB3aWR0aD0iMjI3cHgiIHpvb21BbmRQYW49Im1hZ25pZnkiPjxkZWZzPjxmaWx0ZXIgaGVpZ2h0PSIzMDAlIiBpZD0iZjE2emFlaGxpdjRtZ2UiIHdpZHRoPSIzMDAlIiB4PSItMSIgeT0iLTEiPjxmZUdhdXNzaWFuQmx1ciByZXN1bHQ9ImJsdXJPdXQiIHN0ZERldmlhdGlvbj0iMi4wIi8+PGZlQ29sb3JNYXRyaXggaW49ImJsdXJPdXQiIHJlc3VsdD0iYmx1ck91dDIiIHR5cGU9Im1hdHJpeCIgdmFsdWVzPSIwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAuNCAwIi8+PGZlT2Zmc2V0IGR4PSI0LjAiIGR5PSI0LjAiIGluPSJibHVyT3V0MiIgcmVzdWx0PSJibHVyT3V0MyIvPjxmZUJsZW5kIGluPSJTb3VyY2VHcmFwaGljIiBpbjI9ImJsdXJPdXQzIiBtb2RlPSJub3JtYWwiLz48L2ZpbHRlcj48L2RlZnM+PGc+PCEtLU1ENT1bODhkMzY0NDMzOTZjNWZiYjYyZjQ3NmQ1NjQxMjFkZDFdCmNsYXNzIEVudGl0eUF0dHJpYnV0ZVNlbGVjdG9yVHlwZS0tPjxyZWN0IGZpbGw9IiNGRUZFQ0UiIGZpbHRlcj0idXJsKCNmMTZ6YWVobGl2NG1nZSkiIGhlaWdodD0iMzcuNTk3NyIgaWQ9IkVudGl0eUF0dHJpYnV0ZVNlbGVjdG9yVHlwZSIgc3R5bGU9InN0cm9rZTogI0E4MDAzNjsgc3Ryb2tlLXdpZHRoOiAxLjU7IiB3aWR0aD0iMTUzIiB4PSIzNC41IiB5PSI4Ii8+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtc3R5bGU9Iml0YWxpYyIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nQW5kR2x5cGhzIiB0ZXh0TGVuZ3RoPSI2MSIgeD0iODAuNSIgeT0iMjQuMjU1OSI+wqtkYXRhdHlwZcK7PC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmb250LXN0eWxlPSJpdGFsaWMiIGxlbmd0aEFkanVzdD0ic3BhY2luZ0FuZEdseXBocyIgdGV4dExlbmd0aD0iMTQ3IiB4PSIzNy41IiB5PSIzOC4wNTQ3Ij5FbnRpdHlBdHRyaWJ1dGVTZWxlY3RvclR5cGU8L3RleHQ+PCEtLU1ENT1bNmM4NjVjYTg5M2ZhNTE4OTIyZTA0NTg0ZmQ1ZjI4YzRdCmNsYXNzIEpTT05QYXRoRW50aXR5QXR0cmlidXRlU2VsZWN0b3JUeXBlLS0+PHJlY3QgZmlsbD0iI0ZFRkVDRSIgZmlsdGVyPSJ1cmwoI2YxNnphZWhsaXY0bWdlKSIgaGVpZ2h0PSIzNy41OTc3IiBpZD0iSlNPTlBhdGhFbnRpdHlBdHRyaWJ1dGVTZWxlY3RvclR5cGUiIHN0eWxlPSJzdHJva2U6ICNBODAwMzY7IHN0cm9rZS13aWR0aDogMS41OyIgd2lkdGg9IjIxMCIgeD0iNiIgeT0iMTA2Ii8+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZvbnQtc3R5bGU9Iml0YWxpYyIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nQW5kR2x5cGhzIiB0ZXh0TGVuZ3RoPSI2NSIgeD0iNzguNSIgeT0iMTIyLjI1NTkiPsKrZGF0YVR5cGXCuzwvdGV4dD48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nQW5kR2x5cGhzIiB0ZXh0TGVuZ3RoPSIyMDQiIHg9IjkiIHk9IjEzNi4wNTQ3Ij5KU09OUGF0aEVudGl0eUF0dHJpYnV0ZVNlbGVjdG9yVHlwZTwvdGV4dD48IS0tTUQ1PVszYzJmN2JlNTg4MTRiNzJiMmM3YTM5NzY1ZTMzY2UzMV0KcmV2ZXJzZSBsaW5rIEVudGl0eUF0dHJpYnV0ZVNlbGVjdG9yVHlwZSB0byBKU09OUGF0aEVudGl0eUF0dHJpYnV0ZVNlbGVjdG9yVHlwZS0tPjxwYXRoIGQ9Ik0xMTEsNjYuNDMgQzExMSw3OS45OCAxMTEsOTQuNTkgMTExLDEwNS43ICIgZmlsbD0ibm9uZSIgaWQ9IkVudGl0eUF0dHJpYnV0ZVNlbGVjdG9yVHlwZSZsdDstSlNPTlBhdGhFbnRpdHlBdHRyaWJ1dGVTZWxlY3RvclR5cGUiIHN0eWxlPSJzdHJva2U6ICNBODAwMzY7IHN0cm9rZS13aWR0aDogMS4wOyIvPjxwb2x5Z29uIGZpbGw9Im5vbmUiIHBvaW50cz0iMTA0LDY2LjA2LDExMSw0Ni4wNiwxMTgsNjYuMDYsMTA0LDY2LjA2IiBzdHlsZT0ic3Ryb2tlOiAjQTgwMDM2OyBzdHJva2Utd2lkdGg6IDEuMDsiLz48IS0tTUQ1PVs2ZmZjMTNkNDViZjdhOTc5YjBkOTkyMTczZTkzYTIxNV0KQHN0YXJ0dW1sDQpoaWRlIGVtcHR5IG1lbWJlcnMgDQpoaWRlIGNpcmNsZQ0KYWJzdHJhY3QgY2xhc3MgRW50aXR5QXR0cmlidXRlU2VsZWN0b3JUeXBlIDw8ZGF0YXR5cGU+Pg0KY2xhc3MgSlNPTlBhdGhFbnRpdHlBdHRyaWJ1dGVTZWxlY3RvclR5cGUgPDxkYXRhVHlwZT4+IGV4dGVuZHMgRW50aXR5QXR0cmlidXRlU2VsZWN0b3JUeXBlDQpAZW5kdW1sDQoKUGxhbnRVTUwgdmVyc2lvbiAxLjIwMjAuMDIoU3VuIE1hciAwMSAxMToyMjowNyBDRVQgMjAyMCkKKEdQTCBzb3VyY2UgZGlzdHJpYnV0aW9uKQpKYXZhIFJ1bnRpbWU6IE9wZW5KREsgUnVudGltZSBFbnZpcm9ubWVudApKVk06IE9wZW5KREsgNjQtQml0IFNlcnZlciBWTQpKYXZhIFZlcnNpb246IDIxLjAuMTArNy1VYnVudHUtMTI0LjA0Ck9wZXJhdGluZyBTeXN0ZW06IExpbnV4CkRlZmF1bHQgRW5jb2Rpbmc6IFVURi04Ckxhbmd1YWdlOiBlbgpDb3VudHJ5OiBVUwotLT48L2c+PC9zdmc+" />
+<p>The <code>Path</code> property is also defined the same as in
+<code>JSONPathAttributeSelectorType</code>.</p>
+<hr />
+<h1 id="6-attribute-selector-evaluation">6 Attribute Selector
+Evaluation</h1>
+<dl>
+<dt>A <code>JSONPathAttributeSelectorType</code> or
+<code>JSONPathEntityAttributeSelector</code> object SHALL be evaluated
+according to the following processing model.</dt>
+<dd>
+<p>Note: It is not necessary for an implementation to exactly follow
+this model. It is only necessary to produce results identical to those
+that would be produced by following this model.</p>
+</dd>
+</dl>
+<p>The first steps are already described in [<a href="#acal-core-10">ACAL-Core-1.0</a>] section 9.4.7 and provided here
+as a reminder:</p>
+<ul>
+<li><p>If the attribute category given by the <code>Category</code>
+property is not found or does not have a <code>Content</code> property,
+then the return value is either <code>Indeterminate</code> or an empty
+bag as determined by the <code>MustBePresent</code> property.</p></li>
+<li><p>If the <code>Expression</code> property of an
+<code>JSONPathEntityAttributeSelector</code> object evaluates to a value
+of the <code>urn:oasis:names:tc:acal:1.0:data-type:entity</code> data
+type and that value does not have a <code>Content</code> property, then
+the return value is either <code>Indeterminate</code> or an empty bag as
+determined by the <code>MustBePresent</code> property.</p></li>
+<li><p>If the <code>Expression</code> property of an
+<code>JSONPathEntityAttributeSelector</code> object evaluates to a value
+of the <code>urn:oasis:names:tc:acal:1.0:data-type:anyURI</code> data
+type and an attribute category with that value as its
+<code>Category</code> is not found or does not have a
+<code>Content</code> property, then the return value is either
+<code>Indeterminate</code> or an empty bag as determined by the
+<code>MustBePresent</code> property.</p></li>
+</ul>
+<p>If the designated attribute category or entity value has a
+<code>Content</code> property, then follow the steps below:</p>
+<ol type="1">
+<li><p>Construct a JSON object (RFC 8259) from the value of the
+<code>Body</code> property of the <code>Content</code> property. If the
+content is not a valid JSON object, then the attribute selector MUST
+return <code>Indeterminate</code> with status code
+<code>urn:oasis:names:tc:acal:1.0:status:syntax-error</code>.</p></li>
+<li><p>The root node of the data structure (JSON object) shall be used
+as context node of evaluation (JSONPath <em>query
+argument</em>).</p></li>
+<li><p>Evaluate the JSONPath expression given in the <code>Path</code>
+property against the context node selected in the previous step,
+according to the syntax and semantics of the JSONPath standard
+[RFC9535].</p></li>
+<li><p>The result of the previous step is a nodelist that is converted
+to a bag of values of the data type specified by the
+<code>DataType</code> property. In most cases the conversion depends on
+the string value of a node&#39;s JSON value, defined as follows:</p>
+<ul>
+<li><p>The string value of a JSON string value is the sequence of
+Unicode characters represented by the text <em>between</em> the
+surrounding double quotes, i.e., with each escape sequence replaced with
+its equivalent Unicode character.</p></li>
+<li><p>The string value of the special JSON value <code>true</code>,
+<code>false</code> or <code>null</code> is the equivalent sequence of
+Unicode characters.</p></li>
+<li><p>The string value of a JSON number is the equivalent sequence of
+Unicode characters.</p></li>
+<li><p>The string value of a JSON array is the empty string.</p></li>
+<li><p>The string value of a JSON object is the empty string.</p></li>
+</ul></li>
+</ol>
+<dl>
+<dt> </dt>
+<dd>
+The nodelist is converted to a bag of values of the data type specified
+by the <code>DataType</code> property as follows:
+</dd>
+<dt> </dt>
+<dd>
+If the specified data type is
+<code>urn:oasis:names:tc:acal:1.0:data-type:boolean</code>, then convert
+the string value of each node using the <code>xs:boolean()</code>
+constructor function from [<a href="#xf">XF</a>] Section 18.1.
+</dd>
+<dt> </dt>
+<dd>
+If the specified data type is
+<code>urn:oasis:names:tc:acal:1.0:data-type:string</code>, then convert
+the string value of each node using the <code>xs:string()</code>
+constructor function from [<a href="#xf">XF</a>] Section 18.1.
+</dd>
+<dt> </dt>
+<dd>
+If the specified data type is
+<code>urn:oasis:names:tc:acal:1.0:data-type:integer</code>, then convert
+the string value of each node using the <code>xs:integer()</code>
+constructor function from [<a href="#xf">XF</a>] Section 18.1.
+</dd>
+<dt> </dt>
+<dd>
+If the specified data type is
+<code>urn:oasis:names:tc:acal:1.0:data-type:double</code>, then convert
+the string value of each node using the <code>xs:double()</code>
+constructor function from [<a href="#xf">XF</a>] Section 18.1.
+</dd>
+<dt> </dt>
+<dd>
+If the specified data type is
+<code>urn:oasis:names:tc:acal:1.0:data-type:dateTime</code>, then
+convert the string value of each node using the
+<code>xs:dateTime()</code> constructor function from [<a href="#xf">XF</a>] Section 18.1.
+</dd>
+<dt> </dt>
+<dd>
+If the specified data type is
+<code>urn:oasis:names:tc:acal:1.0:data-type:date</code>, then convert
+the string value of each node using the <code>xs:date()</code>
+constructor function from [<a href="#xf">XF</a>] Section 18.1.
+</dd>
+<dt> </dt>
+<dd>
+If the specified data type is
+<code>urn:oasis:names:tc:acal:1.0:data-type:time</code>, then convert
+the string value of each node using the <code>xs:time()</code>
+constructor function from [<a href="#xf">XF</a>] Section 18.1.
+</dd>
+<dt> </dt>
+<dd>
+If the specified data type is
+<code>urn:oasis:names:tc:acal:1.0:data-type:hexBinary</code>, then
+convert the string value of each node using the
+<code>xs:hexBinary()</code> constructor function from [<a href="#xf">XF</a>] Section 18.1.
+</dd>
+<dt> </dt>
+<dd>
+If the specified data type is
+<code>urn:oasis:names:tc:acal:1.0:data-type:base64Binary</code>, then
+convert the string value of each node using the
+<code>xs:base64Binary()</code> constructor function from [<a href="#xf">XF</a>] Section 18.1.
+</dd>
+<dt> </dt>
+<dd>
+If the specified data type is
+<code>urn:oasis:names:tc:acal:1.0:data-type:anyURI</code>, then convert
+the string value of each node using the <code>xs:anyURI()</code>
+constructor function from [<a href="#xf">XF</a>] Section 18.1.
+</dd>
+<dt> </dt>
+<dd>
+If the specified data type is
+<code>urn:oasis:names:tc:acal:1.0:data-type:yearMonthDuration</code>,
+then convert the string value of each node using the
+<code>xs:yearMonthDuration()</code> constructor function from [<a href="#xf">XF</a>] Section 18.1.
+</dd>
+<dt> </dt>
+<dd>
+If the specified data type is
+<code>urn:oasis:names:tc:acal:1.0:data-type:dayTimeDuration</code>, then
+convert the string value of each node using the
+<code>xs:dayTimeDuration()</code> constructor function from [<a href="#xf">XF</a>] Section 18.1.
+</dd>
+<dt> </dt>
+<dd>
+If the specified data type is
+<code>urn:oasis:names:tc:acal:1.0:data-type:entity</code> and the value
+of every node in the nodelist is a JSON object, then convert each node
+to an ACAL <code>EntityType</code> object. Each <code>EntityType</code>
+object SHALL have a <code>Content</code> property and SHALL NOT have an
+<code>Attribute</code> property. The <code>Content</code> property SHALL
+have a <code>MediaType</code> property set to
+<code>application/json</code> and the value of the <code>Body</code>
+property SHALL be a copy of the JSON object.
+</dd>
+<dt> </dt>
+<dd>
+If the data type is one of the types referred to above and the result of
+step 3 does not satisfy any of the cases, then the attribute selector
+MUST return <code>Indeterminate</code> with status code
+<code>urn:oasis:names:tc:acal:1.0:status:syntax-error</code>.
+</dd>
+<dt> </dt>
+<dd>
+If the data type is not one of the types referred to above, then the
+return values shall be constructed from the nodelist in a manner
+specified by the particular data type extension specification. If the
+data type extension does not specify an appropriate conversion function,
+then the attribute selector MUST return <code>Indeterminate</code> with
+status code
+<code>urn:oasis:names:tc:acal:1.0:status:syntax-error</code>.
+</dd>
+<dt> </dt>
+<dd>
+If an error occurs when converting the values returned by the expression
+to the specified data type, then the result of the attribute selector
+MUST be <code>Indeterminate</code>, with status code
+<code>urn:oasis:names:tc:acal:1.0:status:processing-error</code>
+</dd>
+<dt> </dt>
+<dd>
+If the result of step 3 is an empty nodelist, then the return value is
+either <code>Indeterminate</code> with status code
+<code>urn:oasis:names:tc:acal:1.0:status:syntax-error</code>, or an
+empty bag, as determined by the <code>MustBePresent</code> property.
+</dd>
+</dl>
+<p>An implementation can be optimized to emit errors without going to
+the effort of generating the string value of node values. For example,
+the string value of a JSON number will never have the correct format for
+a <code>urn:oasis:names:tc:acal:1.0:data-type:dateTime</code> ACAL
+value, so this combination will always produce an error.</p>
+<hr />
+<h1 id="7-safety-security-and-data-protection-considerations">7 Safety,
+Security, and Data Protection Considerations</h1>
+<!-- From OASIS Open Specification Template Instructions:
+
+This section is **REQUIRED** and **MUST** be the second to last numbered section in the document, right before Conformance. This section contains information about safety, security, data protection, and privacy considerations. These can be divided up into separate subsections as desired. All documents **SHOULD** have at least a security and data protection considerations section, and otherwise **MUST** have a blank section indicating “None.” Any other considerations **MAY** also be added.
+
+
+Please note that any specification that will need to register something with IANA or has plans to go on to ITU/ISO/IEC **MUST** have this section filled out. For an example please see the following section in the CACAO specification here [https://docs.oasis-open.org/cacao/security-playbooks/v2.0/cs01/security-playbooks-v2.0-cs01.html\#\_Toc152256574](https://docs.oasis-open.org/cacao/security-playbooks/v2.0/cs01/security-playbooks-v2.0-cs01.html#_Toc152256574) 
+
+-->
+
+<p>Refer to [<a href="#acal-core-10">ACAL-Core-1.0</a>] section 10, and
+Section 4 (Security Considerations) of <a href="#rfc9535">RFC
+9535</a>.</p>
+<hr />
+<h1 id="8-conformance">8 Conformance</h1>
+<!-- From OASIS Open Specification Template Instructions: 
+
+
+This section is **REQUIRED** and **MUST** be the last numbered section in the document. 
+
+
+-->
+
+<h2 id="81-introduction">8.1 Introduction</h2>
+<p>The specification addresses the following aspect of conformance:</p>
+<p>The specification defines a number of functions, etc. that have
+somewhat special applications, therefore they are not required to be
+implemented in an implementation that claims to conform with to this
+specification.</p>
+<h2 id="82-conformance-tables">8.2 Conformance Tables</h2>
+<dl>
+<dt>This section lists those portions of the specification that MUST be
+included in an implementation of a PDP that claims to conform to this
+profile.</dt>
+<dd>
+<p>Note: &quot;M&quot; means mandatory-to-implement. &quot;O&quot; means optional.</p>
+</dd>
+</dl>
+<p>The implementation MUST follow <a href="#5-structures">Section 5</a>,
+<a href="#6-attribute-selector-evaluation">Section 6</a> and <a href="#annex-c-acal-identifiers">Annex D</a> where they apply to
+implemented items in the following tables.</p>
+<p>Many of these items are associated with versions of XACML preceding
+ACAL but have been assigned new identifiers with the
+<code>urn:oasis:names:tc:acal:1.0:</code> prefix. The older XACML
+identifiers have been listed in the tables as deprecated identifiers.
+Implementations MUST support a new identifier defined in this
+specification but MAY recognize the corresponding deprecated identifier
+as equivalent. It is RECOMMENDED that these deprecated identifiers not
+be used in new policies and requests; they are planned to be removed in
+a subsequent version of ACAL. Note that some items appear to be carried
+over from a preceding version of XACML but do not list the XACML
+identifier. This is because ACAL has redefined the item in some way that
+means it is no longer identical to the original definition in XACML, and
+so the identifiers can no longer be considered equivalent. Items new to
+ACAL 1.0 will also not list an XACML identifier.</p>
+<h3 id="821-object-types">8.2.1 Object Types</h3>
+<p>The implementation MUST support the object types that are marked
+<code>M</code>.</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Object Type</th>
+<th style="text-align: left;">M/O</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">JSONPathAttributeSelectorType</td>
+<td style="text-align: left;">M</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">JSONPathEntityAttributeSelectorType</td>
+<td style="text-align: left;">O</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="annex-a-license-document-status-and-notices">Annex A License,
+Document Status and Notices</h1>
+<p>(This annex forms an integral part of this Specification.)</p>
+<h2 id="a1-document-status">A.1 Document Status</h2>
+<p>This document was last revised or approved by the OASIS eXtensible
+Access Control Markup Language (XACML) TC on the above date. The level
+of approval is also listed above. Check the &quot;Latest version&quot; location
+noted above for possible later revisions of this document. Any other
+numbered Versions and other technical work produced by the Technical
+Committee (TC) are listed at <a href="https://groups.oasis-open.org/communities/tc-community-home2?CommunityKey=67afe552-0921-49b7-9a85-018dc7d3ef1d#technical">https://groups.oasis-open.org/communities/tc-community-home2?CommunityKey=67afe552-0921-49b7-9a85-018dc7d3ef1d#technical</a>.</p>
+<p>TC members should send comments on this document to the TC&#39;s email
+list. Others should send comments to the TC&#39;s public comment list, after
+subscribing to it by following the instructions at the &quot;Send A Comment&quot;
+button on the TC&#39;s web page at <a href="https://www.oasis-open.org/committees/xacml/">https://www.oasis-open.org/committees/xacml/</a>.</p>
+<p>NOTE: any machine-readable content (Computer Language Definitions)
+declared Normative for this Work Product is provided in separate plain
+text files. In the event of a discrepancy between any such plain text
+file and display content in the Work Product&#39;s prose narrative
+document(s), the content in the separate plain text file prevails.</p>
+<h2 id="a2-license-and-notices">A.2 License and Notices</h2>
+<p>Copyright © OASIS Open 2026. All Rights Reserved.</p>
+<p>All capitalized terms in the following text have the meanings
+assigned to them in the OASIS Intellectual Property Rights Policy (the
+&quot;OASIS IPR Policy&quot;). The full Policy, which governs the licensure of
+this document, may be found at the OASIS website: [<a href="https://www.oasis-open.org/policies-guidelines/ipr/"><span>https://www.oasis-open.org/policies-guidelines/ipr/</span></a>]</p>
+<p>This document and translations of it may be copied and furnished to
+others, and derivative works that comment on or otherwise explain it or
+assist in its implementation may be prepared, copied, published, and
+distributed, in whole or in part, without restriction of any kind,
+provided that the above copyright notice and this section are included
+on all such copies and derivative works. However, this document itself
+may not be modified in any way, including by removing the copyright
+notice or references to OASIS, except as needed for the purpose of
+developing any document or deliverable produced by an OASIS Technical
+Committee (in which case the rules applicable to copyrights, as set
+forth in the OASIS IPR Policy, must be followed) or as required to
+translate it into languages other than English.</p>
+<p>The limited permissions granted above are perpetual and will not be
+revoked by OASIS or its successors or assigns, as provided in the OASIS
+IPR Policy.</p>
+<p>This document is provided under the <a href="https://www.oasis-open.org/policies-guidelines/ipr/#RF-on-Limited-Mode">RF
+on Limited Terms</a> IPR mode that was chosen when the project was
+established, as defined in the IPR Policy. For information on whether
+any patents have been disclosed that may be essential to implementing
+this document, and any offers of patent licensing terms, please refer to
+the Intellectual Property Rights section of the project’s web page (<a href="https://www.oasis-open.org/committees/xacml/ipr.php"><span>https://www.oasis-open.org/committees/xacml/ipr.php</span></a>).</p>
+<p>This document and the information contained herein is provided on an
+&quot;AS IS&quot; basis and OASIS DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED,
+INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE
+INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY IMPLIED
+WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. OASIS
+AND ITS MEMBERS WILL NOT BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL OR
+CONSEQUENTIAL DAMAGES ARISING OUT OF ANY USE OF THIS DOCUMENT OR ANY
+PART THEREOF.</p>
+<p>As stated in the OASIS IPR Policy, the following three paragraphs in
+brackets apply to OASIS Standards Final Deliverable documents (Committee
+Specifications, OASIS Standards, or Approved Errata).</p>
+<p>OASIS requests that any OASIS Party or any other party that believes
+it has patent claims that would necessarily be infringed by
+implementations of this OASIS Standards Final Deliverable, to notify
+OASIS TC Administrator and provide an indication of its willingness to
+grant patent licenses to such patent claims in a manner consistent with
+the IPR Mode of the OASIS Technical Committee that produced this
+deliverable.</p>
+<p>OASIS invites any party to contact the OASIS TC Administrator if it
+is aware of a claim of ownership of any patent claims that would
+necessarily be infringed by implementations of this OASIS Standards
+Final Deliverable by a patent holder that is not willing to provide a
+license to such patent claims in a manner consistent with the IPR Mode
+of the OASIS Technical Committee that produced this OASIS Standards
+Final Deliverable. OASIS may include such claims on its website, but
+disclaims any obligation to do so.</p>
+<p>OASIS takes no position regarding the validity or scope of any
+intellectual property or other rights that might be claimed to pertain
+to the implementation or use of the technology described in this OASIS
+Standards Final Deliverable or the extent to which any license under
+such rights might or might not be available; neither does it represent
+that it has made any effort to identify any such rights. Information on
+OASIS&#39; procedures with respect to rights in any document or deliverable
+produced by an OASIS Technical Committee can be found on the OASIS
+website. Copies of claims of rights made available for publication and
+any assurances of licenses to be made available, or the result of an
+attempt made to obtain a general license or permission for the use of
+such proprietary rights by implementers or users of this OASIS Standards
+Final Deliverable, can be obtained from the OASIS TC Administrator.
+OASIS makes no representation that any information or list of
+intellectual property rights will at any time be complete, or that any
+claims in such list are, in fact, Essential Claims.</p>
+<p>The name &quot;OASIS&quot; is a trademark of OASIS, the owner and developer of
+this document, and should be used only to refer to the organization and
+its official outputs. OASIS welcomes reference to, and implementation
+and use of, its documents, while reserving the right to enforce its
+marks against misleading uses. Please see <a href="https://www.oasis-open.org/policies-guidelines/trademark/"><span>https://www.oasis-open.org/policies-guidelines/trademark/</span></a>
+for guidance.</p>
+<hr />
+<h1 id="annex-b-references">Annex B References</h1>
+<p>(This annex forms an integral part of this Specification.)</p>
+<p>This section contains the normative and informative references that
+are used in this document.</p>
+<p>Normative references are specific (identified by date of publication
+and/or edition number or version number) and Informative references are
+either specific or non-specific. For specific references, only the cited
+version applies. For non-specific references, the latest version of the
+reference document (including any amendments) applies. While any
+hyperlinks included in this section were valid at the time of
+publication, OASIS cannot guarantee their long term validity.</p>
+<h2 id="b1-normative-references">B.1 Normative References</h2>
+<p>The following documents are referenced in such a way that some or all
+of their content constitutes requirements of this document.</p>
+<h6 id="acal-core-10">[ACAL-Core-1.0]</h6>
+<p>Attribute-Centric Authorization Language (ACAL) Version 1.0. Edited
+by Steven Legg and Cyril Dangerville. 18 February 2026. OASIS Committee
+Specification Draft 01.</p>
+<h6 id="cmf">[CMF]</h6>
+<p>Martin J. Dürst et al, eds., Character Model for the World Wide Web
+1.0: Fundamentals, W3C Recommendation 15 February 2005, <a href="https://www.w3.org/TR/2005/REC-charmod-20050215/">https://www.w3.org/TR/2005/REC-charmod-20050215/</a></p>
+<h6 id="ds">[DS]</h6>
+<p>D. Eastlake et al., XML-Signature Syntax and Processing, <a href="https://www.w3.org/TR/xmldsig-core/">https://www.w3.org/TR/xmldsig-core/</a>,
+World Wide Web Consortium.</p>
+<h6 id="exc-c14n">[exc-c14n]</h6>
+<p>J. Boyer et al, eds., Exclusive XML Canonicalization, Version 1.0,
+W3C Recommendation 18 July 2002, <a href="https://www.w3.org/TR/2002/REC-xml-exc-c14n-20020718/">https://www.w3.org/TR/2002/REC-xml-exc-c14n-20020718/</a></p>
+<h6 id="hancock">[Hancock]</h6>
+<p>Hancock, Polymorphic Type Checking, in Simon L. Peyton Jones,
+Implementation of Functional Programming Languages, Section 8,
+Prentice-Hall International, 1987.</p>
+<h6 id="hier">[Hier]</h6>
+<p>XACML v3.0 Hierarchical Resource Profile Version 1.0. 11 March 2010.
+Committee Specification Draft 03. <a href="https://docs.oasis-open.org/xacml/3.0/xacml-3.0-hierarchical-v1-spec-cd-03-en.html">https://docs.oasis-open.org/xacml/3.0/xacml-3.0-hierarchical-v1-spec-cd-03-en.html</a></p>
+<h6 id="ieee754">[IEEE754]</h6>
+<p>IEEE Standard for Binary Floating-Point Arithmetic 1985, ISBN
+1-5593-7653-8, IEEE Product No. SH10116-TBR.</p>
+<h6 id="infoset">[INFOSET]</h6>
+<p>XML Information Set (Second Edition), W3C Recommendation, 4 February
+2004, <a href="https://www.w3.org/TR/xml-infoset/">https://www.w3.org/TR/xml-infoset/</a></p>
+<h6 id="iso10181-3">[ISO10181-3]</h6>
+<p>ISO/IEC 10181-3:1996 Information technology – Open Systems
+Interconnection -- Security frameworks for open systems: Access control
+framework.</p>
+<h6 id="kudo00">[Kudo00]</h6>
+<p>Kudo M and Hada S, XML document security based on provisional
+authorization, Proceedings of the Seventh ACM Conference on Computer and
+Communications Security, Nov 2000, Athens, Greece, pp 87-96.</p>
+<h6 id="ldap-1">[LDAP-1]</h6>
+<p>RFC 2256, A summary of the X500(96) User Schema for use with LDAPv3,
+Section 5, M Wahl, December 1997, <a href="https://www.ietf.org/rfc/rfc2256.txt">https://www.ietf.org/rfc/rfc2256.txt</a></p>
+<h6 id="ldap-2">[LDAP-2]</h6>
+<p>RFC 2798, Definition of the inetOrgPerson, M. Smith, April 2000, <a href="https://www.ietf.org/rfc/rfc2798.txt">https://www.ietf.org/rfc/rfc2798.txt</a></p>
+<h6 id="mathml">[MathML]</h6>
+<p>Mathematical Markup Language (MathML), Version 2.0, W3C
+Recommendation, 21 October 2003, <a href="https://www.w3.org/TR/2003/REC-MathML2-20031021/">https://www.w3.org/TR/2003/REC-MathML2-20031021/</a></p>
+<h6 id="multi">[Multi]</h6>
+<p>OASIS Committee Draft 03, XACML v3.0 Multiple Decision Profile
+Version 1.0, 11 March 2010, <a href="https://docs.oasis-open.org/xacml/3.0/xacml-3.0-multiple-v1-spec-cd-03-en.doc">https://docs.oasis-open.org/xacml/3.0/xacml-3.0-multiple-v1-spec-cd-03-en.doc</a></p>
+<h6 id="perritt93">[Perritt93]</h6>
+<p>Perritt, H. Knowbots, Permissions Headers and Contract Law,
+Conference on Technological Strategies for Protecting Intellectual
+Property in the Networked Multimedia Environment, April 1993. Available
+at: <a href="https://www.cni.org/resources/historical-resources/technological-strategies-for-protecting-intellectual-property-in-the-networked-multimedia-environment/permission-headers-and-contract-law">https://www.cni.org/resources/historical-resources/technological-strategies-for-protecting-intellectual-property-in-the-networked-multimedia-environment/permission-headers-and-contract-law</a></p>
+<h6 id="rbac">[RBAC]</h6>
+<p>David Ferraiolo and Richard Kuhn, Role-Based Access Controls, 15th
+National Computer Security Conference, 1992.</p>
+<h6 id="rfc2119">[RFC2119]</h6>
+<p><em>Key Words for Use in RFCs to Indicate Requirement Levels</em>,
+BCP 14, RFC 2119, March 1997. [Online]. Available: <a href="https://www.rfc-editor.org/info/rfc2119">https://www.rfc-editor.org/info/rfc2119</a></p>
+<h6 id="rfc2396">[RFC2396]</h6>
+<p>RFC 2396, Berners-Lee T, Fielding R, Masinter L, Uniform Resource
+Identifiers (URI): Generic Syntax, <a href="https://www.ietf.org/rfc/rfc2396.txt">https://www.ietf.org/rfc/rfc2396.txt</a></p>
+<h6 id="rfc2732">[RFC2732]</h6>
+<p>Hinden R, Carpenter B, Masinter L, Format for Literal IPv6 Addresses
+in URL&#39;s, <a href="https://www.ietf.org/rfc/rfc2732.txt">https://www.ietf.org/rfc/rfc2732.txt</a></p>
+<h6 id="rfc3198">[RFC3198]</h6>
+<p>IETF RFC 3198: Terminology for Policy-Based Management, November
+2001. <a href="https://www.ietf.org/rfc/rfc3198.txt">https://www.ietf.org/rfc/rfc3198.txt</a></p>
+<h6 id="rfc8174">[RFC8174]</h6>
+<p><em>Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words</em>,
+BCP 14, RFC 8174, May 2017. [Online]. Available: <a href="https://www.rfc-editor.org/info/rfc8174">https://www.rfc-editor.org/info/rfc8174</a></p>
+<h6 id="rfc9535">[RFC9535]</h6>
+<p>RFC 9535, <em>JSONPath: Query Expressions for JSON</em>, February
+2024. [Online]. Available: <a href="https://datatracker.ietf.org/doc/html/rfc9535">https://datatracker.ietf.org/doc/html/rfc9535</a></p>
+<h6 id="uax15">[UAX15]</h6>
+<p>Mark Davis, Martin Dürst, Unicode Standard Annex #15: Unicode
+Normalization Forms, Unicode 5.1, <a href="https://unicode.org/reports/tr15/">https://unicode.org/reports/tr15/</a></p>
+<h6 id="utr36">[UTR36]</h6>
+<p>Davis, Mark, Suignard, Michel, Unicode Technical Report #36: Unicode
+Security Considerations, <a href="https://www.unicode.org/reports/tr36/">https://www.unicode.org/reports/tr36/</a></p>
+<h6 id="xacmladmin">[XACMLAdmin]</h6>
+<p>OASIS Committee Draft 03, XACML v3.0 Administration and Delegation
+Profile Version 1.0. 11 March 2010, <a href="https://docs.oasis-open.org/xacml/3.0/xacml-3.0-administration-v1-spec-cd-03-en.doc">https://docs.oasis-open.org/xacml/3.0/xacml-3.0-administration-v1-spec-cd-03-en.doc</a></p>
+<h6 id="xf">[XF]</h6>
+<p>XPath and XQuery Functions and Operators 3.1, 21 March 2017, <a href="https://www.w3.org/TR/2017/REC-xpath-functions-31-20170321/">https://www.w3.org/TR/2017/REC-xpath-functions-31-20170321/</a></p>
+<h6 id="xml">[XML]</h6>
+<p>Bray, Tim, et.al. eds, Extensible Markup Language (XML) 1.0 (Fifth
+Edition), W3C Recommendation 26 November 2008, <a href="https://www.w3.org/TR/2008/REC-xml-20081126/">https://www.w3.org/TR/2008/REC-xml-20081126/</a></p>
+<h6 id="xmlid">[XMLid]</h6>
+<p>Marsh, Jonathan, et.al. eds, xml:id Version 1.0. W3C Recommendation 9
+September 2005, <a href="https://www.w3.org/TR/2005/REC-xml-id-20050909/">https://www.w3.org/TR/2005/REC-xml-id-20050909/</a></p>
+<h6 id="xs">[XS]</h6>
+<p>XML Schema 1.1, parts 1 and 2. Available at: <a href="https://www.w3.org/TR/xmlschema11-1/">https://www.w3.org/TR/xmlschema11-1/</a>
+and <a href="https://www.w3.org/TR/xmlschema11-2/">https://www.w3.org/TR/xmlschema11-2/</a></p>
+<h6 id="xpath">[XPath]</h6>
+<p>XML Path Language (XPath) 3.1, W3C Recommendation 21 March 2017, <a href="https://www.w3.org/TR/xpath-31/">https://www.w3.org/TR/xpath-31/</a></p>
+<h6 id="xpathfunc">[XPathFunc]</h6>
+<p>W3C XQuery, XPath, and XSLT Functions and Operators Namespace
+Document (XPath and XQuery Functions and Operators 3.1) 21 March 2017,
+<a href="https://www.w3.org/2005/xpath-functions/">https://www.w3.org/2005/xpath-functions/</a></p>
+<h6 id="xslt">[XSLT]</h6>
+<p>XSL Transformations (XSLT) Version 1.0, W3C Recommendation 16
+November 1999, <a href="https://www.w3.org/TR/xslt/">https://www.w3.org/TR/xslt/</a></p>
+<h2 id="b2-informative-references">B.2 Informative References</h2>
+<p>The following referenced documents are not required for the
+application of this document but may assist the reader with regard to a
+particular subject area.</p>
+<h6 id="cm">[CM]</h6>
+<p>Character Model for the World Wide Web: String Matching W3C Working
+Group Note 11 August 2021, <a href="https://www.w3.org/TR/charmod-norm/">https://www.w3.org/TR/charmod-norm/</a>,
+World Wide Web Consortium.</p>
+<h6 id="hinton94">[Hinton94]</h6>
+<p>Hinton, H, M, Lee, E, S, The Compatibility of Policies, Proceedings
+2nd ACM Conference on Computer and Communications Security, Nov 1994,
+Fairfax, Virginia, USA.</p>
+<h6 id="nistir8318">[NISTIR8318]</h6>
+<p>Black, P. (2020), DADS: The On-Line Dictionary of Algorithms and Data
+Structures, NIST Interagency/Internal Report (NISTIR), National
+Institute of Standards and Technology, Gaithersburg, MD, <a href="https://doi.org/10.6028/NIST.IR.8318">online</a> (Accessed
+December 16, 2025)</p>
+<h6 id="sloman94">[Sloman94]</h6>
+<p>Sloman, M. Policy Driven Management for Distributed Systems. Journal
+of Network and Systems Management, Volume 2, part 4. Plenum Press.
+1994.</p>
+<h6 id="xacml">[XACML]</h6>
+<p><em>eXtensible Access Control Markup Language (XACML) Version 3.0
+Plus Errata 01</em>. Edited by Erik Rissanen. OASIS Standard
+incorporating Approved Errata. <a href="https://docs.oasis-open.org/xacml/3.0/xacml-3.0-core-spec-en.html">https://docs.oasis-open.org/xacml/3.0/xacml-3.0-core-spec-en.html</a>.</p>
+<h6 id="entities">[ENTITIES]</h6>
+<p><em>XACML v3.0 Related and Nested Entities Profile Version 1.0</em>.
+Edited by Steven Legg. 16 February 2021. OASIS Committee Specification
+02. <a href="https://docs.oasis-open.org/xacml/xacml-3.0-related-entities/v1.0/cs02/xacml-3.0-related-entities-v1.0-cs02.html">https://docs.oasis-open.org/xacml/xacml-3.0-related-entities/v1.0/cs02/xacml-3.0-related-entities-v1.0-cs02.html</a>.
+Latest stage: <a href="https://docs.oasis-open.org/xacml/xacml-3.0-related-entities/v1.0/xacml-3.0-related-entities-v1.0.html">https://docs.oasis-open.org/xacml/xacml-3.0-related-entities/v1.0/xacml-3.0-related-entities-v1.0.html</a>.</p>
+<hr />
+<h1 id="annex-c-acal-identifiers">Annex C ACAL Identifiers</h1>
+<p>(This annex forms an integral part of this Specification.)</p>
+<p>This section defines standard identifiers for commonly used
+definitions.</p>
+<h2 id="c1-acal-namespaces">C.1 ACAL Namespaces</h2>
+<p>This ACAL Profile is defined using this identifier.</p>
+<p><code>urn:oasis:names:tc:acal:1.0:jsonpath:schema</code></p>
+<hr />
+<h1 id="annex-d-how-to-generate-html-and-pdf-versions">Annex D How to
+generate HTML and PDF versions</h1>
+<h2 id="online-generation">Online generation</h2>
+<p>HTML/PDF versions are generated automatically online via Github
+Actions after each update pushed to the main branch of <a href="https://github.com/oasis-tcs/xacml-spec/">OASIS XACML TC Github
+repository</a>. Go to Github Actions on the github repository, then go
+to the latest workflow run, and, if the run succeeded, the summary
+should display the links to the generated HTML/PDF documents.</p>
+<h2 id="offline-generation">Offline generation</h2>
+<h3 id="prerequisites">Prerequisites</h3>
+<p>Install Pandoc, Graphviz and PlantUML on your system; or simply use
+Docker with the following shell alias:</p>
+<pre><code>$ alias pandoc=&#39;docker run --rm --volume &quot;$(pwd):/data&quot; cdang/pandoc-plantuml&#39;</code></pre>
+<p><em>The Dockerfile (named <code>Dockerfile</code>) of the docker
+image used in the alias above is provided in the <a href="pandoc">pandoc</a> folder next to this markdown file for your
+convenience if you wish to build it yourself.</em></p>
+<p>OASIS staff are currently using pandoc 3.0 from <a href="https://github.com/jgm/pandoc/releases/tag/3.0">https://github.com/jgm/pandoc/releases/tag/3.0</a>.</p>
+<p>Git clone or get a local copy of <a href="https://github.com/oasis-tcs/xacml-spec/">OASIS XACML TC Github
+repository</a>, open a terminal and <strong>change your working
+directory to the root directory of your local copy of the
+repository</strong>.</p>
+<h3 id="css-stylesheet">CSS stylesheet</h3>
+<p>The generation command uses a CSS stylesheet file (<code>-c</code>
+argument) provided by OASIS. It may be changed to one of these (or the
+local version in the <code>styles</code> folder) to get a different
+style of output:</p>
+<ul>
+<li><a href="https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3.css">https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3.css</a></li>
+<li><a href="https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3a.css">https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3a.css</a>
+(this one produces HTML that resembles the github display more closely,
+especially for blocks of code) This template already includes a
+reference (in HTML code) to this .css file.</li>
+</ul>
+<h3 id="html-generation">HTML generation</h3>
+<p>Run the following command line to generate HTML from this markdown
+file (<code>acal-jsonpath-v1.0-csd01.md</code>) to an output file
+<code>/tmp/acal-jsonpath-v1.0-csd01.html</code>:</p>
+<pre class="console"><code>$ pandoc -f gfm+definition_lists -t html -c styles/markdown-styles-v1.7.3a.css -s --lua-filter pandoc/diagram.lua --defaults pandoc/defaults.yaml --embed-resources --metadata title=&quot; &quot; -o /tmp/acal-jsonpath-v1.0-csd01.html acal-jsonpath-v1.0-csd01.md </code></pre>
+<p>Note this command generates a Table of Contents (TOC) in HTML which
+is located at the top of the HTML document, and which requires
+additional editing in order to be published in the expected OASIS style.
+This editing will be handled by OASIS staff during publication.</p>
+<h3 id="pdf-generation">PDF generation</h3>
+<p>For PDF output (file <code>/tmp/acal-jsonpath-v1.0-csd01.pdf</code>),
+the command line is the following (different <code>-t</code> and
+<code>-H</code> arguments):</p>
+<pre class="console"><code>$ pandoc -f gfm+definition_lists -t pdf -c styles/markdown-styles-v1.7.3a.css -H pandoc/custom_latex_header_for_pandoc_pdf_output.tex -s -L pandoc/diagram.lua --defaults pandoc/defaults.yaml --metadata title=&quot; &quot; --embed-resources -o /tmp/acal-jsonpath-v1.0-csd01.pdf acal-jsonpath-v1.0-csd01.md </code></pre>
+<h1 id="appendix-1-acknowledgments">Appendix 1 Acknowledgments</h1>
+<p>(This appendix does not form an integral part of this Specification
+and is informational.)</p>
+<!-- From OASIS Open Specification Template Instructions:
+
+
+All parts in this appendix are optional to the TC. Individuals or companies, past or present, may request that their name and/or affiliation is not included in this list. 
+
+
+-->
+
+<h2 id="leadership">Leadership</h2>
+<p>The following individuals have had significant leadership positions
+during the development of this document, not just this version of the
+document, and they are gratefully acknowledged:</p>
+<!-- From OASIS Open Specification Template Instructions:
+
+
+This section **SHOULD** include the leadership (chairs, sub committees chairs, secretaries, editors, etc.) of this document, and not just for this version of the document, even if they are no longer members of the TC.
+
+- Position, First Name Last Name, Company, [optional time frames] 
+
+-->
+
+<ul>
+<li>Chairs
+<ul>
+<li>Bill Parducci, Individual</li>
+</ul></li>
+<li>Secretaries
+<ul>
+<li>Bill Parducci, Individual</li>
+</ul></li>
+<li>Editors
+<ul>
+<li>Steven Legg, ViewDS Identity Solutions</li>
+<li>Cyril Dangerville, THALES</li>
+</ul></li>
+</ul>
+<h2 id="special-thanks">Special Thanks</h2>
+<p>The following individuals have made substantial contributions to this
+document, not just this version of the document, and their contributions
+are gratefully acknowledged:</p>
+<!-- From OASIS Open Specification Template Instructions:
+
+
+This section **SHOULD** include individuals that have made significant contributions to this document, and not just this version of the document, even if they are no longer members of the TC or were never members of the TC but sent in a contribution through one of the public comment methods. 
+
+-->
+
+<ul>
+<li>Steven Legg, ViewDS Identity Solutions</li>
+<li>Cyril Dangerville, THALES</li>
+</ul>
+<h2 id="participants">Participants</h2>
+<p>The following individuals were members of this committee during the
+creation of this document, not just this version of the document, and
+their contributions are gratefully acknowledged:</p>
+<p><strong>XACML TC Members:</strong></p>
+<ul>
+<li>Hal Lockhart, Individual</li>
+<li>Bill Parducci, Individual</li>
+<li>Steven Legg, ViewDS Identity Solutions</li>
+<li>Cyril Dangerville, THALES</li>
+</ul>
+<hr />
+<h1 id="appendix-2-changes-from-previous-version">Appendix 2 Changes
+From Previous Version</h1>
+<p>(This appendix does not form an integral part of this Specification
+and is informational.)</p>
+<!-- From OASIS Open Specification Template Instructions: 
+
+The appendix **SHOULD** contain any explanatory text about the reason for this version including any major changes. The level of detail that is included in this appendix is up to the editors and chairs of the TC to determine. This appendix is **REQUIRED**, if there are no changes then one is to put "None." In addition to any descriptive text, all major changes **SHOULD** be in a bulleted list so that reviewers and implementers can easily understand what they need to know.
+
+-->
+
+<p>This is the first version of this profile.</p>
+<h2 id="revision-history">Revision History</h2>
+<p>Latest revision history can be obtained from <a href="https://github.com/oasis-tcs/xacml-spec/blob/v1.0-csd01/acal-jsonpath-v1.0-csd01.md">OASIS
+XACML TC&#39;s github repository</a>.</p>
+<!--
+- \< Date in yyyy-mm-dd format \>, \< Revision number \>  
+- \< Date in yyyy-mm-dd format \>, \< Revision number \>
+-->
+
+<!-- The following centered line represents the end of the document -->  
+
+<p>________________________________________</p>
+</body>
+</html>
