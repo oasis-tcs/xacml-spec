@@ -15,23 +15,22 @@
 
 ### This version
 
-<!-- TODO: update the links -->
-- [ link to authoritative version of the published document ] (Authoritative)  
-- [ links to one or more other versions of the published document (e.g., MD, PDF, Word, HTML, etc.) ] 
+- https://docs.oasis-open.org/xacml/acal/acal/profiles/xpath/v1.0/csd01/acal-xpath-v1.0-csd01.html (Authoritative) \
+- https://docs.oasis-open.org/xacml/acal/acal/profiles/xpath/v1.0/csd01/acal-xpath-v1.0-csd01.pdf \
+- https://docs.oasis-open.org/xacml/acal/acal/profiles/xpath/v1.0/csd01/acal-xpath-v1.0-csd01.md
 
 
 ### Previous version
 
 
-- [ link to authoritative version of the published document ] (Authoritative)  
-- [ links to one or more other versions of the published document (e.g., MD, PDF, Word, HTML, etc.) ] 
-
+N/A
 
 ### Latest version
 
 
-- [ link to authoritative version of the published document ] (Authoritative)  
-- [ links to one or more other versions of the published document (e.g., MD, PDF, Word, HTML, etc.) ] 
+- https://docs.oasis-open.org/xacml/acal/acal/profiles/xpath/v1.0/csd01/acal-xpath-v1.0-csd01.html (Authoritative) \
+- https://docs.oasis-open.org/xacml/acal/acal/profiles/xpath/v1.0/csd01/acal-xpath-v1.0-csd01.pdf \
+- https://docs.oasis-open.org/xacml/acal/acal/profiles/xpath/v1.0/csd01/acal-xpath-v1.0-csd01.md
 
 
 ### Technical Committee
@@ -71,7 +70,7 @@ When referencing this document, the following citation format should be used:
 
 **[ACAL-XPath-1.0]**
 _ACAL v1.0 XPath Profile Version 1.0_.
-Edited by Steven Legg and Cyril Dangerville. 17 February 2026. OASIS Committee Specification Draft 01.
+Edited by Steven Legg and Cyril Dangerville. 17 February 2026. OASIS Committee Specification Draft 01. https://docs.oasis-open.org/xacml/acal/acal/profiles/xpath/v1.0/csd01/acal-xpath-v1.0-csd01.html . Latest stage: https://docs.oasis-open.org/xacml/acal/acal/profiles/xpath/v1.0/csd01/acal-xpath-v1.0-csd01.html .
 
 
 ### Related Work
@@ -1215,22 +1214,22 @@ The generation command uses a CSS stylesheet file (`-c` argument) provided by OA
 
 ### HTML generation
 
-Run the following command line to generate HTML from this markdown file (`acal-v1.0-xpath.md`) to an output file `/tmp/acal-v1.0-xpath.html`:
+Run the following command line to generate HTML from this markdown file (`acal-xpath-v1.0-csd01.md`) to an output file `/tmp/acal-xpath-v1.0-csd01.html`:
 
 <!-- fenced_code_attributes pandoc extension is used for numberine lines in code blocks; fenced_code_attributes is not supported for 'gfm' format. Using 'markdown' instead. -->
 ```console
-$ pandoc -f markdown+definition_lists+fenced_code_attributes -c styles/markdown-styles-v1.7.3a.css --standalone --filter pandoc-include --lua-filter pandoc/diagram.lua --defaults pandoc/defaults.yaml --embed-resources --metadata title=" " -t html -o /tmp/acal-v1.0-xpath.html acal-v1.0-xpath.md 
+$ pandoc -f markdown+definition_lists+fenced_code_attributes -c styles/markdown-styles-v1.7.3a.css --standalone --filter pandoc-include --lua-filter pandoc/diagram.lua --defaults pandoc/defaults.yaml --embed-resources --metadata title=" " -t html -o /tmp/acal-xpath-v1.0-csd01.html acal-xpath-v1.0-csd01.md
 ```
 
 Note this command generates a Table of Contents (TOC) in HTML which is located at the top of the HTML document, and which requires additional editing in order to be published in the expected OASIS style. This editing will be handled by OASIS staff during publication.
 
 ### PDF generation
 
-For PDF output (file `/tmp/acal-v1.0-xpath.pdf`), the command line is the following (different `-t` and `-H` arguments):
+For PDF output (file `/tmp/acal-xpath-v1.0-csd01.pdf`), the command line is the following (different `-t` and `-H` arguments):
 
 <!-- fenced_code_attributes pandoc extension is used for numberine lines in code blocks; fenced_code_attributes is not supported for 'gfm' format. Using 'markdown' instead. -->
 ```console
-$ pandoc -f markdown+definition_lists+fenced_code_attributes -c styles/markdown-styles-v1.7.3a.css -H pandoc/custom_latex_header_for_pandoc_pdf_output.tex --standalone --filter pandoc-include --lua-filter pandoc/diagram.lua --defaults pandoc/defaults.yaml --embed-resources --metadata title=" " -t pdf -o /tmp/acal-v1.0-xpath.pdf acal-v1.0-xpath.md
+$ pandoc -f markdown+definition_lists+fenced_code_attributes -c styles/markdown-styles-v1.7.3a.css -H pandoc/custom_latex_header_for_pandoc_pdf_output.tex --standalone --filter pandoc-include --lua-filter pandoc/diagram.lua --defaults pandoc/defaults.yaml --embed-resources --metadata title=" " -t pdf -o /tmp/acal-xpath-v1.0-csd01.pdf acal-xpath-v1.0-csd01.md
 ```
 
 # Appendix 1 Acknowledgments
@@ -1332,7 +1331,7 @@ This ACAL Profile is a successor to the set of XPath-based features of XACML 3.0
 
 ## Revision History
 
-Latest revision history can be obtained from [OASIS XACML TC's code repository](https://github.com/oasis-tcs/xacml-spec/commits/main/acal-v1.0-xpath.md).
+Latest revision history can be obtained from [OASIS XACML TC's code repository](https://github.com/oasis-tcs/xacml-spec/blob/v1.0-csd01/acal-xpath-v1.0-csd01.md).
 
 <!--
 - \< Date in yyyy-mm-dd format \>, \< Revision number \>  

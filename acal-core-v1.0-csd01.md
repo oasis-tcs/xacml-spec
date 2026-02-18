@@ -3170,7 +3170,7 @@ A `ShortIdSetType` object contains the following properties:
 
 : A sequence of `ShortIdType` objects, each defining a short identifier in this set.
 
-A predefined set of short identifiers for the URIs defined in this specification is provided as a convenience, in both XML (`xacml-core-v4.0-identifiers.xml`) and JSON (`xacml-core-v4.0-identifiers.json`) representations. Use of this set is OPTIONAL.
+A predefined set of short identifiers for the URIs defined in this specification is provided as a convenience, in both XML (`acal-core-xacml-v4.0-identifiers.xml`) and JSON (`acal-core-xacml-v4.0-identifiers.json`) representations. Use of this set is OPTIONAL.
 
 <a name="shortidtype"/>
 
@@ -8120,20 +8120,20 @@ The generation command uses a CSS stylesheet file (`-c` argument) provided by OA
 
 ### HTML generation
 
-Run the following command line to generate HTML from this markdown file (named `acal-v1.0.md`) to an output file `/tmp/acal-v1.0.html`:
+Run the following command line to generate HTML from this markdown file (named `acal-core-v1.0-csd01.md`) to an output file `/tmp/acal-core-v1.0-csd01.html`:
 
 ```console
-$ pandoc -f gfm+definition_lists -t html -c styles/markdown-styles-v1.7.3a.css -s --lua-filter pandoc/diagram.lua --defaults pandoc/defaults.yaml --embed-resources --metadata title=" " -o /tmp/acal-v1.0-csd01.html acal-v1.0.md
+$ pandoc -f gfm+definition_lists -t html -c styles/markdown-styles-v1.7.3a.css -s --lua-filter pandoc/diagram.lua --defaults pandoc/defaults.yaml --embed-resources --metadata title=" " -o /tmp/acal-core-v1.0-csd01.html acal-core-v1.0-csd01.md
 ```
 
 Note this command generates a Table of Contents (TOC) in HTML which is located at the top of the HTML document, and which requires additional editing in order to be published in the expected OASIS style. This editing will be handled by OASIS staff during publication.
 
 ### PDF generation
 
-For PDF output (file `/tmp/acal-v1.0.pdf`), the command line is the following (different `-t` and `-H` arguments):
+For PDF output (file `/tmp/acal-core-v1.0-csd01.pdf`), the command line is the following (different `-t` and `-H` arguments):
 
 ```console
-$ pandoc -f gfm+definition_lists -t pdf -c styles/markdown-styles-v1.7.3a.css -H pandoc/custom_latex_header_for_pandoc_pdf_output.tex -s -L pandoc/diagram.lua --defaults pandoc/defaults.yaml --metadata title=" " --embed-resources -o /tmp/acal-v1.0.pdf acal-v1.0.md
+$ pandoc -f gfm+definition_lists -t pdf -c styles/markdown-styles-v1.7.3a.css -H pandoc/custom_latex_header_for_pandoc_pdf_output.tex -s -L pandoc/diagram.lua --defaults pandoc/defaults.yaml --metadata title=" " --embed-resources -o /tmp/acal-core-v1.0-csd01.pdf acal-core-v1.0-csd01.md
 ```
 
 
@@ -8294,7 +8294,7 @@ ACAL 1.0 is a successor to XACML 3.0. ACAL 1.0 differs from XACML 3.0 in the fol
 
 ## Revision History
 
-Latest revision history can be obtained from [OASIS XACML TC's github repository](https://github.com/oasis-tcs/xacml-spec/commits/main/acal-v1.0.md).
+Latest revision history can be obtained from [OASIS XACML TC's github repository](https://github.com/oasis-tcs/xacml-spec/blob/v1.0-csd01/acal-core-v1.0-csd01.md).
 
 <!--
 - \< Date in yyyy-mm-dd format \>, \< Revision number \>  

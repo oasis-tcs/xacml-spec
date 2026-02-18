@@ -13,25 +13,22 @@
 ## 17 February 2026
 
 
-### This version
+### This version:
 
 
-- [ link to authoritative version of the published document ] (Authoritative)  
-- [ links to one or more other versions of the published document (e.g., MD, PDF, Word, HTML, etc.) ] 
+- https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/csd01/acal-jsonpath-v1.0-csd01.html (Authoritative) \
+- https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/csd01/acal-jsonpath-v1.0-csd01.pdf \
+- https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/csd01/acal-jsonpath-v1.0-csd01.md
 
+### Previous version:
 
-### Previous version
+N/A
 
+### Latest version:
 
-- [ link to authoritative version of the published document ] (Authoritative)  
-- [ links to one or more other versions of the published document (e.g., MD, PDF, Word, HTML, etc.) ] 
-
-
-### Latest version
-
-
-- [ link to authoritative version of the published document ] (Authoritative)  
-- [ links to one or more other versions of the published document (e.g., MD, PDF, Word, HTML, etc.) ] 
+- https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/csd01/acal-jsonpath-v1.0-csd01.html (Authoritative) \
+- https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/csd01/acal-jsonpath-v1.0-csd01.pdf \
+- https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/csd01/acal-jsonpath-v1.0-csd01.md
 
 
 ### Technical Committee
@@ -71,7 +68,7 @@ When referencing this document, the following citation format should be used:
 
 **[ACAL-JSONPath-1.0]**
 _ACAL v1.0 JSONPath Profile Version 1.0_.
-Edited by Steven Legg and Cyril Dangerville. 17 February 2026. OASIS Committee Specification Draft 01.
+Edited by Steven Legg and Cyril Dangerville. 17 February 2026. OASIS Committee Specification Draft 01. https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/csd01/acal-jsonpath-v1.0-csd01.html. Latest stage: https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/csd01/acal-jsonpath-v1.0-csd01.html.
 
 
 ### Related Work
@@ -752,20 +749,20 @@ The generation command uses a CSS stylesheet file (`-c` argument) provided by OA
 
 ### HTML generation
 
-Run the following command line to generate HTML from this markdown file (`acal-v1.0-jsonpath.md`) to an output file `/tmp/acal-v1.0-jsonpath.html`:
+Run the following command line to generate HTML from this markdown file (`acal-jsonpath-v1.0-csd01.md`) to an output file `/tmp/acal-jsonpath-v1.0-csd01.html`:
 
 ```console
-$ pandoc -f gfm+definition_lists -t html -c styles/markdown-styles-v1.7.3a.css -s --lua-filter pandoc/diagram.lua --defaults pandoc/defaults.yaml --embed-resources --metadata title=" " -o /tmp/acal-v1.0-jsonpath.html acal-v1.0-jsonpath.md 
+$ pandoc -f gfm+definition_lists -t html -c styles/markdown-styles-v1.7.3a.css -s --lua-filter pandoc/diagram.lua --defaults pandoc/defaults.yaml --embed-resources --metadata title=" " -o /tmp/acal-jsonpath-v1.0-csd01.html acal-jsonpath-v1.0-csd01.md 
 ```
 
 Note this command generates a Table of Contents (TOC) in HTML which is located at the top of the HTML document, and which requires additional editing in order to be published in the expected OASIS style. This editing will be handled by OASIS staff during publication.
 
 ### PDF generation
 
-For PDF output (file `/tmp/acal-v1.0-jsonpath.pdf`), the command line is the following (different `-t` and `-H` arguments):
+For PDF output (file `/tmp/acal-jsonpath-v1.0-csd01.pdf`), the command line is the following (different `-t` and `-H` arguments):
 
 ```console
-$ pandoc -f gfm+definition_lists -t pdf -c styles/markdown-styles-v1.7.3a.css -H pandoc/custom_latex_header_for_pandoc_pdf_output.tex -s -L pandoc/diagram.lua --defaults pandoc/defaults.yaml --metadata title=" " --embed-resources -o /tmp/acal-v1.0-jsonpath.pdf acal-v1.0-jsonpath.md 
+$ pandoc -f gfm+definition_lists -t pdf -c styles/markdown-styles-v1.7.3a.css -H pandoc/custom_latex_header_for_pandoc_pdf_output.tex -s -L pandoc/diagram.lua --defaults pandoc/defaults.yaml --metadata title=" " --embed-resources -o /tmp/acal-jsonpath-v1.0-csd01.pdf acal-jsonpath-v1.0-csd01.md 
 ```
 
 # Appendix 1 Acknowledgments
@@ -854,7 +851,7 @@ This is the first version of this profile.
 
 ## Revision History
 
-Latest revision history can be obtained from [OASIS XACML TC's github repository](https://github.com/oasis-tcs/xacml-spec/commits/main/acal-v1.0-jsonpath.md).
+Latest revision history can be obtained from [OASIS XACML TC's github repository](https://github.com/oasis-tcs/xacml-spec/blob/v1.0-csd01/acal-jsonpath-v1.0-csd01.md).
 
 <!--
 - \< Date in yyyy-mm-dd format \>, \< Revision number \>  

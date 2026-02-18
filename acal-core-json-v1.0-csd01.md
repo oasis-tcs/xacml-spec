@@ -6,28 +6,28 @@
 
 ## Committee Specification Draft 01
 
-<!-- TODO: update the date -->
+
 ## 17 February 2026
 
 ### This version
 
-<!-- TODO: fix the URLs -->
-- [ link to authoritative version of the published document ] (Authoritative)  
-- [ links to one or more other versions of the published document (e.g., MD, PDF, Word, HTML, etc.) ] 
+- https://docs.oasis-open.org/xacml/acal/jacal/core/v1.0/csd01/acal-core-json-v1.0-csd01.html (Authoritative) \- 
+- https://docs.oasis-open.org/xacml/acal/jacal/core/v1.0/csd01/acal-core-json-v1.0-csd01.pdf \
+- https://docs.oasis-open.org/xacml/acal/acal/profiles/xpath/v1.0/csd01/acal-xpath-v1.0-csd01.md
 
 
 ### Previous version
 
 
-- [ link to authoritative version of the published document ] (Authoritative)  
-- [ links to one or more other versions of the published document (e.g., MD, PDF, Word, HTML, etc.) ] 
+N/A
 
 
 ### Latest version
 
 
-- [ link to authoritative version of the published document ] (Authoritative)  
-- [ links to one or more other versions of the published document (e.g., MD, PDF, Word, HTML, etc.) ] 
+- https://docs.oasis-open.org/xacml/acal/jacal/core/v1.0/csd01/acal-core-json-v1.0-csd01.html (Authoritative) \
+- https://docs.oasis-open.org/xacml/acal/jacal/core/v1.0/csd01/acal-core-json-v1.0-csd01.pdf \
+- https://docs.oasis-open.org/xacml/acal/acal/profiles/xpath/v1.0/csd01/acal-xpath-v1.0-csd01.md
 
 
 ### Technical Committee:
@@ -51,9 +51,9 @@
 ### Additional artifacts:
 
 This document is one component of a Work Product that also includes:
-<!-- TODO: replace with URLs? -->
-* Core JSON schema:  [jacal-core-v1.0-schema.json](jacal-core-v1.0-schema.json)
-* Short identifier set: [jacal-core-v1-identifiers.json](jacal-core-v1.0-identifiers.json)
+
+* Core JSON schema:  [acal-core-json-v1.0-schema.json](acal-core-json-v1.0-schema.json)
+* Short identifier set: [acal-core-json-v1.0-identifiers.json](acal-core-json-v1.0-identifiers.json)
 
 <!-- Note: Any normative computer language definitions that are part of the Work Product, such as XML instances, schemas and Java(TM) code, including fragments of such, must be (a) well formed and valid, (b) provided in separate plain text files, (c) referenced from the Work Product; and (d) where any definition in these separate files disagrees with the definition found in the specification, the definition in the separate file prevails. Remove this note before submitting for publication.)
 -->
@@ -69,7 +69,7 @@ When referencing this specification the following citation format should be used
 
 **[JACAL-Core-1.0]**
 _ACAL v1.0 JSON Representation Profile (JACAL) Version 1.0_.
-Edited by Steven Legg and Cyril Dangerville. 17 February 2026. OASIS Committee Specification Draft 01.
+Edited by Steven Legg and Cyril Dangerville. 17 February 2026. OASIS Committee Specification Draft 01. https://docs.oasis-open.org/xacml/acal/jacal/core/v1.0/csd01/acal-core-json-v1.0-csd01.html . Latest stage: https://docs.oasis-open.org/xacml/acal/jacal/core/v1.0/csd01/acal-core-json-v1.0-csd01.html.
 
 
 ### Related work:
@@ -370,7 +370,7 @@ The list of changes from the previous version and any revision history can be fo
 # 5 Syntax (normative, with the exception of the schema fragments)
 
 The next sections describe the rules that SHALL be applied for mapping the [[ACAL-Core-1.0](#acal-core-10)] agnostic model (UML-based) to [JSON schema Draft 2020-12](#jsonschemacore) definitions for this JSON representation (JACAL).
-These rules have been applied to produce JACAL's core JSON schema in [Annex D](#annex-d-json-schema-normative) (also in the [Core JSON schema file](jacal-core-v1.0-schema.json) accompanying this document) from [[ACAL-Core-1.0](#acal-core-10)] core model.
+These rules have been applied to produce JACAL's core JSON schema in [Annex D](#annex-d-json-schema-normative) (also in the [Core JSON schema file](acal-core-json-v1.0-schema.json) accompanying this document) from [[ACAL-Core-1.0](#acal-core-10)] core model.
 
 We consider `PolicyType`, `BundleType`, `RequestType` and `ResponseType` as the root JSON objects to be used by JACAL users, therefore the final JACAL core schema has the following structure:
 
@@ -612,7 +612,7 @@ Therefor, the `ValueType`'s JSON schema SHALL be enhanced as follows in order to
   },
   "StructuredValueTypeTreeEmpty": {
     "$dynamicAnchor": "StructuredValueTypeExtensions",
-    "$comment": "No StructuredValueType extension by default. Create your own implementation-specific schema that overrides this $dynamicAnchor to support such extensions (e.g. XPathExpressionValueType from XPath Profile). See jacal-root-schema-example-using-xpath-and-jsonpath-profiles.json for example.",
+    "$comment": "No StructuredValueType extension by default. Create your own implementation-specific schema that overrides this $dynamicAnchor to support such extensions (e.g. XPathExpressionValueType from XPath Profile). See jacal-root-schema-example-using-xpath-and-jsonpath-profiles.json in examples folder.",
     "not": true
   }
 ```
@@ -933,7 +933,7 @@ In this example, we consider an ACAL implementation that supports the `Attribute
 !include examples/jacal-root-schema-example-using-jsonpath-profile-only.json
 ```
 
-This schema refers to (and therefore depends on) the [JSONPath Profile's JSON schema](jacal-jsonpath-v1.0-schema.json) by its identifier `urn:oasis:names:tc:jacal:1.0:jsonpath:schema`, which is also provided by the XACML TC with the core schema.
+This schema refers to (and therefore depends on) the [JSONPath Profile's JSON schema](acal-jsonpath-json-v1.0-schema.json) by its identifier `urn:oasis:names:tc:jacal:1.0:jsonpath:schema`, which is also provided by the XACML TC with the core schema.
 
 
 ### 5.4.2 Example using extensions from multiple ACAL Profiles
@@ -944,7 +944,7 @@ In this example, we consider an ACAL implementation that supports various extens
 !include examples/jacal-root-schema-example-using-xpath-and-jsonpath-profiles.json
 ```
 
-This schema refers to (and therefore depends on) to both the [JSONPath Profile's JSON schema](jacal-jsonpath-v1.0-schema.json) by its identifier `urn:oasis:names:tc:jacal:1.0:jsonpath:schema` and [XPath Profile's JSON schema](jacal-xpath-v1.0-schema.json) by its identifier `urn:oasis:names:tc:jacal:1.0:xpath:schema`, which are also provided by the XACML TC with the core schema.
+This schema refers to (and therefore depends on) to both the [JSONPath Profile's JSON schema](acal-jsonpath-json-v1.0-schema.json) by its identifier `urn:oasis:names:tc:jacal:1.0:jsonpath:schema` and [XPath Profile's JSON schema](acal-xpath-json-v1.0-schema.json) by its identifier `urn:oasis:names:tc:jacal:1.0:xpath:schema`, which are also provided by the XACML TC with the core schema.
 
 ### 5.4.3 Example combining a custom extension with a standard profile-defined extension
 
@@ -1343,7 +1343,7 @@ The JACAL core schema is defined using this identifier (`$id`):
 This section includes the JSON Schema for the JACAL syntax defined in this specification, more particularly in section 5 (i.e. obtained by applying the ACAL-to-JSON mapping rules):
 
 ```json
-!include jacal-core-v1.0-schema.json
+!include acal-core-json-v1.0-schema.json
 ```
 
 # Annex E How to generate HTML and PDF versions
@@ -1368,20 +1368,20 @@ The generation command uses a CSS stylesheet file (`-c` argument) provided by OA
 
 ## HTML generation
 
-Run the following command line to generate HTML from this markdown file (named `jacal-core-v1.0.md`) to an output file `/tmp/jacal-core-v1.0.html` :
+Run the following command line to generate HTML from this markdown file (named `acal-core-json-v1.0-csd01.md`) to an output file `/tmp/acal-core-json-v1.0-csd01.html` :
 
 ```console
-$ pandoc -s --embed-resources -f gfm+definition_lists -c styles/markdown-styles-v1.7.3a.css -F pandoc-include -M lang=en -M title=" " -t html -o /tmp/jacal-core-v1.0.html jacal-core-v1.0.md
+$ pandoc -s --embed-resources -f gfm+definition_lists -c styles/markdown-styles-v1.7.3a.css -F pandoc-include -M lang=en -M title=" " -t html -o /tmp/acal-core-json-v1.0-csd01.html acal-core-json-v1.0-csd01.md
 ```
 
 Note this command generates a Table of Contents (TOC) in HTML which is located at the top of the HTML document, and which requires additional editing in order to be published in the expected OASIS style. This editing will be handled by OASIS staff during publication.
 
 ## PDF generation
 
-For PDF output, the command line is the following (different `-t` and `-H` arguments, and output file `/tmp/jacal-core-v1.0.pdf`):
+For PDF output, the command line is the following (different `-t` and `-H` arguments, and output file `/tmp/acal-core-json-v1.0-csd01.pdf`):
 
 ```console
-$ pandoc -s --embed-resources -f gfm+definition_lists -c styles/markdown-styles-v1.7.3a.css -F pandoc-include -H pandoc/custom_latex_header_for_pandoc_pdf_output.tex -M lang=en -M title=" " -t pdf -o /tmp/jacal-core-v1.0.pdf jacal-core-v1.0.md
+$ pandoc -s --embed-resources -f gfm+definition_lists -c styles/markdown-styles-v1.7.3a.css -F pandoc-include -H pandoc/custom_latex_header_for_pandoc_pdf_output.tex -M lang=en -M title=" " -t pdf -o /tmp/acal-core-json-v1.0-csd01.pdf acal-core-json-v1.0-csd01.md
 ```
 
 -------
@@ -1464,7 +1464,7 @@ None. This is the first version of the document.
 
 ## Revision History
 
-Latest revision history can be obtained from [OASIS XACML TC's github repository](https://github.com/oasis-tcs/xacml-spec/commits/main/jacal-core-v1.0.md).
+Latest revision history can be obtained from [OASIS XACML TC's github repository](https://github.com/oasis-tcs/xacml-spec/blob/v1.0-csd01/acal-core-json-v1.0-csd01.md).
 
 <!--
 - \< Date in yyyy-mm-dd format \>, \< Revision number \>  
