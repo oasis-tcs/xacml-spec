@@ -48,10 +48,11 @@ jobs:
             -c styles/markdown-styles-v1.7.3a.css 
             --standalone
             --lua-filter pandoc/diagram.lua
+            --defaults pandoc/defaults.yaml
             --embed-resources
             --metadata title=" "
-            --output output/acal-core-v1.0-csd01.html 
-            acal-core-v1.0-csd01.md
+            --output output/acal-core-v1.0-draft.html 
+            acal-core-v1.0.md
       - name: Pandoc PDF generation
         uses: docker://cdang/pandoc-plantuml
         with:
@@ -62,10 +63,11 @@ jobs:
             -H pandoc/custom_latex_header_for_pandoc_pdf_output.tex
             --standalone
             --lua-filter pandoc/diagram.lua
+            --defaults pandoc/defaults.yaml
             --embed-resources
             --metadata title=" "
-            --output output/acal-core-v1.0-csd01.pdf 
-            acal-core-v1.0-csd01.md
+            --output output/acal-core-v1.0-draft.pdf 
+            acal-core-v1.0.md
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
@@ -76,4 +78,4 @@ jobs:
         uses: actions/deploy-pages@v4
       - name: summary
         run: |
-          echo "### Check the results: https://oasis-tcs.github.io/xacml-spec/acal-core-v1.0-csd01.html | https://oasis-tcs.github.io/xacml-spec/acal-core-v1.0-csd01.pdf" >> $GITHUB_STEP_SUMMARY
+          echo "### Check the results: https://oasis-tcs.github.io/xacml-spec/acal-core-v1.0-draft.html | https://oasis-tcs.github.io/xacml-spec/acal-core-v1.0-draft.pdf" >> $GITHUB_STEP_SUMMARY
