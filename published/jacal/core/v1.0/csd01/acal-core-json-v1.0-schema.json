@@ -1,0 +1,1521 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "urn:oasis:names:tc:jacal:1.0:core:schema",
+	"title": "JSON schema for the JSON Representation of ACAL Core Version 1.0 (JACAL)",
+	"description": "Copyright © OASIS Open 2026. All Rights Reserved.  For license and copyright information, and complete status, please see Annex A which contains the License, Document Status and Notices.",
+	"examples": [
+		{
+			"Bundle": {}
+		}
+	],
+	"anyOf": [
+		{
+			"type": "object",
+			"required": [
+				"Policy"
+			],
+			"properties": {
+				"Policy": {
+					"$ref": "#/$defs/PolicyType"
+				}
+			},
+			"additionalProperties": false
+		},
+		{
+			"type": "object",
+			"required": [
+				"Bundle"
+			],
+			"properties": {
+				"Bundle": {
+					"$ref": "#/$defs/BundleType"
+				}
+			},
+			"additionalProperties": false
+		},
+		{
+			"type": "object",
+			"required": [
+				"Request"
+			],
+			"properties": {
+				"Request": {
+					"$ref": "#/$defs/RequestType"
+				}
+			},
+			"additionalProperties": false
+		},
+		{
+			"type": "object",
+			"required": [
+				"Response"
+			],
+			"properties": {
+				"Response": {
+					"$ref": "#/$defs/ResponseType"
+				}
+			},
+			"additionalProperties": false
+		}
+	],
+	"$defs": {
+		"Name": {
+			"type": "string",
+			"pattern": "^[_:A-Za-z][-._:A-Za-z0-9]*$"
+		},
+		"VersionType": {
+			"description": "Policy version (backslashes must be escaped in JSON)",
+			"type": "string",
+			"pattern": "^(0|[1-9]\\d*)(\\.(0|[1-9]\\d*)){0,3}$"
+		},
+		"VersionMatchType": {
+			"description": "Policy version match pattern (backslashes must be escaped in JSON)",
+			"type": "string",
+			"pattern": "^(0|[1-9]\\d*|\\*)(\\.(0|[1-9]\\d*|\\*|\\+)){0,3}$"
+		},
+		"ShortIdNameType": {
+			"description": "Short Identifier alias",
+			"type": "string",
+			"pattern": "^[A-Za-z][0-9A-Za-z]*(-[0-9A-Za-z]+)*$"
+		},
+		"ShortIdValueType": {
+			"description": "Short Identifier value (long identifier)",
+			"type": "string",
+			"pattern": "^[!#-;=?-\\[\\]_a-z~]*(\\{[A-Za-z][0-9A-Za-z]*(-[0-9A-Za-z]+)*\\}[!#-;=?-\\[\\]_a-z~]*)*$",
+			"minLength": 1
+		},
+		"IdentifierType": {
+			"description": "Identifier supporting Short Identifier names (Pattern needs to be improved as this allows the empty string and other undesirable identifiers, see proposals from issue #56)",
+			"type": "string",
+			"pattern": "^[^{}]*(\\{[A-Za-z][0-9A-Za-z]*(-[0-9A-Za-z]+)*\\}[^{}]*)*$"
+		},
+		"LocalIdentifierType": {
+			"description": "Local identifier, unique only within a Request, Policy or Rule",
+			"type": "string",
+			"pattern": "^_*[A-Za-z][A-Za-z_0-9]*([-.]_*[A-Za-z_0-9]*)*$"
+		},
+		"AttributeSelectorPathType": {
+			"description": "AttributeSelector Path type",
+			"type": "string",
+			"pattern": "^\\S(.*\\S)?$"
+		},
+		"EffectType": {
+			"enum": [
+				"Permit",
+				"Deny"
+			]
+		},
+		"DecisionType": {
+			"enum": [
+				"Permit",
+				"Deny",
+				"Indeterminate",
+				"NotApplicable"
+			]
+		},
+		"MediaType": {
+			"description": "Content media type (RFC 6838). The standard MediaType values defined in JACAL core specification should be used whenever applicable: 'application/xml' for XML document, and 'application/json' for JSON object (default). Or else use a name registered at IANA (RFC 6838 - https://www.iana.org/assignments/media-types/media-types.xhtml).",
+			"$comment": "The pattern is based on the ABNF syntax from section 4.2 of RFC 6838 (with the recommendation that <type-name> and <subtype-name> SHOULD be limited to 64 characters).",
+			"type": "string",
+			"pattern": "^[A-Za-z0-9][A-Za-z0-9!#$&\\-\\^_.+]{0,63}/[A-Za-z0-9][A-Za-z0-9!#$&\\-\\^_.+]{0,63}$"
+		},
+		"ContentEncodingType": {
+			"description": "Content encoding name (RFC 2045). The standard ContentEncodingType value(s) defined in JACAL core specification should be used whenever applicable: 'base64' for complex XML content. For other cases, either use one of the standard Transfer Encodings registered at IANA (RFC 4289 - https://www.iana.org/assignments/transfer-encodings/transfer-encodings.xhtml), or else, if a custom content encoding is really needed, as suggested by RFC 2045 Section 6.3, define a new one prefixed with 'x-'.",
+			"type": "string",
+			"pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+		},
+		"ShortIdType": {
+			"type": "object",
+			"required": [
+				"Name",
+				"Value"
+			],
+			"properties": {
+				"Name": {
+					"$ref": "#/$defs/ShortIdNameType"
+				},
+				"Value": {
+					"$ref": "#/$defs/ShortIdValueType"
+				}
+			},
+			"additionalProperties": false
+		},
+		"ShortIdSetType": {
+			"type": "object",
+			"required": [
+				"Id"
+			],
+			"properties": {
+				"Id": {
+					"type": "string",
+					"format": "uri-reference"
+				},
+				"ShortIdSetReference": {
+					"type": "array",
+					"minItems": 1,
+					"uniqueItems": true,
+					"items": {
+						"type": "string",
+						"format": "uri-reference"
+					}
+				},
+				"ShortId": {
+					"$comment": "TODO: add 'uniqueKeys': ['/Name'] from ArrayExt vocabulary - https://docs.json-everything.net/schema/vocabs/array-ext/",
+					"type": "array",
+					"minItems": 1,
+					"items": {
+						"$ref": "#/$defs/ShortIdType"
+					}
+				}
+			},
+			"additionalProperties": false
+		},
+		"PolicyDefaultsTypeTree": {
+			"$comment": "Using object type to have one and only one property per type of PolicyDefaults (i.e. one per ACAL profile). TODO: add similar properties for other PolicyDefaults extensions defined by other JACAL Profiles supported by the implementation (one property per profile), if there is any.",
+			"$dynamicRef": "#PolicyDefaultsTypeExtensions"
+		},
+		"PolicyDefaultsTypeTreeEmpty": {
+			"$dynamicAnchor": "PolicyDefaultsTypeExtensions",
+			"$comment": "No PolicyDefaults extension supported by default. Create your own implementation-specific schema that overrides this $dynamicAnchor to support extensions (e.g. XPathPolicyDefaults from XPath Profile). See jacal-root-schema-example-using-xpath-and-jsonpath-profiles.json for example.",
+			"not": true
+		},
+		"ParameterType": {
+			"type": "object",
+			"required": [
+				"Name"
+			],
+			"properties": {
+				"Name": {
+					"$ref": "#/$defs/LocalIdentifierType"
+				},
+				"DataType": {
+					"default": "urn:oasis:names:tc:acal:1.0:data-type:string",
+					"$ref": "#/$defs/IdentifierType"
+				},
+				"isBag": {
+					"default": false,
+					"type": "boolean"
+				},
+				"Description": {
+					"type": "string"
+				},
+				"Expression": {
+					"$ref": "#/$defs/ExpressionTypeTree",
+					"dependentSchemas": {
+						"Value": {
+							"$comment": "ACAL constraint (textual) on ParameterType's Expression property (DataType already specified as ParameterType's property)",
+							"properties": {
+								"Value": {
+									"dependentSchemas": {
+										"DataType": {
+											"not": true
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"additionalProperties": false
+		},
+		"BooleanExpressionType": {
+			"$ref": "#/$defs/NonLiteralExpressionTypeTree"
+		},
+		"IdReferenceType": {
+			"$comment": "ACAL abstract type",
+			"type": "object",
+			"required": [
+				"Id"
+			],
+			"properties": {
+				"Id": {
+					"type": "string",
+					"format": "uri-reference"
+				}
+			}
+		},
+		"ExactMatchIdReferenceType": {
+			"$comment": "Final subtype of IdReferenceType",
+			"allOf": [
+				{
+					"$ref": "#/$defs/IdReferenceType"
+				},
+				{
+					"properties": {
+						"Version": {
+							"$ref": "#/$defs/VersionType"
+						}
+					},
+					"required": [
+						"Version"
+					]
+				}
+			],
+			"unevaluatedProperties": false
+		},
+		"PatternMatchIdReferenceType": {
+			"$comment": "Non-final subtype of IdReferenceType",
+			"allOf": [
+				{
+					"$ref": "#/$defs/IdReferenceType"
+				},
+				{
+					"properties": {
+						"Version": {
+							"$ref": "#/$defs/VersionMatchType"
+						}
+					}
+				}
+			]
+		},
+		"PolicyReferenceType": {
+			"$comment": "Final subtype of PatternMatchIdReferenceType",
+			"allOf": [
+				{
+					"$ref": "#/$defs/PatternMatchIdReferenceType"
+				},
+				{
+					"type": "object",
+					"required": [],
+					"properties": {
+						"Expression": {
+							"type": "array",
+							"minItems": 1,
+							"uniqueItems": false,
+							"items": {
+								"$ref": "#/$defs/ExpressionTypeTree",
+								"dependentSchemas": {
+									"Value": {
+										"$comment": "ACAL constraint (textual) on PolicyReference's Expression property (DataType already specified in the corresponding Parameter of the referenced element SHALL not be redefined)",
+										"properties": {
+											"Value": {
+												"dependentSchemas": {
+													"DataType": {
+														"not": true
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			],
+			"unevaluatedProperties": false
+		},
+		"VariableDefinitionType": {
+			"type": "object",
+			"required": [
+				"VariableId",
+				"Expression"
+			],
+			"properties": {
+				"VariableId": {
+					"$ref": "#/$defs/LocalIdentifierType"
+				},
+				"Expression": {
+					"$ref": "#/$defs/ExpressionTypeTree"
+				}
+			},
+			"additionalProperties": false
+		},
+		"VariableReferenceType": {
+			"$comment": "Inheritance relationship to ExpressionType is implemented in ExpressionTypeTree subschema",
+			"type": "object",
+			"required": [
+				"VariableId"
+			],
+			"properties": {
+				"VariableId": {
+					"$ref": "#/$defs/LocalIdentifierType"
+				}
+			},
+			"additionalProperties": false
+		},
+		"SharedVariableDefinitionType": {
+			"type": "object",
+			"required": [
+				"Id",
+				"Version",
+				"Expression"
+			],
+			"properties": {
+				"Id": {
+					"$ref": "#/$defs/LocalIdentifierType"
+				},
+				"Version": {
+					"$ref": "#/$defs/VersionType"
+				},
+				"Description": {
+					"type": "string"
+				},
+				"ShortIdSetReference": {
+					"type": "array",
+					"minItems": 1,
+					"uniqueItems": true,
+					"items": {
+						"type": "string",
+						"format": "uri-reference"
+					}
+				},
+				"Parameter": {
+					"$comment": "TODO: add 'uniqueKeys': ['/Name'] from ArrayExt vocabulary - https://docs.json-everything.net/schema/vocabs/array-ext/",
+					"type": "array",
+					"minItems": 1,
+					"items": {
+						"$ref": "#/$defs/ParameterType"
+					}
+				},
+				"Expression": {
+					"$ref": "#/$defs/ExpressionTypeTree"
+				}
+			},
+			"additionalProperties": false
+		},
+		"SharedVariableReferenceType": {
+			"$comment": "Inheritance relationship to ExpressionType is implemented in ExpressionTypeTree subschema",
+			"type": "object",
+			"required": [
+				"Id"
+			],
+			"properties": {
+				"Id": {
+					"$ref": "#/$defs/LocalIdentifierType"
+				},
+				"Version": {
+					"$ref": "#/$defs/VersionMatchType"
+				},
+				"Expression": {
+					"type": "array",
+					"minItems": 1,
+					"uniqueItems": false,
+					"items": {
+						"$ref": "#/$defs/ExpressionTypeTree",
+						"dependentSchemas": {
+							"Value": {
+								"$comment": "ACAL constraint (textual) on SharedVariableReference's Expression property (DataType already specified in the corresponding Parameter of the referenced element SHALL not be redefined)",
+								"properties": {
+									"Value": {
+										"dependentSchemas": {
+											"DataType": {
+												"not": true
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"additionalProperties": false
+		},
+		"RuleType": {
+			"type": "object",
+			"required": [
+				"Id",
+				"Effect"
+			],
+			"properties": {
+				"Id": {
+					"$ref": "#/$defs/LocalIdentifierType"
+				},
+				"Description": {
+					"type": "string"
+				},
+				"VariableDefinition": {
+					"$comment": "TODO: add 'uniqueKeys': ['/VariableId'] from ArrayExt vocabulary - https://docs.json-everything.net/schema/vocabs/array-ext/",
+					"type": "array",
+					"minItems": 1,
+					"items": {
+						"$ref": "#/$defs/VariableDefinitionType"
+					}
+				},
+				"Condition": {
+					"$ref": "#/$defs/BooleanExpressionType"
+				},
+				"Effect": {
+					"$ref": "#/$defs/EffectType"
+				},
+				"NoticeExpression": {
+					"type": "array",
+					"minItems": 1,
+					"items": {
+						"$ref": "#/$defs/NoticeExpressionType"
+					}
+				}
+			},
+			"additionalProperties": false
+		},
+		"PolicyType": {
+			"type": "object",
+			"required": [
+				"PolicyId",
+				"Version",
+				"CombiningAlgId"
+			],
+			"properties": {
+				"PolicyId": {
+					"type": "string",
+					"format": "uri-reference"
+				},
+				"Version": {
+					"$ref": "#/$defs/VersionType"
+				},
+				"Description": {
+					"type": "string"
+				},
+				"ShortIdSetReference": {
+					"type": "array",
+					"minItems": 1,
+					"uniqueItems": true,
+					"items": {
+						"type": "string",
+						"format": "uri-reference"
+					}
+				},
+				"MaxDelegationDepth": {
+					"type": "integer",
+					"minimum": 0
+				},
+				"PolicyIssuer": {
+					"$ref": "#/$defs/EntityType"
+				},
+				"PolicyDefaults": {
+					"$ref": "#/$defs/PolicyDefaultsTypeTree"
+				},
+				"Parameter": {
+					"$comment": "TODO: add 'uniqueKeys': ['/Name'] from ArrayExt vocabulary - https://docs.json-everything.net/schema/vocabs/array-ext/",
+					"type": "array",
+					"minItems": 1,
+					"items": {
+						"$ref": "#/$defs/ParameterType"
+					}
+				},
+				"VariableDefinition": {
+					"$comment": "TODO: add 'uniqueKeys': ['/VariableId'] from ArrayExt vocabulary - https://docs.json-everything.net/schema/vocabs/array-ext/",
+					"type": "array",
+					"minItems": 1,
+					"items": {
+						"$ref": "#/$defs/VariableDefinitionType"
+					}
+				},
+				"Target": {
+					"$ref": "#/$defs/BooleanExpressionType"
+				},
+				"CombiningAlgId": {
+					"$ref": "#/$defs/IdentifierType"
+				},
+				"CombinerInput": {
+					"type": "array",
+					"minItems": 1,
+					"items": {
+						"$ref": "#/$defs/CombinerInputTypeTree"
+					}
+				},
+				"NoticeExpression": {
+					"type": "array",
+					"minItems": 1,
+					"items": {
+						"$ref": "#/$defs/NoticeExpressionType"
+					}
+				}
+			},
+			"additionalProperties": false
+		},
+		"CombinerInputTypeTree": {
+			"$comment": "CombinerInputType's direct subtypes",
+			"anyOf": [
+				{
+					"type": "object",
+					"required": [
+						"Policy"
+					],
+					"properties": {
+						"Policy": {
+							"$ref": "#/$defs/PolicyType"
+						}
+					},
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"required": [
+						"PolicyReference"
+					],
+					"properties": {
+						"PolicyReference": {
+							"$ref": "#/$defs/PolicyReferenceType"
+						}
+					},
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"required": [
+						"Rule"
+					],
+					"properties": {
+						"Rule": {
+							"$ref": "#/$defs/RuleType"
+						}
+					},
+					"additionalProperties": false
+				}
+			]
+		},
+		"ValueType": {
+			"anyOf": [
+				{
+					"$comment": "Case when the DataType property is unnecessary (implicit or already defined by parent) and the value is primitive",
+					"type": [
+						"boolean",
+						"integer",
+						"number",
+						"string"
+					]
+				},
+				{
+					"$comment": "Same case as above but for structured values",
+					"$ref": "#/$defs/StructuredValueTypeTree"
+				},
+				{
+					"$comment": "Case when the DataType property is required (not the case for boolean / integer / number which have a fixed implicit DataType)",
+					"allOf": [
+						{
+							"type": "object",
+							"properties": {
+								"DataType": {
+									"$ref": "#/$defs/IdentifierType"
+								}
+							},
+							"required": [
+								"DataType"
+							]
+						},
+						{
+							"anyOf": [
+								{
+									"properties": {
+										"Value": {
+											"$comment": "For DataTypes represented as string (besides the standard string type itself).",
+											"type": "string"
+										}
+									},
+									"required": [
+										"Value"
+									]
+								},
+								{
+									"$ref": "#/$defs/StructuredValueTypeTree"
+								}
+							]
+						}
+					],
+					"unevaluatedProperties": false
+				}
+			]
+		},
+		"StructuredValueTypeTree": {
+			"$dynamicRef": "#StructuredValueTypeExtensions"
+		},
+		"StructuredValueTypeTreeEmpty": {
+			"$dynamicAnchor": "StructuredValueTypeExtensions",
+			"$comment": "No StructuredValueType extension supported by default. Create your own implementation-specific schema that overrides this $dynamicAnchor to support such extensions (e.g. XPathExpressionValueType from XPath Profile). See jacal-root-schema-example-using-xpath-and-jsonpath-profiles.json for example.",
+			"not": true
+		},
+		"ApplyType": {
+			"$comment": "ApplyType's inheritance relationship to ExpressionType is implemented in ExpressionTypeTree subschema",
+			"type": "object",
+			"required": [
+				"FunctionId"
+			],
+			"properties": {
+				"Description": {
+					"type": "string"
+				},
+				"FunctionId": {
+					"$ref": "#/$defs/IdentifierType"
+				},
+				"Expression": {
+					"type": "array",
+					"minItems": 1,
+					"uniqueItems": false,
+					"items": {
+						"$ref": "#/$defs/ExpressionTypeTree"
+					}
+				}
+			},
+			"additionalProperties": false
+		},
+		"FunctionType": {
+			"$comment": "FunctionType's inheritance relationship to ExpressionType is implemented in ExpressionTypeTree subschema",
+			"type": "object",
+			"required": [
+				"Id"
+			],
+			"properties": {
+				"Id": {
+					"$ref": "#/$defs/IdentifierType"
+				}
+			},
+			"additionalProperties": false
+		},
+		"NamedAttributeDesignatorType": {
+			"$comment": "Abstract ACAL type",
+			"type": "object",
+			"required": [
+				"AttributeId"
+			],
+			"properties": {
+				"AttributeId": {
+					"$ref": "#/$defs/IdentifierType"
+				},
+				"DataType": {
+					"default": "urn:oasis:names:tc:acal:1.0:data-type:string",
+					"$ref": "#/$defs/IdentifierType"
+				},
+				"Issuer": {
+					"$ref": "#/$defs/Name"
+				},
+				"MustBePresent": {
+					"default": false,
+					"type": "boolean"
+				}
+			}
+		},
+		"AttributeDesignatorType": {
+			"allOf": [
+				{
+					"$ref": "#/$defs/NamedAttributeDesignatorType"
+				},
+				{
+					"type": "object",
+					"required": [
+						"Category"
+					],
+					"properties": {
+						"Category": {
+							"$ref": "#/$defs/IdentifierType"
+						}
+					}
+				}
+			],
+			"unevaluatedProperties": false
+		},
+		"EntityAttributeDesignatorType": {
+			"allOf": [
+				{
+					"$ref": "#/$defs/NamedAttributeDesignatorType"
+				},
+				{
+					"type": "object",
+					"required": [
+						"Expression"
+					],
+					"properties": {
+						"Expression": {
+							"$ref": "#/$defs/ExpressionTypeTree"
+						}
+					}
+				}
+			],
+			"unevaluatedProperties": false
+		},
+		"NamedAttributeDesignatorTypeTree": {
+			"$comment": "NamedAttributeDesignatorType's direct subtypes",
+			"anyOf": [
+				{
+					"type": "object",
+					"required": [
+						"AttributeDesignator"
+					],
+					"properties": {
+						"AttributeDesignator": {
+							"$ref": "#/$defs/AttributeDesignatorType"
+						}
+					},
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"required": [
+						"EntityAttributeDesignator"
+					],
+					"properties": {
+						"EntityAttributeDesignator": {
+							"$ref": "#/$defs/EntityAttributeDesignatorType"
+						}
+					},
+					"additionalProperties": false
+				}
+			]
+		},
+		"BaseAttributeSelectorType": {
+			"$comment": "Abstract ACAL type",
+			"type": "object",
+			"required": [
+				"Path"
+			],
+			"properties": {
+				"Path": {
+					"$ref": "#/$defs/AttributeSelectorPathType"
+				},
+				"DataType": {
+					"default": "urn:oasis:names:tc:acal:1.0:data-type:string",
+					"$ref": "#/$defs/IdentifierType"
+				},
+				"MustBePresent": {
+					"default": false,
+					"type": "boolean"
+				}
+			}
+		},
+		"AttributeSelectorType": {
+			"allOf": [
+				{
+					"$ref": "#/$defs/BaseAttributeSelectorType"
+				},
+				{
+					"type": "object",
+					"required": [
+						"Category"
+					],
+					"properties": {
+						"Category": {
+							"$ref": "#/$defs/IdentifierType"
+						}
+					}
+				}
+			],
+			"unevaluatedProperties": false
+		},
+		"EntityAttributeSelectorType": {
+			"allOf": [
+				{
+					"$ref": "#/$defs/BaseAttributeSelectorType"
+				},
+				{
+					"type": "object",
+					"required": [
+						"Expression"
+					],
+					"properties": {
+						"Expression": {
+							"$ref": "#/$defs/ExpressionTypeTree"
+						}
+					}
+				}
+			],
+			"unevaluatedProperties": false
+		},
+		"BaseAttributeSelectorTypeTree": {
+			"$comment": "BaseAttributeSelectorType's direct subtypes",
+			"anyOf": [
+				{
+					"$ref": "#/$defs/AttributeSelectorTypeTree"
+				},
+				{
+					"$ref": "#/$defs/EntityAttributeSelectorTypeTree"
+				}
+			]
+		},
+		"AttributeSelectorTypeTree": {
+			"$dynamicRef": "#AttributeSelectorTypeExtensions"
+		},
+		"AttributeSelectorTypeTreeEmpty": {
+			"$dynamicAnchor": "AttributeSelectorTypeExtensions",
+			"$comment": "No AttributeSelector extension supported by default. Create your own implementation-specific schema that overrides this $dynamicAnchor to support extensions (e.g. XPathAttributeSelector). See jacal-root-schema-example-using-jsonpath-profile-only.json for example.",
+			"not": true
+		},
+		"EntityAttributeSelectorTypeTree": {
+			"$dynamicRef": "#EntityAttributeSelectorTypeExtensions"
+		},
+		"EntityAttributeSelectorTypeTreeEmpty": {
+			"$dynamicAnchor": "EntityAttributeSelectorTypeExtensions",
+			"$comment": "No EntityAttributeSelector extension supported by default. Create your own implementation-specific schema that overrides this $dynamicAnchor to support extensions (e.g. XPathAttributeSelector). See jacal-root-schema-example-using-jsonpath-profile-only.json for example.",
+			"not": true
+		},
+		"QuantifiedExpressionType": {
+			"type": "object",
+			"required": [
+				"VariableId",
+				"Domain",
+				"Iterant"
+			],
+			"properties": {
+				"VariableId": {
+					"$ref": "#/$defs/LocalIdentifierType"
+				},
+				"Domain": {
+					"$ref": "#/$defs/NonLiteralExpressionTypeTree"
+				},
+				"Iterant": {
+					"$ref": "#/$defs/ExpressionTypeTree"
+				}
+			}
+		},
+		"QuantifiedExpressionTypeTree": {
+			"$comment": "QuantifiedExpressionType's direct subtypes",
+			"anyOf": [
+				{
+					"type": "object",
+					"required": [
+						"ForAny"
+					],
+					"properties": {
+						"ForAny": {
+							"$ref": "#/$defs/QuantifiedExpressionType"
+						}
+					},
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"required": [
+						"ForAll"
+					],
+					"properties": {
+						"ForAll": {
+							"$ref": "#/$defs/QuantifiedExpressionType"
+						}
+					},
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"required": [
+						"Map"
+					],
+					"properties": {
+						"Map": {
+							"$ref": "#/$defs/QuantifiedExpressionType"
+						}
+					},
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"required": [
+						"Select"
+					],
+					"properties": {
+						"Select": {
+							"$ref": "#/$defs/QuantifiedExpressionType"
+						}
+					},
+					"additionalProperties": false
+				}
+			]
+		},
+		"ExpressionTypeTree": {
+			"$comment": "ExpressionType's direct subtypes",
+			"anyOf": [
+				{
+					"type": "object",
+					"required": [
+						"Value"
+					],
+					"properties": {
+						"Value": {
+							"$ref": "#/$defs/ValueType"
+						}
+					},
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"required": [
+						"Function"
+					],
+					"properties": {
+						"Function": {
+							"$ref": "#/$defs/FunctionType"
+						}
+					}
+				},
+				{
+					"$ref": "#/$defs/NonLiteralExpressionTypeTree"
+				}
+			]
+		},
+		"NonLiteralExpressionTypeTree": {
+			"$comment": "ExpressionType's direct subtypes except ValueType",
+			"anyOf": [
+				{
+					"type": "object",
+					"required": [
+						"VariableReference"
+					],
+					"properties": {
+						"VariableReference": {
+							"$ref": "#/$defs/VariableReferenceType"
+						}
+					},
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"required": [
+						"SharedVariableReference"
+					],
+					"properties": {
+						"SharedVariableReference": {
+							"$ref": "#/$defs/SharedVariableReferenceType"
+						}
+					},
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"required": [
+						"Apply"
+					],
+					"properties": {
+						"Apply": {
+							"$ref": "#/$defs/ApplyType"
+						}
+					}
+				},
+				{
+					"$ref": "#/$defs/NamedAttributeDesignatorTypeTree"
+				},
+				{
+					"$comment": "TODO: remove this subschema if (Entity)AttributeSelectorType is not supported by the implementation",
+					"$ref": "#/$defs/BaseAttributeSelectorTypeTree"
+				},
+				{
+					"$comment": "TODO: remove this subschema if QuantifiedExpressionType is not supported by the implementation",
+					"$ref": "#/$defs/QuantifiedExpressionTypeTree"
+				}
+			]
+		},
+		"AttributeAssignmentExpressionType": {
+			"type": "object",
+			"required": [
+				"AttributeId",
+				"Expression"
+			],
+			"properties": {
+				"AttributeId": {
+					"$ref": "#/$defs/IdentifierType"
+				},
+				"Category": {
+					"$ref": "#/$defs/IdentifierType"
+				},
+				"Issuer": {
+					"$ref": "#/$defs/Name"
+				},
+				"Expression": {
+					"$ref": "#/$defs/ExpressionTypeTree"
+				}
+			},
+			"additionalProperties": false
+		},
+		"NoticeExpressionType": {
+			"type": "object",
+			"required": [
+				"Id"
+			],
+			"properties": {
+				"Id": {
+					"$ref": "#/$defs/IdentifierType"
+				},
+				"IsObligation": {
+					"type": "boolean"
+				},
+				"AppliesTo": {
+					"$ref": "#/$defs/EffectType"
+				},
+				"Condition": {
+					"$ref": "#/$defs/BooleanExpressionType"
+				},
+				"AttributeAssignmentExpression": {
+					"$comment": "TODO: add 'uniqueKeys': ['/AttributeId', '/Category'] from ArrayExt vocabulary - https://docs.json-everything.net/schema/vocabs/array-ext/",
+					"type": "array",
+					"minItems": 1,
+					"items": {
+						"$ref": "#/$defs/AttributeAssignmentExpressionType"
+					}
+				}
+			},
+			"additionalProperties": false
+		},
+		"NoticeType": {
+			"type": "object",
+			"required": [
+				"Id"
+			],
+			"properties": {
+				"Id": {
+					"$ref": "#/$defs/IdentifierType"
+				},
+				"IsObligation": {
+					"default": false,
+					"type": "boolean"
+				},
+				"AttributeAssignment": {
+					"$comment": "TODO: add 'uniqueKeys': ['/AttributeId', '/Category'] from ArrayExt vocabulary - https://docs.json-everything.net/schema/vocabs/array-ext/",
+					"type": "array",
+					"minItems": 1,
+					"items": {
+						"$ref": "#/$defs/AttributeAssignmentType"
+					}
+				}
+			},
+			"additionalProperties": false
+		},
+		"AttributeType": {
+			"type": "object",
+			"required": [
+				"AttributeId",
+				"Value"
+			],
+			"properties": {
+				"AttributeId": {
+					"$ref": "#/$defs/IdentifierType"
+				},
+				"Issuer": {
+					"$ref": "#/$defs/Name"
+				},
+				"DataType": {
+					"default": "urn:oasis:names:tc:acal:1.0:data-type:string",
+					"$ref": "#/$defs/IdentifierType"
+				},
+				"Value": {
+					"type": "array",
+					"minItems": 1,
+					"items": {
+						"$ref": "#/$defs/ValueType",
+						"dependentSchemas": {
+							"DataType": {
+								"$comment": "ACAL constraint (textual) on AttributeType's Value property (DataType already specified as AttributeType's property)",
+								"not": true
+							}
+						}
+					}
+				}
+			}
+		},
+		"AttributeAssignmentType": {
+			"allOf": [
+				{
+					"$ref": "#/$defs/AttributeType"
+				},
+				{
+					"type": "object",
+					"required": [],
+					"properties": {
+						"Category": {
+							"$ref": "#/$defs/IdentifierType"
+						}
+					}
+				}
+			],
+			"unevaluatedProperties": false
+		},
+		"ResultEntityType": {
+			"type": "object",
+			"required": [
+				"Category",
+				"Attribute"
+			],
+			"properties": {
+				"Category": {
+					"$ref": "#/$defs/IdentifierType"
+				},
+				"Id": {
+					"$ref": "#/$defs/LocalIdentifierType"
+				},
+				"Attribute": {
+					"$comment": "TODO: add 'uniqueKeys': ['/AttributeId'] from ArrayExt vocabulary - https://docs.json-everything.net/schema/vocabs/array-ext/",
+					"type": "array",
+					"minItems": 1,
+					"items": {
+						"$ref": "#/$defs/AttributeType"
+					}
+				}
+			}
+		},
+		"RequestDefaultsTypeTree": {
+			"$comment": "Using object type to have one and only one property per type of RequestDefaults (i.e. one per ACAL profile). TODO: add similar properties for other RequestDefaults extensions defined by other JACAL Profiles supported by the implementation (one property per profile), if there is any.",
+			"$dynamicRef": "#RequestDefaultsTypeExtensions"
+		},
+		"RequestDefaultsTypeTreeEmpty": {
+			"$dynamicAnchor": "RequestDefaultsTypeExtensions",
+			"$comment": "No RequestDefaults extension supported by default. Create your own implementation-specific schema that overrides this $dynamicAnchor to support extensions (e.g. XPathRequestDefaults from XPath Profile). See jacal-root-schema-example-using-xpath-and-jsonpath-profiles.json for example.",
+			"not": true
+		},
+		"RequestType": {
+			"type": "object",
+			"required": [
+				"RequestEntity"
+			],
+			"properties": {
+				"ShortIdSetReference": {
+					"type": "array",
+					"minItems": 1,
+					"uniqueItems": true,
+					"items": {
+						"type": "string",
+						"format": "uri-reference"
+					}
+				},
+				"RequestDefaults": {
+					"$ref": "#/$defs/RequestDefaultsTypeTree"
+				},
+				"RequestEntity": {
+					"$comment": "TODO: add 'uniqueKeys': ['/Id'] from ArrayExt vocabulary - https://docs.json-everything.net/schema/vocabs/array-ext/",
+					"type": "array",
+					"minItems": 1,
+					"items": {
+						"$ref": "#/$defs/RequestEntityType"
+					}
+				},
+				"MultiRequests": {
+					"$ref": "#/$defs/MultiRequestsType"
+				},
+				"ReturnPolicyIdList": {
+					"default": false,
+					"type": "boolean"
+				},
+				"CombinedDecision": {
+					"default": false,
+					"type": "boolean"
+				}
+			},
+			"additionalProperties": false
+		},
+		"RequestEntityType": {
+			"type": "object",
+			"required": [
+				"Category"
+			],
+			"properties": {
+				"Category": {
+					"$ref": "#/$defs/IdentifierType"
+				},
+				"Id": {
+					"$ref": "#/$defs/LocalIdentifierType"
+				},
+				"Content": {
+					"$ref": "#/$defs/ContentType"
+				},
+				"RequestAttribute": {
+					"$comment": "TODO: add 'uniqueKeys': ['/AttributeId'] from ArrayExt vocabulary - https://docs.json-everything.net/schema/vocabs/array-ext/",
+					"type": "array",
+					"minItems": 1,
+					"items": {
+						"$ref": "#/$defs/RequestAttributeType"
+					}
+				}
+			},
+			"additionalProperties": false
+		},
+		"ContentType": {
+			"$comment": "TODO: supporting this is optional. Remove this subschema if your implementation does not support 'ContentType' objects. Or else, for safety/security reasons, in production, ACAL system users and/or implementers should add further restrictions to the schema of the Body property and/or enforce security measures in the JSON processor to mitigate possible security issues that may occur when allowing any JSON object like this as Body input.",
+			"type": "object",
+			"properties": {
+				"MediaType": {
+					"$ref": "#/$defs/MediaType",
+					"default": "application/json"
+				},
+				"Encoding": {
+					"$ref": "#/$defs/ContentEncodingType"
+				},
+				"Body": {
+					"$comment": "'object' type is used for JSON object, 'string' for others - e.g. XML - possibly escaped or encoded depending on the Encoding property",
+					"type": [
+						"string",
+						"object"
+					]
+				}
+			},
+			"required": [
+				"Body"
+			],
+			"additionalProperties": false
+		},
+		"RequestAttributeType": {
+			"allOf": [
+				{
+					"$ref": "#/$defs/AttributeType"
+				},
+				{
+					"type": "object",
+					"required": [],
+					"properties": {
+						"IncludeInResult": {
+							"default": false,
+							"type": "boolean"
+						}
+					}
+				}
+			],
+			"unevaluatedProperties": false
+		},
+		"ResponseType": {
+			"type": "object",
+			"required": [
+				"Result"
+			],
+			"properties": {
+				"ShortIdSetReference": {
+					"type": "array",
+					"minItems": 1,
+					"uniqueItems": true,
+					"items": {
+						"type": "string",
+						"format": "uri-reference"
+					}
+				},
+				"Result": {
+					"type": "array",
+					"minItems": 1,
+					"items": {
+						"$ref": "#/$defs/ResultType"
+					}
+				}
+			},
+			"additionalProperties": false
+		},
+		"ResultType": {
+			"type": "object",
+			"required": [
+				"Decision"
+			],
+			"properties": {
+				"Decision": {
+					"$ref": "#/$defs/DecisionType"
+				},
+				"Status": {
+					"$ref": "#/$defs/StatusType"
+				},
+				"Notice": {
+					"type": "array",
+					"minItems": 1,
+					"items": {
+						"$ref": "#/$defs/NoticeType"
+					}
+				},
+				"ResultEntity": {
+					"$comment": "TODO: add 'uniqueKeys': ['/Category'] from ArrayExt vocabulary - https://docs.json-everything.net/schema/vocabs/array-ext/",
+					"type": "array",
+					"minItems": 1,
+					"items": {
+						"$ref": "#/$defs/ResultEntityType"
+					}
+				},
+				"ApplicablePolicyReference": {
+					"$comment": "TODO: add 'uniqueKeys': ['/Id'] from ArrayExt vocabulary - https://docs.json-everything.net/schema/vocabs/array-ext/",
+					"type": "array",
+					"minItems": 1,
+					"items": {
+						"$ref": "#/$defs/ExactMatchIdReferenceType"
+					}
+				}
+			},
+			"additionalProperties": false
+		},
+		"MultiRequestsType": {
+			"$comment": "TODO: remove this if your implementation does not support MultiRequests (the Multiple Decision Profile)",
+			"type": "object",
+			"required": [
+				"RequestReference"
+			],
+			"properties": {
+				"RequestReference": {
+					"$comment": "TODO: translate/enforce ACAL constraint: {OCL} self->isUnique(RequestEntityReference->collect(Id)->asSet())",
+					"type": "array",
+					"minItems": 1,
+					"items": {
+						"$ref": "#/$defs/RequestReferenceType"
+					}
+				}
+			},
+			"additionalProperties": false
+		},
+		"RequestReferenceType": {
+			"$comment": "TODO: remove this subschema if your implementation does not support MultiRequests (the Multiple Decision Profile)",
+			"type": "object",
+			"required": [
+				"RequestEntityReference"
+			],
+			"properties": {
+				"RequestEntityReference": {
+					"$comment": "TODO: add 'uniqueKeys': ['/Id'] from ArrayExt vocabulary - https://docs.json-everything.net/schema/vocabs/array-ext/",
+					"type": "array",
+					"minItems": 1,
+					"items": {
+						"$ref": "#/$defs/RequestEntityReferenceType"
+					}
+				}
+			},
+			"additionalProperties": false
+		},
+		"RequestEntityReferenceType": {
+			"type": "object",
+			"required": [
+				"Id"
+			],
+			"properties": {
+				"Id": {
+					"$ref": "#/$defs/LocalIdentifierType"
+				}
+			},
+			"additionalProperties": false
+		},
+		"StatusType": {
+			"type": "object",
+			"required": [
+				"StatusCode"
+			],
+			"properties": {
+				"StatusCode": {
+					"$ref": "#/$defs/StatusCodeType"
+				},
+				"StatusMessage": {
+					"type": "string"
+				},
+				"StatusDetail": {
+					"$ref": "#/$defs/StatusDetailType"
+				}
+			},
+			"additionalProperties": false
+		},
+		"StatusCodeType": {
+			"type": "object",
+			"required": [
+				"Value"
+			],
+			"properties": {
+				"Value": {
+					"$ref": "#/$defs/IdentifierType"
+				},
+				"StatusCode": {
+					"$ref": "#/$defs/StatusCodeType"
+				}
+			},
+			"additionalProperties": false
+		},
+		"StatusDetailType": {
+			"$comment": "TODO: supporting this is optional. Remove this subschema if your implementation does not support 'StatusDetailType' objects. Or else, for safety/security reasons, in production, ACAL system users and/or implementers should add further restrictions to this schema and/or enforce security measures in the JSON processor to mitigate possible security issues that may occur when allowing any JSON object like this as input",
+			"type": "object",
+			"properties": {
+				"MissingAttributeDetail": {
+					"type": "array",
+					"minItems": 1,
+					"items": {
+						"$ref": "#/$defs/MissingAttributeDetailType"
+					}
+				}
+			}
+		},
+		"MissingAttributeDetailType": {
+			"type": "object",
+			"required": [
+				"Category",
+				"AttributeId",
+				"DataType"
+			],
+			"properties": {
+				"Category": {
+					"$ref": "#/$defs/IdentifierType"
+				},
+				"AttributeId": {
+					"$ref": "#/$defs/IdentifierType"
+				},
+				"Issuer": {
+					"$ref": "#/$defs/Name"
+				},
+				"DataType": {
+					"$ref": "#/$defs/IdentifierType"
+				},
+				"Value": {
+					"type": "array",
+					"minItems": 1,
+					"items": {
+						"$ref": "#/$defs/ValueType",
+						"dependentSchemas": {
+							"DataType": {
+								"$comment": "ACAL constraint (textual) on MissingAttributeDetailType's Value property (DataType already specified as MissingAttributeDetail's property)",
+								"not": true
+							}
+						}
+					}
+				}
+			}
+		},
+		"EntityType": {
+			"type": "object",
+			"required": [],
+			"minProperties": 1,
+			"properties": {
+				"Content": {
+					"$ref": "#/$defs/ContentType"
+				},
+				"Attribute": {
+					"$comment": "TODO: add 'uniqueKeys': ['/AttributeId'] from ArrayExt vocabulary - https://docs.json-everything.net/schema/vocabs/array-ext/",
+					"type": "array",
+					"minItems": 1,
+					"items": {
+						"$ref": "#/$defs/AttributeType"
+					}
+				}
+			},
+			"if": {
+				"not": {
+					"required": [
+						"Content"
+					]
+				}
+			},
+			"then": {
+				"required": [
+					"Attribute"
+				]
+			}
+		},
+		"BundleType": {
+			"type": "object",
+			"required": [],
+			"properties": {
+				"ShortIdSet": {
+					"$comment": "TODO: add 'uniqueKeys': ['/Id'] from ArrayExt vocabulary - https://docs.json-everything.net/schema/vocabs/array-ext/",
+					"type": "array",
+					"minItems": 1,
+					"items": {
+						"$ref": "#/$defs/ShortIdSetType"
+					}
+				},
+				"SharedVariableDefinition": {
+					"$comment": "TODO: add 'uniqueKeys': ['/Id'] from ArrayExt vocabulary - https://docs.json-everything.net/schema/vocabs/array-ext/",
+					"type": "array",
+					"minItems": 1,
+					"items": {
+						"$ref": "#/$defs/SharedVariableDefinitionType"
+					}
+				},
+				"Policy": {
+					"$comment": "TODO: add 'uniqueKeys': ['/PolicyId'] from ArrayExt vocabulary - https://docs.json-everything.net/schema/vocabs/array-ext/",
+					"type": "array",
+					"minItems": 1,
+					"items": {
+						"$ref": "#/$defs/PolicyType"
+					}
+				},
+				"PolicyReference": {
+					"$ref": "#/$defs/PolicyReferenceType"
+				}
+			},
+			"dependentRequired": {
+				"PolicyReference": [
+					"Policy"
+				]
+			}
+		}
+	}
+}

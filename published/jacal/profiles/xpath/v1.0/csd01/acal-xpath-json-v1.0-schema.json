@@ -1,0 +1,145 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "urn:oasis:names:tc:jacal:1.0:xpath:schema",
+	"title": "JACAL - XPath Profile schema",
+	"description": "JACAL v1.0 (JSON Representation of ACAL Version 1.0) - XPath Profile schema. Copyright (c) OASIS Open 2026. All Rights Reserved. For more license and copyright information, and complete status, please see Annex A of the XPath Profile of JACAL v1.0 specification, which contains the License, Document Status and Notices.",
+	"$defs": {
+		"NamespaceDeclarationType": {
+			"type": "object",
+			"required": [
+				"Name"
+			],
+			"properties": {
+				"Prefix": {
+					"$ref": "urn:oasis:names:tc:jacal:1.0:core:schema#/$defs/IdentifierType",
+					"$comment": "Default empty value is used to define the default namespace",
+					"default": ""
+				},
+				"Name": {
+					"type": "string",
+					"format": "uri-reference"
+				}
+			},
+			"additionalProperties": false
+		},
+		"XPathDefaultsType": {
+			"type": "object",
+			"required": [
+				"XPathVersion"
+			],
+			"properties": {
+				"XPathVersion": {
+					"$ref": "urn:oasis:names:tc:jacal:1.0:core:schema#/$defs/IdentifierType"
+				},
+				"Namespace": {
+					"type": "array",
+					"minItems": 1,
+					"uniqueItems": true,
+					"items": {
+						"$ref": "#/$defs/NamespaceDeclarationType"
+					},
+					"$comment": "TODO: add 'uniqueKeys': ['/Prefix'] from ArrayExt vocabulary - https://docs.json-everything.net/schema/vocabs/array-ext/ to ensure uniqueness of Prefix values"
+				}
+			},
+			"additionalProperties": false
+		},
+		"XPathRequestDefaultsTypeTree": {
+			"type": "object",
+			"required": [
+				"XPathRequestDefaults"
+			],
+			"properties": {
+				"XPathRequestDefaults": {
+					"$ref": "#/$defs/XPathDefaultsType"
+				}
+			},
+			"additionalProperties": false
+		},
+		"XPathPolicyDefaultsTypeTree": {
+			"type": "object",
+			"required": [
+				"XPathPolicyDefaults"
+			],
+			"properties": {
+				"XPathPolicyDefaults": {
+					"$ref": "#/$defs/XPathDefaultsType"
+				}
+			},
+			"additionalProperties": false
+		},
+		"XPathAttributeSelectorType": {
+			"allOf": [
+				{
+					"$ref": "urn:oasis:names:tc:jacal:1.0:core:schema#/$defs/AttributeSelectorType"
+				},
+				{
+					"type": "object",
+					"required": [],
+					"properties": {
+						"ContextSelectorId": {
+							"$ref": "urn:oasis:names:tc:jacal:1.0:core:schema#/$defs/IdentifierType"
+						}
+					}
+				}
+			],
+			"unevaluatedProperties": false
+		},
+		"XPathEntityAttributeSelectorType": {
+			"allOf": [
+				{
+					"$ref": "urn:oasis:names:tc:jacal:1.0:core:schema#/$defs/EntityAttributeSelectorType"
+				},
+				{
+					"type": "object",
+					"required": [],
+					"properties": {
+						"ContextSelectorId": {
+							"$ref": "urn:oasis:names:tc:jacal:1.0:core:schema#/$defs/IdentifierType"
+						}
+					}
+				}
+			],
+			"unevaluatedProperties": false
+		},
+		"XPathAttributeSelectorTypeTree": {
+			"type": "object",
+			"required": [
+				"XPathAttributeSelector"
+			],
+			"properties": {
+				"XPathAttributeSelector": {
+					"$ref": "#/$defs/XPathAttributeSelectorType"
+				}
+			},
+			"additionalProperties": false
+		},
+		"XPathEntityAttributeSelectorTypeTree": {
+			"type": "object",
+			"required": [
+				"XPathEntityAttributeSelector"
+			],
+			"properties": {
+				"XPathEntityAttributeSelector": {
+					"$ref": "#/$defs/XPathEntityAttributeSelectorType"
+				}
+			},
+			"additionalProperties": false
+		},
+		"XPathExpressionValueType": {
+			"type": "object",
+			"required": [
+				"XPathCategory",
+				"XPath"
+			],
+			"properties": {
+				"XPathCategory": {
+					"$ref": "urn:oasis:names:tc:jacal:1.0:core:schema#/$defs/IdentifierType"
+				},
+				"XPath": {
+					"$ref": "urn:oasis:names:tc:jacal:1.0:core:schema#/$defs/AttributeSelectorPathType"
+				}
+			},
+			"unevaluatedProperties": false
+		}
+	}
+}
