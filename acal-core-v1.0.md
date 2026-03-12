@@ -4869,11 +4869,11 @@ A `MissingAttributeDetailType` object contains the following properties:
 
 `Value` [Any Number]
 
-: A sequence of `ValueType` objects specifying the required value(s) of the missing attribute. None of these objects SHALL redefine/override the DataType identifier already defined by the `DataType` property below, and SHOULD not have any DataType identifier property set at all, if possible.
+: A sequence of `ValueType` objects specifying the required value(s) of the missing attribute. These objects SHALL NOT redefine/override the DataType identifier already defined by the `DataType` property below, and SHOULD not have any DataType identifier property set at all, if possible.
 
 `Category` [Required]
 
-: An `IdentifierType` value indicating the category of the missing attribute.
+: An `IdentifierType` value indicating the category of the missing attribute. Note that an entity attribute designator or entity attribute selector where the `Expression` property evaluates to a value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type does not nominate an attribute category for the named attribute. In this case the `Category` property is set to the special value `urn:oasis:names:tc:acal:1.0:attribute-category:not-applicable`.
 
 `AttributeId` [Required]
 
@@ -5130,7 +5130,7 @@ A named attribute includes specific criteria with which to match attributes in t
 
 ### 8.4.5 Attribute Retrieval
 
-The PDP SHALL request the values of attributes in the request context from the context handler. The context handler MAY also add attributes to the request context without the PDP requesting them. The PDP SHALL reference the attributes as if they were in a physical request context document, but the context handler is responsible for obtaining and supplying the requested values by whatever means it deems appropriate, including by retrieving them from one or more Policy Information Points. The context handler SHALL return the values of attributes that match the attribute designator or attribute selector and form them into a bag of values with the specified data type. If no attributes from the request context match, then the attribute SHALL be considered missing. If the attribute is missing, then the `MustBePresent` property governs whether the attribute designator or attribute selector returns an empty bag or an `Indeterminate` result. If the `MustBePresent` property is `false` (default value), then a missing attribute SHALL result in an empty bag. If the `MustBePresent` property is `true`, then a missing attribute SHALL result in `Indeterminate`. This `Indeterminate` result SHALL be handled in accordance with the specification of the encompassing expressions, rules and policies. If the result is `Indeterminate`, then the `AttributeId`, `DataType` and `Issuer` properties of the attribute MAY be listed in the authorization decision as described in [Section 8.15](#815-authorization-decision). However, a PDP MAY choose not to return such information for security reasons.
+The PDP SHALL request the values of attributes in the request context from the context handler. The context handler MAY also add attributes to the request context without the PDP requesting them. The PDP SHALL reference the attributes as if they were in a physical request context document, but the context handler is responsible for obtaining and supplying the requested values by whatever means it deems appropriate, including by retrieving them from one or more Policy Information Points. The context handler SHALL return the values of attributes that match the attribute designator, entity attribute designator, attribute selector or entity attribute selector and form them into a bag of values with the specified data type. If no attributes from the request context match, then the attribute SHALL be considered missing. If the attribute is missing, then the `MustBePresent` property governs whether the designator or selector returns an empty bag or an `Indeterminate` result. If the `MustBePresent` property is `false` (default value), then a missing attribute SHALL result in an empty bag. If the `MustBePresent` property is `true`, then a missing attribute SHALL result in `Indeterminate`. This `Indeterminate` result SHALL be handled in accordance with the specification of the encompassing expressions, rules and policies. If the result is `Indeterminate`, then the `AttributeId`, `DataType` and `Issuer` properties of the attribute MAY be listed in the authorization decision as described in [Section 8.15](#815-authorization-decision). However, a PDP MAY choose not to return such information for security reasons.
 
 Regardless of any dynamic modifications of the request context during policy evaluation, the PDP SHALL behave as if each bag of attribute values is fully populated in the context before it is first tested, and is thereafter immutable during evaluation. That is, every subsequent test of that attribute shall use the same bag of values that was initially tested.
 
@@ -5375,15 +5375,15 @@ If a policy that contains invalid static data types is evaluated by the ACAL PDP
 
 ### 8.17.3 Missing Attributes
 
-The absence of matching attributes in the request context for any of the attribute designators or attribute selectors that are found in the policy potentially results in the policy evaluating to `Indeterminate`, if the designator or selector has the `MustBePresent` property set to `true`, as described in [Section 7.17](#namedattributedesignatortype) and [Section 7.20](#baseattributeselectortype) and potentially results in a `Decision` property containing the `Indeterminate` value. In this case, if a status code is supplied, then the value
+The absence of matching attributes in the request context for any of the attribute designators, entity attribute designators, attribute selectors or entity attribute selectors that are found in the policy potentially results in the policy evaluating to `Indeterminate`, if the designator or selector has the `MustBePresent` property set to `true`, as described in [Section 7.17](#namedattributedesignatortype) and [Section 7.20](#baseattributeselectortype) and potentially results in a `Decision` property containing the `Indeterminate` value. In this case, if a status code is supplied, then the value
 
 `urn:oasis:names:tc:acal:1.0:status:missing-attribute`
 
-SHALL be used, to indicate that more information is needed in order for a definitive decision to be rendered. In this case, the `StatusType` object MAY list the names and data types of any attributes that are needed by the PDP to refine its decision (see [Section 7.44](#missingattributedetailtype)). A PEP MAY resubmit a refined request context in response to a `Decision` property contents of `Indeterminate` with a status code of
+SHALL be used, to indicate that more information is needed in order for a definitive decision to be rendered. In this case, the `StatusType` object MAY list the names and data types of any attributes that are needed by the PDP to refine its decision (see [Section 7.44](#missingattributedetailtype)). A PEP MAY resubmit a refined request context in response to a `Decision` property value of `Indeterminate` with a status code of
 
 `urn:oasis:names:tc:acal:1.0:status:missing-attribute`
 
-by adding attribute values for the attribute names that were listed in the previous response. When the PDP returns a `Decision` property contents of `Indeterminate`, with a status code of
+by adding attribute values for the attribute names that were listed in the previous response. When the PDP returns a `Decision` property value of `Indeterminate`, with a status code of
 
 `urn:oasis:names:tc:acal:1.0:status:missing-attribute`,
 
@@ -5806,6 +5806,7 @@ The implementation MUST use the attributes or attribute categories associated wi
 | urn:oasis:names:tc:acal:1.0:subject-category:intermediary-subject | O | urn:oasis:names:tc:xacml:1.0:subject-category:intermediary-subject |
 | urn:oasis:names:tc:acal:1.0:subject-category:recipient-subject | O | urn:oasis:names:tc:xacml:1.0:subject-category:recipient-subject |
 | urn:oasis:names:tc:acal:1.0:subject-category:requesting-machine | O | urn:oasis:names:tc:xacml:1.0:subject-category:requesting-machine |
+| urn:oasis:names:tc:acal:1.0:attribute-category:not-applicable | M | |
 
 ### 11.2.7 Data Types
 
@@ -7542,6 +7543,10 @@ This identifier indicates a system entity associated with a local or remote code
 This identifier indicates a system entity associated with the computer that initiated the access request (for example, an IPsec identity):
 
 `urn:oasis:names:tc:acal:1.0:subject-category:requesting-machine`
+
+This identifier is used as the value of the `Category` property of a `MissingAttributeDetailType` object when the attribute is missing from a value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type, which does not belong to a specific attribute category:
+
+`urn:oasis:names:tc:acal:1.0:attribute-category:not-applicable`
 
 ## D.3 Data Types
 
