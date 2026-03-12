@@ -41,6 +41,7 @@
             {
                 "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
                 "Content": {
+                    "MediaType": "application/xml",
                     "Body": "<md:record xmlns:md=\"urn:example:med:schemas:record\" xsi:schemaLocation=\"urn:example:med:schemas:record http://www.med.example.com/schemas/record.xsd\"><md:patient><md:patientDoB>1992-03-21</md:patientDoB><md:patient-number>555555</md:patient-number><md:patientContact><md:email>b.simpson@example.com</md:email></md:patientContact></md:patient></md:record>"
                 },
                 "RequestAttribute": [
