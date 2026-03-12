@@ -930,7 +930,7 @@ To explain how to use this extension mechanism, we go through various concrete e
 In this example, we consider an ACAL implementation that supports the `AttributeSelectorType` extension from the standard JSONPath Profile of ACAL. In this case, the implementation may use as root schema the following combining schema, which combines the core schema with the supported extension's schema:
 
 ```xml
-!include examples/jacal-root-schema-example-using-jsonpath-profile-only.json
+!include examples/acal-core-json/jacal-root-schema-example-using-jsonpath-profile-only.json
 ```
 
 This schema refers to (and therefore depends on) the [JSONPath Profile's JSON schema](acal-jsonpath-json-v1.0-schema.json) by its identifier `urn:oasis:names:tc:jacal:1.0:jsonpath:schema`, which is also provided by the XACML TC with the core schema.
@@ -941,7 +941,7 @@ This schema refers to (and therefore depends on) the [JSONPath Profile's JSON sc
 In this example, we consider an ACAL implementation that supports various extensions (RequestDefaultsType, PolicyDefaultsType, AttributeSelectorType, StructuredValueType) from the XPath Profile of ACAL, and the `AttributeSelectorType` extension from the JSONPath Profile of ACAL. In this case, the implementation should use as root schema the following combining schema, which combines the core schema with the supported extensions' schemas:
 
 ```xml
-!include examples/jacal-root-schema-example-using-xpath-and-jsonpath-profiles.json
+!include examples/acal-core-json/jacal-root-schema-example-using-xpath-and-jsonpath-profiles.json
 ```
 
 This schema refers to (and therefore depends on) to both the [JSONPath Profile's JSON schema](acal-jsonpath-json-v1.0-schema.json) by its identifier `urn:oasis:names:tc:jacal:1.0:jsonpath:schema` and [XPath Profile's JSON schema](acal-xpath-json-v1.0-schema.json) by its identifier `urn:oasis:names:tc:jacal:1.0:xpath:schema`, which are also provided by the XACML TC with the core schema.

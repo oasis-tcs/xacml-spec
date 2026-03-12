@@ -290,7 +290,7 @@ This section contains an example XML document, an example request *context* and 
 The following is an instance of a medical record to which the example ACAL *rules* can be applied.  The `<record>` schema is defined in the registered namespace administered by Medi Corp.
 
 ```xml {.numberLines}
-!include examples/medical_record.xml
+!include examples/acal-xpath/medical_record.xml
 ```
 
 ### 4.4.2 Example request context
@@ -298,7 +298,7 @@ The following is an instance of a medical record to which the example ACAL *rule
 The following example illustrates a request *context*, using XACML representation (XML representation of ACAL), to which the example *rules* may be applicable. It represents a request by the physician Julius Hibbert to read the patient date of birth in the record of Bartholomew Simpson.
 
 ```xml {.numberLines}
-!include examples/Request.xml
+!include examples/acal-xpath/Request.xml
 ```
 
 Lines 21-34: Resource content. The XML resource instance, access to all or part of which may be requested, is placed here. The xpathExpression value(s) in the Request and in the Rules, as well as XPathAttributeSelectors in the Rules will apply to that content.
@@ -308,7 +308,7 @@ Lines 35-40: The identifier of the Resource instance for which access is request
 Here is the equivalent example using JACAL representation (JSON representation of ACAL):
 
 ```json {.numberLines}
-!include examples/Request.json
+!include examples/acal-xpath/Request.json
 ```
 
 
@@ -331,7 +331,7 @@ These rules may be written by different PAPs operating independently, or by a si
 The following ACAL `<Rule>` instance expresses *Rule* 1:
 
 ```xml {.numberLines}
-!include examples/Rule1.xml
+!include examples/acal-xpath/Rule1.xml
 ```
 
 Line 8: XPath expressions in the policy are to be interpreted according to the 2.0 version of the XPath specification.
@@ -343,7 +343,7 @@ Lines 41-48: This Apply expression compares the results of two XPath expressions
 Here is the equivalent example in JACAL syntax (JSON representation of ACAL):
 
 ```json {.numberLines}
-!include examples/Rule1.json
+!include examples/acal-xpath/Rule1.json
 ```
 
 #### 4.4.4.2 Rule 2
@@ -351,7 +351,7 @@ Here is the equivalent example in JACAL syntax (JSON representation of ACAL):
 The following ACAL `<Rule>` instance expresses *Rule* 2:
 
 ```xml {.numberLines}
-!include examples/Rule2.xml
+!include examples/acal-xpath/Rule2.xml
 ```
 
 Line 18: The `<XPathAttributeSelector>` element selects the patient's date of birth by taking the XPath expression over the resource content.
@@ -361,7 +361,7 @@ Line 59: The second argument selects the value of the `<md:parentGuardianId>` el
 Here is the equivalent example in JACAL syntax (JSON representation of ACAL):
 
 ```json {.numberLines}
-!include examples/Rule2.json
+!include examples/acal-xpath/Rule2.json
 ```
 
 #### 4.4.4.3 Rule 3
@@ -369,7 +369,7 @@ Here is the equivalent example in JACAL syntax (JSON representation of ACAL):
 The following ACAL `<Rule>` instance expresses *Rule* 3:
 
 ```xml {.numberLines}
-!include examples/Rule3.xml
+!include examples/acal-xpath/Rule3.xml
 ```
 
 Lines 28-35: The `<Apply>` element targets resources that match the XPath expression `md:record/md:medical`.
@@ -379,7 +379,7 @@ Lines 59-64: The first parameter of the obligation indicates where the PEP will 
 Here is the equivalent example in JACAL syntax (JSON representation of ACAL):
 
 ```json {.numberLines}
-!include examples/Rule3.json
+!include examples/acal-xpath/Rule3.json
 ```
 
 ## 4.5 Changes From the Previous Version
