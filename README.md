@@ -23,8 +23,6 @@ Please send questions or comments about <a href="https://www.oasis-open.org/reso
 
 ## FAQ (Frequently Asked Questions)
 
-*All the Java commands below have been tested with Java 21 LTS.*
-
 ### How to validate XACML documents with the XACML schemas (when I support XML Schema 1.1)?
 
 Since XACML 4.0, XACML schemas exist in [XSD version 1.1](https://www.w3.org/TR/xmlschema11-1/) to provide more advanced validation and especially an equivalence for the UML constraints (OCL) defined in ACAL agnostic model, in form of XSD 1.1 assertions (`xs:assert`). One way to validate against a XSD 1.1 schema is to use [Apache Xerces2 Java XML Parser](https://xerces.apache.org/xerces2-j/), more specifically its [binary distribution](https://xerces.apache.org/mirrors.cgi#binary) called _**Xerces2 Java 2.12.2 (XML Schema 1.1)**_. 
@@ -36,6 +34,7 @@ Then (based on Apache [Xerces2 Java XML Parser's issue 1726](https://issues.apac
 In order to validate a XACML document, say `MyPolicy.xml`, run the following command line (you may omit `-a ./acal-xpath-xml-v4.0-schema.xsd` (resp. `a ./acal-jsonpath-xml-v4.0-schema.xsd`) if your XACML document does not use the XPath (resp. JSONPath) Profile):
 
 ```console
+# Tested with Java 21 LTS
 $ java -cp "xerces-2_12_2-xml-schema-1.1/*" jaxp.SourceValidator -i MyPolicy.xml -a ./acal-core-xml-v4.0-schema.xsd -a ./acal-xpath-xml-v4.0-schema.xsd -a ./acal-jsonpath-xml-v4.0-schema.xsd -f -fx -xsd11
 ```
 
@@ -54,18 +53,21 @@ Here is an example of how to do that with the **XML schema 1.0-only version of X
 
 2. Generate (once and for all validations) the XSD 1.0 version of the core schema using the XSLT stylesheet `xsd1.1-to-1.0.xslt` with [Saxon HE](https://www.saxonica.com/html/download/java.html) (tested with v12.5) as the XSLT engine:
    ```console
+   # Tested with Java 21 LTS
    $ java -jar saxon-he-12.5.jar -xsl:xsd1.1-to-1.0.xsl -s:acal-core-xml-v4.0-schema.xsd -o:/tmp/acal-core-xml-v4.0-schema-xsd1.0.xsd
    ```
 
 3. Generate (once and for all validations) - from the Schematron schema - the XSLT stylesheet that will be processed by the XSLT engine to do the actual Schematron validation of XML documents. Here is an example of generation with [Schxslt2](https://codeberg.org/SchXslt/schxslt2/):
 
     ```console
+    # Tested with Java 21 LTS
     $ java -jar saxon-he-12.5.jar -xsl:/tmp/transpile.xsl -s:acal-core-xml-v4.0-schematron.sch -o:/tmp/acal-core-xml-v4.0-schematron.xsl
     ```
 
 4. In order to validate a XACML document, say `MyPolicy.xml`, against both the XSD 1.0 and Schematron schemas, run the following command lines:
 
     ```console
+    # Tested with Java 21 LTS
     $ java -cp "/tmp/xerces-2_12_2/*" jaxp.SourceValidator -a /tmp/acal-core-xml-v4.0-schema-xsd1.0.xsd -a acal-xpath-xml-v4.0-schema.xsd -a acal-jsonpath-xml-v4.0-schema.xsd -f -i MyPolicy.xml
     $ java -jar saxon-he-12.5.jar -xsl:/tmp/acal-core-xml-v4.0-schematron.xsl MyPolicy.xml
     ```
