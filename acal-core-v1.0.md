@@ -4856,7 +4856,7 @@ skinparam style strictuml
 hide empty members 
 hide circle
 class MissingAttributeDetailType <<dataType>> {
-   + Category: IdentifierType [1]
+   + Category: IdentifierType [0..1]
    + AttributeId: IdentifierType [1]
    + Issuer: Name [0..1]
    + DataType: IdentifierType [1]
@@ -4871,9 +4871,9 @@ A `MissingAttributeDetailType` object contains the following properties:
 
 : A sequence of `ValueType` objects specifying the required value(s) of the missing attribute. These objects SHALL NOT redefine/override the DataType identifier already defined by the `DataType` property below, and SHOULD not have any DataType identifier property set at all, if possible.
 
-`Category` [Required]
+`Category` [Optional]
 
-: An `IdentifierType` value indicating the category of the missing attribute. Note that an entity attribute designator or entity attribute selector where the `Expression` property evaluates to a value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type does not nominate an attribute category for the named attribute. In this case the `Category` property is set to the special value `urn:oasis:names:tc:acal:1.0:attribute-category:not-applicable`.
+: An `IdentifierType` value indicating the category of the missing attribute. Note that an entity attribute designator or entity attribute selector where the `Expression` property evaluates to a value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type does not nominate an attribute category for the named attribute. In this case only the `Category` property is omitted.
 
 `AttributeId` [Required]
 
@@ -5806,7 +5806,6 @@ The implementation MUST use the attributes or attribute categories associated wi
 | urn:oasis:names:tc:acal:1.0:subject-category:intermediary-subject | O | urn:oasis:names:tc:xacml:1.0:subject-category:intermediary-subject |
 | urn:oasis:names:tc:acal:1.0:subject-category:recipient-subject | O | urn:oasis:names:tc:xacml:1.0:subject-category:recipient-subject |
 | urn:oasis:names:tc:acal:1.0:subject-category:requesting-machine | O | urn:oasis:names:tc:xacml:1.0:subject-category:requesting-machine |
-| urn:oasis:names:tc:acal:1.0:attribute-category:not-applicable | M | |
 
 ### 11.2.7 Data Types
 
@@ -7543,10 +7542,6 @@ This identifier indicates a system entity associated with a local or remote code
 This identifier indicates a system entity associated with the computer that initiated the access request (for example, an IPsec identity):
 
 `urn:oasis:names:tc:acal:1.0:subject-category:requesting-machine`
-
-This identifier is used as the value of the `Category` property of a `MissingAttributeDetailType` object when the attribute is missing from a value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type, which does not belong to a specific attribute category:
-
-`urn:oasis:names:tc:acal:1.0:attribute-category:not-applicable`
 
 ## D.3 Data Types
 

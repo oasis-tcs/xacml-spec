@@ -286,7 +286,7 @@
 		</xs:sequence>
 		<!-- Change to XACML 3.0 (issue #48): Category/AttibuteId/Datatype types changed to
 		IdentifierType for supporting Short Identifiers -->
-		<xs:attribute name="Category" type="xacml:IdentifierType" use="required"/>
+		<xs:attribute name="Category" type="xacml:IdentifierType" use="optional"/>
 		<xs:attribute name="AttributeId" type="xacml:IdentifierType" use="required"/>
 		<xs:attribute name="DataType" type="xacml:IdentifierType" use="required"/>
 		<!-- Change to XACML 3.0 (issue #44): Issuer type changed to xs:Name -->
