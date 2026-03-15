@@ -6271,10 +6271,6 @@ Freed, N. and N. Borenstein, "Multipurpose Internet Mail Extensions (MIME) Part 
 *Key Words for Use in RFCs to Indicate Requirement Levels*, BCP 14, RFC 2119, March 1997. [Online]. Available: https://www.rfc-editor.org/info/rfc2119
 
 
-###### [RFC2732]
-
-RFC 2732, Hinden R, Carpenter B, Masinter L, Format for Literal IPv6 Addresses in URL's,  https://www.ietf.org/rfc/rfc2732.txt
-
 ###### [RFC3198]
 
 IETF RFC 3198: Terminology for Policy-Based Management, November 2001. https://www.ietf.org/rfc/rfc3198.txt
@@ -6449,9 +6445,11 @@ The `urn:oasis:names:tc:acal:1.0:data-type:ipAddress` data type represents an IP
 ipAddress = address [ `/` mask ] [ `:` [ portrange ] ]
 ```
 
-For an IPv4 address, the address and mask are formatted in accordance with the syntax for a "host" in IETF RFC 2396 "Uniform Resource Identifiers (URI): Generic Syntax", section 3.2.
+For an IPv4 address, the address and mask SHALL each conform to the `IPv4address` rule defined in [[RFC3986](#rfc3986)], Appendix A.
 
-For an IPv6 address, the address and mask are formatted in accordance with the syntax for an "ipv6reference" in IETF RFC 2732 "Format for Literal IPv6 Addresses in URL's". (Note that an IPv6 address or mask, in this syntax, is enclosed in literal `[` `]` brackets.)
+For an IPv6 address, the address and mask SHALL each conform to the `IP-literal` rule (using the `IPv6address` alternative) defined in [[RFC3986](#rfc3986)], Section 3.2.2 and Appendix A. (Note that an IPv6 address or mask, in this syntax, is enclosed in literal `[` `]` brackets.)
+
+The mask, where present, uses the same syntactic rule as the address component (i.e., `IPv4address` for IPv4, `IP-literal` for IPv6) and represents a network address mask (e.g., `255.255.255.0` for IPv4 or `[ffff:ffff::]` for IPv6). The mask format is defined by this specification and is not derived from any external RFC.
 
 ### C.2.4 DNS Name
 
@@ -6461,7 +6459,7 @@ The `urn:oasis:names:tc:acal:1.0:data-type:dnsName` data type represents a Domai
 dnsName = hostname [ `:` portrange ]
 ```
 
-The hostname is formatted in accordance with IETF RFC 2396 "Uniform Resource Identifiers (URI): Generic Syntax", section 3.2, except that a wildcard `*` may be used in the left-most component of the hostname to indicate "any subdomain" under the domain specified to its right.
+The hostname SHALL conform to the `reg-name` rule defined in [[RFC3986](#rfc3986)], Section 3.2.2 and Appendix A, except that a wildcard `*` may be used in the left-most component of the hostname to indicate "any subdomain" under the domain specified to its right.
 
 For both the `urn:oasis:names:tc:acal:1.0:data-type:ipAddress` and <!-- Newline added to fit on PDF page -->
 `urn:oasis:names:tc:acal:1.0:data-type:dnsName` data types, the port or port range syntax SHALL be
