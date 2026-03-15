@@ -1417,7 +1417,6 @@
 		"MissingAttributeDetailType": {
 			"type": "object",
 			"required": [
-				"Category",
 				"AttributeId",
 				"DataType"
 			],

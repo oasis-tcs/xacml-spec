@@ -4857,7 +4857,7 @@ skinparam style strictuml
 hide empty members 
 hide circle
 class MissingAttributeDetailType <<dataType>> {
-   + Category: IdentifierType [1]
+   + Category: IdentifierType [0..1]
    + AttributeId: IdentifierType [1]
    + Issuer: Name [0..1]
    + DataType: IdentifierType [1]
@@ -4872,9 +4872,9 @@ A `MissingAttributeDetailType` object contains the following properties:
 
 : A sequence of `ValueType` objects specifying the required value(s) of the missing attribute. These objects SHALL NOT redefine/override the DataType identifier already defined by the `DataType` property below, and SHOULD not have any DataType identifier property set at all, if possible.
 
-`Category` [Required]
+`Category` [Optional]
 
-: An `IdentifierType` value indicating the category of the missing attribute. Note that an entity attribute designator or entity attribute selector where the `Expression` property evaluates to a value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type does not nominate an attribute category for the named attribute. In this case the `Category` property is set to the special value `urn:oasis:names:tc:acal:1.0:attribute-category:not-applicable`.
+: An `IdentifierType` value indicating the category of the missing attribute. Note that an entity attribute designator or entity attribute selector where the `Expression` property evaluates to a value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type does not nominate an attribute category for the named attribute. In this case only the `Category` property is omitted.
 
 `AttributeId` [Required]
 
@@ -5807,7 +5807,6 @@ The implementation MUST use the attributes or attribute categories associated wi
 | urn:oasis:names:tc:acal:1.0:subject-category:intermediary-subject | O | urn:oasis:names:tc:xacml:1.0:subject-category:intermediary-subject |
 | urn:oasis:names:tc:acal:1.0:subject-category:recipient-subject | O | urn:oasis:names:tc:xacml:1.0:subject-category:recipient-subject |
 | urn:oasis:names:tc:acal:1.0:subject-category:requesting-machine | O | urn:oasis:names:tc:xacml:1.0:subject-category:requesting-machine |
-| urn:oasis:names:tc:acal:1.0:attribute-category:not-applicable | M | |
 
 ### 11.2.7 Data Types
 
@@ -6640,13 +6639,13 @@ This section contains the specification for logical functions that operate on ar
 
 : This function SHALL take zero or more arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:boolean`.
 
-: This function returns `true` if at least one of its arguments evaluates to `true`; otherwise, the function returns `Indeterminate` if any argument evaluates to `Indeterminate`; otherwise, the function returns `false` (which applies in the case of zero arguments). The order of evaluation SHALL be from the first argument to the last and SHALL stop immediately if any argument evaluates to `true`, leaving the rest of the arguments unevaluated.
+: This function returns `true` if at least one of its arguments evaluates to `true`; otherwise, the function returns `Indeterminate` if any argument evaluates to `Indeterminate`; otherwise, the function returns `false` (which applies in the case of zero arguments). The arguments may be evaluated in any order. Evaluation of the arguments MAY stop if evaluation of the remaining arguments will not change the result of the function, e.g., if any argument evaluates to `true`.
 
 `urn:oasis:names:tc:acal:1.0:function:and`
 
 : This function SHALL take zero or more arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:boolean`.
 
-: This function returns `false` if at least one of its arguments evaluates to `false`; otherwise, the function returns `Indeterminate` if any argument evaluates to `Indeterminate`; otherwise, the function returns `true` (which applies in the case of zero arguments). The order of evaluation SHALL be from the first argument to the last and SHALL stop immediately if any argument evaluates to `false`, leaving the rest of the arguments unevaluated.
+: This function returns `false` if at least one of its arguments evaluates to `false`; otherwise, the function returns `Indeterminate` if any argument evaluates to `Indeterminate`; otherwise, the function returns `true` (which applies in the case of zero arguments). The arguments may be evaluated in any order. Evaluation of the arguments MAY stop if evaluation of the remaining arguments will not change the result of the function, e.g., if any argument evaluates to `false`.
 
 `urn:oasis:names:tc:acal:1.0:function:n-of`
 
@@ -6654,7 +6653,7 @@ This section contains the specification for logical functions that operate on ar
 
 : Let N be the value of the first argument and let M be the number of Boolean arguments. This functions returns `Indeterminate` if N is `Indeterminate`; otherwise, the function returns `true` if N is less than or equal to 0; otherwise, the function returns `false` if N is greater than M; otherwise, the function returns `true` if at least N of the Boolean arguments evaluate to `true`; otherwise, the function return `false` if at least (M + 1 - N) of the Boolean arguments evaluate to `false`; otherwise, the function returns `Indeterminate`.
 
-: The order of evaluation SHALL be: evaluate the first argument and if it is not `Indeterminate`, then evaluate each Boolean argument in order. The evaluation SHALL stop immediately leaving the rest of the Boolean arguments unevaluated if the requirements to return `true` or `false` have been satisfied or if there are insufficient remaining Boolean arguments to satisfy the requirements to return either `true` or `false`.
+: The first argument MUST be evaluated first. If it is not `Indeterminate` then the Boolean arguments may be evaluated in any order. Evaluation of the Boolean arguments MAY stop if evaluation of the remaining arguments will not change the result of the function, e.g., if the requirements to return `true` or `false` have been satisfied or if there are insufficient remaining Boolean arguments to satisfy the requirements to return either `true` or `false`.
 
 : Note that this function differs from the similarly-named function in XACML [[XACML](#xacml)], which returned `Indeterminate` if N was less than zero or greater than M.
 
@@ -7545,10 +7544,6 @@ This identifier indicates a system entity associated with a local or remote code
 This identifier indicates a system entity associated with the computer that initiated the access request (for example, an IPsec identity):
 
 `urn:oasis:names:tc:acal:1.0:subject-category:requesting-machine`
-
-This identifier is used as the value of the `Category` property of a `MissingAttributeDetailType` object when the attribute is missing from a value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type, which does not belong to a specific attribute category:
-
-`urn:oasis:names:tc:acal:1.0:attribute-category:not-applicable`
 
 ## D.3 Data Types
 
