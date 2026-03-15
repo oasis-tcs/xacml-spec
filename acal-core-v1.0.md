@@ -1,24 +1,24 @@
-![OASIS](http://docs.oasis-open.org/templates/OASISLogo-v3.0.png)
-
-
 ---
-
-
-# Attribute-Centric Authorization Language (ACAL) Version 1.0
-
-
-## Committee Specification Draft 01
-
-
-## 18 February 2026
-
+# Document metadata processed by Pandoc:
+logo: |
+  ![OASIS](images/OASISLogo-v3.0.png)
+# Original logo: http://docs.oasis-open.org/templates/OASISLogo-v3.0.png
+title: Attribute-Centric Authorization Language (ACAL) Version 1.0
+subtitle: Committee Specification Draft 02
+keywords: 
+- access control
+- authorization
+- ABAC
+- policy language
+- standard
+# date metadata is set automatically to current date, unless specified on pandoc commandline: --metadata date="..."
+---
 
 ### This version
 
-<!-- TODO: update the links according to OASIS requirements -->
-- https://docs.oasis-open.org/xacml/acal/acal/core/v1.0/csd01/acal-core-v1.0-csd01.html (Authoritative)
-- https://docs.oasis-open.org/xacml/acal/acal/core/v1.0/csd01/acal-core-v1.0-csd01.pdf
-- https://docs.oasis-open.org/xacml/acal/acal/core/v1.0/csd01/acal-core-v1.0-csd01.md
+- https://docs.oasis-open.org/xacml/acal/acal/core/v1.0/csd02/acal-core-v1.0-csd02.html (Authoritative)
+- https://docs.oasis-open.org/xacml/acal/acal/core/v1.0/csd02/acal-core-v1.0-csd02.pdf
+- https://docs.oasis-open.org/xacml/acal/acal/core/v1.0/csd02/acal-core-v1.0-csd02.md
 
 ### Previous version
 
@@ -62,8 +62,8 @@ This specification defines Version 1.0 of the Attribute-Centric Authorization La
 When referencing this document, the following citation format should be used:
 
 **[ACAL-Core-1.0]**
-_Attribute-Centric Authorization Language (ACAL) Version 1.0_.
-Edited by Steven Legg and Cyril Dangerville. 18 February 2026. OASIS Committee Specification Draft 01. https://docs.oasis-open.org/xacml/acal/acal/core/v1.0/csd01/acal-core-v1.0-csd01.html . Latest version: https://docs.oasis-open.org/xacml/acal/acal/core/v1.0/acal-core-v1.0.html
+_%title%_.
+Edited by Steven Legg and Cyril Dangerville. %date% . OASIS %subtitle%. https://docs.oasis-open.org/xacml/acal/acal/core/v1.0/csd02/acal-core-v1.0-csd02.html . Latest version: https://docs.oasis-open.org/xacml/acal/acal/core/v1.0/acal-core-v1.0.html
 
 
 ### Related Work
@@ -2828,7 +2828,7 @@ class RestrictedType <<stereotype>> extends PrimitiveType {
 
 ##### 7.1.2.3.1 URI
 
-A `URI` is a sequence of characters representing a Uniform Resource Identifier according to RFC 3986. Defined in UML as follows:
+A `URI` is a sequence of characters representing a Uniform Resource Identifier according to [[RFC3986](#rfc3986)]. Defined in UML as follows:
 ```plantuml
 @startuml
 hide empty members
@@ -2943,7 +2943,7 @@ class ShortIdValueType <<primitive>> <<restrictedString>> {
 
 The pattern is: `^uc*(\{s\}uc*)*$` where:
 - `s` is the pattern for a ShortId name, copied from the `ShortIdNameType` definition (which excludes curly braces).
-- `uc` is the pattern for a valid URI character based on RFC 3986 (cf. the ABNF definition of 'URI' in Appendix A), which excludes curly braces: `[!#-;=?-\[\]_a-z~]`
+- `uc` is the pattern for a valid URI character based on [[RFC3986](#rfc3986)] (cf. the ABNF definition of 'URI' in Appendix A), which excludes curly braces: `[!#-;=?-\[\]_a-z~]`
 The `minLength=1` restriction prevents the empty string, i.e. there is at least one `uc` or `{s}`.
 
 ##### 7.1.2.3.8 IdentifierType
@@ -2951,7 +2951,7 @@ The `minLength=1` restriction prevents the empty string, i.e. there is at least 
 A value of the `IdentifierType` simple type refers to a specific attribute category, attribute, data type, function, notice, status code, combining algorithm.
 
 UML definition (class diagram):
-<!-- TODO: Pattern needs to be improved as this allows the empty string and other undesirable identifiers. See proposals on issue #56.  -->
+<!-- TODO: Pattern needs to be improved as this allows some undesirable identifiers. See proposals on issue #56.  -->
 ```plantuml
 @startuml
 hide empty members 
@@ -2959,13 +2959,14 @@ hide circle
 class IdentifierType <<primitive>> <<restrictedString>> {
    <<restrictedString>>
    pattern='^[^{}]*(\{[A-Za-z][0-9A-Za-z]*(-[0-9A-Za-z]+)*\}[^{}]*)*$'
+   minLength=1
    --
 }
 @enduml
 ```
 
 A value of this simple type is either:
-* an absolute URI [[RFC2396](#rfc2396)],
+* an absolute URI [[RFC3986](#rfc3986)],
 * the name of a short identifier or
 * a character string with one or more short identifier names enclosed by curly brackets (i.e., `{` and `}`; U+007B and U+007D) optionally preceded, followed and/or separated by other characters allowed in a URI.
 
@@ -3201,7 +3202,7 @@ A `ShortIdType` object contains the following properties:
 : The character string used to replace the simple alias name when a value of `IdentifierType` is evaluated to produce a complete URI; see [Section 8.3](#83-identifier-evaluation).
 
 The value of the `Value` property SHALL be either one of the following:
-* a character string with only characters allowed in a URI [RFC3986] (curly brackets are not allowed) or
+* a character string with only characters allowed in a URI [[RFC3986](#rfc3986)] (curly brackets are not allowed) or
 
 * a character string with one or more references to other short identifiers in the form of the short identifier name enclosed in curly brackets (i.e., `{` and `}`; U+007B and U+007D) optionally preceded, followed and/or separated by other characters allowed in a URI (this excludes curly brackets, which means that the curly bracket characters are not permitted in the value other than to enclose a short identifier name). In addition, the following restrictions apply:
 
@@ -5054,7 +5055,7 @@ All other decisions SHALL result in the permission of access.
 
 ## 8.3 Identifier Evaluation
 
-Various ACAL artifacts are uniquely identified by URI [[RFC2396](#rfc2396)]. This includes attribute categories, attributes, data types, functions, notices, status codes, combining algorithms. Values of the `IdentifierType` simple type are used to refer to such artifacts, possibly using short identifier names, which are not themselves URIs. Therefore an `IdentifierType` value containing short identifier names must undergo evaluation to convert the value to an absolute URI.
+Various ACAL artifacts are uniquely identified by URI [[RFC3986](#rfc3986)]. This includes attribute categories, attributes, data types, functions, notices, status codes, combining algorithms. Values of the `IdentifierType` simple type are used to refer to such artifacts, possibly using short identifier names, which are not themselves URIs. Therefore an `IdentifierType` value containing short identifier names must undergo evaluation to convert the value to an absolute URI.
 
 The value of a short identifier may also contain short identifier names. The _expanded value_ of the short identifier is the value of the short identifier with any reference to another short identifier (including the curly brackets) replaced by the _expanded value_ of the referenced short identifier (thus the expansion is applied recursively).
 
@@ -6270,9 +6271,6 @@ Freed, N. and N. Borenstein, "Multipurpose Internet Mail Extensions (MIME) Part 
 
 *Key Words for Use in RFCs to Indicate Requirement Levels*, BCP 14, RFC 2119, March 1997. [Online]. Available: https://www.rfc-editor.org/info/rfc2119
 
-###### [RFC2396]
-
-RFC 2396, Berners-Lee T, Fielding R, Masinter L, Uniform Resource Identifiers (URI): Generic Syntax, https://www.ietf.org/rfc/rfc2396.txt
 
 ###### [RFC2732]
 
@@ -6281,6 +6279,10 @@ RFC 2732, Hinden R, Carpenter B, Masinter L, Format for Literal IPv6 Addresses i
 ###### [RFC3198]
 
 IETF RFC 3198: Terminology for Policy-Based Management, November 2001. https://www.ietf.org/rfc/rfc3198.txt
+
+###### [RFC3986]
+
+RFC 3986, Berners-Lee T, Fielding R, Masinter L, Uniform Resource Identifiers (URI): Generic Syntax, https://www.ietf.org/rfc/rfc3986.txt
 
 ###### [RFC4289]
 
@@ -8125,20 +8127,19 @@ The generation command uses a CSS stylesheet file (`-c` argument) provided by OA
 
 ### HTML generation
 
-Run the following command line to generate HTML from this markdown file (named `acal-core-v1.0-csd01.md`) to an output file `/tmp/acal-core-v1.0-csd01.html`:
+Run the following command line to generate HTML from this markdown file (named `acal-core-v1.0-csd02.md`) to an output file `/tmp/acal-core-v1.0-csd02.html`:
 
 ```console
-$ pandoc -f gfm+definition_lists -t html -c styles/markdown-styles-v1.7.3a.css -s --lua-filter pandoc/diagram.lua --defaults pandoc/defaults.yaml --embed-resources --metadata title=" " -o /tmp/acal-core-v1.0-csd01.html acal-core-v1.0-csd01.md
+$ pandoc -f gfm+definition_lists -t html -c styles/markdown-styles-v1.7.3a.css -s --lua-filter pandoc/diagram.lua --lua-filter pandoc/meta_vars.lua --defaults pandoc/defaults.yaml --embed-resources -o /tmp/acal-core-v1.0-csd02.html acal-core-v1.0-csd02.md
 ```
-
-Note this command generates a Table of Contents (TOC) in HTML which is located at the top of the HTML document, and which requires additional editing in order to be published in the expected OASIS style. This editing will be handled by OASIS staff during publication.
 
 ### PDF generation
 
-For PDF output (file `/tmp/acal-core-v1.0-csd01.pdf`), the command line is the following (different `-t` and `-H` arguments):
+For PDF output (file `/tmp/acal-core-v1.0-csd02.pdf`), the command line is the following (different `-t` and `-H` arguments):
 
 ```console
-$ pandoc -f gfm+definition_lists -t pdf -c styles/markdown-styles-v1.7.3a.css -H pandoc/custom_latex_header_for_pandoc_pdf_output.tex -s -L pandoc/diagram.lua --defaults pandoc/defaults.yaml --metadata title=" " --embed-resources -o /tmp/acal-core-v1.0-csd01.pdf acal-core-v1.0-csd01.md
+$ DATE=$(date -u +"%d %B %Y")
+$ pandoc -f gfm+definition_lists -t pdf -c styles/markdown-styles-v1.7.3a.css -H pandoc/custom_latex_header_for_pandoc_pdf_output.tex -s -L pandoc/diagram.lua --lua-filter pandoc/meta_vars.lua --defaults pandoc/defaults.yaml --embed-resources -o /tmp/acal-core-v1.0-csd02.pdf acal-core-v1.0-csd02.md
 ```
 
 
@@ -8299,7 +8300,7 @@ ACAL 1.0 is a successor to XACML 3.0. ACAL 1.0 differs from XACML 3.0 in the fol
 
 ## Revision History
 
-Latest revision history can be obtained from [OASIS XACML TC's github repository](https://github.com/oasis-tcs/xacml-spec/blob/v1.0-csd01/acal-core-v1.0-csd01.md).
+Latest revision history can be obtained from [OASIS XACML TC's github repository](https://github.com/oasis-tcs/xacml-spec/blob/v1.0-csd02/acal-core-v1.0-csd02.md).
 
 <!--
 - \< Date in yyyy-mm-dd format \>, \< Revision number \>  
