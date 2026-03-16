@@ -8125,7 +8125,7 @@ The generation command uses a CSS stylesheet file (`-c` argument) provided by OA
 Run the following command line to generate HTML from this markdown file (named `acal-core-v1.0-csd02.md`) to an output file `/tmp/acal-core-v1.0-csd02.html`:
 
 ```console
-$ pandoc -f gfm+definition_lists -t html -c styles/markdown-styles-v1.7.3a.css -s --lua-filter pandoc/diagram.lua --lua-filter pandoc/meta_vars.lua --defaults pandoc/defaults.yaml --embed-resources -o /tmp/acal-core-v1.0-csd02.html acal-core-v1.0-csd02.md
+$ pandoc -f gfm+definition_lists -t html -c styles/markdown-styles-v1.7.3a.css -s --template pandoc/templates/default.html --lua-filter pandoc/diagram.lua --lua-filter pandoc/meta_vars.lua --defaults pandoc/defaults.yaml --embed-resources -o /tmp/acal-core-v1.0-csd02.html acal-core-v1.0-csd02.md
 ```
 
 ### PDF generation
