@@ -1041,12 +1041,12 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 	identifiers -->
 	<xs:simpleType name="IdentifierType">
 		<xs:restriction base="xs:string">
-			<!-- The pattern needs some improvement as this allows undesirable identifiers. See proposals on issue #56 and the XSD 1.1 assertion in the comment down below.  -->
+			<!-- The pattern needs some improvement as this allows undesirable identifiers. See the XSD 1.1 assertion as an alternative in the comment down below.  -->
 			<xs:pattern value="[^{}]*(\{[A-Za-z][0-9A-Za-z]*(-[0-9A-Za-z]+)*\}[^{}]*)*"/>
 			<xs:minLength value="1" />
 			<xs:whiteSpace value="collapse" />
 			<!--								
-			As an alternative, if and only if your XSD 1.1 / XPath processor supports XPath 3.0 or later (for supporting let expressions or fn:environment-variable() function), you may use the XSD 1.1 assertion below for stricter validation (if your ACAL implementation is already parsing such values properly while validating them against the same regular expressions, then your implementation-specific validation is probably more optimal, in which case you may consider this XSD assertion for information / guidance only): 
+			As an alternative, if and only if your XSD 1.1 / XPath processor supports XPath 3.0 or later (for supporting let expressions or fn:environment-variable() function), you may use the XSD 1.1 assertion below for stricter validation (if your ACAL implementation is already parsing such values properly while validating them against the same regular expressions, then your implementation-specific validation is probably more optimal, in which case you may consider this XSD assertion for implementation guidance only): 
 								
 				<xs:assert test="let $URI_CHAR_PATTERN := '[!#-;=?-\[\]_a-z~]', 
 					$URI_CHARS_ANCHORED_PATTERN := concat('^', $URI_CHAR_PATTERN, '*$'), 

@@ -85,9 +85,11 @@
 			"minLength": 1
 		},
 		"IdentifierType": {
-			"description": "Identifier supporting Short Identifier names (Pattern needs to be improved as this allows the empty string and other undesirable identifiers, see proposals from issue #56)",
+			"description": "Identifier supporting Short Identifier names",
 			"type": "string",
-			"pattern": "^[^{}]*(\\{[A-Za-z][0-9A-Za-z]*(-[0-9A-Za-z]+)*\\}[^{}]*)*$"
+			"pattern": "^[^{}]*(\\{[A-Za-z][0-9A-Za-z]*(-[0-9A-Za-z]+)*\\}[^{}]*)*$",
+			"minLength": 1,
+			"$comment": "The pattern may be improved for stricter validation as this allows some undesirable identifiers. However, if your ACAL implementation is already parsing and validating such values strictly according to the ACAL core specification, then your implementation-specific validation is probably more optimal than using an improved - more complex - pattern. The full regex for stricter validation is provided here for implementation guidance only, matching either 1) ShortIdNameType's regex above ( <SHORTNAME> ), or 2) the regex for absolute URIs ( '^[A-Za-z][A-Za-z0-9+\-.]*:<URI_CHAR>+$' where <URI_CHAR> is the regex for ASCII-only URI characters ( '[!#-;=?-\[\]_a-z~]' ), or 3) the regex for {shortname}s possibly preceded/followed by URI characters ( ^<URI_CHAR>*(\{<SHORTNAME>\}<URI_CHAR>*)+$ ):  ^([A-Za-z][0-9A-Za-z]*(-[0-9A-Za-z]+)*|[!#-;=?-\[\]_a-z~]*(\{[A-Za-z][0-9A-Za-z]*(-[0-9A-Za-z]+)*\}[!#-;=?-\[\]_a-z~]*)+|[A-Za-z][A-Za-z0-9+\-.]*:[!#-;=?-\[\]_a-z~]+)$  ",
 		},
 		"LocalIdentifierType": {
 			"description": "Local identifier, unique only within a Request, Policy or Rule",
