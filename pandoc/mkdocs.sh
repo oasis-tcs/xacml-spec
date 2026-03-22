@@ -25,6 +25,10 @@ set -- "${POSITIONAL[@]}"
 INPUT="$1"
 [ ! -f "$INPUT" ] && echo "Error: input file '$INPUT' not found." && exit 1
 
+# Script's directory — filters, templates, defaults, and draft output live here
+# NOTE: must be resolved before OUTPUT_HTML/OUTPUT_PDF which reference it
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 # Resolve absolute paths so cd doesn't break relative references
 INPUT_ABS="$(cd "$(dirname "$INPUT")" && pwd)/$(basename "$INPUT")"
 INPUT_DIR="$(dirname "$INPUT_ABS")"
@@ -32,11 +36,9 @@ BASENAME="$(basename "$INPUT_ABS" .md)"
 OUTPUT_HTML="$SCRIPT_DIR/draft/${BASENAME}.html"
 OUTPUT_PDF="$SCRIPT_DIR/draft/${BASENAME}.pdf"
 
-# Script's directory — filters, templates, and defaults live here
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
 # --- locate Chrome (macOS app bundles and WSL/Git Bash Windows paths) ---
-# TODO: remove this function once pandoc PDF generation is reliable
+# TODO: remove find_chrome() and the --pdf flag once pandoc PDF generation
+#       is reliable, or once the Playwright path below is adopted instead.
 find_chrome() {
     # Check PATH first (covers Linux packages and some custom installs)
     for name in google-chrome google-chrome-stable chromium chromium-browser; do
@@ -131,36 +133,22 @@ printf "HTML: %s\n" "$OUTPUT_HTML"
 # --- optionally produce PDF from the completed HTML via Chrome headless ---
 #
 # TODO: replace this entire block with pandoc native PDF once the pandoc
-#       PDF generation bug is resolved. At that point, remove the --pdf flag,
-#       find_chrome(), and the Chrome dependency check above.
+#       PDF generation bug is resolved. Remove --pdf flag, find_chrome(),
+#       and the Chrome dependency check above at that point.
 #
-# PDF ENGINE SELECTION
-# Chrome has two headless engines with different behaviours:
+# KNOWN ISSUE: Chrome's --print-to-pdf-no-header flag is broken in all
+# current headless modes. Both --headless (legacy) and --headless=new fail
+# to suppress the running header (URL) and footer (date, page N of M).
+# Validated broken as of Chrome 121+ across both engines.
+# Chromium bug: https://bugs.chromium.org/p/chromium/issues/detail?id=1378911
 #
-#   --headless (legacy engine)
-#       Supports --print-to-pdf-no-header, which suppresses Chrome's default
-#       running headers (URL) and footers (date, page N of M). This is the
-#       engine we prefer. Google has marked it deprecated but has not yet
-#       removed it as of early 2026.
+# The PDF produced here will contain Chrome headers/footers. A post-processing
+# crop step (see TODO below) is needed to remove them until this is resolved.
 #
-#   --headless=new (current engine, default in Chrome 112+)
-#       Does NOT honour --print-to-pdf-no-header due to an unresolved
-#       Chromium regression. Headers and footers appear in the PDF output.
-#       Chromium bug: https://bugs.chromium.org/p/chromium/issues/detail?id=1378911
+# FUTURE FIX — replace the Chrome CLI block below with Playwright, which
+# suppresses headers via the DevTools Protocol (displayHeaderFooter: false)
+# rather than relying on the broken CLI flag:
 #
-# RUNTIME SELECTION STRATEGY
-# We attempt the legacy engine first and detect success by checking whether
-# the output file was actually written (Chrome does not reliably return
-# non-zero exit codes on failure). If the legacy engine has been removed,
-# we fall back to --headless=new and warn that headers/footers may appear.
-#
-# WHEN LEGACY ENGINE IS EVENTUALLY REMOVED
-# Replace the Chrome block below with a small Playwright or Puppeteer script
-# that calls page.pdf({ displayHeaderFooter: false }) via the DevTools
-# Protocol — which is how those tools suppress headers internally:
-#
-#   npx playwright pdf --no-header-footer "file://${OUTPUT_HTML}" "$OUTPUT_PDF"
-#   -- or --
 #   node -e "
 #     const { chromium } = require('playwright');
 #     (async () => {
@@ -171,36 +159,26 @@ printf "HTML: %s\n" "$OUTPUT_HTML"
 #       await b.close();
 #     })();"
 #
+# TODO: add a post-processing step using pikepdf or ghostscript to crop the
+#       top and bottom margin bands (~30pt each) where Chrome renders its
+#       headers/footers, as an interim fix until Playwright is adopted or
+#       the Chromium bug is resolved.
+#
 if $MAKE_PDF; then
-    rm -f "$OUTPUT_PDF"  # ensure stale file does not mask a failed run
-
-    printf "PDF:  attempting legacy Chrome headless engine... "
+    printf "PDF:  generating via Chrome --headless=new... "
     "$CHROME" \
-      --headless \
+      --headless=new \
       --no-sandbox \
-      --print-to-pdf-no-header \
       --print-to-pdf="$OUTPUT_PDF" \
       "file://${OUTPUT_HTML}" \
       2>/dev/null
-
     if [ -f "$OUTPUT_PDF" ]; then
-        printf "OK (legacy engine, headers suppressed)\n"
+        printf "done\n"
         printf "PDF:  %s\n" "$OUTPUT_PDF"
+        printf "Note: Chrome headers/footers present (Chromium bug #1378911).\n"
+        printf "      See FUTURE FIX and TODO comments in mkdocs.sh.\n"
     else
-        printf "unavailable\n"
-        printf "PDF:  falling back to --headless=new (headers/footers will appear).\n"
-        printf "      Once Chrome removes the legacy engine, replace this block\n"
-        printf "      with a Playwright/Puppeteer script — see comments in mkdocs.sh.\n"
-        "$CHROME" \
-          --headless=new \
-          --no-sandbox \
-          --print-to-pdf="$OUTPUT_PDF" \
-          "file://${OUTPUT_HTML}" \
-          2>/dev/null
-        if [ -f "$OUTPUT_PDF" ]; then
-            printf "PDF:  %s\n" "$OUTPUT_PDF"
-        else
-            printf "Error: PDF generation failed with both Chrome headless engines.\n" >&2
-        fi
+        printf "failed\n"
+        printf "Error: PDF generation failed.\n" >&2
     fi
 fi
