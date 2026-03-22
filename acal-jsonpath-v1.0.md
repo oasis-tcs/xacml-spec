@@ -612,10 +612,6 @@ David Ferraiolo and Richard Kuhn, Role-Based Access Controls, 15th National Comp
 
 *Key Words for Use in RFCs to Indicate Requirement Levels*, BCP 14, RFC 2119, March 1997. [Online]. Available: https://www.rfc-editor.org/info/rfc2119
 
-###### [RFC2396]
-
-RFC 2396, Berners-Lee T, Fielding R, Masinter L, Uniform Resource Identifiers (URI): Generic Syntax, https://www.ietf.org/rfc/rfc2396.txt
-
 ###### [RFC2732]
 
 Hinden R, Carpenter B, Masinter L, Format for Literal IPv6 Addresses in URL's,  https://www.ietf.org/rfc/rfc2732.txt
