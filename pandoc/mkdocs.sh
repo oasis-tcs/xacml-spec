@@ -136,47 +136,23 @@ printf "HTML: %s\n" "$OUTPUT_HTML"
 #       PDF generation bug is resolved. Remove --pdf flag, find_chrome(),
 #       and the Chrome dependency check above at that point.
 #
-# KNOWN ISSUE: Chrome's --print-to-pdf-no-header flag is broken in all
-# current headless modes. Both --headless (legacy) and --headless=new fail
-# to suppress the running header (URL) and footer (date, page N of M).
-# Validated broken as of Chrome 121+ across both engines.
-# Chromium bug: https://bugs.chromium.org/p/chromium/issues/detail?id=1378911
-#
-# The PDF produced here will contain Chrome headers/footers. A post-processing
-# crop step (see TODO below) is needed to remove them until this is resolved.
-#
-# FUTURE FIX — replace the Chrome CLI block below with Playwright, which
-# suppresses headers via the DevTools Protocol (displayHeaderFooter: false)
-# rather than relying on the broken CLI flag:
-#
-#   node -e "
-#     const { chromium } = require('playwright');
-#     (async () => {
-#       const b = await chromium.launch();
-#       const p = await b.newPage();
-#       await p.goto('file://${OUTPUT_HTML}');
-#       await p.pdf({ path: '${OUTPUT_PDF}', displayHeaderFooter: false, format: 'A4' });
-#       await b.close();
-#     })();"
-#
-# TODO: add a post-processing step using pikepdf or ghostscript to crop the
-#       top and bottom margin bands (~30pt each) where Chrome renders its
-#       headers/footers, as an interim fix until Playwright is adopted or
-#       the Chromium bug is resolved.
+# NOTE: --no-pdf-header-footer suppresses Chrome's running header (URL) and
+#       footer (date, page N of M) under --headless=new. This is the correct
+#       flag for the current headless engine; the older --print-to-pdf-no-header
+#       flag is broken in all Chrome versions from 121 onwards.
 #
 if $MAKE_PDF; then
     printf "PDF:  generating via Chrome --headless=new... "
     "$CHROME" \
       --headless=new \
       --no-sandbox \
+      --no-pdf-header-footer \
       --print-to-pdf="$OUTPUT_PDF" \
       "file://${OUTPUT_HTML}" \
       2>/dev/null
     if [ -f "$OUTPUT_PDF" ]; then
         printf "done\n"
         printf "PDF:  %s\n" "$OUTPUT_PDF"
-        printf "Note: Chrome headers/footers present (Chromium bug #1378911).\n"
-        printf "      See FUTURE FIX and TODO comments in mkdocs.sh.\n"
     else
         printf "failed\n"
         printf "Error: PDF generation failed.\n" >&2
