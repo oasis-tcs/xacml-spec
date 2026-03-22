@@ -132,10 +132,6 @@ printf "HTML: %s\n" "$OUTPUT_HTML"
 
 # --- optionally produce PDF from the completed HTML via Chrome headless ---
 #
-# TODO: replace this entire block with pandoc native PDF once the pandoc
-#       PDF generation bug is resolved. Remove --pdf flag, find_chrome(),
-#       and the Chrome dependency check above at that point.
-#
 # NOTE: --no-pdf-header-footer suppresses Chrome's running header (URL) and
 #       footer (date, page N of M) under --headless=new. This is the correct
 #       flag for the current headless engine; the older --print-to-pdf-no-header
