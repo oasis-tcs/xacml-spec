@@ -1,19 +1,24 @@
-![OASIS](http://docs.oasis-open.org/templates/OASISLogo-v3.0.png)
-
 ---
+# Document metadata processed by Pandoc:
+logo: |
+  ![OASIS](images/OASISLogo-v3.0.png)
+# Original logo: http://docs.oasis-open.org/templates/OASISLogo-v3.0.png
+title: JSON Representation of ACAL Version 1.0 (JACAL)
+subtitle: Committee Specification Draft 02
+version: "1.0"
+stage_revision: csd02 # [stage-abbrev][revisionNumber] as defined in https://docs.oasis-open.org/specGuidelines/ndr/namingDirectives.html
+lang: en
+keywords: ["access control", "authorization", "ABAC", "policy language", "JSON", "standard"]
+# date metadata is set automatically to current date, unless specified on pandoc commandline: --metadata date="..."
 
-# JSON Representation of ACAL Version 1.0 (JACAL)
-
-## Committee Specification Draft 01
-
-
-## 18 February 2026
+# If metadata 'x' is a string, any placeholder %x% will be replaced with the value of metadata 'x' (using meta_vars.lua filter), e.g. %version% will be replaced with the version metadata value.
+---
 
 ### This version
 
-- https://docs.oasis-open.org/xacml/acal/jacal/core/v1.0/csd01/acal-core-json-v1.0-csd01.html (Authoritative) 
-- https://docs.oasis-open.org/xacml/acal/jacal/core/v1.0/csd01/acal-core-json-v1.0-csd01.pdf
-- https://docs.oasis-open.org/xacml/acal/acal/profiles/xpath/v1.0/csd01/acal-xpath-v1.0-csd01.md
+- https://docs.oasis-open.org/xacml/acal/jacal/core/v%version%/%stage_revision%/acal-core-json-v%version%-%stage_revision%.html (Authoritative) 
+- https://docs.oasis-open.org/xacml/acal/jacal/core/v%version%/%stage_revision%/acal-core-json-v%version%-%stage_revision%.pdf
+- https://docs.oasis-open.org/xacml/acal/jacal/core/v%version%/%stage_revision%/acal-core-json-v%version%-%stage_revision%.md
 
 
 ### Previous version
@@ -25,9 +30,9 @@ N/A
 ### Latest version
 
 
-- https://docs.oasis-open.org/xacml/acal/jacal/core/v1.0/csd01/acal-core-json-v1.0-csd01.html (Authoritative)
-- https://docs.oasis-open.org/xacml/acal/jacal/core/v1.0/csd01/acal-core-json-v1.0-csd01.pdf
-- https://docs.oasis-open.org/xacml/acal/acal/profiles/xpath/v1.0/csd01/acal-xpath-v1.0-csd01.md
+- https://docs.oasis-open.org/xacml/acal/jacal/core/v1.0/acal-core-json-v1.0.html (Authoritative)
+- https://docs.oasis-open.org/xacml/acal/jacal/core/v1.0/acal-core-json-v1.0.pdf
+- https://docs.oasis-open.org/xacml/acal/jacal/core/v1.0/acal-xpath-v1.0.md
 
 
 ### Technical Committee:
@@ -52,8 +57,8 @@ N/A
 
 This document is one component of a Work Product that also includes:
 
-* Core JSON schema:  [acal-core-json-v1.0-schema.json](acal-core-json-v1.0-schema.json)
-* Short identifier set: [acal-core-json-v1.0-identifiers.json](acal-core-json-v1.0-identifiers.json)
+* [Core JSON schema](acal-core-json-v%version%-schema.json);
+* [Short identifier set](acal-core-json-v%version%-identifiers.json).
 
 <!-- Note: Any normative computer language definitions that are part of the Work Product, such as XML instances, schemas and Java(TM) code, including fragments of such, must be (a) well formed and valid, (b) provided in separate plain text files, (c) referenced from the Work Product; and (d) where any definition in these separate files disagrees with the definition found in the specification, the definition in the separate file prevails. Remove this note before submitting for publication.)
 -->
@@ -68,8 +73,8 @@ This specification defines Version 1.0 of the JSON Representation Profile of the
 When referencing this specification the following citation format should be used:
 
 **[JACAL-Core-1.0]**
-_ACAL v1.0 JSON Representation Profile (JACAL) Version 1.0_.
-Edited by Steven Legg and Cyril Dangerville. 18 February 2026. OASIS Committee Specification Draft 01. https://docs.oasis-open.org/xacml/acal/jacal/core/v1.0/csd01/acal-core-json-v1.0-csd01.html . Latest stage: https://docs.oasis-open.org/xacml/acal/jacal/core/v1.0/csd01/acal-core-json-v1.0-csd01.html.
+_%title%_.
+Edited by Steven Legg and Cyril Dangerville. %date%. OASIS %subtitle%. https://docs.oasis-open.org/xacml/acal/jacal/core/v%version%/%stage_revision%/acal-core-json-v%version%-%stage_revision%.html . Latest stage: https://docs.oasis-open.org/xacml/acal/jacal/core/v1.0/acal-core-json-v1.0.html.
 
 
 ### Related work:
@@ -370,7 +375,7 @@ The list of changes from the previous version and any revision history can be fo
 # 5 Syntax (normative, with the exception of the schema fragments)
 
 The next sections describe the rules that SHALL be applied for mapping the [[ACAL-Core-1.0](#acal-core-10)] agnostic model (UML-based) to [JSON schema Draft 2020-12](#jsonschemacore) definitions for this JSON representation (JACAL).
-These rules have been applied to produce JACAL's core JSON schema in [Annex D](#annex-d-json-schema-normative) (also in the [Core JSON schema file](acal-core-json-v1.0-schema.json) accompanying this document) from [[ACAL-Core-1.0](#acal-core-10)] core model.
+These rules have been applied to produce JACAL's core JSON schema in [Annex D](#annex-d-json-schema-normative) (also in the [Core JSON schema file](acal-core-json-v%version%-schema.json) accompanying this document) from [[ACAL-Core-1.0](#acal-core-10)] core model.
 
 We consider `PolicyType`, `BundleType`, `RequestType` and `ResponseType` as the root JSON objects to be used by JACAL users, therefore the final JACAL core schema has the following structure:
 
@@ -933,7 +938,7 @@ In this example, we consider an ACAL implementation that supports the `Attribute
 !include examples/acal-core-json/jacal-root-schema-example-using-jsonpath-profile-only.json
 ```
 
-This schema refers to (and therefore depends on) the [JSONPath Profile's JSON schema](acal-jsonpath-json-v1.0-schema.json) by its identifier `urn:oasis:names:tc:jacal:1.0:jsonpath:schema`, which is also provided by the XACML TC with the core schema.
+This schema refers to (and therefore depends on) the [JSONPath Profile's JSON schema](acal-jsonpath-json-v%version%-schema.json) by its identifier `urn:oasis:names:tc:jacal:1.0:jsonpath:schema`, which is also provided by the XACML TC with the core schema.
 
 
 ### 5.4.2 Example using extensions from multiple ACAL Profiles
@@ -944,7 +949,7 @@ In this example, we consider an ACAL implementation that supports various extens
 !include examples/acal-core-json/jacal-root-schema-example-using-xpath-and-jsonpath-profiles.json
 ```
 
-This schema refers to (and therefore depends on) to both the [JSONPath Profile's JSON schema](acal-jsonpath-json-v1.0-schema.json) by its identifier `urn:oasis:names:tc:jacal:1.0:jsonpath:schema` and [XPath Profile's JSON schema](acal-xpath-json-v1.0-schema.json) by its identifier `urn:oasis:names:tc:jacal:1.0:xpath:schema`, which are also provided by the XACML TC with the core schema.
+This schema refers to (and therefore depends on) to both the [JSONPath Profile's JSON schema](acal-jsonpath-json-v%version%-schema.json) by its identifier `urn:oasis:names:tc:jacal:1.0:jsonpath:schema` and [XPath Profile's JSON schema](acal-xpath-json-v%version%-schema.json) by its identifier `urn:oasis:names:tc:jacal:1.0:xpath:schema`, which are also provided by the XACML TC with the core schema.
 
 ### 5.4.3 Example combining a custom extension with a standard profile-defined extension
 
@@ -1346,12 +1351,10 @@ This section includes the JSON Schema for the JACAL syntax defined in this speci
 
 ## Prerequisites
 
-Install Pandoc on your system; or simply use Docker with the following shell alias:
+Install Pandoc **v3.2.1 or later** ( [latest release](https://github.com/jgm/pandoc/releases/latest) ) on your system; or simply use Docker with the following shell alias:
 ```
 $ alias pandoc='docker run --rm --volume "$(pwd):/data" pandoc/extra'
 ```
-
-OASIS staff are currently using pandoc 3.0 from https://github.com/jgm/pandoc/releases/tag/3.0.
 
 Git clone or get a local copy of [OASIS XACML TC Github repository](https://github.com/oasis-tcs/xacml-spec/), open a terminal and **change your working directory to the root directory of your local copy of the repository**.
 
@@ -1362,23 +1365,26 @@ The generation command uses a CSS stylesheet file (`-c` argument) provided by OA
 - https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3a.css (this one produces HTML that resembles the github display more closely, especially for blocks of code) This template already includes a reference (in HTML code) to this .css file.
 - https://docs.oasis-open.org/templates/css/markdown-styles-v1.8.1-cn_final.css
 
-## HTML generation
+### HTML generation
 
-Run the following command line to generate HTML from this markdown file (named `acal-core-json-v1.0-csd01.md`) to an output file `/tmp/acal-core-json-v1.0-csd01.html` :
-
-```console
-$ pandoc -s --embed-resources -f gfm+definition_lists -c styles/markdown-styles-v1.7.3a.css -F pandoc-include -M lang=en -M title=" " -t html -o /tmp/acal-core-json-v1.0-csd01.html acal-core-json-v1.0-csd01.md
-```
-
-Note this command generates a Table of Contents (TOC) in HTML which is located at the top of the HTML document, and which requires additional editing in order to be published in the expected OASIS style. This editing will be handled by OASIS staff during publication.
-
-## PDF generation
-
-For PDF output, the command line is the following (different `-t` and `-H` arguments, and output file `/tmp/acal-core-json-v1.0-csd01.pdf`):
+Run the following command line to generate the HTML from this markdown file (input file specified as last argument):
 
 ```console
-$ pandoc -s --embed-resources -f gfm+definition_lists -c styles/markdown-styles-v1.7.3a.css -F pandoc-include -H pandoc/custom_latex_header_for_pandoc_pdf_output.tex -M lang=en -M title=" " -t pdf -o /tmp/acal-core-json-v1.0-csd01.pdf acal-core-json-v1.0-csd01.md
+$ pandoc/mkdocs.sh --output /tmp acal-core-json-v%version%.md
 ```
+The `--output` option sets the output directory, and the output filename is the same as the input file (last argument) except `.md` extension is replaced with `.html`.
+
+The publication date is automatically set to the current date by default (using Lua filter `pandoc/meta_vars.lua`). However, you may set a specific date of your choice instead, by adding the argument `--metadata date="My date in the form DD Month YYYY"` at the end of the command. 
+
+### PDF generation
+
+For PDF output, add the `--pdf` option as follows:
+
+```console
+$ pandoc/mkdocs.sh --pdf --output /tmp acal-core-json-v%version%.md
+```
+
+The HTML file is generated like the previous command and, in addition, a PDF file is generated with the same name as the input file except the `.md` extension is replaced with `.pdf` in this case.
 
 -------
 
@@ -1460,7 +1466,7 @@ None. This is the first version of the document.
 
 ## Revision History
 
-Latest revision history can be obtained from [OASIS XACML TC's github repository](https://github.com/oasis-tcs/xacml-spec/blob/v1.0-csd01/acal-core-json-v1.0-csd01.md).
+Latest revision history can be obtained from [OASIS XACML TC's github repository](https://github.com/oasis-tcs/xacml-spec/blob/v%version%-%stage_revision%/acal-core-json-v%version%-%stage_revision%.md).
 
 <!--
 - \< Date in yyyy-mm-dd format \>, \< Revision number \>  

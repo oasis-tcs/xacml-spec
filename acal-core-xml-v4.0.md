@@ -1,19 +1,25 @@
-![OASIS](http://docs.oasis-open.org/templates/OASISLogo-v3.0.png)
-
 ---
+# Document metadata processed by Pandoc:
+logo: |
+  ![OASIS](images/OASISLogo-v3.0.png)
+# Original logo: http://docs.oasis-open.org/templates/OASISLogo-v3.0.png
+title: eXtensible Access Control Markup Language (XACML) Version 4.0 (XML Representation of ACAL Version 1.0)
+subtitle: Committee Specification Draft 02
+version: "4.0"
+stage_revision: csd02 # [stage-abbrev][revisionNumber] as defined in https://docs.oasis-open.org/specGuidelines/ndr/namingDirectives.html
+lang: en
+keywords: ["access", "authorization", "ABAC", "policylanguage", "XML", "standard"]
+# date metadata is set automatically to current date, unless specified on pandoc commandline: --metadata date="..."
 
-# eXtensible Access Control Markup Language (XACML) Version 4.0 (XML Representation of ACAL Version 1.0)
-
-## Committee Specification Draft 01
-
-## 18 February 2026
+# If metadata 'x' is a string, any placeholder %x% will be replaced with the value of metadata 'x' (using meta_vars.lua filter), e.g. %version% will be replaced with the version metadata value.
+---
 
 ### This version:
 
 
-- https://docs.oasis-open.org/xacml/acal/xacml/core/v4.0/csd01/acal-core-xml-v4.0-csd01.html (Authoritative)
-- https://docs.oasis-open.org/xacml/acal/xacml/core/v4.0/csd01/acal-core-xml-v4.0-csd01.pdf
-- https://docs.oasis-open.org/xacml/acal/xacml/core/v4.0/csd01/acal-core-xml-v4.0-csd01.md
+- https://docs.oasis-open.org/xacml/acal/xacml/core/v%version%/%stage_revision%/acal-core-xml-v%version%/%stage_revision%.html (Authoritative)
+- https://docs.oasis-open.org/xacml/acal/xacml/core/v%version%/%stage_revision%/acal-core-xml-v%version%/%stage_revision%.pdf
+- https://docs.oasis-open.org/xacml/acal/xacml/core/v%version%/%stage_revision%/acal-core-xml-v%version%/%stage_revision%.md
 
 ### Previous version:
 
@@ -23,9 +29,9 @@
 
 ### Latest version:
 
-- https://docs.oasis-open.org/xacml/acal/xacml/core/v4.0/csd01/acal-core-xml-v4.0-csd01.html (Authoritative)
-- https://docs.oasis-open.org/xacml/acal/xacml/core/v4.0/csd01/acal-core-xml-v4.0-csd01.pdf
-- https://docs.oasis-open.org/xacml/acal/xacml/core/v4.0/csd01/acal-core-xml-v4.0-csd01.md
+- https://docs.oasis-open.org/xacml/acal/xacml/core/v4.0/acal-core-xml-v4.0.html (Authoritative)
+- https://docs.oasis-open.org/xacml/acal/xacml/core/v4.0/acal-core-xml-v4.0.pdf
+- https://docs.oasis-open.org/xacml/acal/xacml/core/v4.0/acal-core-xml-v4.0.md
 
 
 ### Technical Committee:
@@ -49,11 +55,11 @@
 
 This document is one component of a Work Product that also includes:
 
-* Core XML schema: [acal-core-xml-v4.0-schema.xsd](acal-core-xml-v4.0-schema.xsd)
-* Core Schematron rules: [acal-core-xml-v4.0-schematron.sch](acal-core-xml-v4.0-schematron.sch)
-* Short identifier set: [acal-core-xml-v4.0-identifiers.xml](acal-core-xml-v4.0-identifiers.xml)
-* XPath Profile XML schema: [acal-xpath-xml-v4.0-schema.xsd](acal-xpath-xml-v4.0-schema.xsd)
-* JSONPath Profile XML schema: [acal-jsonpath-xml-v4.0-schema.xsd](acal-jsonpath-xml-v4.0-schema.xsd)
+* [Core XML schema](acal-core-xml-v%version%-schema.xsd);
+* [Core Schematron rules](acal-core-xml-v%version%-schematron.sch);
+* [Short identifier set](acal-core-xml-v%version%-identifiers.xml);
+* [XPath Profile XML schema](acal-xpath-xml-v%version%-schema.xsd);
+* [JSONPath Profile XML schema](acal-jsonpath-xml-v%version%-schema.xsd).
 
 <!-- Note: Any normative computer language definitions that are part of the Work Product, such as XML instances, schemas and Java(TM) code, including fragments of such, must be (a) well formed and valid, (b) provided in separate plain text files, (c) referenced from the Work Product; and (d) where any definition in these separate files disagrees with the definition found in the specification, the definition in the separate file prevails. Remove this note before submitting for publication.)
 -->
@@ -67,8 +73,8 @@ This specification defines Version 4.0 of the eXtensible Access Control Markup L
 When referencing this specification the following citation format should be used:
 
 **[XACML-Core-4.0]**
-_eXtensible Access Control Markup Language (XACML) Version 4.0_.
-Edited by Steven Legg and Cyril Dangerville. 18 February 2026. OASIS Committee Specification Draft 01. https://docs.oasis-open.org/xacml/acal/xacml/core/v4.0/csd01/acal-core-xml-v4.0-csd01.html. Latest stage: https://docs.oasis-open.org/xacml/acal/xacml/core/v4.0/csd01/acal-core-xml-v4.0-csd01.html.
+_%title%_.
+Edited by Steven Legg and Cyril Dangerville. %date%. OASIS %subtitle%. https://docs.oasis-open.org/xacml/acal/xacml/core/v%version%/%stage_revision%/acal-core-xml-v%version%-%stage_revision%.html. Latest stage: https://docs.oasis-open.org/xacml/acal/xacml/core/v4.0/acal-core-xml-v4.0.html.
 
 ### Related work:
 
@@ -368,7 +374,7 @@ The list of changes from the previous version and any revision history can be fo
 # 5 Syntax (normative, with the exception of the schema fragments)
 
 The next sections describe the rules that SHALL be applied for mapping the [[ACAL-Core-1.0](#acal-core-10)] agnostic model (UML-based) to [XML schema](#XS) definitions for this XML representation (XACML).
-These rules have been applied to produce XACML's core XML schema in [Annex D](#annex-d-xml-schema-normative) (also in the [Core XML schema file](acal-core-xml-v4.0-schema.xsd) accompanying this document) from [[ACAL-Core-1.0](#acal-core-10)] core model.
+These rules have been applied to produce XACML's core XML schema in [Annex D](#annex-d-xml-schema-normative) (also in the [Core XML schema file](acal-core-xml-v%version%-schema.xsd) accompanying this document) from [[ACAL-Core-1.0](#acal-core-10)] core model.
 
 In all XSD definitions from now, the XACML core namespace `urn:oasis:names:tc:xacml:4.0:core:schema` is the default namespace.
 
@@ -1167,15 +1173,13 @@ HTML/PDF versions are generated automatically online via Github Actions after ea
 
 The following tools are required:
 
-- [Pandoc](https://pandoc.org/);
+- [Pandoc](https://pandoc.org/) **v3.2.1 or later** ( [latest release](https://github.com/jgm/pandoc/releases/latest) );
 - [Pandoc-include filter](https://github.com/DCsunset/pandoc-include).
 
 Either install them on your system or, if you have Docker installed already, simply use the following shell alias:
 ```
 $ alias pandoc='docker run --rm --volume "$(pwd):/data" pandoc/extra'
 ```
-
-OASIS staff are currently using pandoc 3.0 from https://github.com/jgm/pandoc/releases/tag/3.0.
 
 Git clone or get a local copy of [OASIS XACML TC code repository](https://github.com/oasis-tcs/xacml-spec/), open a terminal and **change your working directory to the root directory of your local copy of the repository**.
 
@@ -1189,22 +1193,24 @@ The generation command uses a CSS stylesheet file (`-c` argument) provided by OA
 
 ### HTML generation
 
-Run the following command line to generate HTML from this markdown file (named `acal-core-xml-v4.0-csd01.md`) to an output file `/tmp/acal-core-xml-v4.0-csd01.html` :
+Run the following command line to generate the HTML from this markdown file (input file specified as last argument):
 
 ```console
-$ pandoc -s --verbose --embed-resources -f gfm+definition_lists -c styles/markdown-styles-v1.7.3a.css -F pandoc-include -M lang=en -M title=" " -t html -o /tmp/acal-core-xml-v4.0-csd01.html acal-core-xml-v4.0-csd01.md
+$ pandoc/mkdocs.sh --output /tmp acal-core-xml-v%version%.md
 ```
+The `--output` option sets the output directory, and the output filename is the same as the input file (last argument) except `.md` extension is replaced with `.html`.
 
-Note this command generates a document which may require additional editing in order to be published in the expected OASIS style. This editing will be handled by OASIS staff during publication.
+The publication date is automatically set to the current date by default (using Lua filter `pandoc/meta_vars.lua`). However, you may set a specific date of your choice instead, by adding the argument `--metadata date="My date in the form DD Month YYYY"` at the end of the command. 
 
 ### PDF generation
 
-For PDF output, the command line is the following (different `-t` and `-H` arguments, and output goes to file `/tmp/acal-core-xml-v4.0-csd01.pdf`):
+For PDF output, add the `--pdf` option as follows:
 
 ```console
-$ pandoc -s --embed-resources -f gfm+definition_lists -c styles/markdown-styles-v1.7.3a.css -F pandoc-include -H pandoc/custom_latex_header_for_pandoc_pdf_output.tex --metadata title=" " -t pdf -o /tmp/acal-core-xml-v4.0-csd01.pdf acal-core-xml-v4.0-csd01.md
+$ pandoc/mkdocs.sh --pdf --output /tmp acal-core-xml-v%version%.md
 ```
 
+The HTML file is generated like the previous command and, in addition, a PDF file is generated with the same name as the input file except the `.md` extension is replaced with `.pdf` in this case.
 
 
 # Appendix 1. Acknowledgments
@@ -1339,7 +1345,7 @@ XACML 4.0 differs from XACML 3.0 in the following ways:
 
 ## Revision History
 
-Latest revision history can be obtained from [OASIS XACML TC's code repository](https://github.com/oasis-tcs/xacml-spec/blob/v1.0-csd01/acal-core-xml-v4.0-csd01.md).
+Latest revision history can be obtained from [OASIS XACML TC's code repository](https://github.com/oasis-tcs/xacml-spec/blob/v%version%-%stage_revision%/acal-core-xml-v%version%-%stage_revision%.md).
 
 | Revision | Date | Editor | Changes Made |
 | :--- | :--- | :--- | :--- |

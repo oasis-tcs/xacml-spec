@@ -1,24 +1,25 @@
-﻿![OASIS](http://docs.oasis-open.org/templates/OASISLogo-v3.0.png)
+﻿---
+# Document metadata processed by Pandoc:
+logo: |
+  ![OASIS](images/OASISLogo-v3.0.png)
+# Original logo: http://docs.oasis-open.org/templates/OASISLogo-v3.0.png
+title: ACAL v1.0 JSONPath Profile Version 1.0
+subtitle: Committee Specification Draft 02
+version: "1.0"
+stage_revision: csd02 # [stage-abbrev][revisionNumber] as defined in https://docs.oasis-open.org/specGuidelines/ndr/namingDirectives.html
+lang: en
+keywords: ["access", "authorization", "ABAC", "policylanguage", "JSON", "JSONPath", "standard"]
+# date metadata is set automatically to current date, unless specified on pandoc commandline: --metadata date="..."
 
-
+# If metadata 'x' is a string, any placeholder %x% will be replaced with the value of metadata 'x' (using meta_vars.lua filter), e.g. %version% will be replaced with the version metadata value.
 ---
-
-
-# ACAL v1.0 JSONPath Profile Version 1.0
-
-
-## Committee Specification Draft 01
-
-
-## 18 February 2026
-
 
 ### This version:
 
 
-- https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/csd01/acal-jsonpath-v1.0-csd01.html (Authoritative)
-- https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/csd01/acal-jsonpath-v1.0-csd01.pdf
-- https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/csd01/acal-jsonpath-v1.0-csd01.md
+- https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v%version%/%stage_revision%/acal-jsonpath-v%version%-%stage_revision%.html (Authoritative)
+- https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/%version%/%stage_revision%/acal-jsonpath-v%version%-%stage_revision%.pdf
+- https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v%version%/%stage_revision%/acal-jsonpath-v%version%-%stage_revision%.md
 
 ### Previous version:
 
@@ -26,9 +27,9 @@ N/A
 
 ### Latest version:
 
-- https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/csd01/acal-jsonpath-v1.0-csd01.html (Authoritative)
-- https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/csd01/acal-jsonpath-v1.0-csd01.pdf
-- https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/csd01/acal-jsonpath-v1.0-csd01.md
+- https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/acal-jsonpath-v1.0.html (Authoritative)
+- https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/acal-jsonpath-v1.0.pdf
+- https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/acal-jsonpath-v1.0.md
 
 
 ### Technical Committee
@@ -67,8 +68,8 @@ This specification is a profile of ACAL that provides ACAL extensions based on t
 When referencing this document, the following citation format should be used:
 
 **[ACAL-JSONPath-1.0]**
-_ACAL v1.0 JSONPath Profile Version 1.0_.
-Edited by Steven Legg and Cyril Dangerville. 18 February 2026. OASIS Committee Specification Draft 01. https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/csd01/acal-jsonpath-v1.0-csd01.html. Latest stage: https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/csd01/acal-jsonpath-v1.0-csd01.html.
+_%title%_.
+Edited by Steven Legg and Cyril Dangerville. %date%. OASIS %subtitle%. https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v%version%/%stage_revision%/acal-jsonpath-v%version%-%stage_revision%.html. Latest stage: https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/acal-jsonpath-v1.0.html.
 
 
 ### Related Work
@@ -727,13 +728,11 @@ HTML/PDF versions are generated automatically online via Github Actions after ea
 
 ### Prerequisites
 
-Install Pandoc, Graphviz and PlantUML on your system; or simply use Docker with the following shell alias:
+Install Pandoc **v3.2.1 or later** ( [latest release](https://github.com/jgm/pandoc/releases/latest) ), Graphviz and PlantUML on your system; or simply use Docker with the following shell alias:
 ```
 $ alias pandoc='docker run --rm --volume "$(pwd):/data" cdang/pandoc-plantuml'
 ```
-_The Dockerfile (named `Dockerfile`) of the docker image used in the alias above is provided in the [pandoc](pandoc) folder next to this markdown file for your convenience if you wish to build it yourself._  
-
-OASIS staff are currently using pandoc 3.0 from https://github.com/jgm/pandoc/releases/tag/3.0.
+_The Dockerfile (named `Dockerfile`) of the docker image used in the alias above is provided in the [pandoc](pandoc) folder next to this markdown file for your convenience if you wish to build it yourself._ 
 
 Git clone or get a local copy of [OASIS XACML TC Github repository](https://github.com/oasis-tcs/xacml-spec/), open a terminal and **change your working directory to the root directory of your local copy of the repository**.
 
@@ -745,21 +744,25 @@ The generation command uses a CSS stylesheet file (`-c` argument) provided by OA
 
 ### HTML generation
 
-Run the following command line to generate HTML from this markdown file (`acal-jsonpath-v1.0-csd01.md`) to an output file `/tmp/acal-jsonpath-v1.0-csd01.html`:
+Run the following command line to generate the HTML from this markdown file (input file specified as last argument):
 
 ```console
-$ pandoc -f gfm+definition_lists -t html -c styles/markdown-styles-v1.7.3a.css -s --lua-filter pandoc/diagram.lua --defaults pandoc/defaults.yaml --embed-resources --metadata title=" " -o /tmp/acal-jsonpath-v1.0-csd01.html acal-jsonpath-v1.0-csd01.md 
+$ pandoc/mkdocs.sh --output /tmp acal-jsonpath-v%version%.md
 ```
+The `--output` option sets the output directory, and the output filename is the same as the input file (last argument) except `.md` extension is replaced with `.html`.
 
-Note this command generates a Table of Contents (TOC) in HTML which is located at the top of the HTML document, and which requires additional editing in order to be published in the expected OASIS style. This editing will be handled by OASIS staff during publication.
+The publication date is automatically set to the current date by default (using Lua filter `pandoc/meta_vars.lua`). However, you may set a specific date of your choice instead, by adding the argument `--metadata date="My date in the form DD Month YYYY"` at the end of the command. 
 
 ### PDF generation
 
-For PDF output (file `/tmp/acal-jsonpath-v1.0-csd01.pdf`), the command line is the following (different `-t` and `-H` arguments):
+For PDF output, add the `--pdf` option as follows:
 
 ```console
-$ pandoc -f gfm+definition_lists -t pdf -c styles/markdown-styles-v1.7.3a.css -H pandoc/custom_latex_header_for_pandoc_pdf_output.tex -s -L pandoc/diagram.lua --defaults pandoc/defaults.yaml --metadata title=" " --embed-resources -o /tmp/acal-jsonpath-v1.0-csd01.pdf acal-jsonpath-v1.0-csd01.md 
+$ pandoc/mkdocs.sh --pdf --output /tmp acal-jsonpath-v%version%.md
 ```
+
+The HTML file is generated like the previous command and, in addition, a PDF file is generated with the same name as the input file except the `.md` extension is replaced with `.pdf` in this case.
+
 
 # Appendix 1 Acknowledgments
 
@@ -847,7 +850,7 @@ This is the first version of this profile.
 
 ## Revision History
 
-Latest revision history can be obtained from [OASIS XACML TC's github repository](https://github.com/oasis-tcs/xacml-spec/blob/v1.0-csd01/acal-jsonpath-v1.0-csd01.md).
+Latest revision history can be obtained from [OASIS XACML TC's github repository](https://github.com/oasis-tcs/xacml-spec/blob/v%version%-%stage_revision%/acal-jsonpath-v%version%-%stage_revision%.md).
 
 <!--
 - \< Date in yyyy-mm-dd format \>, \< Revision number \>  

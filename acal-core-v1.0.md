@@ -5,20 +5,20 @@ logo: |
 # Original logo: http://docs.oasis-open.org/templates/OASISLogo-v3.0.png
 title: Attribute-Centric Authorization Language (ACAL) Version 1.0
 subtitle: Committee Specification Draft 02
-keywords: 
-- access control
-- authorization
-- ABAC
-- policy language
-- standard
+version: "1.0"
+stage_revision: csd02 # [stage-abbrev][revisionNumber] as defined in https://docs.oasis-open.org/specGuidelines/ndr/namingDirectives.html
+lang: en
+keywords: ["access", "authorization", "ABAC", "policylanguage", "standard"]
 # date metadata is set automatically to current date, unless specified on pandoc commandline: --metadata date="..."
+
+# If metadata 'x' is a string, any placeholder %x% will be replaced with the value of metadata 'x' (using meta_vars.lua filter), e.g. %version% will be replaced with the version metadata value.
 ---
 
 ### This version
 
-- https://docs.oasis-open.org/xacml/acal/acal/core/v1.0/csd02/acal-core-v1.0-csd02.html (Authoritative)
-- https://docs.oasis-open.org/xacml/acal/acal/core/v1.0/csd02/acal-core-v1.0-csd02.pdf
-- https://docs.oasis-open.org/xacml/acal/acal/core/v1.0/csd02/acal-core-v1.0-csd02.md
+- https://docs.oasis-open.org/xacml/acal/acal/core/v%version%/%stage_revision%/acal-core-v%version%-%stage_revision%.html (Authoritative)
+- https://docs.oasis-open.org/xacml/acal/acal/core/v%version%/%stage_revision%/acal-core-v%version%-%stage_revision%.pdf
+- https://docs.oasis-open.org/xacml/acal/acal/core/v%version%/%stage_revision%/acal-core-v%version%-%stage_revision%.md
 
 ### Previous version
 
@@ -54,7 +54,7 @@ N/A
 
 ### Abstract
 
-This specification defines Version 1.0 of the Attribute-Centric Authorization Language's core model. This model is essentially an XML-agnostic evolution of [XACML v3.0](#xacml) that provides a common foundation for other concrete representation formats to come (e.g. JSON).
+This specification defines Version %version% of the Attribute-Centric Authorization Language's core model. This model is essentially an XML-agnostic evolution of [XACML v3.0](#xacml) that provides a common foundation for other concrete representation formats to come (e.g. JSON).
 
 
 ### Citation Format
@@ -63,7 +63,7 @@ When referencing this document, the following citation format should be used:
 
 **[ACAL-Core-1.0]**
 _%title%_.
-Edited by Steven Legg and Cyril Dangerville. %date% . OASIS %subtitle%. https://docs.oasis-open.org/xacml/acal/acal/core/v1.0/csd02/acal-core-v1.0-csd02.html . Latest version: https://docs.oasis-open.org/xacml/acal/acal/core/v1.0/acal-core-v1.0.html
+Edited by Steven Legg and Cyril Dangerville. %date%. OASIS %subtitle%. https://docs.oasis-open.org/xacml/acal/acal/core/v%version%/%stage_revision%/acal-core-v%version%-%stage_revision%.html . Latest version: https://docs.oasis-open.org/xacml/acal/acal/core/v1.0/acal-core-v1.0.html
 
 
 ### Related Work
@@ -3427,10 +3427,10 @@ hide circle
 abstract class IdReferenceType <<dataType>> {
    + Id: URI [1]
 }
-@enduml
 
 class ExactMatchIdReferenceType <<dataType>> extends IdReferenceType
 class PatternMatchIdReferenceType <<dataType>> extends IdReferenceType
+@enduml
 ```
 
 The `IdReferenceType` object type contains the following property:
@@ -8101,13 +8101,11 @@ HTML/PDF versions are generated automatically online via Github Actions after ea
 
 ### Prerequisites
 
-Install Pandoc, Graphviz and PlantUML on your system; or simply use Docker with the following shell alias:
+Install Pandoc **v3.2.1 or later** ( [latest release](https://github.com/jgm/pandoc/releases/latest) ), Graphviz and PlantUML on your system; or simply use Docker with the following shell alias:
 ```
 $ alias pandoc='docker run --rm --volume "$(pwd):/data" cdang/pandoc-plantuml'
 ```
 _The Dockerfile (named `Dockerfile`) of the docker image used in the alias above is provided in the [pandoc](pandoc) folder next to this markdown file for your convenience if you wish to build it yourself._  
-
-OASIS staff are currently using pandoc 3.0 from https://github.com/jgm/pandoc/releases/tag/3.0.
 
 Git clone or get a local copy of [OASIS XACML TC Github repository](https://github.com/oasis-tcs/xacml-spec/), open a terminal and **change your working directory to the root directory of your local copy of the repository**.
 
@@ -8120,21 +8118,24 @@ The generation command uses a CSS stylesheet file (`-c` argument) provided by OA
 
 ### HTML generation
 
-Run the following command line to generate HTML from this markdown file (named `acal-core-v1.0-csd02.md`) to an output file `/tmp/acal-core-v1.0-csd02.html`:
+Run the following command line to generate the HTML from this markdown file (input file specified as last argument):
 
 ```console
-$ pandoc -f gfm+definition_lists -t html -c styles/markdown-styles-v1.7.3a.css -s --lua-filter pandoc/diagram.lua --lua-filter pandoc/meta_vars.lua --defaults pandoc/defaults.yaml --embed-resources -o /tmp/acal-core-v1.0-csd02.html acal-core-v1.0-csd02.md
+$ pandoc/mkdocs.sh --output /tmp acal-core-v%version%.md
 ```
+The `--output` option sets the output directory, and the output filename is the same as the input file (last argument) except `.md` extension is replaced with `.html`.
+
+The publication date is automatically set to the current date by default (using Lua filter `pandoc/meta_vars.lua`). However, you may set a specific date of your choice instead, by adding the argument `--metadata date="My date in the form DD Month YYYY"` at the end of the command. 
 
 ### PDF generation
 
-For PDF output (file `/tmp/acal-core-v1.0-csd02.pdf`), the command line is the following (different `-t` and `-H` arguments):
+For PDF output, add the `--pdf` option as follows:
 
 ```console
-$ DATE=$(date -u +"%d %B %Y")
-$ pandoc -f gfm+definition_lists -t pdf -c styles/markdown-styles-v1.7.3a.css -H pandoc/custom_latex_header_for_pandoc_pdf_output.tex -s -L pandoc/diagram.lua --lua-filter pandoc/meta_vars.lua --defaults pandoc/defaults.yaml --embed-resources -o /tmp/acal-core-v1.0-csd02.pdf acal-core-v1.0-csd02.md
+$ pandoc/mkdocs.sh --pdf --output /tmp acal-core-v%version%.md
 ```
 
+The HTML file is generated like the previous command and, in addition, a PDF file is generated with the same name as the input file except the `.md` extension is replaced with `.pdf` in this case.
 
 ---
 
@@ -8293,7 +8294,7 @@ ACAL 1.0 is a successor to XACML 3.0. ACAL 1.0 differs from XACML 3.0 in the fol
 
 ## Revision History
 
-Latest revision history can be obtained from [OASIS XACML TC's github repository](https://github.com/oasis-tcs/xacml-spec/blob/v1.0-csd02/acal-core-v1.0-csd02.md).
+Latest revision history can be obtained from [OASIS XACML TC's github repository](https://github.com/oasis-tcs/xacml-spec/blob/v%version%-%stage_revision%/acal-core-v%version%-%stage_revision%.md).
 
 <!--
 - \< Date in yyyy-mm-dd format \>, \< Revision number \>  

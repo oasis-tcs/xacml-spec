@@ -17,6 +17,9 @@ $endif$
 $if(description-meta)$
   <meta name="description" content="$description-meta$" />
 $endif$
+$if(git-revision)$
+  <meta name="x-source-revision" content="$git-revision$" />
+$endif$
   <title>$if(title-prefix)$$title-prefix$ – $endif$$pagetitle$</title>
   <style>
     $styles.html()$
@@ -38,7 +41,9 @@ $endif$
 $for(include-before)$
 $include-before$
 $endfor$
+$if(logo)$
 <p>$logo$</p>
+$endif$
 $if(title)$
 <header id="title-block-header">
 <h1 class="title">$title$</h1>
@@ -71,5 +76,8 @@ $body$
 $for(include-after)$
 $include-after$
 $endfor$
+$if(git-revision)$
+<footer><p style="font-size:0.75em;color:#999;margin-top:3em;">source: $git-revision$</p></footer>
+$endif$
 </body>
 </html>
