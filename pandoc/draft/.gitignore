@@ -1,3 +1,0 @@
-# Ignore all draft output files — this directory is tracked but its contents are not.
-*
-!.gitignore

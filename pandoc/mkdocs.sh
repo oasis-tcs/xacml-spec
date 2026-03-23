@@ -1,29 +1,39 @@
 #! /bin/bash
 
 usage() {
-    echo "Usage: $(basename "$0") [--pdf] <input.md>"
+    echo "Usage: $(basename "$0") [--number-lines] [--pdf] [--output dir] <input.md> [extra pandoc arguments]"
     echo ""
     echo "  Generates an HTML document from the given markdown file."
+    echo "  --number-lines   Number lines in code blocks."
     echo "  --pdf   Also produce a PDF via Chrome headless (requires Chrome)."
     echo "          PDF is generated from the HTML output, not directly from markdown."
+    echo "  --output dir: output directory (path). By default, it is the same directory as the input."
     exit 1
 }
 
 # --- parse arguments ---
+NUMBER_LINES_IN_CODE_BLOCKS=false
 MAKE_PDF=false
+OUTPUT_DIR=""
+SET_OUTPUT_DIR=false
 POSITIONAL=()
 for arg in "$@"; do
     case "$arg" in
-        --pdf) MAKE_PDF=true ;;
         --help|-h) usage ;;
-        *) POSITIONAL+=("$arg") ;;
+        --number-lines) NUMBER_LINES_IN_CODE_BLOCKS=true;;
+        --pdf) MAKE_PDF=true ;;
+        --output) SET_OUTPUT_DIR=true;;
+        *) if $SET_OUTPUT_DIR; then OUTPUT_DIR="$arg"; SET_OUTPUT_DIR=false; else POSITIONAL+=("$arg"); fi;;
     esac
 done
+
 set -- "${POSITIONAL[@]}"
 [ $# -lt 1 ] && usage
 
 INPUT="$1"
 [ ! -f "$INPUT" ] && echo "Error: input file '$INPUT' not found." && exit 1
+
+EXTRA_PANDOC_ARGS=("${POSITIONAL[@]:1}")
 
 # Script's directory — filters, templates, defaults, and draft output live here
 # NOTE: must be resolved before OUTPUT_HTML/OUTPUT_PDF which reference it
@@ -33,8 +43,9 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 INPUT_ABS="$(cd "$(dirname "$INPUT")" && pwd)/$(basename "$INPUT")"
 INPUT_DIR="$(dirname "$INPUT_ABS")"
 BASENAME="$(basename "$INPUT_ABS" .md)"
-OUTPUT_HTML="$SCRIPT_DIR/draft/${BASENAME}.html"
-OUTPUT_PDF="$SCRIPT_DIR/draft/${BASENAME}.pdf"
+OUTPUT_DIR=${OUTPUT_DIR:-${INPUT_DIR}}
+OUTPUT_HTML="${OUTPUT_DIR}/${BASENAME}.html"
+OUTPUT_PDF="${OUTPUT_DIR}/${BASENAME}.pdf"
 
 # --- locate Chrome (macOS app bundles and WSL/Git Bash Windows paths) ---
 # TODO: remove find_chrome() and the --pdf flag once pandoc PDF generation
@@ -116,15 +127,20 @@ fi
 # --- run pandoc from the input file's directory so CSS and image paths resolve ---
 cd "$INPUT_DIR"
 
-$PANDOC -f gfm+definition_lists -t html \
+INPUT_FORMAT="gfm+definition_lists"
+if $NUMBER_LINES_IN_CODE_BLOCKS; then
+    INPUT_FORMAT="markdown+definition_lists+fenced_code_attributes"
+fi
+
+$PANDOC -f "$INPUT_FORMAT" -t html \
   -c styles/markdown-styles-v1.7.3a.css \
   -s \
   --template "$SCRIPT_DIR/templates/default.html" \
-  --lua-filter "$SCRIPT_DIR/diagram.lua" \
+  --filter pandoc-include \
   --lua-filter "$SCRIPT_DIR/meta_vars.lua" \
   --defaults "$SCRIPT_DIR/defaults.yaml" \
   --embed-resources \
-  "${GIT_META[@]}" \
+  "${GIT_META[@]}" "${EXTRA_PANDOC_ARGS[@]}" \
   -o "$OUTPUT_HTML" \
   "$INPUT_ABS"
 
@@ -144,8 +160,7 @@ if $MAKE_PDF; then
       --no-sandbox \
       --no-pdf-header-footer \
       --print-to-pdf="$OUTPUT_PDF" \
-      "file://${OUTPUT_HTML}" \
-      2>/dev/null
+      "file://${OUTPUT_HTML}"
     if [ -f "$OUTPUT_PDF" ]; then
         printf "done\n"
         printf "PDF:  %s\n" "$OUTPUT_PDF"

@@ -1,3 +1,7 @@
+% Workaround for https://github.com/jgm/pandoc/issues/11528
+\usepackage{hyperref}
+\usepackage{hyperxmp}
+
 % Fix to add line breaks in definition lists for PDF output and to overcome "Too deeply nested" error
 \usepackage{enumitem}
 \setlist[description]{style=nextline}
@@ -37,12 +41,14 @@
 
 % Place OASIS logo before the document title block
 \usepackage{graphicx}
-\let\oldmaketitle\maketitle
-\renewcommand{\maketitle}{%
-  \begin{center}%
-    \includegraphics[width=0.35\linewidth]{images/OASISLogo-v3.0.png}%
-  \end{center}%
-  \vspace{0.5cm}%
-  \oldmaketitle%
-}
+%\pretocmd{\@title}{\includegraphics[width=0.35]{images/OASISLogo-v3.0.png}}{}{}
+%\renewcommand\title{\includegraphics[width=0.35\linewidth]{images/OASISLogo-v3.0.png}$title$}
+%\let\oldmaketitle\maketitle
+%\renewcommand{\maketitle}{%
+%  \begin{center}%
+%    \includegraphics[width=0.35\linewidth]{images/OASISLogo-v3.0.png}%
+%  \end{center}%
+%  \vspace{0.5cm}%
+%  \oldmaketitle%
+%}
 
