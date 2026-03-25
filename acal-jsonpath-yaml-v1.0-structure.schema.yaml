@@ -1,0 +1,36 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$id: "acal-jsonpath-yaml-v1.0-structure.schema.yaml"
+title: "YACAL v1.0 JSONPath Profile structural schema"
+description: >
+  JSONPath Profile structural schema for the YAML representation of ACAL
+  Version 1.0. This artifact defines the JSONPath-specific selector extension
+  shapes that may be composed with the YACAL core structural schema.
+$comment: >
+  This schema does not replace the YACAL core structural schema. It defines the
+  profile-specific object shapes that composition schemas may attach to the core
+  extension hooks for AttributeSelectorType and EntityAttributeSelectorType.
+$defs:
+  JSONPathAttributeSelectorType:
+    allOf:
+      - $ref: "acal-core-yaml-v1.0-structure.schema.yaml#/$defs/AttributeSelectorCoreType"
+      - type: object
+    unevaluatedProperties: false
+    $comment: >
+      The local JSONPath profile model adds no JSONPath-specific selector
+      properties beyond the core selector shape. JSONPath-specific semantics are
+      carried by the Path syntax and supported content model.
+
+  JSONPathEntityAttributeSelectorType:
+    allOf:
+      - $ref: "acal-core-yaml-v1.0-structure.schema.yaml#/$defs/EntityAttributeSelectorCoreType"
+      - type: object
+    unevaluatedProperties: false
+    $comment: >
+      The local JSONPath profile model adds no extra properties beyond the core
+      entity-selector shape.
+
+  JSONPathAttributeSelectorTypeExtension:
+    $ref: "#/$defs/JSONPathAttributeSelectorType"
+
+  JSONPathEntityAttributeSelectorTypeExtension:
+    $ref: "#/$defs/JSONPathEntityAttributeSelectorType"

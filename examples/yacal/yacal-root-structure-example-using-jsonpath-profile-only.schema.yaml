@@ -1,0 +1,18 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$id: "yacal-root-structure-example-using-jsonpath-profile-only.schema.yaml"
+title: "YACAL root composition schema using JSONPath profile only"
+description: >
+  Example root schema for an implementation that supports core YACAL plus the
+  JSONPath profile selector extensions.
+$defs:
+  EnabledAttributeSelectorTypeExtensions:
+    $dynamicAnchor: "AttributeSelectorTypeExtensions"
+    anyOf:
+      - $ref: "acal-jsonpath-yaml-v1.0-structure.schema.yaml#/$defs/JSONPathAttributeSelectorTypeExtension"
+
+  EnabledEntityAttributeSelectorTypeExtensions:
+    $dynamicAnchor: "EntityAttributeSelectorTypeExtensions"
+    anyOf:
+      - $ref: "acal-jsonpath-yaml-v1.0-structure.schema.yaml#/$defs/JSONPathEntityAttributeSelectorTypeExtension"
+
+$ref: "acal-core-yaml-v1.0-structure.schema.yaml"

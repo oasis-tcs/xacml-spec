@@ -1,0 +1,125 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$id: "acal-xpath-yaml-v1.0-structure.schema.yaml"
+title: "YACAL v1.0 XPath Profile structural schema"
+description: >
+  XPath Profile structural schema for the YAML representation of ACAL Version
+  1.0. This artifact defines the XPath-specific extension shapes that may be
+  composed with the YACAL core structural schema.
+$comment: >
+  This schema does not replace the YACAL core structural schema. It defines the
+  profile-specific object shapes that composition schemas may attach to the core
+  extension hooks for PolicyDefaultsType, RequestDefaultsType,
+  AttributeSelectorType, EntityAttributeSelectorType, and StructuredValueType.
+$defs:
+  NamespaceDeclarationType:
+    type: object
+    required:
+      - Name
+    properties:
+      Prefix:
+        $ref: "acal-core-yaml-v1.0-structure.schema.yaml#/$defs/IdentifierType"
+        $comment: >
+          The empty string denotes the default namespace when used by the XPath
+          profile.
+        default: ""
+      Name:
+        type: string
+        format: uri-reference
+    additionalProperties: false
+
+  XPathDefaultsType:
+    type: object
+    required:
+      - XPathVersion
+    properties:
+      XPathVersion:
+        $ref: "acal-core-yaml-v1.0-structure.schema.yaml#/$defs/IdentifierType"
+      Namespace:
+        type: array
+        items:
+          $ref: "#/$defs/NamespaceDeclarationType"
+        minItems: 1
+        uniqueItems: true
+    additionalProperties: false
+    $comment: >
+      Namespace object equality is checked structurally here. Prefix-level
+      uniqueness is a higher-order profile constraint and may be enforced by a
+      companion profile constraint artifact.
+
+  XPathPolicyDefaultsTypeTree:
+    type: object
+    required:
+      - XPathPolicyDefaults
+    properties:
+      XPathPolicyDefaults:
+        $ref: "#/$defs/XPathDefaultsType"
+    additionalProperties: false
+
+  XPathRequestDefaultsTypeTree:
+    type: object
+    required:
+      - XPathRequestDefaults
+    properties:
+      XPathRequestDefaults:
+        $ref: "#/$defs/XPathDefaultsType"
+    additionalProperties: false
+
+  XPathAttributeSelectorType:
+    allOf:
+      - $ref: "acal-core-yaml-v1.0-structure.schema.yaml#/$defs/AttributeSelectorCoreType"
+      - type: object
+        properties:
+          ContextSelectorId:
+            $ref: "acal-core-yaml-v1.0-structure.schema.yaml#/$defs/IdentifierType"
+    unevaluatedProperties: false
+
+  XPathEntityAttributeSelectorType:
+    allOf:
+      - $ref: "acal-core-yaml-v1.0-structure.schema.yaml#/$defs/EntityAttributeSelectorCoreType"
+      - type: object
+        properties:
+          ContextSelectorId:
+            $ref: "acal-core-yaml-v1.0-structure.schema.yaml#/$defs/IdentifierType"
+    unevaluatedProperties: false
+
+  XPathExpressionValueType:
+    type: object
+    required:
+      - XPathCategory
+      - XPath
+    properties:
+      XPathCategory:
+        $ref: "acal-core-yaml-v1.0-structure.schema.yaml#/$defs/IdentifierType"
+      XPath:
+        $ref: "acal-core-yaml-v1.0-structure.schema.yaml#/$defs/AttributeSelectorPathType"
+    unevaluatedProperties: false
+
+  XPathStructuredValueTypeExtension:
+    type: object
+    required:
+      - XPathCategory
+      - XPath
+    properties:
+      DataType:
+        $ref: "acal-core-yaml-v1.0-structure.schema.yaml#/$defs/IdentifierType"
+      XPathCategory:
+        $ref: "acal-core-yaml-v1.0-structure.schema.yaml#/$defs/IdentifierType"
+      XPath:
+        $ref: "acal-core-yaml-v1.0-structure.schema.yaml#/$defs/AttributeSelectorPathType"
+    additionalProperties: false
+    $comment: >
+      Composition-facing helper for the core StructuredValueType extension
+      hook. The optional DataType property is permitted here so the same
+      helper works in both explicit-DataType and parent-inferred contexts.
+
+  XPathPolicyDefaultsTypeExtension:
+    $ref: "#/$defs/XPathPolicyDefaultsTypeTree"
+
+  XPathRequestDefaultsTypeExtension:
+    $ref: "#/$defs/XPathRequestDefaultsTypeTree"
+
+  XPathAttributeSelectorTypeExtension:
+    $ref: "#/$defs/XPathAttributeSelectorType"
+
+  XPathEntityAttributeSelectorTypeExtension:
+    $ref: "#/$defs/XPathEntityAttributeSelectorType"

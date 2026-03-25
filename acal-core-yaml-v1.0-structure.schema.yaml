@@ -1,0 +1,1103 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$id: "acal-core-yaml-v1.0-structure.schema.yaml"
+title: "YACAL v1.0 core structural schema"
+description: >
+  Core structural schema for the YAML representation of ACAL Version 1.0.
+  This schema validates parsed YACAL data directly. It focuses on root forms,
+  object shapes, property names, multiplicities, wrapper-key structures, and
+  reusable primitive patterns. YAML parser conformance rules and higher-order
+  ACAL constraints remain outside this artifact.
+$comment: >
+  This first core schema draft covers the core YACAL document forms plus the
+  standalone ShortIdSet artifact form used by the YACAL work product. Profile
+  extension points such as PolicyDefaults, RequestDefaults, StatusDetail, and
+  selector extensions are exposed through explicit dynamic extension hooks for
+  later composition. Higher-order invariants are complemented by the companion
+  core constraint catalog in acal-core-yaml-v1.0-constraints.yaml.
+oneOf:
+  - $ref: "#/$defs/PolicyDocument"
+  - $ref: "#/$defs/BundleDocument"
+  - $ref: "#/$defs/RequestDocument"
+  - $ref: "#/$defs/ResponseDocument"
+  - $ref: "#/$defs/ShortIdSetDocument"
+$defs:
+  URIType:
+    type: string
+    format: uri-reference
+    minLength: 1
+
+  StringType:
+    type: string
+
+  BooleanType:
+    type: boolean
+
+  NonNegativeIntegerType:
+    type: integer
+    minimum: 0
+
+  VersionType:
+    type: string
+    pattern: "^(0|[1-9]\\d*)(\\.(0|[1-9]\\d*)){0,3}$"
+
+  VersionMatchType:
+    type: string
+    pattern: "^(0|[1-9]\\d*|\\*)(\\.(0|[1-9]\\d*|\\*|\\+)){0,3}$"
+
+  ShortIdNameType:
+    type: string
+    pattern: "^[A-Za-z][0-9A-Za-z]*(-[0-9A-Za-z]+)*$"
+
+  IdentifierType:
+    type: string
+    pattern: "^[^{}]*(\\{[A-Za-z][0-9A-Za-z]*(-[0-9A-Za-z]+)*\\}[^{}]*)*$"
+
+  LocalIdentifierType:
+    type: string
+    pattern: "^_*[A-Za-z][A-Za-z_0-9]*([-.]_*[A-Za-z_0-9]*)*$"
+
+  AttributeSelectorPathType:
+    type: string
+    pattern: "^\\S(.*\\S)?$"
+
+  NameType:
+    type: string
+    pattern: "^[_:A-Za-z][-._:A-Za-z0-9:]*$"
+
+  EffectType:
+    type: string
+    enum:
+      - Permit
+      - Deny
+
+  DecisionType:
+    type: string
+    enum:
+      - Permit
+      - Deny
+      - Indeterminate
+      - NotApplicable
+
+  MediaType:
+    type: string
+    pattern: "^[A-Za-z0-9][A-Za-z0-9!#$&\\-\\^_.+]{0,63}/[A-Za-z0-9][A-Za-z0-9!#$&\\-\\^_.+]{0,63}$"
+
+  ContentEncodingType:
+    type: string
+    pattern: "^[a-z0-9]+(-[a-z0-9]+)*$"
+
+  AnyType:
+    type:
+      - object
+      - array
+      - string
+      - number
+      - boolean
+
+  PrimitiveValueScalarType:
+    type:
+      - string
+      - number
+      - boolean
+
+  TypedPrimitiveValueType:
+    type: object
+    required:
+      - DataType
+      - Value
+    properties:
+      DataType:
+        $ref: "#/$defs/IdentifierType"
+      Value:
+        $ref: "#/$defs/PrimitiveValueScalarType"
+    additionalProperties: false
+
+  StructuredValueTypeTree:
+    $dynamicRef: "#StructuredValueTypeExtensions"
+
+  StructuredValueTypeExtensionsEmpty:
+    $dynamicAnchor: "StructuredValueTypeExtensions"
+    $comment: >
+      No StructuredValueType extension is enabled by default in the core
+      schema. Profile or implementation composition schemas may override this
+      dynamic anchor to add concrete structured-value types.
+    not: true
+
+  TypedStructuredValueType:
+    allOf:
+      - type: object
+        required:
+          - DataType
+        properties:
+          DataType:
+            $ref: "#/$defs/IdentifierType"
+      - $ref: "#/$defs/StructuredValueTypeTree"
+    unevaluatedProperties: false
+
+  ValueType:
+    anyOf:
+      - $ref: "#/$defs/PrimitiveValueScalarType"
+      - $ref: "#/$defs/TypedPrimitiveValueType"
+      - $ref: "#/$defs/StructuredValueTypeTree"
+      - $ref: "#/$defs/TypedStructuredValueType"
+    $comment: >
+      Parent-context DataType agreement and other higher-order ValueType
+      invariants are handled by the companion constraint catalog.
+
+  UriArray:
+    type: array
+    items:
+      $ref: "#/$defs/URIType"
+    uniqueItems: true
+
+  ValueArray:
+    type: array
+    items:
+      $ref: "#/$defs/ValueType"
+    minItems: 1
+
+  ExpressionArray:
+    type: array
+    items:
+      $ref: "#/$defs/ExpressionTypeTree"
+
+  PolicyDefaultsType:
+    $dynamicRef: "#PolicyDefaultsTypeExtensions"
+
+  PolicyDefaultsTypeExtensionsEmpty:
+    $dynamicAnchor: "PolicyDefaultsTypeExtensions"
+    $comment: >
+      No PolicyDefaultsType extension is enabled by default in the core
+      schema. Profile or implementation composition schemas may override this
+      dynamic anchor to add concrete policy-default objects.
+    not: true
+
+  RequestDefaultsType:
+    $dynamicRef: "#RequestDefaultsTypeExtensions"
+
+  RequestDefaultsTypeExtensionsEmpty:
+    $dynamicAnchor: "RequestDefaultsTypeExtensions"
+    $comment: >
+      No RequestDefaultsType extension is enabled by default in the core
+      schema. Profile or implementation composition schemas may override this
+      dynamic anchor to add concrete request-default objects.
+    not: true
+
+  ContentType:
+    type: object
+    required:
+      - Body
+    properties:
+      MediaType:
+        $ref: "#/$defs/MediaType"
+      Encoding:
+        $ref: "#/$defs/ContentEncodingType"
+      Body:
+        $ref: "#/$defs/AnyType"
+    additionalProperties: false
+
+  AttributeType:
+    type: object
+    required:
+      - AttributeId
+      - Value
+    properties:
+      AttributeId:
+        $ref: "#/$defs/IdentifierType"
+      Issuer:
+        $ref: "#/$defs/NameType"
+      DataType:
+        $ref: "#/$defs/IdentifierType"
+      Value:
+        $ref: "#/$defs/ValueArray"
+    additionalProperties: false
+
+  RequestAttributeType:
+    type: object
+    required:
+      - AttributeId
+      - Value
+    properties:
+      AttributeId:
+        $ref: "#/$defs/IdentifierType"
+      Issuer:
+        $ref: "#/$defs/NameType"
+      DataType:
+        $ref: "#/$defs/IdentifierType"
+      Value:
+        $ref: "#/$defs/ValueArray"
+      IncludeInResult:
+        $ref: "#/$defs/BooleanType"
+    additionalProperties: false
+
+  AttributeAssignmentType:
+    type: object
+    required:
+      - AttributeId
+      - Value
+    properties:
+      AttributeId:
+        $ref: "#/$defs/IdentifierType"
+      Category:
+        $ref: "#/$defs/IdentifierType"
+      Issuer:
+        $ref: "#/$defs/NameType"
+      DataType:
+        $ref: "#/$defs/IdentifierType"
+      Value:
+        $ref: "#/$defs/ValueArray"
+    additionalProperties: false
+
+  EntityType:
+    type: object
+    properties:
+      Content:
+        $ref: "#/$defs/ContentType"
+      Attribute:
+        type: array
+        items:
+          $ref: "#/$defs/AttributeType"
+        minItems: 1
+    anyOf:
+      - required:
+          - Content
+      - required:
+          - Attribute
+    additionalProperties: false
+
+  VariableReferenceType:
+    type: object
+    required:
+      - VariableId
+    properties:
+      VariableId:
+        $ref: "#/$defs/LocalIdentifierType"
+    additionalProperties: false
+
+  FunctionType:
+    type: object
+    required:
+      - Id
+    properties:
+      Id:
+        $ref: "#/$defs/IdentifierType"
+    additionalProperties: false
+
+  ApplyType:
+    type: object
+    required:
+      - FunctionId
+    properties:
+      FunctionId:
+        $ref: "#/$defs/IdentifierType"
+      Description:
+        $ref: "#/$defs/StringType"
+      Expression:
+        $ref: "#/$defs/ExpressionArray"
+    additionalProperties: false
+
+  AttributeDesignatorType:
+    type: object
+    required:
+      - Category
+      - AttributeId
+    properties:
+      Category:
+        $ref: "#/$defs/IdentifierType"
+      AttributeId:
+        $ref: "#/$defs/IdentifierType"
+      DataType:
+        $ref: "#/$defs/IdentifierType"
+      Issuer:
+        $ref: "#/$defs/NameType"
+      MustBePresent:
+        $ref: "#/$defs/BooleanType"
+    additionalProperties: false
+
+  EntityAttributeDesignatorType:
+    type: object
+    required:
+      - AttributeId
+      - Expression
+    properties:
+      AttributeId:
+        $ref: "#/$defs/IdentifierType"
+      DataType:
+        $ref: "#/$defs/IdentifierType"
+      Issuer:
+        $ref: "#/$defs/NameType"
+      MustBePresent:
+        $ref: "#/$defs/BooleanType"
+      Expression:
+        $ref: "#/$defs/ExpressionTypeTree"
+    additionalProperties: false
+
+  BaseAttributeSelectorType:
+    type: object
+    required:
+      - Path
+    properties:
+      Path:
+        $ref: "#/$defs/AttributeSelectorPathType"
+      DataType:
+        $ref: "#/$defs/IdentifierType"
+      MustBePresent:
+        $ref: "#/$defs/BooleanType"
+    $comment: >
+      Shared base shape for concrete selector subtypes. The core schema does
+      not enable any concrete selector subtype by default.
+
+  AttributeSelectorCoreType:
+    allOf:
+      - $ref: "#/$defs/BaseAttributeSelectorType"
+      - type: object
+        required:
+          - Category
+        properties:
+          Category:
+            $ref: "#/$defs/IdentifierType"
+
+  AttributeSelectorType:
+    $dynamicRef: "#AttributeSelectorTypeExtensions"
+
+  AttributeSelectorTypeExtensionsEmpty:
+    $dynamicAnchor: "AttributeSelectorTypeExtensions"
+    $comment: >
+      No AttributeSelectorType extension is enabled by default in the core
+      schema. Profile or implementation composition schemas may override this
+      dynamic anchor to add concrete selector types.
+    not: true
+
+  EntityAttributeSelectorCoreType:
+    allOf:
+      - $ref: "#/$defs/BaseAttributeSelectorType"
+      - type: object
+        required:
+          - Expression
+        properties:
+          Expression:
+            $ref: "#/$defs/ExpressionTypeTree"
+
+  EntityAttributeSelectorType:
+    $dynamicRef: "#EntityAttributeSelectorTypeExtensions"
+
+  EntityAttributeSelectorTypeExtensionsEmpty:
+    $dynamicAnchor: "EntityAttributeSelectorTypeExtensions"
+    $comment: >
+      No EntityAttributeSelectorType extension is enabled by default in the
+      core schema. Profile or implementation composition schemas may override
+      this dynamic anchor to add concrete selector types.
+    not: true
+
+  SharedVariableReferenceType:
+    type: object
+    required:
+      - Id
+    properties:
+      Id:
+        $ref: "#/$defs/URIType"
+      Version:
+        $ref: "#/$defs/VersionMatchType"
+      Expression:
+        $ref: "#/$defs/ExpressionArray"
+    additionalProperties: false
+
+  QuantifiedExpressionType:
+    type: object
+    required:
+      - VariableId
+      - Domain
+      - Iterant
+    properties:
+      VariableId:
+        $ref: "#/$defs/LocalIdentifierType"
+      Domain:
+        $ref: "#/$defs/NonLiteralExpressionTypeTree"
+      Iterant:
+        $ref: "#/$defs/ExpressionTypeTree"
+    additionalProperties: false
+
+  ExpressionTypeTree:
+    oneOf:
+      - $ref: "#/$defs/ApplyTypeTree"
+      - $ref: "#/$defs/AttributeDesignatorTypeTree"
+      - $ref: "#/$defs/EntityAttributeDesignatorTypeTree"
+      - $ref: "#/$defs/AttributeSelectorTypeTree"
+      - $ref: "#/$defs/EntityAttributeSelectorTypeTree"
+      - $ref: "#/$defs/VariableReferenceTypeTree"
+      - $ref: "#/$defs/SharedVariableReferenceTypeTree"
+      - $ref: "#/$defs/FunctionTypeTree"
+      - $ref: "#/$defs/ValueTypeTree"
+      - $ref: "#/$defs/ForAnyTypeTree"
+      - $ref: "#/$defs/ForAllTypeTree"
+      - $ref: "#/$defs/SelectTypeTree"
+      - $ref: "#/$defs/MapTypeTree"
+
+  NonLiteralExpressionTypeTree:
+    oneOf:
+      - $ref: "#/$defs/ApplyTypeTree"
+      - $ref: "#/$defs/AttributeDesignatorTypeTree"
+      - $ref: "#/$defs/EntityAttributeDesignatorTypeTree"
+      - $ref: "#/$defs/AttributeSelectorTypeTree"
+      - $ref: "#/$defs/EntityAttributeSelectorTypeTree"
+      - $ref: "#/$defs/VariableReferenceTypeTree"
+      - $ref: "#/$defs/SharedVariableReferenceTypeTree"
+      - $ref: "#/$defs/FunctionTypeTree"
+      - $ref: "#/$defs/ForAnyTypeTree"
+      - $ref: "#/$defs/ForAllTypeTree"
+      - $ref: "#/$defs/SelectTypeTree"
+      - $ref: "#/$defs/MapTypeTree"
+
+  BooleanExpressionTypeTree:
+    $ref: "#/$defs/NonLiteralExpressionTypeTree"
+
+  ApplyTypeTree:
+    type: object
+    required:
+      - Apply
+    properties:
+      Apply:
+        $ref: "#/$defs/ApplyType"
+    additionalProperties: false
+
+  AttributeDesignatorTypeTree:
+    type: object
+    required:
+      - AttributeDesignator
+    properties:
+      AttributeDesignator:
+        $ref: "#/$defs/AttributeDesignatorType"
+    additionalProperties: false
+
+  EntityAttributeDesignatorTypeTree:
+    type: object
+    required:
+      - EntityAttributeDesignator
+    properties:
+      EntityAttributeDesignator:
+        $ref: "#/$defs/EntityAttributeDesignatorType"
+    additionalProperties: false
+
+  AttributeSelectorTypeTree:
+    type: object
+    required:
+      - AttributeSelector
+    properties:
+      AttributeSelector:
+        $ref: "#/$defs/AttributeSelectorType"
+    additionalProperties: false
+
+  EntityAttributeSelectorTypeTree:
+    type: object
+    required:
+      - EntityAttributeSelector
+    properties:
+      EntityAttributeSelector:
+        $ref: "#/$defs/EntityAttributeSelectorType"
+    additionalProperties: false
+
+  VariableReferenceTypeTree:
+    type: object
+    required:
+      - VariableReference
+    properties:
+      VariableReference:
+        $ref: "#/$defs/VariableReferenceType"
+    additionalProperties: false
+
+  SharedVariableReferenceTypeTree:
+    type: object
+    required:
+      - SharedVariableReference
+    properties:
+      SharedVariableReference:
+        $ref: "#/$defs/SharedVariableReferenceType"
+    additionalProperties: false
+
+  FunctionTypeTree:
+    type: object
+    required:
+      - Function
+    properties:
+      Function:
+        $ref: "#/$defs/FunctionType"
+    additionalProperties: false
+
+  ValueTypeTree:
+    type: object
+    required:
+      - Value
+    properties:
+      Value:
+        $ref: "#/$defs/ValueType"
+    additionalProperties: false
+
+  ForAnyTypeTree:
+    type: object
+    required:
+      - ForAny
+    properties:
+      ForAny:
+        $ref: "#/$defs/QuantifiedExpressionType"
+    additionalProperties: false
+
+  ForAllTypeTree:
+    type: object
+    required:
+      - ForAll
+    properties:
+      ForAll:
+        $ref: "#/$defs/QuantifiedExpressionType"
+    additionalProperties: false
+
+  SelectTypeTree:
+    type: object
+    required:
+      - Select
+    properties:
+      Select:
+        $ref: "#/$defs/QuantifiedExpressionType"
+    additionalProperties: false
+
+  MapTypeTree:
+    type: object
+    required:
+      - Map
+    properties:
+      Map:
+        $ref: "#/$defs/QuantifiedExpressionType"
+    additionalProperties: false
+
+  VariableDefinitionType:
+    type: object
+    required:
+      - VariableId
+      - Expression
+    properties:
+      VariableId:
+        $ref: "#/$defs/LocalIdentifierType"
+      Expression:
+        $ref: "#/$defs/ExpressionTypeTree"
+    additionalProperties: false
+
+  ParameterType:
+    type: object
+    required:
+      - Name
+    properties:
+      Name:
+        $ref: "#/$defs/LocalIdentifierType"
+      DataType:
+        $ref: "#/$defs/IdentifierType"
+      IsBag:
+        $ref: "#/$defs/BooleanType"
+      Description:
+        $ref: "#/$defs/StringType"
+      Expression:
+        $ref: "#/$defs/ExpressionTypeTree"
+    additionalProperties: false
+
+  PolicyReferenceType:
+    type: object
+    required:
+      - Id
+    properties:
+      Id:
+        $ref: "#/$defs/URIType"
+      Version:
+        $ref: "#/$defs/VersionMatchType"
+      Expression:
+        $ref: "#/$defs/ExpressionArray"
+    additionalProperties: false
+
+  ApplicablePolicyReferenceType:
+    type: object
+    required:
+      - Id
+      - Version
+    properties:
+      Id:
+        $ref: "#/$defs/URIType"
+      Version:
+        $ref: "#/$defs/VersionType"
+    additionalProperties: false
+
+  PolicyPatternMatchReferenceType:
+    type: object
+    required:
+      - Id
+    properties:
+      Id:
+        $ref: "#/$defs/URIType"
+      Version:
+        $ref: "#/$defs/VersionMatchType"
+    additionalProperties: false
+
+  RuleType:
+    type: object
+    required:
+      - Id
+      - Effect
+    properties:
+      Id:
+        $ref: "#/$defs/LocalIdentifierType"
+      Effect:
+        $ref: "#/$defs/EffectType"
+      Description:
+        $ref: "#/$defs/StringType"
+      VariableDefinition:
+        type: array
+        items:
+          $ref: "#/$defs/VariableDefinitionType"
+      Condition:
+        $ref: "#/$defs/BooleanExpressionTypeTree"
+      NoticeExpression:
+        type: array
+        items:
+          $ref: "#/$defs/NoticeExpressionType"
+    additionalProperties: false
+
+  PolicyType:
+    type: object
+    required:
+      - PolicyId
+      - Version
+      - CombiningAlgId
+    properties:
+      PolicyId:
+        $ref: "#/$defs/URIType"
+      Version:
+        $ref: "#/$defs/VersionType"
+      CombiningAlgId:
+        $ref: "#/$defs/IdentifierType"
+      Description:
+        $ref: "#/$defs/StringType"
+      ShortIdSetReference:
+        $ref: "#/$defs/UriArray"
+      MaxDelegationDepth:
+        $ref: "#/$defs/NonNegativeIntegerType"
+      PolicyIssuer:
+        $ref: "#/$defs/EntityType"
+      PolicyDefaults:
+        type: array
+        items:
+          $ref: "#/$defs/PolicyDefaultsType"
+      Parameter:
+        type: array
+        items:
+          $ref: "#/$defs/ParameterType"
+      VariableDefinition:
+        type: array
+        items:
+          $ref: "#/$defs/VariableDefinitionType"
+      Target:
+        $ref: "#/$defs/BooleanExpressionTypeTree"
+      NoticeExpression:
+        type: array
+        items:
+          $ref: "#/$defs/NoticeExpressionType"
+      CombinerInput:
+        type: array
+        items:
+          $ref: "#/$defs/CombinerInputTypeTree"
+    additionalProperties: false
+
+  RuleTypeTree:
+    type: object
+    required:
+      - Rule
+    properties:
+      Rule:
+        $ref: "#/$defs/RuleType"
+    additionalProperties: false
+
+  PolicyTypeTree:
+    type: object
+    required:
+      - Policy
+    properties:
+      Policy:
+        $ref: "#/$defs/PolicyType"
+    additionalProperties: false
+
+  PolicyReferenceTypeTree:
+    type: object
+    required:
+      - PolicyReference
+    properties:
+      PolicyReference:
+        $ref: "#/$defs/PolicyReferenceType"
+    additionalProperties: false
+
+  CombinerInputTypeTree:
+    oneOf:
+      - $ref: "#/$defs/RuleTypeTree"
+      - $ref: "#/$defs/PolicyTypeTree"
+      - $ref: "#/$defs/PolicyReferenceTypeTree"
+
+  SharedVariableDefinitionType:
+    type: object
+    required:
+      - Id
+      - Version
+      - Expression
+    properties:
+      Id:
+        $ref: "#/$defs/URIType"
+      Version:
+        $ref: "#/$defs/VersionType"
+      Description:
+        $ref: "#/$defs/StringType"
+      ShortIdSetReference:
+        $ref: "#/$defs/UriArray"
+      Parameter:
+        type: array
+        items:
+          $ref: "#/$defs/ParameterType"
+      Expression:
+        $ref: "#/$defs/ExpressionTypeTree"
+    additionalProperties: false
+
+  BundleType:
+    type: object
+    properties:
+      ShortIdSet:
+        type: array
+        items:
+          $ref: "#/$defs/ShortIdSetType"
+      SharedVariableDefinition:
+        type: array
+        items:
+          $ref: "#/$defs/SharedVariableDefinitionType"
+      Policy:
+        type: array
+        items:
+          $ref: "#/$defs/PolicyType"
+      PolicyReference:
+        $ref: "#/$defs/PolicyReferenceType"
+    additionalProperties: false
+
+  RequestEntityReferenceType:
+    type: object
+    required:
+      - Id
+    properties:
+      Id:
+        $ref: "#/$defs/LocalIdentifierType"
+    additionalProperties: false
+
+  RequestReferenceType:
+    type: object
+    required:
+      - RequestEntityReference
+    properties:
+      RequestEntityReference:
+        type: array
+        items:
+          $ref: "#/$defs/RequestEntityReferenceType"
+        minItems: 1
+    additionalProperties: false
+
+  MultiRequestsType:
+    type: object
+    required:
+      - RequestReference
+    properties:
+      RequestReference:
+        type: array
+        items:
+          $ref: "#/$defs/RequestReferenceType"
+        minItems: 1
+    additionalProperties: false
+
+  RequestEntityType:
+    type: object
+    required:
+      - Category
+    properties:
+      Category:
+        $ref: "#/$defs/IdentifierType"
+      Id:
+        $ref: "#/$defs/LocalIdentifierType"
+      Content:
+        $ref: "#/$defs/ContentType"
+      RequestAttribute:
+        type: array
+        items:
+          $ref: "#/$defs/RequestAttributeType"
+    additionalProperties: false
+
+  RequestType:
+    type: object
+    required:
+      - RequestEntity
+    properties:
+      ReturnPolicyIdList:
+        $ref: "#/$defs/BooleanType"
+      CombinedDecision:
+        $ref: "#/$defs/BooleanType"
+      ShortIdSetReference:
+        $ref: "#/$defs/UriArray"
+      RequestDefaults:
+        type: array
+        items:
+          $ref: "#/$defs/RequestDefaultsType"
+      RequestEntity:
+        type: array
+        items:
+          $ref: "#/$defs/RequestEntityType"
+        minItems: 1
+      MultiRequests:
+        $ref: "#/$defs/MultiRequestsType"
+    additionalProperties: false
+
+  ResultEntityType:
+    type: object
+    required:
+      - Category
+      - Attribute
+    properties:
+      Category:
+        $ref: "#/$defs/IdentifierType"
+      Id:
+        $ref: "#/$defs/LocalIdentifierType"
+      Attribute:
+        type: array
+        items:
+          $ref: "#/$defs/AttributeType"
+        minItems: 1
+    additionalProperties: false
+
+  StatusCodeType:
+    type: object
+    required:
+      - Value
+    properties:
+      Value:
+        $ref: "#/$defs/IdentifierType"
+      StatusCode:
+        $ref: "#/$defs/StatusCodeType"
+    additionalProperties: false
+
+  MissingAttributeDetailType:
+    type: object
+    required:
+      - Category
+      - AttributeId
+      - DataType
+    properties:
+      Category:
+        $ref: "#/$defs/IdentifierType"
+      AttributeId:
+        $ref: "#/$defs/IdentifierType"
+      Issuer:
+        $ref: "#/$defs/NameType"
+      DataType:
+        $ref: "#/$defs/IdentifierType"
+      Value:
+        type: array
+        items:
+          $ref: "#/$defs/ValueType"
+    additionalProperties: false
+
+  StatusDetailType:
+    allOf:
+      - $ref: "#/$defs/StatusDetailTypeCore"
+      - $ref: "#/$defs/StatusDetailTypeExtensionProperties"
+    unevaluatedProperties: false
+    $comment: >
+      Conditional StatusDetail presence and status-code-specific detail rules
+      are handled by the companion constraint catalog.
+
+  StatusDetailTypeCore:
+    type: object
+    properties:
+      MissingAttributeDetail:
+        type: array
+        items:
+          $ref: "#/$defs/MissingAttributeDetailType"
+        minItems: 1
+    minProperties: 1
+
+  StatusDetailTypeExtensionProperties:
+    $dynamicRef: "#StatusDetailTypeExtensions"
+
+  StatusDetailTypeExtensionsEmpty:
+    $dynamicAnchor: "StatusDetailTypeExtensions"
+    $comment: >
+      No profile-specific StatusDetail entries are enabled by default in the
+      core schema. Profile or implementation composition schemas may override
+      this dynamic anchor to add supported detail keys.
+    type: object
+
+  StatusType:
+    type: object
+    required:
+      - StatusCode
+    properties:
+      StatusCode:
+        $ref: "#/$defs/StatusCodeType"
+      StatusMessage:
+        $ref: "#/$defs/StringType"
+      StatusDetail:
+        $ref: "#/$defs/StatusDetailType"
+    additionalProperties: false
+
+  NoticeType:
+    type: object
+    required:
+      - Id
+    properties:
+      Id:
+        $ref: "#/$defs/IdentifierType"
+      IsObligation:
+        $ref: "#/$defs/BooleanType"
+      AttributeAssignment:
+        type: array
+        items:
+          $ref: "#/$defs/AttributeAssignmentType"
+    additionalProperties: false
+
+  AttributeAssignmentExpressionType:
+    type: object
+    required:
+      - AttributeId
+      - Expression
+    properties:
+      AttributeId:
+        $ref: "#/$defs/IdentifierType"
+      Category:
+        $ref: "#/$defs/IdentifierType"
+      Issuer:
+        $ref: "#/$defs/NameType"
+      Expression:
+        $ref: "#/$defs/ExpressionTypeTree"
+    additionalProperties: false
+
+  NoticeExpressionType:
+    type: object
+    required:
+      - Id
+    properties:
+      Id:
+        $ref: "#/$defs/IdentifierType"
+      IsObligation:
+        $ref: "#/$defs/BooleanType"
+      AppliesTo:
+        $ref: "#/$defs/EffectType"
+      Condition:
+        $ref: "#/$defs/BooleanExpressionTypeTree"
+      AttributeAssignmentExpression:
+        type: array
+        items:
+          $ref: "#/$defs/AttributeAssignmentExpressionType"
+    additionalProperties: false
+
+  ResultType:
+    type: object
+    required:
+      - Decision
+    properties:
+      Decision:
+        $ref: "#/$defs/DecisionType"
+      Status:
+        $ref: "#/$defs/StatusType"
+      Notice:
+        type: array
+        items:
+          $ref: "#/$defs/NoticeType"
+      ResultEntity:
+        type: array
+        items:
+          $ref: "#/$defs/ResultEntityType"
+      ApplicablePolicyReference:
+        type: array
+        items:
+          $ref: "#/$defs/ApplicablePolicyReferenceType"
+    additionalProperties: false
+
+  ResponseType:
+    type: object
+    required:
+      - Result
+    properties:
+      ShortIdSetReference:
+        $ref: "#/$defs/UriArray"
+      Result:
+        type: array
+        items:
+          $ref: "#/$defs/ResultType"
+        minItems: 1
+    additionalProperties: false
+
+  ShortIdType:
+    type: object
+    required:
+      - Name
+      - Value
+    properties:
+      Name:
+        $ref: "#/$defs/ShortIdNameType"
+      Value:
+        $ref: "#/$defs/URIType"
+    additionalProperties: false
+
+  ShortIdSetType:
+    type: object
+    required:
+      - Id
+    properties:
+      Id:
+        $ref: "#/$defs/URIType"
+      ShortIdSetReference:
+        $ref: "#/$defs/UriArray"
+      ShortId:
+        type: array
+        items:
+          $ref: "#/$defs/ShortIdType"
+    additionalProperties: false
+
+  PolicyDocument:
+    type: object
+    required:
+      - Policy
+    properties:
+      Policy:
+        $ref: "#/$defs/PolicyType"
+    additionalProperties: false
+
+  BundleDocument:
+    type: object
+    required:
+      - Bundle
+    properties:
+      Bundle:
+        $ref: "#/$defs/BundleType"
+    additionalProperties: false
+
+  RequestDocument:
+    type: object
+    required:
+      - Request
+    properties:
+      Request:
+        $ref: "#/$defs/RequestType"
+    additionalProperties: false
+
+  ResponseDocument:
+    type: object
+    required:
+      - Response
+    properties:
+      Response:
+        $ref: "#/$defs/ResponseType"
+    additionalProperties: false
+
+  ShortIdSetDocument:
+    type: object
+    required:
+      - ShortIdSet
+    properties:
+      ShortIdSet:
+        $ref: "#/$defs/ShortIdSetType"
+    additionalProperties: false

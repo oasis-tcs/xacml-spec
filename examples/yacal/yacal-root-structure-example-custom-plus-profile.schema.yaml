@@ -1,0 +1,29 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$id: "yacal-root-structure-example-custom-plus-profile.schema.yaml"
+title: "YACAL root composition schema combining custom and profile extensions"
+description: >
+  Example root schema for an implementation that supports core YACAL, the
+  XPath profile structured-value extension, and a custom structured-value
+  extension defined locally by the implementation.
+$defs:
+  CustomTemplateStructuredValueTypeExtension:
+    type: object
+    required:
+      - TemplateLanguage
+      - Template
+    properties:
+      DataType:
+        $ref: "acal-core-yaml-v1.0-structure.schema.yaml#/$defs/IdentifierType"
+      TemplateLanguage:
+        $ref: "acal-core-yaml-v1.0-structure.schema.yaml#/$defs/IdentifierType"
+      Template:
+        $ref: "acal-core-yaml-v1.0-structure.schema.yaml#/$defs/StringType"
+    additionalProperties: false
+
+  EnabledStructuredValueTypeExtensions:
+    $dynamicAnchor: "StructuredValueTypeExtensions"
+    anyOf:
+      - $ref: "yacal-root-structure-example-custom-plus-profile.schema.yaml#/$defs/CustomTemplateStructuredValueTypeExtension"
+      - $ref: "acal-xpath-yaml-v1.0-structure.schema.yaml#/$defs/XPathStructuredValueTypeExtension"
+
+$ref: "acal-core-yaml-v1.0-structure.schema.yaml"
