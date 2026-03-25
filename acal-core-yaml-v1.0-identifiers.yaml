@@ -2,12 +2,6 @@
 ShortIdSet:
   Id: "urn:oasis:names:tc:acal:1.0:core:identifiers"
   ShortId:
-    # Core identifiers
-    - Name: "identifiers"
-      Value: "urn:oasis:names:tc:acal:1.0:core:identifiers"
-    - Name: "schema"
-      Value: "urn:oasis:names:tc:acal:1.0:core:schema"
-
     # Attribute categories
     - Name: "action"
       Value: "urn:oasis:names:tc:acal:1.0:attribute-category:action"
@@ -557,26 +551,6 @@ ShortIdSet:
       Value: "urn:oasis:names:tc:acal:1.0:function:time-subset"
     - Name: "time-union"
       Value: "urn:oasis:names:tc:acal:1.0:function:time-union"
-    - Name: "type-at-least-one-member-of"
-      Value: "urn:oasis:names:tc:acal:1.0:function:type-at-least-one-member-of"
-    - Name: "type-bag"
-      Value: "urn:oasis:names:tc:acal:1.0:function:type-bag"
-    - Name: "type-bag-size"
-      Value: "urn:oasis:names:tc:acal:1.0:function:type-bag-size"
-    - Name: "type-equal"
-      Value: "urn:oasis:names:tc:acal:1.0:function:type-equal"
-    - Name: "type-intersection"
-      Value: "urn:oasis:names:tc:acal:1.0:function:type-intersection"
-    - Name: "type-is-in"
-      Value: "urn:oasis:names:tc:acal:1.0:function:type-is-in"
-    - Name: "type-one-and-only"
-      Value: "urn:oasis:names:tc:acal:1.0:function:type-one-and-only"
-    - Name: "type-set-equals"
-      Value: "urn:oasis:names:tc:acal:1.0:function:type-set-equals"
-    - Name: "type-subset"
-      Value: "urn:oasis:names:tc:acal:1.0:function:type-subset"
-    - Name: "type-union"
-      Value: "urn:oasis:names:tc:acal:1.0:function:type-union"
     - Name: "x500Name-at-least-one-member-of"
       Value: "urn:oasis:names:tc:acal:1.0:function:x500Name-at-least-one-member-of"
     - Name: "x500Name-bag"
@@ -698,12 +672,3 @@ ShortIdSet:
     - Name: "permit-unless-deny"
       Value: "urn:oasis:names:tc:acal:1.0:combining-algorithm:permit-unless-deny"
 
-    # Content types
-    - Name: "application-json"
-      Value: "application/json"
-    - Name: "application-xml"
-      Value: "application/xml"
-
-    # Content encodings
-    - Name: "base64"
-      Value: "base64"
