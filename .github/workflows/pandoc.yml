@@ -54,15 +54,11 @@ jobs:
             --metadata title=" "
             --output output/acal-core-v1.0-draft.html 
             acal-core-v1.0.md  
+      - name: Install Chromium for printing to PDF
+        run: sudo apt install -y chromium-browser
       - name: Pandoc PDF generation
-        uses: docker://browserless/chrome
-        with:
-          args: >-
-            --headless=new
-            --no-sandbox
-            --no-pdf-header-footer
-            --print-to-pdf="output/acal-core-v1.0-draft.pdf"
-            "file://output/acal-core-v1.0-draft.html"
+        run: |
+            chromium-browser --headless=new --no-sandbox --no-pdf-header-footer --print-to-pdf="output/acal-core-v1.0-draft.pdf" "file://output/acal-core-v1.0-draft.html"
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
