@@ -174,6 +174,5 @@ We provide two concrete examples of combining schemas on this Github repository 
 
 The mapping rules are the following:
 For each JSON property in the JACAL document, 
-1. If the property is defined in the JSON schema as a single-valued *unrestricted* String (`"type": "string"` with no restriction, e.g. no `"format"` or `"pattern"` assertion in particular), then map to an XML attribute with same name and value as the JSON property. (In JACAL core schema, the `Description` and `StatusMessage` properties are the only ones in this case.)
-2. Else map to an XML element in the XACML 4.0 namespace with the same name as the JSON property and the element's text set to the property's value.
-
+1. If and only if the property is defined in the JSON schema as a single-valued *unrestricted* String (`"type": "string"` with no restriction, e.g. no `"format"` or `"pattern"` assertion in particular), then map to an XML element in the XACML 4.0 namespace with the same name as the JSON property and the element's text set to the property's value. (In JACAL core schema, the `Description` and `StatusMessage` properties are the only ones in this case.)
+2. Else map to an XML attribute with same name and value as the JSON property.
