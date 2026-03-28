@@ -52,7 +52,7 @@ NOTES:
 -- https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3.css
 -- https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3a.css (this one produces HTML that resembles the github display more closely, especially for blocks of code)
 -- If you want to use one of the included .css files in pandoc, or develop a different .css file, simply link to it (using -c styles/markdown-styles-v1.7.3a.css) instead of the online files.
-
+-- https://docs.oasis-open.org/templates/css/markdown-styles-v1.8.1-cn_final.css
 
 - The TOC is generated at the top of the resulting HTML body by "pandoc". For final publication (by OASIS staff), it will be reformatted and moved down to the expected location below the OASIS Front Matter.
 - The "front matter" lists without bullets (file URIs, Editors, etc.) use space-backslash for each list item except the last, to force a new line without a full paragraph break.
