@@ -54,15 +54,13 @@ jobs:
             --metadata title=" "
             --output output/acal-core-v1.0-draft.html 
             acal-core-v1.0.md  
-      - name: Install Chromium for printing to PDF
+      - name: Install Chrome for printing to PDF
         run: | 
-          sudo apt install -y chromium-browser libproxy1v5
-          dpkg -L libproxy1v5
-      - name: Fix libpxbackend-1.0.so not found
-        run: export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/x86_64-linux-gnu/libproxy
+          wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          sudo apt install -y ./google-chrome-stable_current_amd64.deb
       - name: Pandoc PDF generation
         run: |
-            chromium-browser --headless=new --no-sandbox --no-pdf-header-footer --print-to-pdf="output/acal-core-v1.0-draft.pdf" "file://output/acal-core-v1.0-draft.html"
+            google-chrome --headless=new --no-sandbox --no-pdf-header-footer --print-to-pdf="output/acal-core-v1.0-draft.pdf" output/acal-core-v1.0-draft.html
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
