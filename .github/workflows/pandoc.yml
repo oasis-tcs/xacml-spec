@@ -48,7 +48,6 @@ jobs:
             -c styles/markdown-styles-v1.7.3a.css 
             --standalone
             --template pandoc/templates/default.html
-            --filter pandoc-include
             --lua-filter pandoc/meta_vars.lua
             --defaults pandoc/defaults.yaml
             --embed-resources
