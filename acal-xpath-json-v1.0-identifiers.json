@@ -27,11 +27,11 @@
 		},
 		{
 			"Name": "xpath30",
-			"Value": "http://www.w3.org/TR/xpath-30/"
+			"Value": "https://www.w3.org/TR/xpath-30/"
 		},
 		{
 			"Name": "xpath31",
-			"Value": "http://www.w3.org/TR/xpath-31/"
+			"Value": "https://www.w3.org/TR/xpath-31/"
 		}
 	]
 }

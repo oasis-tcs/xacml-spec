@@ -614,11 +614,11 @@ A `XPathExpressionValueType` object has the following properties:
 
 The `XPathVersion` property in a `XPathDefaultsType`, `XPathPolicyDefaultsType` or `XPathRequestDefaultsType` object contains an `IdentifierType` value that specifies the XPath version that applies for a policy or request, respectively.
 
-To specify XPath 2.0 the `IdentifierType` value MUST evaluate to `https://www.w3.org/TR/xpath20/`.
+To specify XPath 2.0 the `IdentifierType` value MUST evaluate to `https://www.w3.org/TR/xpath20/`. Therefore the former XPath 2.0 identifier from [[XACML 3.0](#xacml)] - `http://www.w3.org/TR/2007/REC-xpath20-20070123` - is deprecated.
 
-To specify XPath 3.0, the `IdentifierType` value MUST evaluate to `http://www.w3.org/TR/xpath-30/`. 
+To specify XPath 3.0, the `IdentifierType` value MUST evaluate to `https://www.w3.org/TR/xpath-30/`. 
 
-To specify XPath 3.1, the `IdentifierType` value MUST evaluate to `http://www.w3.org/TR/xpath-31/`.
+To specify XPath 3.1, the `IdentifierType` value MUST evaluate to `https://www.w3.org/TR/xpath-31/`.
 
 XPath 1.0 , and therefore the XPath 1.0 identifier `https://www.w3.org/TR/1999/REC-xpath-19991116/`, is deprecated.
 
@@ -1311,7 +1311,7 @@ The appendix **SHOULD** contain any explanatory text about the reason for this v
 
 -->
 
-This ACAL Profile is a successor to the set of XPath-based features of XACML 3.0. This profile differs from XACML 3.0 original XPath features in the following ways:
+This ACAL Profile is a successor to the set of XPath-based features of [[XACML 3.0](#xacml)]. This profile differs from XACML 3.0's original XPath features in the following ways:
 
 - Like [[ACAL-Core-1.0](#acal-core-10)] core model, this profile's constructs can be represented in JSON, YAML or XML at the implementor's discretion.
 
@@ -1320,7 +1320,10 @@ This ACAL Profile is a successor to the set of XPath-based features of XACML 3.0
   
    * `Path` expression (XPath) can use *ACAL* variables from `VariableDefinition`s as XPath variables.
 
-- XPath versions: deprecated XPath version 1.0; added support for XPath 3.0 and 3.1.
+- XPath versions: 
+  - Deprecated XPath version 1.0;
+  - Deprecated XPath 2.0 identifier `http://www.w3.org/TR/2007/REC-xpath20-20070123` in favor of `https://www.w3.org/TR/xpath20/`. 
+  - Added support for XPath 3.0 and 3.1.
 
 - Deprecated prefixes `urn:oasis:names:tc:xacml:` and `https://www.w3.org/2001/XMLSchema#` in favor of `urn:oasis:names:tc:acal:` for all standard identifiers (algorithms, status codes, data-types, functions, attributes and categories)
 
