@@ -47,27 +47,23 @@ jobs:
             -t html
             -c styles/markdown-styles-v1.7.3a.css 
             --standalone
-            --lua-filter pandoc/diagram.lua
+            --template pandoc/templates/default.html
+            --filter pandoc-include
+            --lua-filter pandoc/meta_vars.lua
             --defaults pandoc/defaults.yaml
             --embed-resources
             --metadata title=" "
             --output output/acal-core-v1.0-draft.html 
-            acal-core-v1.0.md
+            acal-core-v1.0.md  
       - name: Pandoc PDF generation
-        uses: docker://cdang/pandoc-plantuml
+        uses: docker://browserless/chrome
         with:
           args: >-
-            -f gfm+definition_lists 
-            -t pdf
-            -c styles/markdown-styles-v1.7.3a.css
-            -H pandoc/custom_latex_header_for_pandoc_pdf_output.tex
-            --standalone
-            --lua-filter pandoc/diagram.lua
-            --defaults pandoc/defaults.yaml
-            --embed-resources
-            --metadata title=" "
-            --output output/acal-core-v1.0-draft.pdf 
-            acal-core-v1.0.md
+            --headless=new
+            --no-sandbox
+            --no-pdf-header-footer
+            --print-to-pdf="output/acal-core-v1.0-draft.pdf"
+            "file://output/acal-core-v1.0-draft.html"
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
