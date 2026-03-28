@@ -38,7 +38,6 @@ jobs:
       - name: List files in the repository
         run: |
           ls ${{ github.workspace }}
-          ls /usr/lib/x86_64-linux-gnu/libproxy
           mkdir output
       - name: Pandoc HTML generation
         uses: docker://cdang/pandoc-plantuml
@@ -56,7 +55,9 @@ jobs:
             --output output/acal-core-v1.0-draft.html 
             acal-core-v1.0.md  
       - name: Install Chromium for printing to PDF
-        run: sudo apt install -y chromium-browser
+        run: | 
+          sudo apt install -y chromium-browser libproxy1v5
+          dpkg -L libproxy1v5
       - name: Fix libpxbackend-1.0.so not found
         run: export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/x86_64-linux-gnu/libproxy
       - name: Pandoc PDF generation
