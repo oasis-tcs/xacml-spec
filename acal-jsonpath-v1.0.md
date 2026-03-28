@@ -1,4 +1,4 @@
-﻿---
+---
 # Document metadata processed by Pandoc:
 logo: |
   ![OASIS](images/OASISLogo-v3.0.png)
