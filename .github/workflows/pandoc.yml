@@ -54,13 +54,12 @@ jobs:
             --metadata title=" "
             --output output/acal-core-v1.0-draft.html 
             acal-core-v1.0.md  
-      - name: Install Chrome for printing to PDF
-        run: | 
-          wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-          sudo apt install -y ./google-chrome-stable_current_amd64.deb
+
+      - name: Setup Chrome
+        uses: browser-actions/setup-chrome@v2
       - name: Pandoc PDF generation
         run: |
-            google-chrome --headless=new --no-sandbox --no-pdf-header-footer --print-to-pdf="output/acal-core-v1.0-draft.pdf" output/acal-core-v1.0-draft.html
+            chrome --headless=new --no-sandbox --no-pdf-header-footer --print-to-pdf="output/acal-core-v1.0-draft.pdf" output/acal-core-v1.0-draft.html
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
