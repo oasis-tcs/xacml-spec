@@ -2535,7 +2535,9 @@ A conformant YACAL document:
 6.  MUST NOT use YAML tags (e.g., `!!str`, `!custom`).
 7.  MUST NOT use YAML anchors (`&name`) or aliases (`*name`).
 8.  MUST NOT use YAML merge keys or multi-document streams.
-9.  SHOULD use YAML block style for mappings and sequences.  Flow style
+9.  MUST NOT use YAML null values (e.g. `null`, `Null`, `NULL`, `~` or undefined).
+10. MUST NOT use the YAML octal notation for integers (any value matching the regular expression `0o [0-7]+`).
+10. SHOULD use YAML block style for mappings and sequences.  Flow style
     MAY be used where it improves readability (e.g., for short inline
     values).
 
