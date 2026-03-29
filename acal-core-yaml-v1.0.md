@@ -2669,21 +2669,21 @@ Policy:
             FunctionId: "urn:oasis:names:tc:acal:1.0:function:and"
             Expression:
               - Apply:
-                  FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-equal"
+                  FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-is-in"
                   Expression:
+                    - Value: view
                     - AttributeDesignator:
                         Category: "urn:oasis:names:tc:acal:1.0:attribute-category:action"
                         AttributeId: "urn:oasis:names:tc:acal:1.0:action:action-id"
                         MustBePresent: true
-                    - Value: view
               - Apply:
-                  FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-equal"
+                  FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-is-in"
                   Expression:
+                    - Value: public
                     - AttributeDesignator:
                         Category: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
                         AttributeId: "urn:example:yacal:resource:content-tier"
                         MustBePresent: true
-                    - Value: public
     - Rule:
         Id: PermitRegisteredContentView
         Description: Permit registered and premium users to view registered content.
@@ -2693,40 +2693,40 @@ Policy:
             FunctionId: "urn:oasis:names:tc:acal:1.0:function:and"
             Expression:
               - Apply:
-                  FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-equal"
+                  FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-is-in"
                   Expression:
+                    - Value: view
                     - AttributeDesignator:
                         Category: "urn:oasis:names:tc:acal:1.0:attribute-category:action"
                         AttributeId: "urn:oasis:names:tc:acal:1.0:action:action-id"
                         MustBePresent: true
-                    - Value: view
               - Apply:
-                  FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-equal"
+                  FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-is-in"
                   Expression:
+                    - Value: registered
                     - AttributeDesignator:
                         Category: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
                         AttributeId: "urn:example:yacal:resource:content-tier"
                         MustBePresent: true
-                    - Value: registered
               - Apply:
                   FunctionId: "urn:oasis:names:tc:acal:1.0:function:or"
                   Expression:
                     - Apply:
-                        FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-equal"
+                        FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-is-in"
                         Expression:
-                          - AttributeDesignator:
-                              Category: "urn:oasis:names:tc:acal:1.0:subject-category:access-subject"
-                              AttributeId: "urn:example:yacal:subject:account-type"
-                              MustBePresent: true
                           - Value: registered
-                    - Apply:
-                        FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-equal"
-                        Expression:
                           - AttributeDesignator:
                               Category: "urn:oasis:names:tc:acal:1.0:subject-category:access-subject"
                               AttributeId: "urn:example:yacal:subject:account-type"
                               MustBePresent: true
+                    - Apply:
+                        FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-is-in"
+                        Expression:
                           - Value: premium
+                          - AttributeDesignator:
+                              Category: "urn:oasis:names:tc:acal:1.0:subject-category:access-subject"
+                              AttributeId: "urn:example:yacal:subject:account-type"
+                              MustBePresent: true
     - Rule:
         Id: PermitPremiumContentView
         Description: Permit only premium users to view premium content.
@@ -2736,29 +2736,29 @@ Policy:
             FunctionId: "urn:oasis:names:tc:acal:1.0:function:and"
             Expression:
               - Apply:
-                  FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-equal"
+                  FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-is-in"
                   Expression:
+                    - Value: view
                     - AttributeDesignator:
                         Category: "urn:oasis:names:tc:acal:1.0:attribute-category:action"
                         AttributeId: "urn:oasis:names:tc:acal:1.0:action:action-id"
                         MustBePresent: true
-                    - Value: view
               - Apply:
-                  FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-equal"
+                  FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-is-in"
                   Expression:
+                    - Value: premium
                     - AttributeDesignator:
                         Category: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
                         AttributeId: "urn:example:yacal:resource:content-tier"
                         MustBePresent: true
-                    - Value: premium
               - Apply:
-                  FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-equal"
+                  FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-is-in"
                   Expression:
+                    - Value: premium
                     - AttributeDesignator:
                         Category: "urn:oasis:names:tc:acal:1.0:subject-category:access-subject"
                         AttributeId: "urn:example:yacal:subject:account-type"
                         MustBePresent: true
-                    - Value: premium
 ```
 
 ------------------------------------------------------------------------
@@ -2785,21 +2785,21 @@ Policy:
             FunctionId: "urn:oasis:names:tc:acal:1.0:function:and"
             Expression:
               - Apply:
-                  FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-equal"
+                  FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-is-in"
                   Expression:
+                    - Value: clinician
                     - AttributeDesignator:
                         Category: "urn:oasis:names:tc:acal:1.0:subject-category:access-subject"
                         AttributeId: "urn:example:yacal:healthcare:subject:role"
                         MustBePresent: true
-                    - Value: clinician
               - Apply:
-                  FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-equal"
+                  FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-is-in"
                   Expression:
+                    - Value: medical-record
                     - AttributeDesignator:
                         Category: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
                         AttributeId: "urn:example:yacal:healthcare:resource:record-type"
                         MustBePresent: true
-                    - Value: medical-record
 ```
 
 ------------------------------------------------------------------------
