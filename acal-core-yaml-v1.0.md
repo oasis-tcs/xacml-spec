@@ -8,7 +8,7 @@
 
 ### This version
 
-- `acal-core-yacal-wd01-v1.0.md` (working draft source)
+- `acal-core-yaml-wd01-v1.0.md` (working draft source)
 
 ### Previous version
 
@@ -16,7 +16,7 @@ N/A
 
 ### Latest version
 
-- `acal-core-yacal-wd01-v1.0.md` (current working draft)
+- `acal-core-yaml-wd01-v1.0.md` (current working draft)
 
 ### Technical Committee
 
@@ -37,10 +37,33 @@ OASIS eXtensible Access Control Markup Language (XACML) TC
 
 ### Additional artifacts
 
-This working draft does not currently declare any separate normative
-machine-readable YACAL artifacts.  If YAML-specific artifacts such as
-schemas, transformation definitions, or identifier sets are later
-declared normative, they will be listed here.
+This work product includes the following machine-readable YACAL
+artifacts.
+
+Normative artifacts:
+
+- `acal-core-yaml-v1.0-structure.schema.yaml` (core YACAL structural schema)
+- `acal-core-yaml-v1.0-constraints.yaml` (core YACAL constraint catalog)
+- `acal-core-yaml-v1.0-identifiers.yaml` (core YACAL short-identifier set)
+- `acal-xpath-yaml-v1.0-structure.schema.yaml` (XPath Profile structural
+  schema)
+- `acal-xpath-yaml-v1.0-identifiers.yaml` (XPath Profile short-identifier
+  set)
+- `acal-jsonpath-yaml-v1.0-structure.schema.yaml` (JSONPath Profile
+  structural schema)
+
+Informative example artifacts:
+
+- `yacal-root-structure-example-core-only.schema.yaml`
+- `yacal-root-structure-example-using-jsonpath-profile-only.schema.yaml`
+- `yacal-root-structure-example-using-xpath-and-jsonpath-profiles.schema.yaml`
+- `yacal-root-structure-example-custom-plus-profile.schema.yaml`
+
+NOTE: any machine-readable content (Computer Language Definitions)
+declared Normative for this Work Product is provided in separate plain
+text files.  In the event of a discrepancy between any such plain text
+file and display content in the Work Product's prose narrative
+document(s), the content in the separate plain text file prevails.
 
 ### Related Work
 
@@ -58,9 +81,11 @@ a corresponding YAML structure, using YAML 1.2 block style with the
 Core Schema.  YACAL is a first-class ACAL representation, parallel in
 authority to the XML and JSON representations.  This specification
 defines YAML syntax and YAML-specific processing rules for ACAL
-constructs.  ACAL semantics are defined by [[ACAL-Core](#acal-core)],
-not by any concrete representation.  Conversion between peer concrete
-representations is outside the scope of this specification.
+constructs, together with companion machine-readable structural,
+constraint, and identifier artifacts.  ACAL semantics are defined by
+[[ACAL-Core](#acal-core)], not by any concrete representation.
+Conversion between peer concrete representations is outside the scope of
+this specification.
 
 ### Citation format
 
@@ -72,7 +97,7 @@ _ACAL v1.0 YAML Representation Profile (YACAL) Version 1.0_.
 Edited by Steven Legg and Cyril Dangerville.
 23 March 2026.
 Working Draft 01.
-`acal-core-yacal-wd01-v1.0.md`.
+`acal-core-yaml-wd01-v1.0.md`.
 
 ------------------------------------------------------------------------
 
@@ -99,8 +124,13 @@ Annex A. [License, Document Status and Notices](#annex-a-license-document-status
   - [A.2 License and Notices](#a2-license-and-notices)
 Annex B. [References](#annex-b-references)
   - [B.1 Normative References](#b1-normative-references)
-Annex C. [Complete Example: Website Content Access Policy](#annex-c-complete-example-website-content-access-policy)
-Annex D. [Complete Example: Healthcare Chart Access Policy](#annex-d-complete-example-healthcare-chart-access-policy)
+Annex C. [YACAL Identifiers and Machine-Readable Artifacts](#annex-c-yacal-identifiers-and-machine-readable-artifacts)
+  - [C.1 Core Short-Identifier Set](#c1-core-short-identifier-set)
+  - [C.2 Core YACAL Artifacts](#c2-core-yacal-artifacts)
+  - [C.3 Profile YACAL Artifacts](#c3-profile-yacal-artifacts)
+  - [C.4 Informative Composition Schemas](#c4-informative-composition-schemas)
+Annex D. [Complete Example: Website Content Access Policy](#annex-d-complete-example-website-content-access-policy)
+Annex E. [Complete Example: Healthcare Chart Access Policy](#annex-e-complete-example-healthcare-chart-access-policy)
 Appendix 1. [Acknowledgments](#appendix-1-acknowledgments)
   - [Leadership](#leadership)
   - [Special Thanks](#special-thanks)
@@ -403,7 +433,7 @@ in the ACAL abstract model definition.
 Optional properties that are absent from a YACAL document take the
 default values defined by the ACAL abstract model.  A property MUST
 NOT be present with a null value (`null`, `Null`, `NULL`, `~` or undefined value in YAML) as a substitute for omission
-(see [Section 5.4.3](#543-null)).
+(see [Section 5.4.3](#543-null-and-omission)).
 
 ------------------------------------------------------------------------
 
@@ -1151,10 +1181,10 @@ VariableReference:
 
 ```yaml
 SharedVariableReference:
-  Id: "urn:example:yacal:shared:is-business-hours"
+  Id: "urn:example:yacal:shared:is-local-timezone"
   Version: "1.*"
   Expression:
-    - Value: "America/New_York"
+    - Value: "America/Los_Angeles"
 ```
 
 Each item in `Expression` corresponds positionally to a `Parameter`
@@ -1645,9 +1675,11 @@ empty.
 
 ```yaml
 SharedVariableDefinition:
-  - Id: "urn:example:yacal:shared:is-business-hours"
+  - Id: "urn:example:yacal:shared:is-local-timezone"
     Version: "1.0"
-    Description: Returns true during business hours.
+    Description: >
+      Returns true when the environment timezone matches the
+      specified timezone parameter.
     Parameter:
       - Name: timezone
         DataType: "urn:oasis:names:tc:acal:1.0:data-type:string"
@@ -1655,10 +1687,14 @@ SharedVariableDefinition:
           Value: "America/New_York"
     Expression:
       Apply:
-        FunctionId: string-equal
+        FunctionId: string-is-in
         Expression:
-          - Value: "America/New_York"
-          - Value: "America/New_York"
+          - VariableReference:
+              VariableId: timezone
+          - AttributeDesignator:
+              Category: "urn:oasis:names:tc:acal:1.0:attribute-category:environment"
+              AttributeId: "urn:example:yacal:environment:timezone"
+              MustBePresent: true
 ```
 
 Properties:
@@ -2453,6 +2489,13 @@ implementation claims support for such an optional feature, it MUST
 implement the corresponding YACAL syntax, typing, and constraint rules
 consistently.
 
+This specification is accompanied by normative machine-readable
+artifacts for core YACAL structure, core constraints, core short
+identifiers, and selected ACAL profiles.  These artifacts support
+consistent implementation and validation of YACAL, but they do not
+change the peer relationship between YACAL and the XML and JSON ACAL
+representations.
+
 ### 7.2 Conformance Categories
 
 For the purposes of this specification:
@@ -2530,6 +2573,23 @@ the shared mapping rules in [Section 5.4](#54-complex-type-mapping),
 while the remaining entries are given dedicated object-level mappings in
 later subsections.
 
+#### 7.3.2 Machine-Readable Artifact Support
+
+The following machine-readable artifacts accompany this specification:
+
+| Artifact | Status | Notes |
+|:---|:---:|:---|
+| `acal-core-yaml-v1.0-structure.schema.yaml` | M | Core structural validation artifact |
+| `acal-core-yaml-v1.0-constraints.yaml` | M | Core constraint catalog |
+| `acal-core-yaml-v1.0-identifiers.yaml` | M | Core short-identifier set |
+| `acal-xpath-yaml-v1.0-structure.schema.yaml` | O | Required only for XPath Profile support |
+| `acal-xpath-yaml-v1.0-identifiers.yaml` | O | Required only for XPath Profile support |
+| `acal-jsonpath-yaml-v1.0-structure.schema.yaml` | O | Required only for JSONPath Profile support |
+
+The composition schemas listed in [Annex C](#annex-c-yacal-identifiers-and-machine-readable-artifacts)
+are informative examples showing how core and profile artifacts may be
+combined in a particular deployment.
+
 ### 7.4 Conformant YACAL Document
 
 A conformant YACAL document:
@@ -2547,9 +2607,14 @@ A conformant YACAL document:
 8.  MUST NOT use YAML merge keys or multi-document streams.
 9.  MUST NOT use YAML null values (e.g. `null`, `Null`, `NULL`, `~` or undefined).
 10. MUST NOT use the YAML octal notation for integers (any value matching the regular expression `0o [0-7]+`).
-10. SHOULD use YAML block style for mappings and sequences.  Flow style
+11. SHOULD use YAML block style for mappings and sequences.  Flow style
     MAY be used where it improves readability (e.g., for short inline
     values).
+12. If it uses only core YACAL features, it MUST be structurally
+    compatible with `acal-core-yaml-v1.0-structure.schema.yaml`.
+13. If it uses XPath or JSONPath profile features, it MUST be
+    structurally compatible with a composition schema that enables the
+    corresponding profile artifacts.
 
 ### 7.5 Conformant YACAL Processor
 
@@ -2567,6 +2632,14 @@ A conformant YACAL processor:
     [Section 7.3.1](#731-syntax-objects), it MUST implement the
     corresponding syntax, typing, inheritance, and constraint rules
     consistently.
+6.  A processor claiming core YACAL conformance MUST support the core
+    machine-readable artifacts listed as mandatory in
+    [Section 7.3.2](#732-machine-readable-artifact-support), or provide
+    equivalent enforcement of the same structural, identifier, and
+    constraint rules.
+7.  A processor claiming support for the XPath Profile or JSONPath
+    Profile MUST support the corresponding profile artifacts, or provide
+    equivalent enforcement of the same profile-specific rules.
 
 ### 7.6 Validation Support and Error Reporting
 
@@ -2576,10 +2649,11 @@ Validation of a YACAL document may be performed in multiple layers:
     Schema.
 2.  **YACAL structural validation**: the parsed content is checked
     against the structural and typing rules defined in this
-    specification.
+    specification, typically with `acal-core-yaml-v1.0-structure.schema.yaml`
+    or an applicable composition schema.
 3.  **Constraint validation**: property-level and object-level
-    constraints are checked according to [Section 5.12](#512-constraint-handling)
-    and ACAL.
+    constraints are checked according to [Section 5.12](#512-constraint-handling),
+    ACAL, and, where used, `acal-core-yaml-v1.0-constraints.yaml`.
 4.  **ACAL semantic validation**: the resulting representation is
     checked against applicable ACAL model constraints and semantics.
 
@@ -2603,10 +2677,15 @@ deliverable.  Stable publication metadata, publication URLs, and any
 required formal OASIS boilerplate should be updated when the document
 advances to committee publication.
 
-No separate machine-readable content is currently declared normative for
-this working draft.  If such content is later declared normative, it
-SHALL be identified in the front matter and, where appropriate,
-referenced from this annex.
+This working draft declares the machine-readable artifacts listed in the
+front matter as part of the work product.  Normative artifacts are also
+summarized in [Annex C](#annex-c-yacal-identifiers-and-machine-readable-artifacts).
+
+NOTE: any machine-readable content (Computer Language Definitions)
+declared Normative for this Work Product is provided in separate plain
+text files.  In the event of a discrepancy between any such plain text
+file and display content in the Work Product's prose narrative
+document(s), the content in the separate plain text file prevails.
 
 ### A.2 License and Notices
 
@@ -2658,7 +2737,72 @@ this specification.
 
 ------------------------------------------------------------------------
 
-## Annex C. Complete Example: Website Content Access Policy
+## Annex C. YACAL Identifiers and Machine-Readable Artifacts
+
+(This annex forms an integral part of this Specification.)
+
+### C.1 Core Short-Identifier Set
+
+This work product provides the standard YACAL serialization of the ACAL
+core short-identifier set in the file
+`acal-core-yaml-v1.0-identifiers.yaml`.
+
+The `ShortIdSet.Id` value of this artifact is:
+
+`urn:oasis:names:tc:acal:1.0:core:identifiers`
+
+YACAL uses the ACAL core identifier inventory directly.  The YACAL
+artifact is therefore the YAML serialization of the same underlying ACAL
+identifier set used by peer concrete representations.
+
+### C.2 Core YACAL Artifacts
+
+The following normative core YACAL artifacts accompany this
+specification:
+
+1. `acal-core-yaml-v1.0-structure.schema.yaml`
+2. `acal-core-yaml-v1.0-constraints.yaml`
+3. `acal-core-yaml-v1.0-identifiers.yaml`
+
+The structural schema defines the core YACAL root forms, object shapes,
+property names, primitive patterns, wrapper-key structures, and
+extension hooks.
+
+The constraint catalog defines the higher-order YACAL and ACAL
+constraints that are not fully captured by the structural schema alone.
+
+### C.3 Profile YACAL Artifacts
+
+The following normative profile artifacts accompany this specification:
+
+1. `acal-xpath-yaml-v1.0-structure.schema.yaml`
+2. `acal-xpath-yaml-v1.0-identifiers.yaml`
+3. `acal-jsonpath-yaml-v1.0-structure.schema.yaml`
+
+The XPath Profile artifacts enable XPath-specific defaults, selector
+extensions, structured values, and profile identifiers.
+
+The JSONPath Profile artifact enables JSONPath-specific selector
+extensions.  The JSONPath Profile defines no profile-specific
+identifiers and therefore has no companion identifier artifact.
+
+### C.4 Informative Composition Schemas
+
+The following informative composition schemas are provided as examples
+for implementations combining the core and profile artifacts:
+
+1. `yacal-root-structure-example-core-only.schema.yaml`
+2. `yacal-root-structure-example-using-jsonpath-profile-only.schema.yaml`
+3. `yacal-root-structure-example-using-xpath-and-jsonpath-profiles.schema.yaml`
+4. `yacal-root-structure-example-custom-plus-profile.schema.yaml`
+
+These example schemas do not form part of the normative YACAL syntax.
+They are provided as implementer guidance for composing extension hooks
+and profile support in deployment-specific root schemas.
+
+------------------------------------------------------------------------
+
+## Annex D. Complete Example: Website Content Access Policy
 
 (This annex does not form an integral part of this Specification and is
 informational.)
@@ -2778,7 +2922,7 @@ Policy:
 
 ------------------------------------------------------------------------
 
-## Annex D. Complete Example: Healthcare Chart Access Policy
+## Annex E. Complete Example: Healthcare Chart Access Policy
 
 (This annex does not form an integral part of this Specification and is
 informational.)
