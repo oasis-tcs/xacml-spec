@@ -273,15 +273,19 @@ be relied upon.
 #### 5.1.2 Core Schema
 
 YACAL documents MUST be interpreted using the YAML 1.2 Core Schema.
-Under the Core Schema, the following scalar resolutions apply:
+Under the Core Schema, the following scalar resolutions apply (depending on the matched regular expression in this order, cf. [[YAML](#yaml)] section 10.3.2):
 
-| YAML Scalar | Resolved Type | ACAL DataType |
-|---|---|---|
-| `true`, `false` | Boolean | `urn:oasis:names:tc:acal:1.0:data-type:boolean` |
-| `null`, `~` | Null | *(not an ACAL value; see Section 5.4.3)* |
-| `42`, `-7`, `0` | Integer | `urn:oasis:names:tc:acal:1.0:data-type:integer` |
-| `3.14`, `-0.5`, `.inf`, `.nan` | Float | `urn:oasis:names:tc:acal:1.0:data-type:double` |
-| `hello`, `view`, `Permit` | String | `urn:oasis:names:tc:acal:1.0:data-type:string` |
+| YAML Scalar regex | Examples | Resolved YAML Type | ACAL DataType |
+|---|---|---|---|
+| `null \| Null \| NULL \| ~` | `null` | null | *Not a valid ACAL value; see Section 5.4.3* |
+| `true \| True \| TRUE \| false \| False \| FALSE` | `true`, `false` | Boolean | `urn:oasis:names:tc:acal:1.0:data-type:boolean` |
+| `[-+]? [0-9]+` | `42`, `-7`, `0` | Integer (base 10) | `urn:oasis:names:tc:acal:1.0:data-type:integer` |
+| `0o [0-7]+` | `0o7` | Integer (base 8) | *Not a valid ACAL value, see Section 5.1.4* |
+| `0x [0-9a-fA-F]+` | `Ox3A` | Integer (base 16) | `urn:oasis:names:tc:acal:1.0:data-type:hexBinary` |
+| `[-+]? ( \. [0-9]+ \| [0-9]+ ( \. [0-9]* )? ) ( [eE] [-+]? [0-9]+ )?` | `0.`, `-0.0`, `.5`, `+12e03`, `-2E+05` | Float (number) | `urn:oasis:names:tc:acal:1.0:data-type:double` |
+| `[-+]? ( \.inf \| \.Inf \| \.INF )` | `.inf`, `-.Inf`, `+.INF` | Float (Infinity) | `urn:oasis:names:tc:acal:1.0:data-type:double` |
+| `\.nan \| \.NaN \| \.NAN` | `.nan`, `.NAN` | Float (not-a-number) | `urn:oasis:names:tc:acal:1.0:data-type:double` |
+| `*` (default) | `hello`, `view`, `Permit` | String | `urn:oasis:names:tc:acal:1.0:data-type:string` |
 
 The Core Schema guarantees that unquoted scalars like `2026-03-23` are
 resolved as strings (not dates), and `010` is resolved as the integer 10
@@ -347,7 +351,8 @@ documents:
     document is a single YAML document.  Bundles are expressed using
     *BundleType*, not YAML multi-document streams.
 -   **Merge keys** (`<<`): a YAML 1.1 feature not part of YAML 1.2.
--   **Null** values (i.e. `null`, `Null`, `NULL`, `~` or the absence of value are considered invalid). 
+-   **Null** values (i.e. `null`, `Null`, `NULL`, `~` or the absence of value are considered invalid).
+-   **Octal notation** for integers (to align with JSON integer type), i.e. any value matching the pattern `0o [0-7]+` is forbidden.
 
 ### 5.2 Document Structure
 
