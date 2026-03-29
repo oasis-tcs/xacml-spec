@@ -911,7 +911,7 @@ This specification defines the following `Content` types in order to support ACA
       "Body": "<?xml version=\"1.0\"?><catalog><book id=\"bk101\"><author>Gambardella, Matthew</author><title>XML Developer's Guide</title><genre>Computer</genre><price>44.95</price><publish_date>2000-10-01</publish_date><description>An in-depth look at creating applications with XML.</description></book></catalog>"
      }
      ```
-     2) **Base64-encoded:** if `Encoding` is `base64`, the XML is Base64-encoded as per [BASE64]. For example:
+     2) **Base64-encoded:** if `Encoding` is `base64`, the XML is Base64-encoded as per [[RFC4648](#rfc4648). For example:
      ```json
      {
       "MediaType": "application/xml",
@@ -1193,10 +1193,6 @@ The following documents are referenced in such a way that some or all of their c
 
 Attribute-Centric Authorization Language (ACAL) Version 1.0. Edited by Steven Legg and Cyril Dangerville. 18 February 2026. OASIS Committee Specification Draft 01.
 
-###### [RFC8259]
-
-RFC 8259, Tim Bray, *The JavaScript Object Notation (JSON) Data Interchange Format*, December 2017, https://www.rfc-editor.org/info/rfc8259 .
-
 ##### [JsonSchemaCore] 
 
 A. Wright and al., *JSON Schema: A Media Type for Describing JSON Documents*, June 2022, https://json-schema.org/draft/2020-12/draft-bhutton-json-schema-01
@@ -1282,14 +1278,21 @@ RFC 2732, Hinden R, Carpenter B, Masinter L, Format for Literal IPv6 Addresses i
 
 IETF RFC 3198: Terminology for Policy-Based Management, November 2001. https://www.ietf.org/rfc/rfc3198.txt
 
+######  [RFC4648]                
+
+RFC 4648, *The Base16, Base32, and Base64 Data Encodings.* October 2006. IETF RFC 4648. http://tools.ietf.org/html/rfc4648
+
 ###### [RFC8174]
 
 Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174, May 2017, https://www.rfc-editor.org/info/rfc8174.
 
+###### [RFC8259]
+
+RFC 8259, Tim Bray, *The JavaScript Object Notation (JSON) Data Interchange Format*, December 2017, https://www.rfc-editor.org/info/rfc8259 .
 
 ###### [RFC9535]
 
-RFC 9535, *JSONPath: Query Expressions for JSON*, February 2024. [Online]. Available: https://datatracker.ietf.org/doc/html/rfc9535
+RFC 9535, *JSONPath: Query Expressions for JSON*, February 2024. Available online: https://datatracker.ietf.org/doc/html/rfc9535
 
 ###### [UAX15]
 
