@@ -919,8 +919,8 @@ properties:
 
 | Property | Required | Type | Notes |
 |---|---|---|---|
-| `MediaType` | No | String | Media type of the content body. If omitted, the interpretation of `Body` is determined by the enclosing ACAL context or by the relevant profile |
-| `Encoding` | No | String | Content encoding, used only when the `Body` string is encoded rather than directly represented |
+| `MediaType` | No | String | Media type of the content body. If omitted, the default value `application/yaml` applies, and the `Body` SHALL be a YAML 1.2 document. The values `application/json` and `application/xml` SHALL be used for JSON objects and XML documents respectively.  |
+| `Encoding` | No | String | Content encoding, used only when the `Body` string is encoded rather than directly represented. The Encoding value `base64` indicates that the Body is Base64-encoded as per [[RFC4648](#rfc4648)]. Other Encoding values may be defined by other YACAL Profiles. |
 | `Body` | Yes | *AnyType* | Direct representation of the content payload |
 
 The `Body` value is the direct YACAL representation of the underlying
@@ -933,16 +933,27 @@ native YAML forms:
 
 ```yaml
 Content:
-  MediaType: "application/json"
   Body:
     patient:
       id: "P-12345"
       ward: cardiology
 ```
 
-For XML or other textual structured content, the `Body` SHOULD normally
+For XML, JSON or other textual structured content, the `Body` SHOULD normally
 be represented as a YAML string.  If encoded binary or escaped textual
 content is required, the `Encoding` property identifies that encoding:
+
+
+```yaml
+Content:
+  MediaType: "application/json"
+  Body: |
+    { "patient": { 
+        "id": "P-12345",
+        "ward": "cardiology"
+      }
+    }
+```
 
 ```yaml
 Content:
@@ -2632,16 +2643,19 @@ this specification.
 : Bradner, S., "Key words for use in RFCs to Indicate Requirement
   Levels", BCP 14, RFC 2119, March 1997.
   https://www.rfc-editor.org/rfc/rfc2119
+  
+<a id="rfc3986"></a>**[RFC3986]**
+: Berners-Lee, T., Fielding, R., and L. Masinter, "Uniform Resource
+  Identifier (URI): Generic Syntax", STD 66, RFC 3986, January 2005.
+  https://www.rfc-editor.org/rfc/rfc3986
+
+<a id="rfc4648"></a>**[RFC4648]**               
+: RFC 4648, *The Base16, Base32, and Base64 Data Encodings.* October 2006. IETF RFC 4648. http://tools.ietf.org/html/rfc4648
 
 <a id="rfc8174"></a>**[RFC8174]**
 : Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC 2119 Key
   Words", BCP 14, RFC 8174, May 2017.
   https://www.rfc-editor.org/rfc/rfc8174
-
-<a id="rfc3986"></a>**[RFC3986]**
-: Berners-Lee, T., Fielding, R., and L. Masinter, "Uniform Resource
-  Identifier (URI): Generic Syntax", STD 66, RFC 3986, January 2005.
-  https://www.rfc-editor.org/rfc/rfc3986
 
 ------------------------------------------------------------------------
 
