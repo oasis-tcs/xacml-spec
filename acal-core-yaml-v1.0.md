@@ -347,6 +347,7 @@ documents:
     document is a single YAML document.  Bundles are expressed using
     *BundleType*, not YAML multi-document streams.
 -   **Merge keys** (`<<`): a YAML 1.1 feature not part of YAML 1.2.
+-   **Null** values (i.e. `null`, `Null`, `NULL`, `~` or the absence of value are considered invalid). 
 
 ### 5.2 Document Structure
 
@@ -396,7 +397,7 @@ in the ACAL abstract model definition.
 
 Optional properties that are absent from a YACAL document take the
 default values defined by the ACAL abstract model.  A property MUST
-NOT be present with a `null` value as a substitute for omission
+NOT be present with a null value (`null`, `Null`, `NULL`, `~` or undefined value in YAML) as a substitute for omission
 (see [Section 5.4.3](#543-null)).
 
 ------------------------------------------------------------------------
@@ -599,11 +600,8 @@ Expression:
 
 #### 5.4.3 Null and Omission
 
-YAML `null` is not a valid ACAL value and MUST NOT be used as a generic
-stand-in for absence.
-
-The YAML scalars `null` and `~` MUST NOT appear as property values in a
-YACAL document.
+The YAML scalars `null`, `Null`, `NULL` and `~` are not valid YACAL values and MUST NOT be used as a generic
+stand-in for absence. Similarly, a property with undefined value (e.g. `myProperty: # Empty`) is forbidden in YACAL.
 
 To omit an optional property, the property MUST simply be absent from
 the mapping.  An omitted property is not equivalent to a present
