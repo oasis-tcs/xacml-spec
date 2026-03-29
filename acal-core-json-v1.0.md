@@ -911,7 +911,7 @@ This specification defines the following `Content` types in order to support ACA
       "Body": "<?xml version=\"1.0\"?><catalog><book id=\"bk101\"><author>Gambardella, Matthew</author><title>XML Developer's Guide</title><genre>Computer</genre><price>44.95</price><publish_date>2000-10-01</publish_date><description>An in-depth look at creating applications with XML.</description></book></catalog>"
      }
      ```
-     2) **Base64-encoded:** if `Encoding` is `base64`, the XML is Base64-encoded as per [[RFC4648](#rfc4648). For example:
+     2) **Base64-encoded:** if `Encoding` is `base64`, the XML is Base64-encoded as per [[RFC4648](#rfc4648)]. For example:
      ```json
      {
       "MediaType": "application/xml",
