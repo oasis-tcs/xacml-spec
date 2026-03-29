@@ -1085,13 +1085,13 @@ usable concrete subtype in the expression position.
 
 ```yaml
 Apply:
-  FunctionId: string-equal
+  FunctionId: string-is-in
   Expression:
+    - Value: view
     - AttributeDesignator:
         Category: "urn:oasis:names:tc:acal:1.0:attribute-category:action"
         AttributeId: "urn:oasis:names:tc:acal:1.0:action:action-id"
         MustBePresent: true
-    - Value: view
 ```
 
 Properties:
@@ -1214,13 +1214,13 @@ wrapper.  The expression MUST NOT be a literal *ValueType*:
 ```yaml
 Condition:
   Apply:
-    FunctionId: string-equal
+    FunctionId: string-is-in
     Expression:
+      - Value: read
       - AttributeDesignator:
           Category: "urn:oasis:names:tc:acal:1.0:attribute-category:action"
           AttributeId: "urn:oasis:names:tc:acal:1.0:action:action-id"
           MustBePresent: true
-      - Value: read
 ```
 
 #### 5.5.10 AttributeSelectorType
@@ -1302,13 +1302,13 @@ Policy:
     - VariableId: action_is_view
       Expression:
         Apply:
-          FunctionId: string-equal
+          FunctionId: string-is-in
           Expression:
+            - Value: view
             - AttributeDesignator:
                 Category: "urn:oasis:names:tc:acal:1.0:attribute-category:action"
                 AttributeId: "urn:oasis:names:tc:acal:1.0:action:action-id"
                 MustBePresent: true
-            - Value: view
   CombinerInput:
     - Rule:
         Id: PermitPublicView
@@ -1320,13 +1320,13 @@ Policy:
               - VariableReference:
                   VariableId: action_is_view
               - Apply:
-                  FunctionId: string-equal
+                  FunctionId: string-is-in
                   Expression:
+                    - Value: public
                     - AttributeDesignator:
                         Category: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
                         AttributeId: "urn:example:yacal:resource:visibility"
                         MustBePresent: true
-                    - Value: public
 ```
 
 Properties:
@@ -1370,21 +1370,21 @@ Rule:
       FunctionId: and
       Expression:
         - Apply:
-            FunctionId: string-equal
+            FunctionId: string-is-in
             Expression:
+              - Value: clinician
               - AttributeDesignator:
                   Category: "urn:oasis:names:tc:acal:1.0:subject-category:access-subject"
                   AttributeId: "urn:example:yacal:subject:role"
                   MustBePresent: true
-              - Value: clinician
         - Apply:
-            FunctionId: string-equal
+            FunctionId: string-is-in
             Expression:
+              - Value: medical-record
               - AttributeDesignator:
                   Category: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
                   AttributeId: "urn:example:yacal:resource:type"
                   MustBePresent: true
-              - Value: medical-record
 ```
 
 Properties:
@@ -1441,13 +1441,13 @@ VariableDefinition:
   - VariableId: is_admin
     Expression:
       Apply:
-        FunctionId: string-equal
+        FunctionId: string-is-in
         Expression:
+          - Value: admin
           - AttributeDesignator:
               Category: "urn:oasis:names:tc:acal:1.0:subject-category:access-subject"
               AttributeId: "urn:example:yacal:subject:role"
               MustBePresent: true
-          - Value: admin
 ```
 
 If the `Expression` is a literal `ValueType` and neither the value nor
@@ -1739,7 +1739,6 @@ used.
 Category: "urn:oasis:names:tc:acal:1.0:subject-category:access-subject"
 Id: subject-entity-1
 Content:
-  MediaType: "application/json"
   Body:
     name: Alice
     department: Engineering
@@ -2306,13 +2305,13 @@ Policy:
         Effect: Permit
         Condition:
           Apply:
-            FunctionId: string-equal
+            FunctionId: string-is-in
             Expression:
+              - Value: clinician
               - AttributeDesignator:
                   Category: access-subject
                   AttributeId: subject-role
                   MustBePresent: true
-              - Value: clinician
 ```
 
 ------------------------------------------------------------------------
