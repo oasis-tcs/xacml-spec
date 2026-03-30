@@ -39,6 +39,8 @@
 		{ "Name":"authn-locality-dns-name", "Value":"urn:oasis:names:tc:acal:1.0:subject:authn-locality:dns-name" },
 
 		{ "Name":"resource-id", "Value":"urn:oasis:names:tc:acal:1.0:resource:resource-id" },
+		{ "Name":"resource-location", "Value":"urn:oasis:names:tc:acal:1.0:resource:resource-location" },
+		{ "Name":"simple-file-name", "Value":"urn:oasis:names:tc:acal:1.0:resource:simple-file-name" },
 		{ "Name":"target-namespace", "Value":"urn:oasis:names:tc:acal:1.0:resource:target-namespace" },
 
 		{ "Name":"action-id", "Value":"urn:oasis:names:tc:acal:1.0:action:action-id" },
@@ -195,6 +197,8 @@
 		{ "Name":"entity-one-and-only", "Value":"urn:oasis:names:tc:acal:1.0:function:entity-one-and-only" },
 		{ "Name":"entity-bag-size", "Value":"urn:oasis:names:tc:acal:1.0:function:entity-bag-size" },
 		{ "Name":"entity-bag", "Value":"urn:oasis:names:tc:acal:1.0:function:entity-bag" },
+		{ "Name":"is-empty", "Value":"urn:oasis:names:tc:acal:1.0:function:is-empty" },
+		{ "Name":"is-not-empty", "Value":"urn:oasis:names:tc:acal:1.0:function:is-not-empty" },
 		{ "Name":"string-concatenate", "Value":"urn:oasis:names:tc:acal:1.0:function:string-concatenate" },
 		{ "Name":"boolean-from-string", "Value":"urn:oasis:names:tc:acal:1.0:function:boolean-from-string" },
 		{ "Name":"string-from-boolean", "Value":"urn:oasis:names:tc:acal:1.0:function:string-from-boolean" },

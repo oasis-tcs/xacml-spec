@@ -47,6 +47,8 @@
 	<!-- Resource Attributes -->
 
 	<ShortId Name="resource-id" Value="urn:oasis:names:tc:acal:1.0:resource:resource-id"/>
+	<ShortId Name="resource-location" Value="urn:oasis:names:tc:acal:1.0:resource:resource-location"/>
+	<ShortId Name="simple-file-name" Value="urn:oasis:names:tc:acal:1.0:resource:simple-file-name"/>
 	<ShortId Name="target-namespace" Value="urn:oasis:names:tc:acal:1.0:resource:target-namespace"/>
 
 	<!-- Action Attributes. -->
@@ -213,6 +215,8 @@
 	<ShortId Name="entity-one-and-only" Value="urn:oasis:names:tc:acal:1.0:function:entity-one-and-only"/>
 	<ShortId Name="entity-bag-size" Value="urn:oasis:names:tc:acal:1.0:function:entity-bag-size"/>
 	<ShortId Name="entity-bag" Value="urn:oasis:names:tc:acal:1.0:function:entity-bag"/>
+	<ShortId Name="is-empty" Value="urn:oasis:names:tc:acal:1.0:function:is-empty"/>
+	<ShortId Name="is-not-empty" Value="urn:oasis:names:tc:acal:1.0:function:is-not-empty"/>
 	<ShortId Name="string-concatenate" Value="urn:oasis:names:tc:acal:1.0:function:string-concatenate"/>
 	<ShortId Name="boolean-from-string" Value="urn:oasis:names:tc:acal:1.0:function:boolean-from-string"/>
 	<ShortId Name="string-from-boolean" Value="urn:oasis:names:tc:acal:1.0:function:string-from-boolean"/>
