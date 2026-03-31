@@ -275,8 +275,8 @@ YACAL conformance or semantics.
 The design of YACAL is guided by the following principles, in priority
 order:
 
-1.  **Conformance**: every YACAL document MUST be expressible as a
-    semantically equivalent ACAL instance.
+1.  **Conformance**: every YACAL document MUST be conformant with the ACAL core.
+    YACAL MUST NOT semantically extend the ACAL core.
 2.  **Interoperability discipline**: any separate interoperability
     guidance for translating between concrete representations SHOULD
     preserve all ACAL-significant information.
