@@ -485,8 +485,7 @@ the lexical constraints of that type.
 
 Restricted string types MUST NOT use YAML tags or any YAML-specific
 typing mechanism to indicate their ACAL type.  Their type is determined
-by property context, wrapper context, or an explicit `DataType` property
-where this specification allows one.
+by property context or wrapper context.
 
 Examples of restricted string types include `VersionType`,
 `VersionMatchType`, and `LocalIdentifierType`.
@@ -651,7 +650,7 @@ because YAML provides native scalar forms.
 the same conceptual split as ACAL:
 
 1. fixed-datatype primitive values
-2. restricted-string primitive values
+2. lexical-datatype primitive values
 3. structured values
 
 Unless a more specific parent-context rule applies, a `ValueType` is
@@ -680,8 +679,9 @@ The following rules apply to primitive `ValueType` forms:
 4. A YAML string scalar represents either:
    1. `LiteralStringType`, if no inherited or explicit non-string
       `DataType` applies
-   2. `LiteralRestrictedStringType`, if an inherited or explicit
-      non-string lexical `DataType` applies
+   2. `LiteralRestrictedStringType`, if an inherited or explicit ACAL
+      lexical `DataType` such as `anyURI`, `date`, or `rfc822Name`
+      applies
 5. If a fixed-datatype primitive value is accompanied by an explicit
    `DataType`, that `DataType` MUST match the fixed data type of the
    scalar and SHOULD be omitted.
@@ -716,8 +716,8 @@ When the data type is not implicit from either YAML scalar resolution or
 the surrounding ACAL context, explicit typing is required:
 
 ```yaml
-DataType: "urn:oasis:names:tc:acal:1.0:data-type:date"
-Value: "2026-03-23"
+DataType: "urn:oasis:names:tc:acal:1.0:data-type:anyURI"
+Value: "https://example.com/policies/permit-read"
 ```
 
 The ACAL `DataType` of a `ValueType` is determined by the following
