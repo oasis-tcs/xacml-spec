@@ -430,9 +430,7 @@ in the ACAL abstract model definition.
 
 #### 5.2.4 Omitted Properties
 
-Optional properties that are absent from a YACAL document take the
-default values defined by the ACAL abstract model.  A property MUST
-NOT be present with a null value (`null`, `Null`, `NULL`, `~` or undefined value in YAML) as a substitute for omission
+An optional property that is absent from a YACAL document takes the default value defined by the ACAL abstract model, if one is defined. A property MUST NOT be present with a null value (`null`, `Null`, `NULL`, `~` or undefined value in YAML) as a substitute for omission
 (see [Section 5.4.3](#543-null-and-omission)).
 
 ------------------------------------------------------------------------
