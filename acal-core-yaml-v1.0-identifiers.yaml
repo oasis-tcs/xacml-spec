@@ -129,6 +129,7 @@ ShortIdSet:
       Value: "urn:oasis:names:tc:acal:1.0:combining-algorithm:permit-unless-deny"
 
     # Functions
+    # C.3.1 Equality Predicates
     - Name: "string-equal"
       Value: "urn:oasis:names:tc:acal:1.0:function:string-equal"
     - Name: "boolean-equal"
@@ -159,6 +160,8 @@ ShortIdSet:
       Value: "urn:oasis:names:tc:acal:1.0:function:hexBinary-equal"
     - Name: "base64Binary-equal"
       Value: "urn:oasis:names:tc:acal:1.0:function:base64Binary-equal"
+
+    # C.3.2 Arithmetic Functions
     - Name: "integer-add"
       Value: "urn:oasis:names:tc:acal:1.0:function:integer-add"
     - Name: "double-add"
@@ -185,14 +188,20 @@ ShortIdSet:
       Value: "urn:oasis:names:tc:acal:1.0:function:round"
     - Name: "floor"
       Value: "urn:oasis:names:tc:acal:1.0:function:floor"
+
+    # C.3.3 String Conversion Functions
     - Name: "string-normalize-space"
       Value: "urn:oasis:names:tc:acal:1.0:function:string-normalize-space"
     - Name: "string-normalize-to-lower-case"
       Value: "urn:oasis:names:tc:acal:1.0:function:string-normalize-to-lower-case"
+
+    # C.3.4 Numeric Data Type Conversion Functions
     - Name: "double-to-integer"
       Value: "urn:oasis:names:tc:acal:1.0:function:double-to-integer"
     - Name: "integer-to-double"
       Value: "urn:oasis:names:tc:acal:1.0:function:integer-to-double"
+
+    # C.3.5 Logical Functions
     - Name: "or"
       Value: "urn:oasis:names:tc:acal:1.0:function:or"
     - Name: "and"
@@ -203,6 +212,8 @@ ShortIdSet:
       Value: "urn:oasis:names:tc:acal:1.0:function:not"
     - Name: "ternary-if"
       Value: "urn:oasis:names:tc:acal:1.0:function:ternary-if"
+
+    # C.3.6 Numeric Comparison Functions
     - Name: "integer-greater-than"
       Value: "urn:oasis:names:tc:acal:1.0:function:integer-greater-than"
     - Name: "integer-greater-than-or-equal"
@@ -219,6 +230,8 @@ ShortIdSet:
       Value: "urn:oasis:names:tc:acal:1.0:function:double-less-than"
     - Name: "double-less-than-or-equal"
       Value: "urn:oasis:names:tc:acal:1.0:function:double-less-than-or-equal"
+
+    # C.3.7 Date and Time Arithmetic Functions
     - Name: "dateTime-add-dayTimeDuration"
       Value: "urn:oasis:names:tc:acal:1.0:function:dateTime-add-dayTimeDuration"
     - Name: "dateTime-add-yearMonthDuration"
@@ -231,6 +244,8 @@ ShortIdSet:
       Value: "urn:oasis:names:tc:acal:1.0:function:date-add-yearMonthDuration"
     - Name: "date-subtract-yearMonthDuration"
       Value: "urn:oasis:names:tc:acal:1.0:function:date-subtract-yearMonthDuration"
+
+    # C.3.8 Non-numeric Comparison Functions
     - Name: "string-greater-than"
       Value: "urn:oasis:names:tc:acal:1.0:function:string-greater-than"
     - Name: "string-greater-than-or-equal"
@@ -265,6 +280,8 @@ ShortIdSet:
       Value: "urn:oasis:names:tc:acal:1.0:function:date-less-than"
     - Name: "date-less-than-or-equal"
       Value: "urn:oasis:names:tc:acal:1.0:function:date-less-than-or-equal"
+
+    # C.3.10 Bag Functions
     - Name: "string-one-and-only"
       Value: "urn:oasis:names:tc:acal:1.0:function:string-one-and-only"
     - Name: "string-bag-size"
@@ -395,6 +412,8 @@ ShortIdSet:
       Value: "urn:oasis:names:tc:acal:1.0:function:entity-bag-size"
     - Name: "entity-bag"
       Value: "urn:oasis:names:tc:acal:1.0:function:entity-bag"
+
+    # C.3.9 String Functions
     - Name: "string-concatenate"
       Value: "urn:oasis:names:tc:acal:1.0:function:string-concatenate"
     - Name: "boolean-from-string"
@@ -449,6 +468,8 @@ ShortIdSet:
       Value: "urn:oasis:names:tc:acal:1.0:function:dnsName-from-string"
     - Name: "string-from-dnsName"
       Value: "urn:oasis:names:tc:acal:1.0:function:string-from-dnsName"
+
+    # C.3.9 String Functions
     - Name: "string-starts-with"
       Value: "urn:oasis:names:tc:acal:1.0:function:string-starts-with"
     - Name: "anyURI-starts-with"
@@ -465,6 +486,8 @@ ShortIdSet:
       Value: "urn:oasis:names:tc:acal:1.0:function:string-substring"
     - Name: "anyURI-substring"
       Value: "urn:oasis:names:tc:acal:1.0:function:anyURI-substring"
+
+    # C.3.12 Higher-order Bag Functions
     - Name: "any-of"
       Value: "urn:oasis:names:tc:acal:1.0:function:any-of"
     - Name: "all-of"
@@ -479,14 +502,20 @@ ShortIdSet:
       Value: "urn:oasis:names:tc:acal:1.0:function:all-of-all"
     - Name: "map"
       Value: "urn:oasis:names:tc:acal:1.0:function:map"
+
+    # C.3.10 Bag Functions
     - Name: "is-empty"
       Value: "urn:oasis:names:tc:acal:1.0:function:is-empty"
     - Name: "is-not-empty"
       Value: "urn:oasis:names:tc:acal:1.0:function:is-not-empty"
+
+    # C.3.15 Special Match Functions
     - Name: "x500Name-match"
       Value: "urn:oasis:names:tc:acal:1.0:function:x500Name-match"
     - Name: "rfc822Name-match"
       Value: "urn:oasis:names:tc:acal:1.0:function:rfc822Name-match"
+
+    # C.3.13 Regular-Expression-Based Functions
     - Name: "string-regexp-match"
       Value: "urn:oasis:names:tc:acal:1.0:function:string-regexp-match"
     - Name: "anyURI-regexp-match"
@@ -499,6 +528,8 @@ ShortIdSet:
       Value: "urn:oasis:names:tc:acal:1.0:function:rfc822Name-regexp-match"
     - Name: "x500Name-regexp-match"
       Value: "urn:oasis:names:tc:acal:1.0:function:x500Name-regexp-match"
+
+    # C.3.11 Set Functions
     - Name: "string-intersection"
       Value: "urn:oasis:names:tc:acal:1.0:function:string-intersection"
     - Name: "string-at-least-one-member-of"
@@ -639,6 +670,8 @@ ShortIdSet:
       Value: "urn:oasis:names:tc:acal:1.0:function:rfc822Name-subset"
     - Name: "rfc822Name-set-equals"
       Value: "urn:oasis:names:tc:acal:1.0:function:rfc822Name-set-equals"
+
+    # C.3.14 Aggregate Functions
     - Name: "string-minimum"
       Value: "urn:oasis:names:tc:acal:1.0:function:string-minimum"
     - Name: "string-maximum"
@@ -667,5 +700,7 @@ ShortIdSet:
       Value: "urn:oasis:names:tc:acal:1.0:function:date-minimum"
     - Name: "date-maximum"
       Value: "urn:oasis:names:tc:acal:1.0:function:date-maximum"
+
+    # C.3.16 Other Functions
     - Name: "access-permitted"
       Value: "urn:oasis:names:tc:acal:1.0:function:access-permitted"

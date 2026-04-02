@@ -2753,6 +2753,15 @@ YACAL uses the ACAL core identifier inventory directly.  The YACAL
 artifact is therefore the YAML serialization of the same underlying ACAL
 identifier set used by peer concrete representations.
 
+For readability, `acal-core-yaml-v1.0-identifiers.yaml` preserves the
+same function identifier ordering used by the peer XML and JSON
+identifier artifacts.  Because YAML permits comments, the YACAL
+serialization MAY annotate runs of function identifiers with comment
+labels that reference the ACAL Core Annex `C.3.x` subsection where
+those functions are defined.  These comments are non-normative
+presentation aids only and do not alter the underlying identifier set
+or its semantics.
+
 ### C.2 Core YACAL Artifacts
 
 The following normative core YACAL artifacts accompany this
