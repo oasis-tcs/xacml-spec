@@ -417,10 +417,6 @@ All property names in YACAL use PascalCase, following the ACAL abstract
 model property set as normalized for YAML presentation: `PolicyId`, `CombiningAlgId`,
 `AttributeDesignator`, `MustBePresent`, etc.
 
-Where an ACAL abstract property name is not already PascalCase, YACAL
-normalizes it to PascalCase.  For example, the ACAL property `isBag` is
-represented in YACAL as `IsBag`.
-
 #### 5.2.3 Property Ordering
 
 The ordering of keys within a YAML mapping is not significant for
