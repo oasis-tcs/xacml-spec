@@ -3365,7 +3365,7 @@ hide circle
 class ParameterType <<dataType>> {
    + Name: LocalIdentifierType [1]
    + DataType: IdentifierType [0..1] = 'urn:oasis:names:tc:acal:1.0:data-type:string'
-   + isBag: Boolean [0..1] = false
+   + IsBag: Boolean [0..1] = false
    + Description: String [0..1]
    + Expression: ExpressionType [0..1]
 }
@@ -3507,7 +3507,7 @@ The `PolicyReferenceType` object type extends the `PatternMatchIdReferenceType` 
 
 `Expression` [Any Number]
 
-: Arguments for a parameterized policy, in the same order as the `Parameter` values in the referenced policy, and each argument number *n* MUST match the definition of the `Parameter` number *n* (`DataType`, `isBag`). The number of arguments *N* may be less than the number of declared `Parameter`s if and only if the `Parameter`s number *N* (starting at zero) and above have defined default values, in which case they are used as remaining arguments. 
+: Arguments for a parameterized policy, in the same order as the `Parameter` values in the referenced policy, and each argument number *n* MUST match the definition of the `Parameter` number *n* (`DataType`, `IsBag`). The number of arguments *N* may be less than the number of declared `Parameter`s if and only if the `Parameter`s number *N* (starting at zero) and above have defined default values, in which case they are used as remaining arguments. 
 
 **DataType inference rule**: if an Expression has an (optional) `DataType` property (statically-typed Expression), i.e. its type is `ValueType`, `NamedAttributeDesignatorType`, `BaseAttributeSelectorType` or any subtype thereof, then the Expression's `DataType` property SHOULD be omitted in this case as it is already defined by the corresponding `Parameter`'s definition in the referenced `PolicyType` object. Else it SHALL match that `Parameter`'s `DataType`.
 
@@ -4106,7 +4106,7 @@ The `SharedVariableReferenceType` object type contains the following properties:
 
 `Expression` [Any Number]
 
-: Arguments for a parameterized shared variable (`SharedVariableDefinitionType` object), in the same order as the `Parameter` declarations in the referenced shared variable, and each argument number *n* MUST match the definition of the `Parameter` number *n* (`DataType`, `isBag`). The number of arguments *N* may be less than the number of declared `Parameter`s if and only if the `Parameter`s number *N* (starting at zero) and above have defined default values, in which case they are used as remaining arguments. 
+: Arguments for a parameterized shared variable (`SharedVariableDefinitionType` object), in the same order as the `Parameter` declarations in the referenced shared variable, and each argument number *n* MUST match the definition of the `Parameter` number *n* (`DataType`, `IsBag`). The number of arguments *N* may be less than the number of declared `Parameter`s if and only if the `Parameter`s number *N* (starting at zero) and above have defined default values, in which case they are used as remaining arguments. 
 
 **DataType inference rule**: if an Expression has an (optional) `DataType` property (statically-typed Expression), i.e. its type is `ValueType`, `NamedAttributeDesignatorType`, `BaseAttributeSelectorType` or any subtype thereof, then the Expression's `DataType` property SHOULD be omitted in this case as it is already defined by the corresponding `Parameter`'s definition in the referenced `SharedVariableDefinitionType` object. Else it SHALL match that `Parameter`'s `DataType`.
 
