@@ -2841,7 +2841,7 @@ ACAL representation formats (in ACAL profiles) usually have a native equivalent 
 
 ##### 7.1.2.3.2 NonNegativeInteger
 
-A `NonNegativeInteger` is a positive `Integer`, equal to or greater than zero. Defined in UML as follows:
+A `NonNegativeInteger` is an `Integer`, equal to or greater than zero. Defined in UML as follows:
 ```plantuml
 @startuml
 hide empty members
@@ -3085,7 +3085,7 @@ The values of `DecisionType` have the following meanings:
 
 ##### 7.1.2.3.14 MediaType (optional)
 
-_**Support for this type is optional, required only if `ContentType` objects MUST be supported.**_
+_**Support for this type is optional, unless `ContentType` objects are supported.**_
 
 `MediaType` is the primitive type for `ContentType` objects' `MediaType` property (see [Section 7.34](#734-contenttype-optional) ).
 
@@ -3109,7 +3109,7 @@ This is the generic type definition. However, the exact possible values SHALL be
 
 ##### 7.1.2.3.15 ContentEncodingType (optional)
 
-_**Support for this type is optional, required only if `ContentType` objects MUST be supported.**_
+_**Support for this type is optional, unless `ContentType` objects are supported.**_
 
 `ContentEncodingType` is the primitive type for `ContentType` objects' `Encoding` property (see [Section 7.34](#734-contenttype-optional) ).
 
@@ -3443,7 +3443,7 @@ The `IdReferenceType` object type contains the following property:
 
 _**Support for this object type is optional, required only if the `ReturnPolicyIdList` property in the Request is supported.**_
 
-An `ExactMatchIdReferenceType` object is a type of policy reference that matches both the identifier and a specific (fixed) version of a policy. In a `ApplicablePolicyReference`, it is used to identify a policy that has been applicable to a request.
+An `ExactMatchIdReferenceType` object is a type of policy reference that matches both the identifier and a specific (fixed) version of a policy. In an `ApplicablePolicyReference`, it is used to identify a policy that has been applicable to a request.
 
 UML definition (class diagram):
 ```plantuml
@@ -3825,7 +3825,7 @@ A `NamedAttributeDesignatorType` object contains the following properties:
 
 `DataType` [Optional]
 
-: An `IdentifierType` value specifying the `DataType` of the named attribute. The bag returned by the designator SHALL contain values of this data type. If this property is omitted, the DataType inference rule(s) of the parent object SHALL apply first, if there is any rule defined in this specification in the parent object type's section (either [ApplyType](#715-applytype), [PolicyReferenceType](#711-policyreferencetype), [SharedVariableReferenceType](#724b-sharedvariablereferencetype), or one of the [QuantifiedExpressionTypes](#725-quantifiedexpressiontype-optional) ); if there is not any, or if the DataType is still undefined after applying the rule(s), then it is treated as being set to `urn:oasis:names:tc:acal:1.0:data-type:string` by default.
+: An `IdentifierType` value specifying the `DataType` of the named attribute. The bag returned by the designator SHALL contain values of this data type. If this property is omitted, the DataType inference rule(s) of the parent object SHALL apply first, if there is any rule defined in this specification in the parent object type's section (either [ApplyType](#715-applytype), [PolicyReferenceType](#711-policyreferencetype), [SharedVariableReferenceType](#724b-sharedvariablereferencetype), or one of the subtypes of [QuantifiedExpressionType](#725-quantifiedexpressiontype-optional) ); if there is not any, or if the DataType is still undefined after applying the rule(s), then it is treated as being set to `urn:oasis:names:tc:acal:1.0:data-type:string` by default.
 
 `Issuer` [Optional]
 
@@ -3929,7 +3929,7 @@ A `BaseAttributeSelectorType` object has the following properties:
 
 `DataType` [Optional]
 
-: An `IdentifierType` value specifying the data type of the values returned from the evaluation of the attribute selector or entity attribute selector. If this property is omitted, the DataType inference rule(s) of the parent object SHALL apply first, if there is any rule defined in this specification in the parent object type's section (either [ApplyType](#715-applytype), [PolicyReferenceType](#711-policyreferencetype), [SharedVariableReferenceType](#724b-sharedvariablereferencetype), or one of the [QuantifiedExpressionTypes](#725-quantifiedexpressiontype-optional) ); if there is not any, or if the DataType is still undefined after applying the rule(s), then it is treated as being set to `urn:oasis:names:tc:acal:1.0:data-type:string` by default.
+: An `IdentifierType` value specifying the data type of the values returned from the evaluation of the attribute selector or entity attribute selector. If this property is omitted, the DataType inference rule(s) of the parent object SHALL apply first, if there is any rule defined in this specification in the parent object type's section (either [ApplyType](#715-applytype), [PolicyReferenceType](#711-policyreferencetype), [SharedVariableReferenceType](#724b-sharedvariablereferencetype), or one of the subtypes of [QuantifiedExpressionType](#725-quantifiedexpressiontype-optional) ); if there is not any, or if the DataType is still undefined after applying the rule(s), then it is treated as being set to `urn:oasis:names:tc:acal:1.0:data-type:string` by default.
 
 `MustBePresent` [Optional, Default false]
 
@@ -4050,7 +4050,7 @@ A `ValueType` object has the following properties:
 
 `DataType` [Optional]
 
-: An `IdentifierType` value specifying the data type of the attribute value. If this property is omitted, the DataType inference rule(s) of the parent object SHALL apply first, if there is any rule defined in this specification in the parent object type's section (either [ApplyType](#715-applytype), [PolicyReferenceType](#711-policyreferencetype), [SharedVariableReferenceType](#724b-sharedvariablereferencetype), or one of the [QuantifiedExpressionTypes](#725-quantifiedexpressiontype-optional) ); if there is not any, or if the DataType is still undefined after applying the rule(s), then it is treated as being set to `urn:oasis:names:tc:acal:1.0:data-type:string` by default.
+: An `IdentifierType` value specifying the data type of the attribute value. If this property is omitted, the DataType inference rule(s) of the parent object SHALL apply first, if there is any rule defined in this specification in the parent object type's section (either [ApplyType](#715-applytype), [PolicyReferenceType](#711-policyreferencetype), [SharedVariableReferenceType](#724b-sharedvariablereferencetype), or one of the subtypes of [QuantifiedExpressionType](#725-quantifiedexpressiontype-optional) ); if there is not any, or if the DataType is still undefined after applying the rule(s), then it is treated as being set to `urn:oasis:names:tc:acal:1.0:data-type:string` by default.
 
 A ValueType is abstract and subtypes may be either primitive types - i.e. subtypes of `PrimitiveValueType` in the above diagram (LiteralStringType, LiteralIntegerType, etc.) - or structured types (see [section 8.4.1](#841-structured-attributes)) -  i.e. subtypes of `StructuredValueType` in the above diagram.
 
@@ -5676,57 +5676,56 @@ Many of these items are associated with versions of XACML preceding ACAL but hav
 
 The implementation MUST support the object types that are marked `M`.
 
-| Object Type | M/O |
-| :--- | :--- |
-| ApplyType | M |
-| AttributeAssignmentExpressionType | M |
-| AttributeAssignmentType | M |
-| AttributeDesignatorType | M |
-| AttributeSelectorType | O |
-| AttributeType | M |
-| BaseAttributeSelectorType | O |
-| BooleanExpressionType | M |
-| BundleType | O |
-| ContentType | O |
-| DecisionType | M |
-| DescriptionType | M |
-| EntityAttributeDesignatorType | M |
-| EntityAttributeSelectorType | O |
-| EntityType | M |
-| ExactMatchIdReferenceType | O |
-| ExpressionType | M |
-| FunctionType | M |
-| MissingAttributeDetailType | M |
-| MultiRequestsType | O |
-| NamedAttributeDesignatorType | M |
-| NoticeExpressionType | M |
-| NoticeType | M |
-| PolicyDefaultsType | O |
-| PolicyIssuerType | O |
-| ParameterType | M |
-| PolicyReferenceType | M |
-| PolicyType | M |
-| QuantifiedExpressionType | O |
-| RequestAttributeType | M |
-| RequestDefaultsType | O |
-| RequestEntityReferenceType | O |
-| RequestEntityType | M |
-| RequestReferenceType | O |
-| RequestType | M |
-| ResponseType | M |
-| ResultEntityType | M |
-| ResultType | M |
-| RuleType | M |
-| SharedVariableDefinitionType | O |
-| SharedVariableReferenceType | M |
-| ShortIdSetType | M |
-| ShortIdType | M |
-| StatusType | M |
-| StatusCodeType | M |
-| StatusDetailType | O |
-| ValueType | M |
-| VariableDefinitionType | M |
-| VariableReferenceType | M |
+| Object Type | M/O | Properties of the Type |
+| :--- | :--- | :--- |
+| ApplyType | M | Apply |
+| AttributeAssignmentExpressionType | M | AttributeAssignmentExpression |
+| AttributeAssignmentType | M | AttributeAssignment |
+| AttributeDesignatorType | M | AttributeDesignator |
+| AttributeSelectorType | O | AttributeSelector |
+| AttributeType | M | Attribute |
+| BaseAttributeSelectorType | O | |
+| BooleanExpressionType | M | Condition, Target |
+| BundleType | O | Bundle |
+| ContentType | O | Content |
+| DescriptionType | M | Description |
+| EntityAttributeDesignatorType | M | EntityAttributeDesignator |
+| EntityAttributeSelectorType | O | EntityAttributeSelector |
+| EntityType | M | PolicyIssuer |
+| ExactMatchIdReferenceType | O | ApplicablePolicyReference |
+| ExpressionType | M | Expression |
+| FunctionType | M | Function |
+| MissingAttributeDetailType | M | MissingAttributeDetail |
+| MultiRequestsType | O | MultiRequests |
+| NamedAttributeDesignatorType | M | |
+| NoticeExpressionType | M | NoticeExpression |
+| NoticeType | M | Notice |
+| PatternMatchIdReferenceType | M | |
+| PolicyDefaultsType | O | PolicyDefaults |
+| ParameterType | M | Parameter |
+| PolicyReferenceType | M | PolicyReference |
+| PolicyType | M | Policy |
+| QuantifiedExpressionType | O | ForAll, ForAny, Map, Select |
+| RequestAttributeType | M | RequestAttribute |
+| RequestDefaultsType | O | RequestDefaults |
+| RequestEntityReferenceType | O | RequestEntityReference |
+| RequestEntityType | M | RequestEntity |
+| RequestReferenceType | O | RequestReference |
+| RequestType | M | Request |
+| ResponseType | M | Response |
+| ResultEntityType | M | ResultEntity |
+| ResultType | M | Result |
+| RuleType | M | Rule |
+| SharedVariableDefinitionType | O | SharedVariableDefinition |
+| SharedVariableReferenceType | O | SharedVariableReference |
+| ShortIdSetType | M | ShortIdSet |
+| ShortIdType | M | ShortId |
+| StatusType | M | Status |
+| StatusCodeType | M | StatusCode |
+| StatusDetailType | O | StatusDetail |
+| ValueType | M | Value |
+| VariableDefinitionType | M | VariableDefinition |
+| VariableReferenceType | M | VariableReference |
 
 ### 11.2.2 Identifier Prefixes
 
