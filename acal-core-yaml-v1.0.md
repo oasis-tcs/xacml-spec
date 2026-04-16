@@ -254,6 +254,13 @@ evaluation rules, and abstract conformance requirements is
 [[ACAL-Core](#acal-core)].  This specification defines how ACAL abstract
 model types are expressed in YAML.
 
+The authoritative definitions of ACAL simple types, object structures,
+inheritance relationships, and `ValueType` subtypes remain in
+[[ACAL-Core](#acal-core)] Section 7.  Likewise, the mandatory-versus-
+optional support classification of ACAL object types remains in
+[[ACAL-Core](#acal-core)] Section 11.2.  YACAL does not redefine those
+abstract model elements; it defines only their YAML representation.
+
 ### 4.2 Relationship to Peer Representations
 
 YACAL is structurally aligned with the other ACAL concrete
@@ -324,7 +331,16 @@ resolved as strings (not dates), and `010` is resolved as the integer 10
 #### 5.1.3 String Quoting
 
 YAML does not require quotes around string scalars unless the value
-contains characters that would cause misinterpretation.  In YACAL:
+contains characters that would cause misinterpretation. Quoting is
+not merely a stylistic convention: during parsing, non-plain scalars
+(values enclosed in single or double quotes) — are unconditionally
+assigned the non-specific tag `!`, which resolves to
+`tag:yaml.org,2002:str` (string).  Plain (unquoted) scalars are
+assigned the non-specific tag `?`, which is then resolved by
+schema-specific rules; under the
+Core Schema required by [Section 5.1.2](#512-core-schema), this means `true` resolves to `!!bool`, `42` to `!!int`, `1.0` to `!!float`, and so on.
+
+In YACAL:
 
 -   **URIs MUST be quoted** (double or single quotes) because they
     contain colons, which YAML interprets as key-value separators:
@@ -431,23 +447,29 @@ An optional property that is absent from a YACAL document takes the default valu
 
 ------------------------------------------------------------------------
 
-### 5.3 Primitive Type Mapping
+### 5.3 Simple Type Mapping
 
 #### 5.3.1 Mapping Model
 
-This section defines the default YACAL mapping rules for ACAL primitive
-types.  Unless a more specific rule applies, a primitive ACAL value is
-represented as a YAML scalar.
+This section defines the default YACAL mapping rules for ACAL simple
+types.  The simple types themselves remain defined by
+[[ACAL-Core](#acal-core)] Section 7.1, including the ACAL-defined simple
+types in ACAL Core Section 7.1.2.3.  Unless a more specific rule
+applies, a simple ACAL value is represented as a YAML scalar.
 
 YACAL relies on YAML 1.2 Core Schema resolution, but ACAL lexical and
-value-space constraints remain normative.  Therefore, a YAML scalar is
-not conformant merely because it is legal YAML; it MUST also satisfy the
-constraints of the ACAL primitive type being represented.
+value-space constraints remain normative.  YAML resolution therefore
+determines the YAML scalar category, not the ACAL type definition
+itself.  A YAML scalar is not conformant merely because it is legal
+YAML; it MUST also satisfy the constraints of the ACAL simple type being
+represented.
 
-#### 5.3.2 Primitive Types Mapped to Native YAML Scalars
+#### 5.3.2 Selected Simple Types Mapped to Native YAML Scalars
 
-The ACAL primitive types in the following table are represented using
-native YAML scalar forms under the Core Schema:
+The following table defines the YAML scalar forms used for selected ACAL
+simple types whose lexical space aligns with native YAML scalars.  It
+specifies the YACAL representation only; the underlying ACAL type
+definitions remain those of [[ACAL-Core](#acal-core)] Section 7.1.
 
 | ACAL Type | YAML Form | Notes |
 |---|---|---|
@@ -473,7 +495,7 @@ represent doubles, whereas `3` represents an integer.
 
 #### 5.3.3 Restricted String Types
 
-Each ACAL primitive type whose value space is defined by a restricted
+Each ACAL simple type whose value space is defined by a restricted
 string lexical form is represented as a YAML string scalar that matches
 the lexical constraints of that type.
 
@@ -481,8 +503,10 @@ Restricted string types MUST NOT use YAML tags or any YAML-specific
 typing mechanism to indicate their ACAL type.  Their type is determined
 by property context or wrapper context.
 
-Examples of restricted string types include `VersionType`,
-`VersionMatchType`, and `LocalIdentifierType`.
+Examples of ACAL core restricted string types include `VersionType`,
+`VersionMatchType`, `ShortIdNameType`, `ShortIdValueType`, and
+`LocalIdentifierType`; their authoritative definitions remain in
+[[ACAL-Core](#acal-core)] Section 7.1.2.3.
 
 Examples:
 
@@ -499,9 +523,9 @@ such as `1.0` would otherwise be resolved as non-string YAML scalars.
 
 #### 5.3.4 Enumeration Types
 
-Each ACAL enumerated type is represented as a YAML string scalar whose
-value is exactly one of the lexical enumeration values defined by ACAL
-or the relevant ACAL profile.
+Each ACAL enumerated type defined by ACAL core or the relevant ACAL
+profile is represented as a YAML string scalar whose value is exactly
+one of the permitted lexical enumeration values.
 
 Unless quoting is required by [Section 5.1.3](#513-string-quoting),
 enumeration values MAY be written as unquoted YAML strings.
@@ -517,8 +541,8 @@ Decision: NotApplicable
 
 #### 5.3.5 Identifier-Like and URI Types
 
-`IdentifierType`, `URI`, and similar identifier-valued primitive types
-are represented as YAML string scalars.
+`IdentifierType`, `URI`, and similar identifier-valued simple types are
+represented as YAML string scalars.
 
 Absolute URIs MUST be quoted:
 
@@ -544,13 +568,13 @@ The three ACAL identifier forms remain valid in YACAL:
 All such forms are subject to the quoting rules in
 [Section 5.1.3](#513-string-quoting).
 
-#### 5.3.6 Primitive Type Summary
+#### 5.3.6 Simple Type Summary
 
-The following rules summarize primitive type mapping in YACAL:
+The following rules summarize simple type mapping in YACAL:
 
-1. Primitive ACAL values are represented as YAML scalars.
+1. ACAL simple values are represented as YAML scalars.
 2. Native YAML scalar types SHOULD be used where their Core Schema
-   resolution matches the ACAL primitive type exactly.
+   resolution matches the ACAL simple type exactly.
 3. Restricted strings and identifiers are represented as YAML strings,
    not as custom YAML-typed nodes.
 4. Enumeration values are represented as YAML strings using the exact
@@ -563,6 +587,11 @@ The following rules summarize primitive type mapping in YACAL:
 ### 5.4 Complex Type Mapping
 
 #### 5.4.1 Default Mapping Rules for Complex ACAL Types
+
+The authoritative definitions of ACAL complex types, their properties,
+multiplicities, inheritance relationships, and abstract-versus-concrete
+status remain in [[ACAL-Core](#acal-core)] Section 7.  This section
+defines only how those ACAL structures are represented in YAML.
 
 Unless a more specific rule in this specification applies, a complex
 ACAL type is represented as a YAML mapping.
@@ -594,7 +623,10 @@ The default rules are:
 #### 5.4.2 Property Mapping Rules
 
 For each property of a complex ACAL type, apply the following rules
-unless a more specific type section overrides them:
+unless a more specific type section overrides them.  The property names,
+multiplicities, defaults, and inheritance semantics come from the ACAL
+core type definitions; the rules below describe only how those
+properties are written in YAML.
 
 1. A single-valued property is represented directly using the YAML
    representation of its ACAL type.
@@ -637,8 +669,10 @@ property whose value is YAML `null`.
 
 #### 5.4.4 ValueType Mapping Rules
 
-The ACAL `ValueType` and its literal subtypes are mapped specially
-because YAML provides native scalar forms.
+The ACAL `ValueType` model is defined in
+[[ACAL-Core](#acal-core)] Section 7.23.  The ACAL `ValueType` and its
+literal subtypes are mapped specially because YAML provides native
+scalar forms.
 
 `ValueType` is abstract.  In YACAL, its concrete representations follow
 the same conceptual split as ACAL:
@@ -683,6 +717,12 @@ The following rules apply to primitive `ValueType` forms:
    `DataType`, that string MUST satisfy the lexical constraints of the
    effective ACAL data type.
 
+YAML Core Schema resolution determines whether an unquoted scalar is a
+boolean, integer, float, or string before the ACAL typing rules above
+are applied.  An explicit `DataType` therefore supplements YAML
+resolution but does not reinterpret a YAML integer scalar as
+`LiteralDoubleType` or a YAML float scalar as `LiteralIntegerType`.
+
 Primitive implicit examples:
 
 ```yaml
@@ -713,6 +753,9 @@ the surrounding ACAL context, explicit typing is required:
 DataType: "urn:oasis:names:tc:acal:1.0:data-type:anyURI"
 Value: "https://example.com/policies/permit-read"
 ```
+
+Explicit `DataType` complements YAML Core Schema resolution; it does not
+override the scalar category already determined by the YAML parser.
 
 The ACAL `DataType` of a `ValueType` is determined by the following
 precedence:
@@ -760,10 +803,10 @@ because the surrounding context already fixes it.
 
 #### 5.4.5 StructuredValueType Mapping
 
-`StructuredValueType` is an abstract form of `ValueType` used for
-profile-defined structured values.  A concrete `StructuredValueType`
-subtype is represented as a YAML mapping containing the
-profile-defined properties of that subtype.
+`StructuredValueType` is the abstract structured-value branch of
+`ValueType` defined by [[ACAL-Core](#acal-core)] Section 7.23.  A
+concrete `StructuredValueType` subtype is represented as a YAML mapping
+containing the profile-defined properties of that subtype.
 
 When a structured value is used in expression position, that mapping is
 the value associated with the `Value` wrapper key; YACAL does not add an
@@ -1068,8 +1111,14 @@ The following conventions apply wherever those properties appear:
 
 - `Category` is represented as an `IdentifierType` YAML scalar
 - `Description` is represented as a YAML string scalar
-- both properties follow the general primitive-type and quoting rules in
-  [Section 5.3](#53-primitive-type-mapping)
+- both properties follow the general simple-type and quoting rules in
+  [Section 5.3](#53-simple-type-mapping)
+
+The remaining subsections of Section 5 are organized by the
+corresponding ACAL Core Section 7 structures.  Where a subsection
+includes a property table, that table is a YACAL mapping summary for the
+core-defined structure; it does not replace the authoritative ACAL Core
+definition of the type, its properties, or its multiplicities.
 
 ------------------------------------------------------------------------
 
@@ -2473,8 +2522,8 @@ The YACAL specification addresses conformance in the following areas:
 
 1. conformance of YACAL documents
 2. conformance of YACAL processors
-3. support for mandatory and optional YACAL syntax objects derived from
-   ACAL core
+3. support for mandatory and optional ACAL object types and features
+   when represented in YACAL
 
 Some ACAL objects and features are optional to implement, either because
 they are optional in ACAL core or because they are only required when
@@ -2498,74 +2547,42 @@ For the purposes of this specification:
   conformance
 - **O** means optional-to-implement
 
+For ACAL object types, these categories are inherited unchanged from
+[[ACAL-Core](#acal-core)] Section 11.2.1.  YACAL uses the same notation
+again in [Section 7.3.2](#732-machine-readable-artifact-support) for
+YACAL-specific artifacts.
+
 An implementation MUST follow [Section 5](#5-syntax-normative) where it
 applies to implemented items in the following tables.
 
 ### 7.3 Conformance Tables
 
-#### 7.3.1 Syntax Objects
+#### 7.3.1 ACAL Object-Type Conformance
 
-The implementation MUST support those YACAL syntax objects marked `M`.
+YACAL inherits ACAL object-type conformance from
+[[ACAL-Core](#acal-core)] Section 11.2.1.
 
-| Object name | M/O | Notes |
-|:---|:---:|:---|
-| `Apply` | M | Core expression form |
-| `ApplicablePolicyReference` | O | Optional result detail support |
-| `Attribute` | M | Reusable attribute object used in request, result, entity, and notice contexts |
-| `AttributeAssignment` | M | Mandatory when notices are supported |
-| `AttributeAssignmentExpression` | M | Core notice-expression syntax |
-| `AttributeDesignator` | M | Core expression form |
-| `AttributeSelector` | O | Optional/profile-based |
-| `Bundle` | O | Optional bundle support |
-| `Category` | M | Reusable identifier-valued property |
-| `Condition` | M | Core rule syntax |
-| `Content` | O | Optional/profile-based |
-| `Description` | M | Reusable free-form string property |
-| `EntityAttributeDesignator` | O | Optional in ACAL core support model |
-| `EntityAttributeSelector` | O | Optional/profile-based |
-| `Expression` | M | Core expression container |
-| `ForAll` | O | Optional quantified expression |
-| `ForAny` | O | Optional quantified expression |
-| `Function` | M | Core higher-order expression form |
-| `Map` | O | Optional quantified expression |
-| `MissingAttributeDetail` | M | Core status-detail object |
-| `MultiRequests` | O | Optional request feature |
-| `Notice` | M | Core response object |
-| `NoticeExpression` | M | Core policy/rule object |
-| `Policy` | M | Core root/support object |
-| `PolicyDefaults` | O | Optional/profile-based |
-| `PolicyPatternMatchReference` | O | Optional pattern-match policy reference |
-| `PolicyReference` | M | Core reference object |
-| `PolicyIssuer` | O | Optional support |
-| `Request` | M | Core root/support object |
-| `RequestAttribute` | M | Core request object |
-| `RequestDefaults` | O | Optional/profile-based |
-| `RequestEntity` | M | Core request object |
-| `RequestEntityReference` | O | Optional multi-request support |
-| `RequestReference` | O | Optional multi-request support |
-| `Response` | M | Core root/support object |
-| `Result` | M | Core response object |
-| `ResultEntity` | M | Core response object |
-| `Rule` | M | Core combiner object |
-| `Select` | O | Optional quantified expression |
-| `SharedVariableDefinition` | O | Optional bundle feature |
-| `SharedVariableReference` | O | Optional bundle feature |
-| `ShortId` | M | Core short-identifier object |
-| `ShortIdSet` | M | Core short-identifier object |
-| `ShortIdSetReference` | M | Core short-identifier reference |
-| `Status` | M | Core response object |
-| `StatusCode` | M | Core status object |
-| `StatusDetail` | O | Optional detailed status support |
-| `StatusMessage` | O | Optional detailed status support |
-| `Target` | M | Core policy object |
-| `Value` | M | Core literal expression form |
-| `VariableDefinition` | M | Core variable object |
-| `VariableReference` | M | Core expression form |
+A processor claiming core YACAL conformance MUST support the YACAL
+representation of every ACAL object type marked `M` in that table.  It
+MAY omit support for ACAL object types marked `O` unless it claims the
+corresponding optional ACAL feature.
 
-Reusable entries such as `Attribute`, `Category`, and `Description` use
-the shared mapping rules in [Section 5.4](#54-complex-type-mapping),
-while the remaining entries are given dedicated object-level mappings in
-later subsections.
+This specification therefore does not repeat the ACAL core object-type
+conformance table.  [Section 5](#5-syntax-normative) defines the YAML
+representation of those same ACAL object types, while
+[[ACAL-Core](#acal-core)] remains authoritative for their
+mandatory/optional classification.
+
+Some ACAL object types, such as `DecisionType`, `DescriptionType`,
+`ParameterType`, `NamedAttributeDesignatorType`,
+`BaseAttributeSelectorType`, and `QuantifiedExpressionType`, do not
+correspond to standalone YACAL root keys.  Their conformance status
+still comes from ACAL core and applies wherever this specification maps
+them into YAML.
+
+For readability, this specification often refers to a YACAL surface form
+without the `Type` suffix when such a surface form exists, for example
+`PolicyType` as `Policy` and `ValueType` as `Value`.
 
 #### 7.3.2 Machine-Readable Artifact Support
 
@@ -2591,7 +2608,8 @@ A conformant YACAL document:
 1.  MUST be a valid YAML 1.2 document [[YAML1.2](#yaml12)].
 2.  MUST use the YAML 1.2 Core Schema for scalar type resolution.
 3.  MUST conform to all structural requirements defined in this
-    specification.
+    specification for representing the applicable ACAL Section 7
+    structures in YAML.
 4.  MUST correspond to a semantically valid ACAL instance when
     interpreted according to this specification and [[ACAL-Core](#acal-core)].
 5.  MUST satisfy the applicable constraint rules in
@@ -2622,10 +2640,10 @@ A conformant YACAL processor:
 4.  MUST enforce the applicable structural and semantic constraints
     defined in this specification and in ACAL for all supported
     objects and features.
-5.  If it claims support for an optional syntax object marked `O` in
-    [Section 7.3.1](#731-syntax-objects), it MUST implement the
-    corresponding syntax, typing, inheritance, and constraint rules
-    consistently.
+5.  If it claims support for an optional ACAL object type or feature
+    covered by [Section 7.3.1](#731-acal-object-type-conformance), it
+    MUST implement the corresponding YACAL syntax, typing, inheritance,
+    and constraint rules consistently.
 6.  A processor claiming core YACAL conformance MUST support the core
     machine-readable artifacts listed as mandatory in
     [Section 7.3.2](#732-machine-readable-artifact-support), or provide
