@@ -1,0 +1,615 @@
+Artifact: YACALConstraintCatalog
+Id: "urn:oasis:names:tc:acal:1.0:artifact:yaml:constraints:core"
+Version: "1.0"
+Title: "YACAL v1.0 core constraint catalog"
+Description: >
+  Core higher-order constraint catalog for the YAML representation of
+  ACAL Version 1.0. This artifact complements the core structural
+  schema. It is evaluated over parsed YACAL data after YAML parsing and
+  structural validation.
+StructuralArtifact: "acal-core-yaml-v1.0-structure.schema.yaml"
+Specification: "acal-core-yaml-wd01-v1.0.md"
+Status: "draft"
+PathNotation:
+  Name: "yacal-path-v1-draft"
+  Description: >
+    Paths are evaluated over parsed YACAL data after successful
+    structural validation. The notation is intentionally small and
+    YACAL-specific.
+  Rules:
+    - "$ denotes the document root."
+    - ".Property selects a child property."
+    - "[] iterates over all items of a sequence-valued property."
+    - "Wrapper keys such as Policy, Rule, or Value are expressed as ordinary property names."
+    - "A path ending in a property name denotes that property's value."
+    - "Paths in this first draft are descriptive and implementation-neutral."
+EvaluationModel:
+  Layers:
+    - "YAML parsing"
+    - "YACAL structural validation"
+    - "YACAL constraint evaluation"
+    - "ACAL semantic evaluation"
+  Notes:
+    - "This catalog does not replace the structural schema."
+    - "Some rules require resolution against enclosing scope, profile definitions, or externally supplied artifacts."
+    - "Implementation-internal projections remain non-normative."
+RuleKinds:
+  uniqueByProperty:
+    Meaning: "Values in a collection are unique by one or more named child properties."
+  uniqueByConcreteSubtype:
+    Meaning: "No two values in a collection denote the same effective concrete subtype."
+  uniqueByDerivedSet:
+    Meaning: "Values in a collection are unique by a derived unordered set computed from nested values."
+  conditionalPresence:
+    Meaning: "The presence or absence of one property is conditioned on another property value."
+  nonEmptyWhenPresent:
+    Meaning: "If one property is present, another collection-valued property must be present and non-empty."
+  propertyAgreement:
+    Meaning: "Two related properties must agree when both are present."
+  referenceMustResolve:
+    Meaning: "A reference value must resolve to an in-scope target object."
+  noNestedExpressionKind:
+    Meaning: "An expression subtree must not contain a prohibited nested expression kind."
+  graphMustBeAcyclic:
+    Meaning: "Following the declared reference relation must not produce direct or indirect cycles."
+  graphMustNotRepeatNode:
+    Meaning: "A resolved graph walk must not revisit the same target node more than once."
+Rule:
+  - Id: "shortidset-shortid-name-unique"
+    Kind: uniqueByProperty
+    Severity: error
+    AppliesTo:
+      ObjectType: ShortIdSetType
+      CollectionPath: "$.ShortIdSet[].ShortId"
+    KeyProperties:
+      - Name
+    Requirement: >
+      Within a single ShortIdSetType, Name values MUST be unique.
+    Provenance:
+      YACALSection: "5.11.2"
+      ACALSection: "7.2"
+
+  - Id: "shortidset-reference-acyclic"
+    Kind: graphMustBeAcyclic
+    Severity: error
+    AppliesTo:
+      ObjectType: ShortIdSetType
+      NodeIdentityProperty: Id
+      ReferencePath: ShortIdSetReference
+      ObjectLocations:
+        - "$.ShortIdSet[]"
+        - "$.Bundle.ShortIdSet[]"
+    Requirement: >
+      A ShortIdSetType object MUST NOT directly or indirectly reference
+      itself.
+    Resolution:
+      ReferenceValueType: URI
+      RequiresResolvedShortIdSetGraph: true
+    Provenance:
+      YACALSection: "5.11.1"
+      ACALSection: "7.2"
+
+  - Id: "shortidset-reference-no-repeat"
+    Kind: graphMustNotRepeatNode
+    Severity: error
+    AppliesTo:
+      ObjectType: ShortIdSetType
+      NodeIdentityProperty: Id
+      ReferencePath: ShortIdSetReference
+      ObjectLocations:
+        - "$.ShortIdSet[]"
+        - "$.Bundle.ShortIdSet[]"
+    Requirement: >
+      A ShortIdSetType object MUST NOT directly or indirectly reference
+      any other short identifier set more than once.
+    Resolution:
+      ReferenceValueType: URI
+      RequiresResolvedShortIdSetGraph: true
+    Provenance:
+      ACALSection: "7.2"
+
+  - Id: "policy-parameter-name-unique"
+    Kind: uniqueByProperty
+    Severity: error
+    AppliesTo:
+      ObjectType: PolicyType
+      CollectionPath: "$.Policy.Parameter"
+    KeyProperties:
+      - Name
+    Requirement: >
+      Parameter names within a PolicyType MUST be unique.
+    Provenance:
+      ACALSection: "7.6"
+
+  - Id: "shared-variable-parameter-name-unique"
+    Kind: uniqueByProperty
+    Severity: error
+    AppliesTo:
+      ObjectType: SharedVariableDefinitionType
+      CollectionPath: "$.Bundle.SharedVariableDefinition[].Parameter"
+    KeyProperties:
+      - Name
+    Requirement: >
+      Parameter names within a SharedVariableDefinitionType MUST be
+      unique.
+    Provenance:
+      ACALSection: "7.13b"
+
+  - Id: "policy-variable-id-scoped-unique"
+    Kind: uniqueByProperty
+    Severity: error
+    AppliesTo:
+      ObjectType: PolicyType
+      CollectionPath: "$.Policy.VariableDefinition"
+    KeyProperties:
+      - VariableId
+    Requirement: >
+      VariableDefinition VariableId values in a PolicyType MUST be
+      unique within that collection and MUST NOT override any
+      VariableDefinition already in scope from an enclosing policy.
+    ScopeModel:
+      EnclosingScopes:
+        - PolicyType
+    Provenance:
+      YACALSection: "5.12.2"
+      ACALSection: "7.13"
+
+  - Id: "rule-variable-id-scoped-unique"
+    Kind: uniqueByProperty
+    Severity: error
+    AppliesTo:
+      ObjectType: RuleType
+      CollectionPath: "$.Policy.CombinerInput[].Rule.VariableDefinition"
+    KeyProperties:
+      - VariableId
+    Requirement: >
+      VariableDefinition VariableId values in a RuleType MUST be unique
+      within that collection and MUST NOT override any VariableDefinition
+      already in scope from an enclosing policy.
+    ScopeModel:
+      EnclosingScopes:
+        - PolicyType
+    Provenance:
+      YACALSection: "5.12.2"
+      ACALSection: "7.13"
+
+  - Id: "shared-variable-reference-acyclic"
+    Kind: graphMustBeAcyclic
+    Severity: error
+    AppliesTo:
+      ObjectType: SharedVariableDefinitionType
+      NodeIdentityProperty: Id
+      ObjectLocations:
+        - "$.Bundle.SharedVariableDefinition[]"
+      ReferenceExpressionPath: Expression
+      ReferenceWrapperKey: SharedVariableReference
+      ReferenceIdProperty: Id
+    Requirement: >
+      SharedVariableDefinitionType expressions MAY reference other shared
+      variables, but MUST NOT create direct or indirect recursive shared
+      variable dependencies.
+    Provenance:
+      YACALSection: "5.7.2"
+      ACALSection: "7.13b"
+
+  - Id: "shared-variable-definition-no-variable-reference"
+    Kind: noNestedExpressionKind
+    Severity: error
+    AppliesTo:
+      ObjectType: SharedVariableDefinitionType
+      ExpressionPath: "$.Bundle.SharedVariableDefinition[].Expression"
+    ProhibitedWrapperKey: VariableReference
+    Requirement: >
+      A SharedVariableDefinitionType expression SHALL NOT contain
+      VariableReferenceType objects.
+    Provenance:
+      YACALSection: "5.7.2"
+      ACALSection: "7.13b"
+
+  - Id: "bundle-policyreference-requires-policy"
+    Kind: nonEmptyWhenPresent
+    Severity: error
+    AppliesTo:
+      ObjectType: BundleType
+      ContainerPath: "$.Bundle"
+    IfPresentProperty: PolicyReference
+    RequiredNonEmptyCollectionProperty: Policy
+    Requirement: >
+      If PolicyReference is present, the Policy collection MUST be
+      present and non-empty.
+    Provenance:
+      YACALSection: "5.7.1"
+      ACALSection: "7.47"
+
+  - Id: "request-defaults-unique-concrete-subtype"
+    Kind: uniqueByConcreteSubtype
+    Severity: error
+    AppliesTo:
+      ObjectType: RequestType
+      CollectionPath: "$.Request.RequestDefaults"
+    Requirement: >
+      No two RequestDefaults values may denote the same effective
+      concrete subtype.
+    Provenance:
+      YACALSection: "5.12.2"
+      ACALSection: "7.32"
+
+  - Id: "policy-defaults-unique-concrete-subtype"
+    Kind: uniqueByConcreteSubtype
+    Severity: error
+    AppliesTo:
+      ObjectType: PolicyType
+      CollectionPath: "$.Policy.PolicyDefaults"
+    Requirement: >
+      No two PolicyDefaults values may denote the same effective
+      concrete subtype.
+    Provenance:
+      YACALSection: "5.12.2"
+      ACALSection: "7.5"
+
+  - Id: "request-entity-id-unique"
+    Kind: uniqueByProperty
+    Severity: error
+    AppliesTo:
+      ObjectType: RequestType
+      CollectionPath: "$.Request.RequestEntity"
+    KeyProperties:
+      - Id
+    IgnoreMissingKey: true
+    Requirement: >
+      If RequestEntity Id values are present, they MUST be unique within
+      the enclosing request.
+    Provenance:
+      YACALSection: "5.8.1"
+      ACALSection: "7.31"
+
+  - Id: "request-attribute-id-unique-within-entity"
+    Kind: uniqueByProperty
+    Severity: error
+    AppliesTo:
+      ObjectType: RequestEntityType
+      CollectionPath: "$.Request.RequestEntity[].RequestAttribute"
+    KeyProperties:
+      - AttributeId
+    Requirement: >
+      RequestAttribute values within a RequestEntityType MUST be unique
+      by AttributeId.
+    Provenance:
+      YACALSection: "5.12.2"
+      ACALSection: "7.35"
+
+  - Id: "requestreference-requestentityreference-id-unique"
+    Kind: uniqueByProperty
+    Severity: error
+    AppliesTo:
+      ObjectType: RequestReferenceType
+      CollectionPath: "$.Request.MultiRequests.RequestReference[].RequestEntityReference"
+    KeyProperties:
+      - Id
+    Requirement: >
+      Id values in a single RequestReferenceType MUST be unique.
+    Provenance:
+      YACALSection: "5.8.5"
+      ACALSection: "7.39"
+
+  - Id: "requestreference-requestentityreference-resolves"
+    Kind: referenceMustResolve
+    Severity: error
+    AppliesTo:
+      ObjectType: RequestReferenceType
+      ReferencePath: "$.Request.MultiRequests.RequestReference[].RequestEntityReference[].Id"
+      TargetCollectionPath: "$.Request.RequestEntity"
+      TargetKeyProperty: Id
+    Requirement: >
+      Each RequestEntityReference Id MUST identify a RequestEntityType in
+      the enclosing Request.
+    Provenance:
+      YACALSection: "5.8.5"
+      ACALSection: "7.40"
+
+  - Id: "multirequests-requestreference-unique-by-entity-id-set"
+    Kind: uniqueByDerivedSet
+    Severity: error
+    AppliesTo:
+      ObjectType: MultiRequestsType
+      CollectionPath: "$.Request.MultiRequests.RequestReference"
+      DerivedSetPath: RequestEntityReference[].Id
+    Requirement: >
+      The set of referenced RequestEntity identifiers in each
+      RequestReference MUST be unique within the enclosing MultiRequests
+      value.
+    Normalization:
+      TreatAsUnorderedSet: true
+    Provenance:
+      YACALSection: "5.8.4"
+      ACALSection: "7.38"
+
+  - Id: "statusdetail-forbidden-for-ok"
+    Kind: conditionalPresence
+    Severity: error
+    AppliesTo:
+      ObjectType: StatusType
+      ContainerPath: "$.Response.Result[].Status"
+    WhenPropertyEquals:
+      PropertyPath: StatusCode.Value
+      Value: "urn:oasis:names:tc:acal:1.0:status:ok"
+    ForbiddenProperty: StatusDetail
+    Requirement: >
+      StatusDetail MUST NOT be present when StatusCode.Value is status:ok.
+    Provenance:
+      YACALSection: "5.10.3"
+
+  - Id: "statusdetail-forbidden-for-syntax-error"
+    Kind: conditionalPresence
+    Severity: error
+    AppliesTo:
+      ObjectType: StatusType
+      ContainerPath: "$.Response.Result[].Status"
+    WhenPropertyEquals:
+      PropertyPath: StatusCode.Value
+      Value: "urn:oasis:names:tc:acal:1.0:status:syntax-error"
+    ForbiddenProperty: StatusDetail
+    Requirement: >
+      StatusDetail MUST NOT be present when StatusCode.Value is
+      status:syntax-error.
+    Provenance:
+      YACALSection: "5.10.3"
+
+  - Id: "statusdetail-forbidden-for-processing-error"
+    Kind: conditionalPresence
+    Severity: error
+    AppliesTo:
+      ObjectType: StatusType
+      ContainerPath: "$.Response.Result[].Status"
+    WhenPropertyEquals:
+      PropertyPath: StatusCode.Value
+      Value: "urn:oasis:names:tc:acal:1.0:status:processing-error"
+    ForbiddenProperty: StatusDetail
+    Requirement: >
+      StatusDetail MUST NOT be present when StatusCode.Value is
+      status:processing-error.
+    Provenance:
+      YACALSection: "5.10.3"
+
+  - Id: "statusdetail-missing-attribute-shape"
+    Kind: conditionalPresence
+    Severity: error
+    AppliesTo:
+      ObjectType: StatusType
+      ContainerPath: "$.Response.Result[].Status"
+    WhenPropertyEquals:
+      PropertyPath: StatusCode.Value
+      Value: "urn:oasis:names:tc:acal:1.0:status:missing-attribute"
+    AllowedStatusDetailKeys:
+      - MissingAttributeDetail
+    Requirement: >
+      When StatusCode.Value is status:missing-attribute, StatusDetail MAY
+      be present and, in core YACAL, may contain one or more
+      MissingAttributeDetail values.
+    Provenance:
+      YACALSection: "5.10.3"
+
+  - Id: "attribute-valuetype-datatype-agreement"
+    Kind: propertyAgreement
+    Severity: error
+    AppliesTo:
+      ObjectType: AttributeType
+      ContainerLocations:
+        - "$.Policy.PolicyIssuer.Attribute[]"
+        - "$.Response.Result[].ResultEntity[].Attribute[]"
+      ParentProperty: DataType
+      ChildCollectionPath: Value
+      ChildProperty: DataType
+      ChildAppliesWhenWrapperLikeValueMapping: true
+    Requirement: >
+      If an AttributeType specifies DataType and a nested Value mapping
+      also specifies DataType, the two values MUST agree.
+    Provenance:
+      YACALSection: "5.4.12"
+
+  - Id: "requestattribute-valuetype-datatype-agreement"
+    Kind: propertyAgreement
+    Severity: error
+    AppliesTo:
+      ObjectType: RequestAttributeType
+      ContainerLocations:
+        - "$.Request.RequestEntity[].RequestAttribute[]"
+      ParentProperty: DataType
+      ChildCollectionPath: Value
+      ChildProperty: DataType
+      ChildAppliesWhenWrapperLikeValueMapping: true
+    Requirement: >
+      If a RequestAttributeType specifies DataType and a nested Value
+      mapping also specifies DataType, the two values MUST agree.
+    Provenance:
+      YACALSection: "5.8.3"
+
+  - Id: "attributeassignment-valuetype-datatype-agreement"
+    Kind: propertyAgreement
+    Severity: error
+    AppliesTo:
+      ObjectType: AttributeAssignmentType
+      ContainerLocations:
+        - "$.Response.Result[].Notice[].AttributeAssignment[]"
+      ParentProperty: DataType
+      ChildCollectionPath: Value
+      ChildProperty: DataType
+      ChildAppliesWhenWrapperLikeValueMapping: true
+    Requirement: >
+      If an AttributeAssignmentType specifies DataType and a nested Value
+      mapping also specifies DataType, the two values MUST agree.
+    Provenance:
+      YACALSection: "5.9.2"
+
+  - Id: "parameter-valuetype-datatype-agreement"
+    Kind: propertyAgreement
+    Severity: error
+    AppliesTo:
+      ObjectType: ParameterType
+      ContainerLocations:
+        - "$.Policy.Parameter[]"
+        - "$.Bundle.SharedVariableDefinition[].Parameter[]"
+      ParentProperty: DataType
+      ChildExpressionPath: Expression.Value
+      ChildProperty: DataType
+    Requirement: >
+      If a ParameterType fixes DataType and its Expression is a ValueType
+      mapping that also specifies DataType, the two values MUST agree.
+    Provenance:
+      YACALSection: "5.6.5"
+
+  - Id: "sharedvariablereference-argument-datatype-agreement"
+    Kind: propertyAgreement
+    Severity: error
+    AppliesTo:
+      ObjectType: SharedVariableReferenceType
+      ContainerLocations:
+        - "$..SharedVariableReference"
+      ParentModel: "Referenced shared variable parameter list"
+      ChildCollectionPath: Expression
+      ChildProperty: DataType
+    Requirement: >
+      Where the referenced shared variable parameter fixes a DataType, a
+      nested ValueType argument that specifies DataType MUST agree with
+      that parameter type.
+    Resolution:
+      RequiresReferencedSharedVariableLookup: true
+    Provenance:
+      YACALSection: "5.5.6"
+      ACALSection: "7.24b"
+
+  - Id: "policyreference-argument-datatype-agreement"
+    Kind: propertyAgreement
+    Severity: error
+    AppliesTo:
+      ObjectType: PolicyReferenceType
+      ContainerLocations:
+        - "$.Policy.CombinerInput[].PolicyReference"
+        - "$.Bundle.PolicyReference"
+      ParentModel: "Referenced policy parameter list"
+      ChildCollectionPath: Expression
+      ChildProperty: DataType
+    Requirement: >
+      Where the referenced policy parameter fixes a DataType, a nested
+      ValueType argument that specifies DataType MUST agree with that
+      parameter type.
+    Resolution:
+      RequiresReferencedPolicyLookup: true
+    Provenance:
+      YACALSection: "5.6.6"
+      ACALSection: "7.11"
+
+  - Id: "rule-noticeexpression-id-unique"
+    Kind: uniqueByProperty
+    Severity: error
+    AppliesTo:
+      ObjectType: RuleType
+      CollectionPath: "$.Policy.CombinerInput[].Rule.NoticeExpression"
+    KeyProperties:
+      - Id
+    Requirement: >
+      NoticeExpression Id values within a RuleType MUST be unique.
+    Provenance:
+      YACALSection: "5.9.1"
+      ACALSection: "7.17"
+
+  - Id: "result-notice-id-unique"
+    Kind: uniqueByProperty
+    Severity: error
+    AppliesTo:
+      ObjectType: ResultType
+      CollectionPath: "$.Response.Result[].Notice"
+    KeyProperties:
+      - Id
+    Requirement: >
+      Notice Id values within a ResultType MUST be unique.
+    Provenance:
+      YACALSection: "5.9.3"
+      ACALSection: "7.41"
+
+  - Id: "result-resultentity-category-unique"
+    Kind: uniqueByProperty
+    Severity: error
+    AppliesTo:
+      ObjectType: ResultType
+      CollectionPath: "$.Response.Result[].ResultEntity"
+    KeyProperties:
+      - Category
+    Requirement: >
+      ResultEntity Category values within a ResultType MUST be unique.
+    Provenance:
+      YACALSection: "5.8.9"
+      ACALSection: "7.41"
+
+  - Id: "result-applicablepolicyreference-id-unique"
+    Kind: uniqueByProperty
+    Severity: error
+    AppliesTo:
+      ObjectType: ResultType
+      CollectionPath: "$.Response.Result[].ApplicablePolicyReference"
+    KeyProperties:
+      - Id
+    Requirement: >
+      ApplicablePolicyReference Id values within a ResultType MUST be
+      unique.
+    Provenance:
+      YACALSection: "5.8.10"
+      ACALSection: "7.41"
+
+  - Id: "bundle-shortidset-id-unique"
+    Kind: uniqueByProperty
+    Severity: error
+    AppliesTo:
+      ObjectType: BundleType
+      CollectionPath: "$.Bundle.ShortIdSet"
+    KeyProperties:
+      - Id
+    Requirement: >
+      ShortIdSet Id values within a BundleType MUST be unique.
+    Provenance:
+      YACALSection: "5.7.1"
+      ACALSection: "7.47"
+
+  - Id: "bundle-sharedvariabledefinition-id-unique"
+    Kind: uniqueByProperty
+    Severity: error
+    AppliesTo:
+      ObjectType: BundleType
+      CollectionPath: "$.Bundle.SharedVariableDefinition"
+    KeyProperties:
+      - Id
+    Requirement: >
+      SharedVariableDefinition Id values within a BundleType MUST be
+      unique.
+    Provenance:
+      YACALSection: "5.7.1"
+      ACALSection: "7.47"
+
+  - Id: "bundle-policy-policyid-unique"
+    Kind: uniqueByProperty
+    Severity: error
+    AppliesTo:
+      ObjectType: BundleType
+      CollectionPath: "$.Bundle.Policy"
+    KeyProperties:
+      - PolicyId
+    Requirement: >
+      Policy PolicyId values within a BundleType MUST be unique.
+    Provenance:
+      YACALSection: "5.7.1"
+      ACALSection: "7.47"
+
+  - Id: "resultentity-attribute-attributeid-unique"
+    Kind: uniqueByProperty
+    Severity: error
+    AppliesTo:
+      ObjectType: ResultEntityType
+      CollectionPath: "$.Response.Result[].ResultEntity[].Attribute"
+    KeyProperties:
+      - AttributeId
+    Requirement: >
+      Attribute AttributeId values within a ResultEntityType MUST be
+      unique.
+    Provenance:
+      YACALSection: "5.8.9"
+      ACALSection: "7.42"

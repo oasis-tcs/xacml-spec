@@ -1,0 +1,7 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$id: "yacal-root-structure-example-core-only.schema.yaml"
+title: "YACAL core-only root composition schema"
+description: >
+  Example root schema for an implementation that supports only core YACAL with
+  no additional profile or custom extensions.
+$ref: "acal-core-yaml-v1.0-structure.schema.yaml"
