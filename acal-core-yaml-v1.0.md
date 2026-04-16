@@ -212,19 +212,20 @@ This document uses the following abbreviations and acronyms:
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
 "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
 document are to be interpreted as described in [[RFC2119](#rfc2119)]
-and [[RFC8174](#rfc8174)].
+and [[RFC8174](#rfc8174)] when, and only when, they appear in all
+capitals, as shown here.
 
 ### 3.2 Typographic Conventions
 
 YAML examples are presented in block style using code fences.  Property
 names from the ACAL abstract model are rendered in `monospace`.
-References to ACAL abstract model types use the form *TypeName* in
-italics.
+References to ACAL abstract model types use the form `TypeName` in
+monospace.
 
 ### 3.3 YAML Presentation Conventions
 
 Unless otherwise stated, examples use YAML 1.2 block style and the Core
-Schema.  Flow style MAY appear in short inline examples, but block style
+Schema.  Flow style may appear in short inline examples, but block style
 is the preferred presentation form in this specification.
 
 ------------------------------------------------------------------------
@@ -282,12 +283,12 @@ YACAL conformance or semantics.
 The design of YACAL is guided by the following principles, in priority
 order:
 
-1.  **Conformance**: every YACAL document MUST be conformant with the ACAL core.
-    YACAL MUST NOT semantically extend the ACAL core.
+1.  **Conformance**: every YACAL document must be conformant with the ACAL core.
+    YACAL must not semantically extend the ACAL core.
 2.  **Interoperability discipline**: any separate interoperability
-    guidance for translating between concrete representations SHOULD
+    guidance for translating between concrete representations should
     preserve all ACAL-significant information.
-3.  **Readability**: YACAL SHOULD take advantage of YAML's block style
+3.  **Readability**: YACAL should take advantage of YAML's block style
     to improve human readability.
 4.  **Consistency**: YACAL uses the same property names, type
     discrimination patterns, and structural conventions as the peer ACAL
@@ -395,7 +396,7 @@ documents:
     direct structural correspondence to the ACAL abstract model.
 -   **Multiple documents** (`---` / `...` separators): a YACAL
     document is a single YAML document.  Bundles are expressed using
-    *BundleType*, not YAML multi-document streams.
+    `BundleType`, not YAML multi-document streams.
 -   **Merge keys** (`<<`): a YAML 1.1 feature not part of YAML 1.2.
 -   **Null** values (i.e. `null`, `Null`, `NULL`, `~` or the absence of value are considered invalid).
 -   **Octal notation** for integers (to align with JSON integer type), i.e. any value matching the pattern `0o [0-7]+` is forbidden.
@@ -409,10 +410,10 @@ root level.  The key identifies the document type:
 
 | Root Key | ACAL Type | Description |
 |---|---|---|
-| `Policy` | *PolicyType* | A single policy |
-| `Bundle` | *BundleType* | A collection of policies, shared variables, and identifiers |
-| `Request` | *RequestType* | An authorization decision request |
-| `Response` | *ResponseType* | An authorization decision response |
+| `Policy` | `PolicyType` | A single policy |
+| `Bundle` | `BundleType` | A collection of policies, shared variables, and identifiers |
+| `Request` | `RequestType` | An authorization decision request |
+| `Response` | `ResponseType` | An authorization decision response |
 
 Example:
 
@@ -476,7 +477,6 @@ definitions remain those of [[ACAL-Core](#acal-core)] Section 7.1.
 | `String` | YAML string scalar | Quote when required by [Section 5.1.3](#513-string-quoting) |
 | `Boolean` | YAML boolean scalar | MUST use `true` or `false` |
 | `Integer` | YAML integer scalar | MUST resolve as integer under the Core Schema |
-| `NonNegativeInteger` | YAML integer scalar | MUST resolve as integer and be greater than or equal to zero |
 | `Double` | YAML float scalar | MUST resolve as float under the Core Schema |
 
 Examples:
@@ -988,7 +988,7 @@ properties:
 |---|---|---|---|
 | `MediaType` | No | String | Media type of the content body. If omitted, the default value `application/yaml` applies, and the `Body` SHALL be a YAML 1.2 document. The values `application/json` and `application/xml` SHALL be used for JSON objects and XML documents respectively.  |
 | `Encoding` | No | String | Content encoding, used only when the `Body` string is encoded rather than directly represented. The Encoding value `base64` indicates that the Body is Base64-encoded as per [[RFC4648](#rfc4648)]. Other Encoding values may be defined by other YACAL Profiles. |
-| `Body` | Yes | *AnyType* | Direct representation of the content payload |
+| `Body` | Yes | `AnyType` | Direct representation of the content payload |
 
 The `Body` value is the direct YACAL representation of the underlying
 content and follows the rules in
@@ -1046,10 +1046,10 @@ with one or more values.  In YACAL, it is represented as a YAML mapping:
 
 | Property | Required | Default | Type | Cardinality |
 |---|---|---|---|---|
-| `AttributeId` | Yes | — | *IdentifierType* | 1 |
+| `AttributeId` | Yes | — | `IdentifierType` | 1 |
 | `Issuer` | No | — | Name | 0..1 |
-| `DataType` | No | string | *IdentifierType* | 0..1 |
-| `Value` | Yes | — | *ValueType* | 1..* |
+| `DataType` | No | string | `IdentifierType` | 0..1 |
+| `Value` | Yes | — | `ValueType` | 1..* |
 
 The `Value` property is represented as a YAML sequence, each item being
 the direct representation of a `ValueType`.
@@ -1083,8 +1083,8 @@ properties:
 
 | Property | Required | Type | Cardinality |
 |---|---|---|---|
-| `Content` | No | *ContentType* | 0..1 |
-| `Attribute` | No | *AttributeType* | * |
+| `Content` | No | `ContentType` | 0..1 |
+| `Attribute` | No | `AttributeType` | * |
 
 At least one of `Content` or `Attribute` MUST be present.
 
@@ -1126,7 +1126,7 @@ definition of the type, its properties, or its multiplicities.
 
 #### 5.5.1 ExpressionType
 
-ACAL *ExpressionType* is an abstract polymorphic type.  In YACAL, it is
+ACAL `ExpressionType` is an abstract polymorphic type.  In YACAL, it is
 represented as a YAML mapping with exactly one key that identifies the
 expression subtype, following the generic wrapper-key rules in
 [Section 5.4.6](#546-polymorphism-and-wrapper-key-discrimination):
@@ -1138,23 +1138,23 @@ usable concrete subtype in the expression position.
 
 | Wrapper Key | ACAL Type |
 |---|---|
-| `Apply` | *ApplyType* |
-| `AttributeDesignator` | *AttributeDesignatorType* |
-| `EntityAttributeDesignator` | *EntityAttributeDesignatorType* |
-| `AttributeSelector` | *AttributeSelectorType* (optional) |
-| `EntityAttributeSelector` | *EntityAttributeSelectorType* (optional) |
-| `VariableReference` | *VariableReferenceType* |
-| `SharedVariableReference` | *SharedVariableReferenceType* |
-| `Function` | *FunctionType* |
-| `Value` | *ValueType* |
-| `ForAny` | *ForAnyType* (optional) |
-| `ForAll` | *ForAllType* (optional) |
-| `Select` | *SelectType* (optional) |
-| `Map` | *MapType* (optional) |
+| `Apply` | `ApplyType` |
+| `AttributeDesignator` | `AttributeDesignatorType` |
+| `EntityAttributeDesignator` | `EntityAttributeDesignatorType` |
+| `AttributeSelector` | `AttributeSelectorType` (optional) |
+| `EntityAttributeSelector` | `EntityAttributeSelectorType` (optional) |
+| `VariableReference` | `VariableReferenceType` |
+| `SharedVariableReference` | `SharedVariableReferenceType` |
+| `Function` | `FunctionType` |
+| `Value` | `ValueType` |
+| `ForAny` | `ForAnyType` (optional) |
+| `ForAll` | `ForAllType` (optional) |
+| `Select` | `SelectType` (optional) |
+| `Map` | `MapType` (optional) |
 
 #### 5.5.2 ApplyType
 
-*ApplyType* represents a function application with arguments:
+`ApplyType` represents a function application with arguments:
 
 ```yaml
 Apply:
@@ -1171,13 +1171,13 @@ Properties:
 
 | Property | Required | Type | Notes |
 |---|---|---|---|
-| `FunctionId` | Yes | *IdentifierType* | Function identifier |
+| `FunctionId` | Yes | `IdentifierType` | Function identifier |
 | `Description` | No | String | Free-form description |
-| `Expression` | No | Sequence of *ExpressionType* | Arguments in order; empty if function takes no arguments. When the function signature fixes an argument `DataType`, a statically typed child expression such as `Value` SHOULD omit `DataType`; if present, it MUST agree with the function signature |
+| `Expression` | No | Sequence of `ExpressionType` | Arguments in order; empty if function takes no arguments. When the function signature fixes an argument `DataType`, a statically typed child expression such as `Value` SHOULD omit `DataType`; if present, it MUST agree with the function signature |
 
 #### 5.5.3 AttributeDesignatorType
 
-*AttributeDesignatorType* retrieves attribute values from the request
+`AttributeDesignatorType` retrieves attribute values from the request
 context:
 
 ```yaml
@@ -1191,9 +1191,9 @@ Properties:
 
 | Property | Required | Default | Type | Notes |
 |---|---|---|---|---|
-| `Category` | Yes | — | *IdentifierType* | Attribute category |
-| `AttributeId` | Yes | — | *IdentifierType* | Attribute identifier |
-| `DataType` | No | string | *IdentifierType* | Data type of returned values; subject to inference rules |
+| `Category` | Yes | — | `IdentifierType` | Attribute category |
+| `AttributeId` | Yes | — | `IdentifierType` | Attribute identifier |
+| `DataType` | No | string | `IdentifierType` | Data type of returned values; subject to inference rules |
 | `Issuer` | No | — | Name | Attribute issuer |
 | `MustBePresent` | No | `false` | Boolean | If `true`, missing attribute returns Indeterminate |
 
@@ -1208,8 +1208,8 @@ EntityAttributeDesignator:
       VariableId: current_entity
 ```
 
-Properties are inherited from *NamedAttributeDesignatorType* with the
-addition of `Expression` (required, *ExpressionType*) instead of
+Properties are inherited from `NamedAttributeDesignatorType` with the
+addition of `Expression` (required, `ExpressionType`) instead of
 `Category`.  The inherited properties appear in the same mapping; YACAL
 does not introduce a separate `NamedAttributeDesignator` wrapper layer.
 
@@ -1237,7 +1237,7 @@ parameter fixes the `DataType`, a nested `ValueType` SHOULD omit
 
 #### 5.5.7 FunctionType
 
-*FunctionType* appears as an argument to higher-order functions:
+`FunctionType` appears as an argument to higher-order functions:
 
 ```yaml
 Function:
@@ -1246,7 +1246,7 @@ Function:
 
 #### 5.5.8 QuantifiedExpressionTypes
 
-*ForAny*, *ForAll*, *Select*, and *Map* share a common structure:
+`ForAny`, `ForAll`, `Select`, and `Map` share a common structure:
 
 ```yaml
 ForAny:
@@ -1269,20 +1269,20 @@ Properties:
 
 | Property | Required | Type | Notes |
 |---|---|---|---|
-| `VariableId` | Yes | *LocalIdentifierType* | Quantified variable identifier |
-| `Domain` | Yes | *NonLiteralExpressionType* | Expression evaluating to a bag |
-| `Iterant` | Yes | *ExpressionType* | Expression evaluated per domain value |
+| `VariableId` | Yes | `LocalIdentifierType` | Quantified variable identifier |
+| `Domain` | Yes | `NonLiteralExpressionType` | Expression evaluating to a bag |
+| `Iterant` | Yes | `ExpressionType` | Expression evaluated per domain value |
 
 These are concrete subtypes of the abstract
-*QuantifiedExpressionType*.  In polymorphic expression position, the
+`QuantifiedExpressionType`.  In polymorphic expression position, the
 wrapper key identifies which quantified subtype is in use; the common
 inherited properties then appear directly within that subtype's mapping.
 
 #### 5.5.9 BooleanExpressionType
 
-*BooleanExpressionType* (used by `Target` and `Condition`) is
+`BooleanExpressionType` (used by `Target` and `Condition`) is
 represented directly as the contained expression, not as a separate
-wrapper.  The expression MUST NOT be a literal *ValueType*:
+wrapper.  The expression MUST NOT be a literal `ValueType`:
 
 ```yaml
 Condition:
@@ -1308,9 +1308,9 @@ base-selector properties plus the `Category` property:
 | Property | Required | Default | Type | Notes |
 |---|---|---|---|---|
 | `Path` | Yes | — | String | Profile-defined path expression syntax |
-| `DataType` | No | string or inferred | *IdentifierType* | Expected data type of selected values |
+| `DataType` | No | string or inferred | `IdentifierType` | Expected data type of selected values |
 | `MustBePresent` | No | `false` | Boolean | Missing or empty selection handling |
-| `Category` | Yes | — | *IdentifierType* | Request entity category whose `Content` is queried |
+| `Category` | Yes | — | `IdentifierType` | Request entity category whose `Content` is queried |
 
 Illustrative form:
 
@@ -1337,9 +1337,9 @@ required `Expression` property:
 | Property | Required | Default | Type | Notes |
 |---|---|---|---|---|
 | `Path` | Yes | — | String | Profile-defined path expression syntax |
-| `DataType` | No | string or inferred | *IdentifierType* | Expected data type of selected values |
+| `DataType` | No | string or inferred | `IdentifierType` | Expected data type of selected values |
 | `MustBePresent` | No | `false` | Boolean | Missing or empty selection handling |
-| `Expression` | Yes | — | *ExpressionType* | Evaluates to an entity value or category URI |
+| `Expression` | Yes | — | `ExpressionType` | Evaluates to an entity value or category URI |
 
 Illustrative form:
 
@@ -1407,20 +1407,20 @@ Properties:
 | Property | Required | Default | Type | Cardinality |
 |---|---|---|---|---|
 | `PolicyId` | Yes | — | URI | 1 |
-| `Version` | Yes | — | *VersionType* | 1 |
-| `CombiningAlgId` | Yes | — | *IdentifierType* | 1 |
+| `Version` | Yes | — | `VersionType` | 1 |
+| `CombiningAlgId` | Yes | — | `IdentifierType` | 1 |
 | `Description` | No | — | String | 0..1 |
 | `ShortIdSetReference` | No | — | URI | * |
 | `MaxDelegationDepth` | No | — | NonNegativeInteger | 0..1 |
-| `PolicyIssuer` | No | — | *EntityType* | 0..1 |
-| `PolicyDefaults` | No | — | *PolicyDefaultsType* | * |
-| `Parameter` | No | — | *ParameterType* | * |
-| `VariableDefinition` | No | — | *VariableDefinitionType* | * |
-| `Target` | No | *(applies to all)* | *BooleanExpressionType* | 0..1 |
-| `NoticeExpression` | No | — | *NoticeExpressionType* | * |
-| `CombinerInput` | No | — | *CombinerInputType* | * |
+| `PolicyIssuer` | No | — | `EntityType` | 0..1 |
+| `PolicyDefaults` | No | — | `PolicyDefaultsType` | * |
+| `Parameter` | No | — | `ParameterType` | * |
+| `VariableDefinition` | No | — | `VariableDefinitionType` | * |
+| `Target` | No | *(applies to all)* | `BooleanExpressionType` | 0..1 |
+| `NoticeExpression` | No | — | `NoticeExpressionType` | * |
+| `CombinerInput` | No | — | `CombinerInputType` | * |
 
-`PolicyType` is also a concrete subtype of *CombinerInputType*.  When
+`PolicyType` is also a concrete subtype of `CombinerInputType`.  When
 it appears in a direct position such as the document root or the
 `Bundle.Policy` property, it uses its direct mapping.  When it appears
 within the polymorphic `CombinerInput` property, it is identified by
@@ -1464,16 +1464,16 @@ Properties:
 
 | Property | Required | Default | Type | Cardinality |
 |---|---|---|---|---|
-| `Id` | Yes | — | *LocalIdentifierType* | 1 |
-| `Effect` | Yes | — | *EffectType* | 1 |
+| `Id` | Yes | — | `LocalIdentifierType` | 1 |
+| `Effect` | Yes | — | `EffectType` | 1 |
 | `Description` | No | — | String | 0..1 |
-| `VariableDefinition` | No | — | *VariableDefinitionType* | * |
-| `Condition` | No | *(always satisfied)* | *BooleanExpressionType* | 0..1 |
-| `NoticeExpression` | No | — | *NoticeExpressionType* | * |
+| `VariableDefinition` | No | — | `VariableDefinitionType` | * |
+| `Condition` | No | *(always satisfied)* | `BooleanExpressionType` | 0..1 |
+| `NoticeExpression` | No | — | `NoticeExpressionType` | * |
 
 #### 5.6.3 CombinerInputType
 
-*CombinerInputType* is a polymorphic container.  Each element in the
+`CombinerInputType` is a polymorphic container.  Each element in the
 `CombinerInput` sequence is a YAML mapping with exactly one key
 identifying the input type, following the generic rules in
 [Section 5.4.6](#546-polymorphism-and-wrapper-key-discrimination):
@@ -1592,7 +1592,7 @@ It is represented as a YAML mapping with:
 | Property | Required | Type | Notes |
 |---|---|---|---|
 | `Id` | Yes | URI | Identifier of the referenced policy |
-| `Version` | No | *VersionMatchType* | Matching expression for acceptable versions |
+| `Version` | No | `VersionMatchType` | Matching expression for acceptable versions |
 
 Example:
 
@@ -1706,10 +1706,10 @@ Properties:
 
 | Property | Required | Type | Cardinality |
 |---|---|---|---|
-| `ShortIdSet` | No | *ShortIdSetType* | * |
-| `SharedVariableDefinition` | No | *SharedVariableDefinitionType* | * |
-| `Policy` | No | *PolicyType* | * |
-| `PolicyReference` | No | *PolicyReferenceType* | 0..1 |
+| `ShortIdSet` | No | `ShortIdSetType` | * |
+| `SharedVariableDefinition` | No | `SharedVariableDefinitionType` | * |
+| `Policy` | No | `PolicyType` | * |
+| `PolicyReference` | No | `PolicyReferenceType` | 0..1 |
 
 If `PolicyReference` is present, the `Policy` sequence MUST NOT be
 empty.
@@ -1745,11 +1745,11 @@ Properties:
 | Property | Required | Type | Cardinality |
 |---|---|---|---|
 | `Id` | Yes | URI | 1 |
-| `Version` | Yes | *VersionType* | 1 |
+| `Version` | Yes | `VersionType` | 1 |
 | `Description` | No | String | 0..1 |
 | `ShortIdSetReference` | No | URI | * |
-| `Parameter` | No | *ParameterType* | * |
-| `Expression` | Yes | *ExpressionType* | 1 |
+| `Parameter` | No | `ParameterType` | * |
+| `Expression` | Yes | `ExpressionType` | 1 |
 
 `SharedVariableDefinitionType` objects exist at bundle scope rather than
 policy scope.  Their `Expression` MAY contain
@@ -1798,9 +1798,9 @@ Properties:
 | `ReturnPolicyIdList` | No | `false` | Boolean | 0..1 |
 | `CombinedDecision` | No | `false` | Boolean | 0..1 |
 | `ShortIdSetReference` | No | — | URI | * |
-| `RequestDefaults` | No | — | *RequestDefaultsType* | * |
-| `RequestEntity` | Yes | — | *RequestEntityType* | 1..* |
-| `MultiRequests` | No | — | *MultiRequestsType* | 0..1 |
+| `RequestDefaults` | No | — | `RequestDefaultsType` | * |
+| `RequestEntity` | Yes | — | `RequestEntityType` | 1..* |
+| `MultiRequests` | No | — | `MultiRequestsType` | 0..1 |
 
 `RequestDefaultsType` is an abstract extensible type.  Each item in the
 `RequestDefaults` sequence therefore uses the concrete subtype defined
@@ -1833,10 +1833,10 @@ Properties:
 
 | Property | Required | Type | Cardinality |
 |---|---|---|---|
-| `Category` | Yes | *IdentifierType* | 1 |
-| `Id` | No | *LocalIdentifierType* | 0..1 |
-| `Content` | No | *ContentType* | 0..1 |
-| `RequestAttribute` | No | *RequestAttributeType* | * |
+| `Category` | Yes | `IdentifierType` | 1 |
+| `Id` | No | `LocalIdentifierType` | 0..1 |
+| `Content` | No | `ContentType` | 0..1 |
+| `RequestAttribute` | No | `RequestAttributeType` | * |
 
 `Content`, if present, follows the generic mapping rules in
 [Section 5.4.11](#5411-contenttype-mapping).
@@ -1864,10 +1864,10 @@ Properties:
 
 | Property | Required | Default | Type | Cardinality |
 |---|---|---|---|---|
-| `AttributeId` | Yes | — | *IdentifierType* | 1 |
+| `AttributeId` | Yes | — | `IdentifierType` | 1 |
 | `Issuer` | No | — | Name | 0..1 |
-| `DataType` | No | string | *IdentifierType* | 0..1 |
-| `Value` | Yes | — | *ValueType* | 1..* |
+| `DataType` | No | string | `IdentifierType` | 0..1 |
+| `Value` | Yes | — | `ValueType` | 1..* |
 | `IncludeInResult` | No | `false` | Boolean | 0..1 |
 
 `RequestAttributeType` extends `AttributeType` with
@@ -1895,7 +1895,7 @@ Properties:
 
 | Property | Required | Type | Cardinality |
 |---|---|---|---|
-| `RequestReference` | Yes | *RequestReferenceType* | 1..* |
+| `RequestReference` | Yes | `RequestReferenceType` | 1..* |
 
 Each `RequestReference` value identifies one request instance by naming
 the `RequestEntity` values from the enclosing `Request`.
@@ -1922,7 +1922,7 @@ Properties:
 
 | Property | Required | Type | Cardinality |
 |---|---|---|---|
-| `RequestEntityReference` | Yes | *RequestEntityReferenceType* | 1..* |
+| `RequestEntityReference` | Yes | `RequestEntityReferenceType` | 1..* |
 
 Each referenced `Id` MUST identify a `RequestEntityType` object in the
 enclosing `Request`, and the `Id` values in a single
@@ -1940,7 +1940,7 @@ Properties:
 
 | Property | Required | Type | Cardinality |
 |---|---|---|---|
-| `Id` | Yes | *LocalIdentifierType* | 1 |
+| `Id` | Yes | `LocalIdentifierType` | 1 |
 
 The `Id` value references the `Id` property of a `RequestEntityType`
 object in the enclosing `Request`.
@@ -1968,7 +1968,7 @@ Properties:
 | Property | Required | Type | Cardinality |
 |---|---|---|---|
 | `ShortIdSetReference` | No | URI | * |
-| `Result` | Yes | *ResultType* | 1..* |
+| `Result` | Yes | `ResultType` | 1..* |
 
 YACAL permits multiple `Result` values in a `Response`, which is
 especially relevant when the optional multi-request feature is used.
@@ -1979,11 +1979,11 @@ Properties:
 
 | Property | Required | Type | Cardinality |
 |---|---|---|---|
-| `Decision` | Yes | *DecisionType* | 1 |
-| `Status` | No | *StatusType* | 0..1 |
-| `Notice` | No | *NoticeType* | * |
-| `ResultEntity` | No | *ResultEntityType* | * |
-| `ApplicablePolicyReference` | No | *ExactMatchIdReferenceType* | * |
+| `Decision` | Yes | `DecisionType` | 1 |
+| `Status` | No | `StatusType` | 0..1 |
+| `Notice` | No | `NoticeType` | * |
+| `ResultEntity` | No | `ResultEntityType` | * |
+| `ApplicablePolicyReference` | No | `ExactMatchIdReferenceType` | * |
 
 If the originating `Request.ReturnPolicyIdList` value is `true`, a
 processor that supports this feature SHOULD populate
@@ -2006,9 +2006,9 @@ Properties:
 
 | Property | Required | Type | Cardinality |
 |---|---|---|---|
-| `Category` | Yes | *IdentifierType* | 1 |
-| `Id` | No | *LocalIdentifierType* | 0..1 |
-| `Attribute` | Yes | *AttributeType* | 1..* |
+| `Category` | Yes | `IdentifierType` | 1 |
+| `Id` | No | `LocalIdentifierType` | 0..1 |
+| `Attribute` | Yes | `AttributeType` | 1..* |
 
 `ResultEntityType` reflects request attributes whose
 `RequestAttribute.IncludeInResult` property was `true`.
@@ -2033,7 +2033,7 @@ Properties:
 | Property | Required | Type | Cardinality |
 |---|---|---|---|
 | `Id` | Yes | URI | 1 |
-| `Version` | Yes | *VersionType* | 1 |
+| `Version` | Yes | `VersionType` | 1 |
 
 Each item identifies a specific policy version that was applicable to
 the request.  The `Id` value is a policy identifier URI and `Version`
@@ -2088,11 +2088,11 @@ Properties:
 
 | Property | Required | Default | Type | Cardinality |
 |---|---|---|---|---|
-| `Id` | Yes | — | *IdentifierType* | 1 |
+| `Id` | Yes | — | `IdentifierType` | 1 |
 | `IsObligation` | No | omitted | Boolean | 0..1 |
-| `AppliesTo` | No | Permit or Deny | *EffectType* | 0..1 |
-| `Condition` | No | satisfied | *BooleanExpressionType* | 0..1 |
-| `AttributeAssignmentExpression` | No | — | *AttributeAssignmentExpressionType* | * |
+| `AppliesTo` | No | Permit or Deny | `EffectType` | 0..1 |
+| `Condition` | No | satisfied | `BooleanExpressionType` | 0..1 |
+| `AttributeAssignmentExpression` | No | — | `AttributeAssignmentExpressionType` | * |
 
 If `AppliesTo` is omitted, the notice expression is eligible for either
 `Permit` or `Deny`.
@@ -2117,10 +2117,10 @@ Properties:
 
 | Property | Required | Type | Cardinality |
 |---|---|---|---|
-| `AttributeId` | Yes | *IdentifierType* | 1 |
-| `Category` | No | *IdentifierType* | 0..1 |
+| `AttributeId` | Yes | `IdentifierType` | 1 |
+| `Category` | No | `IdentifierType` | 0..1 |
 | `Issuer` | No | Name | 0..1 |
-| `Expression` | Yes | *ExpressionType* | 1 |
+| `Expression` | Yes | `ExpressionType` | 1 |
 
 The `Expression` is evaluated to a constant value or bag of values to
 produce the corresponding `AttributeAssignmentType` value or values in
@@ -2148,9 +2148,9 @@ Properties:
 
 | Property | Required | Default | Type | Cardinality |
 |---|---|---|---|---|
-| `Id` | Yes | — | *IdentifierType* | 1 |
+| `Id` | Yes | — | `IdentifierType` | 1 |
 | `IsObligation` | No | `false` | Boolean | 0..1 |
-| `AttributeAssignment` | No | — | *AttributeAssignmentType* | * |
+| `AttributeAssignment` | No | — | `AttributeAssignmentType` | * |
 
 `AttributeAssignment` items SHOULD be unique by the pair
 `(AttributeId, Category)`.
@@ -2170,11 +2170,11 @@ Properties:
 
 | Property | Required | Default | Type | Cardinality |
 |---|---|---|---|---|
-| `AttributeId` | Yes | — | *IdentifierType* | 1 |
-| `Category` | No | — | *IdentifierType* | 0..1 |
+| `AttributeId` | Yes | — | `IdentifierType` | 1 |
+| `Category` | No | — | `IdentifierType` | 0..1 |
 | `Issuer` | No | — | Name | 0..1 |
-| `DataType` | No | string | *IdentifierType* | 0..1 |
-| `Value` | Yes | — | *ValueType* | 1..* |
+| `DataType` | No | string | `IdentifierType` | 0..1 |
+| `Value` | Yes | — | `ValueType` | 1..* |
 
 `AttributeAssignmentType` extends `AttributeType` with the optional
 `Category` property.  If the enclosing assignment defines `DataType`,
@@ -2198,9 +2198,9 @@ Properties:
 
 | Property | Required | Type | Cardinality |
 |---|---|---|---|
-| `StatusCode` | Yes | *StatusCodeType* | 1 |
+| `StatusCode` | Yes | `StatusCodeType` | 1 |
 | `StatusMessage` | No | String | 0..1 |
-| `StatusDetail` | No | *StatusDetailType* | 0..1 |
+| `StatusDetail` | No | `StatusDetailType` | 0..1 |
 
 `StatusMessage` is a free-form human-readable string.
 
@@ -2222,8 +2222,8 @@ Properties:
 
 | Property | Required | Type | Cardinality |
 |---|---|---|---|
-| `Value` | Yes | *IdentifierType* | 1 |
-| `StatusCode` | No | *StatusCodeType* | 0..1 |
+| `Value` | Yes | `IdentifierType` | 1 |
+| `StatusCode` | No | `StatusCodeType` | 0..1 |
 
 The optional nested `StatusCode` refines the parent status code and is
 represented recursively using the same mapping rules.
@@ -2286,11 +2286,11 @@ Properties:
 
 | Property | Required | Type | Cardinality |
 |---|---|---|---|
-| `Category` | Yes | *IdentifierType* | 1 |
-| `AttributeId` | Yes | *IdentifierType* | 1 |
+| `Category` | Yes | `IdentifierType` | 1 |
+| `AttributeId` | Yes | `IdentifierType` | 1 |
 | `Issuer` | No | Name | 0..1 |
-| `DataType` | Yes | *IdentifierType* | 1 |
-| `Value` | No | *ValueType* | * |
+| `DataType` | Yes | `IdentifierType` | 1 |
+| `Value` | No | `ValueType` | * |
 
 If `Value` items are present, each nested value SHOULD omit its own
 `DataType` because the enclosing `MissingAttributeDetailType` already
@@ -2329,7 +2329,7 @@ Properties:
 |---|---|---|---|
 | `Id` | Yes | URI | 1 |
 | `ShortIdSetReference` | No | URI | * |
-| `ShortId` | No | *ShortIdType* | * |
+| `ShortId` | No | `ShortIdType` | * |
 
 The referenced short-id sets are applied recursively.  A conformant
 processor MUST reject direct or indirect cycles in
@@ -2347,7 +2347,7 @@ Properties:
 
 | Property | Required | Type | Cardinality |
 |---|---|---|---|
-| `Name` | Yes | *LocalIdentifierType* | 1 |
+| `Name` | Yes | `LocalIdentifierType` | 1 |
 | `Value` | Yes | URI | 1 |
 
 Within a single `ShortIdSetType`, `Name` values MUST be unique.
@@ -2369,7 +2369,7 @@ the containing object.
 #### 5.11.4 Usage in Policies
 
 Short identifiers, once declared, may be used anywhere an
-*IdentifierType* is expected:
+`IdentifierType` is expected:
 
 ```yaml
 Policy:
@@ -2770,7 +2770,7 @@ identifier set used by peer concrete representations.
 For readability, `acal-core-yaml-v1.0-identifiers.yaml` preserves the
 same function identifier ordering used by the peer XML and JSON
 identifier artifacts.  Because YAML permits comments, the YACAL
-serialization MAY annotate runs of function identifiers with comment
+serialization may annotate runs of function identifiers with comment
 labels that reference the ACAL Core Annex `C.3.x` subsection where
 those functions are defined.  These comments are non-normative
 presentation aids only and do not alter the underlying identifier set
