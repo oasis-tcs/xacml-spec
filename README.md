@@ -57,7 +57,8 @@ Please send questions or comments about <a href="https://www.oasis-open.org/reso
 
 ## FAQ (Frequently Asked Questions)
 
-### How to validate XACML documents with the XACML schemas (when I support XML Schema 1.1)?
+### How to validate XACML documents with the XACML schemas
+#### Case 1: your implementation supports the latest XML Schema standard 1.1
 
 Since XACML 4.0, XACML schemas exist in [XSD version 1.1](https://www.w3.org/TR/xmlschema11-1/) to provide more advanced validation and especially an equivalence for the UML constraints (OCL) defined in ACAL agnostic model, in form of XSD 1.1 assertions (`xs:assert`). One way to validate against a XSD 1.1 schema is to use [Apache Xerces2 Java XML Parser](https://xerces.apache.org/xerces2-j/), more specifically its [binary distribution](https://xerces.apache.org/mirrors.cgi#binary) called _**Xerces2 Java 2.12.2 (XML Schema 1.1)**_. 
 
@@ -72,7 +73,7 @@ In order to validate a XACML document, say `MyPolicy.xml`, run the following com
 $ java -cp "xerces-2_12_2-xml-schema-1.1/*" jaxp.SourceValidator -i MyPolicy.xml -a ./acal-core-xml-v4.0-schema.xsd -a ./acal-xpath-xml-v4.0-schema.xsd -a ./acal-jsonpath-xml-v4.0-schema.xsd -f -fx -xsd11
 ```
 
-### If the implementation does not support XML Schema 1.1, how to validate XACML documents with the XACML schemas (using only XML Schema 1.0 and Schematron)?
+#### Case 2: your implementation supports only XML Schema 1.0
 
 As an alternative to the XSD 1.1 core schema (with XSD 1.1 assertions) previously mentioned, implementers that only support XSD 1.0 may use an XSD 1.0 version of the core schema - obtained by filtering out all the schema elements with attribute `vc:minVersion="1.1"` according to the [XML Schema Versioning standard](https://www.w3.org/2007/XMLSchema-versioning/) (e.g. using a [XSLT](https://www.w3.org/TR/xslt20/) stylesheet) - in combination with the core [Schematron](https://www.iso.org/standard/85625.html) [schema](acal-core-xml-v4.0-schematron.sch), which provides an equivalent for XSD 1.1 assertions.
 
@@ -172,7 +173,15 @@ We provide two concrete examples of combining schemas on this Github repository 
 
 ### How to convert a JACAL document to XACML 4.0?
 
-The mapping rules are the following:
-For each JSON property in the JACAL document, 
-1. If and only if the property is defined in the JSON schema as single-valued and its type is a simple/primitive type **other than** the *unrestricted* String type, then map to an XML attribute with same name and value as the JSON property. *Unrestricted  String* means it is defined as `"type": "string"` only, without any further restriction, e.g. no `"format"` or `"pattern"` assertion in particular.
-2. Else map to an XML element in the XACML 4.0 namespace with the same name as the JSON property and the element's text set to the property's value . (In JACAL core schema, only the `Description` and `StatusMessage` properties are single-valued unrestricted Strings.)
+The XACML TC will provide an example of JACAL-to-XACML conversion tool as a reference, on this repository. 
+In the meantime, you may apply the following mapping rules:
+
+*For each JSON property *P* with value *V* in the JACAL document,*
+1. If and only if *P* is defined in the JACAL (JSON) schema as single-valued (not a JSON array), then
+   1. If *P*'s type is a primitive type **other than** the *unrestricted* `string` type, map to an XML attribute `P="escaped_V"` where *escaped_V* is *V* possibly modified after escaping XML special characters. (*Unrestricted  String* means it is defined as `"type": "string"` only, without any further restriction, e.g. no `"format"` or `"pattern"` assertion in particular.)
+   1. Else if *P*'s type is simply (unrestricted) `string`, map to an XML element `<P>escaped_V</P>` defined in the XACML 4.0 namespace. (In JACAL core schema, only the `Description` and `StatusMessage` properties are single-valued unrestricted Strings.)
+   1. Else if *P*'s type is `object` (JSON object), map to the XML element `<P>` and, for each sub-property *P<sub>n</sub>* of the object, re-apply these same mapping rules (recursively) to *P<sub>n</sub>* and add the result XML attribute/element to `<P>` as a child node. The order of child elements must match the order defined in the XACML schema.
+2. Else (*P* is a JSON array) for each JSON value *V<sub>n</sub>* (n=0, 1,...) of *P*, create an XML element `<P>` with the following XML attributes and/or child nodes:
+   1. If *V<sub>n</sub>* is primitive, the only child node is a text node whose content is *V<sub>n</sub>* possibly modified after applying XML character escaping rules. No XML attribute. 
+   1. Else if *V<sub>n</sub>* is a JSON object, the attributes and child elements are the results of re-applying the full mapping rules to each property *P<sub>n</sub>* of this object. The order of child elements must match the order defined in the XACML schema for the corresponding `<P>` element.
+   1. Else (*V<sub>n</sub>* is a JSON array) reject as invalid (JSON arrays of arrays are not allowed). 
