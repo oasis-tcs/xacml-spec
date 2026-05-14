@@ -505,33 +505,39 @@ If a complex ACAL type `FooType` is not in the previous cases (section 5.2.1, 5.
 
 1. If `FooType` is abstract (italicized title in the UML diagram), then:
    * 1.1. If `FooType` is empty (no class inheritance, no property), then:
-     - 1.1.1. If and only if `FooType` is used by more than one property in ACAL model (e.g. `ExpressionType`), then map it to the following XSD definition:
+     - 1.1.1. If and only if `FooType` is used by more than one property in ACAL model (e.g. `ArgumentType`), then map it to the following XSD definition:
        ```xml 
+       <xs:element name="Foo" type="FooType" abstract="true" />
        <xs:complexType name="FooType" abstract="true"/>
        ```
      - 1.1.2. Else (it is single-used) skip it as instructed in section 5.2.2.
   
    * 1.2. Else (`FooType` is not empty, i.e. inherits a type and/or has at least one property):
      - 1.2.1. If  `FooType` inherits from a Datatype `BarType` (Generalization relationship), then:
-       + 1.2.1.1. If `BarType` is a single-use empty type as defined in section 5.2.2, `BarType` is not mapped to any XSD type (mapping is done only at the property level), therefore `FooType` (e.g. `PolicyType`) SHALL be mapped to the following XSD definition (not inheriting from `BarType`):
+       + 1.2.1.1. If `BarType` is a single-use empty type as defined in section 5.2.2, `BarType` is not mapped to any XSD type (mapping is done only at the property level), therefore `FooType` SHALL be mapped to the following XSD definition (not inheriting from `BarType`):
   
           ```xml
+          <xs:element name="Foo" type="FooType" abstract="true" />
           <xs:complexType name="FooType" abstract="true">
             ...property mapping rules (5.2.5) apply...
           </xs:complexType>
           ```
 
-       + 1.2.1.2. Else (`BarType` is not a single-use empty type, therefore is mapped to a dedicated XML type) if `FooType` has no property (e.g. `ForAnyType`), map it to the following XSD element definition (no need for an XSD type):
+       + 1.2.1.2. Else (`BarType` is not a single-use empty type, therefore mapped to a dedicated XML type and element) if `FooType` has no property (e.g. `ExpressionType`), map it to the following XSD element definition:
          
          ```xml
-         <xs:element name="Foo" type="BarType" substitutionGroup="Super" abstract="true"/>
+         <xs:element name="Foo" type="FooType" substitutionGroup="Bar" abstract="true"/>
+         <xs:complexType name="FooType" abstract="true">
+              <xs:complexContent>
+                <xs:extension base="BarType" />
+              </xs:complexContent>
+         </xs:complexType>
          ```
-         
-         where `Super` is the name of the `SuperType` element and `SuperType` is the closest datatype to `BarType` in `BarType`'s class hierachy (including `BarType` itself) that is used as at least one property's datatype in ACAL model.
 
 	    + 1.2.1.3. Else (`FooType` has at least one property):
   
             ```xml
+            <xs:element name="Foo" type="FooType" substitutionGroup="Bar" abstract="true"/>
             <xs:complexType name="FooType" abstract="true">
               <xs:complexContent>
                 <xs:extension base="BarType">
@@ -846,6 +852,7 @@ The implementation MUST support those schema elements in the XACML core namespac
 |:------------------------------|:----|
 | Apply                         | M   |
 | ApplicablePolicyReference     | O   |
+| Argument                      | M   |
 | Attribute                     | M   |
 | AttributeAssignment           | M   |
 | AttributeAssignmentExpression | M   |
@@ -865,6 +872,7 @@ The implementation MUST support those schema elements in the XACML core namespac
 | Map                           | O   |
 | MissingAttributeDetail        | M   |
 | MultiRequests                 | O   |
+| NamedArgument                 | O   |
 | Notice                        | M   |
 | NoticeExpression              | M   |
 | Policy                        | M   |

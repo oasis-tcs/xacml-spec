@@ -265,6 +265,7 @@ Copyright © OASIS Open 2026. All Rights Reserved.  For license and copyright in
   - [7.45 ResultEntityType](#745-resultentitytype)
   - [7.46 EntityType](#746-entitytype)
   - [7.47 BundleType](#747-bundletype)
+  - [7.48 ArgumentType and NamedArgumentType](#748-argumenttype-and-namedargumenttype)
 - [8 Functional Requirements](#8-functional-requirements)
   - [8.1 Unicode Issues](#81-unicode-issues)
     - [8.1.1 Normalization](#811-normalization)
@@ -1287,7 +1288,7 @@ The following XACML policy, respectively in XML, YAML and JSON, contains a rule 
 [15]         Condition:
 [16]           Apply:
 [17]             FunctionId: any-of
-[18]             Expression:
+[18]             Argument:
 [19]               - Function:
 [20]                   Id: rfc822Name-match
 [23]               - AttributeDesignator:
@@ -1314,7 +1315,7 @@ The following XACML policy, respectively in XML, YAML and JSON, contains a rule 
 [15]       "Condition":{
 [16]         "Apply":{
 [17]           "FunctionId":"any-of",
-[18]           "Expression":[{
+[18]           "Argument":[{
 [19]             "Function":{
 [20]               "Id":"rfc822Name-match"
 [21]             }
@@ -1895,20 +1896,20 @@ Rule 1 illustrates a policy with a simple rule containing a condition. It also i
 [08]     - "urn:oasis:names:tc:acal:1.0:example:identifiers"
 [09]   VariableDefinition:
 [10]     - VariableId: patient_number_match
-[11]       Expression:
+[11]       Argument:
 [12]         Apply:
 [13]           FunctionId: string-equal
-[14]           Expression:
+[14]           Argument:
 [15]             - Apply:
 [16]                 FunctionId: string-one-and-only
-[17]                 Expression:
+[17]                 Argument:
 [18]                   - AttributeDesignator:
 [19]                       Category: access-subject
 [20]                       AttributeId: patient-number
 [21]                       DataType: string
 [26]             - Apply:
 [27]                 FunctionId: string-one-and-only
-[28]                 Expression:
+[28]                 Argument:
 [29]                   - AttributeDesignator:
 [30]                       Category: resource
 [31]                       AttributeId: patient-number
@@ -1916,7 +1917,7 @@ Rule 1 illustrates a policy with a simple rule containing a condition. It also i
 [40]   Target:
 [41]     Apply:
 [42]       FunctionId: anyURI-is-in
-[43]       Expression:
+[43]       Argument:
 [44]         - Value:
 [45]             DataType: anyURI
 [46]             Value: "http://www.med.example.com/springfield-hospital"
@@ -1932,10 +1933,10 @@ Rule 1 illustrates a policy with a simple rule containing a condition. It also i
 [62]         Condition:
 [63]           Apply:
 [64]             FunctionId: and
-[65]             Expression:
+[65]             Argument:
 [66]               - Apply:
 [67]                   FunctionId: any-of
-[68]                   Expression:
+[68]                   Argument:
 [69]                     - Function:
 [70]                         Id: string-equal
 [73]                     - Value:
@@ -1960,10 +1961,10 @@ Rule 1 illustrates a policy with a simple rule containing a condition. It also i
 [11]     "Expression":{
 [12]       "Apply":{
 [13]         "FunctionId":"string-equal",
-[14]         "Expression":[{
+[14]         "Argument":[{
 [15]           "Apply":{
 [16]             "FunctionId":"string-one-and-only",
-[17]             "Expression":[{
+[17]             "Argument":[{
 [18]               "AttributeDesignator":{
 [19]                 "Category":"access-subject",
 [20]                 "AttributeId":"patient-number",
@@ -1974,7 +1975,7 @@ Rule 1 illustrates a policy with a simple rule containing a condition. It also i
 [25]         },{
 [26]           "Apply":{
 [27]             "FunctionId":"string-one-and-only",
-[28]             "Expression":[{
+[28]             "Argument":[{
 [29]               "AttributeDesignator":{
 [30]                 "Category":"resource",
 [31]                 "AttributeId":"patient-number",
@@ -1989,7 +1990,7 @@ Rule 1 illustrates a policy with a simple rule containing a condition. It also i
 [40]   "Target":{
 [41]     "Apply":{
 [42]       "FunctionId":"anyURI-is-in",
-[43]       "Expression":[{
+[43]       "Argument":[{
 [44]         "Value":{
 [45]           "DataType":"anyURI",
 [46]           "Value":"http://www.med.example.com/springfield-hospital"
@@ -2011,10 +2012,10 @@ Rule 1 illustrates a policy with a simple rule containing a condition. It also i
 [62]       "Condition":{
 [63]         "Apply":{
 [64]           "FunctionId":"and",
-[65]           "Expression":[{
+[65]           "Argument":[{
 [66]             "Apply":{
 [67]               "FunctionId":"any-of",
-[68]               "Expression":[{
+[68]               "Argument":[{
 [69]                 "Function":{
 [70]                   "Id":"string-equal"
 [71]                 }
@@ -2179,20 +2180,20 @@ Rule 2 illustrates the use of a mathematical function, i.e., `urn:oasis:names:tc
 [011]       Expression:
 [012]         Apply:
 [013]           FunctionId: date-less-than-or-equal
-[014]           Expression:
+[014]           Argument:
 [015]             - Apply:
 [016]                 FunctionId: date-one-and-only
-[017]                 Expression:
+[017]                 Argument:
 [018]                   - AttributeDesignator:
 [019]                       Category: environment
 [020]                       AttributeId: current-date
 [021]                       DataType: date
 [026]             - Apply:
 [027]                 FunctionId: date-add-yearMonthDuration
-[028]                 Expression:
+[028]                 Argument:
 [029]                   - Apply:
 [030]                       FunctionId: date-one-and-only
-[031]                       Expression:
+[031]                       Argument:
 [032]                         - AttributeDesignator:
 [033]                             Category: resource
 [034]                             AttributeId: patient-date-of-birth
@@ -2203,7 +2204,7 @@ Rule 2 illustrates the use of a mathematical function, i.e., `urn:oasis:names:tc
 [050]   Target:
 [051]     Apply:
 [052]       FunctionId: anyURI-is-in
-[053]       Expression:
+[053]       Argument:
 [054]         - Value:
 [055]             DataType: anyURI
 [056]             Value: "http://www.med.example.com/springfield-hospital"
@@ -2219,10 +2220,10 @@ Rule 2 illustrates the use of a mathematical function, i.e., `urn:oasis:names:tc
 [072]         Condition:
 [073]           Apply:
 [074]             FunctionId: and
-[075]             Expression:
+[075]             Argument:
 [076]               - Apply:
 [077]                   FunctionId: string-is-in
-[078]                   Expression:
+[078]                   Argument:
 [079]                     - Value:
 [080]                         DataType: string
 [081]                         Value: read
@@ -2232,17 +2233,17 @@ Rule 2 illustrates the use of a mathematical function, i.e., `urn:oasis:names:tc
 [086]                         DataType: string
 [091]               - Apply:
 [092]                   FunctionId: rfc822Name-equal
-[093]                   Expression:
+[093]                   Argument:
 [094]                     - Apply:
 [095]                         FunctionId: rfc822Name-one-and-only
-[096]                         Expression:
+[096]                         Argument:
 [097]                           - AttributeDesignator:
 [098]                               Category: access-subject
 [099]                               AttributeId: subject-id
 [100]                               DataType: rfc822Name
 [105]                     - Apply:
 [106]                         FunctionId: rfc822Name-one-and-only
-[107]                         Expression:
+[107]                         Argument:
 [108]                           - AttributeDesignator:
 [109]                               Category: resource
 [110]                               AttributeId: parent-guardian-id
@@ -2262,10 +2263,10 @@ Rule 2 illustrates the use of a mathematical function, i.e., `urn:oasis:names:tc
 [011]     "Expression":{
 [012]       "Apply":{
 [013]         "FunctionId":"date-less-than-or-equal",
-[014]         "Expression":[{
+[014]         "Argument":[{
 [015]           "Apply":{
 [016]             "FunctionId":"date-one-and-only",
-[017]             "Expression":[{
+[017]             "Argument":[{
 [018]               "AttributeDesignator":{
 [019]                 "Category":"environment",
 [020]                 "AttributeId":"current-date",
@@ -2276,10 +2277,10 @@ Rule 2 illustrates the use of a mathematical function, i.e., `urn:oasis:names:tc
 [025]         },{
 [026]           "Apply":{
 [027]             "FunctionId":"date-add-yearMonthDuration",
-[028]             "Expression":[{
+[028]             "Argument":[{
 [029]               "Apply":{
 [030]                 "FunctionId":"date-one-and-only",
-[031]                 "Expression":[{
+[031]                 "Argument":[{
 [032]                   "AttributeDesignator":{
 [033]                     "Category":"resource",
 [034]                     "AttributeId":"patient-date-of-birth",
@@ -2301,7 +2302,7 @@ Rule 2 illustrates the use of a mathematical function, i.e., `urn:oasis:names:tc
 [050]   "Target":{
 [051]     "Apply":{
 [052]       "FunctionId":"anyURI-is-in",
-[053]       "Expression":[{
+[053]       "Argument":[{
 [054]         "Value":{
 [055]           "DataType":"anyURI",
 [056]           "Value":"http://www.med.example.com/springfield-hospital"
@@ -2323,10 +2324,10 @@ Rule 2 illustrates the use of a mathematical function, i.e., `urn:oasis:names:tc
 [072]       "Condition":{
 [073]         "Apply":{
 [074]           "FunctionId":"and",
-[075]           "Expression":[{
+[075]           "Argument":[{
 [076]             "Apply":{
 [077]               "FunctionId":"string-is-in",
-[078]               "Expression":[{
+[078]               "Argument":[{
 [079]                 "Value":{
 [080]                   "DataType":"string",
 [081]                   "Value":"read"
@@ -2341,10 +2342,10 @@ Rule 2 illustrates the use of a mathematical function, i.e., `urn:oasis:names:tc
 [090]           },{
 [091]             "Apply":{
 [092]               "FunctionId":"rfc822Name-equal",
-[093]               "Expression":[{
+[093]               "Argument":[{
 [094]                 "Apply":{
 [095]                   "FunctionId":"rfc822Name-one-and-only",
-[096]                   "Expression":[{
+[096]                   "Argument":[{
 [097]                     "AttributeDesignator":{
 [098]                       "Category":"access-subject",
 [099]                       "AttributeId":"subject-id",
@@ -2355,7 +2356,7 @@ Rule 2 illustrates the use of a mathematical function, i.e., `urn:oasis:names:tc
 [104]               },{
 [105]                 "Apply":{
 [106]                   "FunctionId":"rfc822Name-one-and-only",
-[107]                   "Expression":[{
+[107]                   "Argument":[{
 [108]                     "AttributeDesignator":{
 [109]                       "Category":"resource",
 [110]                       "AttributeId":"parent-guardian-id",
@@ -2507,7 +2508,7 @@ Rule 3 illustrates the use of a notice expression.
 [010]   Target:
 [011]     Apply:
 [012]       FunctionId: anyURI-is-in
-[013]       Expression:
+[013]       Argument:
 [014]         - Value:
 [015]             DataType: anyURI
 [016]             Value: "http://www.med.example.com/springfield-hospital"
@@ -2523,10 +2524,10 @@ Rule 3 illustrates the use of a notice expression.
 [032]         Condition:
 [033]           Apply:
 [034]             FunctionId: and
-[035]             Expression:
+[035]             Argument:
 [036]               - Apply:
 [037]                   FunctionId: string-is-in
-[038]                   Expression:
+[038]                   Argument:
 [039]                     - Value:
 [040]                         DataType: string
 [041]                         Value: physician
@@ -2536,7 +2537,7 @@ Rule 3 illustrates the use of a notice expression.
 [047]                         DataType: string
 [052]               - Apply:
 [053]                   FunctionId: string-is-in
-[054]                   Expression:
+[054]                   Argument:
 [055]                     - Value:
 [056]                         DataType: string
 [057]                         Value: write
@@ -2546,17 +2547,17 @@ Rule 3 illustrates the use of a notice expression.
 [063]                         DataType: string
 [068]               - Apply:
 [069]                   FunctionId: string-equal
-[070]                   Expression:
+[070]                   Argument:
 [071]                     - Apply:
 [072]                         FunctionId: string-one-and-only
-[073]                         Expression:
+[073]                         Argument:
 [074]                           - AttributeDesignator:
 [075]                               Category: access-subject
 [076]                               AttributeId: physician-id
 [077]                               DataType: string
 [082]                     - Apply:
 [083]                         FunctionId: string-one-and-only
-[084]                         Expression:
+[084]                         Argument:
 [085]                           - AttributeDesignator:
 [086]                               Category: resource
 [087]                               AttributeId: primary-care-physician
@@ -2595,7 +2596,7 @@ Rule 3 illustrates the use of a notice expression.
 [010]   "Target":{
 [011]     "Apply":{
 [012]       "FunctionId":"anyURI-is-in",
-[013]       "Expression":[{
+[013]       "Argument":[{
 [014]         "Value":{
 [015]           "DataType":"anyURI",
 [016]           "Value":"http://www.med.example.com/springfield-hospital"
@@ -2617,10 +2618,10 @@ Rule 3 illustrates the use of a notice expression.
 [032]       "Condition":{
 [033]         "Apply":{
 [034]           "FunctionId":"and",
-[035]           "Expression":[{
+[035]           "Argument":[{
 [036]             "Apply":{
 [037]               "FunctionId":"string-is-in",
-[038]               "Expression":[{
+[038]               "Argument":[{
 [039]                 "Value":{
 [040]                   "DataType":"string",
 [041]                   "Value":"physician"
@@ -2636,7 +2637,7 @@ Rule 3 illustrates the use of a notice expression.
 [051]           },{
 [052]             "Apply":{
 [053]               "FunctionId":"string-is-in",
-[054]               "Expression":[{
+[054]               "Argument":[{
 [055]                 "Value":{
 [056]                   "DataType":"string",
 [057]                   "Value":"write"
@@ -2652,10 +2653,10 @@ Rule 3 illustrates the use of a notice expression.
 [067]           },{
 [068]             "Apply":{
 [069]               "FunctionId":"string-equal",
-[070]               "Expression":[{
+[070]               "Argument":[{
 [071]                 "Apply":{
 [072]                   "FunctionId":"string-one-and-only",
-[073]                   "Expression":[{
+[073]                   "Argument":[{
 [074]                     "AttributeDesignator":{
 [075]                       "Category":"access-subject",
 [076]                       "AttributeId":"physician-id",
@@ -2666,7 +2667,7 @@ Rule 3 illustrates the use of a notice expression.
 [081]               },{
 [082]                 "Apply":{
 [083]                   "FunctionId":"string-one-and-only",
-[084]                   "Expression":[{
+[084]                   "Argument":[{
 [085]                     "AttributeDesignator":{
 [086]                       "Category":"resource",
 [087]                       "AttributeId":"primary-care-physician",
@@ -2815,10 +2816,10 @@ Rule 4 illustrates the use of the `Deny` effect value.
 [14]         Condition:
 [15]           Apply:
 [16]             FunctionId: and
-[17]             Expression:
+[17]             Argument:
 [18]               - Apply:
 [19]                   FunctionId: string-is-in
-[20]                   Expression:
+[20]                   Argument:
 [21]                     - Value:
 [22]                         DataType: string
 [23]                         Value: administrator
@@ -2828,7 +2829,7 @@ Rule 4 illustrates the use of the `Deny` effect value.
 [29]                         DataType: string
 [34]               - Apply:
 [35]                   FunctionId: anyURI-is-in
-[36]                   Expression:
+[36]                   Argument:
 [37]                     - Value:
 [38]                         DataType: anyURI
 [39]                         Value: "http://www.med.example.com/springfield-hospital"
@@ -2838,10 +2839,10 @@ Rule 4 illustrates the use of the `Deny` effect value.
 [45]                         DataType: anyURI
 [50]               - Apply:
 [51]                   FunctionId: or
-[52]                   Expression:
+[52]                   Argument:
 [53]                     - Apply:
 [54]                         FunctionId: string-is-in
-[55]                         Expression:
+[55]                         Argument:
 [56]                           - Value:
 [57]                               DataType: string
 [58]                               Value: read
@@ -2851,7 +2852,7 @@ Rule 4 illustrates the use of the `Deny` effect value.
 [64]                               DataType: string
 [69]                     - Apply:
 [70]                         FunctionId: string-is-in
-[71]                         Expression:
+[71]                         Argument:
 [72]                           - Value:
 [73]                               DataType: string
 [74]                               Value: write
@@ -2875,10 +2876,10 @@ Rule 4 illustrates the use of the `Deny` effect value.
 [14]       "Condition":{
 [15]         "Apply":{
 [16]           "FunctionId":"and",
-[17]           "Expression":[{
+[17]           "Argument":[{
 [18]             "Apply":{
 [19]               "FunctionId":"string-is-in",
-[20]               "Expression":[{
+[20]               "Argument":[{
 [21]                 "Value":{
 [22]                   "DataType":"string",
 [23]                   "Value":"administrator"
@@ -2894,7 +2895,7 @@ Rule 4 illustrates the use of the `Deny` effect value.
 [33]           },{
 [34]             "Apply":{
 [35]               "FunctionId":"anyURI-is-in",
-[36]               "Expression":[{
+[36]               "Argument":[{
 [37]                 "Value":{
 [38]                   "DataType":"anyURI",
 [39]                   "Value":"http://www.med.example.com/springfield-hospital"
@@ -2910,10 +2911,10 @@ Rule 4 illustrates the use of the `Deny` effect value.
 [49]           },{
 [50]             "Apply":{
 [51]               "FunctionId":"or",
-[52]               "Expression":[{
+[52]               "Argument":[{
 [53]                 "Apply":{
 [54]                   "FunctionId":"string-is-in",
-[55]                   "Expression":[{
+[55]                   "Argument":[{
 [56]                     "Value":{
 [57]                       "DataType":"string",
 [58]                       "Value":"read"
@@ -2929,7 +2930,7 @@ Rule 4 illustrates the use of the `Deny` effect value.
 [68]               },{
 [69]                 "Apply":{
 [70]                   "FunctionId":"string-is-in",
-[71]                   "Expression":[{
+[71]                   "Argument":[{
 [72]                     "Value":{
 [73]                       "DataType":"string",
 [74]                       "Value":"write"
@@ -3044,7 +3045,7 @@ The following policy illustrates the combined policies. Rule 1, Rule 2 and Rule 
 [15]         Target:
 [16]           Apply:
 [17]             FunctionId: anyURI-is-in
-[18]             Expression:
+[18]             Argument:
 [19]               - Value:
 [20]                   DataType: anyURI
 [21]                   Value: "http://www.med.example.com/springfield-hospital"
@@ -3084,7 +3085,7 @@ The following policy illustrates the combined policies. Rule 1, Rule 2 and Rule 
 [15]       "Target":{
 [16]         "Apply":{
 [17]           "FunctionId":"anyURI-is-in",
-[18]           "Expression":[{
+[18]           "Argument":[{
 [19]             "Value":{
 [20]               "DataType":"anyURI",
 [21]               "Value":"http://www.med.example.com/springfield-hospital"
@@ -3970,18 +3971,23 @@ hide empty members
 hide circle
 class PatternMatchIdReferenceType <<dataType>>
 class PolicyReferenceType <<dataType>> extends PatternMatchIdReferenceType {
-   + Expression: ExpressionType [*] {ordered, nonunique}
+   + Argument: ArgumentType [*] {ordered, nonunique}
 }
 @enduml
 ```
 
 The `PolicyReferenceType` object type extends the `PatternMatchIdReferenceType` object type with the following properties:
 
-`Expression` [Any Number]
+`Argument` [Any Number]
 
-: Arguments for a parameterized policy, in the same order as the `Parameter` values in the referenced policy, and each argument number *n* MUST match the definition of the `Parameter` number *n* (`DataType`, `IsBag`). The number of arguments *N* may be less than the number of declared `Parameter`s if and only if the `Parameter`s number *N* (starting at zero) and above have defined default values, in which case they are used as remaining arguments. 
+: Arguments for a parameterized policy. The sequence of argments SHALL be exclusively either one of these:
+- A sequence of *positional* arguments, i.e. `ExpressionType` objects declared in the same order as the `Parameter` values in the referenced policy; each argument number *n* MUST match the definition of the policy's `Parameter` number *n* (`DataType`, `IsBag`);
+- A sequence of *named* arguments, i.e. `NamedArgumentType` objects declared in any order, where each argument has a unique name *x* that associates it with the policy's `Parameter` named *x* and therefore its Expression must match that Parameter's definition (`DataType`, `IsBag`). 
+- 
 
-**DataType inference rule**: if an Expression has an (optional) `DataType` property (statically-typed Expression), i.e. its type is `ValueType`, `NamedAttributeDesignatorType`, `BaseAttributeSelectorType` or any subtype thereof, then the Expression's `DataType` property SHOULD be omitted in this case as it is already defined by the corresponding `Parameter`'s definition in the referenced `PolicyType` object. Else it SHALL match that `Parameter`'s `DataType`.
+The number of arguments *N* may be less than the number of declared `Parameter`s if and only if the `Parameter`s number *N* (starting at zero) and above have defined default values, in which case they are used as remaining arguments. 
+
+**DataType inference rule**: if an Argument's Expression has an (optional) `DataType` property (statically-typed Expression), i.e. its type is `ValueType`, `NamedAttributeDesignatorType`, `BaseAttributeSelectorType` or any subtype thereof, then the Expression's `DataType` property SHOULD be omitted in this case as it is already defined by the corresponding `Parameter`'s definition in the referenced `PolicyType` object. Else (if present) it SHALL match that `Parameter`'s `DataType`.
 
 ## 7.12 RuleType
 
@@ -4125,7 +4131,8 @@ UML definition (class diagram):
 @startuml
 hide empty members 
 hide circle
-abstract class ExpressionType <<dataType>>
+abstract class ArgumentType <<dataType>>
+abstract class ExpressionType <<dataType>> extends ArgumentType
 
 abstract class NonLiteralExpressionType extends ExpressionType
 class ApplyType <<dataType>> extends NonLiteralExpressionType
@@ -4222,7 +4229,7 @@ abstract class NonLiteralExpressionType <<datatype>>
 class ApplyType <<dataType>> extends NonLiteralExpressionType {
    + Description: String [0..1]
    + FunctionId: IdentifierType [1]
-   + Expression: ExpressionType [*] {ordered, nonunique}
+   + Argument: ArgumentType [*] {ordered, nonunique}
 }
 @enduml
 ```
@@ -4237,12 +4244,16 @@ An `ApplyType` object contains the following properties:
 
 : A free-form `String` description of the `ApplyType` object.
 
-`Expression` [Any Number]
+`Argument` [Any Number]
 
-: A sequence of `ExpressionType` objects, each defining an expression as an argument to the function. **DataType inference rule**: if an Expression has an (optional) `DataType` property (statically-typed Expression), i.e. its type is `ValueType`, `NamedAttributeDesignatorType`, `BaseAttributeSelectorType` or any subtype thereof, then the Expression's `DataType` property MAY be omitted in this case if the corresponding parameter's definition in the function's signature (the function identified by `FunctionId`) has a fixed DataType (which is the case for most ACAL functions). Else it SHALL match the function parameter's DataType.
+: A sequence of `ArgumentType` objects, each defining an expression as an argument to the function. The sequence of argments SHALL be exclusively either one of these:
+- A sequence of *positional* arguments, i.e. `ExpressionType` objects declared in the same order as the parameters defined in the function's signature and matching the parameter data-types;
+- If and only if the function has defined parameter names for all its parameters, it may also be a sequence of *named* arguments, i.e. `NamedArgumentType` objects declared in any order, where each argument has a unique name *x* that associates it with the function's parameter named *x* and therefore the argument's expression must match that parameter data-type.
+  *Note: although there is not a function with such defined parameter names in the current version of ACAL, there may be some specified in future versions of ACAL or in ACAL Profiles.*
 
+**DataType inference rule**: if an Argument's Expression has an (optional) `DataType` property (statically-typed Expression), i.e. its type is `ValueType`, `NamedAttributeDesignatorType`, `BaseAttributeSelectorType` or any subtype thereof, and if the corresponding parameter's definition in the function's signature (the function identified by `FunctionId`) has a fixed DataType, then the Expression's `DataType` property MAY be omitted, as it is already defined by the function's signature. (Else (if present) it SHALL be the same as the function parameter's DataType.)
 
-If one of these is a `ValueType` object and the function's signature defines explicitly the data-type of the corresponding argument, then this object does not need to (re)declare any `DataType` identifier as it is already defined accordingly. In particular, if the concrete type (`ValueType` subtype) of the value has an (optional) `DataType` identifier property (e.g. `LiteralRestrictedStringType`), then the value SHALL leave this attribute unset.
+For example, if the Argument's Expression is a `ValueType` object and the function's signature defines the data-type of the corresponding argument explicity to be *T*, then the object does not need any `DataType` identifier, it is already defined implicitly to be *T*.
 
 ## 7.16 FunctionType
 
@@ -4561,7 +4572,7 @@ abstract class NonLiteralExpressionType <<datatype>>
 class SharedVariableReferenceType <<dataType>> extends NonLiteralExpressionType {
    + Id: URI [1]
    + Version: VersionMatchType [0..1]
-   + Expression: ExpressionType [*] {ordered, nonunique}
+   + Argument: ArgumentType [*] {ordered, nonunique}
 }
 @enduml
 ```
@@ -4576,11 +4587,13 @@ The `SharedVariableReferenceType` object type contains the following properties:
 
 : Specifies a matching expression for selecting an acceptable version of the referenced shared variable. The matching operation is defined in [Section 7.12](#71235-versionmatchtype). If this property is present, then the selected version of the shared variable MUST match the expression. If the property is absent, then any version of the shared variable is acceptable. In the case that more than one version matches, then the most recent one SHOULD be used.
 
-`Expression` [Any Number]
+`Argument` [Any Number]
 
-: Arguments for a parameterized shared variable (`SharedVariableDefinitionType` object), in the same order as the `Parameter` declarations in the referenced shared variable, and each argument number *n* MUST match the definition of the `Parameter` number *n* (`DataType`, `IsBag`). The number of arguments *N* may be less than the number of declared `Parameter`s if and only if the `Parameter`s number *N* (starting at zero) and above have defined default values, in which case they are used as remaining arguments. 
+: Arguments for a parameterized shared variable (`SharedVariableDefinitionType` object). The sequence of argments SHALL be exclusively either one of these:
+- A sequence of *positional* arguments, i.e. `ExpressionType` objects declared in the same order as the `Parameter` values in the referenced shared variable definition; each argument number *n* MUST match the definition of the shared variable's `Parameter` number *n* (`DataType`, `IsBag`);
+- A sequence of *named* arguments, i.e. `NamedArgumentType` objects declared in any order, where each argument has a unique name *x* that associates it with the shared variable's `Parameter` named *x* and therefore its Expression must match that Parameter's definition (`DataType`, `IsBag`). 
 
-**DataType inference rule**: if an Expression has an (optional) `DataType` property (statically-typed Expression), i.e. its type is `ValueType`, `NamedAttributeDesignatorType`, `BaseAttributeSelectorType` or any subtype thereof, then the Expression's `DataType` property SHOULD be omitted in this case as it is already defined by the corresponding `Parameter`'s definition in the referenced `SharedVariableDefinitionType` object. Else it SHALL match that `Parameter`'s `DataType`.
+**DataType inference rule**: if an Argument's Expression has an (optional) `DataType` property (statically-typed Expression), i.e. its type is `ValueType`, `NamedAttributeDesignatorType`, `BaseAttributeSelectorType` or any subtype thereof, then the Expression's `DataType` property SHOULD be omitted in this case as it is already defined by the corresponding `Parameter`'s definition in the referenced `SharedVariableDefinitionType` object. Else (if present) it SHALL match that `Parameter`'s `DataType`.
 
 
 ## 7.25 QuantifiedExpressionType (optional)
@@ -5468,6 +5481,38 @@ A `BundleType` object contains the following properties:
 
 : If present, a `PolicyReferenceType` object that MUST reference a policy in the `Policy` property. A PDP defined by this `BundleType` object SHALL evaluate every authorization request by evaluating this policy reference (the referenced policy is the entry point of evaluation). See [Section 8.13](#813-policyreference-evaluation). If this property is absent, then the PDP returns `NotApplicable` for every authorization request. The policy reference MUST specify arguments if the referenced policy is parameterized.
 
+
+## 7.48 ArgumentType and NamedArgumentType
+
+The `ArgumentType` object class is the generic type for all kinds of argument expressions passed to function calls (`ApplyType` objects), parameterized policies (`PolicyType` objects) and shared variables (`SharedVariableDefinitionType` objects). It may be either a simple expression (`ExpressionType` object) or a *named argument* (`NamedArgumentType` object).
+
+The `NamedArgumentType` is a subtype of `ArgumentType` representing *named arguments*. A named argument associates an argument  - by its name - with a given parameter of the corresponding function, policy or shared variable, depending on the context. This is similar to the  *named parameters* feature used for function calls in well-known programming languages. In particular, *named arguments* can be declared in any order, regardless of the order of the parameters of the function, policy or shared variable.
+
+UML definition (class diagram):
+```plantuml
+@startuml
+skinparam style strictuml
+hide empty members 
+hide circle
+abstract class ArgumentType <<dataType>> 
+abstract class ExpressionType <<datatype>> extends ArgumentType
+class NamedArgumentType <<datatype>> extends ArgumentType {
+  {field} + Name: LocalIdentifierType [1]
+  {field} + Expression: ExpressionType [1]
+}
+@enduml
+```
+
+An `NamedArgumentType` object contains the following properties:
+
+`Name` [Required]
+
+: The name identifying the parameter (in the function, policy or shared variable definition) to which the argument is associated with.
+
+`Expression` [Required]
+
+: The argument value expression
+
 ---
 
 
@@ -6151,6 +6196,7 @@ The implementation MUST support the object types that are marked `M`.
 | Object Type | M/O | Properties of the Type |
 | :--- | :--- | :--- |
 | ApplyType | M | Apply |
+| ArgumentType | M | Argument |
 | AttributeAssignmentExpressionType | M | AttributeAssignmentExpression |
 | AttributeAssignmentType | M | AttributeAssignment |
 | AttributeDesignatorType | M | AttributeDesignator |
@@ -6169,6 +6215,7 @@ The implementation MUST support the object types that are marked `M`.
 | FunctionType | M | Function |
 | MissingAttributeDetailType | M | MissingAttributeDetail |
 | MultiRequestsType | O | MultiRequests |
+| NamedArgumentType | O | |
 | NamedAttributeDesignatorType | M | |
 | NoticeExpressionType | M | NoticeExpression |
 | NoticeType | M | Notice |
@@ -7498,12 +7545,12 @@ Examples in this section are presented in both the XML and JSON representations 
   ```json
   "Apply":{
     "FunctionId":"any-of",
-    "Expression":[
+    "Argument":[
       { "Function":{ "Id":"string-equal" } },
       { "Value": "Paul" },
       { "Apply":{
         "FunctionId":"string-bag",
-        "Expression":[
+        "Argument":[
           { "Value": "John" },
           { "Value": "Paul" },
           { "Value": "George" },
@@ -7541,12 +7588,12 @@ Examples in this section are presented in both the XML and JSON representations 
   ```json
   "Apply":{
     "FunctionId":"all-of",
-    "Expression":[
+    "Argument":[
       { "Function":{ "Id":"integer-greater-than" } },
       { "Value": 10 },
       { "Apply":{
         "FunctionId":"integer-bag",
-        "Expression":[
+        "Argument":[
           { "Value": 9 },
           { "Value": 3 },
           { "Value": 4 },
@@ -7587,18 +7634,18 @@ Examples in this section are presented in both the XML and JSON representations 
   ```json
   "Apply":{
     "FunctionId":"any-of-any",
-    "Expression":[
+    "Argument":[
       { "Function":{ "Id":"string-equal" } },
       { "Apply":{
         "FunctionId":"string-bag",
-        "Expression":[
+        "Argument":[
           { "Value": "Ringo" },
           { "Value": "Mary" }
         ]
       }},
       { "Apply":{
         "FunctionId":"string-bag",
-        "Expression":[
+        "Argument":[
           { "Value": "John" },
           { "Value": "Paul" },
           { "Value": "George" },
@@ -7639,18 +7686,18 @@ Examples in this section are presented in both the XML and JSON representations 
   ```json
   "Apply":{
     "FunctionId":"all-of-any",
-    "Expression":[
+    "Argument":[
       { "Function":{ "Id":"integer-greater-than" } },
       { "Apply":{
         "FunctionId":"integer-bag",
-        "Expression":[
+        "Argument":[
           { "Value": 10 },
           { "Value": 20 }
         ]
       }},
       { "Apply":{
         "FunctionId":"integer-bag",
-        "Expression":[
+        "Argument":[
           { "Value": 1 },
           { "Value": 3 },
           { "Value": 5 },
@@ -7691,18 +7738,18 @@ Examples in this section are presented in both the XML and JSON representations 
   ```json
   "Apply":{
     "FunctionId":"any-of-all",
-    "Expression":[
+    "Argument":[
       { "Function":{ "Id":"integer-greater-than" } },
       { "Apply":{
         "FunctionId":"integer-bag",
-        "Expression":[
+        "Argument":[
           { "Value": 3 },
           { "Value": 5 }
         ]
       }},
       { "Apply":{
         "FunctionId":"integer-bag",
-        "Expression":[
+        "Argument":[
           { "Value": 1 },
           { "Value": 2 },
           { "Value": 3 },
@@ -7743,18 +7790,18 @@ Examples in this section are presented in both the XML and JSON representations 
   ```json
   "Apply":{
     "FunctionId":"all-of-all",
-    "Expression":[
+    "Argument":[
       { "Function":{ "Id":"integer-greater-than" } },
       { "Apply":{
         "FunctionId":"integer-bag",
-        "Expression":[
+        "Argument":[
           { "Value":6 },
           { "Value":5 }
         ]
       }},
       { "Apply":{
         "FunctionId":"integer-bag",
-        "Expression":[
+        "Argument":[
           { "Value":1 },
           { "Value":2 },
           { "Value":3 },
@@ -7789,11 +7836,11 @@ Examples in this section are presented in both the XML and JSON representations 
   ```json
   "Apply":{
     "FunctionId":"map",
-    "Expression":[
+    "Argument":[
       { "Function":{ "Id":"string-normalize-to-lower-case" } },
       { "Apply":{
         "FunctionId":"string-bag",
-        "Expression":[
+        "Argument":[
           { "Value": "Hello" },
           { "Value": "World!" }
         ]
@@ -8746,6 +8793,10 @@ ACAL 1.0 is a successor to XACML 3.0. ACAL 1.0 differs from XACML 3.0 in the fol
   * `MustBePresent`: changed to be optional with `false` as default value.
 
 - The `xml:id` attribute ([XMLid]) for an attribute category is replaced by a generic 'Id' property so that all ACAL representation formats are on an equal footing.
+
+- `Apply` changes: `Expression` elements are now `Argument` elements which may be either positional arguments (simple `Expression` elements) or named arguments (`Expressions` associated to a function parameter if the function has defined parameter names). 
+
+- New `ArgumentType` and `NamedArgumentType` adding support for *named arguments* in `Apply` expressions as described above.
 
 - The quantified expressions (`ForAny`, `ForAll`, `Select` and `Map`) and the `entity` data type from the XACML 3.0 Entities Profile [[ENTITIES](#entities)] have been incorporated in ACAL version 1.0. The `attribute-designator` function from the profile has been reinvented as the `EntityAttributeDesignatorType` expression object type and the `attribute-selector` function from the the profile has been reinvented as the `EntityAttributeSelectorType` expression object type.
 

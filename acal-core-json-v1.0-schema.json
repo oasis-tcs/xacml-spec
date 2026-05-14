@@ -281,15 +281,15 @@
 					"type": "object",
 					"required": [],
 					"properties": {
-						"Expression": {
+						"Argument": {
 							"type": "array",
 							"minItems": 1,
 							"uniqueItems": false,
 							"items": {
-								"$ref": "#/$defs/ExpressionTypeTree",
+								"$ref": "#/$defs/ArgumentTypeTree",
 								"dependentSchemas": {
 									"Value": {
-										"$comment": "ACAL constraint (textual) on PolicyReference's Expression property (DataType already specified in the corresponding Parameter of the referenced element SHALL not be redefined)",
+										"$comment": "ACAL constraint (textual) on PolicyReference's Argument property (DataType already specified in the corresponding Parameter of the referenced element)",
 										"properties": {
 											"Value": {
 												"dependentSchemas": {
@@ -390,15 +390,15 @@
 				"Version": {
 					"$ref": "#/$defs/VersionMatchType"
 				},
-				"Expression": {
+				"Argument": {
 					"type": "array",
 					"minItems": 1,
 					"uniqueItems": false,
 					"items": {
-						"$ref": "#/$defs/ExpressionTypeTree",
+						"$ref": "#/$defs/ArgumentTypeTree",
 						"dependentSchemas": {
 							"Value": {
-								"$comment": "ACAL constraint (textual) on SharedVariableReference's Expression property (DataType already specified in the corresponding Parameter of the referenced element SHALL not be redefined)",
+								"$comment": "ACAL constraint (textual) on SharedVariableReference's Argument property (DataType already specified in the corresponding Parameter of the referenced element)",
 								"properties": {
 									"Value": {
 										"dependentSchemas": {
@@ -642,12 +642,12 @@
 				"FunctionId": {
 					"$ref": "#/$defs/IdentifierType"
 				},
-				"Expression": {
+				"Argument": {
 					"type": "array",
 					"minItems": 1,
 					"uniqueItems": false,
 					"items": {
-						"$ref": "#/$defs/ExpressionTypeTree"
+						"$ref": "#/$defs/ArgumentTypeTree"
 					}
 				}
 			},
@@ -912,6 +912,42 @@
 					"additionalProperties": false
 				}
 			]
+		},
+		"ArgumentTypeTree": {
+			"$comment": "ArgumentType's direct subtypes",
+			"anyOf": [
+				{
+					"$ref": "#/$defs/ExpressionTypeTree"
+				},
+				{
+					"type": "object",
+					"required": [
+						"NamedArgument"
+					],
+					"properties": {
+						"NamedArgument": {
+							"$ref": "#/$defs/NamedArgumentType"
+						}
+					},
+					"additionalProperties": false
+				}
+			]
+		},
+		"NamedArgumentType": {
+			"type": "object",
+			"required": [
+				"Name",
+				"Expression"
+			],
+			"properties": {
+				"Name": {
+					"$ref": "#/$defs/LocalIdentifierType"
+				},
+				"Expression": {
+					"$ref": "#/$defs/ExpressionTypeTree"
+				}
+			},
+			"additionalProperties": false
 		},
 		"ExpressionTypeTree": {
 			"$comment": "ExpressionType's direct subtypes",

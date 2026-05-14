@@ -1159,7 +1159,7 @@ usable concrete subtype in the expression position.
 ```yaml
 Apply:
   FunctionId: string-is-in
-  Expression:
+  Argument:
     - Value: view
     - AttributeDesignator:
         Category: "urn:oasis:names:tc:acal:1.0:attribute-category:action"
@@ -1173,7 +1173,7 @@ Properties:
 |---|---|---|---|
 | `FunctionId` | Yes | `IdentifierType` | Function identifier |
 | `Description` | No | String | Free-form description |
-| `Expression` | No | Sequence of `ExpressionType` | Arguments in order; empty if function takes no arguments. When the function signature fixes an argument `DataType`, a statically typed child expression such as `Value` SHOULD omit `DataType`; if present, it MUST agree with the function signature |
+| `Argument` | No | Sequence of `ArgumentType` | Arguments in order, or named arguments (`NamedArgumentType`) in any order if the function has *named parameters* (more info in the `ApplyType` section of [[ACAL-Core](#acal-core)] ); empty if function takes no arguments. When the function signature fixes an argument `DataType`, a statically typed child expression such as `Value` SHOULD omit `DataType`; if present, it MUST agree with the function signature. |
 
 #### 5.5.3 AttributeDesignatorType
 
@@ -1226,14 +1226,13 @@ VariableReference:
 SharedVariableReference:
   Id: "urn:example:yacal:shared:is-local-timezone"
   Version: "1.*"
-  Expression:
+  Argument:
     - Value: "America/Los_Angeles"
 ```
 
-Each item in `Expression` corresponds positionally to a `Parameter`
-definition in the referenced shared variable.  Where the referenced
-parameter fixes the `DataType`, a nested `ValueType` SHOULD omit
-`DataType`; if present, it MUST agree.
+Each item in `Argument` SHALL correspond  to a `Parameter`
+definition in the referenced shared variable definition, either positionally (declared in the same order) or by name using only `NamedArgument` properties. More info in the `SharedVariableReferenceType` section of [[ACAL-Core](#acal-core)].
+A nested `ValueType` SHOULD omit `DataType` as it is already fixed by the `Parameter` in the referenced shared variable; if present, it MUST agree.
 
 #### 5.5.7 FunctionType
 
@@ -1259,7 +1258,7 @@ ForAny:
   Iterant:
     Apply:
       FunctionId: string-equal
-      Expression:
+      Argument:
         - VariableReference:
             VariableId: role
         - Value: admin
@@ -1288,7 +1287,7 @@ wrapper.  The expression MUST NOT be a literal `ValueType`:
 Condition:
   Apply:
     FunctionId: string-is-in
-    Expression:
+    Argument:
       - Value: read
       - AttributeDesignator:
           Category: "urn:oasis:names:tc:acal:1.0:attribute-category:action"
@@ -1376,7 +1375,7 @@ Policy:
       Expression:
         Apply:
           FunctionId: string-is-in
-          Expression:
+          Argument:
             - Value: view
             - AttributeDesignator:
                 Category: "urn:oasis:names:tc:acal:1.0:attribute-category:action"
@@ -1389,12 +1388,12 @@ Policy:
         Condition:
           Apply:
             FunctionId: and
-            Expression:
+            Argument:
               - VariableReference:
                   VariableId: action_is_view
               - Apply:
                   FunctionId: string-is-in
-                  Expression:
+                  Argument:
                     - Value: public
                     - AttributeDesignator:
                         Category: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
@@ -1441,10 +1440,10 @@ Rule:
   Condition:
     Apply:
       FunctionId: and
-      Expression:
+      Argument:
         - Apply:
             FunctionId: string-is-in
-            Expression:
+            Argument:
               - Value: clinician
               - AttributeDesignator:
                   Category: "urn:oasis:names:tc:acal:1.0:subject-category:access-subject"
@@ -1452,7 +1451,7 @@ Rule:
                   MustBePresent: true
         - Apply:
             FunctionId: string-is-in
-            Expression:
+            Argument:
               - Value: medical-record
               - AttributeDesignator:
                   Category: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
@@ -1515,7 +1514,7 @@ VariableDefinition:
     Expression:
       Apply:
         FunctionId: string-is-in
-        Expression:
+        Argument:
           - Value: admin
           - AttributeDesignator:
               Category: "urn:oasis:names:tc:acal:1.0:subject-category:access-subject"
@@ -1549,15 +1548,14 @@ value's `DataType`.  If both are present, they MUST agree.
 PolicyReference:
   Id: "urn:example:yacal:policy:audit-logging"
   Version: "2.*"
-  Expression:
+  Argument:
     - Value: "high"
     - Value: 90
 ```
 
-Each item in `Expression` corresponds positionally to a `Parameter`
-definition in the referenced policy.  Where the referenced parameter
-fixes the `DataType`, a nested `ValueType` SHOULD omit `DataType`; if
-present, it MUST agree.
+Each item in `Argument` SHALL correspond  to a `Parameter`
+definition in the referenced policy, either positionally (declared in the same order) or by name using only `NamedArgument` properties. More info in the `PolicyReferenceType` section of [[ACAL-Core](#acal-core)].
+A nested `ValueType` SHOULD omit `DataType` as it is already fixed by the `Parameter` in the referenced policy; if present, it MUST agree.
 
 #### 5.6.7 PolicyIssuer
 
@@ -1628,6 +1626,19 @@ define:
 YACAL core itself does not assign a core wrapper key or core property
 set for `PolicyDefaultsType`.
 
+#### 5.6.10 ArgumentType and NamedArgumentType
+
+The `ArgumentType` is a generic type for `Argument` properties which represent arguments passed to function calls (`ApplyType`), parameterized policies (`PolicyType`) or shared variables (`SharedVariableDefinitionType`).
+
+Based on the corresponding definition from [[ACAL-Core](#acal-core)], an `Argument` in YACAL is either one of these:
+1. A positional argument, represented as any one of the `ExpressionType` YAML representations defined in the [ExpressionType section](#551-expressiontype);
+2. A named argument, represented as a YAML mapping with key `NamedArgument` and the following mapping as value:
+
+    | Property | Required | Default | Type | Notes |
+    |---|---|---|---|---|
+    | `Name` | Yes | — | `LocalIdentifierType` | Name of the the referenced function / policy / shared variable's `Parameter` that this argument is associated with. |
+    | `Expression` | Yes | - | `ExpressionType` | The argument's value expression; same as for a positional argument. |
+
 ------------------------------------------------------------------------
 
 ### 5.7 Bundle Representation
@@ -1653,16 +1664,16 @@ Bundle:
       Expression:
         Apply:
           FunctionId: and
-          Expression:
+          Argument:
             - Apply:
                 FunctionId: integer-greater-than-or-equal
-                Expression:
+                Argument:
                   - Apply:
                       FunctionId: time-hour-from-time
-                      Expression:
+                      Argument:
                         - Apply:
                             FunctionId: time-one-and-only
-                            Expression:
+                            Argument:
                               - AttributeDesignator:
                                   Category: "urn:oasis:names:tc:acal:1.0:attribute-category:environment"
                                   AttributeId: "urn:oasis:names:tc:acal:1.0:environment:current-time"
@@ -1670,13 +1681,13 @@ Bundle:
                   - Value: 9
             - Apply:
                 FunctionId: integer-less-than
-                Expression:
+                Argument:
                   - Apply:
                       FunctionId: time-hour-from-time
-                      Expression:
+                      Argument:
                         - Apply:
                             FunctionId: time-one-and-only
-                            Expression:
+                            Argument:
                               - AttributeDesignator:
                                   Category: "urn:oasis:names:tc:acal:1.0:attribute-category:environment"
                                   AttributeId: "urn:oasis:names:tc:acal:1.0:environment:current-time"
@@ -1731,7 +1742,7 @@ SharedVariableDefinition:
     Expression:
       Apply:
         FunctionId: string-is-in
-        Expression:
+        Argument:
           - VariableReference:
               VariableId: timezone
           - AttributeDesignator:
@@ -2385,7 +2396,7 @@ Policy:
         Condition:
           Apply:
             FunctionId: string-is-in
-            Expression:
+            Argument:
               - Value: clinician
               - AttributeDesignator:
                   Category: access-subject
@@ -2847,10 +2858,10 @@ Policy:
         Condition:
           Apply:
             FunctionId: "urn:oasis:names:tc:acal:1.0:function:and"
-            Expression:
+            Argument:
               - Apply:
                   FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-is-in"
-                  Expression:
+                  Argument:
                     - Value: view
                     - AttributeDesignator:
                         Category: "urn:oasis:names:tc:acal:1.0:attribute-category:action"
@@ -2858,7 +2869,7 @@ Policy:
                         MustBePresent: true
               - Apply:
                   FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-is-in"
-                  Expression:
+                  Argument:
                     - Value: public
                     - AttributeDesignator:
                         Category: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
@@ -2871,10 +2882,10 @@ Policy:
         Condition:
           Apply:
             FunctionId: "urn:oasis:names:tc:acal:1.0:function:and"
-            Expression:
+            Argument:
               - Apply:
                   FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-is-in"
-                  Expression:
+                  Argument:
                     - Value: view
                     - AttributeDesignator:
                         Category: "urn:oasis:names:tc:acal:1.0:attribute-category:action"
@@ -2882,7 +2893,7 @@ Policy:
                         MustBePresent: true
               - Apply:
                   FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-is-in"
-                  Expression:
+                  Argument:
                     - Value: registered
                     - AttributeDesignator:
                         Category: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
@@ -2890,10 +2901,10 @@ Policy:
                         MustBePresent: true
               - Apply:
                   FunctionId: "urn:oasis:names:tc:acal:1.0:function:or"
-                  Expression:
+                  Argument:
                     - Apply:
                         FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-is-in"
-                        Expression:
+                        Argument:
                           - Value: registered
                           - AttributeDesignator:
                               Category: "urn:oasis:names:tc:acal:1.0:subject-category:access-subject"
@@ -2901,7 +2912,7 @@ Policy:
                               MustBePresent: true
                     - Apply:
                         FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-is-in"
-                        Expression:
+                        Argument:
                           - Value: premium
                           - AttributeDesignator:
                               Category: "urn:oasis:names:tc:acal:1.0:subject-category:access-subject"
@@ -2914,10 +2925,10 @@ Policy:
         Condition:
           Apply:
             FunctionId: "urn:oasis:names:tc:acal:1.0:function:and"
-            Expression:
+            Argument:
               - Apply:
                   FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-is-in"
-                  Expression:
+                  Argument:
                     - Value: view
                     - AttributeDesignator:
                         Category: "urn:oasis:names:tc:acal:1.0:attribute-category:action"
@@ -2925,7 +2936,7 @@ Policy:
                         MustBePresent: true
               - Apply:
                   FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-is-in"
-                  Expression:
+                  Argument:
                     - Value: premium
                     - AttributeDesignator:
                         Category: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
@@ -2933,7 +2944,7 @@ Policy:
                         MustBePresent: true
               - Apply:
                   FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-is-in"
-                  Expression:
+                  Argument:
                     - Value: premium
                     - AttributeDesignator:
                         Category: "urn:oasis:names:tc:acal:1.0:subject-category:access-subject"
@@ -2963,10 +2974,10 @@ Policy:
         Condition:
           Apply:
             FunctionId: "urn:oasis:names:tc:acal:1.0:function:and"
-            Expression:
+            Argument:
               - Apply:
                   FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-is-in"
-                  Expression:
+                  Argument:
                     - Value: clinician
                     - AttributeDesignator:
                         Category: "urn:oasis:names:tc:acal:1.0:subject-category:access-subject"
@@ -2974,7 +2985,7 @@ Policy:
                         MustBePresent: true
               - Apply:
                   FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-is-in"
-                  Expression:
+                  Argument:
                     - Value: medical-record
                     - AttributeDesignator:
                         Category: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"

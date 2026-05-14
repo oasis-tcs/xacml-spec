@@ -292,7 +292,7 @@ $defs:
         $ref: "#/$defs/IdentifierType"
       Description:
         $ref: "#/$defs/StringType"
-      Expression:
+      Argument:
         $ref: "#/$defs/ExpressionArray"
     additionalProperties: false
 
