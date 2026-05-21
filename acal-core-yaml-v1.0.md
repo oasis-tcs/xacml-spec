@@ -479,6 +479,7 @@ definitions remain those of [[ACAL-Core](#acal-core)] Section 7.1.
 | `Integer` | YAML integer scalar | MUST resolve as integer under the Core Schema |
 | `Double` | YAML float scalar | MUST resolve as float under the Core Schema |
 | `NonNegativeInteger` | YAML integer scalar without the `-` sign, i.e. matching the regex `-?[0-9]+` under the Core Schema||
+| `URI`| YAML string scalar matching the same syntax as JSON schema's `format` assertion set to `uri-reference`||
 
 Examples:
 
