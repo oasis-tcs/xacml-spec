@@ -3312,6 +3312,10 @@ class URI <<primitive>>
 
 ACAL representation formats (in ACAL profiles) usually have a native equivalent for this type, in which case they should use that, e.g. XML schema `xs:anyURI`, JSON schema `{ "type": "string", "format": "uri" }`.
 
+###### Reserved prefix for URIs
+
+Whenever a property of this type (`URI`) is used in ACAL data model, the values starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are reserved by the XACML TC for their exclusive use.
+
 ##### 7.1.2.3.2 NonNegativeInteger
 
 A `NonNegativeInteger` is an `Integer`, equal to or greater than zero. Defined in UML as follows:
@@ -3448,6 +3452,10 @@ A short identifier name appearing in the second and third cases MUST be the name
 Note that the three cases can be distinguished from each other syntactically in a valid, correctly-formatted value. If the value contains curly brackets, then the third case must apply since the curly bracket characters are not legal characters for an absolute URI or a short identifier name; otherwise, if the value matches the pattern for a short identifier name, then the second case applies since an absolute URI begins with a scheme name and a colon character (i.e., `:`; U+003A) and the colon character is not a legal character for a short identifier name; otherwise, the value is an absolute URI.
 
 The conversion of a value of the `IdentifierType` simple type into an absolute URI is detailed in [Section 8.3](#83-identifier-evaluation).
+
+###### Reserved prefix for identifiers
+
+Whenever a property of this type (`IdentifierType`) is used in ACAL data model, the values starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are reserved by the XACML TC for their exclusive use.
 
 ##### 7.1.2.3.9 LocalIdentifierType
 
@@ -3635,10 +3643,12 @@ A `ShortIdSetType` object contains the following properties:
 `Id` [Required]
 
 : The identifier for this short identifier set. It is the responsibility of the PAP to ensure that no two short identifier sets visible to the PDP have the same identifier. This MAY be achieved by following a predefined URN or URI scheme. If the identifier is in the form of a URL, then it MAY be resolvable.
+`Id` values starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are reserved by the XACML TC for their exclusive use.
 
 `ShortIdSetReference` [Any Number]
 
 : A sequence of `URI` values referencing other short identifier sets. The short identifiers of the referenced sets are included in this set. This applies recursively to the sets referenced by a referenced set. This set SHALL NOT reference itself and SHALL NOT reference a set that directly or indirectly references this set. This set SHALL NOT directly or indirectly reference any other set more than once.
+URIs starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are reserved by the XACML TC for their exclusive use.
 
 `ShortId` [Any Number]
 
@@ -3746,6 +3756,7 @@ A `PolicyType` object contains the following properties:
 `PolicyId` [Required]
 
 : A `URI` value specifying an identifier for the policy. It is the responsibility of the PAP to ensure that no two policies visible to the PDP have the same identifier. This MAY be achieved by following a predefined URN or URI scheme. If the policy identifier is in the form of a URL, then it MAY be resolvable.
+`PolicyId` values starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are reserved by the XACML TC for their exclusive use.
 
 `Version` [Required]
 
@@ -3753,7 +3764,8 @@ A `PolicyType` object contains the following properties:
 
 `CombiningAlgId` [Required]
 
-: An `IdentifierType` value identifying the combining algorithm by which the `PolicyType` and `RuleType` objects MUST be combined. Standard combining algorithms are listed in [Annex E](#annex-e-combining-algorithms). Standard combining algorithm identifiers are listed in [Annex D.9](#d9-combining-algorithms).
+: An `IdentifierType` value identifying the combining algorithm by which the `PolicyType` and `RuleType` objects MUST be combined. Standard combining algorithms are listed in [Annex E](#annex-e-combining-algorithms). Standard combining algorithm identifiers are listed in [Annex D.9](#d9-combining-algorithms). 
+`CombiningAlgId` values starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are reserved by the XACML TC for their exclusive use.
 
 `MaxDelegationDepth` [Optional]
 
@@ -3762,6 +3774,7 @@ A `PolicyType` object contains the following properties:
 `ShortIdSetReference` [Any Number]
 
 : A sequence of `URI` values referencing short identifier sets. Each value MUST be unique in the sequence. The short identifiers used by the policy MUST be ones defined in the referenced sets or in any further sets referenced by the referenced sets (recursively). The policy SHALL NOT directly or indirectly reference any short identifier set more than once.
+URIs starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are reserved by the XACML TC for their exclusive use.
 
 `Description` [Optional]
 
@@ -3853,7 +3866,8 @@ A `ParameterType` object contains the following properties:
 
 `DataType` [Optional, Default `urn:oasis:names:tc:acal:1.0:data-type:string`]
 
-: An `IdentifierType` value specifying the data type of the parameter. If this property is omitted, then it is treated as being set to `urn:oasis:names:tc:acal:1.0:data-type:string`.
+: An `IdentifierType` value specifying the data type of the parameter. If this property is omitted, then it is treated as being set to `urn:oasis:names:tc:acal:1.0:data-type:string`. 
+`DataType` values starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are reserved by the XACML TC for their exclusive use.
 
 `IsBag` [Optional, Default false]
 
@@ -3911,6 +3925,7 @@ The `IdReferenceType` object type contains the following property:
 `Id` [Required]
 
 : A URI being the `PolicyId` of the referenced policy. If the URI is a URL, then it MAY be resolvable to the policy. However, the mechanism for resolving a policy reference to the corresponding policy is outside the scope of this specification.
+`Id` values starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are reserved by the XACML TC for their exclusive use.
 
 ## 7.9 ExactMatchIdReferenceType (optional)
 
@@ -4093,6 +4108,7 @@ class SharedVariableDefinitionType <<dataType>> {
 `Id` [Required]
 
 : A `URI` value specifying an identifier for the shared variable. It is the responsibility of the PAP to ensure that no two shared variables visible to the PDP have the same identifier. This MAY be achieved by following a predefined URN or URI scheme. If the identifier is in the form of a URL, then it MAY be resolvable.
+`Id` values starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are reserved by the XACML TC for their exclusive use.
 
 `Version` [Required]
 
@@ -4105,6 +4121,7 @@ class SharedVariableDefinitionType <<dataType>> {
 `ShortIdSetReference` [Any Number]
 
 : A sequence of `URI` values referencing short identifier sets. The short identifiers used by the shared variable MUST be ones defined in the referenced sets or in any further sets referenced by the referenced sets (recursively). The shared variable SHALL NOT directly or indirectly reference any short identifier set more than once.
+URIs starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are reserved by the XACML TC for their exclusive use.
 
 `Parameter` [Any Number]
 
@@ -4239,6 +4256,7 @@ An `ApplyType` object contains the following properties:
 `FunctionId` [Required]
 
 : An `IdentifierType` value identifying the function to be applied to the arguments. ACAL-defined functions are described in [Annex C.3](#c3-functions).
+`FunctionId` values starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are reserved by the XACML TC for their exclusive use.
 
 `Description` [Optional]
 
@@ -4276,6 +4294,7 @@ A `FunctionType` object contains the following property:
 `Id` [Required]
 
 : An `IdentifierType` value identifying a function.
+`Id` values starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are reserved by the XACML TC for their exclusive use.
 
 <a name="namedattributedesignatortype"></a>
 
@@ -4305,10 +4324,12 @@ A `NamedAttributeDesignatorType` object contains the following properties:
 `AttributeId` [Required]
 
 : An `IdentifierType` value specifying the `AttributeId` of the named attribute.
+`AttributeId` values starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are reserved by the XACML TC for their exclusive use.
 
 `DataType` [Optional]
 
 : An `IdentifierType` value specifying the `DataType` of the named attribute. The bag returned by the designator SHALL contain values of this data type. If this property is omitted, the DataType inference rule(s) of the parent object SHALL apply first, if there is any rule defined in this specification in the parent object type's section (either [ApplyType](#715-applytype), [PolicyReferenceType](#711-policyreferencetype), [SharedVariableReferenceType](#724b-sharedvariablereferencetype), or one of the subtypes of [QuantifiedExpressionType](#725-quantifiedexpressiontype-optional) ); if there is not any, or if the DataType is still undefined after applying the rule(s), then it is treated as being set to `urn:oasis:names:tc:acal:1.0:data-type:string` by default.
+`DataType` values starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are reserved by the XACML TC for their exclusive use.
 
 `Issuer` [Optional]
 
@@ -4345,6 +4366,7 @@ The `AttributeDesignatorType` object type extends the `NamedAttributeDesignatorT
 `Category` [Required]
 
 : An `IdentifierType` value specifying an attribute category in the request context from which values of the named attribute are retrieved.
+`Category` values starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are reserved by the XACML TC for their exclusive use.
 
 The properties inherited from `NamedAttributeDesignatorType` specify the named attribute. The attribute designator retrieves values from attributes matching the named attribute that are present in the `RequestEntityType` object having a `Category` property that matches, by identifier equality, the `Category` property of the attribute designator.
 
@@ -4413,6 +4435,7 @@ A `BaseAttributeSelectorType` object has the following properties:
 `DataType` [Optional]
 
 : An `IdentifierType` value specifying the data type of the values returned from the evaluation of the attribute selector or entity attribute selector. If this property is omitted, the DataType inference rule(s) of the parent object SHALL apply first, if there is any rule defined in this specification in the parent object type's section (either [ApplyType](#715-applytype), [PolicyReferenceType](#711-policyreferencetype), [SharedVariableReferenceType](#724b-sharedvariablereferencetype), or one of the subtypes of [QuantifiedExpressionType](#725-quantifiedexpressiontype-optional) ); if there is not any, or if the DataType is still undefined after applying the rule(s), then it is treated as being set to `urn:oasis:names:tc:acal:1.0:data-type:string` by default.
+`DataType` values starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are reserved by the XACML TC for their exclusive use.
 
 `MustBePresent` [Optional, Default false]
 
@@ -4443,6 +4466,7 @@ The `AttributeSelectorType` object type extends the `BaseAttributeSelectorType` 
 `Category` [Required]
 
 : An `IdentifierType` value specifying an attribute category in the request context. The `Content` property of that attribute categeory contains the structured content from which nodes will be selected.
+`Category` values starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are reserved by the XACML TC for their exclusive use.
 
 ## 7.22 EntityAttributeSelectorType (optional)
 
@@ -4534,6 +4558,7 @@ A `ValueType` object has the following properties:
 `DataType` [Optional]
 
 : An `IdentifierType` value specifying the data type of the attribute value. If this property is omitted, the DataType inference rule(s) of the parent object SHALL apply first, if there is any rule defined in this specification in the parent object type's section (either [ApplyType](#715-applytype), [PolicyReferenceType](#711-policyreferencetype), [SharedVariableReferenceType](#724b-sharedvariablereferencetype), or one of the subtypes of [QuantifiedExpressionType](#725-quantifiedexpressiontype-optional) ); if there is not any, or if the DataType is still undefined after applying the rule(s), then it is treated as being set to `urn:oasis:names:tc:acal:1.0:data-type:string` by default.
+`DataType` values starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are reserved by the XACML TC for their exclusive use.
 
 A ValueType is abstract and subtypes may be either primitive types - i.e. subtypes of `PrimitiveValueType` in the above diagram (LiteralStringType, LiteralIntegerType, etc.) - or structured types (see [section 8.4.1](#841-structured-attributes)) -  i.e. subtypes of `StructuredValueType` in the above diagram.
 
@@ -4582,6 +4607,7 @@ The `SharedVariableReferenceType` object type contains the following properties:
 `Id` [Required]
 
 : A URI being the `Id` of the referenced shared variable. If the URI is a URL, then it MAY be resolvable to the shared variable. However, the mechanism for resolving a shared variable reference to the corresponding shared variable is outside the scope of this specification.
+`Id` values starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are reserved by the XACML TC for their exclusive use.
 
 `Version` [Optional]
 
@@ -4745,6 +4771,7 @@ A `NoticeType` object contains the following properties:
 `Id` [Required]
 
 : An `IdentifierType` value specifying an identifier for the notice that the PEP associates with particular processing requirements or informational content.
+`Id` values starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are reserved by the XACML TC for their exclusive use.
 
 `IsObligation` [Optional, Default `false`]
 
@@ -4780,6 +4807,7 @@ An `AttributeType` object contains the following properties:
 `AttributeId` [Required]
 
 : An `IdentifierType` value identifying the attribute. A number of identifiers are reserved by ACAL to denote commonly used attributes. See [Annex D](#annex-d-acal-identifiers).
+`AttributeId` values starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are reserved by the XACML TC for their exclusive use.
 
 `Issuer` [Optional]
 
@@ -4816,6 +4844,7 @@ The `AttributeAssignmentType` object type extends the `AttributeType` object typ
 `Category` [Optional]
 
 : An `IdentifierType` value specifying the category of the attribute. If this property is absent, the attribute has no category. The PEP SHALL interpret the significance and meaning of any `Category` property. Non-normative note: an expected use of the category is to disambiguate attributes that are relayed from the request.
+`Category` values starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are reserved by the XACML TC for their exclusive use.
 
 None of the `Value`s may have a `DataType` property on its own since it is already defined by the `DataType` property at the `AttributeAssignmentType` object level (inherited from `AttributeType`).
 
@@ -4845,6 +4874,7 @@ A `NoticeExpressionType` object contains the following properties:
 `Id` [Required]
 
 : An `IdentifierType` value nominating the identifier for the notice that the PEP associates with particular processing requirements or informational content.
+`Id` values starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are reserved by the XACML TC for their exclusive use.
 
 `IsObligation` [Optional]
 
@@ -4890,10 +4920,12 @@ An `AttributeAssignmentExpressionType` object contains the following properties:
 `AttributeId` [Required]
 
 : An `IdentifierType` value specifying the identifier of the attribute. The value of the `AttributeId` property in the resulting `AttributeAssignmentType` object MUST be equal to this value.
+`AttributeId` values starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are reserved by the XACML TC for their exclusive use.
 
 `Category` [Optional]
 
 : An `IdentifierType` value specifying the category of the attribute. If this property is missing, the attribute has no category. The value of the `Category` property in the resulting `AttributeAssignmentType` object MUST be equal to this value.
+`Category` values starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are reserved by the XACML TC for their exclusive use.
 
 `Issuer` [Optional]
 
@@ -4934,6 +4966,7 @@ A `RequestType` object contains the following properties:
 `ShortIdSetReference` [Any Number]
 
 : A sequence of `URI` values referencing short identifier sets. The short identifiers used by the request MUST be ones defined in the referenced sets.
+URIs starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are reserved by the XACML TC for their exclusive use.
 
 `RequestDefaults` [Any Number]
 
@@ -4989,6 +5022,7 @@ A `RequestEntityType` object contains the following properties:
 `Category` [Required]
 
 : An `IdentifierType` value indicating which attribute category the contained attributes belong to, and it is used to differentiate between attributes of subject, resource, action, environment or other categories.
+`Category` values starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are reserved by the XACML TC for their exclusive use.
 
 `Id` [Optional]
 
@@ -5089,6 +5123,7 @@ A `ResponseType` object contains the following properties:
 `ShortIdSetReference` [Any Number]
 
 : A sequence of `URI` values referencing short identifier sets. The short identifiers used by the response MUST be ones defined in the referenced sets.
+URIs starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are reserved by the XACML TC for their exclusive use.
 
 `Result` [One to Many]
 
@@ -5266,7 +5301,8 @@ A `StatusCodeType` object contains the following properties:
 
 `Value` [Required]
 
-: See [Annex D.8](#d8-status-codes) for a list of values.
+: See [Annex D.8](#d8-status-codes) for a list of values. 
+`Value` values starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are reserved by the XACML TC for their exclusive use.
 
 `StatusCode` [Any Number]
 
@@ -5360,14 +5396,17 @@ A `MissingAttributeDetailType` object contains the following properties:
 `Category` [Optional]
 
 : An `IdentifierType` value indicating the category of the missing attribute. Note that an entity attribute designator or entity attribute selector where the `Expression` property evaluates to a value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type does not nominate an attribute category for the named attribute. In this case only the `Category` property is omitted.
+`Category` values starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are reserved by the XACML TC for their exclusive use.
 
 `AttributeId` [Required]
 
 : An `IdentifierType` value indicating the attribute identifier of the missing attribute.
+`AttributeId` values starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are reserved by the XACML TC for their exclusive use.
 
 `DataType` [Required]
 
 : An `IdentifierType` value indicating the data type of the missing attribute.
+`DataType` values starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are reserved by the XACML TC for their exclusive use.
 
 `Issuer` [Optional]
 
@@ -5397,6 +5436,7 @@ A `ResultEntityType` object contains the following properties:
 `Category` [Required]
 
 : An `IdentifierType` value indicating which attribute category the contained attributes belong to.
+`Category` values starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are reserved by the XACML TC for their exclusive use.
 
 `Id` [Optional]
 
