@@ -6206,7 +6206,6 @@ The implementation MUST support the object types that are marked `M`.
 | BooleanExpressionType | M | Condition, Target |
 | BundleType | O | Bundle |
 | ContentType | O | Content |
-| DescriptionType | M | Description |
 | EntityAttributeDesignatorType | M | EntityAttributeDesignator |
 | EntityAttributeSelectorType | O | EntityAttributeSelector |
 | EntityType | M | PolicyIssuer |
