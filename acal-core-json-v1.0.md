@@ -153,7 +153,7 @@ Copyright © OASIS Open 2026. All Rights Reserved.  For license and copyright in
   - [4.3 Example Short Identifier Set](#43-example-short-identifier-set)
   - [4.4 Changes From the Previous Version](#44-changes-from-the-previous-version)
 - [5 Syntax (normative, with the exception of the schema fragments)](#5-syntax-normative-with-the-exception-of-the-schema-fragments)
-  - [5.1 Mapping ACAL primitive types](#51-mapping-acal-primitive-types)
+  - [5.1 Mapping ACAL simple types](#51-mapping-acal-simple-types)
     - [5.1.1 Primitive types mapped to native JSON schema definitions](#511-primitive-types-mapped-to-native-json-schema-definitions)
     - [5.1.2 Restricted String types (UML stereotype `<<restrictedString>>`)](#512-restricted-string-types-uml-stereotype-restrictedstring)
     - [5.1.3 Enum types (UML stereotype `<<enumeration>>`)](#513-enum-types-uml-stereotype-enumeration)
@@ -318,9 +318,31 @@ The JACAL syntax is defined in a [JSON Schema](#JsonSchemaValidation) associated
 
 <!-- All text is normative unless otherwise labeled -->
 
+The Attribute-Centric Authorization Language (ACAL) Version 1.0
+[[ACAL-Core](#acal-core-10)] defines an abstract policy language for
+attribute-based access control (ABAC) decisions.  The ACAL abstract
+model is independent of any concrete representation format; concrete
+representations are defined by companion specifications.
+
+JACAL defines the JSON representation of ACAL.  It is one of multiple
+concrete projections of the same ACAL model.
+
+
 ## 4.1 Requirements
 
-The JSON representation (JACAL) should be as aligned as possible with [[ACAL-Core-1.0](#acal-core-10)].
+The JSON representation (JACAL) should be as aligned as possible with [[ACAL-Core-1.0](#acal-core-10)] (section 7 in particular). Indeed, JACAL is a concrete representation format for ACAL.  Every construct in
+the ACAL abstract model has a corresponding JACAL representation defined
+in this specification.  The normative reference for semantics,
+evaluation rules, and abstract conformance requirements is
+[[ACAL-Core](#acal-core-10)].  This specification defines how ACAL abstract
+model types are expressed in JSON.
+
+The authoritative definitions of ACAL simple types, object structures,
+inheritance relationships, and `ValueType` subtypes remain in
+[[ACAL-Core](#acal-core-10)] Section 7.  Likewise, the mandatory-versus-
+optional support classification of ACAL object types remains in
+[[ACAL-Core](#acal-core-10)] Section 11.2.  JACAL does not redefine those
+abstract model elements; it defines only their JSON representation.
 
 ## 4.2 Abstraction Layer
 
@@ -408,9 +430,9 @@ We consider `PolicyType`, `BundleType`, `RequestType` and `ResponseType` as the 
 ```
 where `<subschema 1>`,`<subschema 2>`, etc. are the reusable JSON subschemas created by applying the ACAL model mapping rules described in sections 5.1 and 5.2. For the rest of the document, the JSON object containing these subschemas is simply referred to as *the `$defs` object*.
 
-## 5.1 Mapping ACAL primitive types 
+## 5.1 Mapping ACAL simple types 
 
-For each primitive type (stereotyped `<<primitive>>` or `<<enumeration>>`) in [[ACAL-Core-1.0](#acal-core-10)] model, apply the mapping rules in the next subsections.
+For each simple type (stereotyped `<<primitive>>` or `<<enumeration>>`) in section 7.1.2 of [[ACAL-Core-1.0](#acal-core-10)] model, apply the mapping rules in the next subsections to obtain the JSON representation.
 
 ### 5.1.1 Primitive types mapped to native JSON schema definitions
 
@@ -424,13 +446,14 @@ The ACAL primitive types in the following table have a direct JSON equivalent in
 |Boolean|`{"type": "boolean"}`|
 |Double|`{"type": "number"}`|
 |Integer|`{"type": "integer"}`|
-|NonNegativeInteger|`{"type": "integer", "minimum": 0}`|
-|URI|`{"type": "string", "format": "uri-reference"}`|
 
-Contrary to the above subschemas which are not added as reusable schemas to the *\$defs object*, the ACAL `Name` type's corresponding subschema is added to the *`$defs` object*:
+Contrary to the above subschemas which are not added as first-class reusable schemas to the `\$defs` object of the JSON schema, the ACAL `NonNegativeInteger`, `URI` and `Name` type's corresponding subschemas are added as such:
 ```json
 {
   "$defs": {
+    ...
+    "NonNegativeInteger": {"type": "integer", "minimum": 0},
+    "URI": {"type": "string", "format": "uri-reference"},
     "Name": {"type": "string", "pattern": "^[_:A-Za-z][-._:A-Za-z0-9]*$"}
     ...
   }
@@ -440,7 +463,7 @@ Contrary to the above subschemas which are not added as reusable schemas to the 
 
 ### 5.1.2 Restricted String types (UML stereotype `<<restrictedString>>`)
 
-Each ACAL primitive type `FooType` with stereotype `<<restrictedString>>`, i.e. with a given `pattern` property set to a regular expression *<REGEX>*, is mapped to a subschema in the *`$defs` object* as follows:
+Each ACAL primitive type `FooType` with stereotype `<<restrictedString>>` in section 7.1.2.3 of [[ACAL-Core-1.0](#acal-core-10)] (e.g. `VersionType`, `VersionMatchType`, `ShortIdNameType`, `ShortIdValueType`, `IdentifierType`, `LocalIdentifierType`, etc.), i.e. with a given `pattern` property set to a regular expression *<REGEX>*, is mapped to a subschema in the *`$defs` object* as follows:
 
 ```json
 {
@@ -474,7 +497,7 @@ For example, ACAL `VersionType` translates to the following subschema definition
 
 ### 5.1.3 Enum types (UML stereotype `<<enumeration>>`)
 
-Each ACAL enumerated type `FooType` (stereotyped `<<enumeration>>`) with enum values *V1, V2, ... Vn* is mapped to the following subschema:
+Each ACAL enumerated type `FooType` (stereotyped `<<enumeration>>`) from section 7.1.2.3 of [[ACAL-Core-1.0](#acal-core-10)] with enum values *V1, V2, ... Vn* is mapped to the following subschema (e.g. `EffectType`, `DecisionType`):
 
 ```json
 {
@@ -514,7 +537,7 @@ The `object` type is used for JSON object (which can be used to wrap a JSON arra
 
 ### 5.2.2 ValueType mapping rules
 
-The `ValueType` and subtypes from [[ACAL-Core-1.0](#acal-core-10)] section 7.23 are mapped to JSON as described in the next subsections.
+The authoritative definition of ACAL `ValueType` and subtypes is in [[ACAL-Core-1.0](#acal-core-10)] section 7.23. The next subsections define the mapping rules from ACAL authoritative definition to their JSON representation.
 
 #### 5.2.2.1 Primitive value mappings
 
@@ -1049,64 +1072,33 @@ This section lists those portions of the specification that MUST be included in 
 
 The implementation MUST follow [Section 5](#5-syntax-normative-with-the-exception-of-the-schema-fragments) and [Annex C](#annex-c-jacal-identifiers-normative) where they apply to implemented items in the following tables.
 
-### 7.2.1 Schema objects
+*********
+#### 7.3.1 ACAL Object-Type Conformance
 
-The implementation MUST support those JSON schema objects that are marked `M`.
+JACAL inherits ACAL object-type conformance from [[ACAL-Core](#acal-core-10)] Section 11.2.1.
 
-| Object name                   | M/O |
-|:------------------------------|:----|
-| Apply                         | M   |
-| ApplicablePolicyReference     | O   |
-| Attribute                     | M   |
-| AttributeAssignment           | M   |
-| AttributeAssignmentExpression | M   |
-| AttributeDesignator           | M   |
-| AttributeSelector             | O   |
-| Bundle                        | O   |
-| Category                      | M   |
-| Condition                     | M   |
-| Content                       | O   |
-| Description                   | M   |
-| EntityAttributeDesignator     | O   |
-| EntityAttributeSelector       | O   |
-| Expression                    | M   |
-| ForAll                        | O   |
-| ForAny                        | O   |
-| Function                      | M   |
-| Map                           | O   |
-| MissingAttributeDetail        | M   |
-| MultiRequests                 | O   |
-| Notice                        | M   |
-| NoticeExpression              | M   |
-| Policy                        | M   |
-| PolicyDefaults                | O   |
-| PolicyReference               | M   |
-| PolicyIssuer                  | O   |
-| PolicyPatternMatchReference   | O   |
-| Request                       | M   |
-| RequestAttribute              | M   |
-| RequestDefaults               | O   |
-| RequestEntity                 | M   |
-| RequestEntityReference        | O   |
-| RequestReference              | O   |
-| Response                      | M   |
-| Result                        | M   |
-| ResultEntity                  | M   |
-| Rule                          | M   |
-| Select                        | O   |
-| SharedVariableDefinition      | O   |
-| SharedVariableReference       | O   |
-| ShortId                       | M   |
-| ShortIdSet                    | M   |
-| ShortIdSetReference           | M   |
-| Status                        | M   |
-| StatusCode                    | M   |
-| StatusDetail                  | O   |
-| StatusMessage                 | O   |
-| Target                        | M   |
-| Value                         | M   |
-| VariableDefinition            | M   |
-| VariableReference             | M   |
+A processor claiming core YACAL conformance MUST support the JACAL
+representation of every ACAL object type marked `M` in that table.  It
+MAY omit support for ACAL object types marked `O` unless it claims the
+corresponding optional ACAL feature.
+
+This specification therefore does not repeat the ACAL core object-type
+conformance table.  [Section 5](#5-syntax-normative-with-the-exception-of-the-schema-fragments) defines the YAML
+representation of those same ACAL object types, while
+[[ACAL-Core](#acal-core-10)] remains authoritative for their
+mandatory/optional classification.
+
+#### 7.3.2 Machine-Readable Artifact Support
+
+The following machine-readable artifacts accompany this specification:
+
+| Artifact | Status | Notes |
+|:---|:---:|:---|
+| `acal-core-json-v1.0-schema.json` | M | Core JSON schema |
+| `acal-core-json-v1.0-identifiers.json` | M | Core short-identifier set |
+| `acal-xpath-json-v1.0-schema.json` | O | JSON schema for XPath Profile support |
+| `acal-xpath-json-v1.0-identifiers.json` | O | Short identifier set for XPath profile support |
+| `acal-jsonpath-json-v1.0-schema.json` | O | JSON schema for JSONPath Profile support |
 
 -------
 
