@@ -59,6 +59,14 @@
 		}
 	],
 	"$defs": {
+		"URI": {
+			"type": "string",
+			"format": "uri-reference"
+		},
+		"NonNegativeInteger": {
+			"type": "integer",
+			"minimum": 0
+		},
 		"Name": {
 			"type": "string",
 			"pattern": "^[_:A-Za-z][-._:A-Za-z0-9]*$"
@@ -149,16 +157,14 @@
 			],
 			"properties": {
 				"Id": {
-					"type": "string",
-					"format": "uri-reference"
+					"$ref": "#/$defs/URI"
 				},
 				"ShortIdSetReference": {
 					"type": "array",
 					"minItems": 1,
 					"uniqueItems": true,
 					"items": {
-						"type": "string",
-						"format": "uri-reference"
+						"$ref": "#/$defs/URI"
 					}
 				},
 				"ShortId": {
@@ -232,8 +238,7 @@
 			],
 			"properties": {
 				"Id": {
-					"type": "string",
-					"format": "uri-reference"
+					"$ref": "#/$defs/URI"
 				}
 			}
 		},
@@ -346,7 +351,7 @@
 			],
 			"properties": {
 				"Id": {
-					"$ref": "#/$defs/LocalIdentifierType"
+					"$ref": "#/$defs/URI"
 				},
 				"Version": {
 					"$ref": "#/$defs/VersionType"
@@ -359,8 +364,7 @@
 					"minItems": 1,
 					"uniqueItems": true,
 					"items": {
-						"type": "string",
-						"format": "uri-reference"
+						"$ref": "#/$defs/URI"
 					}
 				},
 				"Parameter": {
@@ -385,8 +389,7 @@
 			],
 			"properties": {
 				"Id": {
-					"type": "string",
-					"format": "uri-reference"
+					"$ref": "#/$defs/URI"
 				},
 				"Version": {
 					"$ref": "#/$defs/VersionMatchType"
@@ -462,8 +465,7 @@
 			],
 			"properties": {
 				"PolicyId": {
-					"type": "string",
-					"format": "uri-reference"
+					"$ref": "#/$defs/URI"
 				},
 				"Version": {
 					"$ref": "#/$defs/VersionType"
@@ -476,13 +478,11 @@
 					"minItems": 1,
 					"uniqueItems": true,
 					"items": {
-						"type": "string",
-						"format": "uri-reference"
+						"$ref": "#/$defs/URI"
 					}
 				},
 				"MaxDelegationDepth": {
-					"type": "integer",
-					"minimum": 0
+					"$ref": "#/$defs/NonNegativeInteger"
 				},
 				"PolicyIssuer": {
 					"$ref": "#/$defs/EntityType"
@@ -1199,8 +1199,7 @@
 					"minItems": 1,
 					"uniqueItems": true,
 					"items": {
-						"type": "string",
-						"format": "uri-reference"
+						"$ref": "#/$defs/URI"
 					}
 				},
 				"RequestDefaults": {
@@ -1307,8 +1306,7 @@
 					"minItems": 1,
 					"uniqueItems": true,
 					"items": {
-						"type": "string",
-						"format": "uri-reference"
+						"$ref": "#/$defs/URI"
 					}
 				},
 				"Result": {
