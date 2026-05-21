@@ -385,7 +385,8 @@
 			],
 			"properties": {
 				"Id": {
-					"$ref": "#/$defs/LocalIdentifierType"
+					"type": "string",
+					"format": "uri-reference"
 				},
 				"Version": {
 					"$ref": "#/$defs/VersionMatchType"
