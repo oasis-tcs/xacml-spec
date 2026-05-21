@@ -1157,6 +1157,18 @@ XACML is defined using this identifier:
 
 `urn:oasis:names:tc:xacml:4.0:core:schema`
 
+## C.2 Core Short-Identifier Set
+
+This work product provides the standard XML serialization of the ACAL
+core short-identifier set in the file
+`acal-core-xml-v4.0-identifiers.xml`.
+
+The `ShortIdSet.Id` value of this artifact is:
+
+`urn:oasis:names:tc:acal:1.0:core:identifiers`
+
+**CAUTION:** This short identifier set SHALL NOT be modified except by the XACML TC. Since its `ShortIdSet.Id` is using one of the prefixes reserved for XACML TC use (`urn:oasis:names:tc:acal:`), users outside the TC SHALL NOT create a new short identifier set of their own with the same `Id`.
+
 -------
 
 # Annex D XML Schema (normative)

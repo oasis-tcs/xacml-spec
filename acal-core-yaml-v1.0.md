@@ -2776,6 +2776,8 @@ The `ShortIdSet.Id` value of this artifact is:
 
 `urn:oasis:names:tc:acal:1.0:core:identifiers`
 
+**CAUTION:** This short identifier set SHALL NOT be modified except by the XACML TC. Since its `ShortIdSet.Id` is using one of the prefixes reserved for XACML TC use (`urn:oasis:names:tc:acal:`), users outside the TC SHALL NOT create a new short identifier set of their own with the same `Id`. 
+
 YACAL uses the ACAL core identifier inventory directly.  The YACAL
 artifact is therefore the YAML serialization of the same underlying ACAL
 identifier set used by peer concrete representations.

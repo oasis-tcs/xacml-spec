@@ -1332,6 +1332,18 @@ The JACAL core schema is defined using this identifier (`$id`):
 
 `urn:oasis:names:tc:jacal:1.0:core:schema`
 
+## C.2 Core Short-Identifier Set 
+
+This work product provides the standard JSON serialization of the ACAL
+core short-identifier set in the file
+`acal-core-json-v1.0-identifiers.json`.
+
+The `ShortIdSet.Id` value of this artifact is:
+
+`urn:oasis:names:tc:acal:1.0:core:identifiers`
+
+**CAUTION:** This short identifier set SHALL NOT be modified except by the XACML TC. Since its `ShortIdSet.Id` is using one of the prefixes reserved for XACML TC use (`urn:oasis:names:tc:acal:`), users outside the TC SHALL NOT create a new short identifier set of their own with the same `Id`.
+
 -------
 
 # Annex D JSON Schema (normative)
