@@ -51,6 +51,7 @@ $defs:
   IdentifierType:
     type: string
     pattern: "^[^{}]*(\\{[A-Za-z][0-9A-Za-z]*(-[0-9A-Za-z]+)*\\}[^{}]*)*$"
+    minLength: 1
 
   LocalIdentifierType:
     type: string
@@ -98,6 +99,7 @@ $defs:
     type:
       - string
       - number
+      - integer
       - boolean
 
   TypedPrimitiveValueType:
@@ -146,6 +148,7 @@ $defs:
 
   UriArray:
     type: array
+    minItems: 1
     items:
       $ref: "#/$defs/URIType"
     uniqueItems: true
@@ -156,10 +159,11 @@ $defs:
       $ref: "#/$defs/ValueType"
     minItems: 1
 
-  ExpressionArray:
+  ArgumentArray:
     type: array
+    minItems: 1
     items:
-      $ref: "#/$defs/ExpressionTypeTree"
+      $ref: "#/$defs/ArgumentTypeTree"
 
   PolicyDefaultsType:
     $dynamicRef: "#PolicyDefaultsTypeExtensions"
@@ -293,7 +297,7 @@ $defs:
       Description:
         $ref: "#/$defs/StringType"
       Argument:
-        $ref: "#/$defs/ExpressionArray"
+        $ref: "#/$defs/ArgumentArray"
     additionalProperties: false
 
   AttributeDesignatorType:
@@ -398,8 +402,8 @@ $defs:
         $ref: "#/$defs/URIType"
       Version:
         $ref: "#/$defs/VersionMatchType"
-      Expression:
-        $ref: "#/$defs/ExpressionArray"
+      Argument:
+        $ref: "#/$defs/ArgumentArray"
     additionalProperties: false
 
   QuantifiedExpressionType:
@@ -442,7 +446,6 @@ $defs:
       - $ref: "#/$defs/EntityAttributeSelectorTypeTree"
       - $ref: "#/$defs/VariableReferenceTypeTree"
       - $ref: "#/$defs/SharedVariableReferenceTypeTree"
-      - $ref: "#/$defs/FunctionTypeTree"
       - $ref: "#/$defs/ForAnyTypeTree"
       - $ref: "#/$defs/ForAllTypeTree"
       - $ref: "#/$defs/SelectTypeTree"
@@ -450,6 +453,27 @@ $defs:
 
   BooleanExpressionTypeTree:
     $ref: "#/$defs/NonLiteralExpressionTypeTree"
+
+  ArgumentTypeTree:
+    oneOf:
+      - $ref: "#/$defs/ExpressionTypeTree"
+      - type: object
+        required: NamedArgument
+        properties: 
+          NamedArgument:
+            $ref: "#/$defs/NamedArgumentType"
+
+  NamedArgumentType: 
+    type: object
+    required:
+      - Name
+      - Expression
+    properties:
+      Name:
+        $ref: "#/$defs/LocalIdentifierType"
+      Expression:
+        $ref: "#/$defs/ExpressionTypeTree"		
+		
 
   ApplyTypeTree:
     type: object
@@ -591,6 +615,7 @@ $defs:
         $ref: "#/$defs/IdentifierType"
       IsBag:
         $ref: "#/$defs/BooleanType"
+        default: false
       Description:
         $ref: "#/$defs/StringType"
       Expression:
@@ -606,8 +631,8 @@ $defs:
         $ref: "#/$defs/URIType"
       Version:
         $ref: "#/$defs/VersionMatchType"
-      Expression:
-        $ref: "#/$defs/ExpressionArray"
+      Argument:
+        $ref: "#/$defs/ArgumentArray"
     additionalProperties: false
 
   ApplicablePolicyReferenceType:
@@ -647,12 +672,14 @@ $defs:
         $ref: "#/$defs/StringType"
       VariableDefinition:
         type: array
+        minItems: 1
         items:
           $ref: "#/$defs/VariableDefinitionType"
       Condition:
         $ref: "#/$defs/BooleanExpressionTypeTree"
       NoticeExpression:
         type: array
+        minItems: 1
         items:
           $ref: "#/$defs/NoticeExpressionType"
     additionalProperties: false
@@ -679,27 +706,29 @@ $defs:
       PolicyIssuer:
         $ref: "#/$defs/EntityType"
       PolicyDefaults:
-        type: array
-        items:
-          $ref: "#/$defs/PolicyDefaultsType"
+        $ref: "#/$defs/PolicyDefaultsType"
       Parameter:
         type: array
+        minItems: 1
         items:
           $ref: "#/$defs/ParameterType"
       VariableDefinition:
         type: array
+        minItems: 1
         items:
           $ref: "#/$defs/VariableDefinitionType"
       Target:
         $ref: "#/$defs/BooleanExpressionTypeTree"
-      NoticeExpression:
-        type: array
-        items:
-          $ref: "#/$defs/NoticeExpressionType"
       CombinerInput:
         type: array
+        minItems: 1
         items:
           $ref: "#/$defs/CombinerInputTypeTree"
+      NoticeExpression:
+        type: array
+        minItems: 1
+        items:
+          $ref: "#/$defs/NoticeExpressionType"
     additionalProperties: false
 
   RuleTypeTree:
@@ -752,6 +781,7 @@ $defs:
         $ref: "#/$defs/UriArray"
       Parameter:
         type: array
+        minItems: 1
         items:
           $ref: "#/$defs/ParameterType"
       Expression:
@@ -763,14 +793,17 @@ $defs:
     properties:
       ShortIdSet:
         type: array
+        minItems: 1
         items:
           $ref: "#/$defs/ShortIdSetType"
       SharedVariableDefinition:
         type: array
+        minItems: 1
         items:
           $ref: "#/$defs/SharedVariableDefinitionType"
       Policy:
         type: array
+        minItems: 1
         items:
           $ref: "#/$defs/PolicyType"
       PolicyReference:
@@ -823,6 +856,7 @@ $defs:
         $ref: "#/$defs/ContentType"
       RequestAttribute:
         type: array
+        minItems: 1
         items:
           $ref: "#/$defs/RequestAttributeType"
     additionalProperties: false
@@ -834,13 +868,13 @@ $defs:
     properties:
       ReturnPolicyIdList:
         $ref: "#/$defs/BooleanType"
+        default: false
       CombinedDecision:
         $ref: "#/$defs/BooleanType"
+        default: false
       ShortIdSetReference:
         $ref: "#/$defs/UriArray"
       RequestDefaults:
-        type: array
-        items:
           $ref: "#/$defs/RequestDefaultsType"
       RequestEntity:
         type: array
@@ -882,7 +916,6 @@ $defs:
   MissingAttributeDetailType:
     type: object
     required:
-      - Category
       - AttributeId
       - DataType
     properties:
@@ -896,6 +929,7 @@ $defs:
         $ref: "#/$defs/IdentifierType"
       Value:
         type: array
+        minItems: 1
         items:
           $ref: "#/$defs/ValueType"
     additionalProperties: false
@@ -954,6 +988,7 @@ $defs:
         $ref: "#/$defs/BooleanType"
       AttributeAssignment:
         type: array
+        minItems: 1
         items:
           $ref: "#/$defs/AttributeAssignmentType"
     additionalProperties: false
@@ -989,6 +1024,7 @@ $defs:
         $ref: "#/$defs/BooleanExpressionTypeTree"
       AttributeAssignmentExpression:
         type: array
+        minItems: 1
         items:
           $ref: "#/$defs/AttributeAssignmentExpressionType"
     additionalProperties: false
@@ -1004,14 +1040,17 @@ $defs:
         $ref: "#/$defs/StatusType"
       Notice:
         type: array
+        minItems: 1
         items:
           $ref: "#/$defs/NoticeType"
       ResultEntity:
         type: array
+        minItems: 1
         items:
           $ref: "#/$defs/ResultEntityType"
       ApplicablePolicyReference:
         type: array
+        minItems: 1
         items:
           $ref: "#/$defs/ApplicablePolicyReferenceType"
     additionalProperties: false
@@ -1053,6 +1092,7 @@ $defs:
         $ref: "#/$defs/UriArray"
       ShortId:
         type: array
+        minItems: 1
         items:
           $ref: "#/$defs/ShortIdType"
     additionalProperties: false
