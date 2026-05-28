@@ -2539,7 +2539,7 @@ The YACAL specification addresses conformance in the following areas:
    when represented in YACAL
 
 Some ACAL objects and features are optional to implement, either because
-they are optional in ACAL core or because they are only required when
+they are optional in the ACAL core or because they are only required when
 supporting specific ACAL profiles or deployment scenarios.  If an
 implementation claims support for such an optional feature, it MUST
 implement the corresponding YACAL syntax, typing, and constraint rules
@@ -2605,9 +2605,9 @@ The following machine-readable artifacts accompany this specification:
 |:---|:---:|:---|
 | `acal-core-yaml-v1.0-structure.schema.yaml` | M | Core structural validation artifact |
 | `acal-core-yaml-v1.0-constraints.yaml` | M | Core constraint catalog |
-| `acal-core-yaml-v1.0-identifiers.yaml` | M | Core short-identifier set |
+| `acal-core-yaml-v1.0-identifiers.yaml` | M | Core short identifier set represented in YAML |
 | `acal-xpath-yaml-v1.0-structure.schema.yaml` | O | Required only for XPath Profile support |
-| `acal-xpath-yaml-v1.0-identifiers.yaml` | O | Required only for XPath Profile support |
+| `acal-xpath-yaml-v1.0-identifiers.yaml` | O | Short identifier set for XPath Profile support represented in YAML |
 | `acal-jsonpath-yaml-v1.0-structure.schema.yaml` | O | Required only for JSONPath Profile support |
 
 The composition schemas listed in [Annex C](#annex-c-yacal-identifiers-and-machine-readable-artifacts)

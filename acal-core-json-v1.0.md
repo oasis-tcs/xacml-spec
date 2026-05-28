@@ -339,8 +339,9 @@ model types are expressed in JSON.
 
 The authoritative definitions of ACAL simple types, object structures,
 inheritance relationships, and `ValueType` subtypes remain in
-[[ACAL-Core](#acal-core-10)] Section 7.  Likewise, the mandatory-versus-
-optional support classification of ACAL object types remains in
+[[ACAL-Core](#acal-core-10)] Section 7.  Likewise, the
+mandatory-versus-optional
+support classification of ACAL object types remains in
 [[ACAL-Core](#acal-core-10)] Section 11.2.  JACAL does not redefine those
 abstract model elements; it defines only their JSON representation.
 
@@ -430,9 +431,9 @@ We consider `PolicyType`, `BundleType`, `RequestType` and `ResponseType` as the 
 ```
 where `<subschema 1>`,`<subschema 2>`, etc. are the reusable JSON subschemas created by applying the ACAL model mapping rules described in sections 5.1 and 5.2. For the rest of the document, the JSON object containing these subschemas is simply referred to as *the `$defs` object*.
 
-## 5.1 Mapping ACAL simple types 
+## 5.1 Mapping ACAL simple types
 
-For each simple type (stereotyped `<<primitive>>` or `<<enumeration>>`) in section 7.1.2 of [[ACAL-Core-1.0](#acal-core-10)] model, apply the mapping rules in the next subsections to obtain the JSON representation.
+For each simple type (stereotyped `<<primitive>>` or `<<enumeration>>`) in section 7.1.2 of the [[ACAL-Core-1.0](#acal-core-10)] model, apply the mapping rules in the next subsections to obtain the JSON representation.
 
 ### 5.1.1 Primitive types mapped to native JSON schema definitions
 
@@ -463,7 +464,7 @@ Contrary to the above subschemas which are not added as first-class reusable sch
 
 ### 5.1.2 Restricted String types (UML stereotype `<<restrictedString>>`)
 
-Each ACAL primitive type `FooType` with stereotype `<<restrictedString>>` in section 7.1.2.3 of [[ACAL-Core-1.0](#acal-core-10)] (e.g. `VersionType`, `VersionMatchType`, `ShortIdNameType`, `ShortIdValueType`, `IdentifierType`, `LocalIdentifierType`, etc.), i.e. with a given `pattern` property set to a regular expression *<REGEX>*, is mapped to a subschema in the *`$defs` object* as follows:
+Each ACAL primitive type `FooType` with stereotype `<<restrictedString>>` in section 7.1.2.3 of [[ACAL-Core-1.0](#acal-core-10)] (e.g., `VersionType`, `VersionMatchType`, `ShortIdNameType`, `ShortIdValueType`, `IdentifierType`, `LocalIdentifierType`, etc.), i.e., with a given `pattern` property set to a regular expression *\<REGEX>*, is mapped to a subschema in the *`$defs` object* as follows:
 
 ```json
 {
@@ -1060,44 +1061,69 @@ This section is **REQUIRED** and **MUST** be the last numbered section in the do
 
 ## 7.1 Introduction
 
-The JACAL specification addresses the following aspect of conformance:
+The JACAL specification addresses conformance for ACAL object types and features when represented in JSON.
 
-The JACAL specification defines a number of functions, etc. that have somewhat special applications, therefore they are not required to be implemented in an implementation that claims to conform with the OASIS standard.
+Some ACAL objects and features are optional to implement, either because
+they are optional in the ACAL core or because they are only required when
+supporting specific ACAL profiles or deployment scenarios. If an
+implementation claims support for such an optional feature, it MUST
+implement the corresponding JACAL syntax, typing, and constraint rules
+consistently.
 
-## 7.2 Conformance tables
+This specification is accompanied by normative machine-readable
+artifacts for core JACAL structure, core short
+identifiers, and selected ACAL profiles. These artifacts support
+consistent implementation and validation of JACAL, but they do not
+change the peer relationship between JACAL and the XML and YAML ACAL
+representations.
 
-This section lists those portions of the specification that MUST be included in an implementation of a **_PDP_** that claims to conform to JACAL 1.0.
+## 7.2 Conformance Categories
 
-: Note: "M" means mandatory-to-implement. "O" means optional.
+For the purposes of this specification:
 
-The implementation MUST follow [Section 5](#5-syntax-normative-with-the-exception-of-the-schema-fragments) and [Annex C](#annex-c-jacal-identifiers-normative) where they apply to implemented items in the following tables.
+- **M** means mandatory-to-implement for a processor claiming core JACAL
+  conformance
+- **O** means optional-to-implement
 
-*********
-#### 7.3.1 ACAL Object-Type Conformance
+For ACAL object types, these categories are inherited unchanged from
+[[ACAL-Core](#acal-core)] section 11.2.1. JACAL uses the same notation
+again in [section 7.3.2](#732-machine-readable-artifact-support) for
+JACAL-specific artifacts.
 
-JACAL inherits ACAL object-type conformance from [[ACAL-Core](#acal-core-10)] Section 11.2.1.
+An implementation MUST follow
+[Section 5](#5-syntax-normative-with-the-exception-of-the-schema-fragments)
+and [Annex C](#annex-c-xacml-identifiers-normative) where they apply to
+implemented items in the following tables.
 
-A processor claiming core YACAL conformance MUST support the JACAL
+## 7.3 Conformance tables
+
+### 7.3.1 ACAL Object-Type Conformance
+
+JACAL inherits ACAL object-type conformance from
+[[ACAL-Core](#acal-core-10)] section 11.2.1.
+
+A processor claiming core JACAL conformance MUST support the JACAL
 representation of every ACAL object type marked `M` in that table.  It
 MAY omit support for ACAL object types marked `O` unless it claims the
 corresponding optional ACAL feature.
 
 This specification therefore does not repeat the ACAL core object-type
-conformance table.  [Section 5](#5-syntax-normative-with-the-exception-of-the-schema-fragments) defines the YAML
-representation of those same ACAL object types, while
+conformance table.
+[Section 5](#5-syntax-normative-with-the-exception-of-the-schema-fragments)
+defines the JSON representation of those same ACAL object types, while
 [[ACAL-Core](#acal-core-10)] remains authoritative for their
 mandatory/optional classification.
 
-#### 7.3.2 Machine-Readable Artifact Support
+### 7.3.2 Machine-Readable Artifact Support
 
 The following machine-readable artifacts accompany this specification:
 
 | Artifact | Status | Notes |
 |:---|:---:|:---|
 | `acal-core-json-v1.0-schema.json` | M | Core JSON schema |
-| `acal-core-json-v1.0-identifiers.json` | M | Core short-identifier set |
+| `acal-core-json-v1.0-identifiers.json` | M | Core short identifier set represented in JSON |
 | `acal-xpath-json-v1.0-schema.json` | O | JSON schema for XPath Profile support |
-| `acal-xpath-json-v1.0-identifiers.json` | O | Short identifier set for XPath profile support |
+| `acal-xpath-json-v1.0-identifiers.json` | O | Short identifier set for XPath profile support represented in JSON |
 | `acal-jsonpath-json-v1.0-schema.json` | O | JSON schema for JSONPath Profile support |
 
 -------

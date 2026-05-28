@@ -156,7 +156,7 @@ Copyright © OASIS Open 2026. All Rights Reserved.  For license and copyright in
   - [4.3 Example Short Identifier Set](#43-example-short-identifier-set)
   - [4.4 Changes From the Previous Version](#44-changes-from-the-previous-version)
 - [5 Syntax (normative, with the exception of the schema fragments)](#5-syntax-normative-with-the-exception-of-the-schema-fragments)
-  - [5.1 Mapping ACAL primitive types](#51-mapping-acal-primitive-types)
+  - [5.1 Mapping ACAL simple types](#51-mapping-acal-simple-types)
     - [5.1.1 Primitive types mapped to standard XSD data-types](#511-primitive-types-mapped-to-standard-xsd-data-types)
     - [5.1.2 Restricted String types (UML stereotype `<<restrictedString>>`)](#512-restricted-string-types-uml-stereotype-restrictedstring)
     - [5.1.3 Enum types (UML stereotype `<<enumeration>>`)](#513-enum-types-uml-stereotype-enumeration)
@@ -317,9 +317,34 @@ The XACML syntax is defined in a schema associated with the following XML namesp
 
 <!-- All text is normative unless otherwise labeled -->
 
+The Attribute-Centric Authorization Language (ACAL) Version 1.0
+[[ACAL-Core](#acal-core-10)] defines an abstract policy language for
+attribute-based access control (ABAC) decisions. The ACAL abstract
+model is independent of any concrete representation format; concrete
+representations are defined by companion specifications.
+
+XACML defines the XML representation of ACAL. It is one of multiple
+concrete projections of the same ACAL model.
+
+
 ## 4.1 Requirements
 
-The XML representation should be as aligned as possible with ACAL.
+The XML representation (XACML) should be as aligned as possible with
+[[ACAL-Core-1.0](#acal-core-10)] (section 7 in particular).
+Indeed, XACML is a concrete representation format for ACAL.
+Every construct in the ACAL abstract model has a corresponding XACML
+representation defined in this specification.
+The normative reference for semantics, evaluation rules, and abstract
+conformance requirements is [[ACAL-Core](#acal-core-10)].
+This specification defines how ACAL abstract model types are expressed in XML.
+
+The authoritative definitions of ACAL simple types, object structures,
+inheritance relationships, and `ValueType` subtypes remain in
+[[ACAL-Core](#acal-core-10)] section 7.
+Likewise, the mandatory-versus-optional support classification of ACAL object
+types remains in [[ACAL-Core](#acal-core-10)] section 11.2.
+XACML does not redefine those abstract model elements;
+it defines only their XML representation.
 
 ## 4.2 Abstraction Layer
 
@@ -379,9 +404,11 @@ These rules have been applied to produce XACML's core XML schema in [Annex D](#a
 In all XSD definitions from now, the XACML core namespace `urn:oasis:names:tc:xacml:4.0:core:schema` is the default namespace.
 
 
-## 5.1 Mapping ACAL primitive types 
+## 5.1 Mapping ACAL simple types
 
-For each primitive type (stereotyped `<<primitive>>` or `<<enumeration>>`) in [[ACAL-Core-1.0](#acal-core-10)] model, apply the mapping rules in the next subsections.
+For each simple type (stereotyped `<<primitive>>` or `<<enumeration>>`) in
+section 7.1.2 of the [[ACAL-Core-1.0](#acal-core-10)] model, apply the mapping
+rules in the next subsections to obtain the XML representation.
 
 ### 5.1.1 Primitive types mapped to standard XSD data-types
 
@@ -401,7 +428,7 @@ Table 1: Mapping ACAL primitive types to standard XSD data-types
 
 ### 5.1.2 Restricted String types (UML stereotype `<<restrictedString>>`)
 
-Each ACAL primitive type `FooType` with stereotype `<<restrictedString>>`, i.e. with a given `pattern` property set to a regular expression *<REGEX>*, is mapped to the following XSD definition:
+Each ACAL primitive type `FooType` with stereotype `<<restrictedString>>` in section 7.1.2.3 of [[ACAL-Core-1.0](#acal-core-10)] (e.g., `VersionType`, `VersionMatchType`, `ShortIdNameType`, `ShortIdValueType`, `IdentifierType`, `LocalIdentifierType`, etc.), i.e., with a given `pattern` property set to a regular expression *\<REGEX>*, is mapped to the following XSD definition:
 
 ```xml
 <xs:simpleType name="FooType">
@@ -436,7 +463,7 @@ For example, ACAL `VersionType` translates to the following XSD definition:
 
 ### 5.1.3 Enum types (UML stereotype `<<enumeration>>`)
 
-Each ACAL enumerated type `FooType` (stereotyped `<<enumeration>>`) with enum values *V1, V2, ... Vn* is mapped to the following XSD definition:
+Each ACAL enumerated type `FooType` (stereotyped `<<enumeration>>`) from section 7.1.2.3 of [[ACAL-Core-1.0](#acal-core-10)] with enum values *V1, V2, ... Vn* is mapped to the following XSD definition:
 
 ```xml
 <xs:simpleType name="FooType">
@@ -483,7 +510,7 @@ Except the `AnyType` already addressed in the previous section, a single-use emp
 
 ### 5.2.3 ValueType mapping rules
 
-As an exception, if the ACAL complex type is `ValueType` from [[ACAL-Core-1.0](#acal-core-10)] section 7.23, it is always mapped to the following XSD: 
+The authoritative definition of ACAL `ValueType` and subtypes is in [[ACAL-Core-1.0](#acal-core-10)] section 7.23. The XACML representation of ACAL `ValueType` is defined by the following XSD:
 
 ```xml
 <xs:complexType name="ValueType" mixed="true">
@@ -832,78 +859,70 @@ This section is **REQUIRED** and **MUST** be the last numbered section in the do
 
 ## 7.1 Introduction
 
-The XACML specification addresses the following aspect of conformance:
+The XACML specification addresses conformance for ACAL object types and features when represented in XML.
 
-The XACML specification defines a number of functions, etc. that have somewhat special applications, therefore they are not required to be implemented in an implementation that claims to conform with the OASIS standard.
+Some ACAL objects and features are optional to implement, either because
+they are optional in the ACAL core or because they are only required when
+supporting specific ACAL profiles or deployment scenarios. If an
+implementation claims support for such an optional feature, it MUST
+implement the corresponding XML syntax, typing, and constraint rules
+consistently.
 
-## 7.2 Conformance tables
+This specification is accompanied by normative machine-readable
+artifacts for core XACML syntax, core short
+identifiers, and selected ACAL profiles. These artifacts support
+consistent implementation and validation of XACML, but they do not
+change the peer relationship between XACML and the YAML and JSON ACAL
+representations.
 
-This section lists those portions of the specification that MUST be included in an implementation of a **_PDP_** that claims to conform to XACML 4.0. A set of test cases has been created to assist in this process. These test cases can be located from the OASIS XACML TC Web page. The site hosting the test cases contains a full description of the test cases and how to execute them.
+## 7.2 Conformance Categories
 
-: Note: "M" means mandatory-to-implement. "O" means optional.
+For the purposes of this specification:
 
-The implementation MUST follow [Section 5](#5-syntax-normative-with-the-exception-of-the-schema-fragments) and [Annex C](#annex-c-xacml-identifiers-normative) where they apply to implemented items in the following tables.
+- **M** means mandatory-to-implement for a processor claiming core XACML
+  conformance
+- **O** means optional-to-implement
 
-### 7.2.1 Schema elements
+For ACAL object types, these categories are inherited unchanged from
+[[ACAL-Core](#acal-core)] section 11.2.1. XACML uses the same notation
+again in [section 7.3.2](#732-machine-readable-artifact-support) for
+XACML-specific artifacts.
 
-The implementation MUST support those schema elements in the XACML core namespace (`urn:oasis:names:tc:xacml:4.0:core:schema`) that are marked `M`.
+An implementation MUST follow
+[Section 5](#5-syntax-normative-with-the-exception-of-the-schema-fragments)
+and [Annex C](#annex-c-xacml-identifiers-normative) where they apply to
+implemented items in the following tables.
 
-| Element name                  | M/O |
-|:------------------------------|:----|
-| Apply                         | M   |
-| ApplicablePolicyReference     | O   |
-| Argument                      | M   |
-| Attribute                     | M   |
-| AttributeAssignment           | M   |
-| AttributeAssignmentExpression | M   |
-| AttributeDesignator           | M   |
-| AttributeSelector             | O   |
-| Bundle                        | O   |
-| Category                      | M   |
-| Condition                     | M   |
-| Content                       | O   |
-| Description                   | M   |
-| EntityAttributeDesignator     | O   |
-| EntityAttributeSelector       | O   |
-| Expression                    | M   |
-| ForAll                        | O   |
-| ForAny                        | O   |
-| Function                      | M   |
-| Map                           | O   |
-| MissingAttributeDetail        | M   |
-| MultiRequests                 | O   |
-| NamedArgument                 | O   |
-| Notice                        | M   |
-| NoticeExpression              | M   |
-| Policy                        | M   |
-| PolicyDefaults                | O   |
-| PolicyReference               | M   |
-| PolicyIssuer                  | O   |
-| PolicyPatternMatchReference   | O   |
-| Request                       | M   |
-| RequestAttribute              | M   |
-| RequestDefaults               | O   |
-| RequestEntity                 | M   |
-| RequestEntityReference        | O   |
-| RequestReference              | O   |
-| Response                      | M   |
-| Result                        | M   |
-| ResultEntity                  | M   |
-| Rule                          | M   |
-| Select                        | O   |
-| SharedVariableDefinition      | O   |
-| SharedVariableReference      | O   |
-| ShortId                       | M   |
-| ShortIdSet                    | M   |
-| ShortIdSetReference           | M   |
-| Status                        | M   |
-| StatusCode                    | M   |
-| StatusDetail                  | O   |
-| StatusMessage                 | O   |
-| Target                        | M   |
-| Value                         | M   |
-| VariableDefinition            | M   |
-| VariableReference             | M   |
+## 7.3 Conformance tables
+
+### 7.3.1 ACAL Object-Type Conformance
+
+XACML inherits ACAL object-type conformance from
+[[ACAL-Core](#acal-core-10)] section 11.2.1.
+
+A processor claiming core XACML conformance MUST support the XACML
+representation of every ACAL object type marked `M` in that table. It
+MAY omit support for ACAL object types marked `O` unless it claims the
+corresponding optional ACAL feature.
+
+This specification therefore does not repeat the ACAL core object-type
+conformance table.
+[Section 5](#5-syntax-normative-with-the-exception-of-the-schema-fragments)
+defines the XML representation of those same ACAL object types, while
+[[ACAL-Core](#acal-core-10)] remains authoritative for their
+mandatory/optional classification.
+
+### 7.3.2 Machine-Readable Artifact Support
+
+The following machine-readable artifacts accompany this specification:
+
+| Artifact | Status | Notes |
+|:---|:---:|:---|
+| `acal-core-xml-v4.0-schema.xsd` | M | Core XML Schema |
+| `acal-core-xml-v4.0-identifiers.xml` | M | Core short identifier set represented in XML |
+| `acal-xpath-xml-v4.0-schema.xsd` | O | XML Schema for XPath Profile support |
+| `acal-xpath-xml-v4.0-identifiers.xml` | O | Short identifier set for XPath profile support represented in XML |
+| `acal-jsonpath-xml-v4.0-schema.xsd` | O | XML Schema for JSONPath Profile support |
 
 -------
 
