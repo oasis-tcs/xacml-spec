@@ -128,6 +128,7 @@ representation of ACAL.
 |---|---|
 | Schema mechanism | W3C XML Schema 1.1 (structural) + Schematron or XSD 1.1 assertions (higher-order constraints) |
 | Type discrimination | Element names identify types (`<Rule>`, `<Policy>`, `<Apply>`, etc.) |
+| Literal typing | A uniform `<Value>` surface form is used; the effective ACAL `DataType` determines whether the value is a fixed primitive literal, a restricted string literal, or a structured value |
 | Namespace handling | XML namespace prefixes (`xmlns:xacml="urn:oasis:names:tc:xacml:4.0:core:schema"`) |
 | Short identifier support | Present; `{name}` notation in attribute values |
 | Validation toolchain | Xerces2, Saxon, standard XSD 1.1 and Schematron processors |
@@ -146,6 +147,7 @@ JACAL v1.0 is the JSON representation of ACAL.
 |---|---|
 | Schema mechanism | JSON Schema Draft 2020-12, using `$dynamicRef`/`$dynamicAnchor` for profile extensibility |
 | Type discrimination | Wrapper keys identify expression types (`"Rule": {...}`, `"Apply": {...}`) within `Expression` arrays |
+| Literal typing | JSON booleans, integers, and non-integer numbers imply the fixed ACAL primitive literal types; strings rely on context or explicit `DataType` when needed |
 | Namespace handling | Not applicable; namespaced identifiers are plain string URIs |
 | Short identifier support | Present; `{name}` notation in string values |
 | Validation toolchain | Any JSON Schema Draft 2020-12 validator (e.g. jsonschema by Sourcemeta, AJV) |
@@ -165,6 +167,7 @@ YACAL v1.0 is the YAML representation of ACAL.
 |---|---|
 | Schema mechanism | JSON Schema Draft 2020-12 semantics, serialized in YAML; validated over parsed YAML data |
 | Type discrimination | Same wrapper-key approach as JACAL |
+| Literal typing | YAML Core Schema booleans, integers, and floats imply the fixed ACAL primitive literal types; strings rely on context or explicit `DataType` when needed |
 | Namespace handling | Not applicable; short identifiers serve an equivalent ergonomic purpose |
 | Short identifier support | Present and most visible, because YAML readability benefits most from compressed identifiers |
 | Constraint catalog | Separate `acal-core-yaml-v1.0-constraints.yaml` for higher-order invariants not suitable for JSON Schema encoding |
@@ -263,6 +266,7 @@ explicit about where each validation responsibility lives.
 | Core structural schema | XSD 1.1 | JSON Schema Draft 2020-12 | JSON Schema Draft 2020-12, serialized as YAML |
 | Higher-order constraint layer | Schematron + XSD 1.1 assertions | Partly in JSON Schema; partly implementation guidance | Separate YAML constraint catalog |
 | Short-identifier reference set | XML `ShortIdSet` | JSON `ShortIdSet` | YAML `ShortIdSet` |
+| Primitive literal typing | Effective `DataType` determines the concrete `ValueType` subtype behind the uniform `<Value>` surface | Native JSON primitive forms imply the fixed ACAL primitive literal types | Native YAML Core Schema scalar forms imply the fixed ACAL primitive literal types |
 | XPath Profile | Present | Present | Present |
 | JSONPath Profile | Present | Present | Present |
 | Profile extension composition | Via XSD imports | `$dynamicRef`/`$dynamicAnchor` | Same mechanism as JACAL, with explicit composition schema examples |
