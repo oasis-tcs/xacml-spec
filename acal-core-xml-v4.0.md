@@ -177,7 +177,7 @@ Copyright © OASIS Open 2026. All Rights Reserved.  For license and copyright in
     - [6.2.2 Policy integrity](#622-policy-integrity)
 - [7 Conformance](#7-conformance)
   - [7.1 Introduction](#71-introduction)
-  - [7.2 Conformance tables](#72-conformance-tables)
+  - [7.3 Conformance Tables](#73-conformance-tables)
     - [7.2.1 Schema elements](#721-schema-elements)
 - [Annex A License, Document Status and Notices](#annex-a-license-document-status-and-notices)
   - [A.1 Document Status](#a1-document-status)
@@ -189,7 +189,7 @@ Copyright © OASIS Open 2026. All Rights Reserved.  For license and copyright in
   - [C.1 XACML namespaces](#c1-xacml-namespaces)
 - [Annex D XML Schema (normative)](#annex-d-xml-schema-normative)
 - [Annex E How to generate HTML and PDF Versions](#annex-e-how-to-generate-html-and-pdf-versions)
-- [Appendix 1. Acknowledgments](#appendix-1-acknowledgments)
+- [Appendix 1 Acknowledgments](#appendix-1-acknowledgments)
   - [Leadership](#leadership)
   - [Special Thanks](#special-thanks)
   - [Participants](#participants)
@@ -330,7 +330,7 @@ concrete projections of the same ACAL model.
 ## 4.1 Requirements
 
 The XML representation (XACML) should be as aligned as possible with
-[[ACAL-Core-1.0](#acal-core-10)] (section 7 in particular).
+[[ACAL-Core-1.0](#acal-core-10)] (Section 7 in particular).
 Indeed, XACML is a concrete representation format for ACAL.
 Every construct in the ACAL abstract model has a corresponding XACML
 representation defined in this specification.
@@ -340,9 +340,9 @@ This specification defines how ACAL abstract model types are expressed in XML.
 
 The authoritative definitions of ACAL simple types, object structures,
 inheritance relationships, and `ValueType` subtypes remain in
-[[ACAL-Core](#acal-core-10)] section 7.
+[[ACAL-Core](#acal-core-10)] Section 7.
 Likewise, the mandatory-versus-optional support classification of ACAL object
-types remains in [[ACAL-Core](#acal-core-10)] section 11.2.
+types remains in [[ACAL-Core](#acal-core-10)] Section 11.2.
 XACML does not redefine those abstract model elements;
 it defines only their XML representation.
 
@@ -407,7 +407,7 @@ In all XSD definitions from now, the XACML core namespace `urn:oasis:names:tc:xa
 ## 5.1 Mapping ACAL simple types
 
 For each simple type (stereotyped `<<primitive>>` or `<<enumeration>>`) in
-section 7.1.2 of the [[ACAL-Core-1.0](#acal-core-10)] model, apply the mapping
+Section 7.1.2 of the [[ACAL-Core-1.0](#acal-core-10)] model, apply the mapping
 rules in the next subsections to obtain the XML representation.
 
 ### 5.1.1 Primitive types mapped to standard XSD data-types
@@ -428,7 +428,7 @@ Table 1: Mapping ACAL primitive types to standard XSD data-types
 
 ### 5.1.2 Restricted String types (UML stereotype `<<restrictedString>>`)
 
-Each ACAL primitive type `FooType` with stereotype `<<restrictedString>>` in section 7.1.2.3 of [[ACAL-Core-1.0](#acal-core-10)] (e.g., `VersionType`, `VersionMatchType`, `ShortIdNameType`, `ShortIdValueType`, `IdentifierType`, `LocalIdentifierType`, etc.), i.e., with a given `pattern` property set to a regular expression *\<REGEX>*, is mapped to the following XSD definition:
+Each ACAL primitive type `FooType` with stereotype `<<restrictedString>>` in Section 7.1.2.3 of [[ACAL-Core-1.0](#acal-core-10)] (e.g., `VersionType`, `VersionMatchType`, `ShortIdNameType`, `ShortIdValueType`, `IdentifierType`, `LocalIdentifierType`, etc.), i.e., with a given `pattern` property set to a regular expression *\<REGEX>*, is mapped to the following XSD definition:
 
 ```xml
 <xs:simpleType name="FooType">
@@ -463,7 +463,7 @@ For example, ACAL `VersionType` translates to the following XSD definition:
 
 ### 5.1.3 Enum types (UML stereotype `<<enumeration>>`)
 
-Each ACAL enumerated type `FooType` (stereotyped `<<enumeration>>`) from section 7.1.2.3 of [[ACAL-Core-1.0](#acal-core-10)] with enum values *V1, V2, ... Vn* is mapped to the following XSD definition:
+Each ACAL enumerated type `FooType` (stereotyped `<<enumeration>>`) from Section 7.1.2.3 of [[ACAL-Core-1.0](#acal-core-10)] with enum values *V1, V2, ... Vn* is mapped to the following XSD definition:
 
 ```xml
 <xs:simpleType name="FooType">
@@ -506,11 +506,11 @@ The ACAL `AnyType` is mapped to the `xs:anyType` type in XML.
 
 There are complex ACAL datatypes playing the role of *Union* datatype, such as `CombinerInputType`, which are *empty* (no property and no class inheritance) and have as many subtypes as possible types in the *union*. These are usually used once for a property that can take one of multiple alternative types, such as `CombinerInput`. 
 
-Except the `AnyType` already addressed in the previous section, a single-use empty ACAL datatype `FooType` (i.e. used only for one property `P` in the whole ACAL model (e.g. `CombinerInput`) and not to be used in any ACAL extension) SHALL not be mapped to any dedicated XML type, element or attribute in the XSD. The mapping is done only at the level of property `P` (section 5.2.5) to a `xs:choice` of XSD elements corresponding to the subtypes of `FooType`. 
+Except the `AnyType` already addressed in the previous section, a single-use empty ACAL datatype `FooType` (i.e. used only for one property `P` in the whole ACAL model (e.g. `CombinerInput`) and not to be used in any ACAL extension) SHALL not be mapped to any dedicated XML type, element or attribute in the XSD. The mapping is done only at the level of property `P` (Section 5.2.5) to a `xs:choice` of XSD elements corresponding to the subtypes of `FooType`.
 
 ### 5.2.3 ValueType mapping rules
 
-The authoritative definition of ACAL `ValueType` and subtypes is in [[ACAL-Core-1.0](#acal-core-10)] section 7.23. The XACML representation of ACAL `ValueType` is defined by the following XSD:
+The authoritative definition of ACAL `ValueType` and subtypes is in [[ACAL-Core-1.0](#acal-core-10)] Section 7.23. The XACML representation of ACAL `ValueType` is defined by the following XSD:
 
 ```xml
 <xs:complexType name="ValueType" mixed="true">
@@ -526,9 +526,11 @@ The authoritative definition of ACAL `ValueType` and subtypes is in [[ACAL-Core-
 </xs:complexType>
 ```
 
+Unlike the primitive JSON and YAML forms, this XACML surface form does not by itself distinguish `LiteralBooleanType`, `LiteralIntegerType`, `LiteralDoubleType`, `LiteralStringType`, `LiteralRestrictedStringType`, or a concrete `StructuredValueType` subtype. In XACML, the concrete `ValueType` subtype is determined from the effective ACAL `DataType` together with the XML content form. For the `<<fixedDatatype>>` literal subtypes, the effective `DataType` is their fixed ACAL data-type identifier, whether supplied explicitly or inferred by the parent-context rules in [[ACAL-Core-1.0](#acal-core-10)] Section 7.23. `LiteralRestrictedStringType` and concrete `StructuredValueType` subtypes require an explicit or inherited `DataType` that identifies the intended ACAL data type, and the element content MUST conform to the lexical or structured representation defined for that type.
+
 ### 5.2.4 Default mapping rules for complex ACAL types (other than ValueType)
 
-If a complex ACAL type `FooType` is not in the previous cases (section 5.2.1, 5.2.2 and 5.2.3), then:
+If a complex ACAL type `FooType` is not in the previous cases (Section 5.2.1, 5.2.2 and 5.2.3), then:
 
 1. If `FooType` is abstract (italicized title in the UML diagram), then:
    * 1.1. If `FooType` is empty (no class inheritance, no property), then:
@@ -537,11 +539,11 @@ If a complex ACAL type `FooType` is not in the previous cases (section 5.2.1, 5.
        <xs:element name="Foo" type="FooType" abstract="true" />
        <xs:complexType name="FooType" abstract="true"/>
        ```
-     - 1.1.2. Else (it is single-used) skip it as instructed in section 5.2.2.
+     - 1.1.2. Else (it is single-used) skip it as instructed in Section 5.2.2.
   
    * 1.2. Else (`FooType` is not empty, i.e. inherits a type and/or has at least one property):
      - 1.2.1. If  `FooType` inherits from a Datatype `BarType` (Generalization relationship), then:
-       + 1.2.1.1. If `BarType` is a single-use empty type as defined in section 5.2.2, `BarType` is not mapped to any XSD type (mapping is done only at the property level), therefore `FooType` SHALL be mapped to the following XSD definition (not inheriting from `BarType`):
+       + 1.2.1.1. If `BarType` is a single-use empty type as defined in Section 5.2.2, `BarType` is not mapped to any XSD type (mapping is done only at the property level), therefore `FooType` SHALL be mapped to the following XSD definition (not inheriting from `BarType`):
   
           ```xml
           <xs:element name="Foo" type="FooType" abstract="true" />
@@ -583,7 +585,7 @@ If a complex ACAL type `FooType` is not in the previous cases (section 5.2.1, 5.
        ```
 2. Else (`FooType` is not abstract) apply the same mapping rules as in the first case, except remove `abstract="true"` from the `xs:complexType` and `xs:element` definitions.
 
-3. If `FooType` has a UML *link* (kind of *Association*) via its property *keyRefProp* to another type `BarType`'s property *keyProp* (e.g. a reference to a BarType instance via its identifier), then add a `<xs:keyRef>` element as defined in section 3.11.2 of [[XS](#xs11)] (Identity-constraint Definitions), into the XML element declaration of the root object type (*RootObjectType*) enclosing the property(ies) of type *FooType* and *BarType* (created previously), as follows:
+3. If `FooType` has a UML *link* (kind of *Association*) via its property *keyRefProp* to another type `BarType`'s property *keyProp* (e.g. a reference to a BarType instance via its identifier), then add a `<xs:keyRef>` element as defined in Section 3.11.2 of [[XS](#xs11)] (Identity-constraint Definitions), into the XML element declaration of the root object type (*RootObjectType*) enclosing the property(ies) of type *FooType* and *BarType* (created previously), as follows:
    ```xml
    <xs:element name="RootObject" ...>
      ...
@@ -602,7 +604,7 @@ If a complex ACAL type `FooType` is not in the previous cases (section 5.2.1, 5.
    ```
    where `<XPath_to_Foo_element>` is the XPath expression to select the *Foo* element of `FooType`.
    
-4. If `FooType` has *Object-level constraints* as defined in section 7.1.1.1.2 of [[ACAL-Core-1.0](#acal-core-10)], implementers SHOULD apply the recommended mappings in the section [5.2.6](#526-mapping-complex-acal-constraints-ocl), or they MAY also apply alternative implementation-specific mapping mechanisms as they see fit.
+4. If `FooType` has *Object-level constraints* as defined in Section 7.1.1.1.2 of [[ACAL-Core-1.0](#acal-core-10)], implementers SHOULD apply the recommended mappings in the Section [5.2.6](#526-mapping-complex-acal-constraints-ocl), or they MAY also apply alternative implementation-specific mapping mechanisms as they see fit.
 
 ### 5.2.5 Property mapping rules
 
@@ -617,8 +619,8 @@ Inside the `xs:complexType` or `xs:extension` element created by the previous ma
 
 2. Else if *PropType* is a primitive type, then:
    
-   - 2.1. Map *PropType* to a XSD type according to mapping rules of section 5.1. The obtained XSD type is referred to as `PropXsdType` in the next steps.
-   - 2.2. If *PropType* is other than (unrestricted) `String` (it may be a restricted String type as in section 5.1.2) AND single-valued (the upper bound of the multiplicity is 1), then map to an XML attribute as follows (if *Prop*'s multiplicity is `0..1`, replace `$use` with `optional`, else with `required`):
+   - 2.1. Map *PropType* to a XSD type according to mapping rules of Section 5.1. The obtained XSD type is referred to as `PropXsdType` in the next steps.
+   - 2.2. If *PropType* is other than (unrestricted) `String` (it may be a restricted String type as in Section 5.1.2) AND single-valued (the upper bound of the multiplicity is 1), then map to an XML attribute as follows (if *Prop*'s multiplicity is `0..1`, replace `$use` with `optional`, else with `required`):
 
      ```xml
      <xs:attribute name="Prop" type="PropXsdType" use="$use"/>
@@ -647,7 +649,7 @@ Inside the `xs:complexType` or `xs:extension` element created by the previous ma
         </xs:sequence>
         ```
 
-   - 2.4. If *Prop* is multivalued and has a *simple uniqueness constraint* as defined in section 7.1.1.1.1.1 of [[ACAL-Core-1.0](#acal-core-10)], i.e. a UML `unique` annotation, then add an `<xs:key>` element as defined in section 3.11.2 of [[XS](#xs11)] (Identity-constraint Definitions), into the XML element declaration of the root object type enclosing *Prop* (created previously), as follows:
+   - 2.4. If *Prop* is multivalued and has a *simple uniqueness constraint* as defined in Section 7.1.1.1.1.1 of [[ACAL-Core-1.0](#acal-core-10)], i.e. a UML `unique` annotation, then add an `<xs:key>` element as defined in Section 3.11.2 of [[XS](#xs11)] (Identity-constraint Definitions), into the XML element declaration of the root object type enclosing *Prop* (created previously), as follows:
   
      ```xml
      <xs:element name="RootAncestorOfProp" ...>
@@ -700,7 +702,7 @@ Inside the `xs:complexType` or `xs:extension` element created by the previous ma
      </xs:sequence>
      ```
 
-   - 4.3. If *Prop* has a *mandatory-property-based uniqueness constraint* as defined in section 7.1.1.1.1.2 of [[ACAL-Core-1.0](#acal-core-10)], i.e. `self->isUnique(itemProp)`, then add an `<xs:key>` element as defined in section 3.11.2 of [[XS](#xs11)] (Identity-constraint Definitions), into the XML element of the root object type enclosing *Prop* (created previously), as follows (such `itemProp` is always mapped to an XML attribute in this case):
+   - 4.3. If *Prop* has a *mandatory-property-based uniqueness constraint* as defined in Section 7.1.1.1.1.2 of [[ACAL-Core-1.0](#acal-core-10)], i.e. `self->isUnique(itemProp)`, then add an `<xs:key>` element as defined in Section 3.11.2 of [[XS](#xs11)] (Identity-constraint Definitions), into the XML element of the root object type enclosing *Prop* (created previously), as follows (such `itemProp` is always mapped to an XML attribute in this case):
   
      ```xml
      <xs:element name="RootAncestorOfProp" ...>
@@ -712,7 +714,7 @@ Inside the `xs:complexType` or `xs:extension` element created by the previous ma
      ```
      where `<XPath_to_Prop>` is the XPath expression to select the *Prop* element from `RootAncestorOfProp` element.
 
-   - 4.4 Else if *Prop* has a *optional-property-based uniqueness constraint* as defined in section 7.1.1.1.1.2 of [[ACAL-Core-1.0](#acal-core-10)], i.e. `self->select(itemProp <> null)->isUnique(itemProp)`, then add an `<xs:unique>` element as defined in section 3.11.2 of [[XS](#xs11)] (Identity-constraint Definitions), into the XML element of the root object type enclosing *Prop* (created previously), as follows (such `itemProp` is always mapped to an XML attribute in this case):
+   - 4.4 Else if *Prop* has a *optional-property-based uniqueness constraint* as defined in Section 7.1.1.1.1.2 of [[ACAL-Core-1.0](#acal-core-10)], i.e. `self->select(itemProp <> null)->isUnique(itemProp)`, then add an `<xs:unique>` element as defined in Section 3.11.2 of [[XS](#xs11)] (Identity-constraint Definitions), into the XML element of the root object type enclosing *Prop* (created previously), as follows (such `itemProp` is always mapped to an XML attribute in this case):
   
      ```xml
      <xs:element name="RootAncestorOfProp" ...>
@@ -725,7 +727,7 @@ Inside the `xs:complexType` or `xs:extension` element created by the previous ma
 
      where `<XPath_to_Prop>` is the XPath expression to select the *Prop* element from `RootAncestorOfProp` element.
 
-   - 4.5. Else if *Prop* has a *multi-property-based uniqueness constraint* as defined in section 7.1.1.1.1.2 of [[ACAL-Core-1.0](#acal-core-10)], i.e. ` self->isUnique(Sequence{itemProp1, itemProp2, ...})`, then add an `<xs:unique>` element as defined in section 3.11.2 of [[XS](#xs11)] (Identity-constraint Definitions), into the XML element of the root object type enclosing *Prop* (created previously), as follows (such `itemProp1`, `itemProp2`, etc. are always mapped to XML attributes in this case):
+   - 4.5. Else if *Prop* has a *multi-property-based uniqueness constraint* as defined in Section 7.1.1.1.1.2 of [[ACAL-Core-1.0](#acal-core-10)], i.e. ` self->isUnique(Sequence{itemProp1, itemProp2, ...})`, then add an `<xs:unique>` element as defined in Section 3.11.2 of [[XS](#xs11)] (Identity-constraint Definitions), into the XML element of the root object type enclosing *Prop* (created previously), as follows (such `itemProp1`, `itemProp2`, etc. are always mapped to XML attributes in this case):
   
      ```xml
      <xs:element name="RootAncestorOfProp" ...>
@@ -740,7 +742,7 @@ Inside the `xs:complexType` or `xs:extension` element created by the previous ma
 
      where `<XPath_to_Prop>` is the XPath expression to select the *Prop* element from `RootAncestorOfProp` element.
 
-   - 4.6. Else if *Prop* has other kinds of constraints defined in section 7.1.1.1.1.2 of [[ACAL-Core-1.0](#acal-core-10)] not mentioned previously, implementers SHOULD apply the recommended mappings in the next section, or they MAY also apply alternative implementation-specific mapping mechanisms as they see fit.
+   - 4.6. Else if *Prop* has other kinds of constraints defined in Section 7.1.1.1.1.2 of [[ACAL-Core-1.0](#acal-core-10)] not mentioned previously, implementers SHOULD apply the recommended mappings in the next section, or they MAY also apply alternative implementation-specific mapping mechanisms as they see fit.
 
 ### 5.2.6 Mapping complex ACAL constraints (OCL)
 
@@ -748,10 +750,10 @@ _*This section is non-normative.*_
 
 The following kinds of OCL-defined UML constraints in the [[ACAL-Core-1.0](#acal-core-10)] model do not have any equivalent in [[XSD 1.0](#xs)]:
 
-- Some of the OCL-defined property-level constraints in [[ACAL-Core-1.0](#acal-core-10)] section 7.1.1.1.1.2:
+- Some of the OCL-defined property-level constraints in [[ACAL-Core-1.0](#acal-core-10)] Section 7.1.1.1.1.2:
   - Multivalued-property-based uniqueness constraint;
   - Value type uniqueness constraint.
-- All object-level constraints in [[ACAL-Core-1.0](#acal-core-10)] section 7.1.1.1.2.
+- All object-level constraints in [[ACAL-Core-1.0](#acal-core-10)] Section 7.1.1.1.2.
 
 This document does not mandate a particular method to map and/or implement these more complex constraints, and leaves this part of the specification implementation-defined. Instead, this document provides only an implementation guidance that recommends to possible options described in the next sections:
 
@@ -761,7 +763,7 @@ This document does not mandate a particular method to map and/or implement these
 
 #### 5.2.6.1 Option 1: XML Schema 1.1 assertions
 
-Implementations supporting [W3C XML Schema 1.1](#xs11) standard SHOULD use XSD 1.1 assertions as defined in section 3.13 of XSD 1.1 standard to implement the aforementioned constraints. The general mapping rule consists for each constraint specified on a ACAL Datatype `FooType` or one of its properties, to define an equivalent XSD 1.1 assertion `<xs:assert test="expression"/>` - where *expression* is the XPath equivalent of the OCL constraint expression - inside the `xs:complexType` definition of `FooType`.
+Implementations supporting [W3C XML Schema 1.1](#xs11) standard SHOULD use XSD 1.1 assertions as defined in Section 3.13 of XSD 1.1 standard to implement the aforementioned constraints. The general mapping rule consists for each constraint specified on a ACAL Datatype `FooType` or one of its properties, to define an equivalent XSD 1.1 assertion `<xs:assert test="expression"/>` - where *expression* is the XPath equivalent of the OCL constraint expression - inside the `xs:complexType` definition of `FooType`.
 
 The equivalent XSD 1.1 assertions are already defined in the *Core XML schema* accompanying this document (`<xs:assert>` elements). However, certain generic assertions may be problematic for certain XSD 1.1 / XPath engines or use cases, in which case alternative assertions are suggested in XML comments before or after each possibly problematic `<xs:assert>` element currently in use in the schema. Implementers SHOULD review these before use.
 
@@ -831,11 +833,11 @@ This section identifies possible security and privacy compromise scenarios that 
 
 ## 6.1 Threat model
 
-Refer to [[ACAL-Core-1.0](#acal-core-10)] section 11.1.
+Refer to [[ACAL-Core-1.0](#acal-core-10)] Section 11.1.
 
 ## 6.2 Safeguards
 
-Refer to [[ACAL-Core-1.0](#acal-core-10)] section 11.2 for general considerations.
+Refer to [[ACAL-Core-1.0](#acal-core-10)] Section 11.2 for general considerations.
 
 ### 6.2.1 Policy confidentiality
 
@@ -884,8 +886,8 @@ For the purposes of this specification:
 - **O** means optional-to-implement
 
 For ACAL object types, these categories are inherited unchanged from
-[[ACAL-Core](#acal-core)] section 11.2.1. XACML uses the same notation
-again in [section 7.3.2](#732-machine-readable-artifact-support) for
+[[ACAL-Core](#acal-core)] Section 11.2.1. XACML uses the same notation
+again in [Section 7.3.2](#732-machine-readable-artifact-support) for
 XACML-specific artifacts.
 
 An implementation MUST follow
@@ -893,12 +895,12 @@ An implementation MUST follow
 and [Annex C](#annex-c-xacml-identifiers-normative) where they apply to
 implemented items in the following tables.
 
-## 7.3 Conformance tables
+## 7.3 Conformance Tables
 
 ### 7.3.1 ACAL Object-Type Conformance
 
 XACML inherits ACAL object-type conformance from
-[[ACAL-Core](#acal-core-10)] section 11.2.1.
+[[ACAL-Core](#acal-core-10)] Section 11.2.1.
 
 A processor claiming core XACML conformance MUST support the XACML
 representation of every ACAL object type marked `M` in that table. It
@@ -1192,7 +1194,7 @@ The `ShortIdSet.Id` value of this artifact is:
 
 # Annex D XML Schema (normative)
 
-This section includes the XML Schema for the XACML syntax defined in this specification, more particularly in section 5 (i.e. obtained by applying the ACAL-to-XML mapping rules):
+This section includes the XML Schema for the XACML syntax defined in this specification, more particularly in Section 5 (i.e. obtained by applying the ACAL-to-XML mapping rules):
 
 ```xml 
 !include`xslt="pandoc/remove-comments.xsl"` acal-core-xml-v4.0-schema.xsd
@@ -1252,7 +1254,7 @@ $ pandoc/mkdocs.sh --pdf --output /tmp acal-core-xml-v%version%.md
 The HTML file is generated like the previous command and, in addition, a PDF file is generated with the same name as the input file except the `.md` extension is replaced with `.pdf` in this case.
 
 
-# Appendix 1. Acknowledgments
+# Appendix 1 Acknowledgments
 
 (This appendix does not form an integral part of this Specification and is informational.)
 

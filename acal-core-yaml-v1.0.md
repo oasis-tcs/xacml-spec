@@ -109,7 +109,7 @@ copyright, and document-status information, see
 
 ------------------------------------------------------------------------
 
-## Table of Contents
+# Table of Contents
 
 1. [Scope](#1-scope)
 2. [Definitions and Acronyms](#2-definitions-and-acronyms)
@@ -119,28 +119,28 @@ copyright, and document-status information, see
 6. [Safety, Security and Privacy Considerations (non-normative)](#6-safety-security-and-privacy-considerations-non-normative)
 7. [Conformance](#7-conformance)
 
-Annex A. [License, Document Status and Notices](#annex-a-license-document-status-and-notices)
+Annex A [License, Document Status and Notices](#annex-a-license-document-status-and-notices)
   - [A.1 Document Status](#a1-document-status)
   - [A.2 License and Notices](#a2-license-and-notices)
-Annex B. [References](#annex-b-references)
+Annex B [References](#annex-b-references)
   - [B.1 Normative References](#b1-normative-references)
-Annex C. [YACAL Identifiers and Machine-Readable Artifacts](#annex-c-yacal-identifiers-and-machine-readable-artifacts)
+Annex C [YACAL Identifiers and Machine-Readable Artifacts](#annex-c-yacal-identifiers-and-machine-readable-artifacts)
   - [C.1 Core Short-Identifier Set](#c1-core-short-identifier-set)
   - [C.2 Core YACAL Artifacts](#c2-core-yacal-artifacts)
   - [C.3 Profile YACAL Artifacts](#c3-profile-yacal-artifacts)
   - [C.4 Informative Composition Schemas](#c4-informative-composition-schemas)
-Annex D. [Complete Example: Website Content Access Policy](#annex-d-complete-example-website-content-access-policy)
-Annex E. [Complete Example: Healthcare Chart Access Policy](#annex-e-complete-example-healthcare-chart-access-policy)
-Appendix 1. [Acknowledgments](#appendix-1-acknowledgments)
+Annex D [Complete Example: Website Content Access Policy](#annex-d-complete-example-website-content-access-policy)
+Annex E [Complete Example: Healthcare Chart Access Policy](#annex-e-complete-example-healthcare-chart-access-policy)
+Appendix 1 [Acknowledgments](#appendix-1-acknowledgments)
   - [Leadership](#leadership)
   - [Special Thanks](#special-thanks)
   - [Participants](#participants)
-Appendix 2. [Changes From Previous Version](#appendix-2-changes-from-previous-version)
+Appendix 2 [Changes From Previous Version](#appendix-2-changes-from-previous-version)
   - [Revision History](#revision-history)
 
 ------------------------------------------------------------------------
 
-## 1. Scope
+# 1 Scope
 
 This specification defines the YAML syntax of the
 [[ACAL-Core](#acal-core)] model and the YAML-specific syntax and
@@ -159,16 +159,16 @@ requirements, this specification relies on [[ACAL-Core](#acal-core)].
 
 ------------------------------------------------------------------------
 
-## 2. Definitions and Acronyms
+# 2 Definitions and Acronyms
 
-### 2.1 Definitions
+## 2.1 Definitions
 
-#### 2.1.1 Terms Defined Elsewhere
+### 2.1.1 Terms Defined Elsewhere
 
 ACAL
 : Attribute-Centric Authorization Language Version 1.0
 
-#### 2.1.2 Terms Defined in This Document
+### 2.1.2 Terms Defined in This Document
 
 YACAL
 : YAML Representation of ACAL Version 1.0 (this specification)
@@ -187,7 +187,7 @@ wrapper key
 : A mapping key whose name identifies the type of the value it
   contains; used for type discrimination in polymorphic contexts
 
-### 2.2 Abbreviations and Acronyms
+## 2.2 Abbreviations and Acronyms
 
 This document uses the following abbreviations and acronyms:
 
@@ -205,9 +205,9 @@ This document uses the following abbreviations and acronyms:
 
 ------------------------------------------------------------------------
 
-## 3. Document Conventions
+# 3 Document Conventions
 
-### 3.1 Key Words
+## 3.1 Key Words
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
 "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
@@ -215,14 +215,14 @@ document are to be interpreted as described in [[RFC2119](#rfc2119)]
 and [[RFC8174](#rfc8174)] when, and only when, they appear in all
 capitals, as shown here.
 
-### 3.2 Typographic Conventions
+## 3.2 Typographic Conventions
 
 YAML examples are presented in block style using code fences.  Property
 names from the ACAL abstract model are rendered in `monospace`.
 References to ACAL abstract model types use the form `TypeName` in
 monospace.
 
-### 3.3 YAML Presentation Conventions
+## 3.3 YAML Presentation Conventions
 
 Unless otherwise stated, examples use YAML 1.2 block style and the Core
 Schema.  Flow style may appear in short inline examples, but block style
@@ -230,7 +230,7 @@ is the preferred presentation form in this specification.
 
 ------------------------------------------------------------------------
 
-## 4. Introduction (non-normative)
+# 4 Introduction (non-normative)
 
 The Attribute-Centric Authorization Language (ACAL) Version 1.0
 [[ACAL-Core](#acal-core)] defines an abstract policy language for
@@ -246,7 +246,7 @@ sequence, and scalar constructs that suit ACAL's object structure well.
 YACAL uses those constructs while preserving the semantics of the ACAL
 abstract model.
 
-### 4.1 Relationship to ACAL
+## 4.1 Relationship to ACAL
 
 YACAL is a concrete representation format for ACAL.  Every construct in
 the ACAL abstract model has a corresponding YACAL representation defined
@@ -262,7 +262,7 @@ optional support classification of ACAL object types remains in
 [[ACAL-Core](#acal-core)] Section 11.2.  YACAL does not redefine those
 abstract model elements; it defines only their YAML representation.
 
-### 4.2 Relationship to Peer Representations
+## 4.2 Relationship to Peer Representations
 
 YACAL is structurally aligned with the other ACAL concrete
 representations.  The mapping from ACAL to YACAL follows the same broad
@@ -278,7 +278,7 @@ abstract model.  Transformations between concrete representations, where
 needed, belong in separate interoperability guidance and do not define
 YACAL conformance or semantics.
 
-### 4.3 Design Principles
+## 4.3 Design Principles
 
 The design of YACAL is guided by the following principles, in priority
 order:
@@ -296,11 +296,11 @@ order:
 
 ------------------------------------------------------------------------
 
-## 5. Syntax (normative)
+# 5 Syntax (normative)
 
-### 5.1 YAML Baseline
+## 5.1 YAML Baseline
 
-#### 5.1.1 YAML Version
+### 5.1.1 YAML Version
 
 YACAL documents MUST conform to YAML 1.2 [[YAML1.2](#yaml12)].
 YAML 1.1 features that are absent from or incompatible with YAML 1.2
@@ -308,10 +308,10 @@ YAML 1.1 features that are absent from or incompatible with YAML 1.2
 locale-dependent boolean values like `yes`, `no`, `on`, `off`) MUST NOT
 be relied upon.
 
-#### 5.1.2 Core Schema
+### 5.1.2 Core Schema
 
 YACAL documents MUST be interpreted using the YAML 1.2 Core Schema.
-Under the Core Schema, the following scalar resolutions apply (depending on the matched regular expression in this order, cf. [[YAML](#yaml)] section 10.3.2):
+Under the Core Schema, the following scalar resolutions apply (depending on the matched regular expression in this order, cf. [[YAML1.2](#yaml12)] Section 10.3.2):
 
 | YAML Scalar regex | Examples | Resolved YAML Type | ACAL DataType |
 |---|---|---|---|
@@ -329,7 +329,7 @@ The Core Schema guarantees that unquoted scalars like `2026-03-23` are
 resolved as strings (not dates), and `010` is resolved as the integer 10
 (not octal 8), eliminating the type ambiguity present in YAML 1.1.
 
-#### 5.1.3 String Quoting
+### 5.1.3 String Quoting
 
 YAML does not require quotes around string scalars unless the value
 contains characters that would cause misinterpretation. Quoting is
@@ -384,7 +384,7 @@ In YACAL:
     Value: "null"
     ```
 
-#### 5.1.4 Prohibited YAML Features
+### 5.1.4 Prohibited YAML Features
 
 The following YAML features MUST NOT be used in conformant YACAL
 documents:
@@ -401,9 +401,9 @@ documents:
 -   **Null** values (i.e. `null`, `Null`, `NULL`, `~` or the absence of value are considered invalid).
 -   **Octal notation** for integers (to align with JSON integer type), i.e. any value matching the pattern `0o [0-7]+` is forbidden.
 
-### 5.2 Document Structure
+## 5.2 Document Structure
 
-#### 5.2.1 Root Element
+### 5.2.1 Root Element
 
 A YACAL document is a single YAML mapping with exactly one key at the
 root level.  The key identifies the document type:
@@ -428,29 +428,29 @@ Policy:
         Effect: Permit
 ```
 
-#### 5.2.2 Property Names
+### 5.2.2 Property Names
 
 All property names in YACAL use PascalCase, following the ACAL abstract
 model property set as normalized for YAML presentation: `PolicyId`, `CombiningAlgId`,
 `AttributeDesignator`, `MustBePresent`, etc.
 
-#### 5.2.3 Property Ordering
+### 5.2.3 Property Ordering
 
 The ordering of keys within a YAML mapping is not significant for
 YACAL semantics.  However, for readability and consistency, YACAL
 documents SHOULD order properties in the same sequence as they appear
 in the ACAL abstract model definition.
 
-#### 5.2.4 Omitted Properties
+### 5.2.4 Omitted Properties
 
 An optional property that is absent from a YACAL document takes the default value defined by the ACAL abstract model, if one is defined. A property MUST NOT be present with a null value (`null`, `Null`, `NULL`, `~` or undefined value in YAML) as a substitute for omission
 (see [Section 5.4.3](#543-null-and-omission)).
 
 ------------------------------------------------------------------------
 
-### 5.3 Simple Type Mapping
+## 5.3 Simple Type Mapping
 
-#### 5.3.1 Mapping Model
+### 5.3.1 Mapping Model
 
 This section defines the default YACAL mapping rules for ACAL simple
 types.  The simple types themselves remain defined by
@@ -465,7 +465,7 @@ itself.  A YAML scalar is not conformant merely because it is legal
 YAML; it MUST also satisfy the constraints of the ACAL simple type being
 represented.
 
-#### 5.3.2 Selected Simple Types Mapped to Native YAML Scalars
+### 5.3.2 Selected Simple Types Mapped to Native YAML Scalars
 
 The following table defines the YAML scalar forms used for selected ACAL
 simple types whose lexical space aligns with native YAML scalars.  It
@@ -495,7 +495,7 @@ A value of ACAL type `Double` MUST use a lexical form that YAML resolves
 as a float rather than an integer.  For example, `3.0` and `-0.5`
 represent doubles, whereas `3` represents an integer.
 
-#### 5.3.3 Restricted String Types
+### 5.3.3 Restricted String Types
 
 Each ACAL simple type whose value space is defined by a restricted
 string lexical form is represented as a YAML string scalar that matches
@@ -523,7 +523,7 @@ VariableId: is_admin
 `VersionType` and `VersionMatchType` values MUST be quoted because forms
 such as `1.0` would otherwise be resolved as non-string YAML scalars.
 
-#### 5.3.4 Enumeration Types
+### 5.3.4 Enumeration Types
 
 Each ACAL enumerated type defined by ACAL core or the relevant ACAL
 profile is represented as a YAML string scalar whose value is exactly
@@ -541,7 +541,7 @@ Decision: Permit
 Decision: NotApplicable
 ```
 
-#### 5.3.5 Identifier-Like and URI Types
+### 5.3.5 Identifier-Like and URI Types
 
 `IdentifierType`, `URI`, and similar identifier-valued simple types are
 represented as YAML string scalars.
@@ -570,7 +570,7 @@ The three ACAL identifier forms remain valid in YACAL:
 All such forms are subject to the quoting rules in
 [Section 5.1.3](#513-string-quoting).
 
-#### 5.3.6 Simple Type Summary
+### 5.3.6 Simple Type Summary
 
 The following rules summarize simple type mapping in YACAL:
 
@@ -586,9 +586,9 @@ The following rules summarize simple type mapping in YACAL:
 
 ------------------------------------------------------------------------
 
-### 5.4 Complex Type Mapping
+## 5.4 Complex Type Mapping
 
-#### 5.4.1 Default Mapping Rules for Complex ACAL Types
+### 5.4.1 Default Mapping Rules for Complex ACAL Types
 
 The authoritative definitions of ACAL complex types, their properties,
 multiplicities, inheritance relationships, and abstract-versus-concrete
@@ -622,7 +622,7 @@ The default rules are:
    are special cases of this model in which the document type is made
    explicit by the single root key.
 
-#### 5.4.2 Property Mapping Rules
+### 5.4.2 Property Mapping Rules
 
 For each property of a complex ACAL type, apply the following rules
 unless a more specific type section overrides them.  The property names,
@@ -660,7 +660,7 @@ Expression:
   - Value: write
 ```
 
-#### 5.4.3 Null and Omission
+### 5.4.3 Null and Omission
 
 The YAML scalars `null`, `Null`, `NULL` and `~` are not valid YACAL values and MUST NOT be used as a generic
 stand-in for absence. Similarly, a property with undefined value (e.g. `myProperty: # Empty`) is forbidden in YACAL.
@@ -669,7 +669,7 @@ To omit an optional property, the property MUST simply be absent from
 the mapping.  An omitted property is not equivalent to a present
 property whose value is YAML `null`.
 
-#### 5.4.4 ValueType Mapping Rules
+### 5.4.4 ValueType Mapping Rules
 
 The ACAL `ValueType` model is defined in
 [[ACAL-Core](#acal-core)] Section 7.23.  The ACAL `ValueType` and its
@@ -803,7 +803,7 @@ Parameter:
 In both examples above, the nested value SHOULD omit its own `DataType`
 because the surrounding context already fixes it.
 
-#### 5.4.5 StructuredValueType Mapping
+### 5.4.5 StructuredValueType Mapping
 
 `StructuredValueType` is the abstract structured-value branch of
 `ValueType` defined by [[ACAL-Core](#acal-core)] Section 7.23.  A
@@ -845,7 +845,7 @@ RequestAttribute:
         FieldB: 3
 ```
 
-#### 5.4.6 Polymorphism and Wrapper-Key Discrimination
+### 5.4.6 Polymorphism and Wrapper-Key Discrimination
 
 When a value is in a polymorphic position, YACAL represents it as a YAML
 mapping with exactly one wrapper key.
@@ -884,7 +884,7 @@ CombinerInput:
       Effect: Permit
 ```
 
-#### 5.4.7 Inheritance and Subtype Resolution
+### 5.4.7 Inheritance and Subtype Resolution
 
 ACAL inheritance affects which properties a subtype carries, but it does
 not require nested YAML wrappers for each inheritance layer.
@@ -920,7 +920,7 @@ Examples of this flattening include:
   `CombinerInputType` subtypes in polymorphic positions but use their
   direct property mappings in non-polymorphic positions
 
-#### 5.4.8 Extensible Abstract Types
+### 5.4.8 Extensible Abstract Types
 
 Some abstract ACAL types are designed to be extended by ACAL profiles
 or by implementation-defined profile-compatible subtypes.  YACAL uses
@@ -948,7 +948,7 @@ Important examples of extensible abstract types in ACAL include:
 - `AttributeSelectorType`
 - `EntityAttributeSelectorType`
 
-#### 5.4.9 Ordering and Presentation Rules
+### 5.4.9 Ordering and Presentation Rules
 
 Within a YAML mapping, property ordering is not semantically
 significant.  Within a YAML sequence, item ordering is preserved.
@@ -958,7 +958,7 @@ evaluation or ordered collections.  Where ACAL does not assign semantic
 meaning to ordering, processors MUST preserve the sequence as given but
 need not treat the order as semantically relevant.
 
-#### 5.4.10 AnyType Mapping
+### 5.4.10 AnyType Mapping
 
 `AnyType` is used where ACAL permits representation-defined or
 profile-defined arbitrary content, notably in `ContentType` and
@@ -981,7 +981,7 @@ or block-scalar style.
 YAML tags, anchors, aliases, merge keys, and multi-document streams are
 prohibited in `AnyType` content just as they are elsewhere in YACAL.
 
-#### 5.4.11 ContentType Mapping
+### 5.4.11 ContentType Mapping
 
 `ContentType` is represented as a YAML mapping with the following
 properties:
@@ -1041,7 +1041,7 @@ Content:
 Processors MAY reject unsupported media types, unsupported encodings, or
 profile-specific content forms they do not claim to implement.
 
-#### 5.4.12 AttributeType Mapping
+### 5.4.12 AttributeType Mapping
 
 `AttributeType` is the reusable ACAL form for an identified attribute
 with one or more values.  In YACAL, it is represented as a YAML mapping:
@@ -1075,7 +1075,7 @@ Subtypes of `AttributeType`, such as `RequestAttributeType` and
 `AttributeAssignmentType`, inherit this mapping and add their own
 properties in the same YAML mapping.
 
-#### 5.4.13 EntityType Mapping
+### 5.4.13 EntityType Mapping
 
 `EntityType` is the reusable ACAL form for entity-valued content, such
 as `PolicyIssuer`.
@@ -1104,7 +1104,7 @@ PolicyIssuer:
 [Section 5.4.11](#5411-contenttype-mapping) and `AttributeType`
 according to [Section 5.4.12](#5412-attributetype-mapping).
 
-#### 5.4.14 Common Scalar Property Conventions
+### 5.4.14 Common Scalar Property Conventions
 
 Some ACAL properties recur across many YACAL objects and do not require
 their own wrapper or container syntax.
@@ -1124,9 +1124,9 @@ definition of the type, its properties, or its multiplicities.
 
 ------------------------------------------------------------------------
 
-### 5.5 Expression Representation
+## 5.5 Expression Representation
 
-#### 5.5.1 ExpressionType
+### 5.5.1 ExpressionType
 
 ACAL `ExpressionType` is an abstract polymorphic type.  In YACAL, it is
 represented as a YAML mapping with exactly one key that identifies the
@@ -1154,7 +1154,7 @@ usable concrete subtype in the expression position.
 | `Select` | `SelectType` (optional) |
 | `Map` | `MapType` (optional) |
 
-#### 5.5.2 ApplyType
+### 5.5.2 ApplyType
 
 `ApplyType` represents a function application with arguments:
 
@@ -1177,7 +1177,7 @@ Properties:
 | `Description` | No | String | Free-form description |
 | `Argument` | No | Sequence of `ArgumentType` | Arguments in order, or named arguments (`NamedArgumentType`) in any order if the function has *named parameters* (more info in the `ApplyType` section of [[ACAL-Core](#acal-core)] ); empty if function takes no arguments. When the function signature fixes an argument `DataType`, a statically typed child expression such as `Value` SHOULD omit `DataType`; if present, it MUST agree with the function signature. |
 
-#### 5.5.3 AttributeDesignatorType
+### 5.5.3 AttributeDesignatorType
 
 `AttributeDesignatorType` retrieves attribute values from the request
 context:
@@ -1199,7 +1199,7 @@ Properties:
 | `Issuer` | No | — | Name | Attribute issuer |
 | `MustBePresent` | No | `false` | Boolean | If `true`, missing attribute returns Indeterminate |
 
-#### 5.5.4 EntityAttributeDesignatorType
+### 5.5.4 EntityAttributeDesignatorType
 
 ```yaml
 EntityAttributeDesignator:
@@ -1215,14 +1215,14 @@ addition of `Expression` (required, `ExpressionType`) instead of
 `Category`.  The inherited properties appear in the same mapping; YACAL
 does not introduce a separate `NamedAttributeDesignator` wrapper layer.
 
-#### 5.5.5 VariableReferenceType
+### 5.5.5 VariableReferenceType
 
 ```yaml
 VariableReference:
   VariableId: is_admin
 ```
 
-#### 5.5.6 SharedVariableReferenceType
+### 5.5.6 SharedVariableReferenceType
 
 ```yaml
 SharedVariableReference:
@@ -1236,7 +1236,7 @@ Each item in `Argument` SHALL correspond  to a `Parameter`
 definition in the referenced shared variable definition, either positionally (declared in the same order) or by name using only `NamedArgument` properties. More info in the `SharedVariableReferenceType` section of [[ACAL-Core](#acal-core)].
 A nested `ValueType` SHOULD omit `DataType` as it is already fixed by the `Parameter` in the referenced shared variable; if present, it MUST agree.
 
-#### 5.5.7 FunctionType
+### 5.5.7 FunctionType
 
 `FunctionType` appears as an argument to higher-order functions:
 
@@ -1245,7 +1245,7 @@ Function:
   Id: string-equal
 ```
 
-#### 5.5.8 QuantifiedExpressionTypes
+### 5.5.8 QuantifiedExpressionTypes
 
 `ForAny`, `ForAll`, `Select`, and `Map` share a common structure:
 
@@ -1279,7 +1279,7 @@ These are concrete subtypes of the abstract
 wrapper key identifies which quantified subtype is in use; the common
 inherited properties then appear directly within that subtype's mapping.
 
-#### 5.5.9 BooleanExpressionType
+### 5.5.9 BooleanExpressionType
 
 `BooleanExpressionType` (used by `Target` and `Condition`) is
 represented directly as the contained expression, not as a separate
@@ -1297,7 +1297,7 @@ Condition:
           MustBePresent: true
 ```
 
-#### 5.5.10 AttributeSelectorType
+### 5.5.10 AttributeSelectorType
 
 `AttributeSelectorType` is an optional, profile-defined expression form.
 In YACAL it uses the `AttributeSelector` wrapper key from
@@ -1326,7 +1326,7 @@ AttributeSelector:
 The concrete syntax and semantics of `Path`, and any additional
 selector-specific properties, are defined by the relevant ACAL profile.
 
-#### 5.5.11 EntityAttributeSelectorType
+### 5.5.11 EntityAttributeSelectorType
 
 `EntityAttributeSelectorType` is an optional, profile-defined expression
 form.  In YACAL it uses the `EntityAttributeSelector` wrapper key from
@@ -1358,9 +1358,9 @@ category URI, as defined by ACAL and the relevant selector profile.
 
 ------------------------------------------------------------------------
 
-### 5.6 Policy and Rule Representation
+## 5.6 Policy and Rule Representation
 
-#### 5.6.1 PolicyType
+### 5.6.1 PolicyType
 
 A complete policy example:
 
@@ -1432,7 +1432,7 @@ the `Policy` wrapper key.
 the relevant ACAL profile, following the generic rules in
 [Section 5.4.8](#548-extensible-abstract-types).
 
-#### 5.6.2 RuleType
+### 5.6.2 RuleType
 
 ```yaml
 Rule:
@@ -1472,7 +1472,7 @@ Properties:
 | `Condition` | No | *(always satisfied)* | `BooleanExpressionType` | 0..1 |
 | `NoticeExpression` | No | — | `NoticeExpressionType` | * |
 
-#### 5.6.3 CombinerInputType
+### 5.6.3 CombinerInputType
 
 `CombinerInputType` is a polymorphic container.  Each element in the
 `CombinerInput` sequence is a YAML mapping with exactly one key
@@ -1508,7 +1508,7 @@ different presentation contexts in YACAL:
 1. direct use, where the surrounding property already fixes the type
 2. polymorphic combiner use, where the wrapper key identifies the type
 
-#### 5.6.4 VariableDefinitionType
+### 5.6.4 VariableDefinitionType
 
 ```yaml
 VariableDefinition:
@@ -1528,7 +1528,7 @@ If the `Expression` is a literal `ValueType` and neither the value nor
 its parent context fixes a `DataType`, it is treated as string by
 default.
 
-#### 5.6.5 ParameterType
+### 5.6.5 ParameterType
 
 ```yaml
 Parameter:
@@ -1544,7 +1544,7 @@ If the `Expression` is a `ValueType`, it SHOULD omit any nested
 `DataType` because the surrounding `ParameterType` already fixes the
 value's `DataType`.  If both are present, they MUST agree.
 
-#### 5.6.6 PolicyReferenceType
+### 5.6.6 PolicyReferenceType
 
 ```yaml
 PolicyReference:
@@ -1559,7 +1559,7 @@ Each item in `Argument` SHALL correspond  to a `Parameter`
 definition in the referenced policy, either positionally (declared in the same order) or by name using only `NamedArgument` properties. More info in the `PolicyReferenceType` section of [[ACAL-Core](#acal-core)].
 A nested `ValueType` SHOULD omit `DataType` as it is already fixed by the `Parameter` in the referenced policy; if present, it MUST agree.
 
-#### 5.6.7 PolicyIssuer
+### 5.6.7 PolicyIssuer
 
 The `PolicyIssuer` property of a `PolicyType` value uses the direct
 mapping of `EntityType` from [Section 5.4.13](#5413-entitytype-mapping).
@@ -1580,7 +1580,7 @@ PolicyIssuer:
 If `PolicyIssuer` includes structured body content, that content follows
 the `ContentType` rules in [Section 5.4.11](#5411-contenttype-mapping).
 
-#### 5.6.8 PolicyPatternMatchReference
+### 5.6.8 PolicyPatternMatchReference
 
 For conformance-table alignment with the peer representations, YACAL
 uses the name `PolicyPatternMatchReference` for the direct YAML mapping
@@ -1606,7 +1606,7 @@ If parameter expressions are required, the `PolicyReferenceType`
 representation in [Section 5.6.6](#566-policyreferencetype) is used
 instead.
 
-#### 5.6.9 PolicyDefaultsType
+### 5.6.9 PolicyDefaultsType
 
 `PolicyDefaultsType` is an optional abstract extension point.  ACAL core
 defines no concrete `PolicyDefaultsType` subtype, so YACAL core defines
@@ -1628,7 +1628,7 @@ define:
 YACAL core itself does not assign a core wrapper key or core property
 set for `PolicyDefaultsType`.
 
-#### 5.6.10 ArgumentType and NamedArgumentType
+### 5.6.10 ArgumentType and NamedArgumentType
 
 The `ArgumentType` is a generic type for `Argument` properties which represent arguments passed to function calls (`ApplyType`), parameterized policies (`PolicyType`) or shared variables (`SharedVariableDefinitionType`).
 
@@ -1643,9 +1643,9 @@ Based on the corresponding definition from [[ACAL-Core](#acal-core)], an `Argume
 
 ------------------------------------------------------------------------
 
-### 5.7 Bundle Representation
+## 5.7 Bundle Representation
 
-#### 5.7.1 BundleType
+### 5.7.1 BundleType
 
 ```yaml
 Bundle:
@@ -1727,7 +1727,7 @@ Properties:
 If `PolicyReference` is present, the `Policy` sequence MUST NOT be
 empty.
 
-#### 5.7.2 SharedVariableDefinitionType
+### 5.7.2 SharedVariableDefinitionType
 
 ```yaml
 SharedVariableDefinition:
@@ -1776,9 +1776,9 @@ scope of any `VariableDefinitionType`, its expression SHALL NOT contain
 
 ------------------------------------------------------------------------
 
-### 5.8 Request and Response Representation
+## 5.8 Request and Response Representation
 
-#### 5.8.1 RequestType
+### 5.8.1 RequestType
 
 ```yaml
 Request:
@@ -1825,7 +1825,7 @@ enclosing request.  These identifiers are the targets of
 `RequestEntityReferenceType` when the optional multi-request feature is
 used.
 
-#### 5.8.2 RequestEntityType
+### 5.8.2 RequestEntityType
 
 ```yaml
 Category: "urn:oasis:names:tc:acal:1.0:subject-category:access-subject"
@@ -1861,7 +1861,7 @@ Unless the optional multi-request feature is in use, processors SHOULD
 reject multiple `RequestEntity` objects in the same request with the
 same `Category` value.
 
-#### 5.8.3 RequestAttributeType
+### 5.8.3 RequestAttributeType
 
 ```yaml
 RequestAttribute:
@@ -1889,7 +1889,7 @@ Properties:
 attribute defines `DataType`, nested values SHOULD omit their own
 `DataType`.
 
-#### 5.8.4 MultiRequestsType
+### 5.8.4 MultiRequestsType
 
 ```yaml
 MultiRequests:
@@ -1921,7 +1921,7 @@ If a processor does not implement this optional feature but encounters a
 optional feature and fail in a manner consistent with ACAL response
 rules.
 
-#### 5.8.5 RequestReferenceType
+### 5.8.5 RequestReferenceType
 
 ```yaml
 RequestReference:
@@ -1941,7 +1941,7 @@ Each referenced `Id` MUST identify a `RequestEntityType` object in the
 enclosing `Request`, and the `Id` values in a single
 `RequestReferenceType` object MUST be unique.
 
-#### 5.8.6 RequestEntityReferenceType
+### 5.8.6 RequestEntityReferenceType
 
 ```yaml
 RequestEntityReference:
@@ -1958,7 +1958,7 @@ Properties:
 The `Id` value references the `Id` property of a `RequestEntityType`
 object in the enclosing `Request`.
 
-#### 5.8.7 ResponseType
+### 5.8.7 ResponseType
 
 ```yaml
 Response:
@@ -1986,7 +1986,7 @@ Properties:
 YACAL permits multiple `Result` values in a `Response`, which is
 especially relevant when the optional multi-request feature is used.
 
-#### 5.8.8 ResultType
+### 5.8.8 ResultType
 
 Properties:
 
@@ -2003,7 +2003,7 @@ processor that supports this feature SHOULD populate
 `ApplicablePolicyReference` with the identifiers of policies found to be
 applicable to the request.
 
-#### 5.8.9 ResultEntityType
+### 5.8.9 ResultEntityType
 
 ```yaml
 ResultEntity:
@@ -2030,7 +2030,7 @@ Unlike `RequestEntityType`, `ResultEntityType` has no `Content`
 property, and its contained `Attribute` objects have no
 `IncludeInResult` property.
 
-#### 5.8.10 ApplicablePolicyReference
+### 5.8.10 ApplicablePolicyReference
 
 `ApplicablePolicyReference` values use the direct mapping of
 `ExactMatchIdReferenceType`:
@@ -2052,7 +2052,7 @@ Each item identifies a specific policy version that was applicable to
 the request.  The `Id` value is a policy identifier URI and `Version`
 is a required `VersionType` value for that exact match.
 
-#### 5.8.11 RequestDefaultsType
+### 5.8.11 RequestDefaultsType
 
 `RequestDefaultsType` is an optional abstract extension point.  ACAL
 core defines no concrete `RequestDefaultsType` subtype, so YACAL core
@@ -2073,9 +2073,9 @@ define:
 
 ------------------------------------------------------------------------
 
-### 5.9 Notice Representation
+## 5.9 Notice Representation
 
-#### 5.9.1 NoticeExpressionType
+### 5.9.1 NoticeExpressionType
 
 ```yaml
 NoticeExpression:
@@ -2113,7 +2113,7 @@ If `AppliesTo` is omitted, the notice expression is eligible for either
 `AttributeAssignmentExpression` items SHOULD be unique by the pair
 `(AttributeId, Category)`.
 
-#### 5.9.2 AttributeAssignmentExpressionType
+### 5.9.2 AttributeAssignmentExpressionType
 
 ```yaml
 AttributeAssignmentExpression:
@@ -2142,7 +2142,7 @@ the returned notice.
 If the expression is a literal `ValueType` without a separately fixed
 type, string is the default `DataType`.
 
-#### 5.9.3 NoticeType
+### 5.9.3 NoticeType
 
 ```yaml
 Notice:
@@ -2168,7 +2168,7 @@ Properties:
 `AttributeAssignment` items SHOULD be unique by the pair
 `(AttributeId, Category)`.
 
-#### 5.9.4 AttributeAssignmentType
+### 5.9.4 AttributeAssignmentType
 
 ```yaml
 AttributeAssignment:
@@ -2196,9 +2196,9 @@ MUST agree with the enclosing `DataType`.
 
 ------------------------------------------------------------------------
 
-### 5.10 Status Representation
+## 5.10 Status Representation
 
-#### 5.10.1 StatusType
+### 5.10.1 StatusType
 
 ```yaml
 Status:
@@ -2220,7 +2220,7 @@ Properties:
 `StatusDetail`, if present, follows the rules in
 [Section 5.10.3](#5103-statusdetailtype).
 
-#### 5.10.2 StatusCodeType
+### 5.10.2 StatusCodeType
 
 ```yaml
 Status:
@@ -2241,7 +2241,7 @@ Properties:
 The optional nested `StatusCode` refines the parent status code and is
 represented recursively using the same mapping rules.
 
-#### 5.10.3 StatusDetailType
+### 5.10.3 StatusDetailType
 
 `StatusDetailType` is optional and carries additional status
 information.  In YACAL, it is represented as a YAML mapping whose keys
@@ -2278,7 +2278,7 @@ Profiles or implementation agreements MAY define additional
 representation-specific `StatusDetail` entries, but processors MUST
 reject unsupported entries they do not claim to implement.
 
-#### 5.10.4 MissingAttributeDetailType
+### 5.10.4 MissingAttributeDetailType
 
 ```yaml
 Status:
@@ -2311,7 +2311,7 @@ defines it.
 
 ------------------------------------------------------------------------
 
-### 5.11 Short Identifier Representation
+## 5.11 Short Identifier Representation
 
 YACAL uses the ACAL core identifier sets defined by
 [[ACAL-Core](#acal-core)] directly.  It defines no separate
@@ -2320,7 +2320,7 @@ YACAL-specific core identifier inventory for WD01.  Any
 identifier sets and short identifier semantics defined by ACAL core or
 by the relevant ACAL profile.
 
-#### 5.11.1 ShortIdSetType
+### 5.11.1 ShortIdSetType
 
 ```yaml
 ShortIdSet:
@@ -2348,7 +2348,7 @@ The referenced short-id sets are applied recursively.  A conformant
 processor MUST reject direct or indirect cycles in
 `ShortIdSetReference`.
 
-#### 5.11.2 ShortIdType
+### 5.11.2 ShortIdType
 
 ```yaml
 ShortId:
@@ -2365,7 +2365,7 @@ Properties:
 
 Within a single `ShortIdSetType`, `Name` values MUST be unique.
 
-#### 5.11.3 ShortIdSetReference
+### 5.11.3 ShortIdSetReference
 
 `ShortIdSetReference` is represented as a YAML sequence of URI values:
 
@@ -2379,7 +2379,7 @@ Each URI references a `ShortIdSetType` object.  The referenced sets and
 their transitive references define the short identifiers available in
 the containing object.
 
-#### 5.11.4 Usage in Policies
+### 5.11.4 Usage in Policies
 
 Short identifiers, once declared, may be used anywhere an
 `IdentifierType` is expected:
@@ -2408,9 +2408,9 @@ Policy:
 
 ------------------------------------------------------------------------
 
-### 5.12 Constraint Handling
+## 5.12 Constraint Handling
 
-#### 5.12.1 Constraint Categories
+### 5.12.1 Constraint Categories
 
 YACAL conformance depends on more than well-formed YAML syntax.  A
 conformant YACAL document MUST satisfy:
@@ -2428,7 +2428,7 @@ Others require interpretation of ACAL types, inheritance, identifier
 scope, or profile-specific semantics.  A document MAY therefore be valid
 YAML yet still be non-conformant YACAL.
 
-#### 5.12.2 Property-Level Constraints
+### 5.12.2 Property-Level Constraints
 
 Unless a more specific rule applies, the following property-level
 constraints apply:
@@ -2458,7 +2458,7 @@ MUST enforce where those properties are supported include:
   `RequestEntityType`
 - `PolicyDefaults` and `RequestDefaults` uniqueness by concrete subtype
 
-#### 5.12.3 Object-Level Constraints and Cross-Property Invariants
+### 5.12.3 Object-Level Constraints and Cross-Property Invariants
 
 Some ACAL constraints involve the relationship between multiple
 properties or the interpreted meaning of the object as a whole.  Such
@@ -2478,7 +2478,7 @@ Examples include:
 YACAL processors MUST evaluate these constraints according to ACAL and
 this specification for all supported object types.
 
-#### 5.12.4 Enforcement Expectations
+### 5.12.4 Enforcement Expectations
 
 Conformant YACAL processors:
 
@@ -2496,9 +2496,9 @@ Conformant YACAL processors:
 
 ------------------------------------------------------------------------
 
-## 6. Safety, Security and Privacy Considerations (non-normative)
+# 6 Safety, Security and Privacy Considerations (non-normative)
 
-### 6.1 YAML Parser and Processor Safety
+## 6.1 YAML Parser and Processor Safety
 
 YACAL processors should use YAML parsers configured for YAML 1.2 Core
 Schema behavior and should reject features prohibited by this
@@ -2511,7 +2511,7 @@ including limits on document size, nesting depth, alias expansion
 behavior, and resource consumption.  Error diagnostics should be
 reported against the original YACAL source where possible.
 
-### 6.2 Interoperability and Content Handling
+## 6.2 Interoperability and Content Handling
 
 YAML scalar resolution can create interoperability hazards when values
 resemble booleans, numbers, or nulls.  The quoting rules in
@@ -2527,9 +2527,9 @@ boundary.
 
 ------------------------------------------------------------------------
 
-## 7. Conformance
+# 7 Conformance
 
-### 7.1 Introduction
+## 7.1 Introduction
 
 The YACAL specification addresses conformance in the following areas:
 
@@ -2552,7 +2552,7 @@ consistent implementation and validation of YACAL, but they do not
 change the peer relationship between YACAL and the XML and JSON ACAL
 representations.
 
-### 7.2 Conformance Categories
+## 7.2 Conformance Categories
 
 For the purposes of this specification:
 
@@ -2568,9 +2568,9 @@ YACAL-specific artifacts.
 An implementation MUST follow [Section 5](#5-syntax-normative) where it
 applies to implemented items in the following tables.
 
-### 7.3 Conformance Tables
+## 7.3 Conformance Tables
 
-#### 7.3.1 ACAL Object-Type Conformance
+### 7.3.1 ACAL Object-Type Conformance
 
 YACAL inherits ACAL object-type conformance from
 [[ACAL-Core](#acal-core)] Section 11.2.1.
@@ -2597,7 +2597,7 @@ For readability, this specification often refers to a YACAL surface form
 without the `Type` suffix when such a surface form exists, for example
 `PolicyType` as `Policy` and `ValueType` as `Value`.
 
-#### 7.3.2 Machine-Readable Artifact Support
+### 7.3.2 Machine-Readable Artifact Support
 
 The following machine-readable artifacts accompany this specification:
 
@@ -2614,7 +2614,7 @@ The composition schemas listed in [Annex C](#annex-c-yacal-identifiers-and-machi
 are informative examples showing how core and profile artifacts may be
 combined in a particular deployment.
 
-### 7.4 Conformant YACAL Document
+## 7.4 Conformant YACAL Document
 
 A conformant YACAL document:
 
@@ -2641,7 +2641,7 @@ A conformant YACAL document:
     structurally compatible with a composition schema that enables the
     corresponding profile artifacts.
 
-### 7.5 Conformant YACAL Processor
+## 7.5 Conformant YACAL Processor
 
 A conformant YACAL processor:
 
@@ -2666,7 +2666,7 @@ A conformant YACAL processor:
     Profile MUST support the corresponding profile artifacts, or provide
     equivalent enforcement of the same profile-specific rules.
 
-### 7.6 Validation Support and Error Reporting
+## 7.6 Validation Support and Error Reporting
 
 Validation of a YACAL document may be performed in multiple layers:
 
@@ -2688,11 +2688,11 @@ derived intermediate representation.
 
 ------------------------------------------------------------------------
 
-## Annex A. License, Document Status and Notices
+# Annex A License, Document Status and Notices
 
 (This annex forms an integral part of this Specification.)
 
-### A.1 Document Status
+## A.1 Document Status
 
 This working draft was prepared for the OASIS eXtensible Access Control
 Markup Language (XACML) TC on the date shown above.
@@ -2712,7 +2712,7 @@ text files.  In the event of a discrepancy between any such plain text
 file and display content in the Work Product's prose narrative
 document(s), the content in the separate plain text file prevails.
 
-### A.2 License and Notices
+## A.2 License and Notices
 
 Copyright © OASIS Open 2026. All Rights Reserved.
 
@@ -2722,7 +2722,7 @@ time.
 
 ------------------------------------------------------------------------
 
-## Annex B. References
+# Annex B References
 
 (This annex forms an integral part of this Specification.)
 
@@ -2731,7 +2731,7 @@ This section contains the normative references used in this document.
 Normative references are those whose content constitutes requirements of
 this specification.
 
-### B.1 Normative References
+## B.1 Normative References
 
 <a id="acal-core"></a>**[ACAL-Core]**
 : *Attribute-Centric Authorization Language (ACAL) Version 1.0*.
@@ -2762,11 +2762,11 @@ this specification.
 
 ------------------------------------------------------------------------
 
-## Annex C. YACAL Identifiers and Machine-Readable Artifacts
+# Annex C YACAL Identifiers and Machine-Readable Artifacts
 
 (This annex forms an integral part of this Specification.)
 
-### C.1 Core Short-Identifier Set
+## C.1 Core Short-Identifier Set
 
 This work product provides the standard YACAL serialization of the ACAL
 core short-identifier set in the file
@@ -2791,7 +2791,7 @@ those functions are defined.  These comments are non-normative
 presentation aids only and do not alter the underlying identifier set
 or its semantics.
 
-### C.2 Core YACAL Artifacts
+## C.2 Core YACAL Artifacts
 
 The following normative core YACAL artifacts accompany this
 specification:
@@ -2807,7 +2807,7 @@ extension hooks.
 The constraint catalog defines the higher-order YACAL and ACAL
 constraints that are not fully captured by the structural schema alone.
 
-### C.3 Profile YACAL Artifacts
+## C.3 Profile YACAL Artifacts
 
 The following normative profile artifacts accompany this specification:
 
@@ -2822,7 +2822,7 @@ The JSONPath Profile artifact enables JSONPath-specific selector
 extensions.  The JSONPath Profile defines no profile-specific
 identifiers and therefore has no companion identifier artifact.
 
-### C.4 Informative Composition Schemas
+## C.4 Informative Composition Schemas
 
 The following informative composition schemas are provided as examples
 for implementations combining the core and profile artifacts:
@@ -2838,7 +2838,7 @@ and profile support in deployment-specific root schemas.
 
 ------------------------------------------------------------------------
 
-## Annex D. Complete Example: Website Content Access Policy
+# Annex D Complete Example: Website Content Access Policy
 
 (This annex does not form an integral part of this Specification and is
 informational.)
@@ -2958,7 +2958,7 @@ Policy:
 
 ------------------------------------------------------------------------
 
-## Annex E. Complete Example: Healthcare Chart Access Policy
+# Annex E Complete Example: Healthcare Chart Access Policy
 
 (This annex does not form an integral part of this Specification and is
 informational.)
@@ -2999,12 +2999,12 @@ Policy:
 
 ------------------------------------------------------------------------
 
-## Appendix 1. Acknowledgments
+# Appendix 1 Acknowledgments
 
 (This appendix does not form an integral part of this Specification and
 is informational.)
 
-### Leadership
+## Leadership
 
 The following individuals have had significant leadership roles in the
 development of related ACAL representation work and are gratefully
@@ -3018,12 +3018,12 @@ acknowledged:
   - Steven Legg, ViewDS Identity Solutions
   - Cyril Dangerville, THALES
 
-### Special Thanks
+## Special Thanks
 
 Substantial drafting and review contributions from Steven Legg, Cyril
 Dangerville, and Bill Parducci are gratefully acknowledged.
 
-### Participants
+## Participants
 
 The following individuals are acknowledged as members of the committee
 active during the creation of this working draft:
@@ -3035,7 +3035,7 @@ active during the creation of this working draft:
 
 ------------------------------------------------------------------------
 
-## Appendix 2. Changes From Previous Version
+# Appendix 2 Changes From Previous Version
 
 (This appendix does not form an integral part of this Specification and
 is informational.)
@@ -3043,6 +3043,6 @@ is informational.)
 This is the first public working draft of the YACAL representation
 document.
 
-### Revision History
+## Revision History
 
 - 2026-03-23, Working Draft 01
