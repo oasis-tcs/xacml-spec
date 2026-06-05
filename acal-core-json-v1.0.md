@@ -567,13 +567,19 @@ The authoritative definition of ACAL `ValueType` and subtypes is in [[ACAL-Core-
 
 #### 5.2.2.1 Primitive value mappings
 
-1. A `LiteralBooleanType` object is represented as a JSON boolean. The ACAL data-type is implicitly set to `urn:oasis:names:tc:acal:1.0:data-type:boolean`.
-2. A `LiteralIntegerType` object is represented as a JSON integer as defined by [JsonSchemaValidation](#jsonschemavalidation) section 6.1.1 (JSON number with a zero fractional part). The ACAL data-type is implicitly set to `urn:oasis:names:tc:acal:1.0:data-type:integer`.
-3. A `LiteralDoubleType` object is represented as a JSON number with a non-zero fractional part. The ACAL data-type is implicitly set to `urn:oasis:names:tc:acal:1.0:data-type:double`.
+1. A `LiteralBooleanType` object is represented as a JSON boolean. The ACAL data-type is implicitly set to the standard ACAL Boolean (`urn:oasis:names:tc:acal:1.0:data-type:boolean`).
+2. A `LiteralIntegerType` object is represented as a JSON integer as defined by [[JsonSchemaValidation](#jsonschemavalidation)] section 6.1.1 (JSON number with a zero fractional part), in absence of a `DataType` property. The ACAL data-type is implicitly set to `urn:oasis:names:tc:acal:1.0:data-type:integer`. A `DataType` property may be specified explicitly to override this data-type with a different type of number, e.g. ACAL Double.
+3. A `LiteralDoubleType` object is represented as a JSON number with one of these:
+   
+   - Either a non-zero fractional part, in absence of a `DataType` property, in which case the ACAL data-type is implicitly set to the standard ACAL Double (`urn:oasis:names:tc:acal:1.0:data-type:double`).
+   - Or a zero fractional part, if and only if the `DataType` property is explicitly set to the standard ACAL Double type. For example:
+     ```json
+     {"DataType": "urn:oasis:names:tc:acal:1.0:data-type:double", "Value": "1.0" }
+     ```
 4. A `LiteralStringType` object is represented as a JSON string without any JSON property named `DataType`. If a `DataType` property is present at an upper level, i.e. in the parent or an ancestor object (e.g. `AttributeType` object), its value MUST be `urn:oasis:names:tc:acal:1.0:data-type:string`. Else the ACAL data-type is implicitly set to `urn:oasis:names:tc:acal:1.0:data-type:string`.
 5. A `LiteralRestrictedStringType` object, which may be used for any primitive type with a lexical representation, is represented in either of two forms:
-   1. If the `DataType` property is already present at an upper level, i.e. in the parent or an ancestor object (e.g. an `AttributeType` object), then this object may be represented simply as a JSON string. The ACAL data-type is inferred from the aforementioned `DataType` property.
-   2. Else it is wrapped in a JSON object made of two string properties `DataType` and `$` holding the actual value:
+   - If the `DataType` property is already present at an upper level, i.e. in the parent or an ancestor object (e.g. an `AttributeType` object), then this object may be represented simply as a JSON string. The ACAL data-type is inferred from the aforementioned `DataType` property.
+   - Else it is wrapped in a JSON object made of two string properties `DataType` and `Value` holding the actual value:
       ```json
       {"DataType": "<LiteralRestrictedStringType object's DataType>", "Value": "<LiteralRestrictedStringType object's Value>" }
       ```
