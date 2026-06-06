@@ -97,7 +97,7 @@
 			"type": "string",
 			"pattern": "^[^{}]*(\\{[A-Za-z][0-9A-Za-z]*(-[0-9A-Za-z]+)*\\}[^{}]*)*$",
 			"minLength": 1,
-			"$comment": "The pattern may be improved for stricter validation as this allows some undesirable identifiers. However, if your ACAL implementation is already parsing and validating such values strictly according to the ACAL core specification, then your implementation-specific validation is probably more optimal than using an improved - more complex - pattern. The full regex for stricter validation is provided here for implementation guidance only, matching either 1) ShortIdNameType's regex above ( <SHORTNAME> ), or 2) the regex for absolute URIs ( '^[A-Za-z][A-Za-z0-9+\-.]*:<URI_CHAR>+$' where <URI_CHAR> is the regex for ASCII-only URI characters ( '[!#-;=?-\[\]_a-z~]' ), or 3) the regex for {shortname}s possibly preceded/followed by URI characters ( ^<URI_CHAR>*(\{<SHORTNAME>\}<URI_CHAR>*)+$ ):  ^([A-Za-z][0-9A-Za-z]*(-[0-9A-Za-z]+)*|[!#-;=?-\[\]_a-z~]*(\{[A-Za-z][0-9A-Za-z]*(-[0-9A-Za-z]+)*\}[!#-;=?-\[\]_a-z~]*)+|[A-Za-z][A-Za-z0-9+\-.]*:[!#-;=?-\[\]_a-z~]+)$  ",
+			"$comment": "The pattern may be improved for stricter validation as this allows some undesirable identifiers. However, if your ACAL implementation is already parsing and validating such values strictly according to the ACAL core specification, then your implementation-specific validation is probably more optimal than using an improved - more complex - pattern. For a more complete regex, refer to the JACAL specification, section 5.1.2.1."
 		},
 		"LocalIdentifierType": {
 			"description": "Local identifier, unique only within a Request, Policy or Rule",
@@ -133,6 +133,14 @@
 			"description": "Content encoding name (RFC 2045). The standard ContentEncodingType value(s) defined in JACAL core specification should be used whenever applicable: 'base64' for complex XML content. For other cases, either use one of the standard Transfer Encodings registered at IANA (RFC 4289 - https://www.iana.org/assignments/transfer-encodings/transfer-encodings.xhtml), or else, if a custom content encoding is really needed, as suggested by RFC 2045 Section 6.3, define a new one prefixed with 'x-'.",
 			"type": "string",
 			"pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+		},
+		"AnyType": {
+			"type": [
+				"object",
+				"string",
+				"number",
+				"boolean"
+			]
 		},
 		"ShortIdType": {
 			"type": "object",
@@ -182,7 +190,7 @@
 			"$comment": "Using object type to have one and only one property per type of PolicyDefaults (i.e. one per ACAL profile). TODO: add similar properties for other PolicyDefaults extensions defined by other JACAL Profiles supported by the implementation (one property per profile), if there is any.",
 			"$dynamicRef": "#PolicyDefaultsTypeExtensions"
 		},
-		"PolicyDefaultsTypeTreeEmpty": {
+		"PolicyDefaultsTypeExtensionsDisabled": {
 			"$dynamicAnchor": "PolicyDefaultsTypeExtensions",
 			"$comment": "No PolicyDefaults extension supported by default. Create your own implementation-specific schema that overrides this $dynamicAnchor to support extensions (e.g. XPathPolicyDefaults from XPath Profile). See jacal-root-schema-example-using-xpath-and-jsonpath-profiles.json for example.",
 			"not": true
@@ -570,62 +578,71 @@
 				}
 			]
 		},
+		"PrimitiveValueType": {
+			"type": [
+				"boolean",
+				"number",
+				"string"
+			]
+		},
+		"TypedValueType": {
+			"description": "ValueType with an explicit DataType property",
+			"allOf": [
+				{
+					"type": "object",
+					"properties": {
+						"DataType": {
+							"$ref": "#/$defs/IdentifierType"
+						}
+					},
+					"required": [
+						"DataType"
+					]
+				},
+				{
+					"anyOf": [
+						{
+							"properties": {
+								"Value": {
+									"$comment": "Primitive value case. Boolean values not included here because they have a fixed DataType: ACAL Boolean.",
+									"type": [
+										"number",
+										"string"
+									]
+								}
+							},
+							"required": [
+								"Value"
+							]
+						},
+						{
+							"$ref": "#/$defs/StructuredValueTypeTree"
+						}
+					]
+				}
+			],
+			"unevaluatedProperties": false
+		},
 		"ValueType": {
 			"anyOf": [
 				{
-					"$comment": "Case when the DataType property is unnecessary (implicit or already defined by parent) and the value is primitive",
-					"type": [
-						"boolean",
-						"integer",
-						"number",
-						"string"
-					]
+					"$comment": "Case of primitive values when the DataType property is unnecessary (implicit or already defined by parent)",
+					"$ref": "#/$defs/PrimitiveValueType"
 				},
 				{
 					"$comment": "Same case as above but for structured values",
 					"$ref": "#/$defs/StructuredValueTypeTree"
 				},
 				{
-					"$comment": "Case when the DataType property is required (not the case for boolean / integer / number which have a fixed implicit DataType)",
-					"allOf": [
-						{
-							"type": "object",
-							"properties": {
-								"DataType": {
-									"$ref": "#/$defs/IdentifierType"
-								}
-							},
-							"required": [
-								"DataType"
-							]
-						},
-						{
-							"anyOf": [
-								{
-									"properties": {
-										"Value": {
-											"$comment": "For DataTypes represented as string (besides the standard string type itself).",
-											"type": "string"
-										}
-									},
-									"required": [
-										"Value"
-									]
-								},
-								{
-									"$ref": "#/$defs/StructuredValueTypeTree"
-								}
-							]
-						}
-					],
-					"unevaluatedProperties": false
+					"$comment": "Case of when the DataType property must be explicit (for primitive and structured values)",
+					"$ref": "#/$defs/TypedValueType"
 				}
 			]
 		},
 		"StructuredValueTypeTree": {
 			"$dynamicRef": "#StructuredValueTypeExtensions"
 		},
-		"StructuredValueTypeTreeEmpty": {
+		"StructuredValueTypeExtensionsDisabled": {
 			"$dynamicAnchor": "StructuredValueTypeExtensions",
 			"$comment": "No StructuredValueType extension supported by default. Create your own implementation-specific schema that overrides this $dynamicAnchor to support such extensions (e.g. XPathExpressionValueType from XPath Profile). See jacal-root-schema-example-using-xpath-and-jsonpath-profiles.json for example.",
 			"not": true
@@ -829,7 +846,7 @@
 		"AttributeSelectorTypeTree": {
 			"$dynamicRef": "#AttributeSelectorTypeExtensions"
 		},
-		"AttributeSelectorTypeTreeEmpty": {
+		"AttributeSelectorTypeExtensionsDisabled": {
 			"$dynamicAnchor": "AttributeSelectorTypeExtensions",
 			"$comment": "No AttributeSelector extension supported by default. Create your own implementation-specific schema that overrides this $dynamicAnchor to support extensions (e.g. XPathAttributeSelector). See jacal-root-schema-example-using-jsonpath-profile-only.json for example.",
 			"not": true
@@ -837,7 +854,7 @@
 		"EntityAttributeSelectorTypeTree": {
 			"$dynamicRef": "#EntityAttributeSelectorTypeExtensions"
 		},
-		"EntityAttributeSelectorTypeTreeEmpty": {
+		"EntityAttributeSelectorTypeExtensionsDisabled": {
 			"$dynamicAnchor": "EntityAttributeSelectorTypeExtensions",
 			"$comment": "No EntityAttributeSelector extension supported by default. Create your own implementation-specific schema that overrides this $dynamicAnchor to support extensions (e.g. XPathAttributeSelector). See jacal-root-schema-example-using-jsonpath-profile-only.json for example.",
 			"not": true
@@ -1183,7 +1200,7 @@
 			"$comment": "Using object type to have one and only one property per type of RequestDefaults (i.e. one per ACAL profile). TODO: add similar properties for other RequestDefaults extensions defined by other JACAL Profiles supported by the implementation (one property per profile), if there is any.",
 			"$dynamicRef": "#RequestDefaultsTypeExtensions"
 		},
-		"RequestDefaultsTypeTreeEmpty": {
+		"RequestDefaultsTypeExtensionsDisabled": {
 			"$dynamicAnchor": "RequestDefaultsTypeExtensions",
 			"$comment": "No RequestDefaults extension supported by default. Create your own implementation-specific schema that overrides this $dynamicAnchor to support extensions (e.g. XPathRequestDefaults from XPath Profile). See jacal-root-schema-example-using-xpath-and-jsonpath-profiles.json for example.",
 			"not": true
@@ -1266,10 +1283,7 @@
 				},
 				"Body": {
 					"$comment": "'object' type is used for JSON object, 'string' for others - e.g. XML - possibly escaped or encoded depending on the Encoding property",
-					"type": [
-						"string",
-						"object"
-					]
+					"$ref": "#/$defs/AnyType"
 				}
 			},
 			"required": [
@@ -1449,7 +1463,8 @@
 						"$ref": "#/$defs/MissingAttributeDetailType"
 					}
 				}
-			}
+			},
+			"minProperties": 1
 		},
 		"MissingAttributeDetailType": {
 			"type": "object",
@@ -1483,7 +1498,8 @@
 						}
 					}
 				}
-			}
+			},
+			"additionalProperties": false
 		},
 		"EntityType": {
 			"type": "object",

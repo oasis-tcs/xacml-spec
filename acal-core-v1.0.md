@@ -5052,13 +5052,12 @@ The following UML definition (class diagram) is provided for information purpose
 @startuml
 hide empty members 
 hide circle
+abstract class AnyType <<dataType>>
 class ContentType <<dataType>> {
    + MediaType: MediaType [0..1]
    + Encoding: ContentEncodingType [0..1]
    + Body: AnyType [1]
 }
-
-abstract class AnyType <<dataType>>
 @enduml
 ```
 

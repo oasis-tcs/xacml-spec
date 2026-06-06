@@ -164,7 +164,7 @@ We provide two concrete examples of combining schemas on this Github repository 
    $ jsonschema validate --resolve acal-core-json-v1.0-schema.json --resolve acal-jsonpath-json-v1.0-schema.json examples/jacal-root-schema-example-using-jsonpath-profile-only.json policy.json
    ```
    
-2. **Example 2:** you want to support both JSONPath and XPath based AttributeSelectors, i.e. JSONPath and XPath Profiles, then you may use the example of [combining schema for JSONPath and XPath Profile support](examples/jacal-root-schema-example-using-xpath-and-jsonpath-profiles.json). This schema makes a reference (`$ref`) to the [core schema](acal-core-json-v1.0-schema.json), [JSONPath Profile's schema](acal-jsonpath-json-v1.0-schema.json) and [XPath Profile's schema](acal-xpath-json-v1.0-schema.json).
+2. **Example 2:** you want to support both JSONPath and XPath based AttributeSelectors, i.e. JSONPath and XPath Profiles, then you may use the example of [combining schema for JSONPath and XPath Profile support](examples/acal-core-json/jacal-root-schema-example-using-xpath-and-jsonpath-profiles.json). This schema makes a reference (`$ref`) to the [core schema](acal-core-json-v1.0-schema.json), [JSONPath Profile's schema](acal-jsonpath-json-v1.0-schema.json) and [XPath Profile's schema](acal-xpath-json-v1.0-schema.json).
 
    To use this schema, the previous JSON schema validation command is modified as follows:
    ```console

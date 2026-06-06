@@ -48,10 +48,17 @@ $defs:
     type: string
     pattern: "^[A-Za-z][0-9A-Za-z]*(-[0-9A-Za-z]+)*$"
 
+  ShortIdValueType:
+    type: string
+    pattern: "^[!#-;=?-\\[\\]_a-z~]*(\\{[A-Za-z][0-9A-Za-z]*(-[0-9A-Za-z]+)*\\}[!#-;=?-\\[\\]_a-z~]*)*$"
+    minLength: 1
+
   IdentifierType:
     type: string
     pattern: "^[^{}]*(\\{[A-Za-z][0-9A-Za-z]*(-[0-9A-Za-z]+)*\\}[^{}]*)*$"
     minLength: 1
+    $comment: >
+      The pattern may be improved for stricter validation as this allows some undesirable identifiers. However, if your ACAL implementation is already parsing and validating such values strictly according to the ACAL core specification, then your implementation-specific validation is probably more optimal than using an improved - more complex - pattern. For a more complete regex, refer to the JACAL specification, section 5.1.2.1."
 
   LocalIdentifierType:
     type: string
@@ -61,7 +68,7 @@ $defs:
     type: string
     pattern: "^\\S(.*\\S)?$"
 
-  NameType:
+  Name:
     type: string
     pattern: "^[_:A-Za-z][-._:A-Za-z0-9:]*$"
 
@@ -90,58 +97,52 @@ $defs:
   AnyType:
     type:
       - object
-      - array
       - string
       - number
       - boolean
 
-  PrimitiveValueScalarType:
+  PrimitiveValueType:
     type:
       - string
       - number
-      - integer
       - boolean
-
-  TypedPrimitiveValueType:
-    type: object
-    required:
-      - DataType
-      - Value
-    properties:
-      DataType:
-        $ref: "#/$defs/IdentifierType"
-      Value:
-        $ref: "#/$defs/PrimitiveValueScalarType"
-    additionalProperties: false
 
   StructuredValueTypeTree:
     $dynamicRef: "#StructuredValueTypeExtensions"
 
-  StructuredValueTypeExtensionsEmpty:
+  StructuredValueTypeExtensionsDisabled:
     $dynamicAnchor: "StructuredValueTypeExtensions"
     $comment: >
       No StructuredValueType extension is enabled by default in the core
       schema. Profile or implementation composition schemas may override this
       dynamic anchor to add concrete structured-value types.
     not: true
-
-  TypedStructuredValueType:
+  
+  TypedValueType:
+    description: ValueType with an explicit DataType property
     allOf:
-      - type: object
-        required:
-          - DataType
-        properties:
-          DataType:
-            $ref: "#/$defs/IdentifierType"
+    - type: object
+      properties:
+        DataType:
+          $ref: "#/$defs/IdentifierType"
+      required:
+      - DataType
+    - anyOf:
+      - properties:
+          Value: 
+            $comment: >
+              Primitive value case: number / string values may be mapped to a different ACAL data-type depending on the DataType property (as opposed to 'boolean' ones which have a fixed DataType - ACAL Boolean), e.g. number '1.0' may be mapped to ACAL Integer or Double or other non-standard user-defined number type according to the DataType
+            type: ["number", "string"]
+        required: 
+        - Value
       - $ref: "#/$defs/StructuredValueTypeTree"
     unevaluatedProperties: false
 
   ValueType:
     anyOf:
-      - $ref: "#/$defs/PrimitiveValueScalarType"
-      - $ref: "#/$defs/TypedPrimitiveValueType"
+      - $ref: "#/$defs/PrimitiveValueType"
       - $ref: "#/$defs/StructuredValueTypeTree"
-      - $ref: "#/$defs/TypedStructuredValueType"
+      - $ref: "#/$defs/TypedValueType"
     $comment: >
       Parent-context DataType agreement and other higher-order ValueType
       invariants are handled by the companion constraint catalog.
@@ -162,13 +163,14 @@ $defs:
   ArgumentArray:
     type: array
     minItems: 1
+    uniqueItems: false
     items:
       $ref: "#/$defs/ArgumentTypeTree"
 
-  PolicyDefaultsType:
+  PolicyDefaultsTypeTree:
     $dynamicRef: "#PolicyDefaultsTypeExtensions"
 
-  PolicyDefaultsTypeExtensionsEmpty:
+  PolicyDefaultsTypeExtensionsDisabled:
     $dynamicAnchor: "PolicyDefaultsTypeExtensions"
     $comment: >
       No PolicyDefaultsType extension is enabled by default in the core
@@ -176,10 +178,10 @@ $defs:
       dynamic anchor to add concrete policy-default objects.
     not: true
 
-  RequestDefaultsType:
+  RequestDefaultsTypeTree:
     $dynamicRef: "#RequestDefaultsTypeExtensions"
 
-  RequestDefaultsTypeExtensionsEmpty:
+  RequestDefaultsTypeExtensionsDisabled:
     $dynamicAnchor: "RequestDefaultsTypeExtensions"
     $comment: >
       No RequestDefaultsType extension is enabled by default in the core
@@ -201,6 +203,7 @@ $defs:
     additionalProperties: false
 
   AttributeType:
+    $comment: "Non-final type (see AttributeAssignmentType and RequestAttributeType subtypes)"
     type: object
     required:
       - AttributeId
@@ -209,48 +212,29 @@ $defs:
       AttributeId:
         $ref: "#/$defs/IdentifierType"
       Issuer:
-        $ref: "#/$defs/NameType"
+        $ref: "#/$defs/Name"
       DataType:
         $ref: "#/$defs/IdentifierType"
+        default: "urn:oasis:names:tc:acal:1.0:data-type:string"
       Value:
         $ref: "#/$defs/ValueArray"
-    additionalProperties: false
 
   RequestAttributeType:
-    type: object
-    required:
-      - AttributeId
-      - Value
-    properties:
-      AttributeId:
-        $ref: "#/$defs/IdentifierType"
-      Issuer:
-        $ref: "#/$defs/NameType"
-      DataType:
-        $ref: "#/$defs/IdentifierType"
-      Value:
-        $ref: "#/$defs/ValueArray"
-      IncludeInResult:
-        $ref: "#/$defs/BooleanType"
-    additionalProperties: false
+    allOf:
+    - $ref: "#/$defs/AttributeType"
+    - properties:
+        IncludeInResult:
+          $ref: "#/$defs/BooleanType"
+          default: false
+    unevaluatedProperties: false
 
   AttributeAssignmentType:
-    type: object
-    required:
-      - AttributeId
-      - Value
-    properties:
-      AttributeId:
-        $ref: "#/$defs/IdentifierType"
-      Category:
-        $ref: "#/$defs/IdentifierType"
-      Issuer:
-        $ref: "#/$defs/NameType"
-      DataType:
-        $ref: "#/$defs/IdentifierType"
-      Value:
-        $ref: "#/$defs/ValueArray"
-    additionalProperties: false
+    allOf:
+    - $ref: "#/$defs/AttributeType"
+    - properties:
+        Category:
+          $ref: "#/$defs/IdentifierType"
+    unevaluatedProperties: false
 
   EntityType:
     type: object
@@ -300,41 +284,60 @@ $defs:
         $ref: "#/$defs/ArgumentArray"
     additionalProperties: false
 
-  AttributeDesignatorType:
+  NamedAttributeDesignatorType:
+    $comment: "Abstract ACAL type"
     type: object
     required:
-      - Category
       - AttributeId
     properties:
-      Category:
-        $ref: "#/$defs/IdentifierType"
       AttributeId:
         $ref: "#/$defs/IdentifierType"
       DataType:
         $ref: "#/$defs/IdentifierType"
+        default: "urn:oasis:names:tc:acal:1.0:data-type:string"
       Issuer:
-        $ref: "#/$defs/NameType"
+        $ref: "#/$defs/Name"
       MustBePresent:
         $ref: "#/$defs/BooleanType"
-    additionalProperties: false
+        default: false
+
+  AttributeDesignatorType: 
+    allOf:
+    - $ref: "#/$defs/NamedAttributeDesignatorType"
+    - properties: 
+        Category:
+          $ref: "#/$defs/IdentifierType"
+      required:
+      - Category
+    unevaluatedProperties: false
 
   EntityAttributeDesignatorType:
-    type: object
-    required:
-      - AttributeId
+    allOf:
+    - $ref: "#/$defs/NamedAttributeDesignatorType"
+    - properties: 
+        Expression:
+          $ref: "#/$defs/ExpressionTypeTree"
+      required:
       - Expression
-    properties:
-      AttributeId:
-        $ref: "#/$defs/IdentifierType"
-      DataType:
-        $ref: "#/$defs/IdentifierType"
-      Issuer:
-        $ref: "#/$defs/NameType"
-      MustBePresent:
-        $ref: "#/$defs/BooleanType"
-      Expression:
-        $ref: "#/$defs/ExpressionTypeTree"
-    additionalProperties: false
+    unevaluatedProperties: false
+
+  NamedAttributeDesignatorTypeTree:
+    $comment: "NamedAttributeDesignatorType's direct subtypes"
+    anyOf:
+    - type: object
+      properties:
+        AttributeDesignator: 
+          $ref: "#/$defs/AttributeDesignatorType"
+      required:
+      - AttributeDesignator
+      additionalProperties: false
+    - type: object
+      properties:
+        EntityAttributeDesignator:
+          $ref: "#/$defs/EntityAttributeDesignatorType"
+      required:
+      - EntityAttributeDesignator
+      additionalProperties": false
 
   BaseAttributeSelectorType:
     type: object
@@ -345,13 +348,15 @@ $defs:
         $ref: "#/$defs/AttributeSelectorPathType"
       DataType:
         $ref: "#/$defs/IdentifierType"
+        default: "urn:oasis:names:tc:acal:1.0:data-type:string"
       MustBePresent:
         $ref: "#/$defs/BooleanType"
+        default: false
     $comment: >
       Shared base shape for concrete selector subtypes. The core schema does
       not enable any concrete selector subtype by default.
 
-  AttributeSelectorCoreType:
+  AttributeSelectorType:
     allOf:
       - $ref: "#/$defs/BaseAttributeSelectorType"
       - type: object
@@ -360,11 +365,12 @@ $defs:
         properties:
           Category:
             $ref: "#/$defs/IdentifierType"
+    unevaluatedProperties: false
 
-  AttributeSelectorType:
+  AttributeSelectorTypeTree:
     $dynamicRef: "#AttributeSelectorTypeExtensions"
 
-  AttributeSelectorTypeExtensionsEmpty:
+  AttributeSelectorTypeExtensionsDisabled:
     $dynamicAnchor: "AttributeSelectorTypeExtensions"
     $comment: >
       No AttributeSelectorType extension is enabled by default in the core
@@ -372,7 +378,7 @@ $defs:
       dynamic anchor to add concrete selector types.
     not: true
 
-  EntityAttributeSelectorCoreType:
+  EntityAttributeSelectorType:
     allOf:
       - $ref: "#/$defs/BaseAttributeSelectorType"
       - type: object
@@ -381,17 +387,24 @@ $defs:
         properties:
           Expression:
             $ref: "#/$defs/ExpressionTypeTree"
+    unevaluatedProperties: false
 
-  EntityAttributeSelectorType:
+  EntityAttributeSelectorTypeTree:
     $dynamicRef: "#EntityAttributeSelectorTypeExtensions"
 
-  EntityAttributeSelectorTypeExtensionsEmpty:
+  EntityAttributeSelectorTypeExtensionsDisabled:
     $dynamicAnchor: "EntityAttributeSelectorTypeExtensions"
     $comment: >
       No EntityAttributeSelectorType extension is enabled by default in the
       core schema. Profile or implementation composition schemas may override
       this dynamic anchor to add concrete selector types.
     not: true
+
+  BaseAttributeSelectorTypeTree:
+    $comment: "BaseAttributeSelectorType's direct subtypes"
+    anyOf:
+    - $ref: "#/$defs/AttributeSelectorTypeTree"
+    - $ref: "#/$defs/EntityAttributeSelectorTypeTree"
 
   SharedVariableReferenceType:
     type: object
@@ -420,38 +433,29 @@ $defs:
       Iterant:
         $ref: "#/$defs/ExpressionTypeTree"
     additionalProperties: false
+  
+  QuantifiedExpressionTypeTree:
+    - $ref: "#/$defs/ForAnyTypeTree"
+    - $ref: "#/$defs/ForAllTypeTree"
+    - $ref: "#/$defs/MapTypeTree"
+    - $ref: "#/$defs/SelectTypeTree"
 
   ExpressionTypeTree:
     oneOf:
-      - $ref: "#/$defs/ApplyTypeTree"
-      - $ref: "#/$defs/AttributeDesignatorTypeTree"
-      - $ref: "#/$defs/EntityAttributeDesignatorTypeTree"
-      - $ref: "#/$defs/AttributeSelectorTypeTree"
-      - $ref: "#/$defs/EntityAttributeSelectorTypeTree"
-      - $ref: "#/$defs/VariableReferenceTypeTree"
-      - $ref: "#/$defs/SharedVariableReferenceTypeTree"
       - $ref: "#/$defs/FunctionTypeTree"
       - $ref: "#/$defs/ValueTypeTree"
-      - $ref: "#/$defs/ForAnyTypeTree"
-      - $ref: "#/$defs/ForAllTypeTree"
-      - $ref: "#/$defs/SelectTypeTree"
-      - $ref: "#/$defs/MapTypeTree"
+      - $ref: "#/$defs/NonLiteralExpressionTypeTree"
 
   NonLiteralExpressionTypeTree:
     oneOf:
       - $ref: "#/$defs/ApplyTypeTree"
-      - $ref: "#/$defs/AttributeDesignatorTypeTree"
-      - $ref: "#/$defs/EntityAttributeDesignatorTypeTree"
-      - $ref: "#/$defs/AttributeSelectorTypeTree"
-      - $ref: "#/$defs/EntityAttributeSelectorTypeTree"
+      - $ref: "#/$defs/NamedAttributeDesignatorTypeTree"
+      - $ref: "#/$defs/BaseAttributeSelectorTypeTree"
       - $ref: "#/$defs/VariableReferenceTypeTree"
       - $ref: "#/$defs/SharedVariableReferenceTypeTree"
-      - $ref: "#/$defs/ForAnyTypeTree"
-      - $ref: "#/$defs/ForAllTypeTree"
-      - $ref: "#/$defs/SelectTypeTree"
-      - $ref: "#/$defs/MapTypeTree"
+      - $ref: "#/$defs/QuantifiedExpressionTypeTree"
 
-  BooleanExpressionTypeTree:
+  BooleanExpressionType:
     $ref: "#/$defs/NonLiteralExpressionTypeTree"
 
   ArgumentTypeTree:
@@ -623,40 +627,41 @@ $defs:
     additionalProperties: false
 
   PolicyReferenceType:
-    type: object
-    required:
-      - Id
-    properties:
-      Id:
-        $ref: "#/$defs/URIType"
-      Version:
-        $ref: "#/$defs/VersionMatchType"
-      Argument:
-        $ref: "#/$defs/ArgumentArray"
-    additionalProperties: false
+    $comment: "Subtype of PatternMatchIdReferenceType"
+    allOf: 
+    - $ref: "#/$defs/PatternMatchIdReferenceType"
+    - properties:
+        Argument:
+          $ref: "#/$defs/ArgumentArray"
+    unevaluatedProperties: false
 
-  ApplicablePolicyReferenceType:
+  IdReferenceType:
+    $comment: "ACAL abstract type"
     type: object
-    required:
-      - Id
-      - Version
     properties:
       Id:
-        $ref: "#/$defs/URIType"
+        $ref": "#/$defs/URIType"
+    required:
+    - Id
+
+  ExactMatchIdReferenceType:
+    $comment: "Final subtype of IdReferenceType"
+    allOf:
+    - $ref: "#/$defs/IdReferenceType"
+    - properties:
       Version:
         $ref: "#/$defs/VersionType"
-    additionalProperties: false
+      required:
+      - Version
+    unevaluatedProperties: false
 
-  PolicyPatternMatchReferenceType:
-    type: object
-    required:
-      - Id
-    properties:
-      Id:
-        $ref: "#/$defs/URIType"
-      Version:
-        $ref: "#/$defs/VersionMatchType"
-    additionalProperties: false
+  PatternMatchIdReferenceType:
+    $comment: "Non-final subtype of IdReferenceType"
+    allOf:
+      - $ref: "#/$defs/IdReferenceType"
+      - properties:
+          Version:
+            $ref: "#/$defs/VersionMatchType"
 
   RuleType:
     type: object
@@ -676,7 +681,7 @@ $defs:
         items:
           $ref: "#/$defs/VariableDefinitionType"
       Condition:
-        $ref: "#/$defs/BooleanExpressionTypeTree"
+        $ref: "#/$defs/BooleanExpressionType"
       NoticeExpression:
         type: array
         minItems: 1
@@ -706,7 +711,7 @@ $defs:
       PolicyIssuer:
         $ref: "#/$defs/EntityType"
       PolicyDefaults:
-        $ref: "#/$defs/PolicyDefaultsType"
+        $ref: "#/$defs/PolicyDefaultsTypeTree"
       Parameter:
         type: array
         minItems: 1
@@ -718,7 +723,7 @@ $defs:
         items:
           $ref: "#/$defs/VariableDefinitionType"
       Target:
-        $ref: "#/$defs/BooleanExpressionTypeTree"
+        $ref: "#/$defs/BooleanExpressionType"
       CombinerInput:
         type: array
         minItems: 1
@@ -924,20 +929,18 @@ $defs:
       AttributeId:
         $ref: "#/$defs/IdentifierType"
       Issuer:
-        $ref: "#/$defs/NameType"
+        $ref: "#/$defs/Name"
       DataType:
         $ref: "#/$defs/IdentifierType"
+        default: "urn:oasis:names:tc:acal:1.0:data-type:string"
       Value:
-        type: array
-        minItems: 1
-        items:
-          $ref: "#/$defs/ValueType"
+        $ref: "#/$defs/ValueArray"
     additionalProperties: false
 
   StatusDetailType:
     allOf:
       - $ref: "#/$defs/StatusDetailTypeCore"
-      - $ref: "#/$defs/StatusDetailTypeExtensionProperties"
+      - $dynamicRef: "#StatusDetailTypeExtensions"
     unevaluatedProperties: false
     $comment: >
       Conditional StatusDetail presence and status-code-specific detail rules
@@ -951,18 +954,15 @@ $defs:
         items:
           $ref: "#/$defs/MissingAttributeDetailType"
         minItems: 1
-    minProperties: 1
+    minProperties: 1    
 
-  StatusDetailTypeExtensionProperties:
-    $dynamicRef: "#StatusDetailTypeExtensions"
-
-  StatusDetailTypeExtensionsEmpty:
+  StatusDetailTypeExtensionsDisabled:
     $dynamicAnchor: "StatusDetailTypeExtensions"
     $comment: >
       No profile-specific StatusDetail entries are enabled by default in the
       core schema. Profile or implementation composition schemas may override
       this dynamic anchor to add supported detail keys.
-    type: object
+    not: true
 
   StatusType:
     type: object
@@ -986,6 +986,7 @@ $defs:
         $ref: "#/$defs/IdentifierType"
       IsObligation:
         $ref: "#/$defs/BooleanType"
+        default: false
       AttributeAssignment:
         type: array
         minItems: 1
@@ -1004,7 +1005,7 @@ $defs:
       Category:
         $ref: "#/$defs/IdentifierType"
       Issuer:
-        $ref: "#/$defs/NameType"
+        $ref: "#/$defs/Name"
       Expression:
         $ref: "#/$defs/ExpressionTypeTree"
     additionalProperties: false
@@ -1021,7 +1022,7 @@ $defs:
       AppliesTo:
         $ref: "#/$defs/EffectType"
       Condition:
-        $ref: "#/$defs/BooleanExpressionTypeTree"
+        $ref: "#/$defs/BooleanExpressionType"
       AttributeAssignmentExpression:
         type: array
         minItems: 1
@@ -1052,7 +1053,7 @@ $defs:
         type: array
         minItems: 1
         items:
-          $ref: "#/$defs/ApplicablePolicyReferenceType"
+          $ref: "#/$defs/ExactMatchIdReferenceType"
     additionalProperties: false
 
   ResponseType:
@@ -1078,7 +1079,7 @@ $defs:
       Name:
         $ref: "#/$defs/ShortIdNameType"
       Value:
-        $ref: "#/$defs/URIType"
+        $ref: "#/$defs/ShortIdValueType"
     additionalProperties: false
 
   ShortIdSetType:
