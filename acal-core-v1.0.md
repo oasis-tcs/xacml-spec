@@ -645,7 +645,7 @@ None.
 
 # 4 Introduction (non-normative)
 
-<!-- From XACML 3.0 section 2 Background -->
+<!-- From XACML 3.0 Section 2 Background -->
 The "economics of scale" have driven computing platform vendors to develop products with very generalized functionality, so that they can be used in the widest possible range of situations. "Out of the box", these products have the maximum possible privilege for accessing data and executing software, so that they can be used in as many application environments as possible, including those with the most permissive security policies. In the more common case of a relatively restrictive security policy, the platform's inherent privileges must be constrained by configuration.
 
 The security policy of a large enterprise has many elements and many points of enforcement. Elements of policy may be managed by the Information Systems department, by Human Resources, by the Legal department and by the Finance department. And the policy may be enforced by the extranet, mail, WAN, and remote-access systems; platforms which inherently implement a permissive security policy. The current practice is to manage the configuration of each point of enforcement independently in order to implement the security policy as accurately as possible. Consequently, it is an expensive and unreliable proposition to modify the security policy. Moreover, it is virtually impossible to obtain a consolidated view of the safeguards in effect throughout the enterprise to enforce the policy. At the same time, there is increasing pressure on corporate and government executives from consumers, shareholders, and regulators to demonstrate "best practice" in the protection of the information assets of the enterprise and its customers.
@@ -735,7 +735,7 @@ ACAL provides a set of functions that allow a policy writer to be absolutely cle
 
 ## 4.7 Policies Based on Resource Contents
 
-<!-- TODO: merge this section into 4.5, as Attribute selectors are already mentioned in section 4.5. This seems redundant. -->
+<!-- TODO: merge this section into 4.5, as Attribute selectors are already mentioned in Section 4.5. This seems redundant. -->
 In many applications, it is required to base an authorization decision on data contained in the information resource to which access is requested. For instance, a common component of privacy policy is that a person should be allowed to read records for which he or she is the subject. The corresponding policy must contain a reference to the subject identified in the information resource itself.
 
 ACAL provides facilities for doing this when the information resource can be represented as a structured document like XML or JSON. The `AttributeSelectorType` object may contain a content-specific Path expression (e.g. XPath) over the `ContentType` object of the resource to identify data in the information resource to be used in the policy evaluation.
@@ -812,7 +812,7 @@ The detailed list of changes from the previous version and any revision history 
 
 # 5 Models (non-normative)
 
-<!-- From XACML 3.0 section 3 Models -->
+<!-- From XACML 3.0 Section 3 Models -->
 
 The data-flow model and language model of ACAL are described in the following sub-sections.
 
@@ -3163,7 +3163,7 @@ A property has a unique name (unique among the object's properties) and a value,
 
 #### 7.1.1.1 Object constraints
 
-ACAL object types may have extra object constraints expressed in form of UML constraints (section 7.6 of [[UML](#uml)]) in the UML models of each ACAL type. These constraints may apply either to a single property of the object - so-called *property-level constraints* - or more globally on multiple properties of the object at once, i.e. *object-level constraints*.
+ACAL object types may have extra object constraints expressed in form of UML constraints (Section 7.6 of [[UML](#uml)]) in the UML models of each ACAL type. These constraints may apply either to a single property of the object - so-called *property-level constraints* - or more globally on multiple properties of the object at once, i.e. *object-level constraints*.
 
 As a reminder, a property is said *multi-valued* (or *multivalued*) if the upper bound of its multiplicity (UML) is (strictly) greater than one, else it is said *single-valued*.
 
@@ -3187,7 +3187,7 @@ Property-level constraints are defined at the level of a specific property as an
 
 ###### 7.1.1.1.1.2 OCL constraints
 
-More advanced constraints are expressed in [[OCL](#OCL)] in the form `{{OCL} expression}` as specified by section 8.3.4.2 (and 8.3.5.2 for the example) of [[UML](#uml)].
+More advanced constraints are expressed in [[OCL](#OCL)] in the form `{{OCL} expression}` as specified by Section 8.3.4.2 (and 8.3.5.2 for the example) of [[UML](#uml)].
 Let refer to *prop* as the property to which the constraint is applied. In each OCL expression below, *prop* is used as the OCL context. Therefore, the `self` keyword in particular refers to *prop* itself.
 
 **Mandatory-property-based uniqueness constraint:**
@@ -3570,7 +3570,7 @@ _**Support for this type is optional, unless `ContentType` objects are supported
 
 `MediaType` is the primitive type for `ContentType` objects' `MediaType` property (see [Section 7.34](#734-contenttype-optional) ).
 
-The regular expression below follows the ABNF syntax from section 4.2 of [[RFC6838]](#rfc6838) (with the recommendation that `<type-name>` and `<subtype-name>` SHOULD be limited to 64 characters).
+The regular expression below follows the ABNF syntax from Section 4.2 of [[RFC6838]](#rfc6838) (with the recommendation that `<type-name>` and `<subtype-name>` SHOULD be limited to 64 characters).
 
 UML definition:
 ```plantuml
@@ -3628,7 +3628,7 @@ UML definition (class diagram):
 hide empty members 
 hide circle
 /' 
-OCL v2.4, section 11.2.3: "by virtue of the implicit conversion to a collection literal, an expression evaluating to null can be used as source of collection operations [...]. If the source is the null literal, it is implicitly converted to an empty Set by invoking oclAsSet()." Therefore no need for null check on multi-valued properties before calling notEmpty, isUnique, etc.
+OCL v2.4, Section 11.2.3: "by virtue of the implicit conversion to a collection literal, an expression evaluating to null can be used as source of collection operations [...]. If the source is the null literal, it is implicitly converted to an empty Set by invoking oclAsSet()." Therefore no need for null check on multi-valued properties before calling notEmpty, isUnique, etc.
 '/
 class ShortIdSetType <<dataType>> {
   {field} + Id: URI [1]
@@ -3721,7 +3721,7 @@ UML definition (class diagram):
 hide empty members 
 hide circle
 /' 
-OCL v2.4, section 11.2.3: "by virtue of the implicit conversion to a collection literal, an expression evaluating to null can be used as source of collection operations [...]. If the source is the null literal, it is implicitly converted to an empty Set by invoking oclAsSet()." Therefore no need for null check on multi-valued properties before calling notEmpty, isUnique, etc.
+OCL v2.4, Section 11.2.3: "by virtue of the implicit conversion to a collection literal, an expression evaluating to null can be used as source of collection operations [...]. If the source is the null literal, it is implicitly converted to an empty Set by invoking oclAsSet()." Therefore no need for null check on multi-valued properties before calling notEmpty, isUnique, etc.
 '/
 'A CombinerInput is not always unique: there may be two PolicyReferences to the same parameterized Policy but with different arguments (so the same PolicyId occurs twice).
 /'
@@ -4560,7 +4560,9 @@ A `ValueType` object has the following properties:
 : An `IdentifierType` value specifying the data type of the attribute value. If this property is omitted, the DataType inference rule(s) of the parent object SHALL apply first, if there is any rule defined in this specification in the parent object type's section (either [ApplyType](#715-applytype), [PolicyReferenceType](#711-policyreferencetype), [SharedVariableReferenceType](#724b-sharedvariablereferencetype), or one of the subtypes of [QuantifiedExpressionType](#725-quantifiedexpressiontype-optional) ); if there is not any, or if the DataType is still undefined after applying the rule(s), then it is treated as being set to `urn:oasis:names:tc:acal:1.0:data-type:string` by default.
 `DataType` values starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are reserved by the XACML TC for their exclusive use.
 
-A ValueType is abstract and subtypes may be either primitive types - i.e. subtypes of `PrimitiveValueType` in the above diagram (LiteralStringType, LiteralIntegerType, etc.) - or structured types (see [section 8.4.1](#841-structured-attributes)) -  i.e. subtypes of `StructuredValueType` in the above diagram.
+A ValueType is abstract and subtypes may be either primitive types - i.e. subtypes of `PrimitiveValueType` in the above diagram (LiteralStringType, LiteralIntegerType, etc.) - or structured types (see [Section 8.4.1](#841-structured-attributes)) -  i.e. subtypes of `StructuredValueType` in the above diagram.
+
+The abstract model distinguishes `LiteralBooleanType`, `LiteralIntegerType`, `LiteralDoubleType`, and `LiteralStringType` from `LiteralRestrictedStringType` by their effective ACAL `DataType` and value space, not by any required concrete syntactic wrapper. A concrete representation MAY make that distinction directly through native scalar syntax, or it MAY use a uniform literal surface form in which the concrete `ValueType` subtype is determined from the effective `DataType` obtained from the subtype's `<<fixedDatatype>>` definition, an explicit `DataType` property, or the applicable parent-context inference rules above. A concrete subtype of `StructuredValueType` is identified by its effective `DataType`, exactly as for the primitive subtypes above; the concrete syntax of its structured content is then defined by the ACAL Profile or user definition that introduces that subtype. Because the rules above resolve any otherwise-undetermined literal to the `string` data type, a structured value is never identified by inspecting its content.
 
 ## 7.24 VariableReferenceType
 
@@ -5495,7 +5497,7 @@ class BundleType <<dataType>> {
   {field} + PolicyReference: PolicyReferenceType [0..1]
 }
 /' 
-OCL v2.4, section 11.2.3: "by virtue of the implicit conversion to a collection literal, an expression evaluating to null can be used as source of collection operations [...]. If the source is the null literal, it is implicitly converted to an empty Set by invoking oclAsSet()." Therefore no need for null check on multi-valued properties before calling notEmpty, isUnique, etc.
+OCL v2.4, Section 11.2.3: "by virtue of the implicit conversion to a collection literal, an expression evaluating to null can be used as source of collection operations [...]. If the source is the null literal, it is implicitly converted to an empty Set by invoking oclAsSet()." Therefore no need for null check on multi-valued properties before calling notEmpty, isUnique, etc.
 '/
 note "{{OCL} PolicyReference = null or Policy->notEmpty()}" as constraint
 BundleType .. constraint
@@ -7320,7 +7322,7 @@ These functions perform comparison operations on two arguments of non-numerical 
 
 `urn:oasis:names:tc:acal:1.0:function:dateTime-less-than`
 
-: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:dateTime` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is less than the second argument according to the order relation specified for `urn:oasis:names:tc:acal:1.0:data-type:dateTime` by [XS, part 2, section 3.2.7]. Otherwise, it SHALL return `false`. Note: if a dateTime value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [[XS](#xs)].
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:dateTime` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is less than the second argument according to the order relation specified for `urn:oasis:names:tc:acal:1.0:data-type:dateTime` by [XS, part 2, Section 3.2.7]. Otherwise, it SHALL return `false`. Note: if a dateTime value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [[XS](#xs)].
 
 `urn:oasis:names:tc:acal:1.0:function:dateTime-less-than-or-equal`
 

@@ -174,7 +174,7 @@ Copyright © OASIS Open 2026. All Rights Reserved.  For license and copyright in
     - [6.2.2 Policy integrity](#622-policy-integrity)
 - [7 Conformance](#7-conformance)
   - [7.1 Introduction](#71-introduction)
-  - [7.2 Conformance tables](#72-conformance-tables)
+  - [7.3 Conformance Tables](#73-conformance-tables)
     - [7.2.1 Schema objects](#721-schema-objects)
 - [Annex A License, Document Status and Notices](#annex-a-license-document-status-and-notices)
   - [A.1 Document Status](#a1-document-status)
@@ -186,7 +186,7 @@ Copyright © OASIS Open 2026. All Rights Reserved.  For license and copyright in
   - [C.1 JACAL schema identifier](#c1-jacal-schema-identifier)
 - [Annex D JACAL schema (normative)](#annex-c-jacal-identifiers-normative)
 - [Annex E How to generate HTML and PDF Versions](#annex-e-how-to-generate-html-and-pdf-versions)
-- [Appendix 1. Acknowledgments](#appendix-1-acknowledgments)
+- [Appendix 1 Acknowledgments](#appendix-1-acknowledgments)
   - [Leadership](#leadership)
   - [Special Thanks](#special-thanks)
   - [Participants](#participants)
@@ -330,7 +330,7 @@ concrete projections of the same ACAL model.
 
 ## 4.1 Requirements
 
-The JSON representation (JACAL) should be as aligned as possible with [[ACAL-Core-1.0](#acal-core-10)] (section 7 in particular). Indeed, JACAL is a concrete representation format for ACAL.  Every construct in
+The JSON representation (JACAL) should be as aligned as possible with [[ACAL-Core-1.0](#acal-core-10)] (Section 7 in particular). Indeed, JACAL is a concrete representation format for ACAL.  Every construct in
 the ACAL abstract model has a corresponding JACAL representation defined
 in this specification.  The normative reference for semantics,
 evaluation rules, and abstract conformance requirements is
@@ -433,7 +433,7 @@ where `<subschema 1>`,`<subschema 2>`, etc. are the reusable JSON subschemas cre
 
 ## 5.1 Mapping ACAL simple types
 
-For each simple type (stereotyped `<<primitive>>` or `<<enumeration>>`) in section 7.1.2 of the [[ACAL-Core-1.0](#acal-core-10)] model, apply the mapping rules in the next subsections to obtain the JSON representation.
+For each simple type (stereotyped `<<primitive>>` or `<<enumeration>>`) in Section 7.1.2 of the [[ACAL-Core-1.0](#acal-core-10)] model, apply the mapping rules in the next subsections to obtain the JSON representation.
 
 ### 5.1.1 Primitive types mapped to native JSON schema definitions
 
@@ -464,7 +464,7 @@ Contrary to the above subschemas which are not added as first-class reusable sch
 
 ### 5.1.2 Restricted String types (UML stereotype `<<restrictedString>>`)
 
-Each ACAL primitive type `FooType` with stereotype `<<restrictedString>>` in section 7.1.2.3 of [[ACAL-Core-1.0](#acal-core-10)] (e.g., `VersionType`, `VersionMatchType`, `ShortIdNameType`, `ShortIdValueType`, `IdentifierType`, `LocalIdentifierType`, etc.), i.e., with a given `pattern` property set to a regular expression *\<REGEX>*, is mapped to a subschema in the *`$defs` object* as follows:
+Each ACAL primitive type `FooType` with stereotype `<<restrictedString>>` in Section 7.1.2.3 of [[ACAL-Core-1.0](#acal-core-10)] (e.g., `VersionType`, `VersionMatchType`, `ShortIdNameType`, `ShortIdValueType`, `IdentifierType`, `LocalIdentifierType`, etc.), i.e., with a given `pattern` property set to a regular expression *\<REGEX>*, is mapped to a subschema in the *`$defs` object* as follows:
 
 ```json
 {
@@ -523,7 +523,7 @@ This is a union of three regular expressions (either one must match) representin
 
 ### 5.1.3 Enum types (UML stereotype `<<enumeration>>`)
 
-Each ACAL enumerated type `FooType` (stereotyped `<<enumeration>>`) from section 7.1.2.3 of [[ACAL-Core-1.0](#acal-core-10)] with enum values *V1, V2, ... Vn* is mapped to the following subschema (e.g. `EffectType`, `DecisionType`):
+Each ACAL enumerated type `FooType` (stereotyped `<<enumeration>>`) from Section 7.1.2.3 of [[ACAL-Core-1.0](#acal-core-10)] with enum values *V1, V2, ... Vn* is mapped to the following subschema (e.g. `EffectType`, `DecisionType`):
 
 ```json
 {
@@ -563,7 +563,7 @@ The `object` type is used for JSON object (which can be used to wrap a JSON arra
 
 ### 5.2.2 ValueType mapping rules
 
-The authoritative definition of ACAL `ValueType` and subtypes is in [[ACAL-Core-1.0](#acal-core-10)] section 7.23. The next subsections define the mapping rules from ACAL authoritative definition to their JSON representation.
+The authoritative definition of ACAL `ValueType` and subtypes is in [[ACAL-Core-1.0](#acal-core-10)] Section 7.23. The next subsections define the mapping rules from ACAL authoritative definition to their JSON representation.
 
 #### 5.2.2.1 Primitive value mappings
 
@@ -715,12 +715,12 @@ Therefore, the `ValueType`'s JSON schema SHALL be enhanced as follows in order t
 }
 ```
 
- This enables ACAL implementers to extend `StructuredValueType` with new concrete subtypes of their own or from standard JACAL Profiles, by overriding the `$dynamicAnchor` (redeclare with the same name) in a implementation-specific JSON schema, as described in section [5.4](#54-jacal-extension-mechanism). That section gives an example where `StructuredValueType` is extended with the `XPathExpressionValueType` (`urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` data-type) from the XPath Profile.
+ This enables ACAL implementers to extend `StructuredValueType` with new concrete subtypes of their own or from standard JACAL Profiles, by overriding the `$dynamicAnchor` (redeclare with the same name) in a implementation-specific JSON schema, as described in Section [5.4](#54-jacal-extension-mechanism). That section gives an example where `StructuredValueType` is extended with the `XPathExpressionValueType` (`urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` data-type) from the XPath Profile.
 
 
 ### 5.2.3 Default mapping rules for complex ACAL types (other than ValueType)
 
-For each complex ACAL type `FooType` that does not fall under any of the previous cases (section 5.2.1 and 5.2.2), apply the mappings rules defined in this section.
+For each complex ACAL type `FooType` that does not fall under any of the previous cases (Section 5.2.1 and 5.2.2), apply the mappings rules defined in this section.
 
 **Definitions**:
 - The term *concrete type* is used as synonym for *non-abstract type*.
@@ -731,7 +731,7 @@ For each complex ACAL type `FooType` that does not fall under any of the previou
 - Let `FooSub1FinalType`, `FooSub2FinalType`, etc. be referred to as the final subtypes of `FooType` if there is any.
 - Let `FooSub1NonFinalType`, `FooSub2NonFinalType`, etc. be referred to as the non-final subtypes of `FooType` if there is any.
 - Let *p<sub>n</sub>* be the n-th property defined in *FooType* class model specifically (not already defined in a supertype of *FooType* if any).
-- Let *\<s<sub>i</sub>\>* be the JSON subschema obtained by applying Property mapping rules of section 5.2.4 to the property *p<sub>n</sub>*.
+- Let *\<s<sub>i</sub>\>* be the JSON subschema obtained by applying Property mapping rules of Section 5.2.4 to the property *p<sub>n</sub>*.
 - Let *\<LR>* be the list of all required properties *p<sub>n</sub>*, i.e. such that the lower bound of *p<sub>n</sub>*'s multiplicity is 1.
 
 **Mapping rules**:
@@ -784,7 +784,7 @@ For each complex ACAL type `FooType` that does not fall under any of the previou
          "not": true
        }
        ```
-       This enables ACAL implementers to extend `FooType` with concrete subtypes of their own or from standard JACAL Profiles, by overriding the `$dynamicAnchor` with the same name in a new (implementation-specific) JSON schema. See section [5.4](#54-jacal-extension-mechanism) for more information.
+       This enables ACAL implementers to extend `FooType` with concrete subtypes of their own or from standard JACAL Profiles, by overriding the `$dynamicAnchor` with the same name in a new (implementation-specific) JSON schema. See Section [5.4](#54-jacal-extension-mechanism) for more information.
   
      - 1.2.2. Else (`FooType` has one or more subtypes in ACAL core model), then add also the following JSON subschema to the *`$defs` object*:
       ```json 
@@ -937,7 +937,7 @@ For each of an ACAL Datatype's property *Prop* with value type *PropType*, the c
   { <PropTypeSchema_without_opening_and_closing_braces>, "default": <DEFAULT> }
   ```
 - 2. Else (*Prop* is multivalued):
-  - 2.1. If the property has a **Value type uniqueness constraint** as defined in [[ACAL-Core-1.0](#acal-core-10)] section 7.1.1.1.1.2 (`self->isUnique(oclType())`), then map to the following subschema:
+  - 2.1. If the property has a **Value type uniqueness constraint** as defined in [[ACAL-Core-1.0](#acal-core-10)] Section 7.1.1.1.1.2 (`self->isUnique(oclType())`), then map to the following subschema:
     ```json
     {
       "type": "object",
@@ -966,12 +966,12 @@ For each of an ACAL Datatype's property *Prop* with value type *PropType*, the c
 
     **The standard `uniqueItems` keyword does not allow to enforce uniqueness of array items based on a specific key when such items are JSON objects, in the current latest JSON schema draft (version 2020-12).** 
 
-    Therefore, the mapping of **property-based uniqueness constraints** - defined in [[ACAL-Core-1.0](#acal-core-10)] section 7.1.1.1.1.2 - on properties of complex/structured type (mapped to JSON object) is left implementation-defined by this specification, since there is no standard mechanism in the current latest JSON schema standard to enforce the such constraints. However, as a general guidance, implementations MAY use the third-party [ArrayExt extension vocabulary](https://github.com/json-schema-org/json-schema-vocabularies) and more particulary the `uniqueKeys` keyword (instead of `uniqueItems`) to implement this feature. 
+    Therefore, the mapping of **property-based uniqueness constraints** - defined in [[ACAL-Core-1.0](#acal-core-10)] Section 7.1.1.1.1.2 - on properties of complex/structured type (mapped to JSON object) is left implementation-defined by this specification, since there is no standard mechanism in the current latest JSON schema standard to enforce the such constraints. However, as a general guidance, implementations MAY use the third-party [ArrayExt extension vocabulary](https://github.com/json-schema-org/json-schema-vocabularies) and more particulary the `uniqueKeys` keyword (instead of `uniqueItems`) to implement this feature.
 
 
 ### 5.2.5 Mapping ACAL object-level constraints (OCL)
 
-ACAL object-level constraints defined in [[ACAL-Core-1.0](#acal-core-10)] section 7.1.1.1.2 may be translated into JSON subschema(s) to be added the corresponding JSON schema definition of the ACAL Datatype, according to the table below:
+ACAL object-level constraints defined in [[ACAL-Core-1.0](#acal-core-10)] Section 7.1.1.1.2 may be translated into JSON subschema(s) to be added the corresponding JSON schema definition of the ACAL Datatype, according to the table below:
 
 **Table 2:** ACAL/UML constraints mapped to JSON schema
 
@@ -997,7 +997,7 @@ This specification defines the following `Content` types in order to support ACA
   - `MediaType` attribute SHALL be set to `application/xml`;
   - `Encoding` attribute is either unused/undefined or set to `base64`.
   - `Body` property is set to a JSON string containing the XML document in one of the following forms:
-     1) **Escaped:** if `Encoding` is undefined, the XML is escaped to be a valid JSON string using escaping rules described in section 7 of [[RFC8259](#rfc8259)], i.e. in particular the double quote (`"`), backslash (`\`) and control characters are escaped with a backslash `\` (the new line escaped as `\n`, the carriage return as `\r`, and the horizontal tab as `\t`). For example:
+     1) **Escaped:** if `Encoding` is undefined, the XML is escaped to be a valid JSON string using escaping rules described in Section 7 of [[RFC8259](#rfc8259)], i.e. in particular the double quote (`"`), backslash (`\`) and control characters are escaped with a backslash `\` (the new line escaped as `\n`, the carriage return as `\r`, and the horizontal tab as `\t`). For example:
      ```json
      {
       "MediaType": "application/xml",
@@ -1019,7 +1019,7 @@ The implementation SHALL support a given content type in this list if and only i
 
 **If the implementation does not support any extension, you may use the JACAL core schema (provided with this specification) as is, and ignore this section.**
 
-Extending JACAL syntax means extending JACAL core JSON schema (obtained from the mapping rules in the previous section). As explained in the mapping rule 1.2.1 of section 5.2.3, JACAL core schema uses a `$dynamicRef` for any extensible ACAL type that may be extended by a separate JSON schema (overriding a matching `$dynamicAnchor`), depending on which extensions the ACAL implementation shall support. 
+Extending JACAL syntax means extending JACAL core JSON schema (obtained from the mapping rules in the previous section). As explained in the mapping rule 1.2.1 of Section 5.2.3, JACAL core schema uses a `$dynamicRef` for any extensible ACAL type that may be extended by a separate JSON schema (overriding a matching `$dynamicAnchor`), depending on which extensions the ACAL implementation shall support.
 
 To explain how to use this extension mechanism, we go through various concrete examples in the next sections.
 
@@ -1102,11 +1102,11 @@ This section identifies possible security and privacy compromise scenarios that 
 
 ## 6.1 Threat model
 
-Refer to [[ACAL-Core-1.0](#acal-core-10)] section 11.1.
+Refer to [[ACAL-Core-1.0](#acal-core-10)] Section 11.1.
 
 ## 6.2 Safeguards
 
-Refer to [[ACAL-Core-1.0](#acal-core-10)] section 11.2 for general considerations.
+Refer to [[ACAL-Core-1.0](#acal-core-10)] Section 11.2 for general considerations.
 
 ### 6.2.1 Policy confidentiality
 
@@ -1155,8 +1155,8 @@ For the purposes of this specification:
 - **O** means optional-to-implement
 
 For ACAL object types, these categories are inherited unchanged from
-[[ACAL-Core](#acal-core)] section 11.2.1. JACAL uses the same notation
-again in [section 7.3.2](#732-machine-readable-artifact-support) for
+[[ACAL-Core](#acal-core)] Section 11.2.1. JACAL uses the same notation
+again in [Section 7.3.2](#732-machine-readable-artifact-support) for
 JACAL-specific artifacts.
 
 An implementation MUST follow
@@ -1164,12 +1164,12 @@ An implementation MUST follow
 and [Annex C](#annex-c-xacml-identifiers-normative) where they apply to
 implemented items in the following tables.
 
-## 7.3 Conformance tables
+## 7.3 Conformance Tables
 
 ### 7.3.1 ACAL Object-Type Conformance
 
 JACAL inherits ACAL object-type conformance from
-[[ACAL-Core](#acal-core-10)] section 11.2.1.
+[[ACAL-Core](#acal-core-10)] Section 11.2.1.
 
 A processor claiming core JACAL conformance MUST support the JACAL
 representation of every ACAL object type marked `M` in that table.  It
@@ -1443,7 +1443,7 @@ The `ShortIdSet.Id` value of this artifact is:
 
 # Annex D JSON Schema (normative)
 
-This section includes the JSON Schema for the JACAL syntax defined in this specification, more particularly in section 5 (i.e. obtained by applying the ACAL-to-JSON mapping rules):
+This section includes the JSON Schema for the JACAL syntax defined in this specification, more particularly in Section 5 (i.e. obtained by applying the ACAL-to-JSON mapping rules):
 
 ```json
 !include acal-core-json-v1.0-schema.json
@@ -1491,7 +1491,7 @@ The HTML file is generated like the previous command and, in addition, a PDF fil
 -------
 
 
-# Appendix 1. Acknowledgments
+# Appendix 1 Acknowledgments
 
 (This appendix does not form an integral part of this Specification and is informational.)
 
