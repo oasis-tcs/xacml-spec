@@ -2100,6 +2100,11 @@ changes and additionally translate the serialization format.
   attribute has mixed-type values, split it into separate attributes.
 - [ ] **Rename `Attributes` to `RequestEntity`** in request documents;
   rename `Attributes` in response/result to `ResultEntity`.
+- [ ] **Remove `EarliestVersion` and `LatestVersion` from `PolicyReference`**; .
+- [ ] **Remove `IncludeInResult` attributes in response results**.
+- [ ] **Replace AttributeValue element with a Value element**.
+- [ ] **Changed Decision element to an XML attribute in Result**.
+- [ ] (optional) **Remove IncludeInResult, ReturnPolicyIdList, CombinedDecision and DataType attributes that are set to default values, if you wish to simplify the syntax.**
 
 ### Identifier namespace
 
