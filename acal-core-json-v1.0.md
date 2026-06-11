@@ -174,6 +174,7 @@ Copyright © OASIS Open 2026. All Rights Reserved.  For license and copyright in
     - [6.2.2 Policy integrity](#622-policy-integrity)
 - [7 Conformance](#7-conformance)
   - [7.1 Introduction](#71-introduction)
+  - [7.2 Conformance Categories](#72-conformance-categories)
   - [7.3 Conformance Tables](#73-conformance-tables)
     - [7.2.1 Schema objects](#721-schema-objects)
 - [Annex A License, Document Status and Notices](#annex-a-license-document-status-and-notices)
