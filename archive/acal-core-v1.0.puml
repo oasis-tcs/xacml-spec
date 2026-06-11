@@ -1,0 +1,301 @@
+@startuml
+hide empty members 
+hide circle
+!pragma layout smetana
+skinparam linetype ortho
+
+'Constraints and defaults removed from class members and stereotypes remove from classes for conciseness
+
+package "Common data model" {
+
+    'Used in PDP Configuration and PDP API        
+    abstract class ArgumentType 
+    abstract class ExpressionType extends ArgumentType
+    abstract class ValueType extends ExpressionType
+    
+    'Used in PDP Configuration and PDP API
+    class AttributeType {
+       + AttributeId: IdentifierType [1]
+       + Issuer: Name [0..1]
+       + DataType: IdentifierType [0..1]
+    }
+    AttributeType *-- "1..*" ValueType: Value
+    
+    abstract class IdReferenceType {
+       + Id: URI [1]
+    }
+
+    class ShortIdType {
+       + Name: ShortIdNameType [1]
+       + Value: ShortIdValueType [1]
+    }
+
+    class ShortIdSetType {
+        {field} + Id: URI [1]
+    }
+
+    ShortIdSetType *-- "*" ShortIdType: ShortId\n{ordered,unique}
+    ShortIdSetType --> "*" ShortIdSetType: ShortIdSetReference\n{unique}
+
+    class ContentType {
+       + MediaType: MediaType [0..1]
+       + Encoding: ContentEncodingType [0..1]
+       + Body: AnyType [1]
+    }
+}
+
+package "PDP Configuration" {
+    
+    EntityType *-- "0..1" ContentType: Content
+    EntityType *-- "*" AttributeType: Attribute
+    
+    'WARNING CombinerInputType changed to interface to avoid multiple inheritance from PolicyReference
+    interface CombinerInputType
+    
+    abstract class PolicyDefaultsType
+    
+    class NamedArgumentType {
+      {field} + Name: LocalIdentifierType [1]
+    }
+    NamedArgumentType --|> ArgumentType
+    NamedArgumentType *-- ExpressionType: Expression
+        
+    class ParameterType {
+       + Name: LocalIdentifierType [1]
+       + DataType: IdentifierType [0..1]
+       + IsBag: Boolean [0..1]
+       + Description: String [0..1]
+    }
+    ParameterType *-- "0..1" ExpressionType: Expression
+    
+    class VariableDefinitionType {
+       + VariableId: LocalIdentifierType [1]
+    }
+    VariableDefinitionType *-- ExpressionType: Expression
+    
+    abstract class NonLiteralExpressionType
+    NonLiteralExpressionType --|> ExpressionType
+    
+    BooleanExpressionType *-- NonLiteralExpressionType: Expression
+    
+    package "Notice Expression" {
+    
+    class AttributeAssignmentExpressionType {
+       + AttributeId: IdentifierType [1]
+       + Category: IdentifierType [0..1]
+       + Issuer: Name [0..1]
+    }
+    AttributeAssignmentExpressionType *-- ExpressionType: Expression
+    
+    class NoticeExpressionType {
+      {field} + Id: IdentifierType [1]
+      {field} + IsObligation: Boolean [0..1]
+      {field} + AppliesTo: EffectType [0..1]
+    }
+    NoticeExpressionType *-- BooleanExpressionType: Condition
+    NoticeExpressionType *-- "*" AttributeAssignmentExpressionType: AttributeAssignmentExpression
+    }
+    
+    class PolicyType #LightSkyBlue implements CombinerInputType {
+      {field} + PolicyId: URI [1]
+      {field} + Version: VersionType [1]
+      {field} + Description: String [0..1]
+      {field} + MaxDelegationDepth: NonNegativeInteger [0..1]
+      {field} + CombiningAlgId: IdentifierType [1]
+    }
+    PolicyType --> "*" ShortIdSetType: ShortIdSetReference\n{unique}
+    PolicyType *-- "0..1" EntityType: PolicyIssuer 
+    PolicyType *-- "*" PolicyDefaultsType: PolicyDefaults\n{unique}
+    PolicyType *-- "*" ParameterType: Parameter\n{ordered,unique}
+    PolicyType *-- "*" VariableDefinitionType: VariableDefinition\n{ordered,unique}
+    PolicyType *-- "0..1" BooleanExpressionType: Target
+    PolicyType *-- "*" CombinerInputType: CombinerInput\n{ordered}
+    PolicyType *-- "*" NoticeExpressionType: NoticeExpression\n{ordered,unique}
+    
+    'WARNING: CHANGE!!!!
+    class RuleType implements CombinerInputType {
+        {field} + Id: LocalIdentifierType [1]
+        {field} + Description: String [0..1]
+        {field} + Effect: EffectType [1]
+    }
+    RuleType *-- "*" VariableDefinitionType: VariableDefinition\n{ordered, unique}
+    RuleType *-- "0..1" BooleanExpressionType: Condition
+    RuleType *-- "*" NoticeExpressionType: NoticeExpression\n{ordered}
+    
+    class PatternMatchIdReferenceType {
+       + Version: VersionMatchType [0..1]
+    }
+    PatternMatchIdReferenceType --|> IdReferenceType
+    
+    
+    'WARNING: class PolicyReferenceType extends CombinerInputType AND PatternMatchIdReference!!!!!
+    class PolicyReferenceType extends PatternMatchIdReferenceType implements CombinerInputType
+    PolicyReferenceType --> PolicyType: Id,Version
+    PolicyReferenceType *-- "*" ArgumentType: Argument\n{ordered}
+    
+    class SharedVariableDefinitionType {
+        {field} + Id: URI [1]
+        {field} + Version: VersionType [1]
+        {field} + Description: String [0..1]
+    }
+    SharedVariableDefinitionType --> "*" ShortIdSetType: ShortIdSetReference\n{unique}
+    SharedVariableDefinitionType *-- "*" ParameterType: Parameter\n{ordered,unique}
+    SharedVariableDefinitionType *-- ExpressionType: Expression
+    
+    class FunctionType  {
+       + Id: IdentifierType [1]
+    }
+    FunctionType --|> ExpressionType
+        
+    class ApplyType extends NonLiteralExpressionType {
+       + Description: String [0..1]
+       + FunctionId: IdentifierType [1]
+    }
+    ApplyType *-- "*" ArgumentType: Argument\n{ordered}
+    
+    abstract class NamedAttributeDesignatorType extends NonLiteralExpressionType {
+       + AttributeId: IdentifierType [1]
+       + DataType: IdentifierType [0..1]
+       + Issuer: Name [0..1]
+       + MustBePresent: Boolean [0..1]
+    }
+    
+    class AttributeDesignatorType extends NamedAttributeDesignatorType {
+       + Category: IdentifierType [1]
+    }
+    
+    class EntityAttributeDesignatorType extends NamedAttributeDesignatorType
+    EntityAttributeDesignatorType *-- ExpressionType: Expression
+    
+    abstract class BaseAttributeSelectorType extends NonLiteralExpressionType {
+       + Path: AttributeSelectorPathType [1]
+       + DataType: IdentifierType [0..1]
+       + MustBePresent: Boolean [0..1]
+    }
+
+    abstract class AttributeSelectorType extends BaseAttributeSelectorType {
+       + Category: IdentifierType [1]
+    }
+    
+    abstract class EntityAttributeSelectorType extends BaseAttributeSelectorType
+    EntityAttributeSelectorType *-- ExpressionType: Expression
+    
+    class VariableReferenceType extends NonLiteralExpressionType {
+       '+ VariableId: LocalIdentifierType [1]
+    }
+    VariableReferenceType --> VariableDefinitionType: VariableId
+    
+    class SharedVariableReferenceType extends NonLiteralExpressionType {
+       ' TODO: rename Id to VariableId like in VariableReference    
+       '+ Id: URI [1]
+       '+ Version: VersionMatchType [0..1]
+    }
+    SharedVariableReferenceType --> SharedVariableDefinitionType: Id,Version
+    SharedVariableReferenceType *-- "*" ArgumentType: Argument\n{ordered}
+    
+    abstract class QuantifiedExpressionType extends NonLiteralExpressionType {
+       + VariableId: LocalIdentifierType [1]
+    }
+    QuantifiedExpressionType *-- NonLiteralExpressionType: Domain
+    QuantifiedExpressionType *-- ExpressionType: Iterant
+     
+    'class ForAnyType extends QuantifiedExpressionType
+    'class ForAllType extends QuantifiedExpressionType
+    'class MapType extends QuantifiedExpressionType
+    'class SelectType extends QuantifiedExpressionType
+
+    class BundleType #LightSkyBlue
+    BundleType *-- "*" ShortIdSetType: ShortIdSet\n{ordered, unique}
+    BundleType *-- "*" SharedVariableDefinitionType: SharedVariableDefinition\n{ordered, unique}
+    BundleType *-- "*" PolicyType: Policy\n{ordered, unique} 
+    BundleType *-- "0..1" PolicyReferenceType: PolicyReference
+}
+
+
+package "PDP API (used by PEPs)" {
+
+    abstract class RequestDefaultsType
+    
+    class RequestAttributeType {
+       + IncludeInResult: Boolean [0..1]
+    }
+    RequestAttributeType --|> AttributeType
+    
+    class RequestEntityType {
+      {field} + Category: IdentifierType [1]
+      {field} + Id: LocalIdentifierType [0..1]
+    }
+    RequestEntityType *-- "0..1" ContentType: Content
+    RequestEntityType *-- "*" RequestAttributeType: RequestAttribute
+    
+    ' This is a simplification of RequestReferenceType -> RequestEntityReferenceType -> 
+    ' RequestReferenceType *-- "1..*" RequestEntityReferenceType\n{unique} 
+    ' class RequestEntityReferenceType {
+    '   + Id: LocalIdentifierType [1]
+    '}
+    RequestReferenceType *-- "1..*" RequestEntityType: RequestEntityReference\n{unique}
+
+    MultiRequestsType *-- "1..*" RequestReferenceType: RequestReference\n{unique}
+
+    class RequestType #LightSkyBlue {
+      {field} + ReturnPolicyIdList: Boolean [0..1]
+      {field} + CombinedDecision: Boolean [0..1]
+    }
+    RequestType --> "*" ShortIdSetType: ShortIdSetReference\n{unique}
+    RequestType *-- "*" RequestDefaultsType: RequestDefaults\n{unique}
+    RequestType *-- "1..*" RequestEntityType: RequestEntity\n{unique}
+    RequestType *-- "0..1" MultiRequestsType: MultiRequests
+
+    class StatusCodeType {
+       + Value: IdentifierType [1]
+    }
+    StatusCodeType *-- "0..1" StatusCodeType: StatusCode
+    
+    class StatusDetailType {
+       + <any>: AnyType [*]
+    }
+    ' StatusDetailType may contain MissingAttributeDetailType
+    'class MissingAttributeDetailType <<dataType>> {
+    '   + Category: IdentifierType [0..1]
+    '   + AttributeId: IdentifierType [1]
+    '   + Issuer: Name [0..1]
+    '   + DataType: IdentifierType [1]
+    '   + Value: ValueType [*] {unordered, nonunique}
+    '}
+    class StatusType {
+       + StatusMessage: String [0..1]
+    }
+    StatusType *-- StatusCodeType: StatusCode
+    StatusType *-- "0..1" StatusDetailType: StatusDetail
+    
+    class AttributeAssignmentType {
+       + Category: IdentifierType [0..1]
+    }
+    AttributeAssignmentType --|> AttributeType 
+    
+    class NoticeType {
+       {field} + Id: IdentifierType [1]
+       {field} + IsObligation: Boolean [0..1]
+    }
+    NoticeType *-- AttributeAssignmentType: AttributeAssignment\n{ordered,unique}
+    
+    class ExactMatchIdReferenceType {
+       + Version: VersionType [1]
+    }
+    ExactMatchIdReferenceType --|> IdReferenceType 
+    
+    class ResultType {
+      {field} + Decision: DecisionType [1]
+    }
+    ResultType *-- "0..1" StatusType: Status
+    ResultType *-- "*" ResultEntityType: ResultEntity\n{unique}
+    ResultType *-- "*" NoticeType: Notice\n{ordered}
+    ResultType *-- "*" ExactMatchIdReferenceType: ApplicablePolicyReference\n{unique}
+
+    class ResponseType #LightSkyBlue
+    ResponseType --> "*" ShortIdSetType: ShortIdSetReference\n{unique}
+    ResponseType --> "1..*" ResultType: Result
+}
+
+    ' TODO: try add full ValueType hierarchy
+@enduml

@@ -1,0 +1,1 @@
+This directory contains files that are no longer used - or at least not currently used - for the production of ACAL standards, but possibly useful one day.
