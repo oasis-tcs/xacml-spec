@@ -2100,8 +2100,9 @@ Properties:
 If `AppliesTo` is omitted, the notice expression is eligible for either
 `Permit` or `Deny`.
 
-`AttributeAssignmentExpression` items SHOULD be unique by the pair
-`(AttributeId, Category)`.
+`AttributeAssignmentExpression` items MUST be unique by the pair
+`(AttributeId, Category)`, as defined for `NoticeExpressionType` in
+[[ACAL-Core](#acal-core)].
 
 ### 5.9.2 AttributeAssignmentExpressionType
 

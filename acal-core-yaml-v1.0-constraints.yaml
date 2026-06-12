@@ -513,6 +513,23 @@ Rule:
       YACALSection: "5.9.1"
       ACALSection: "7.12"
 
+  - Id: "noticeexpression-attributeassignmentexpression-unique"
+    Kind: uniqueByProperty
+    Severity: error
+    AppliesTo:
+      ObjectType: NoticeExpressionType
+      CollectionPath: "$..NoticeExpression[].AttributeAssignmentExpression"
+    KeyProperties:
+      - AttributeId
+      - Category
+    Requirement: >
+      AttributeAssignmentExpression values within a NoticeExpressionType
+      MUST be unique by the (AttributeId, Category) pair. An absent
+      Category participates in the pair as an absent value.
+    Provenance:
+      YACALSection: "5.9.1"
+      ACALSection: "7.29"
+
   - Id: "result-notice-id-unique"
     Kind: uniqueByProperty
     Severity: error

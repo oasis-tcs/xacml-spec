@@ -721,7 +721,10 @@ $defs:
       PolicyIssuer:
         $ref: "#/$defs/EntityType"
       PolicyDefaults:
-        $ref: "#/$defs/PolicyDefaultsTypeTree"
+        type: array
+        minItems: 1
+        items:
+          $ref: "#/$defs/PolicyDefaultsTypeTree"
       Parameter:
         type: array
         minItems: 1
@@ -890,7 +893,10 @@ $defs:
       ShortIdSetReference:
         $ref: "#/$defs/UriArray"
       RequestDefaults:
-        $ref: "#/$defs/RequestDefaultsTypeTree"
+        type: array
+        minItems: 1
+        items:
+          $ref: "#/$defs/RequestDefaultsTypeTree"
       RequestEntity:
         type: array
         items:
