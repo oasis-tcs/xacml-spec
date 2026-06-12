@@ -1580,31 +1580,21 @@ PolicyIssuer:
 If `PolicyIssuer` includes structured body content, that content follows
 the `ContentType` rules in [Section 5.4.11](#5411-contenttype-mapping).
 
-### 5.6.8 PolicyPatternMatchReference
+### 5.6.8 PatternMatchIdReferenceType
 
-For conformance-table alignment with the peer representations, YACAL
-uses the name `PolicyPatternMatchReference` for the direct YAML mapping
-of ACAL `PatternMatchIdReferenceType` when it is used as a policy
-reference without parameters.
+ACAL `PatternMatchIdReferenceType` is the base type of
+`PolicyReferenceType` and is not used on its own in YACAL core: policy
+references, with or without `Argument` expressions, use the
+`PolicyReferenceType` representation in
+[Section 5.6.6](#566-policyreferencetype).
 
-It is represented as a YAML mapping with:
+Its YAML mapping defines the following properties, which
+`PolicyReferenceType` inherits:
 
 | Property | Required | Type | Notes |
 |---|---|---|---|
 | `Id` | Yes | URI | Identifier of the referenced policy |
 | `Version` | No | `VersionMatchType` | Matching expression for acceptable versions |
-
-Example:
-
-```yaml
-PolicyPatternMatchReference:
-  Id: "urn:example:yacal:policy:audit-logging"
-  Version: "2.*"
-```
-
-If parameter expressions are required, the `PolicyReferenceType`
-representation in [Section 5.6.6](#566-policyreferencetype) is used
-instead.
 
 ### 5.6.9 PolicyDefaultsType
 
