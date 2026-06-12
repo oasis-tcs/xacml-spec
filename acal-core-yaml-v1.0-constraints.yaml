@@ -511,7 +511,7 @@ Rule:
       NoticeExpression Id values within a RuleType MUST be unique.
     Provenance:
       YACALSection: "5.9.1"
-      ACALSection: "7.17"
+      ACALSection: "7.12"
 
   - Id: "result-notice-id-unique"
     Kind: uniqueByProperty
@@ -525,7 +525,7 @@ Rule:
       Notice Id values within a ResultType MUST be unique.
     Provenance:
       YACALSection: "5.9.3"
-      ACALSection: "7.41"
+      ACALSection: "7.37"
 
   - Id: "result-resultentity-category-unique"
     Kind: uniqueByProperty
@@ -539,7 +539,7 @@ Rule:
       ResultEntity Category values within a ResultType MUST be unique.
     Provenance:
       YACALSection: "5.8.9"
-      ACALSection: "7.41"
+      ACALSection: "7.37"
 
   - Id: "result-applicablepolicyreference-id-unique"
     Kind: uniqueByProperty
@@ -554,7 +554,7 @@ Rule:
       unique.
     Provenance:
       YACALSection: "5.8.10"
-      ACALSection: "7.41"
+      ACALSection: "7.37"
 
   - Id: "bundle-shortidset-id-unique"
     Kind: uniqueByProperty
@@ -612,4 +612,4 @@ Rule:
       unique.
     Provenance:
       YACALSection: "5.8.9"
-      ACALSection: "7.42"
+      ACALSection: "7.45"

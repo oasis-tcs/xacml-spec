@@ -2289,7 +2289,7 @@ Properties:
 
 | Property | Required | Type | Cardinality |
 |---|---|---|---|
-| `Category` | Yes | `IdentifierType` | 1 |
+| `Category` | No | `IdentifierType` | 0..1 |
 | `AttributeId` | Yes | `IdentifierType` | 1 |
 | `Issuer` | No | Name | 0..1 |
 | `DataType` | Yes | `IdentifierType` | 1 |
