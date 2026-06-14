@@ -6,7 +6,30 @@ OASIS TC GitHub repositories, as described in <a href="https://www.oasis-open.or
 
 ## Description
 
-The purpose of the XACML TC is to define a core XML schema for representing authorization and entitlement policies. This GitHub repository lists ]tracking issues and features for the OASIS XACML TC. Requests for modification can be made via <a href="https://github.com/oasis-tcs/xacml-spec/issues">Github Issues</a>.
+The OASIS XACML Technical Committee is developing ACAL (Attribute-Centric Authorization Language) v1.0, the successor to XACML 3.0. ACAL separates policy semantics from serialization syntax, enabling the same authorization policies to be expressed in XML (XACML v4.0), JSON (JACAL v1.0), or YAML (YACAL v1.0). This repository contains the specifications, schemas, and supplementary artifacts for all three representations. Requests for modification can be made via <a href="https://github.com/oasis-tcs/xacml-spec/issues">GitHub Issues</a>.
+
+### Specification Family
+
+| Specification | Short name | Role |
+|---|---|---|
+| ACAL Core v1.0 | ACAL | Format-agnostic abstract model, processing rules, conformance |
+| ACAL Core – XML Representation Profile v4.0 | XACML v4.0 | XML serialization of ACAL |
+| ACAL Core – JSON Representation Profile v1.0 | JACAL v1.0 | JSON serialization of ACAL |
+| ACAL Core – YAML Representation Profile v1.0 | YACAL v1.0 | YAML serialization of ACAL |
+
+### Key Changes from XACML 3.0
+
+- **Policy absorbs PolicySet**: nested policies use a single `Policy` type with a `CombinerInput` sequence; `PolicySet` is eliminated
+- **Target simplification**: the `AnyOf / AllOf / Match` structure is replaced by a plain boolean `Apply` expression — the same language as `Condition`
+- **NoticeExpression**: `ObligationExpression` and `AdviceExpression` are unified into a single `NoticeExpression` type with an `IsObligation` flag
+- **Attribute DataType**: `DataType` is declared once per `Attribute`, not per value, preventing mixed-type bags
+- **Short identifiers (ShortIdSet)**: user-defined URI aliases reduce verbosity; a standard ACAL identifier set covers all built-ins
+- **QuantifiedExpression**: `ForAny`, `ForAll`, `Map`, and `Select` enable iteration over attribute value bags
+- **Bundle**: portable container for policies, shared variable definitions, and identifier sets
+- **Identifier namespace**: standard identifiers move from `urn:oasis:names:tc:xacml:` to `urn:oasis:names:tc:acal:`
+- **XPath moved to a profile**: XPath-based `AttributeSelector` and functions are in the separate ACAL XPath Profile; a new JSONPath Profile is also defined
+
+For a complete description of changes with worked examples in all three representations, see the [ACAL Adoption and Implementation Guide](acal-adoption-guide.md).
 
 ## Contributions
 As stated in this repository's <a href="https://github.com/oasis-tcs/xacml-spec/blob/master/CONTRIBUTING.md">CONTRIBUTING file</a>, contributors to this repository are expected to be Members of the OASIS XACML TC, for any substantive change requests. Anyone wishing to contribute to this GitHub project and <a href="https://www.oasis-open.org/join/participation-instructions">participate</a> in the TC's technical activity is invited to join as an OASIS TC Member.  Public feedback is also accepted, subject to the terms of the <a href="https://www.oasis-open.org/policies-guidelines/ipr#appendixa">OASIS Feedback License</a>, as noted in the <a href="https://github.com/oasis-tcs/xacml-spec/blob/master/LICENSE.md">LICENSE</a> file.  
@@ -16,7 +39,7 @@ Please see the <a href="https://github.com/oasis-tcs/xacml-spec/blob/master/LICE
 
 ## Further Description of this Repository
 
-Please note that the TC currently is soliciting comments from the community on evolution and potential reworking of core elements of the XACML specification.  See this repository's <a href="https://github.com/oasis-tcs/xacml-spec/blob/master/CONTRIBUTING.md">CONTRIBUTING file</a> for more. 
+See this repository's <a href="https://github.com/oasis-tcs/xacml-spec/blob/master/CONTRIBUTING.md">CONTRIBUTING file</a> for information on how to participate in the TC's work.
 
 ## Contact
 Please send questions or comments about <a href="https://www.oasis-open.org/resources/tcadmin/github-repositories-for-oasis-tc-members-chartered-work">OASIS TC GitHub repositories</a> to <a href="mailto:project-administration@oasis-open.org">Project Administration</a>.  For questions about content in this repository, please contact the TC Chair or Co-Chairs as listed on the the XACML TC's <a href="https://www.oasis-open.org/committees/xacml/">home page</a>.
@@ -54,6 +77,9 @@ Please send questions or comments about <a href="https://www.oasis-open.org/reso
 - [XSD 1.1-to-1.0 conversion XSLT](xsd1.1-to-1.0.xsl): XSLT stylesheet for creating an XML schema 1.0 version of an XML-schema-1.1-defined XSD (removing the XML-Schema-1.1-specific elements). 
 - [pandoc](pandoc) directory: files specifically used for HTML/PDF generation with Pandoc (CSS stylesheets, pandoc templates, Lua filters, scripts, etc.);
 - [published](published) directory: latest published (to OASIS) documents and related files (e.g. XML/JSON schemas), as part of the last release.
+
+- Supplementary documents:
+  - [ACAL Adoption and Implementation Guide](acal-adoption-guide.md): informative guide covering the changes from XACML 3.0, cross-representation examples, migration checklist, and conformance overview.
 
 ## FAQ (Frequently Asked Questions)
 
@@ -170,6 +196,32 @@ We provide two concrete examples of combining schemas on this Github repository 
    ```console
    $ jsonschema validate --resolve acal-core-json-v1.0-schema.json --resolve acal-jsonpath-json-v1.0-schema.json --resolve acal-xpath-json-v1.0-schema.json examples/jacal-root-schema-example-using-xpath-and-jsonpath-profiles.json policy.json
    ```
+
+### How to validate YACAL (YAML) documents with the YACAL schemas?
+
+YACAL is the YAML representation of ACAL. Validation requires two steps: structural validation using the YACAL structural schema (a JSON Schema Draft 2020-12 document serialized in YAML), and higher-order constraint checking using the YACAL constraint catalog.
+
+**Step 1: Structural validation**
+
+Use any YAML 1.2 parser combined with a JSON Schema Draft 2020-12 validator. Parse the YACAL document to a YAML data model, then validate against the structural schema. For implementations that support only one ACAL Core Profile, use the core-only structural schema directly:
+
+```console
+$ <your-yaml-json-schema-validator> acal-core-yaml-v1.0-structure.schema.yaml policy.yaml
+```
+
+For implementations that support profiles (XPath, JSONPath), use the corresponding composition example schema as the root schema, referencing the core and profile schemas:
+
+```console
+$ <your-yaml-json-schema-validator> \
+    yacal-root-structure-example-using-xpath-and-jsonpath-profiles.schema.yaml \
+    policy.yaml
+```
+
+The composition example schemas in this repository (`yacal-root-structure-example-*.schema.yaml`) illustrate how to combine the core schema with one or more profile schemas for common deployment scenarios.
+
+**Step 2: Constraint validation**
+
+Apply the constraint catalog (`acal-core-yaml-v1.0-constraints.yaml`) using a constraint processor compatible with the catalog's format. The constraint catalog captures higher-order rules (uniqueness, scoped references, cycle detection) that are normative in ACAL Core but are not expressible purely in JSON Schema.
 
 ### How to convert a JACAL document to XACML 4.0?
 
