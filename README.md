@@ -34,6 +34,12 @@ For a complete description of changes with worked examples in all three represen
 ## Contributions
 As stated in this repository's <a href="https://github.com/oasis-tcs/xacml-spec/blob/master/CONTRIBUTING.md">CONTRIBUTING file</a>, contributors to this repository are expected to be Members of the OASIS XACML TC, for any substantive change requests. Anyone wishing to contribute to this GitHub project and <a href="https://www.oasis-open.org/join/participation-instructions">participate</a> in the TC's technical activity is invited to join as an OASIS TC Member.  Public feedback is also accepted, subject to the terms of the <a href="https://www.oasis-open.org/policies-guidelines/ipr#appendixa">OASIS Feedback License</a>, as noted in the <a href="https://github.com/oasis-tcs/xacml-spec/blob/master/LICENSE.md">LICENSE</a> file.  
 
+### Open-source Community Contributions
+A separate [GitHub public organization](https://github.com/acal-community/) (ACAL Open Source Community) was created at the initiative of the OASIS ACAL TC to support development of open source resources related to the TC work and the ACAL/XACML standard in general.
+
+While this Github organization remains associated with the sponsor TC, its development priorities, leadership, intellectual property terms, participation rules, and other matters of governance are [separate and distinct](https://github.com/oasis-open/acal-community/blob/master/CONTRIBUTING.md#governance-distinct-from-oasis-tc-process) from the OASIS TC Process and related policies.
+
+
 ## Licensing
 Please see the <a href="https://github.com/oasis-tcs/xacml-spec/blob/master/LICENSE.md">LICENSE</a> file for description of the license terms and OASIS policies applicable to the TC's work in this GitHub project. Content in this repository is intended to be part of the XACML TC's permanent record of activity, visible and freely available for all to use, subject to applicable OASIS policies, as presented in the repository <a href="https://github.com/oasis-tcs/xacml-spec/blob/master/LICENSE.md">LICENSE</a> file.
 
