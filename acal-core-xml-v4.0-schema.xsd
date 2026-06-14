@@ -534,11 +534,11 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 		</xs:restriction>
 	</xs:simpleType>
 
-	<!-- Change to XACML 3.0 - Issue #16: old PolicyIdReference Type changed to new
-	PatternMatchIdReferenceType and element name renamed to PolicyPatternMatchReference,
-	which is used only in a SAML XACMLPolicyQuery of the SAML Profile of XACML.
+	<!-- Change to XACML 3.0 - Issue #16: old PolicyIdReferenceType changed to new
+	PatternMatchIdReferenceType, retained here as the base type of PolicyReferenceType.
+	No element of this type is defined in this schema; the SAML Profile of XACML defines
+	one for use in a SAML XACMLPolicyQuery.
 	 See new PolicyReference element below for policy references used in Policies -->
-	<xs:element name="PolicyPatternMatchReference" type="xacml:PatternMatchIdReferenceType" />
 	<!-- Change to XACML 3.0 - Issue #16: New IdReferenceType extension with Version pattern
 	matching, to be used in Policies (PolicyReference) and XACMLPolicyQuery (PolicyIdReference).
 	Same as old PolicyIdReferenceType except the Id is now an XML attribute, cf. IdReferenceType change
