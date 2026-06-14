@@ -459,7 +459,7 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 		<!-- Change to XACML 3.0 (issue #48): Id attribute type changed to IdentifierType for
 		supporting Short Identifiers -->
 		<xs:attribute name="Id" type="xacml:IdentifierType" use="required" />
-		<xs:attribute name="IsObligation" type="xs:boolean" use="optional" />
+		<xs:attribute name="IsObligation" type="xs:boolean" use="optional" default="false" />
 		<xs:attribute name="AppliesTo" type="xacml:EffectType" use="optional">
 			<xs:annotation>
 				<xs:documentation xml:lang="en"> Undefined AppliesTo means it applies to both Permit
@@ -527,7 +527,8 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 						&lt;name&gt;.&lt;name&gt;.&lt;name&gt;... or
 						&lt;name&gt;-&lt;name&gt;-&lt;name&gt;... where &lt;name&gt; is at least a
 						letter possibly preceded by underscore(s) and/or followed by
-						letter(s)/digit(s)/underscore(s) </xs:documentation>
+						letter(s)/digit(s)/underscore(s) 
+					</xs:documentation>
 				</xs:annotation>
 			</xs:pattern>
 		</xs:restriction>
@@ -580,18 +581,28 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 			<xs:documentation xml:lang="en"> ACAL Profiles may extend DefaultsType to support both
 				PolicyDefaults and RequestDefaults with one single complexType and
 				substitutionGroup(s) as follows (see XPath Profile's XSD for another example):
-				&lt;xs:complexType name=&quot;MyProfileDefaultsType&quot;&gt;
-				&lt;xs:complexContent&gt; &lt;xs:extension base=&quot;xacml:DefaultsType&quot;&gt;
-				...My common Defaults... &lt;/xs:extension&gt; &lt;/xs:complexContent&gt;
-				&lt;/xs:complexType&gt; In XSD 1.0: &lt;xs:element
-				name=&quot;MyProfilePolicyDefaults&quot; type=&quot;MyProfileDefaultsType&quot;
-				substitutionGroup=&quot;xacml:PolicyDefaults&quot;/&gt; &lt;xs:element
-				name=&quot;MyProfileRequestDefaults&quot; type=&quot;MyProfileDefaultsType&quot;
-				substitutionGroup=&quot;xacml:RequestDefaults&quot;/&gt; In XSD 1.1,
-				substitutionGroup on multiple elements is allowed, therefore we can simplify:
-				&lt;xs:element name=&quot;MyProfileDefaults&quot;
-				type=&quot;MyProfileDefaultsType&quot; ubstitutionGroup=&quot;xacml:PolicyDefaults
-				xacml:RequestDefaults&quot;/&gt; </xs:documentation>
+						
+				<xs:complexType name="MyProfileDefaultsType">
+					<xs:complexContent> 
+						<xs:extension base="xacml:DefaultsType">
+							...My common Defaults... 
+						</xs:extension> 
+					</xs:complexContent>
+				</xs:complexType> 
+						
+				In XSD 1.0: 
+				<xs:element
+				name="MyProfilePolicyDefaults" type="MyProfileDefaultsType"
+				substitutionGroup="xacml:PolicyDefaults"/> 
+				<xs:element
+				name="MyProfileRequestDefaults" type="MyProfileDefaultsType"
+				substitutionGroup="xacml:RequestDefaults"/> 
+						
+				In XSD 1.1, substitutionGroup on multiple elements is allowed, therefore we can simplify:
+				<xs:element name="MyProfileDefaults"
+				type="MyProfileDefaultsType" substitutionGroup="xacml:PolicyDefaults
+				xacml:RequestDefaults" />
+			</xs:documentation>
 		</xs:annotation>
 	</xs:complexType>
 
@@ -668,12 +679,12 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 			<xs:selector xpath="xacml:Rule" />
 			<xs:field xpath="@Id" />
 		</xs:key>
+		<xs:key name="Policy_NoticeExpression_Id">
+			<xs:selector xpath="xacml:NoticeExpression" />
+			<xs:field xpath="@Id" />
+		</xs:key>
 		<!--
-			Other uniqueness constraints considered:
-			- NoticeExpression: not always unique, e.g. a sequence of obligations that calls the same action
-		twice (same Id) but with different arguments (AttributeAssignments): 
-			  1) mail to these recipients; (obligation Id = 'mail')
-			  2) mail to these other recipients with a different message (same obligation Id = 'mail').
+			Other uniqueness constraint(s) considered:
 			- CombinerInput: not always unique: there may be two PolicyReferences to the same parameterized
 		Policy but with different arguments, so the same PolicyId may occur twice.
 		-->
@@ -746,10 +757,10 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 			<xs:selector xpath="xacml:VariableDefinition" />
 			<xs:field xpath="@VariableId" />
 		</xs:key>
-		<!--
-		Other possible uniqueness constraints considered:
-		- NoticeExpression (Id): is not unique for same reason as in PolicyType.
-		-->
+		<xs:key name="Rule_NoticeExpression_Id">
+			<xs:selector xpath="xacml:NoticeExpression" />
+			<xs:field xpath="@Id" />
+		</xs:key>
 	</xs:element>
 	<xs:complexType name="RuleType">
 		<xs:sequence>

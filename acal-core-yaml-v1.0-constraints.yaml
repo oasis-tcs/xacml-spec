@@ -513,6 +513,20 @@ Rule:
       YACALSection: "5.9.1"
       ACALSection: "7.17"
 
+  - Id: "policy-noticeexpression-id-unique"
+    Kind: uniqueByProperty
+    Severity: error
+    AppliesTo:
+      ObjectType: PolicyType
+      CollectionPath: "$.Policy.NoticeExpression"
+    KeyProperties:
+      - Id
+    Requirement: >
+      NoticeExpression Id values within a PolicyType MUST be unique.
+    Provenance:
+      YACALSection: "5.9.1"
+      ACALSection: "7.4"
+
   - Id: "result-notice-id-unique"
     Kind: uniqueByProperty
     Severity: error

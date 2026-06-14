@@ -78,8 +78,6 @@ package "PDP Configuration" {
     
     BooleanExpressionType *-- NonLiteralExpressionType: Expression
     
-    package "Notice Expression" {
-    
     class AttributeAssignmentExpressionType {
        + AttributeId: IdentifierType [1]
        + Category: IdentifierType [0..1]
@@ -94,7 +92,6 @@ package "PDP Configuration" {
     }
     NoticeExpressionType *-- BooleanExpressionType: Condition
     NoticeExpressionType *-- "*" AttributeAssignmentExpressionType: AttributeAssignmentExpression
-    }
     
     class PolicyType #LightSkyBlue implements CombinerInputType {
       {field} + PolicyId: URI [1]
@@ -289,7 +286,7 @@ package "PDP API (used by PEPs)" {
     }
     ResultType *-- "0..1" StatusType: Status
     ResultType *-- "*" ResultEntityType: ResultEntity\n{unique}
-    ResultType *-- "*" NoticeType: Notice\n{ordered}
+    ResultType *-- "*" NoticeType: Notice\n{ordered, unique}
     ResultType *-- "*" ExactMatchIdReferenceType: ApplicablePolicyReference\n{unique}
 
     class ResponseType #LightSkyBlue

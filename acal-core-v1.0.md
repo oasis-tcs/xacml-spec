@@ -3725,9 +3725,18 @@ OCL v2.4, Section 11.2.3: "by virtue of the implicit conversion to a collection 
 '/
 'A CombinerInput is not always unique: there may be two PolicyReferences to the same parameterized Policy but with different arguments (so the same PolicyId occurs twice).
 /'
-A NoticeExpression is not always unique, e.g. a sequence of obligations that calls the same action twice (same Id) but with different arguments (AttributeAssignments): 
-1) mail to these recipients; (obligation Id = 'mail')
-2) mail to these other recipients with a different message (same obligation Id = 'mail').
+A NoticeExpression has a unique Id. In case you need to call the same action twice but with different arguments (AttributeAssignments) in a sequence of Notices, simply use an AttributeAssignment to identify the action, but keep the NoticeExpression Id unique (which helps with troubleshooting). For example, two notices calling the same action (send mail) but with different args (different content sent to different recipients) (N.B.: this is pseudo-code for brevity, not an official syntax):
+
+- NoticeExpression Id="send_mail_to_a"
+   - AttributeAssignmentExpression AttributeId="action"  Value="mail"
+   - AttributeAssignmentExpression AttributeId="recipients" Value="a@example.com"
+   - AttributeAssignmentExpression AttributeId="body" Value="blablabla"
+   ... other args...
+- NoticeExpression Id="send_mail_to_b"
+   - AttributeAssignmentExpression AttributeId="action"  Value="mail"
+   - AttributeAssignmentExpression AttributeId="recipients" Value="b@example.com"
+   - AttributeAssignmentExpression AttributeId="body" Value="foobar"
+   ... other args... 
 '/
 class PolicyType <<dataType>> extends CombinerInputType {
   {field} + PolicyId: URI [1]
@@ -3742,7 +3751,7 @@ class PolicyType <<dataType>> extends CombinerInputType {
   {field} + Target: BooleanExpressionType [0..1]
   {field} + CombiningAlgId: IdentifierType [1]
   {field} + CombinerInput: CombinerInputType [*] {ordered, nonunique}
-  {field} + NoticeExpression: NoticeExpressionType [*] {ordered, nonunique}
+  {field} + NoticeExpression: NoticeExpressionType [*] {ordered, unique} {{OCL} self->isUnique(Id)}
 }
 
 abstract class CombinerInputType <<dataType>>
@@ -3803,7 +3812,7 @@ URIs starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are
 
 `NoticeExpression` [Any Number]
 
-: A sequence of `NoticeExpressionType` objects to be evaluated into notices by the PDP. See [Section 7.29](#729-noticeexpressiontype). See [Section 8.16](#816-notices) for a description of how the notices to be returned by the PDP are determined.
+: A sequence of `NoticeExpressionType` objects to be evaluated into notices by the PDP. Each object's `Id` MUST be unique in this sequence. See [Section 7.29](#729-noticeexpressiontype). See [Section 8.16](#816-notices) for a description of how the notices to be returned by the PDP are determined.
 
 `CombinerInput` [Any Number]
 
@@ -3997,8 +4006,7 @@ The `PolicyReferenceType` object type extends the `PatternMatchIdReferenceType` 
 
 : Arguments for a parameterized policy. The sequence of argments SHALL be exclusively either one of these:
 - A sequence of *positional* arguments, i.e. `ExpressionType` objects declared in the same order as the `Parameter` values in the referenced policy; each argument number *n* MUST match the definition of the policy's `Parameter` number *n* (`DataType`, `IsBag`);
-- A sequence of *named* arguments, i.e. `NamedArgumentType` objects declared in any order, where each argument has a unique name *x* that associates it with the policy's `Parameter` named *x* and therefore its Expression must match that Parameter's definition (`DataType`, `IsBag`). 
-- 
+- A sequence of *named* arguments, i.e. `NamedArgumentType` objects declared in any order, where each argument has a unique name *x* that associates it with the policy's `Parameter` named *x* and therefore its Expression must match that Parameter's definition (`DataType`, `IsBag`).
 
 The number of arguments *N* may be less than the number of declared `Parameter`s if and only if the `Parameter`s number *N* (starting at zero) and above have defined default values, in which case they are used as remaining arguments. 
 
@@ -4016,16 +4024,13 @@ UML definition (class diagram):
 @startuml
 hide empty members 
 hide circle
-/'
-NoticeExpression (Id) is not unique for same reason as in PolicyType, and Notices may be in sequence (ordered).
-'/
 class RuleType <<dataType>> {
   {field} + Id: LocalIdentifierType [1]
   {field} + Description: String [0..1]
   {field} + VariableDefinition: VariableDefinitionType [*] {ordered, unique} {{OCL} self->isUnique(VariableId)}
   {field} + Condition: BooleanExpressionType [0..1]
   {field} + Effect: EffectType [1]
-  {field} + NoticeExpression: NoticeExpressionType [*] {ordered, nonunique}
+  {field} + NoticeExpression: NoticeExpressionType [*] {ordered, unique} {{OCL} self->isUnique(Id)}
 }
 @enduml
 ```
@@ -4863,7 +4868,7 @@ hide empty members
 hide circle
 class NoticeExpressionType <<dataType>> {
   {field} + Id: IdentifierType [1]
-  {field} + IsObligation: Boolean [0..1]
+  {field} + IsObligation: Boolean [0..1] = false
   {field} + AppliesTo: EffectType [0..1]
   {field} + Condition: BooleanExpressionType [0..1]
   {field} + AttributeAssignmentExpression: AttributeAssignmentExpressionType [*] {ordered, unique} {{OCL} self->isUnique(Sequence{AttributeId, Category})}
@@ -4880,7 +4885,7 @@ A `NoticeExpressionType` object contains the following properties:
 
 `IsObligation` [Optional]
 
-: A `Boolean` value that determines the setting for the `IsObligation` property of the notice. If `IsObligation` is present, then the `IsObligation` property of the notice is set to the same value; otherwise, the `IsObligation` property is omitted, then from the notice.
+: A `Boolean` value that determines the setting for the `IsObligation` property of the notice. If `IsObligation` is present, then the `IsObligation` property of the notice is set to the same value; otherwise, the `IsObligation` property is omitted from the notice (default value is `false`, i.e. the notice is advice).
 
 `AppliesTo` [Optional]
 
@@ -5144,7 +5149,7 @@ hide circle
 class ResultType <<dataType>> {
   {field} + Decision: DecisionType [1]
   {field} + Status: StatusType [0..1]
-  {field} + Notice: NoticeType [*] {ordered, nonunique}
+  {field} + Notice: NoticeType [*] {ordered, unique} {{OCL} self->isUnique(Id)}
   {field} + ResultEntity: ResultEntityType [*] {unordered, unique} {{OCL} self->isUnique(Category)}
   {field} + ApplicablePolicyReference: ExactMatchIdReferenceType [*] {unordered, unique} {{OCL} self->isUnique(Id)}
 }
@@ -5161,15 +5166,15 @@ A `ResultType` object contains the following properties:
 
 : A `StatusType` object indicating whether errors occurred during evaluation of the decision request, and optionally, information about those errors. If the `ResponseType` object contains `ResultType` objects whose `StatusType` objects are all identical, and the `ResponseType` object is contained in a protocol wrapper that can convey status information, then the common status information MAY be placed in the protocol wrapper and this `StatusType` object MAY be omitted from all the `ResultType` objects.
 
-`Notice` [any Number]
+`Notice` [Any Number]
 
 : A sequence of `NoticeType` objects, each a notice to be interpreted by the PEP. Each object's `Id` MUST be unique in the sequence. See [Section 7.26](#noticetype). If the PEP does not understand or cannot fulfill an obligation notice, then the action of the PEP is determined by its bias, see [Section 8.2](#82-policy-enforcement-point). If the PEP does not understand an advice notice, the PEP may safely ignore the notice. See [Section 8.16](#816-notices) for a description of how the list of notices to be returned by the PDP is determined.
 
-`ResultEntity` [Optional]
+`ResultEntity` [Any Number]
 
 : A sequence of `ResultEntityType` objects, each an attribute category containing attributes that were part of the request. The choice of which attributes are included here is made with the `IncludeInResult` property of the `RequestAttributeType` objects of the request. See [Section 7.27](#attributetype).
 
-`ApplicablePolicyReference` [Optional]
+`ApplicablePolicyReference` [Any Number]
 
 : A sequence of `ExactMatchIdReferenceType` objects. If the `ReturnPolicyIdList` property in the `RequestType` object is `true` (see [Section 7.31](#requesttype)), a PDP that implements this optional feature MUST return a sequence that includes the identifiers of all policies which were found to be fully applicable, whether or not the effect (after rule combining) was the same or different from the decision. The sequence is unordered. The sequence MAY include the identifiers of other policies that are currently in force, as long as no policies required for the decision are omitted. A PDP MAY satisfy this requirement by including all policies currently in force, or by including all policies which were evaluated in making the decision, or by including all policies which did not evaluate to `NotApplicable`, or by any other algorithm which does not omit any policies which contributed to the decision. However, a decision which returns `NotApplicable` MUST return an empty list.
 
@@ -5305,9 +5310,9 @@ A `StatusCodeType` object contains the following properties:
 : See [Annex D.8](#d8-status-codes) for a list of values. 
 `Value` values starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are reserved by the XACML TC for their exclusive use.
 
-`StatusCode` [Any Number]
+`StatusCode` [Optional]
 
-: A sequence of `StatusCodeType` objects describing minor status codes. Each minor status code qualifies its parent status code.
+: A `StatusCodeType` object describing a minor status code, which qualifies its parent status code. Minor status codes may be nested recursively this way.
 
 ## 7.43 StatusDetailType (optional)
 
@@ -5443,7 +5448,7 @@ A `ResultEntityType` object contains the following properties:
 
 : A `String` identifier matching the `Id` property of the corresponding `RequestEntityType` object in the request from which the reflected attributes are obtained.
 
-`Attribute` [Any Number]
+`Attribute` [One to Many]
 
 : A sequence of `AttributeType` objects representing `RequestAttributeType` objects from the same attribute category in the request.
 

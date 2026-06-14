@@ -1019,6 +1019,7 @@ $defs:
         $ref: "#/$defs/IdentifierType"
       IsObligation:
         $ref: "#/$defs/BooleanType"
+        default: false
       AppliesTo:
         $ref: "#/$defs/EffectType"
       Condition:
