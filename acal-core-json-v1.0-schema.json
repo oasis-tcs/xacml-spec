@@ -187,7 +187,7 @@
 			"additionalProperties": false
 		},
 		"PolicyDefaultsTypeTree": {
-			"$comment": "Using object type to have one and only one property per type of PolicyDefaults (i.e. one per ACAL profile). TODO: add similar properties for other PolicyDefaults extensions defined by other JACAL Profiles supported by the implementation (one property per profile), if there is any.",
+			"$comment": "This is meant to be overridden in a custom schema that combines the enabled extensions (matching the ACAL implementation) in a 'oneOf' schema in order to have one and only one property per type of PolicyDefaults (i.e. one per ACAL profile). TODO: add similar properties for other PolicyDefaults extensions defined by other JACAL Profiles supported by the implementation (one property per profile), if there is any.",
 			"$dynamicRef": "#PolicyDefaultsTypeExtensions"
 		},
 		"PolicyDefaultsTypeExtensionsDisabled": {
@@ -497,7 +497,11 @@
 					"$ref": "#/$defs/EntityType"
 				},
 				"PolicyDefaults": {
-					"$ref": "#/$defs/PolicyDefaultsTypeTree"
+				    "type": "array",
+				    "minItems": 1,
+				    "items": {
+				        "$ref": "#/$defs/PolicyDefaultsTypeTree"
+				    }
 				},
 				"Parameter": {
 					"$comment": "TODO: add 'uniqueKeys': ['/Name'] from ArrayExt vocabulary - https://docs.json-everything.net/schema/vocabs/array-ext/",
@@ -1200,7 +1204,7 @@
 			}
 		},
 		"RequestDefaultsTypeTree": {
-			"$comment": "Using object type to have one and only one property per type of RequestDefaults (i.e. one per ACAL profile). TODO: add similar properties for other RequestDefaults extensions defined by other JACAL Profiles supported by the implementation (one property per profile), if there is any.",
+			"$comment": "This is meant to be overridden in a custom schema that combines the enabled extensions (matching the ACAL implementation) in a 'oneOf' schema in order to have one and only one property per type of RequestDefaults (i.e. one per ACAL profile). TODO: add similar properties for other RequestDefaults extensions defined by other JACAL Profiles supported by the implementation (one property per profile), if there is any.",
 			"$dynamicRef": "#RequestDefaultsTypeExtensions"
 		},
 		"RequestDefaultsTypeExtensionsDisabled": {
@@ -1223,7 +1227,11 @@
 					}
 				},
 				"RequestDefaults": {
-					"$ref": "#/$defs/RequestDefaultsTypeTree"
+				    "type": "array",
+				    "minItems": 1,
+				    "items": {
+				        "$ref": "#/$defs/RequestDefaultsTypeTree"
+				    }
 				},
 				"RequestEntity": {
 					"$comment": "TODO: add 'uniqueKeys': ['/Id'] from ArrayExt vocabulary - https://docs.json-everything.net/schema/vocabs/array-ext/",
