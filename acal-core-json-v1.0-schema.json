@@ -816,8 +816,7 @@
 						}
 					}
 				}
-			],
-			"unevaluatedProperties": false
+			]
 		},
 		"EntityAttributeSelectorType": {
 			"allOf": [
@@ -835,8 +834,7 @@
 						}
 					}
 				}
-			],
-			"unevaluatedProperties": false
+			]
 		},
 		"BaseAttributeSelectorTypeTree": {
 			"$comment": "BaseAttributeSelectorType's direct subtypes",
