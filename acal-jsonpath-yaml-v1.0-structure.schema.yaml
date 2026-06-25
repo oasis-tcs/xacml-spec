@@ -12,7 +12,7 @@ $comment: >
 $defs:
   JSONPathAttributeSelectorType:
     allOf:
-      - $ref: "acal-core-yaml-v1.0-structure.schema.yaml#/$defs/AttributeSelectorCoreType"
+      - $ref: "acal-core-yaml-v1.0-structure.schema.yaml#/$defs/AttributeSelectorType"
       - type: object
     unevaluatedProperties: false
     $comment: >
@@ -22,7 +22,7 @@ $defs:
 
   JSONPathEntityAttributeSelectorType:
     allOf:
-      - $ref: "acal-core-yaml-v1.0-structure.schema.yaml#/$defs/EntityAttributeSelectorCoreType"
+      - $ref: "acal-core-yaml-v1.0-structure.schema.yaml#/$defs/EntityAttributeSelectorType"
       - type: object
     unevaluatedProperties: false
     $comment: >

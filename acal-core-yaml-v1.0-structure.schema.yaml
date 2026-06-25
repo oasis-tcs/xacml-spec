@@ -356,7 +356,7 @@ $defs:
       Shared base shape for concrete selector subtypes. The core schema does
       not enable any concrete selector subtype by default.
 
-  AttributeSelectorCoreType:
+  AttributeSelectorType:
     allOf:
       - $ref: "#/$defs/BaseAttributeSelectorType"
       - type: object
@@ -365,15 +365,6 @@ $defs:
         properties:
           Category:
             $ref: "#/$defs/IdentifierType"
-    $comment: >
-      Open (extensible) shape of AttributeSelectorType, used as the base of
-      concrete profile-defined selector subtypes (e.g. the XPath and JSONPath
-      Profile artifacts).
-
-  AttributeSelectorType:
-    allOf:
-      - $ref: "#/$defs/AttributeSelectorCoreType"
-    unevaluatedProperties: false
 
   AttributeSelectorTypeTree:
     type: object
@@ -392,7 +383,7 @@ $defs:
       dynamic anchor to add concrete selector types.
     not: true
 
-  EntityAttributeSelectorCoreType:
+  EntityAttributeSelectorType:
     allOf:
       - $ref: "#/$defs/BaseAttributeSelectorType"
       - type: object
@@ -401,15 +392,6 @@ $defs:
         properties:
           Expression:
             $ref: "#/$defs/ExpressionTypeTree"
-    $comment: >
-      Open (extensible) shape of EntityAttributeSelectorType, used as the base
-      of concrete profile-defined selector subtypes (e.g. the XPath and
-      JSONPath Profile artifacts).
-
-  EntityAttributeSelectorType:
-    allOf:
-      - $ref: "#/$defs/EntityAttributeSelectorCoreType"
-    unevaluatedProperties: false
 
   EntityAttributeSelectorTypeTree:
     type: object
