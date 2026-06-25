@@ -6227,7 +6227,7 @@ The ACAL specification defines a number of functions, etc. that have somewhat sp
 
 ## 11.2 Conformance Tables
 
-This section lists those portions of the specification that MUST be included in an implementation of a PDP that claims to conform to ACAL 1.0. A set of test cases has been created to assist in this process. These test cases can be located from the OASIS XACML TC Web page. The site hosting the test cases contains a full description of the test cases and how to execute them.
+This section lists those portions of the specification that MUST be included in an implementation of a PDP that claims to conform to ACAL 1.0. 
 
 : Note: "M" means mandatory-to-implement. "O" means optional.
 
