@@ -6237,18 +6237,16 @@ Many of these items are associated with versions of XACML preceding ACAL but hav
 
 ### 11.2.1 Object Types
 
-The implementation MUST support the object types that are marked `M`.
+The implementation MUST support the object types that are marked `M`. Abstract types are not listed; they cannot appear directly in ACAL documents and have no independent conformance requirement.
 
 | Object Type | M/O | Properties of the Type |
 | :--- | :--- | :--- |
 | ApplyType | M | Apply |
-| ArgumentType | M | Argument |
 | AttributeAssignmentExpressionType | M | AttributeAssignmentExpression |
 | AttributeAssignmentType | M | AttributeAssignment |
 | AttributeDesignatorType | M | AttributeDesignator |
 | AttributeSelectorType | O | AttributeSelector |
 | AttributeType | M | Attribute |
-| BaseAttributeSelectorType | O | |
 | BooleanExpressionType | M | Condition, Target |
 | BundleType | O | Bundle |
 | ContentType | O | Content |
@@ -6261,7 +6259,6 @@ The implementation MUST support the object types that are marked `M`.
 | MissingAttributeDetailType | M | MissingAttributeDetail |
 | MultiRequestsType | O | MultiRequests |
 | NamedArgumentType | O | |
-| NamedAttributeDesignatorType | M | |
 | NoticeExpressionType | M | NoticeExpression |
 | NoticeType | M | Notice |
 | PatternMatchIdReferenceType | M | |
