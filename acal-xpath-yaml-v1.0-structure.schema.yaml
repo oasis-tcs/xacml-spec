@@ -66,7 +66,7 @@ $defs:
 
   XPathAttributeSelectorType:
     allOf:
-      - $ref: "acal-core-yaml-v1.0-structure.schema.yaml#/$defs/AttributeSelectorCoreType"
+      - $ref: "acal-core-yaml-v1.0-structure.schema.yaml#/$defs/AttributeSelectorType"
       - type: object
         properties:
           ContextSelectorId:
@@ -75,7 +75,7 @@ $defs:
 
   XPathEntityAttributeSelectorType:
     allOf:
-      - $ref: "acal-core-yaml-v1.0-structure.schema.yaml#/$defs/EntityAttributeSelectorCoreType"
+      - $ref: "acal-core-yaml-v1.0-structure.schema.yaml#/$defs/EntityAttributeSelectorType"
       - type: object
         properties:
           ContextSelectorId:

@@ -365,10 +365,15 @@ $defs:
         properties:
           Category:
             $ref: "#/$defs/IdentifierType"
-    unevaluatedProperties: false
 
   AttributeSelectorTypeTree:
-    $dynamicRef: "#AttributeSelectorTypeExtensions"
+    type: object
+    required:
+      - AttributeSelector
+    properties:
+      AttributeSelector:
+        $dynamicRef: "#AttributeSelectorTypeExtensions"
+    additionalProperties: false
 
   AttributeSelectorTypeExtensionsDisabled:
     $dynamicAnchor: "AttributeSelectorTypeExtensions"
@@ -387,10 +392,15 @@ $defs:
         properties:
           Expression:
             $ref: "#/$defs/ExpressionTypeTree"
-    unevaluatedProperties: false
 
   EntityAttributeSelectorTypeTree:
-    $dynamicRef: "#EntityAttributeSelectorTypeExtensions"
+    type: object
+    required:
+      - EntityAttributeSelector
+    properties:
+      EntityAttributeSelector:
+        $dynamicRef: "#EntityAttributeSelectorTypeExtensions"
+    additionalProperties: false
 
   EntityAttributeSelectorTypeExtensionsDisabled:
     $dynamicAnchor: "EntityAttributeSelectorTypeExtensions"
@@ -462,8 +472,9 @@ $defs:
     oneOf:
       - $ref: "#/$defs/ExpressionTypeTree"
       - type: object
-        required: NamedArgument
-        properties: 
+        required:
+          - NamedArgument
+        properties:
           NamedArgument:
             $ref: "#/$defs/NamedArgumentType"
 
@@ -476,8 +487,7 @@ $defs:
       Name:
         $ref: "#/$defs/LocalIdentifierType"
       Expression:
-        $ref: "#/$defs/ExpressionTypeTree"		
-		
+        $ref: "#/$defs/ExpressionTypeTree"
 
   ApplyTypeTree:
     type: object
@@ -504,24 +514,6 @@ $defs:
     properties:
       EntityAttributeDesignator:
         $ref: "#/$defs/EntityAttributeDesignatorType"
-    additionalProperties: false
-
-  AttributeSelectorTypeTree:
-    type: object
-    required:
-      - AttributeSelector
-    properties:
-      AttributeSelector:
-        $ref: "#/$defs/AttributeSelectorType"
-    additionalProperties: false
-
-  EntityAttributeSelectorTypeTree:
-    type: object
-    required:
-      - EntityAttributeSelector
-    properties:
-      EntityAttributeSelector:
-        $ref: "#/$defs/EntityAttributeSelectorType"
     additionalProperties: false
 
   VariableReferenceTypeTree:
@@ -640,7 +632,7 @@ $defs:
     type: object
     properties:
       Id:
-        $ref": "#/$defs/URIType"
+        $ref: "#/$defs/URIType"
     required:
     - Id
 
@@ -649,8 +641,8 @@ $defs:
     allOf:
     - $ref: "#/$defs/IdReferenceType"
     - properties:
-      Version:
-        $ref: "#/$defs/VersionType"
+        Version:
+          $ref: "#/$defs/VersionType"
       required:
       - Version
     unevaluatedProperties: false
@@ -711,7 +703,10 @@ $defs:
       PolicyIssuer:
         $ref: "#/$defs/EntityType"
       PolicyDefaults:
-        $ref: "#/$defs/PolicyDefaultsTypeTree"
+        type: array
+        minItems: 1
+        items:
+          $ref: "#/$defs/PolicyDefaultsTypeTree"
       Parameter:
         type: array
         minItems: 1
@@ -880,7 +875,10 @@ $defs:
       ShortIdSetReference:
         $ref: "#/$defs/UriArray"
       RequestDefaults:
-          $ref: "#/$defs/RequestDefaultsType"
+        type: array
+        minItems: 1
+        items:
+          $ref: "#/$defs/RequestDefaultsTypeTree"
       RequestEntity:
         type: array
         items:
