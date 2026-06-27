@@ -1062,6 +1062,18 @@ Rule:
   attribute designator, or an apply expression. Note that `Expression` is the
   property name within `AttributeAssignmentExpression` (singular, one expression
   per assignment), distinct from the `Argument` array used by `Apply`.
+- `AttributeAssignmentExpression` items within a `NoticeExpression` MUST be unique
+  by the `(AttributeId, Category)` pair. `Category` is optional on
+  `AttributeAssignmentExpression`; when absent it participates in the uniqueness
+  check as an absent value — meaning two entries with the same `AttributeId` and no
+  `Category` both present would violate the constraint.
+- `NoticeExpression` Ids are not required to be unique within a `Policy` or `Rule`.
+  A policy may include multiple `NoticeExpression` items sharing the same Id — for
+  example, two obligations with the same purpose identifier but different
+  `AttributeAssignmentExpression` sets (such as sending the same notification type
+  to different recipients). The uniqueness constraint applies to
+  `AttributeAssignmentExpression` pairs within a single notice, not to notice Ids
+  across the enclosing policy or rule.
 
 ---
 
