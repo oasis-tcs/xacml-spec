@@ -6254,7 +6254,6 @@ The implementation MUST support the object types that are marked `M`. Abstract t
 | EntityAttributeSelectorType | O | EntityAttributeSelector |
 | EntityType | M | PolicyIssuer |
 | ExactMatchIdReferenceType | O | ApplicablePolicyReference |
-| ExpressionType | M | Expression |
 | FunctionType | M | Function |
 | MissingAttributeDetailType | M | MissingAttributeDetail |
 | MultiRequestsType | O | MultiRequests |
