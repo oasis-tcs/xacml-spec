@@ -1067,13 +1067,245 @@ Rule:
   `AttributeAssignmentExpression`; when absent it participates in the uniqueness
   check as an absent value — meaning two entries with the same `AttributeId` and no
   `Category` both present would violate the constraint.
-- `NoticeExpression` Ids are not required to be unique within a `Policy` or `Rule`.
-  A policy may include multiple `NoticeExpression` items sharing the same Id — for
-  example, two obligations with the same purpose identifier but different
-  `AttributeAssignmentExpression` sets (such as sending the same notification type
-  to different recipients). The uniqueness constraint applies to
-  `AttributeAssignmentExpression` pairs within a single notice, not to notice Ids
-  across the enclosing policy or rule.
+- `NoticeExpression` Ids MUST be unique within their enclosing `Policy` or `Rule`
+  (OCL: `self->isUnique(Id)`; see the UML comment in [Section 7.4 PolicyType](#74-policytype)
+  of the ACAL Core specification). When the same notification action is needed for
+  multiple recipients or payloads, use **distinct** `NoticeExpression` Ids and add an
+  `AttributeAssignmentExpression` (e.g. `AttributeId="action"` with `Value="send-mail"`)
+  to identify the shared action/notification type. The distinct Ids enable unambiguous
+  reference, logging, and troubleshooting; the common `AttributeAssignment` value
+  conveys the shared intent.
+
+---
+
+#### Variant: Multiple Notices Sharing an Action Type
+
+When the same notification action (e.g. "send-mail") must be invoked for multiple
+recipients or with different payloads, create one `NoticeExpression` **per recipient**
+with a **distinct** `Id`. Use a shared `AttributeAssignmentExpression` (e.g.
+`AttributeId="action" Value="send-mail"`) to semantically tie them together. This
+keeps `NoticeExpression` Ids unique (per the core spec recommendation) for unambiguous
+reference, logging, and troubleshooting.
+
+**Plain language**: A physician may write to a patient chart. When they do, an email
+notification must be sent to both the patient and the patient's next of kin.
+
+---
+
+**XACML v4.0 (XML)**
+
+```xml
+<Rule xmlns="urn:oasis:names:tc:xacml:4.0:core:schema"
+      Id="rule-physician-write" Effect="Permit">
+  <Description>
+    A physician may write to a patient chart, notifying both the patient and next of kin.
+  </Description>
+  <Condition>
+    <Apply FunctionId="{and}">
+      <Apply FunctionId="{string-is-in}">
+        <Value>physician</Value>
+        <AttributeDesignator
+          Category="{access-subject}" AttributeId="{role}"/>
+      </Apply>
+      <Apply FunctionId="{string-is-in}">
+        <Value>write</Value>
+        <AttributeDesignator
+          Category="{action}" AttributeId="{action-id}"/>
+      </Apply>
+    </Apply>
+  </Condition>
+  <NoticeExpression Id="urn:example:notice:notify-patient"
+                   AppliesTo="Permit" IsObligation="true">
+    <AttributeAssignmentExpression AttributeId="urn:example:notice:action">
+      <Value>send-mail</Value>
+    </AttributeAssignmentExpression>
+    <AttributeAssignmentExpression AttributeId="urn:example:notice:mailto">
+      <AttributeDesignator
+        Category="{resource}" AttributeId="{patient-email}" MustBePresent="true"/>
+    </AttributeAssignmentExpression>
+    <AttributeAssignmentExpression AttributeId="urn:example:notice:message">
+      <Value>Your medical chart was updated by your physician.</Value>
+    </AttributeAssignmentExpression>
+  </NoticeExpression>
+  <NoticeExpression Id="urn:example:notice:notify-next-of-kin"
+                   AppliesTo="Permit" IsObligation="true">
+    <AttributeAssignmentExpression AttributeId="urn:example:notice:action">
+      <Value>send-mail</Value>
+    </AttributeAssignmentExpression>
+    <AttributeAssignmentExpression AttributeId="urn:example:notice:mailto">
+      <AttributeDesignator
+        Category="{resource}" AttributeId="{next-of-kin-email}" MustBePresent="true"/>
+    </AttributeAssignmentExpression>
+    <AttributeAssignmentExpression AttributeId="urn:example:notice:message">
+      <Value>Your next of kin's medical chart was updated by a physician.</Value>
+    </AttributeAssignmentExpression>
+  </NoticeExpression>
+</Rule>
+```
+
+**JACAL v1.0 (JSON)**
+
+```json
+{
+  "Rule": {
+    "Id": "rule-physician-write",
+    "Effect": "Permit",
+    "Description": "A physician may write to a patient chart, notifying both the patient and next of kin.",
+    "Condition": {
+      "Apply": {
+        "FunctionId": "{and}",
+        "Argument": [
+          {
+            "Apply": {
+              "FunctionId": "{string-is-in}",
+              "Argument": [
+                { "Value": "physician" },
+                { "AttributeDesignator": { "Category": "{access-subject}", "AttributeId": "{role}" } }
+              ]
+            }
+          },
+          {
+            "Apply": {
+              "FunctionId": "{string-is-in}",
+              "Argument": [
+                { "Value": "write" },
+                { "AttributeDesignator": { "Category": "{action}", "AttributeId": "{action-id}" } }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "NoticeExpression": [
+      {
+        "Id": "urn:example:notice:notify-patient",
+        "AppliesTo": "Permit",
+        "IsObligation": true,
+        "AttributeAssignmentExpression": [
+          {
+            "AttributeId": "urn:example:notice:action",
+            "Expression": { "Value": "send-mail" }
+          },
+          {
+            "AttributeId": "urn:example:notice:mailto",
+            "Expression": {
+              "AttributeDesignator": {
+                "Category": "{resource}",
+                "AttributeId": "{patient-email}",
+                "MustBePresent": true
+              }
+            }
+          },
+          {
+            "AttributeId": "urn:example:notice:message",
+            "Expression": { "Value": "Your medical chart was updated by your physician." }
+          }
+        ]
+      },
+      {
+        "Id": "urn:example:notice:notify-next-of-kin",
+        "AppliesTo": "Permit",
+        "IsObligation": true,
+        "AttributeAssignmentExpression": [
+          {
+            "AttributeId": "urn:example:notice:action",
+            "Expression": { "Value": "send-mail" }
+          },
+          {
+            "AttributeId": "urn:example:notice:mailto",
+            "Expression": {
+              "AttributeDesignator": {
+                "Category": "{resource}",
+                "AttributeId": "{next-of-kin-email}",
+                "MustBePresent": true
+              }
+            }
+          },
+          {
+            "AttributeId": "urn:example:notice:message",
+            "Expression": { "Value": "Your next of kin's medical chart was updated by a physician." }
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**YACAL v1.0 (YAML, with short identifiers)**
+
+```yaml
+Rule:
+  Id: rule-physician-write
+  Effect: Permit
+  Description: >-
+    A physician may write to a patient chart, notifying both the patient and next of kin.
+  Condition:
+    Apply:
+      FunctionId: "{and}"
+      Argument:
+        - Apply:
+            FunctionId: "{string-is-in}"
+            Argument:
+              - Value: physician
+              - AttributeDesignator:
+                  Category: "{access-subject}"
+                  AttributeId: "{role}"
+        - Apply:
+            FunctionId: "{string-is-in}"
+            Argument:
+              - Value: write
+              - AttributeDesignator:
+                  Category: "{action}"
+                  AttributeId: "{action-id}"
+  NoticeExpression:
+    - Id: "urn:example:notice:notify-patient"
+      AppliesTo: Permit
+      IsObligation: true
+      AttributeAssignmentExpression:
+        - AttributeId: "urn:example:notice:action"
+          Expression:
+            Value: send-mail
+        - AttributeId: "urn:example:notice:mailto"
+          Expression:
+            AttributeDesignator:
+              Category: "{resource}"
+              AttributeId: "{patient-email}"
+              MustBePresent: true
+        - AttributeId: "urn:example:notice:message"
+          Expression:
+            Value: Your medical chart was updated by your physician.
+    - Id: "urn:example:notice:notify-next-of-kin"
+      AppliesTo: Permit
+      IsObligation: true
+      AttributeAssignmentExpression:
+        - AttributeId: "urn:example:notice:action"
+          Expression:
+            Value: send-mail
+        - AttributeId: "urn:example:notice:mailto"
+          Expression:
+            AttributeDesignator:
+              Category: "{resource}"
+              AttributeId: "{next-of-kin-email}"
+              MustBePresent: true
+        - AttributeId: "urn:example:notice:message"
+          Expression:
+            Value: Your next of kin's medical chart was updated by a physician.
+```
+
+**What this shows**
+
+- Two `NoticeExpression` entries with distinct Ids (`notify-patient`, `notify-next-of-kin`)
+  satisfy the `isUnique(Id)` constraint. The shared `AttributeAssignmentExpression`
+  (`action = send-mail`) conveys to the PEP that both obligations invoke the same
+  notification mechanism — the unique Ids keep them individually addressable for logging
+  and error reporting.
+- The only difference between the two notices is `mailto` and `message`. The `action`
+  assignment is identical across both — this is the type-tag pattern for grouping notices
+  of the same kind without duplicating Ids.
+- A PEP receiving two `send-mail` obligations can dispatch them independently. If one
+  fails, the unique Id in the error report identifies exactly which recipient was not
+  notified.
 
 ---
 
