@@ -455,7 +455,6 @@
 					"$ref": "#/$defs/EffectType"
 				},
 				"NoticeExpression": {
-					"$comment": "TODO: add 'uniqueKeys': ['/Id'] from ArrayExt vocabulary - https://docs.json-everything.net/schema/vocabs/array-ext/",
 					"type": "array",
 					"minItems": 1,
 					"items": {
@@ -533,7 +532,6 @@
 					}
 				},
 				"NoticeExpression": {
-					"$comment": "TODO: add 'uniqueKeys': ['/Id'] from ArrayExt vocabulary - https://docs.json-everything.net/schema/vocabs/array-ext/",
 					"type": "array",
 					"minItems": 1,
 					"items": {
@@ -1355,7 +1353,6 @@
 					"$ref": "#/$defs/StatusType"
 				},
 				"Notice": {
-					"$comment": "TODO: add 'uniqueKeys': ['/Id'] from ArrayExt vocabulary - https://docs.json-everything.net/schema/vocabs/array-ext/",
 					"type": "array",
 					"minItems": 1,
 					"items": {

@@ -1067,25 +1067,26 @@ Rule:
   `AttributeAssignmentExpression`; when absent it participates in the uniqueness
   check as an absent value — meaning two entries with the same `AttributeId` and no
   `Category` both present would violate the constraint.
-- `NoticeExpression` Ids MUST be unique within their enclosing `Policy` or `Rule`
-  (OCL: `self->isUnique(Id)`; see the UML comment in [Section 7.4 PolicyType](#74-policytype)
-  of the ACAL Core specification). When the same notification action is needed for
-  multiple recipients or payloads, use **distinct** `NoticeExpression` Ids and add an
-  `AttributeAssignmentExpression` (e.g. `AttributeId="action"` with `Value="send-mail"`)
-  to identify the shared action/notification type. The distinct Ids enable unambiguous
-  reference, logging, and troubleshooting; the common `AttributeAssignment` value
-  conveys the shared intent.
+- `NoticeExpression` Ids are **not** required to be unique within a `Policy` or `Rule`.
+  The `Id` identifies what the notice *means* to the PEP — what it must do, or is being
+  informed of — exactly as `ObligationId` did in XACML 3.0. It is a *concept* identifier,
+  not an instance identifier, so a policy MAY emit the same notice `Id` more than once with
+  different `AttributeAssignmentExpression`s. The uniqueness constraint that *does* apply is
+  on `(AttributeId, Category)` pairs **within** a single notice, not on notice Ids across the
+  enclosing policy or rule.
 
 ---
 
-#### Variant: Multiple Notices Sharing an Action Type
+#### Variant: Emitting the Same Notice Twice with Different Arguments
 
-When the same notification action (e.g. "send-mail") must be invoked for multiple
-recipients or with different payloads, create one `NoticeExpression` **per recipient**
-with a **distinct** `Id`. Use a shared `AttributeAssignmentExpression` (e.g.
-`AttributeId="action" Value="send-mail"`) to semantically tie them together. This
-keeps `NoticeExpression` Ids unique (per the core spec recommendation) for unambiguous
-reference, logging, and troubleshooting.
+When the same obligation (e.g. "send-mail") must be discharged for multiple recipients or
+with different payloads, emit one `NoticeExpression` **per recipient**, all carrying the
+**same** `Id`. The `Id` names the obligation — it is what tells the PEP to send mail — and
+the `AttributeAssignmentExpression`s carry the per-instance data that differs between them.
+
+This is the same shape as an XACML 3.0 `ObligationId`, so obligations already defined by
+existing profiles (e.g. `add-history` from the separation-of-duties profile) can be emitted
+repeatedly without inventing a new identifier for each occurrence.
 
 **Plain language**: A physician may write to a patient chart. When they do, an email
 notification must be sent to both the patient and the patient's next of kin.
@@ -1114,11 +1115,8 @@ notification must be sent to both the patient and the patient's next of kin.
       </Apply>
     </Apply>
   </Condition>
-  <NoticeExpression Id="urn:example:notice:notify-patient"
+  <NoticeExpression Id="urn:example:notice:send-mail"
                    AppliesTo="Permit" IsObligation="true">
-    <AttributeAssignmentExpression AttributeId="urn:example:notice:action">
-      <Value>send-mail</Value>
-    </AttributeAssignmentExpression>
     <AttributeAssignmentExpression AttributeId="urn:example:notice:mailto">
       <AttributeDesignator
         Category="{resource}" AttributeId="{patient-email}" MustBePresent="true"/>
@@ -1127,11 +1125,8 @@ notification must be sent to both the patient and the patient's next of kin.
       <Value>Your medical chart was updated by your physician.</Value>
     </AttributeAssignmentExpression>
   </NoticeExpression>
-  <NoticeExpression Id="urn:example:notice:notify-next-of-kin"
+  <NoticeExpression Id="urn:example:notice:send-mail"
                    AppliesTo="Permit" IsObligation="true">
-    <AttributeAssignmentExpression AttributeId="urn:example:notice:action">
-      <Value>send-mail</Value>
-    </AttributeAssignmentExpression>
     <AttributeAssignmentExpression AttributeId="urn:example:notice:mailto">
       <AttributeDesignator
         Category="{resource}" AttributeId="{next-of-kin-email}" MustBePresent="true"/>
@@ -1178,14 +1173,10 @@ notification must be sent to both the patient and the patient's next of kin.
     },
     "NoticeExpression": [
       {
-        "Id": "urn:example:notice:notify-patient",
+        "Id": "urn:example:notice:send-mail",
         "AppliesTo": "Permit",
         "IsObligation": true,
         "AttributeAssignmentExpression": [
-          {
-            "AttributeId": "urn:example:notice:action",
-            "Expression": { "Value": "send-mail" }
-          },
           {
             "AttributeId": "urn:example:notice:mailto",
             "Expression": {
@@ -1203,14 +1194,10 @@ notification must be sent to both the patient and the patient's next of kin.
         ]
       },
       {
-        "Id": "urn:example:notice:notify-next-of-kin",
+        "Id": "urn:example:notice:send-mail",
         "AppliesTo": "Permit",
         "IsObligation": true,
         "AttributeAssignmentExpression": [
-          {
-            "AttributeId": "urn:example:notice:action",
-            "Expression": { "Value": "send-mail" }
-          },
           {
             "AttributeId": "urn:example:notice:mailto",
             "Expression": {
@@ -1259,13 +1246,10 @@ Rule:
                   Category: "{action}"
                   AttributeId: "{action-id}"
   NoticeExpression:
-    - Id: "urn:example:notice:notify-patient"
+    - Id: "urn:example:notice:send-mail"
       AppliesTo: Permit
       IsObligation: true
       AttributeAssignmentExpression:
-        - AttributeId: "urn:example:notice:action"
-          Expression:
-            Value: send-mail
         - AttributeId: "urn:example:notice:mailto"
           Expression:
             AttributeDesignator:
@@ -1275,13 +1259,10 @@ Rule:
         - AttributeId: "urn:example:notice:message"
           Expression:
             Value: Your medical chart was updated by your physician.
-    - Id: "urn:example:notice:notify-next-of-kin"
+    - Id: "urn:example:notice:send-mail"
       AppliesTo: Permit
       IsObligation: true
       AttributeAssignmentExpression:
-        - AttributeId: "urn:example:notice:action"
-          Expression:
-            Value: send-mail
         - AttributeId: "urn:example:notice:mailto"
           Expression:
             AttributeDesignator:
@@ -1295,17 +1276,19 @@ Rule:
 
 **What this shows**
 
-- Two `NoticeExpression` entries with distinct Ids (`notify-patient`, `notify-next-of-kin`)
-  satisfy the `isUnique(Id)` constraint. The shared `AttributeAssignmentExpression`
-  (`action = send-mail`) conveys to the PEP that both obligations invoke the same
-  notification mechanism — the unique Ids keep them individually addressable for logging
-  and error reporting.
-- The only difference between the two notices is `mailto` and `message`. The `action`
-  assignment is identical across both — this is the type-tag pattern for grouping notices
-  of the same kind without duplicating Ids.
-- A PEP receiving two `send-mail` obligations can dispatch them independently. If one
-  fails, the unique Id in the error report identifies exactly which recipient was not
-  notified.
+- Both `NoticeExpression` entries carry the **same** `Id` (`urn:example:notice:send-mail`).
+  This is legal: notice Ids are not required to be unique within a policy or rule. The `Id`
+  is what tells the PEP *which obligation to discharge* — send mail — so both entries route
+  to the same PEP handler.
+- The two notices differ only in `mailto` and `message`. Those `AttributeAssignmentExpression`s
+  are the per-instance data; the `Id` is the concept. No separate `action` assignment is needed
+  to tag the notification type, because the `Id` already carries that meaning.
+- A PEP receiving two `send-mail` obligations dispatches them independently — once per
+  recipient. The obligations are distinguished by their arguments, not by their `Id`.
+- Because the `Id` behaves exactly like an XACML 3.0 `ObligationId`, obligations defined by
+  existing profiles work unchanged: a policy can emit `add-history` twice with different
+  parameters, or the same obligation from two rules that permit access for two different
+  reasons.
 
 ---
 
