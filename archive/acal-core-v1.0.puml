@@ -107,7 +107,7 @@ package "PDP Configuration" {
     PolicyType *-- "*" VariableDefinitionType: VariableDefinition\n{ordered,unique}
     PolicyType *-- "0..1" BooleanExpressionType: Target
     PolicyType *-- "*" CombinerInputType: CombinerInput\n{ordered}
-    PolicyType *-- "*" NoticeExpressionType: NoticeExpression\n{ordered,unique}
+    PolicyType *-- "*" NoticeExpressionType: NoticeExpression\n{ordered}
     
     'WARNING: CHANGE!!!!
     class RuleType implements CombinerInputType {
@@ -286,7 +286,7 @@ package "PDP API (used by PEPs)" {
     }
     ResultType *-- "0..1" StatusType: Status
     ResultType *-- "*" ResultEntityType: ResultEntity\n{unique}
-    ResultType *-- "*" NoticeType: Notice\n{ordered, unique}
+    ResultType *-- "*" NoticeType: Notice\n{ordered}
     ResultType *-- "*" ExactMatchIdReferenceType: ApplicablePolicyReference\n{unique}
 
     class ResponseType #LightSkyBlue
