@@ -1386,7 +1386,7 @@
 			],
 			"properties": {
 				"RequestReference": {
-					"$comment": "TODO: translate/enforce ACAL constraint: {OCL} self->isUnique(RequestEntityReference->collect(Id)->asSet())",
+					"$comment": "TODO: translate/enforce ACAL constraint: {OCL} self->isUnique(RequestEntityReference->asSet())",
 					"type": "array",
 					"minItems": 1,
 					"items": {
@@ -1404,24 +1404,12 @@
 			],
 			"properties": {
 				"RequestEntityReference": {
-					"$comment": "TODO: add 'uniqueKeys': ['/Id'] from ArrayExt vocabulary - https://docs.json-everything.net/schema/vocabs/array-ext/",
 					"type": "array",
 					"minItems": 1,
+					"uniqueItems": true,
 					"items": {
-						"$ref": "#/$defs/RequestEntityReferenceType"
+						"$ref": "#/$defs/LocalIdentifierType"
 					}
-				}
-			},
-			"additionalProperties": false
-		},
-		"RequestEntityReferenceType": {
-			"type": "object",
-			"required": [
-				"Id"
-			],
-			"properties": {
-				"Id": {
-					"$ref": "#/$defs/LocalIdentifierType"
 				}
 			},
 			"additionalProperties": false

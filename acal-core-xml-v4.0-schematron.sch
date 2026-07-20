@@ -125,12 +125,12 @@
 	</rule>
  </pattern>
  <pattern id="ACAL_constraint_on_RequestReference_property">
- 	<title>ACAL constraint on RequestReference property: {OCL} self-&gt;isUnique(RequestEntityReference-&gt;collect(Id)-&gt;asSet())</title>
-	<rule context="xacml:MultiRequests"> 
-		<!-- 
-		XSD assertion: for every RequestReference element $elt and every following sibling $following, either the number of RequestEntityReferences in $elt and $following differ or there is some $id in $elt/xacml:RequestEntityReference/@Id that is not in $following/xacml:RequestEntityReference/@Id.
+ 	<title>ACAL constraint on RequestReference property: {OCL} self-&gt;isUnique(RequestEntityReference-&gt;asSet())</title>
+	<rule context="xacml:MultiRequests">
+		<!--
+		XSD assertion: for every RequestReference element $elt and every following sibling $following, either the number of RequestEntityReferences in $elt and $following differ or there is some $id in $elt/xacml:RequestEntityReference that is not in $following/xacml:RequestEntityReference.
 		Reminder: in XPath, Seq1 = Seq2 is true if and only if at least one value from Seq1 is equal to a value in Seq2 -->
-	  <assert test="every $elt in xacml:RequestReference satisfies (every $following in $elt/following-sibling::xacml:RequestReference satisfies count($elt/xacml:RequestEntityReference) != count($following/xacml:RequestEntityReference) or (some $id in $elt/xacml:RequestEntityReference/@Id satisfies not($id = $following/xacml:RequestEntityReference/@Id)))"></assert>
+	  <assert test="every $elt in xacml:RequestReference satisfies (every $following in $elt/following-sibling::xacml:RequestReference satisfies count($elt/xacml:RequestEntityReference) != count($following/xacml:RequestEntityReference) or (some $id in $elt/xacml:RequestEntityReference satisfies not($id = $following/xacml:RequestEntityReference)))"></assert>
 	</rule>
  </pattern>
  <pattern id="ACAL_constraint_on_NoticeExpressionType_AttributeAssignmentExpression_property">

@@ -27,7 +27,7 @@
 		<xs:keyref name="Request_RequestEntityReference" refer="xacml:Request_RequestEntity_Id">
 			<xs:selector
 				xpath="xacml:MultiRequests/xacml:RequestReference/xacml:RequestEntityReference" />
-			<xs:field xpath="@Id" />
+			<xs:field xpath="." />
 		</xs:keyref>
 	</xs:element>
 	<xs:complexType name="RequestType">
@@ -377,10 +377,10 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 			<xs:element ref="xacml:RequestReference" maxOccurs="unbounded" />
 		</xs:sequence>
 		<xs:assert vc:minVersion="1.1"
-			test="every $elt in xacml:RequestReference satisfies (every $following in $elt/following-sibling::xacml:RequestReference satisfies count($elt/xacml:RequestEntityReference) != count($following/xacml:RequestEntityReference) or (some $id in $elt/xacml:RequestEntityReference/@Id satisfies not($id = $following/xacml:RequestEntityReference/@Id)))">
+			test="every $elt in xacml:RequestReference satisfies (every $following in $elt/following-sibling::xacml:RequestReference satisfies count($elt/xacml:RequestEntityReference) != count($following/xacml:RequestEntityReference) or (some $id in $elt/xacml:RequestEntityReference satisfies not($id = $following/xacml:RequestEntityReference)))">
 			<xs:annotation>
 				<xs:documentation xml:lang="en"> ACAL constraint on RequestReference property: {OCL}
-					self->isUnique(RequestEntityReference->collect(Id)->asSet()) </xs:documentation>
+					self->isUnique(RequestEntityReference->asSet()) </xs:documentation>
 			</xs:annotation>
 		</xs:assert>
 	</xs:complexType>
@@ -395,14 +395,11 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 	</xs:complexType>
 
 	<!-- Change to XACML 3.0 (issue #18): Attributes renamed to RequestEntity in the Request,
-	therefore AttributesReference renamed to RequestEntityReference for consistency -->
-	<xs:element name="RequestEntityReference" type="xacml:RequestEntityReferenceType" />
-	<xs:complexType name="RequestEntityReferenceType">
-		<!-- Change to XACML 3.0 (issue #62): ReferenceId attribute renamed to Id for simplicity and
-		type aligned with other "local" identifiers (RuleId, VariableId, etc.) and portable to other
-		representation formats like JSON. -->
-		<xs:attribute name="Id" type="xacml:LocalIdentifierType" use="required" />
-	</xs:complexType>
+	therefore AttributesReference renamed to RequestEntityReference for consistency.
+	Change to XACML 4.0 (issue #101): RequestEntityReferenceType removed as an unnecessary
+	wrapper around its single Id property; RequestEntityReference is now typed directly as
+	LocalIdentifierType. -->
+	<xs:element name="RequestEntityReference" type="xacml:LocalIdentifierType" />
 
 	<!-- Change to XACML 3.0 (issue #6): Merged Obligation/Advice(Expression) into
 	Notice(Expression) -->
@@ -523,7 +520,7 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 
 	<!-- Change to XACML 3.0 (issue #61): Simple type for local identifiers in general i.e.
 	identifiers that are unique only locally, such as Request-local identifiers (e.g.
-	RequestEntity/@Id and RequestEntityReference/@Id), Policy-local identifiers (e.g. a policy's
+	RequestEntity/@Id and RequestEntityReference), Policy-local identifiers (e.g. a policy's
 	variable ID (VariableId) or
 	parameter name, or RuleId), Rule-local identifiers (e.g. a rule's variable ID), etc. 
 	-->
