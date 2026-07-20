@@ -466,6 +466,17 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 					and Deny. </xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
+		<!-- Issue #99: xs:unique cannot express uniqueness over a key that includes an optional
+		field, so it does not catch duplicate AttributeId when Category is absent from both. This
+		assert covers that case; XSD 1.0 processors must rely on the Schematron rule instead. -->
+		<xs:assert vc:minVersion="1.1"
+			test="every $elt in xacml:AttributeAssignmentExpression satisfies (every $following in $elt/following-sibling::xacml:AttributeAssignmentExpression satisfies not($elt/@AttributeId = $following/@AttributeId and ((not($elt/@Category) and not($following/@Category)) or $elt/@Category = $following/@Category)))">
+			<xs:annotation>
+				<xs:documentation xml:lang="en"> ACAL constraint on NoticeExpression property:
+					{OCL} self->isUnique(AttributeAssignmentExpression->collect(Sequence{AttributeId,
+					Category})) </xs:documentation>
+			</xs:annotation>
+		</xs:assert>
 	</xs:complexType>
 
 	<xs:element name="AttributeAssignmentExpression" type="xacml:AttributeAssignmentExpressionType" />

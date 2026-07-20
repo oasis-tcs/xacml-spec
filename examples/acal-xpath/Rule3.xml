@@ -64,13 +64,12 @@
         </AttributeAssignmentExpression>
         <AttributeAssignmentExpression
             AttributeId="urn:oasis:names:tc:acal:1.0:example:attribute:text">
-            <Value>Your medical record has been accessed by: </Value>
-        </AttributeAssignmentExpression>
-        <AttributeAssignmentExpression
-            AttributeId="urn:oasis:names:tc:acal:1.0:example:attribute:text">
-            <AttributeDesignator
-                Category="urn:oasis:names:tc:acal:1.0:subject-category:access-subject"
-                AttributeId="urn:oasis:names:tc:acal:1.0:subject:subject-id" />
+            <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:string-concatenate">
+                <Value>Your medical record has been accessed by: </Value>
+                <AttributeDesignator
+                    Category="urn:oasis:names:tc:acal:1.0:subject-category:access-subject"
+                    AttributeId="urn:oasis:names:tc:acal:1.0:subject:subject-id" />
+            </Apply>
         </AttributeAssignmentExpression>
     </NoticeExpression>
 </Policy>

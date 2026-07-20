@@ -2484,17 +2484,16 @@ Rule 3 illustrates the use of a notice expression.
 [112]     </AttributeAssignmentExpression>
 [113]     <AttributeAssignmentExpression
 [114]       AttributeId="text">
-[116]       <Value DataType="string">Your medical record has been accessed by: </Value>
-[121]     </AttributeAssignmentExpression>
-[122]     <AttributeAssignmentExpression
-[123]       AttributeId="text">
-[125]       <AttributeDesignator
-[126]         Category="access-subject"
-[127]         AttributeId="subject-id"
-[128]         DataType="string"/>
-[131]     </AttributeAssignmentExpression>
-[132]   </NoticeExpression>
-[133] </Policy>
+[116]       <Apply FunctionId="string-concatenate">
+[119]         <Value DataType="string">Your medical record has been accessed by: </Value>
+[124]         <AttributeDesignator
+[125]           Category="access-subject"
+[126]           AttributeId="subject-id"
+[127]           DataType="string"/>
+[130]       </Apply>
+[132]     </AttributeAssignmentExpression>
+[133]   </NoticeExpression>
+[134] </Policy>
 ```
 
 ```
@@ -2575,15 +2574,16 @@ Rule 3 illustrates the use of a notice expression.
 [109]               DataType: rfc822Name
 [114]         - AttributeId: text
 [115]           Expression:
-[116]             Value:
-[117]               DataType: string
-[118]               Value: "Your medical record has been accessed by: "
-[123]         - AttributeId: text
-[124]           Expression:
-[125]             AttributeDesignator:
-[126]               Category: access-subject
-[127]               AttributeId: subject-id
-[128]               DataType: string
+[116]             Apply:
+[117]               FunctionId: string-concatenate
+[118]               Argument:
+[119]                 - Value:
+[120]                     DataType: string
+[121]                     Value: "Your medical record has been accessed by: "
+[124]                 - AttributeDesignator:
+[125]                     Category: access-subject
+[126]                     AttributeId: subject-id
+[127]                     DataType: string
 ```
 
 ```
@@ -2698,23 +2698,25 @@ Rule 3 illustrates the use of a notice expression.
 [112]      },{
 [114]        "AttributeId":"text",
 [115]        "Expression":{
-[116]          "Value":{
-[117]            "DataType":"string",
-[118]            "Value":"Your medical record has been accessed by: "
-[119]          }
-[120]        }
-[121]      },{
-[123]        "AttributeId":"text",
-[124]        "Expression":{
-[125]          "AttributeDesignator":{
-[126]            "Category":"access-subject",
-[127]            "AttributeId":"subject-id",
-[128]            "DataType":"string"
-[129]          }
-[130]        }
-[131]      }]
-[132]   }]
-[133] }
+[116]          "Apply":{
+[117]            "FunctionId":"string-concatenate",
+[118]            "Argument":[{
+[119]              "Value":{
+[120]                "DataType":"string",
+[121]                "Value":"Your medical record has been accessed by: "
+[122]              }
+[123]            },{
+[124]              "AttributeDesignator":{
+[125]                "Category":"access-subject",
+[126]                "AttributeId":"subject-id",
+[127]                "DataType":"string"
+[128]              }
+[129]            }]
+[130]          }
+[131]        }
+[132]      }]
+[133]   }]
+[134] }
 ```
 
 [010] - [026] The target restricts the applicability of the policy to decision requests for access to medical records belonging to Springfield Hospital.
@@ -2731,7 +2733,7 @@ Rule 3 illustrates the use of a notice expression.
 
 [068] - [093] The third term is satisfied if the accessing physician is the patient's primary physician, i.e., if the `urn:oasis:names:tc:acal:1.0:example:attribute:physician-id` attribute of the access subject is equal to the `urn:oasis:names:tc:acal:1.0:example:attribute:primary-care-physician` attribute of the resource.
 
-[099] - [132] A notice expression.
+[099] - [133] A notice expression.
 
 [100] The `IsObligation` property indicates that this notice is an obligation rather than advice. Obligations are a set of operations that must be performed by the PEP in conjunction with an authorization decision. An obligation may be associated with a `Permit` or `Deny` authorization decision. The policy contains a single notice expression, which will be evaluated into an obligation notice when the policy is evaluated.
 
@@ -2739,13 +2741,11 @@ Rule 3 illustrates the use of a notice expression.
 
 [102] The `AppliesTo` property specifies the authorization decision value for which the obligation notice derived from the notice expression must be fulfilled. In this case, the obligation must be fulfilled when access is permitted.
 
-[103] - [131] Additional information may be provided in a notice by evaluating attribute assignment expressions.
+[103] - [132] Additional information may be provided in a notice by evaluating attribute assignment expressions.
 
 [103] - [112] The first attribute assignment indicates the recipient email address, which is obtained from the `urn:oasis:names:tc:acal:1.0:example:attribute:patient-contact` resource attribute using an attribute designator.
 
-[113] - [121] The second attribute assignment contains literal text for the email body.
-
-[122] - [131] The third attribute assignment provides additional text for the email body, specifically the identity of the physician, which is obtained from the `urn:oasis:names:tc:acal:1.0:subject:subject-id` subject attribute using an attribute designator.
+[113] - [132] The second attribute assignment provides the email body text. Since a single `AttributeAssignmentExpression` may only assign one value per `(AttributeId, Category)` pair, the literal prefix and the identity of the physician (obtained from the `urn:oasis:names:tc:acal:1.0:subject:subject-id` subject attribute using an attribute designator) are combined into a single value with the `urn:oasis:names:tc:acal:1.0:function:string-concatenate` function.
 
 #### 6.2.4.4 Rule 4
 
