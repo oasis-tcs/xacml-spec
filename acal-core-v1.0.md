@@ -2484,17 +2484,16 @@ Rule 3 illustrates the use of a notice expression.
 [112]     </AttributeAssignmentExpression>
 [113]     <AttributeAssignmentExpression
 [114]       AttributeId="text">
-[116]       <Value DataType="string">Your medical record has been accessed by: </Value>
-[121]     </AttributeAssignmentExpression>
-[122]     <AttributeAssignmentExpression
-[123]       AttributeId="text">
-[125]       <AttributeDesignator
-[126]         Category="access-subject"
-[127]         AttributeId="subject-id"
-[128]         DataType="string"/>
-[131]     </AttributeAssignmentExpression>
-[132]   </NoticeExpression>
-[133] </Policy>
+[116]       <Apply FunctionId="string-concatenate">
+[119]         <Value DataType="string">Your medical record has been accessed by: </Value>
+[124]         <AttributeDesignator
+[125]           Category="access-subject"
+[126]           AttributeId="subject-id"
+[127]           DataType="string"/>
+[130]       </Apply>
+[132]     </AttributeAssignmentExpression>
+[133]   </NoticeExpression>
+[134] </Policy>
 ```
 
 ```
@@ -2575,15 +2574,16 @@ Rule 3 illustrates the use of a notice expression.
 [109]               DataType: rfc822Name
 [114]         - AttributeId: text
 [115]           Expression:
-[116]             Value:
-[117]               DataType: string
-[118]               Value: "Your medical record has been accessed by: "
-[123]         - AttributeId: text
-[124]           Expression:
-[125]             AttributeDesignator:
-[126]               Category: access-subject
-[127]               AttributeId: subject-id
-[128]               DataType: string
+[116]             Apply:
+[117]               FunctionId: string-concatenate
+[118]               Argument:
+[119]                 - Value:
+[120]                     DataType: string
+[121]                     Value: "Your medical record has been accessed by: "
+[124]                 - AttributeDesignator:
+[125]                     Category: access-subject
+[126]                     AttributeId: subject-id
+[127]                     DataType: string
 ```
 
 ```
@@ -2698,23 +2698,25 @@ Rule 3 illustrates the use of a notice expression.
 [112]      },{
 [114]        "AttributeId":"text",
 [115]        "Expression":{
-[116]          "Value":{
-[117]            "DataType":"string",
-[118]            "Value":"Your medical record has been accessed by: "
-[119]          }
-[120]        }
-[121]      },{
-[123]        "AttributeId":"text",
-[124]        "Expression":{
-[125]          "AttributeDesignator":{
-[126]            "Category":"access-subject",
-[127]            "AttributeId":"subject-id",
-[128]            "DataType":"string"
-[129]          }
-[130]        }
-[131]      }]
-[132]   }]
-[133] }
+[116]          "Apply":{
+[117]            "FunctionId":"string-concatenate",
+[118]            "Argument":[{
+[119]              "Value":{
+[120]                "DataType":"string",
+[121]                "Value":"Your medical record has been accessed by: "
+[122]              }
+[123]            },{
+[124]              "AttributeDesignator":{
+[125]                "Category":"access-subject",
+[126]                "AttributeId":"subject-id",
+[127]                "DataType":"string"
+[128]              }
+[129]            }]
+[130]          }
+[131]        }
+[132]      }]
+[133]   }]
+[134] }
 ```
 
 [010] - [026] The target restricts the applicability of the policy to decision requests for access to medical records belonging to Springfield Hospital.
@@ -2731,7 +2733,7 @@ Rule 3 illustrates the use of a notice expression.
 
 [068] - [093] The third term is satisfied if the accessing physician is the patient's primary physician, i.e., if the `urn:oasis:names:tc:acal:1.0:example:attribute:physician-id` attribute of the access subject is equal to the `urn:oasis:names:tc:acal:1.0:example:attribute:primary-care-physician` attribute of the resource.
 
-[099] - [132] A notice expression.
+[099] - [133] A notice expression.
 
 [100] The `IsObligation` property indicates that this notice is an obligation rather than advice. Obligations are a set of operations that must be performed by the PEP in conjunction with an authorization decision. An obligation may be associated with a `Permit` or `Deny` authorization decision. The policy contains a single notice expression, which will be evaluated into an obligation notice when the policy is evaluated.
 
@@ -2739,13 +2741,11 @@ Rule 3 illustrates the use of a notice expression.
 
 [102] The `AppliesTo` property specifies the authorization decision value for which the obligation notice derived from the notice expression must be fulfilled. In this case, the obligation must be fulfilled when access is permitted.
 
-[103] - [131] Additional information may be provided in a notice by evaluating attribute assignment expressions.
+[103] - [132] Additional information may be provided in a notice by evaluating attribute assignment expressions.
 
 [103] - [112] The first attribute assignment indicates the recipient email address, which is obtained from the `urn:oasis:names:tc:acal:1.0:example:attribute:patient-contact` resource attribute using an attribute designator.
 
-[113] - [121] The second attribute assignment contains literal text for the email body.
-
-[122] - [131] The third attribute assignment provides additional text for the email body, specifically the identity of the physician, which is obtained from the `urn:oasis:names:tc:acal:1.0:subject:subject-id` subject attribute using an attribute designator.
+[113] - [132] The second attribute assignment provides the email body text. Since a single `AttributeAssignmentExpression` may only assign one value per `(AttributeId, Category)` pair, the literal prefix and the identity of the physician (obtained from the `urn:oasis:names:tc:acal:1.0:subject:subject-id` subject attribute using an attribute designator) are combined into a single value with the `urn:oasis:names:tc:acal:1.0:function:string-concatenate` function.
 
 #### 6.2.4.4 Rule 4
 
@@ -3725,18 +3725,18 @@ OCL v2.4, Section 11.2.3: "by virtue of the implicit conversion to a collection 
 '/
 'A CombinerInput is not always unique: there may be two PolicyReferences to the same parameterized Policy but with different arguments (so the same PolicyId occurs twice).
 /'
-A NoticeExpression has a unique Id. In case you need to call the same action twice but with different arguments (AttributeAssignments) in a sequence of Notices, simply use an AttributeAssignment to identify the action, but keep the NoticeExpression Id unique (which helps with troubleshooting). For example, two notices calling the same action (send mail) but with different args (different content sent to different recipients) (N.B.: this is pseudo-code for brevity, not an official syntax):
+A NoticeExpression Id is not unique. The Id is a *concept* identifier: it tells the PEP what the notice means and how the PEP is to process it (as the ObligationId did in XACML 3.0), rather than identifying a particular occurrence of the notice. The same Id may therefore appear more than once, typically with different AttributeAssignmentExpressions. For example (N.B.: this is pseudo-code for brevity, not an official syntax), one policy sending the same kind of mail to two different recipients with different content:
 
-- NoticeExpression Id="send_mail_to_a"
-   - AttributeAssignmentExpression AttributeId="action"  Value="mail"
+- NoticeExpression Id="send_mail"
    - AttributeAssignmentExpression AttributeId="recipients" Value="a@example.com"
    - AttributeAssignmentExpression AttributeId="body" Value="blablabla"
    ... other args...
-- NoticeExpression Id="send_mail_to_b"
-   - AttributeAssignmentExpression AttributeId="action"  Value="mail"
+- NoticeExpression Id="send_mail"
    - AttributeAssignmentExpression AttributeId="recipients" Value="b@example.com"
    - AttributeAssignmentExpression AttributeId="body" Value="foobar"
-   ... other args... 
+   ... other args...
+
+Likewise, two Rules of the same Policy may each emit the same notice for two different reasons.
 '/
 class PolicyType <<dataType>> extends CombinerInputType {
   {field} + PolicyId: URI [1]
@@ -3751,7 +3751,7 @@ class PolicyType <<dataType>> extends CombinerInputType {
   {field} + Target: BooleanExpressionType [0..1]
   {field} + CombiningAlgId: IdentifierType [1]
   {field} + CombinerInput: CombinerInputType [*] {ordered, nonunique}
-  {field} + NoticeExpression: NoticeExpressionType [*] {ordered, unique} {{OCL} self->isUnique(Id)}
+  {field} + NoticeExpression: NoticeExpressionType [*] {ordered, nonunique}
 }
 
 abstract class CombinerInputType <<dataType>>
@@ -3812,7 +3812,7 @@ URIs starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are
 
 `NoticeExpression` [Any Number]
 
-: A sequence of `NoticeExpressionType` objects to be evaluated into notices by the PDP. Each object's `Id` MUST be unique in this sequence. See [Section 7.29](#729-noticeexpressiontype). See [Section 8.16](#816-notices) for a description of how the notices to be returned by the PDP are determined.
+: A sequence of `NoticeExpressionType` objects to be evaluated into notices by the PDP. Objects' `Id` values are not required to be unique in this sequence; the same `Id` MAY occur more than once, typically with different `AttributeAssignmentExpression`s. See [Section 7.29](#729-noticeexpressiontype). See [Section 8.16](#816-notices) for a description of how the notices to be returned by the PDP are determined.
 
 `CombinerInput` [Any Number]
 
@@ -4024,13 +4024,16 @@ UML definition (class diagram):
 @startuml
 hide empty members 
 hide circle
+/'
+NoticeExpression (Id) is not unique for the same reason as in PolicyType, and Notices may be in sequence (ordered).
+'/
 class RuleType <<dataType>> {
   {field} + Id: LocalIdentifierType [1]
   {field} + Description: String [0..1]
   {field} + VariableDefinition: VariableDefinitionType [*] {ordered, unique} {{OCL} self->isUnique(VariableId)}
   {field} + Condition: BooleanExpressionType [0..1]
   {field} + Effect: EffectType [1]
-  {field} + NoticeExpression: NoticeExpressionType [*] {ordered, unique} {{OCL} self->isUnique(Id)}
+  {field} + NoticeExpression: NoticeExpressionType [*] {ordered, nonunique}
 }
 @enduml
 ```
@@ -4059,7 +4062,7 @@ A `RuleType` object contains the following properties:
 
 `NoticeExpression` [Any Number]
 
-: A sequence of `NoticeExpressionType` objects, each defining a notice expression potentially evaluated into a notice by the PDP. See [NoticeExpressionType](#noticeexpressiontype). Each object's `Id` MUST be unique in this sequence. See [Section 8.16](#816-notices) for a description of how the notices to be returned by the PDP shall be determined. See [Section 8.2](#82-policy-enforcement-point) about enforcement of obligation notices.
+: A sequence of `NoticeExpressionType` objects, each defining a notice expression potentially evaluated into a notice by the PDP. See [NoticeExpressionType](#noticeexpressiontype). Objects' `Id` values are not required to be unique in this sequence; the same `Id` MAY occur more than once, typically with different `AttributeAssignmentExpression`s. See [Section 8.16](#816-notices) for a description of how the notices to be returned by the PDP shall be determined. See [Section 8.2](#82-policy-enforcement-point) about enforcement of obligation notices.
 
 ## 7.13 VariableDefinitionType
 
@@ -4777,7 +4780,7 @@ A `NoticeType` object contains the following properties:
 
 `Id` [Required]
 
-: An `IdentifierType` value specifying an identifier for the notice that the PEP associates with particular processing requirements or informational content.
+: An `IdentifierType` value specifying an identifier for the notice that the PEP associates with particular processing requirements or informational content. The `Id` identifies the *semantics* of the notice — what the PEP is required to do, or is being informed of — rather than a particular occurrence of it. The same `Id` MAY therefore appear on more than one notice in a result, typically with different `AttributeAssignment`s.
 `Id` values starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are reserved by the XACML TC for their exclusive use.
 
 `IsObligation` [Optional, Default `false`]
@@ -4880,7 +4883,7 @@ A `NoticeExpressionType` object contains the following properties:
 
 `Id` [Required]
 
-: An `IdentifierType` value nominating the identifier for the notice that the PEP associates with particular processing requirements or informational content.
+: An `IdentifierType` value nominating the identifier for the notice that the PEP associates with particular processing requirements or informational content. The `Id` identifies the *semantics* of the notice — what the PEP is required to do, or is being informed of — rather than a particular occurrence of it. The same `Id` MAY therefore appear on more than one `NoticeExpression` within a policy or rule, typically with different `AttributeAssignmentExpression`s.
 `Id` values starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are reserved by the XACML TC for their exclusive use.
 
 `IsObligation` [Optional]
@@ -5149,7 +5152,7 @@ hide circle
 class ResultType <<dataType>> {
   {field} + Decision: DecisionType [1]
   {field} + Status: StatusType [0..1]
-  {field} + Notice: NoticeType [*] {ordered, unique} {{OCL} self->isUnique(Id)}
+  {field} + Notice: NoticeType [*] {ordered, nonunique}
   {field} + ResultEntity: ResultEntityType [*] {unordered, unique} {{OCL} self->isUnique(Category)}
   {field} + ApplicablePolicyReference: ExactMatchIdReferenceType [*] {unordered, unique} {{OCL} self->isUnique(Id)}
 }
@@ -5168,7 +5171,7 @@ A `ResultType` object contains the following properties:
 
 `Notice` [Any Number]
 
-: A sequence of `NoticeType` objects, each a notice to be interpreted by the PEP. Each object's `Id` MUST be unique in the sequence. See [Section 7.26](#noticetype). If the PEP does not understand or cannot fulfill an obligation notice, then the action of the PEP is determined by its bias, see [Section 8.2](#82-policy-enforcement-point). If the PEP does not understand an advice notice, the PEP may safely ignore the notice. See [Section 8.16](#816-notices) for a description of how the list of notices to be returned by the PDP is determined.
+: A sequence of `NoticeType` objects, each a notice to be interpreted by the PEP. Objects' `Id` values are not required to be unique in the sequence; the same `Id` MAY occur more than once, typically with different `AttributeAssignment`s, for instance when it is drawn from more than one rule or policy. See [Section 7.26](#noticetype). If the PEP does not understand or cannot fulfill an obligation notice, then the action of the PEP is determined by its bias, see [Section 8.2](#82-policy-enforcement-point). If the PEP does not understand an advice notice, the PEP may safely ignore the notice. See [Section 8.16](#816-notices) for a description of how the list of notices to be returned by the PDP is determined.
 
 `ResultEntity` [Any Number]
 

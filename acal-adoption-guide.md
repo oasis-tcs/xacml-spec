@@ -1067,13 +1067,228 @@ Rule:
   `AttributeAssignmentExpression`; when absent it participates in the uniqueness
   check as an absent value — meaning two entries with the same `AttributeId` and no
   `Category` both present would violate the constraint.
-- `NoticeExpression` Ids are not required to be unique within a `Policy` or `Rule`.
-  A policy may include multiple `NoticeExpression` items sharing the same Id — for
-  example, two obligations with the same purpose identifier but different
-  `AttributeAssignmentExpression` sets (such as sending the same notification type
-  to different recipients). The uniqueness constraint applies to
-  `AttributeAssignmentExpression` pairs within a single notice, not to notice Ids
-  across the enclosing policy or rule.
+- `NoticeExpression` Ids are **not** required to be unique within a `Policy` or `Rule`.
+  The `Id` identifies what the notice *means* to the PEP — what it must do, or is being
+  informed of — exactly as `ObligationId` did in XACML 3.0. It is a *concept* identifier,
+  not an instance identifier, so a policy MAY emit the same notice `Id` more than once with
+  different `AttributeAssignmentExpression`s. The uniqueness constraint that *does* apply is
+  on `(AttributeId, Category)` pairs **within** a single notice, not on notice Ids across the
+  enclosing policy or rule.
+
+---
+
+#### Variant: Emitting the Same Notice Twice with Different Arguments
+
+When the same obligation (e.g. "send-mail") must be discharged for multiple recipients or
+with different payloads, emit one `NoticeExpression` **per recipient**, all carrying the
+**same** `Id`. The `Id` names the obligation — it is what tells the PEP to send mail — and
+the `AttributeAssignmentExpression`s carry the per-instance data that differs between them.
+
+This is the same shape as an XACML 3.0 `ObligationId`, so obligations already defined by
+existing profiles (e.g. `add-history` from the separation-of-duties profile) can be emitted
+repeatedly without inventing a new identifier for each occurrence.
+
+**Plain language**: A physician may write to a patient chart. When they do, an email
+notification must be sent to both the patient and the patient's next of kin.
+
+---
+
+**XACML v4.0 (XML)**
+
+```xml
+<Rule xmlns="urn:oasis:names:tc:xacml:4.0:core:schema"
+      Id="rule-physician-write" Effect="Permit">
+  <Description>
+    A physician may write to a patient chart, notifying both the patient and next of kin.
+  </Description>
+  <Condition>
+    <Apply FunctionId="{and}">
+      <Apply FunctionId="{string-is-in}">
+        <Value>physician</Value>
+        <AttributeDesignator
+          Category="{access-subject}" AttributeId="{role}"/>
+      </Apply>
+      <Apply FunctionId="{string-is-in}">
+        <Value>write</Value>
+        <AttributeDesignator
+          Category="{action}" AttributeId="{action-id}"/>
+      </Apply>
+    </Apply>
+  </Condition>
+  <NoticeExpression Id="urn:example:notice:send-mail"
+                   AppliesTo="Permit" IsObligation="true">
+    <AttributeAssignmentExpression AttributeId="urn:example:notice:mailto">
+      <AttributeDesignator
+        Category="{resource}" AttributeId="{patient-email}" MustBePresent="true"/>
+    </AttributeAssignmentExpression>
+    <AttributeAssignmentExpression AttributeId="urn:example:notice:message">
+      <Value>Your medical chart was updated by your physician.</Value>
+    </AttributeAssignmentExpression>
+  </NoticeExpression>
+  <NoticeExpression Id="urn:example:notice:send-mail"
+                   AppliesTo="Permit" IsObligation="true">
+    <AttributeAssignmentExpression AttributeId="urn:example:notice:mailto">
+      <AttributeDesignator
+        Category="{resource}" AttributeId="{next-of-kin-email}" MustBePresent="true"/>
+    </AttributeAssignmentExpression>
+    <AttributeAssignmentExpression AttributeId="urn:example:notice:message">
+      <Value>Your next of kin's medical chart was updated by a physician.</Value>
+    </AttributeAssignmentExpression>
+  </NoticeExpression>
+</Rule>
+```
+
+**JACAL v1.0 (JSON)**
+
+```json
+{
+  "Rule": {
+    "Id": "rule-physician-write",
+    "Effect": "Permit",
+    "Description": "A physician may write to a patient chart, notifying both the patient and next of kin.",
+    "Condition": {
+      "Apply": {
+        "FunctionId": "{and}",
+        "Argument": [
+          {
+            "Apply": {
+              "FunctionId": "{string-is-in}",
+              "Argument": [
+                { "Value": "physician" },
+                { "AttributeDesignator": { "Category": "{access-subject}", "AttributeId": "{role}" } }
+              ]
+            }
+          },
+          {
+            "Apply": {
+              "FunctionId": "{string-is-in}",
+              "Argument": [
+                { "Value": "write" },
+                { "AttributeDesignator": { "Category": "{action}", "AttributeId": "{action-id}" } }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "NoticeExpression": [
+      {
+        "Id": "urn:example:notice:send-mail",
+        "AppliesTo": "Permit",
+        "IsObligation": true,
+        "AttributeAssignmentExpression": [
+          {
+            "AttributeId": "urn:example:notice:mailto",
+            "Expression": {
+              "AttributeDesignator": {
+                "Category": "{resource}",
+                "AttributeId": "{patient-email}",
+                "MustBePresent": true
+              }
+            }
+          },
+          {
+            "AttributeId": "urn:example:notice:message",
+            "Expression": { "Value": "Your medical chart was updated by your physician." }
+          }
+        ]
+      },
+      {
+        "Id": "urn:example:notice:send-mail",
+        "AppliesTo": "Permit",
+        "IsObligation": true,
+        "AttributeAssignmentExpression": [
+          {
+            "AttributeId": "urn:example:notice:mailto",
+            "Expression": {
+              "AttributeDesignator": {
+                "Category": "{resource}",
+                "AttributeId": "{next-of-kin-email}",
+                "MustBePresent": true
+              }
+            }
+          },
+          {
+            "AttributeId": "urn:example:notice:message",
+            "Expression": { "Value": "Your next of kin's medical chart was updated by a physician." }
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**YACAL v1.0 (YAML, with short identifiers)**
+
+```yaml
+Rule:
+  Id: rule-physician-write
+  Effect: Permit
+  Description: >-
+    A physician may write to a patient chart, notifying both the patient and next of kin.
+  Condition:
+    Apply:
+      FunctionId: "{and}"
+      Argument:
+        - Apply:
+            FunctionId: "{string-is-in}"
+            Argument:
+              - Value: physician
+              - AttributeDesignator:
+                  Category: "{access-subject}"
+                  AttributeId: "{role}"
+        - Apply:
+            FunctionId: "{string-is-in}"
+            Argument:
+              - Value: write
+              - AttributeDesignator:
+                  Category: "{action}"
+                  AttributeId: "{action-id}"
+  NoticeExpression:
+    - Id: "urn:example:notice:send-mail"
+      AppliesTo: Permit
+      IsObligation: true
+      AttributeAssignmentExpression:
+        - AttributeId: "urn:example:notice:mailto"
+          Expression:
+            AttributeDesignator:
+              Category: "{resource}"
+              AttributeId: "{patient-email}"
+              MustBePresent: true
+        - AttributeId: "urn:example:notice:message"
+          Expression:
+            Value: Your medical chart was updated by your physician.
+    - Id: "urn:example:notice:send-mail"
+      AppliesTo: Permit
+      IsObligation: true
+      AttributeAssignmentExpression:
+        - AttributeId: "urn:example:notice:mailto"
+          Expression:
+            AttributeDesignator:
+              Category: "{resource}"
+              AttributeId: "{next-of-kin-email}"
+              MustBePresent: true
+        - AttributeId: "urn:example:notice:message"
+          Expression:
+            Value: Your next of kin's medical chart was updated by a physician.
+```
+
+**What this shows**
+
+- Both `NoticeExpression` entries carry the **same** `Id` (`urn:example:notice:send-mail`).
+  This is legal: notice Ids are not required to be unique within a policy or rule. The `Id`
+  is what tells the PEP *which obligation to discharge* — send mail — so both entries route
+  to the same PEP handler.
+- The two notices differ only in `mailto` and `message`. Those `AttributeAssignmentExpression`s
+  are the per-instance data; the `Id` is the concept. No separate `action` assignment is needed
+  to tag the notification type, because the `Id` already carries that meaning.
+- A PEP receiving two `send-mail` obligations dispatches them independently — once per
+  recipient. The obligations are distinguished by their arguments, not by their `Id`.
+- Because the `Id` behaves exactly like an XACML 3.0 `ObligationId`, obligations defined by
+  existing profiles work unchanged: a policy can emit `add-history` twice with different
+  parameters, or the same obligation from two rules that permit access for two different
+  reasons.
 
 ---
 

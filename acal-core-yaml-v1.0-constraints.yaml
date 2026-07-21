@@ -499,20 +499,6 @@ Rule:
       YACALSection: "5.6.6"
       ACALSection: "7.11"
 
-  - Id: "rule-noticeexpression-id-unique"
-    Kind: uniqueByProperty
-    Severity: error
-    AppliesTo:
-      ObjectType: RuleType
-      CollectionPath: "$.Policy.CombinerInput[].Rule.NoticeExpression"
-    KeyProperties:
-      - Id
-    Requirement: >
-      NoticeExpression Id values within a RuleType MUST be unique.
-    Provenance:
-      YACALSection: "5.9.1"
-      ACALSection: "7.12"
-
   - Id: "noticeexpression-attributeassignmentexpression-unique"
     Kind: uniqueByProperty
     Severity: error
@@ -529,34 +515,6 @@ Rule:
     Provenance:
       YACALSection: "5.9.1"
       ACALSection: "7.29"
-
-  - Id: "policy-noticeexpression-id-unique"
-    Kind: uniqueByProperty
-    Severity: error
-    AppliesTo:
-      ObjectType: PolicyType
-      CollectionPath: "$.Policy.NoticeExpression"
-    KeyProperties:
-      - Id
-    Requirement: >
-      NoticeExpression Id values within a PolicyType MUST be unique.
-    Provenance:
-      YACALSection: "5.9.1"
-      ACALSection: "7.4"
-
-  - Id: "result-notice-id-unique"
-    Kind: uniqueByProperty
-    Severity: error
-    AppliesTo:
-      ObjectType: ResultType
-      CollectionPath: "$.Response.Result[].Notice"
-    KeyProperties:
-      - Id
-    Requirement: >
-      Notice Id values within a ResultType MUST be unique.
-    Provenance:
-      YACALSection: "5.9.3"
-      ACALSection: "7.37"
 
   - Id: "result-resultentity-category-unique"
     Kind: uniqueByProperty

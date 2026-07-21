@@ -133,4 +133,14 @@
 	  <assert test="every $elt in xacml:RequestReference satisfies (every $following in $elt/following-sibling::xacml:RequestReference satisfies count($elt/xacml:RequestEntityReference) != count($following/xacml:RequestEntityReference) or (some $id in $elt/xacml:RequestEntityReference/@Id satisfies not($id = $following/xacml:RequestEntityReference/@Id)))"></assert>
 	</rule>
  </pattern>
+ <pattern id="ACAL_constraint_on_NoticeExpressionType_AttributeAssignmentExpression_property">
+ 	<title>ACAL constraint on NoticeExpressionType property: {OCL} self-&gt;isUnique(AttributeAssignmentExpression-&gt;collect(Sequence{AttributeId, Category}))</title>
+	<rule context="xacml:NoticeExpression">
+		<!--
+		Issue #99: complements the XSD's xs:unique constraint, which cannot catch a duplicate
+		AttributeId when Category is absent from both AttributeAssignmentExpression elements.
+		-->
+	  <assert test="every $elt in xacml:AttributeAssignmentExpression satisfies (every $following in $elt/following-sibling::xacml:AttributeAssignmentExpression satisfies not($elt/@AttributeId = $following/@AttributeId and ((not($elt/@Category) and not($following/@Category)) or $elt/@Category = $following/@Category)))">Duplicate AttributeAssignmentExpression (AttributeId, Category) pair</assert>
+	</rule>
+ </pattern>
 </schema>

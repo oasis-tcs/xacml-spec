@@ -466,6 +466,17 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 					and Deny. </xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
+		<!-- Issue #99: xs:unique cannot express uniqueness over a key that includes an optional
+		field, so it does not catch duplicate AttributeId when Category is absent from both. This
+		assert covers that case; XSD 1.0 processors must rely on the Schematron rule instead. -->
+		<xs:assert vc:minVersion="1.1"
+			test="every $elt in xacml:AttributeAssignmentExpression satisfies (every $following in $elt/following-sibling::xacml:AttributeAssignmentExpression satisfies not($elt/@AttributeId = $following/@AttributeId and ((not($elt/@Category) and not($following/@Category)) or $elt/@Category = $following/@Category)))">
+			<xs:annotation>
+				<xs:documentation xml:lang="en"> ACAL constraint on NoticeExpression property:
+					{OCL} self->isUnique(AttributeAssignmentExpression->collect(Sequence{AttributeId,
+					Category})) </xs:documentation>
+			</xs:annotation>
+		</xs:assert>
 	</xs:complexType>
 
 	<xs:element name="AttributeAssignmentExpression" type="xacml:AttributeAssignmentExpressionType" />
@@ -679,12 +690,13 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 			<xs:selector xpath="xacml:Rule" />
 			<xs:field xpath="@Id" />
 		</xs:key>
-		<xs:key name="Policy_NoticeExpression_Id">
-			<xs:selector xpath="xacml:NoticeExpression" />
-			<xs:field xpath="@Id" />
-		</xs:key>
 		<!--
-			Other uniqueness constraint(s) considered:
+			Other uniqueness constraints considered:
+			- NoticeExpression (Id): not unique. The Id is a concept identifier: it tells the PEP what the
+		notice means and how to process it (as ObligationId did in XACML 3.0), not which occurrence it is.
+		The same Id may therefore occur more than once, typically with different AttributeAssignmentExpressions
+		(e.g. mail the same kind of message to different recipients), or be emitted from two Rules of the same
+		Policy for two different reasons.
 			- CombinerInput: not always unique: there may be two PolicyReferences to the same parameterized
 		Policy but with different arguments, so the same PolicyId may occur twice.
 		-->
@@ -757,10 +769,10 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 			<xs:selector xpath="xacml:VariableDefinition" />
 			<xs:field xpath="@VariableId" />
 		</xs:key>
-		<xs:key name="Rule_NoticeExpression_Id">
-			<xs:selector xpath="xacml:NoticeExpression" />
-			<xs:field xpath="@Id" />
-		</xs:key>
+		<!--
+		Other possible uniqueness constraints considered:
+		- NoticeExpression (Id): is not unique, for the same reason as in PolicyType.
+		-->
 	</xs:element>
 	<xs:complexType name="RuleType">
 		<xs:sequence>
