@@ -159,6 +159,7 @@ if $MAKE_PDF; then
       --headless=new \
       --no-sandbox \
       --no-pdf-header-footer \
+      --disable-gpu \
       --print-to-pdf="$OUTPUT_PDF" \
       "file://${OUTPUT_HTML}"
     if [ -f "$OUTPUT_PDF" ]; then
