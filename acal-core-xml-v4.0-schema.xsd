@@ -422,6 +422,17 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 		Short Identifiers -->
 		<xs:attribute name="Id" type="xacml:IdentifierType" use="required" />
 		<xs:attribute name="IsObligation" type="xs:boolean" use="optional" default="false" />
+		<!-- Issue #102: xs:unique cannot express uniqueness over a key that includes an optional
+		field, so it does not catch duplicate AttributeId when Category is absent from both. This
+		assert covers that case; XSD 1.0 processors must rely on the Schematron rule instead. -->
+		<xs:assert vc:minVersion="1.1"
+			test="every $elt in xacml:AttributeAssignment satisfies (every $following in $elt/following-sibling::xacml:AttributeAssignment satisfies not($elt/@AttributeId = $following/@AttributeId and ((not($elt/@Category) and not($following/@Category)) or $elt/@Category = $following/@Category)))">
+			<xs:annotation>
+				<xs:documentation xml:lang="en"> ACAL constraint on Notice property: {OCL}
+					self->isUnique(AttributeAssignment->collect(Sequence{AttributeId, Category}))
+					</xs:documentation>
+			</xs:annotation>
+		</xs:assert>
 	</xs:complexType>
 
 	<xs:element name="AttributeAssignment" type="xacml:AttributeAssignmentType" />

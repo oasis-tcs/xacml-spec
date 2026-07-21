@@ -516,6 +516,23 @@ Rule:
       YACALSection: "5.9.1"
       ACALSection: "7.29"
 
+  - Id: "notice-attributeassignment-unique"
+    Kind: uniqueByProperty
+    Severity: error
+    AppliesTo:
+      ObjectType: NoticeType
+      CollectionPath: "$.Response.Result[].Notice[].AttributeAssignment"
+    KeyProperties:
+      - AttributeId
+      - Category
+    Requirement: >
+      AttributeAssignment values within a NoticeType MUST be unique by the
+      (AttributeId, Category) pair. An absent Category participates in the
+      pair as an absent value.
+    Provenance:
+      YACALSection: "5.9.3"
+      ACALSection: "7.26"
+
   - Id: "result-resultentity-category-unique"
     Kind: uniqueByProperty
     Severity: error
