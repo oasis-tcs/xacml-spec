@@ -400,7 +400,7 @@ The list of changes from the previous version and any revision history can be fo
 
 # 5 Syntax (normative, with the exception of the schema fragments)
 
-The next sections describe the rules that SHALL be applied for mapping the [[ACAL-Core-1.0](#acal-core-10)] agnostic model (UML-based) to [XML schema](#XS) definitions for this XML representation (XACML).
+The next sections describe the rules that SHALL be applied for mapping the [[ACAL-Core-1.0](#acal-core-10)] agnostic model (UML-based) to [XML schema](#xs) definitions for this XML representation (XACML).
 These rules have been applied to produce XACML's core XML schema in [Annex D](#annex-d-xml-schema-normative) (also in the [Core XML schema file](acal-core-xml-v%version%-schema.xsd) accompanying this document) from [[ACAL-Core-1.0](#acal-core-10)] core model.
 
 In all XSD definitions from now, the XACML core namespace `urn:oasis:names:tc:xacml:4.0:core:schema` is the default namespace.
@@ -414,7 +414,7 @@ rules in the next subsections to obtain the XML representation.
 
 ### 5.1.1 Primitive types mapped to standard XSD data-types
 
-The ACAL primitive types in the following table have a direct XML equivalent in the XSD standard, provided in the second column, and that is used for the XML representation (the expression `xs:foo` means the `foo` type in W3C [XML schema](#XS) standard):
+The ACAL primitive types in the following table have a direct XML equivalent in the XSD standard, provided in the second column, and that is used for the XML representation (the expression `xs:foo` means the `foo` type in W3C [XML schema](#xs) standard):
 
 Table 1: Mapping ACAL primitive types to standard XSD data-types
 
@@ -494,7 +494,7 @@ For example, ACAL `DecisionType` translates to the following XSD definition:
 
 For each complex type (stereotyped `<<dataType>>`) in [[ACAL-Core-1.0](#acal-core-10)] model, apply the mapping rules in the next subsections.
 
-The expression *`xs:foo` type (respectively element)* means the `foo` type (respectively element) defined in W3C [XML schema](#XS) standard.
+The expression *`xs:foo` type (respectively element)* means the `foo` type (respectively element) defined in W3C [XML schema](#xs) standard.
 
 <a name="anonymized-datatypes"></a>
 
