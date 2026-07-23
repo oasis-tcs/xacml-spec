@@ -150,7 +150,7 @@ Copyright © OASIS Open 2026. All Rights Reserved.  For license and copyright in
   - [4.4 Multiple Subjects](#44-multiple-subjects)
   - [4.5 Policies Based on Subject and Resource Attributes](#45-policies-based-on-subject-and-resource-attributes)
   - [4.6 Multi-Valued Attributes](#46-multi-valued-attributes)
-  - [4.7 Policies Based on Resource Contents](#47-policies-based-on-resource-contents)
+  - [4.7 Policies Based on Resource Contents](#47-policies-based-on-subject-and-resource-contents)
   - [4.8 Operators](#48-operators)
   - [4.9 Policy Distribution](#49-policy-distribution)
   - [4.10 Policy Indexing](#410-policy-indexing)
@@ -721,11 +721,15 @@ Access control policies often place requirements on the actions of more than one
 
 ## 4.5 Policies Based on Subject and Resource Attributes
 
-Another common requirement is to base an authorization decision on some characteristic of the subject other than its identity. Perhaps, the most common application of this idea is the subject's role [[RBAC](#rbac)]. ACAL provides facilities to support this approach. Attributes of subjects contained in the request context may be identified by an attribute designator. Alternatively, an attribute selector may contain a Path expression (e.g. Path/JSONPath) over the `ContentType` object of the subject to identify a particular subject attribute value by its location in the context (see [Section 4.11](#411-abstraction-layer) for an explanation of context).
+Another common requirement is to base an authorization decision on some characteristic of the subject other than its identity.
+Perhaps, the most common application of this idea is the subject's role [[RBAC](#rbac)]. ACAL provides facilities to support this approach.
+Attributes of subjects contained in the request context may be obtained by an attribute designator.
 
 ACAL provides a standard way to reference the attributes defined in the LDAP series of specifications [[LDAP-1](#ldap-1)], [[LDAP-2](#ldap-2)]. This is intended to encourage implementers to use standard attribute identifiers for some common subject attributes.
 
-Another common requirement is to base an authorization decision on some characteristic of the resource other than its identity. ACAL provides facilities to support this approach. Attributes of the resource may be identified by an attribute designator. Alternatively, an attribute selector may contain a Path expression (e.g. XPath/JSONPath) over the `ContentType` object of the resource to identify a particular resource attribute value by its location in the context.
+Another common requirement is to base an authorization decision on some characteristic of the resource other than its identifier.
+ACAL provides facilities to support this approach.
+Attributes of the resource may also be obtained by an attribute designator.
 
 ## 4.6 Multi-Valued Attributes
 
@@ -733,14 +737,19 @@ The most common techniques for communicating attributes (LDAP, XPath, JSONPath, 
 
 ACAL provides a set of functions that allow a policy writer to be absolutely clear about how the PDP should handle the case of multiple attribute values. These are the "higher-order" functions (see [Annex C.3](#c3-functions)).
 
-## 4.7 Policies Based on Resource Contents
+## 4.7 Policies Based on Subject and Resource Contents
 
-<!-- TODO: merge this section into 4.5, as Attribute selectors are already mentioned in Section 4.5. This seems redundant. -->
-In many applications, it is required to base an authorization decision on data contained in the information resource to which access is requested. For instance, a common component of privacy policy is that a person should be allowed to read records for which he or she is the subject. The corresponding policy must contain a reference to the subject identified in the information resource itself.
+In many applications, it is required to base an authorization decision on data contained in the information resource to which access is requested.
+For instance, a common component of privacy policy is that a person should be allowed to read records for which he or she is the subject.
+The corresponding policy must be able to determine the subject identified in the information resource itself.
+Similarly, an authorization decision may need to be based on data contained in a user record representing the subject requesting access.
 
-ACAL provides facilities for doing this when the information resource can be represented as a structured document like XML or JSON. The `AttributeSelectorType` object may contain a content-specific Path expression (e.g. XPath) over the `ContentType` object of the resource to identify data in the information resource to be used in the policy evaluation.
+ACAL provides facilities for doing this when the user record or information resource can be represented as a structured document formatted as XML or JSON.
+The `AttributeSelectorType` object may contain a content-specific path expression (e.g., XPath or JSONPath) over the `ContentType` object of the subject or resource in the request context
+(see [Section 4.11](#411-abstraction-layer) for an explanation of context)
+to obtain attribute values to be used in the policy evaluation.
 
-In cases where the information resource is not structured document like XML or JSON, specified attributes of the resource can be referenced, as described in [Section 4.5](#45-policies-based-on-subject-and-resource-attributes).
+The use of a `ContentType` object in a subject or resource in the request context does not preclude additional or redundant attributes also being present and referenced, as described in [Section 4.5](#45-policies-based-on-subject-and-resource-attributes).
 
 ## 4.8 Operators
 
@@ -836,8 +845,6 @@ digraph Fig1 {
     // Default parameters for links (smaller font than nodes)
     edge [fontname=Arial, fontsize=10.0]
     
-    
-    // TODO: remove group attributes to see if this makes a difference
     
     // BEGIN LEFT PART 
     // Define the Access requester, PDP and PAP boxes, then link them together in order to be aligned vertically by Graphviz dot engine.
@@ -1208,12 +1215,17 @@ Rules are described above. The remaining components are described in the followi
 
 #### 5.3.2.1 Policy Target
 
-An ACAL policy contains a target that specifies the set of requests to which it applies. The target of a policy may be:
-1. Either declared by the writer of the policy. In this case, any component rules in the policy that have the same condition as the target may omit the condition. Such rules inherit the target of the policy in which they are contained.
-2. Or not, in which case it may be calculated from the targets and conditions of the policies and rules (respectively) that it contains. A system entity that calculates a target in this way is not defined by ACAL, but there are two logical methods that might be used: <!-- TODO: Maybe not mention it here, this is Implementation guidance.  Also presenting two methods with different results is confusing and make the spec look ambiguous / non-deterministic behavior. What is the standard/right method between those two? -->
-   1. First method: the target of the outer policy (the "outer component") is calculated as the union of all the targets of the referenced policies and the conditions of the referenced rules (the "inner components"). <!-- TODO: clarify: this method is not possible if there is no policy references, only rules and inline policies, what then? Also now a policy can contain policies inline (not referenced). -->
-   1. Second method: the target of the outer component is calculated as the intersection of all the targets and conditions of the inner components.The results of evaluation in each case will be very different: in the first case, the target of the outer component makes it applicable to any decision request that matches the target or condition of at least one inner component; in the second case, the target of the outer component makes it applicable only to decision requests that match the target or condition of every inner component.
-  
+An ACAL policy contains a target that specifies the set of decision requests to which it applies.
+A policy applies to a particular decision request if the target evaluates to `true` for that decision request.
+If the target evaluates to `false` for a particular decision request, then the policy immediately evaluates to `NotApplicable` and the policy's combining algorithm and component policies and rules are not considered.
+
+A component policy will also have a target.
+The component policy is applicable to decision requests that satisfy both the target of the component policy and the target of the outer policy.
+Therefore, the target of a component policy may omit any test performed by the target of the outer policy.
+
+A component rule will have a condition. The component rule is applicable to decision requests that satisfy both the condition of the component rule and the target of the outer policy.
+Therefore, the condition of a component rule may omit any test performed by the target of the outer policy.
+
 #### 5.3.2.2 Combining Algorithm
 
 The combining algorithm specifies the procedure by which the results of evaluating the component rules and policies are combined when evaluating the policy, i.e. the `Decision` value placed in the response context by the PDP is the result of evaluating the policy, as defined by the combining algorithm. 
@@ -3428,7 +3440,6 @@ The `minLength=1` restriction prevents the empty string, i.e. there is at least 
 A value of the `IdentifierType` simple type refers to a specific attribute category, attribute, data type, function, notice, status code, combining algorithm.
 
 UML definition (class diagram):
-<!-- TODO: Pattern needs to be improved as this allows some undesirable identifiers. See proposals on issue #56.  -->
 ```plantuml
 @startuml
 hide empty members 
