@@ -162,9 +162,16 @@
                                         "Value": "Your medical record has been accessed by: "
                                     },
                                     {
-                                        "AttributeDesignator": {
-                                            "Category": "urn:oasis:names:tc:acal:1.0:subject-category:access-subject",
-                                            "AttributeId": "urn:oasis:names:tc:acal:1.0:subject:subject-id"
+                                        "Apply": {
+                                            "FunctionId": "urn:oasis:names:tc:acal:1.0:function:string-one-and-only",
+                                            "Expression": [
+                                                {
+                                                    "AttributeDesignator": {
+                                                        "Category": "urn:oasis:names:tc:acal:1.0:subject-category:access-subject",
+                                                        "AttributeId": "urn:oasis:names:tc:acal:1.0:subject:subject-id"
+                                                    }
+                                                }
+                                            ]
                                         }
                                     }
                                 ]
