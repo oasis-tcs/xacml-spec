@@ -36,6 +36,8 @@ EvaluationModel:
 RuleKinds:
   uniqueByProperty:
     Meaning: "Values in a collection are unique by one or more named child properties."
+  uniqueByValue:
+    Meaning: "Values in a collection of primitive-typed values are unique by their own scalar value."
   uniqueByConcreteSubtype:
     Meaning: "No two values in a collection denote the same effective concrete subtype."
   uniqueByDerivedSet:
@@ -279,15 +281,14 @@ Rule:
       ACALSection: "7.35"
 
   - Id: "requestreference-requestentityreference-id-unique"
-    Kind: uniqueByProperty
+    Kind: uniqueByValue
     Severity: error
     AppliesTo:
       ObjectType: RequestReferenceType
       CollectionPath: "$.Request.MultiRequests.RequestReference[].RequestEntityReference"
-    KeyProperties:
-      - Id
     Requirement: >
-      Id values in a single RequestReferenceType MUST be unique.
+      RequestEntityReference values in a single RequestReferenceType MUST
+      be unique.
     Provenance:
       YACALSection: "5.8.5"
       ACALSection: "7.39"
@@ -297,15 +298,15 @@ Rule:
     Severity: error
     AppliesTo:
       ObjectType: RequestReferenceType
-      ReferencePath: "$.Request.MultiRequests.RequestReference[].RequestEntityReference[].Id"
+      ReferencePath: "$.Request.MultiRequests.RequestReference[].RequestEntityReference[]"
       TargetCollectionPath: "$.Request.RequestEntity"
       TargetKeyProperty: Id
     Requirement: >
-      Each RequestEntityReference Id MUST identify a RequestEntityType in
-      the enclosing Request.
+      Each RequestEntityReference value MUST identify a RequestEntityType
+      in the enclosing Request by the value of its Id property.
     Provenance:
       YACALSection: "5.8.5"
-      ACALSection: "7.40"
+      ACALSection: "7.39"
 
   - Id: "multirequests-requestreference-unique-by-entity-id-set"
     Kind: uniqueByDerivedSet
@@ -313,7 +314,7 @@ Rule:
     AppliesTo:
       ObjectType: MultiRequestsType
       CollectionPath: "$.Request.MultiRequests.RequestReference"
-      DerivedSetPath: RequestEntityReference[].Id
+      DerivedSetPath: RequestEntityReference[]
     Requirement: >
       The set of referenced RequestEntity identifiers in each
       RequestReference MUST be unique within the enclosing MultiRequests

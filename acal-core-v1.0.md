@@ -257,15 +257,14 @@ Copyright © OASIS Open 2026. All Rights Reserved.  For license and copyright in
   - [7.37 ResultType](#737-resulttype)
   - [7.38 MultiRequestsType (optional)](#738-multirequeststype-optional)
   - [7.39 RequestReferenceType (optional)](#739-requestreferencetype-optional)
-  - [7.40 RequestEntityReferenceType (optional)](#740-requestentityreferencetype-optional)
-  - [7.41 StatusType](#741-statustype)
-  - [7.42 StatusCodeType](#742-statuscodetype)
-  - [7.43 StatusDetailType (optional)](#743-statusdetailtype-optional)
-  - [7.44 MissingAttributeDetailType](#744-missingattributedetailtype)
-  - [7.45 ResultEntityType](#745-resultentitytype)
-  - [7.46 EntityType](#746-entitytype)
-  - [7.47 BundleType](#747-bundletype)
-  - [7.48 ArgumentType and NamedArgumentType](#748-argumenttype-and-namedargumenttype)
+  - [7.40 StatusType](#740-statustype)
+  - [7.41 StatusCodeType](#741-statuscodetype)
+  - [7.42 StatusDetailType (optional)](#742-statusdetailtype-optional)
+  - [7.43 MissingAttributeDetailType](#743-missingattributedetailtype)
+  - [7.44 ResultEntityType](#744-resultentitytype)
+  - [7.45 EntityType](#745-entitytype)
+  - [7.46 BundleType](#746-bundletype)
+  - [7.47 ArgumentType and NamedArgumentType](#747-argumenttype-and-namedargumenttype)
 - [8 Functional Requirements](#8-functional-requirements)
   - [8.1 Unicode Issues](#81-unicode-issues)
     - [8.1.1 Normalization](#811-normalization)
@@ -5195,7 +5194,7 @@ UML definition (class diagram):
 hide empty members 
 hide circle
 class MultiRequestsType <<dataType>> {
-   + RequestReference: RequestReferenceType [1..*] {unordered, unique} {{OCL} self->isUnique(RequestEntityReference->collect(Id)->asSet())}
+   + RequestReference: RequestReferenceType [1..*] {unordered, unique} {{OCL} self->isUnique(RequestEntityReference->asSet())}
 }
 @enduml
 ```
@@ -5220,7 +5219,7 @@ UML definition (class diagram):
 hide empty members 
 hide circle
 class RequestReferenceType <<dataType>> {
-   + RequestEntityReference: RequestEntityReferenceType [1..*] {unordered, unique} {{OCL} self->isUnique(Id)}
+   + RequestEntityReference: LocalIdentifierType [1..*] {unordered, unique}
 }
 @enduml
 ```
@@ -5229,37 +5228,9 @@ A `RequestReferenceType` object contains the following properties:
 
 `RequestEntityReference` [one to many]
 
-: A sequence of `RequestEntityReferenceType` objects, each a reference to a `RequestEntityType` object in the enclosing `RequestType` object. See [Section 7.40](#requestentityreferencetype).
+: A sequence of `LocalIdentifierType` values, each referencing a `RequestEntityType` object in the enclosing `RequestType` object by the value of its `Id` property.
 
-<a name="requestentityreferencetype"></a>
-
-## 7.40 RequestEntityReferenceType (optional)
-
-_**Support for this object is optional.**_
-
-A `RequestEntityReferenceType` object makes a reference to a `RequestEntityType` object. The meaning of this object is defined in [[Multi](#multi)].
-
-UML definition (class diagram):
-```plantuml
-@startuml
-hide empty members 
-hide circle
-class RequestEntityType <<dataType>> 
-class RequestEntityReferenceType <<dataType>> {
-   + Id: LocalIdentifierType [1]
-}
-
-RequestEntityReferenceType "Id *" --> "Id 1" RequestEntityType: reference
-@enduml
-```
-
-A `RequestEntityReferenceType` object contains the following properties:
-
-`Id` [Required]
-
-: A `LocalIdentifierType` value referencing a `RequestEntityType` object in the enclosing `RequestType` object by the value of its `Id` property.
-
-## 7.41 StatusType
+## 7.40 StatusType
 
 A `StatusType` object represents the status of the authorization decision result.
 
@@ -5290,7 +5261,7 @@ A `StatusType` object contains the following properties:
 
 : A `StatusDetailType` object containing additional status information.
 
-## 7.42 StatusCodeType
+## 7.41 StatusCodeType
 
 A `StatusCodeType` object contains a major status code value and an optional recursive series of minor status codes.
 
@@ -5317,7 +5288,7 @@ A `StatusCodeType` object contains the following properties:
 
 : A `StatusCodeType` object describing a minor status code, which qualifies its parent status code. Minor status codes may be nested recursively this way.
 
-## 7.43 StatusDetailType (optional)
+## 7.42 StatusDetailType (optional)
 
 _**Support for this object type is optional.**_
 
@@ -5376,7 +5347,7 @@ A PDP MUST NOT return a `StatusDetailType` object in conjunction with the `proce
 
 <a name="missingattributedetailtype"></a>
 
-## 7.44 MissingAttributeDetailType
+## 7.43 MissingAttributeDetailType
 
 A `MissingAttributeDetailType` object conveys information about attributes required for policy evaluation that were missing from the request context.
 
@@ -5423,7 +5394,7 @@ A `MissingAttributeDetailType` object contains the following properties:
 
 If the PDP includes `ValueType` objects in the `MissingAttributeDetailType` object, then this indicates the acceptable values for that attribute. If no `ValueType` objects are included, then the `MissingAttributeDetailType` object indicates the names of attributes that the PDP failed to resolve during its evaluation. The list of attributes may be partial or complete. There is no guarantee by the PDP that supplying the missing values or attributes will be sufficient to satisfy the policy.
 
-## 7.45 ResultEntityType
+## 7.44 ResultEntityType
 
 A `ResultEntityType` object contains a sequence of `AttributeType` objects reflecting `RequestAttributeType` objects in a given attribute category from the request that had their `IncludeInResult` properties set to `true`. The `ResultEntityType` objects only appear in a result.
 
@@ -5457,7 +5428,7 @@ A `ResultEntityType` object contains the following properties:
 
 <a name="entitytype"></a>
 
-## 7.46 EntityType
+## 7.45 EntityType
 
 The `EntityType` object class defines the structure of values of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type. An `EntityType` object contains a sequence of `AttributeType` objects and/or syntax-specific content (i.e., XML or JSON). The `EntityType` object type is similar to the `RequestEntityType` object type but omits the `Category` property; values of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type don't self-identify with any particular attribute category.
 
@@ -5486,7 +5457,7 @@ An `EntityType` object contains the following properties:
 
 : A sequence of `AttributeType` objects.
 
-## 7.47 BundleType
+## 7.46 BundleType
 
 A `BundleType` object type collects together the policies, short identifier sets and shared variables that a PDP uses to evaluate an authorization request along with the starting point for that evaluation. A PDP is said to be defined by a `BundleType` object, although an implementation is not required to physically represent such an object.
 
@@ -5531,7 +5502,7 @@ A `BundleType` object contains the following properties:
 : If present, a `PolicyReferenceType` object that MUST reference a policy in the `Policy` property. A PDP defined by this `BundleType` object SHALL evaluate every authorization request by evaluating this policy reference (the referenced policy is the entry point of evaluation). See [Section 8.13](#813-policyreference-evaluation). If this property is absent, then the PDP returns `NotApplicable` for every authorization request. The policy reference MUST specify arguments if the referenced policy is parameterized.
 
 
-## 7.48 ArgumentType and NamedArgumentType
+## 7.47 ArgumentType and NamedArgumentType
 
 The `ArgumentType` object class is the generic type for all kinds of argument expressions passed to function calls (`ApplyType` objects), parameterized policies (`PolicyType` objects) and shared variables (`SharedVariableDefinitionType` objects). It may be either a simple expression (`ExpressionType` object) or a *named argument* (`NamedArgumentType` object).
 
@@ -5946,7 +5917,7 @@ The absence of matching attributes in the request context for any of the attribu
 
 `urn:oasis:names:tc:acal:1.0:status:missing-attribute`
 
-SHALL be used, to indicate that more information is needed in order for a definitive decision to be rendered. In this case, the `StatusType` object MAY list the names and data types of any attributes that are needed by the PDP to refine its decision (see [Section 7.44](#missingattributedetailtype)). A PEP MAY resubmit a refined request context in response to a `Decision` property value of `Indeterminate` with a status code of
+SHALL be used, to indicate that more information is needed in order for a definitive decision to be rendered. In this case, the `StatusType` object MAY list the names and data types of any attributes that are needed by the PDP to refine its decision (see [Section 7.43](#missingattributedetailtype)). A PEP MAY resubmit a refined request context in response to a `Decision` property value of `Indeterminate` with a status code of
 
 `urn:oasis:names:tc:acal:1.0:status:missing-attribute`
 
@@ -6271,7 +6242,6 @@ The implementation MUST support the object types that are marked `M`. Abstract t
 | QuantifiedExpressionType | O | ForAll, ForAny, Map, Select |
 | RequestAttributeType | M | RequestAttribute |
 | RequestDefaultsType | O | RequestDefaults |
-| RequestEntityReferenceType | O | RequestEntityReference |
 | RequestEntityType | M | RequestEntity |
 | RequestReferenceType | O | RequestReference |
 | RequestType | M | Request |
@@ -7034,7 +7004,7 @@ where `portnumber` is a decimal port number. If the port number is of the form `
 
 ### C.2.6 Entity
 
-The `urn:oasis:names:tc:acal:1.0:data-type:entity` data type is used to represent an entity nested within another entity. Values of this data type are objects of the `EntityType` object type [Section 7.46](#entitytype).
+The `urn:oasis:names:tc:acal:1.0:data-type:entity` data type is used to represent an entity nested within another entity. Values of this data type are objects of the `EntityType` object type [Section 7.45](#entitytype).
 
 ## C.3 Functions
 
@@ -8266,7 +8236,7 @@ This identifier indicates success:
 
 `urn:oasis:names:tc:acal:1.0:status:ok`
 
-This identifier indicates that all the attributes necessary to make a policy decision were not available (see [Section 7.44](#missingattributedetailtype)):
+This identifier indicates that all the attributes necessary to make a policy decision were not available (see [Section 7.43](#missingattributedetailtype)):
 
 `urn:oasis:names:tc:acal:1.0:status:missing-attribute`
 

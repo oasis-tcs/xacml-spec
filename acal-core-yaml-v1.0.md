@@ -1812,7 +1812,7 @@ by the relevant ACAL profile, following the generic rules in
 
 If `RequestEntity.Id` values are present, they MUST be unique within the
 enclosing request.  These identifiers are the targets of
-`RequestEntityReferenceType` when the optional multi-request feature is
+`RequestEntityReference` values when the optional multi-request feature is
 used.
 
 ### 5.8.2 RequestEntityType
@@ -1885,13 +1885,13 @@ attribute defines `DataType`, nested values SHOULD omit their own
 MultiRequests:
   RequestReference:
     - RequestEntityReference:
-        - Id: subject-entity-1
-        - Id: action-entity-1
-        - Id: resource-entity-1
+        - subject-entity-1
+        - action-entity-1
+        - resource-entity-1
     - RequestEntityReference:
-        - Id: subject-entity-2
-        - Id: action-entity-1
-        - Id: resource-entity-1
+        - subject-entity-2
+        - action-entity-1
+        - resource-entity-1
 ```
 
 Properties:
@@ -1916,39 +1916,22 @@ rules.
 ```yaml
 RequestReference:
   - RequestEntityReference:
-      - Id: subject-entity-1
-      - Id: action-entity-1
-      - Id: resource-entity-1
+      - subject-entity-1
+      - action-entity-1
+      - resource-entity-1
 ```
 
 Properties:
 
 | Property | Required | Type | Cardinality |
 |---|---|---|---|
-| `RequestEntityReference` | Yes | `RequestEntityReferenceType` | 1..* |
+| `RequestEntityReference` | Yes | `LocalIdentifierType` | 1..* |
 
-Each referenced `Id` MUST identify a `RequestEntityType` object in the
-enclosing `Request`, and the `Id` values in a single
-`RequestReferenceType` object MUST be unique.
+Each `RequestEntityReference` value MUST identify a `RequestEntityType`
+object in the enclosing `Request` by the value of its `Id` property, and
+the values in a single `RequestReferenceType` object MUST be unique.
 
-### 5.8.6 RequestEntityReferenceType
-
-```yaml
-RequestEntityReference:
-  - Id: subject-entity-1
-  - Id: action-entity-1
-```
-
-Properties:
-
-| Property | Required | Type | Cardinality |
-|---|---|---|---|
-| `Id` | Yes | `LocalIdentifierType` | 1 |
-
-The `Id` value references the `Id` property of a `RequestEntityType`
-object in the enclosing `Request`.
-
-### 5.8.7 ResponseType
+### 5.8.6 ResponseType
 
 ```yaml
 Response:
@@ -1976,7 +1959,7 @@ Properties:
 YACAL permits multiple `Result` values in a `Response`, which is
 especially relevant when the optional multi-request feature is used.
 
-### 5.8.8 ResultType
+### 5.8.7 ResultType
 
 Properties:
 
@@ -1993,7 +1976,7 @@ processor that supports this feature SHOULD populate
 `ApplicablePolicyReference` with the identifiers of policies found to be
 applicable to the request.
 
-### 5.8.9 ResultEntityType
+### 5.8.8 ResultEntityType
 
 ```yaml
 ResultEntity:
@@ -2020,7 +2003,7 @@ Unlike `RequestEntityType`, `ResultEntityType` has no `Content`
 property, and its contained `Attribute` objects have no
 `IncludeInResult` property.
 
-### 5.8.10 ApplicablePolicyReference
+### 5.8.9 ApplicablePolicyReference
 
 `ApplicablePolicyReference` values use the direct mapping of
 `ExactMatchIdReferenceType`:
@@ -2042,7 +2025,7 @@ Each item identifies a specific policy version that was applicable to
 the request.  The `Id` value is a policy identifier URI and `Version`
 is a required `VersionType` value for that exact match.
 
-### 5.8.11 RequestDefaultsType
+### 5.8.10 RequestDefaultsType
 
 `RequestDefaultsType` is an optional abstract extension point.  ACAL
 core defines no concrete `RequestDefaultsType` subtype, so YACAL core

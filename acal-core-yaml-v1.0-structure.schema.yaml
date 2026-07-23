@@ -810,15 +810,6 @@ $defs:
         $ref: "#/$defs/PolicyReferenceType"
     additionalProperties: false
 
-  RequestEntityReferenceType:
-    type: object
-    required:
-      - Id
-    properties:
-      Id:
-        $ref: "#/$defs/LocalIdentifierType"
-    additionalProperties: false
-
   RequestReferenceType:
     type: object
     required:
@@ -827,7 +818,7 @@ $defs:
       RequestEntityReference:
         type: array
         items:
-          $ref: "#/$defs/RequestEntityReferenceType"
+          $ref: "#/$defs/LocalIdentifierType"
         minItems: 1
     additionalProperties: false
 
