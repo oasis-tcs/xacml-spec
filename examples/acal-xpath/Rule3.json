@@ -164,7 +164,7 @@
                                     {
                                         "Apply": {
                                             "FunctionId": "urn:oasis:names:tc:acal:1.0:function:string-one-and-only",
-                                            "Expression": [
+                                            "Argument": [
                                                 {
                                                     "AttributeDesignator": {
                                                         "Category": "urn:oasis:names:tc:acal:1.0:subject-category:access-subject",
