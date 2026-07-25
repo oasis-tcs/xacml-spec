@@ -1093,7 +1093,7 @@
 					"$ref": "#/$defs/BooleanExpressionType"
 				},
 				"AttributeAssignmentExpression": {
-					"$comment": "TODO: add 'uniqueKeys': ['/AttributeId', '/Category'] from ArrayExt vocabulary - https://docs.json-everything.net/schema/vocabs/array-ext/",
+					"$comment": "Issue #99: the (AttributeId, Category) pair is not required to be unique. Whether a notice accepts repeated attribute assignments, and how they combine, is left to the definition of the individual obligation or advice.",
 					"type": "array",
 					"minItems": 1,
 					"items": {
@@ -1117,7 +1117,7 @@
 					"type": "boolean"
 				},
 				"AttributeAssignment": {
-					"$comment": "TODO: add 'uniqueKeys': ['/AttributeId', '/Category'] from ArrayExt vocabulary - https://docs.json-everything.net/schema/vocabs/array-ext/",
+					"$comment": "Issue #99: the (AttributeId, Category) pair is not required to be unique. Whether a notice accepts repeated attribute assignments, and how they combine, is left to the definition of the individual obligation or advice.",
 					"type": "array",
 					"minItems": 1,
 					"items": {

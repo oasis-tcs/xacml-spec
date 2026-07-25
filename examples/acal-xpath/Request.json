@@ -1,16 +1,18 @@
 {
     "Request": {
-        "RequestDefaults": {
-            "XPathRequestDefaults": {
-                "XPathVersion": "https://www.w3.org/TR/xpath20/",
-                "Namespace": [
-                    {
-                        "Prefix": "md",
-                        "Name": "urn:example:med:schemas:record"
-                    }
-                ]
+        "RequestDefaults": [
+            {
+                "XPathRequestDefaults": {
+                    "XPathVersion": "https://www.w3.org/TR/xpath20/",
+                    "Namespace": [
+                        {
+                            "Prefix": "md",
+                            "Name": "urn:example:med:schemas:record"
+                        }
+                    ]
+                }
             }
-        },
+        ],
         "RequestEntity": [
             {
                 "Category": "urn:oasis:names:tc:acal:1.0:subject-category:access-subject",

@@ -403,14 +403,10 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 
 	<!-- Change to XACML 3.0 (issue #6): Merged Obligation/Advice(Expression) into
 	Notice(Expression) -->
-	<xs:element name="Notice" type="xacml:NoticeType">
-		<xs:unique name="Notice_AttributeAssignment_AttributeId-Category">
-			<xs:selector xpath="xacml:AttributeAssignment" />
-			<xs:field xpath="@AttributeId" />
-			<!-- Note that this does not prevent duplicate AttributeId if Category not present -->
-			<xs:field xpath="@Category" />
-		</xs:unique>
-	</xs:element>
+	<!-- Issue #99: AttributeAssignment is no longer constrained to be unique by the (AttributeId,
+	Category) pair. Whether a notice accepts repeated attribute assignments, and how they combine,
+	is left to the definition of the individual obligation or advice, as it was in XACML 3.0. -->
+	<xs:element name="Notice" type="xacml:NoticeType" />
 	<xs:complexType name="NoticeType">
 		<xs:sequence>
 			<xs:element ref="xacml:AttributeAssignment" minOccurs="0" maxOccurs="unbounded" />
@@ -419,17 +415,6 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 		Short Identifiers -->
 		<xs:attribute name="Id" type="xacml:IdentifierType" use="required" />
 		<xs:attribute name="IsObligation" type="xs:boolean" use="optional" default="false" />
-		<!-- Issue #102: xs:unique cannot express uniqueness over a key that includes an optional
-		field, so it does not catch duplicate AttributeId when Category is absent from both. This
-		assert covers that case; XSD 1.0 processors must rely on the Schematron rule instead. -->
-		<xs:assert vc:minVersion="1.1"
-			test="every $elt in xacml:AttributeAssignment satisfies (every $following in $elt/following-sibling::xacml:AttributeAssignment satisfies not($elt/@AttributeId = $following/@AttributeId and ((not($elt/@Category) and not($following/@Category)) or $elt/@Category = $following/@Category)))">
-			<xs:annotation>
-				<xs:documentation xml:lang="en"> ACAL constraint on Notice property: {OCL}
-					self->isUnique(AttributeAssignment->collect(Sequence{AttributeId, Category}))
-					</xs:documentation>
-			</xs:annotation>
-		</xs:assert>
 	</xs:complexType>
 
 	<xs:element name="AttributeAssignment" type="xacml:AttributeAssignmentType" />
@@ -449,15 +434,12 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 
 	<!-- Change to XACML 3.0 (issue #6): Merged Obligation/Advice(Expression) into
 	Notice(Expression) -->
-	<xs:element name="NoticeExpression" type="xacml:NoticeExpressionType">
-		<xs:unique name="NoticeExpression_AttributeAssignmentExpression_AttributeId-Category">
-			<xs:selector xpath="xacml:AttributeAssignmentExpression" />
-			<xs:field xpath="@AttributeId" />
-			<!-- Note that this does not prevent duplicate AttributeId if Category (optional) not
-			present -->
-			<xs:field xpath="@Category" />
-		</xs:unique>
-	</xs:element>
+	<!-- Issue #99: AttributeAssignmentExpression is no longer constrained to be unique by the
+	(AttributeId, Category) pair. Whether a notice accepts repeated attribute assignments, and how
+	they combine, is left to the definition of the individual obligation or advice, as it was in
+	XACML 3.0. Note also that a single AttributeAssignmentExpression evaluating to a bag already
+	produces one AttributeAssignment per bag value, all sharing the same (AttributeId, Category). -->
+	<xs:element name="NoticeExpression" type="xacml:NoticeExpressionType" />
 	<xs:complexType name="NoticeExpressionType">
 		<xs:sequence>
 			<xs:element ref="xacml:Condition" minOccurs="0" />
@@ -474,17 +456,6 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 					and Deny. </xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
-		<!-- Issue #99: xs:unique cannot express uniqueness over a key that includes an optional
-		field, so it does not catch duplicate AttributeId when Category is absent from both. This
-		assert covers that case; XSD 1.0 processors must rely on the Schematron rule instead. -->
-		<xs:assert vc:minVersion="1.1"
-			test="every $elt in xacml:AttributeAssignmentExpression satisfies (every $following in $elt/following-sibling::xacml:AttributeAssignmentExpression satisfies not($elt/@AttributeId = $following/@AttributeId and ((not($elt/@Category) and not($following/@Category)) or $elt/@Category = $following/@Category)))">
-			<xs:annotation>
-				<xs:documentation xml:lang="en"> ACAL constraint on NoticeExpression property:
-					{OCL} self->isUnique(AttributeAssignmentExpression->collect(Sequence{AttributeId,
-					Category})) </xs:documentation>
-			</xs:annotation>
-		</xs:assert>
 	</xs:complexType>
 
 	<xs:element name="AttributeAssignmentExpression" type="xacml:AttributeAssignmentExpressionType" />
