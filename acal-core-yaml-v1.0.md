@@ -2083,8 +2083,10 @@ Properties:
 If `AppliesTo` is omitted, the notice expression is eligible for either
 `Permit` or `Deny`.
 
-`AttributeAssignmentExpression` items MUST be unique by the pair
-`(AttributeId, Category)`, as defined for `NoticeExpressionType` in
+`AttributeAssignmentExpression` items are not required to be unique by the pair
+`(AttributeId, Category)`. Whether a given notice accepts repeated attribute
+assignments, and how a consumer combines them, is left to the definition of the
+individual obligation or advice, as defined for `NoticeExpressionType` in
 [[ACAL-Core](#acal-core)].
 
 ### 5.9.2 AttributeAssignmentExpressionType
@@ -2139,8 +2141,10 @@ Properties:
 | `IsObligation` | No | `false` | Boolean | 0..1 |
 | `AttributeAssignment` | No | — | `AttributeAssignmentType` | * |
 
-`AttributeAssignment` items SHOULD be unique by the pair
-`(AttributeId, Category)`.
+`AttributeAssignment` items are not required to be unique by the pair
+`(AttributeId, Category)`. A single `AttributeAssignmentExpression` evaluating to a
+bag already yields one `AttributeAssignment` per bag value, all sharing the same
+pair.
 
 ### 5.9.4 AttributeAssignmentType
 

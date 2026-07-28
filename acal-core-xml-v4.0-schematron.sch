@@ -133,24 +133,11 @@
 	  <assert test="every $elt in xacml:RequestReference satisfies (every $following in $elt/following-sibling::xacml:RequestReference satisfies count($elt/xacml:RequestEntityReference) != count($following/xacml:RequestEntityReference) or (some $id in $elt/xacml:RequestEntityReference satisfies not($id = $following/xacml:RequestEntityReference)))"></assert>
 	</rule>
  </pattern>
- <pattern id="ACAL_constraint_on_NoticeExpressionType_AttributeAssignmentExpression_property">
- 	<title>ACAL constraint on NoticeExpressionType property: {OCL} self-&gt;isUnique(AttributeAssignmentExpression-&gt;collect(Sequence{AttributeId, Category}))</title>
-	<rule context="xacml:NoticeExpression">
-		<!--
-		Issue #99: complements the XSD's xs:unique constraint, which cannot catch a duplicate
-		AttributeId when Category is absent from both AttributeAssignmentExpression elements.
-		-->
-	  <assert test="every $elt in xacml:AttributeAssignmentExpression satisfies (every $following in $elt/following-sibling::xacml:AttributeAssignmentExpression satisfies not($elt/@AttributeId = $following/@AttributeId and ((not($elt/@Category) and not($following/@Category)) or $elt/@Category = $following/@Category)))">Duplicate AttributeAssignmentExpression (AttributeId, Category) pair</assert>
-	</rule>
- </pattern>
- <pattern id="ACAL_constraint_on_NoticeType_AttributeAssignment_property">
- 	<title>ACAL constraint on NoticeType property: {OCL} self-&gt;isUnique(AttributeAssignment-&gt;collect(Sequence{AttributeId, Category}))</title>
-	<rule context="xacml:Notice">
-		<!--
-		Issue #102: complements the XSD's xs:unique constraint, which cannot catch a duplicate
-		AttributeId when Category is absent from both AttributeAssignment elements.
-		-->
-	  <assert test="every $elt in xacml:AttributeAssignment satisfies (every $following in $elt/following-sibling::xacml:AttributeAssignment satisfies not($elt/@AttributeId = $following/@AttributeId and ((not($elt/@Category) and not($following/@Category)) or $elt/@Category = $following/@Category)))">Duplicate AttributeAssignment (AttributeId, Category) pair</assert>
-	</rule>
- </pattern>
+ <!--
+ Issue #99: the patterns that enforced (AttributeId, Category) uniqueness on
+ NoticeExpression/AttributeAssignmentExpression and Notice/AttributeAssignment have been removed.
+ Those pairs are no longer required to be unique; whether a notice accepts repeated attribute
+ assignments, and how they combine, is left to the definition of the individual obligation or
+ advice, as it was in XACML 3.0.
+ -->
 </schema>

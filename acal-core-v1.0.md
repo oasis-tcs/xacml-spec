@@ -2766,7 +2766,9 @@ Rule 3 illustrates the use of a notice expression.
 
 [103] - [112] The first attribute assignment indicates the recipient email address, which is obtained from the `urn:oasis:names:tc:acal:1.0:example:attribute:patient-contact` resource attribute using an attribute designator.
 
-[113] - [137] The second attribute assignment provides the email body text. Since a single `AttributeAssignmentExpression` may only assign one value per `(AttributeId, Category)` pair, the literal prefix and the identity of the physician (obtained from the `urn:oasis:names:tc:acal:1.0:subject:subject-id` subject attribute using an attribute designator) are combined into a single value with the `urn:oasis:names:tc:acal:1.0:function:string-concatenate` function. The attribute designator returns a bag of attribute values but `string-concatenate` takes arguments that are single string values, so the designator is wrapped in the `string-one-and-only` function to reduce the bag to a single value.
+[113] - [137] The second attribute assignment provides the email body text. The literal prefix and the identity of the physician (obtained from the `urn:oasis:names:tc:acal:1.0:subject:subject-id` subject attribute using an attribute designator) are combined into a single value with the `urn:oasis:names:tc:acal:1.0:function:string-concatenate` function. The attribute designator returns a bag of attribute values but `string-concatenate` takes arguments that are single string values, so the designator is wrapped in the `string-one-and-only` function to reduce the bag to a single value.
+
+A notice expression is not required to keep its attribute assignments unique by the `(AttributeId, Category)` pair, so the body text could instead have been supplied as two separate assignments sharing the `text` `AttributeId`. Constructing the complete value in a single assignment, as shown here, is nevertheless the recommended practice: neither the order of attribute assignments within a notice nor the order of values within a bag is guaranteed to be preserved, so composing the value in the policy leaves no ambiguity for the PEP to resolve. Where a notice does accept repeated assignments, it is the definition of that individual obligation or advice — not this specification — that states how they are to be interpreted.
 
 #### 6.2.4.4 Rule 4
 
@@ -4789,7 +4791,7 @@ hide circle
 class NoticeType <<dataType>> {
    {field} + Id: IdentifierType [1]
    {field} + IsObligation: Boolean [0..1] = false
-   {field} + AttributeAssignment: AttributeAssignmentType [*] {ordered, unique} {{OCL} self->isUnique(Sequence{AttributeId, Category})}
+   {field} + AttributeAssignment: AttributeAssignmentType [*] {ordered, nonunique}
 }
 @enduml
 ```
@@ -4894,7 +4896,7 @@ class NoticeExpressionType <<dataType>> {
   {field} + IsObligation: Boolean [0..1] = false
   {field} + AppliesTo: EffectType [0..1]
   {field} + Condition: BooleanExpressionType [0..1]
-  {field} + AttributeAssignmentExpression: AttributeAssignmentExpressionType [*] {ordered, unique} {{OCL} self->isUnique(Sequence{AttributeId, Category})}
+  {field} + AttributeAssignmentExpression: AttributeAssignmentExpressionType [*] {ordered, nonunique}
 }
 @enduml
 ```

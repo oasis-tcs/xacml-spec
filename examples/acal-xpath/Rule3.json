@@ -4,21 +4,23 @@
         "Version": "1.0",
         "CombiningAlgId": "urn:oasis:names:tc:acal:1.0:combining-algorithm:deny-overrides",
         "Description": "Policy for any medical record in the urn:example:med:schemas:record namespace",
-        "PolicyDefaults": {
-            "XPathPolicyDefaults": {
-                "XPathVersion": "https://www.w3.org/TR/xpath20/",
-                "Namespace": [
-                    {
-                        "Prefix": "md",
-                        "Name": "urn:example:med:schemas:record"
-                    }
-                ]
+        "PolicyDefaults": [
+            {
+                "XPathPolicyDefaults": {
+                    "XPathVersion": "https://www.w3.org/TR/xpath20/",
+                    "Namespace": [
+                        {
+                            "Prefix": "md",
+                            "Name": "urn:example:med:schemas:record"
+                        }
+                    ]
+                }
             }
-        },
+        ],
         "Target": {
             "Apply": {
                 "FunctionId": "urn:oasis:names:tc:acal:1.0:function:anyURI-is-in",
-                "Expression": [
+                "Argument": [
                     {
                         "Value": "urn:example:med:schemas:record"
                     },
@@ -40,11 +42,11 @@
                     "Condition": {
                         "Apply": {
                             "FunctionId": "urn:oasis:names:tc:acal:1.0:function:and",
-                            "Expression": [
+                            "Argument": [
                                 {
                                     "Apply": {
                                         "FunctionId": "urn:oasis:names:tc:acal:1.0:function:string-is-in",
-                                        "Expression": [
+                                        "Argument": [
                                             {
                                                 "Value": "physician"
                                             },
@@ -60,7 +62,7 @@
                                 {
                                     "Apply": {
                                         "FunctionId": "urn:oasis:names:tc:acal:1.0:function:any-of",
-                                        "Expression": [
+                                        "Argument": [
                                             {
                                                 "Function": {
                                                     "Id": "urn:oasis:names:tc:acal:1.0:function:xpath-node-match"
@@ -84,7 +86,7 @@
                                 {
                                     "Apply": {
                                         "FunctionId": "urn:oasis:names:tc:acal:1.0:function:string-is-in",
-                                        "Expression": [
+                                        "Argument": [
                                             {
                                                 "Value": "write"
                                             },
@@ -100,11 +102,11 @@
                                 {
                                     "Apply": {
                                         "FunctionId": "urn:oasis:names:tc:acal:1.0:function:string-equal",
-                                        "Expression": [
+                                        "Argument": [
                                             {
                                                 "Apply": {
                                                     "FunctionId": "urn:oasis:names:tc:acal:1.0:function:string-one-and-only",
-                                                    "Expression": [
+                                                    "Argument": [
                                                         {
                                                             "AttributeDesignator": {
                                                                 "Category": "urn:oasis:names:tc:acal:1.0:subject-category:access-subject",
@@ -117,7 +119,7 @@
                                             {
                                                 "Apply": {
                                                     "FunctionId": "urn:oasis:names:tc:acal:1.0:function:string-one-and-only",
-                                                    "Expression": [
+                                                    "Argument": [
                                                         {
                                                             "XPathAttributeSelector": {
                                                                 "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
@@ -157,7 +159,7 @@
                         "Expression": {
                             "Apply": {
                                 "FunctionId": "urn:oasis:names:tc:acal:1.0:function:string-concatenate",
-                                "Expression": [
+                                "Argument": [
                                     {
                                         "Value": "Your medical record has been accessed by: "
                                     },

@@ -1062,18 +1062,22 @@ Rule:
   attribute designator, or an apply expression. Note that `Expression` is the
   property name within `AttributeAssignmentExpression` (singular, one expression
   per assignment), distinct from the `Argument` array used by `Apply`.
-- `AttributeAssignmentExpression` items within a `NoticeExpression` MUST be unique
-  by the `(AttributeId, Category)` pair. `Category` is optional on
-  `AttributeAssignmentExpression`; when absent it participates in the uniqueness
-  check as an absent value — meaning two entries with the same `AttributeId` and no
-  `Category` both present would violate the constraint.
-- `NoticeExpression` Ids are **not** required to be unique within a `Policy` or `Rule`.
+- `AttributeAssignmentExpression` items within a `NoticeExpression` are **not** required
+  to be unique by the `(AttributeId, Category)` pair, as they were not in XACML 3.0. Whether
+  a given notice accepts repeated attribute assignments, and how the PEP combines them, is
+  part of the definition of that individual obligation or advice, not of ACAL itself. Note
+  that a single `AttributeAssignmentExpression` evaluating to a bag already produces one
+  `AttributeAssignment` per bag value, all sharing the same pair.
+- Even so, where a notice argument is logically a single value assembled from several parts,
+  prefer building it into one assignment with `string-concatenate` rather than emitting
+  several assignments that the PEP must reassemble. Neither the order of attribute
+  assignments nor the order of values within a bag is guaranteed to be preserved, so the
+  single-value form is unambiguous. See the Rule 3 example in [[ACAL-Core](#acal-core)].
+- `NoticeExpression` Ids are likewise **not** required to be unique within a `Policy` or `Rule`.
   The `Id` identifies what the notice *means* to the PEP — what it must do, or is being
   informed of — exactly as `ObligationId` did in XACML 3.0. It is a *concept* identifier,
   not an instance identifier, so a policy MAY emit the same notice `Id` more than once with
-  different `AttributeAssignmentExpression`s. The uniqueness constraint that *does* apply is
-  on `(AttributeId, Category)` pairs **within** a single notice, not on notice Ids across the
-  enclosing policy or rule.
+  different `AttributeAssignmentExpression`s.
 
 ---
 

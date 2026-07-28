@@ -500,39 +500,11 @@ Rule:
       YACALSection: "5.6.6"
       ACALSection: "7.11"
 
-  - Id: "noticeexpression-attributeassignmentexpression-unique"
-    Kind: uniqueByProperty
-    Severity: error
-    AppliesTo:
-      ObjectType: NoticeExpressionType
-      CollectionPath: "$..NoticeExpression[].AttributeAssignmentExpression"
-    KeyProperties:
-      - AttributeId
-      - Category
-    Requirement: >
-      AttributeAssignmentExpression values within a NoticeExpressionType
-      MUST be unique by the (AttributeId, Category) pair. An absent
-      Category participates in the pair as an absent value.
-    Provenance:
-      YACALSection: "5.9.1"
-      ACALSection: "7.29"
-
-  - Id: "notice-attributeassignment-unique"
-    Kind: uniqueByProperty
-    Severity: error
-    AppliesTo:
-      ObjectType: NoticeType
-      CollectionPath: "$.Response.Result[].Notice[].AttributeAssignment"
-    KeyProperties:
-      - AttributeId
-      - Category
-    Requirement: >
-      AttributeAssignment values within a NoticeType MUST be unique by the
-      (AttributeId, Category) pair. An absent Category participates in the
-      pair as an absent value.
-    Provenance:
-      YACALSection: "5.9.3"
-      ACALSection: "7.26"
+  # Issue #99: "noticeexpression-attributeassignmentexpression-unique" (ACAL 7.29) and
+  # "notice-attributeassignment-unique" (ACAL 7.26) were removed. The (AttributeId, Category)
+  # pair is no longer required to be unique within a NoticeExpression or a Notice; whether a
+  # notice accepts repeated attribute assignments, and how they combine, is left to the
+  # definition of the individual obligation or advice, as it was in XACML 3.0.
 
   - Id: "result-resultentity-category-unique"
     Kind: uniqueByProperty

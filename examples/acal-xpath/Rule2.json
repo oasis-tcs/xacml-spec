@@ -3,28 +3,30 @@
         "PolicyId": "urn:oasis:names:tc:acal:1.0:example:policyid:2",
         "Version": "1.0",
         "CombiningAlgId": "urn:oasis:names:tc:acal:1.0:combining-algorithm:deny-overrides",
-        "PolicyDefaults": {
-            "XPathPolicyDefaults": {
-                "XPathVersion": "https://www.w3.org/TR/xpath20/",
-                "Namespace": [
-                    {
-                        "Prefix": "md",
-                        "Name": "urn:example:med:schemas:record"
-                    }
-                ]
+        "PolicyDefaults": [
+            {
+                "XPathPolicyDefaults": {
+                    "XPathVersion": "https://www.w3.org/TR/xpath20/",
+                    "Namespace": [
+                        {
+                            "Prefix": "md",
+                            "Name": "urn:example:med:schemas:record"
+                        }
+                    ]
+                }
             }
-        },
+        ],
         "VariableDefinition": [
             {
                 "VariableId": "patient_under_16",
                 "Expression": {
                     "Apply": {
                         "FunctionId": "urn:oasis:names:tc:acal:1.0:function:date-less-or-equal",
-                        "Expression": [
+                        "Argument": [
                             {
                                 "Apply": {
                                     "FunctionId": "urn:oasis:names:tc:acal:1.0:function:date-one-and-only",
-                                    "Expression": [
+                                    "Argument": [
                                         {
                                             "AttributeDesignator": {
                                                 "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:environment",
@@ -37,11 +39,11 @@
                             {
                                 "Apply": {
                                     "FunctionId": "urn:oasis:names:tc:acal:1.0:function:date-add-yearMonthDuration",
-                                    "Expression": [
+                                    "Argument": [
                                         {
                                             "Apply": {
                                                 "FunctionId": "urn:oasis:names:tc:acal:1.0:function:date-one-and-only",
-                                                "Expression": [
+                                                "Argument": [
                                                     {
                                                         "XPathAttributeSelector": {
                                                             "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
@@ -71,7 +73,7 @@
                     "Condition": {
                         "Apply": {
                             "FunctionId": "urn:oasis:names:tc:acal:1.0:function:and",
-                            "Expression": [
+                            "Argument": [
                                 {
                                     "VariableReference": {
                                         "VariableId": "patient_under_16"
@@ -80,7 +82,7 @@
                                 {
                                     "Apply": {
                                         "FunctionId": "urn:oasis:names:tc:acal:1.0:function:string-is-in",
-                                        "Expression": [
+                                        "Argument": [
                                             {
                                                 "Value": "read"
                                             },
@@ -96,7 +98,7 @@
                                 {
                                     "Apply": {
                                         "FunctionId": "urn:oasis:names:tc:acal:1.0:function:anyURI-is-in",
-                                        "Expression": [
+                                        "Argument": [
                                             {
                                                 "Value": "urn:example:med:schemas:record"
                                             },
@@ -112,7 +114,7 @@
                                 {
                                     "Apply": {
                                         "FunctionId": "urn:oasis:names:tc:acal:1.0:function:any-of",
-                                        "Expression": [
+                                        "Argument": [
                                             {
                                                 "Function": {
                                                     "Id": "urn:oasis:names:tc:acal:1.0:function:xpath-node-match"
@@ -136,11 +138,11 @@
                                 {
                                     "Apply": {
                                         "FunctionId": "urn:oasis:names:tc:acal:1.0:function:string-equal",
-                                        "Expression": [
+                                        "Argument": [
                                             {
                                                 "Apply": {
                                                     "FunctionId": "urn:oasis:names:tc:acal:1.0:function:string-one-and-only",
-                                                    "Expression": [
+                                                    "Argument": [
                                                         {
                                                             "AttributeDesignator": {
                                                                 "Category": "urn:oasis:names:tc:acal:1.0:subject-category:access-subject",
@@ -153,7 +155,7 @@
                                             {
                                                 "Apply": {
                                                     "FunctionId": "urn:oasis:names:tc:acal:1.0:function:string-one-and-only",
-                                                    "Expression": [
+                                                    "Argument": [
                                                         {
                                                             "XPathAttributeSelector": {
                                                                 "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
