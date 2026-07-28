@@ -172,6 +172,7 @@ Copyright © OASIS Open 2026. All Rights Reserved.  For license and copyright in
     - [9.2.1 Object Types](#object-types)
     - [9.2.2 Data Types](#data-types)
     - [9.2.3 Functions](#functions)
+    - [9.2.4 Attributes](#attributes)
 - [Annex A License, Document Status and Notices](#annex-a-license-document-status-and-notices)
   - [A.1 Document Status](#a.1-document-status)
   - [A.2 License and Notices](#a.2-license-and-notices)
@@ -187,6 +188,7 @@ Copyright © OASIS Open 2026. All Rights Reserved.  For license and copyright in
 - [Annex D ACAL Identifiers](#annex-d-acal-identifiers)
   - [D.1 ACAL Namespaces](#d.1-acal-namespaces)
   - [D.2 Data Types](#d.2-data-types)
+  - [D.3 Attributes](#d.3-attributes)
 - [Annex E How to generate HTML and PDF Versions](#annex-e-how-to-generate-html-and-pdf-versions)
 - [Appendix 1 Acknowledgments](#appendix-1-acknowledgments)
   - [Leadership](#leadership)
@@ -304,7 +306,7 @@ The following example illustrates a request *context*, using XACML representatio
 
 Lines 21-34: Resource content. The XML resource instance, access to all or part of which may be requested, is placed here. The xpathExpression value(s) in the Request and in the Rules, as well as XPathAttributeSelectors in the Rules will apply to that content.
 
-Lines 35-40: The identifier of the Resource instance for which access is requested, which is an XPath expression into the `<Content>` element that selects the data to be accessed.
+Lines 35-40: The `urn:oasis:names:tc:acal:1.0:content-selector` attribute ([Annex D.3](#d.3-attributes)), whose value is an XPath expression into the `<Content>` element selecting the node to be accessed. The rules below name this attribute in the `ContextSelectorId` property of their `<XPathAttributeSelector>` elements.
 
 Here is the equivalent example using JACAL representation (JSON representation of ACAL):
 
@@ -530,7 +532,7 @@ The `XPathAttributeSelectorType` object type extends the `AttributeSelectorType`
 
 `ContextSelectorId` [Optional]
 
-: An `IdentifierType` value specifying an ACAL attribute (by its `AttributeId`) in the attribute category (`RequestEntityType` object with `Category` matching this attribute selector's `Category`) containing the XML content. The referenced attribute MUST have a single value of data type `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` (see Annex C) and the XPath expression represented by that value must select a single node in the XML content. The `XPathCategory` property of the referenced ACAL attribute value SHALL be ignored.
+: An `IdentifierType` value specifying an ACAL attribute (by its `AttributeId`) in the attribute category (`RequestEntityType` object with `Category` matching this attribute selector's `Category`) containing the XML content. The referenced attribute MUST have a single value of data type `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` (see Annex C) and the XPath expression represented by that value must select a single node in the XML content. The `XPathCategory` property of the referenced ACAL attribute value SHALL be ignored. This profile defines the standard attribute identifier `urn:oasis:names:tc:acal:1.0:content-selector` for this purpose (see [Annex D.3](#d.3-attributes)); any other attribute satisfying the conditions above MAY be named instead.
 
 More importantly, in the context of this profile, the value of the `Path` property inherited from supertype `AttributeSelectorType` SHALL be an XPath expression [XPath]. In addition, this XPath expression may reference one or more XPath variables, in which case each XPath variable's value(s) is taken(s) from the corresponding so-called *ACAL variable*, i.e. the variable defined by a `<VariableDefinition>` with a `VariableId` matching the XPath variable name, in the scope of this element. Only XPath variables of primitive atomic type or array of primitive atomic type are allowed in this XPath expression; in the first case (respectively the second case), the corresponding ACAL variable must return a single value (respectively a bag) of a primitive datatype that is convertible to that XPath atomic type. How to do this conversion is described in section 8.4.7 of [[ACAL-Core-1.0](#acal-core-10)].
 
@@ -862,6 +864,16 @@ The implementation MUST properly process those functions associated with the ide
 | urn:oasis:names:tc:acal:1.0:function:xpath-node-equal | O | urn:oasis:names:tc:xacml:3.0:function:xpath-node-equal |
 | urn:oasis:names:tc:acal:1.0:function:xpath-node-match | O | urn:oasis:names:tc:xacml:3.0:function:xpath-node-match |
 
+### 9.2.4 Attributes
+
+The implementation MUST use the attributes associated with the following identifiers in the way this profile has defined (see [Annex D.3](#d.3-attributes)). This requirement pertains primarily to implementations of a PAP or PEP that uses ACAL, since the semantics of the attribute are transparent to the PDP.
+
+| Identifier | M/O | Deprecated Identifier |
+| :--- | :--- | :--- |
+| urn:oasis:names:tc:acal:1.0:content-selector | O | urn:oasis:names:tc:xacml:3.0:content-selector |
+
+Note: this attribute is OPTIONAL because its value is of the OPTIONAL data type `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` (see [Section 9.2.2](#data-types)). An implementation that supports that data type and the `ContextSelectorId` property of `XPathAttributeSelectorType` SHOULD recognize this identifier.
+
 ---
 
 
@@ -1139,7 +1151,7 @@ Note that in each case an implementation is conformant as long as it produces th
 
 _**Supporting these functions is optional.**_
 
-This section specifies functions that take XPath expressions for arguments. An XPath expression evaluates to a node-set, which is a set of XML nodes that match the expression. A node or node-set is not in the formal data type system of ACAL. All comparison or other operations on node-sets are performed in isolation of the particular function specified. The context nodes and namespace mappings of the XPath expressions are defined by the XPath data type, see [Annex C.2.1](#c21-xpath-expression). The following functions are defined:
+This section specifies functions that take XPath expressions for arguments. An XPath expression evaluates to a node-set, which is a set of XML nodes that match the expression. A node or node-set is not in the formal data type system of ACAL. All comparison or other operations on node-sets are performed in isolation of the particular function specified. The context nodes and namespace mappings of the XPath expressions are defined by the XPath data type, see [Annex C.2.1](#c.2.1-xpath-expression). The following functions are defined:
 
 `urn:oasis:names:tc:acal:1.0:function:xpath-node-count`
 
@@ -1169,9 +1181,23 @@ This ACAL Profile is defined using this identifier.
 
 ## D.2 Data Types
 
-The following identifiers indicate data types that are defined in [Annex C.2](#c2-data-types):
+The following identifiers indicate data types that are defined in [Annex C.2](#c.2-data-types):
 
 * `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression`.
+
+## D.3 Attributes
+
+This profile defines the following standard attribute identifier.
+
+This attribute identifies a node of the XML document in the `Body` property of the `Content` object of the `RequestEntityType` object in which the attribute appears:
+
+`urn:oasis:names:tc:acal:1.0:content-selector`
+
+: The corresponding ACAL attribute SHALL have a single value of data type `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` (see [Annex C.2.1](#c.2.1-xpath-expression)), and the XPath expression represented by that value SHALL select a single node of that XML document. As with any value of that data type, the `XPathCategory` property of the value gives the `Category` of the `RequestEntityType` object holding the `Content` object to which the expression applies.
+
+: This is the standard attribute identifier for use as the value of the `ContextSelectorId` property of an `XPathAttributeSelectorType` or `XPathEntityAttributeSelectorType` object (see [Section 5.3.3](#attributeselectortype-extension---xpathattributeselectortype)). Use of this identifier is RECOMMENDED where no more specific attribute applies; `ContextSelectorId` MAY name any other attribute satisfying the conditions stated in [Section 5.3.3](#attributeselectortype-extension---xpathattributeselectortype).
+
+In [[XACML 3.0](#xacml)] the corresponding identifier `urn:oasis:names:tc:xacml:3.0:content-selector` is defined by the XACML v3.0 Hierarchical Resource Profile [[Hier](#hier)], although it is consumed by the `ContextSelectorId` mechanism of XACML core. ACAL reverses that arrangement and defines the identifier here, alongside the mechanism that consumes it, because the identifier is not specific to hierarchical resources. An ACAL Profile for Hierarchical Resources is expected to reference this definition rather than restate it.
 
 ---
 
@@ -1329,6 +1355,8 @@ This ACAL Profile is a successor to the set of XPath-based features of [[XACML 3
 - Deprecated prefixes `urn:oasis:names:tc:xacml:` and `https://www.w3.org/2001/XMLSchema#` in favor of `urn:oasis:names:tc:acal:` for all standard identifiers (algorithms, status codes, data-types, functions, attributes and categories)
 
 - Namespaces (prefix-to-namespace bindings) may be be declared as part of `XPathRequestDefaultsType`/`XPathPolicyDefaultsType` to allow using namespace prefixes in non-XML representations of ACAL (e.g. JSON) like it was the case for Requests in JSON Profile of XACML 3.0.
+
+- The `content-selector` attribute identifier is defined by this profile ([Annex D.3](#d.3-attributes)), whereas its XACML 3.0 counterpart `urn:oasis:names:tc:xacml:3.0:content-selector` is defined by the XACML v3.0 Hierarchical Resource Profile [[Hier](#hier)] even though it is consumed by the `ContextSelectorId` mechanism of XACML core. The identifier is not specific to hierarchical resources, so ACAL defines it alongside the mechanism that consumes it.
 
 ## Revision History
 

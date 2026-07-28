@@ -17,3 +17,5 @@ ShortIdSet:
       Value: "https://www.w3.org/TR/xpath-30/"
     - Name: xpath31
       Value: "https://www.w3.org/TR/xpath-31/"
+    - Name: content-selector
+      Value: "urn:oasis:names:tc:acal:1.0:content-selector"
