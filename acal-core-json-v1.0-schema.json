@@ -1190,7 +1190,7 @@
 					"$ref": "#/$defs/LocalIdentifierType"
 				},
 				"Attribute": {
-					"$comment": "TODO: add 'uniqueKeys': ['/AttributeId'] from ArrayExt vocabulary - https://docs.json-everything.net/schema/vocabs/array-ext/",
+					"$comment": "Issue #120: Attribute values MUST be unique by the combination of AttributeId, DataType and Issuer (ACAL Section 7.44), compared per that section's identifier-equality/effective-DataType/absent-Issuer rules. Not enforced at the JSON Schema level -- Requirement prose only; see acal-core-yaml-v1.0-constraints.yaml's resultentity-attribute-attributeid-unique rule for the equivalent YACAL-side statement.",
 					"type": "array",
 					"minItems": 1,
 					"items": {
@@ -1267,7 +1267,7 @@
 					"$ref": "#/$defs/ContentType"
 				},
 				"RequestAttribute": {
-					"$comment": "TODO: add 'uniqueKeys': ['/AttributeId'] from ArrayExt vocabulary - https://docs.json-everything.net/schema/vocabs/array-ext/",
+					"$comment": "Issue #120: RequestAttribute values MUST be unique by the combination of AttributeId, DataType and Issuer (ACAL Section 7.33), compared per that section's identifier-equality/effective-DataType/absent-Issuer rules. Not enforced at the JSON Schema level -- Requirement prose only; see acal-core-yaml-v1.0-constraints.yaml's request-attribute-id-unique-within-entity rule for the equivalent YACAL-side statement.",
 					"type": "array",
 					"minItems": 1,
 					"items": {
@@ -1505,7 +1505,7 @@
 					"$ref": "#/$defs/ContentType"
 				},
 				"Attribute": {
-					"$comment": "TODO: add 'uniqueKeys': ['/AttributeId'] from ArrayExt vocabulary - https://docs.json-everything.net/schema/vocabs/array-ext/",
+					"$comment": "Issue #120: Attribute values MUST be unique by the combination of AttributeId, DataType and Issuer (ACAL Section 7.45), compared per that section's identifier-equality/effective-DataType/absent-Issuer rules. Applies to every use of EntityType, including PolicyIssuer. Not enforced at the JSON Schema level -- Requirement prose only; see acal-core-yaml-v1.0-constraints.yaml's policyissuer-attribute-attributeid-unique rule for the equivalent YACAL-side statement.",
 					"type": "array",
 					"minItems": 1,
 					"items": {

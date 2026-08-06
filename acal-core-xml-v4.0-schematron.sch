@@ -118,7 +118,45 @@
 	  <assert test="xacml:Content or xacml:Attribute"></assert>
 	</rule>
  </pattern>
- <pattern id="ACAL_constraint_on_BundleType"> 
+ <!--
+ Issue #120: the three patterns below complement the corresponding xs:unique constraints in
+ acal-core-xml-v4.0-schema.xsd (which cannot catch a duplicate AttributeId/DataType pair when
+ Issuer is absent from both compared Attribute/RequestAttribute elements), for XSD 1.0-only
+ consumers. Neither these patterns nor xs:unique can perform the Section 8.3 short-identifier
+ expansion that identifier equality depends on, so AttributeId/DataType duplicates that differ
+ only by short-id-vs-URI spelling are not caught by any schema-level check.
+ -->
+ <pattern id="ACAL_constraint_on_ResultEntityType_Attribute_property">
+	<title>ACAL constraint on ResultEntityType property: {OCL} self-&gt;isUnique(Attribute-&gt;collect(Sequence{AttributeId, DataType, Issuer}))</title>
+	<rule context="xacml:ResultEntity">
+	  <assert test="every $elt in xacml:Attribute satisfies (every $following in $elt/following-sibling::xacml:Attribute satisfies not(
+			$elt/@AttributeId = $following/@AttributeId
+			and ($elt/@DataType, 'urn:oasis:names:tc:acal:1.0:data-type:string')[1] = ($following/@DataType, 'urn:oasis:names:tc:acal:1.0:data-type:string')[1]
+			and ((not($elt/@Issuer) and not($following/@Issuer)) or $elt/@Issuer = $following/@Issuer)
+		))">Duplicate Attribute (AttributeId, DataType, Issuer)</assert>
+	</rule>
+ </pattern>
+ <pattern id="ACAL_constraint_on_RequestEntityType_RequestAttribute_property">
+	<title>ACAL constraint on RequestEntityType property: {OCL} self-&gt;isUnique(RequestAttribute-&gt;collect(Sequence{AttributeId, DataType, Issuer}))</title>
+	<rule context="xacml:RequestEntity">
+	  <assert test="every $elt in xacml:RequestAttribute satisfies (every $following in $elt/following-sibling::xacml:RequestAttribute satisfies not(
+			$elt/@AttributeId = $following/@AttributeId
+			and ($elt/@DataType, 'urn:oasis:names:tc:acal:1.0:data-type:string')[1] = ($following/@DataType, 'urn:oasis:names:tc:acal:1.0:data-type:string')[1]
+			and ((not($elt/@Issuer) and not($following/@Issuer)) or $elt/@Issuer = $following/@Issuer)
+		))">Duplicate RequestAttribute (AttributeId, DataType, Issuer)</assert>
+	</rule>
+ </pattern>
+ <pattern id="ACAL_constraint_on_PolicyIssuer_Attribute_property">
+	<title>ACAL constraint on EntityType property: {OCL} self-&gt;isUnique(Attribute-&gt;collect(Sequence{AttributeId, DataType, Issuer}))</title>
+	<rule context="xacml:PolicyIssuer">
+	  <assert test="every $elt in xacml:Attribute satisfies (every $following in $elt/following-sibling::xacml:Attribute satisfies not(
+			$elt/@AttributeId = $following/@AttributeId
+			and ($elt/@DataType, 'urn:oasis:names:tc:acal:1.0:data-type:string')[1] = ($following/@DataType, 'urn:oasis:names:tc:acal:1.0:data-type:string')[1]
+			and ((not($elt/@Issuer) and not($following/@Issuer)) or $elt/@Issuer = $following/@Issuer)
+		))">Duplicate Attribute (AttributeId, DataType, Issuer)</assert>
+	</rule>
+ </pattern>
+ <pattern id="ACAL_constraint_on_BundleType">
  	<title>ACAL constraint on BundleType: {OCL} PolicyReference = null or Policy-&gt;notEmpty()</title>
 	<rule context="xacml:Bundle"> 
 	  <assert test="not(xacml:PolicyReference) or xacml:Policy"></assert>

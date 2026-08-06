@@ -201,10 +201,17 @@
 	IncludeInResult attributes in Attribute elements.
 	 -->
 	<xs:element name="ResultEntity" type="xacml:ResultEntityType">
-		<xs:key name="ResultEntity_Attribute_AttributeId">
+		<!-- Issue #120: relaxed from AttributeId-only to the (AttributeId, DataType, Issuer)
+		triple used for attribute-designator matching (Section 7.17). Issuer is optional, so
+		xs:key (which requires every field present) cannot be used here; xs:unique is used
+		instead. xs:unique still cannot catch a duplicate when Issuer is absent from both
+		compared Attribute elements; see the xs:assert on ResultEntityType below. -->
+		<xs:unique name="ResultEntity_Attribute_AttributeId-DataType-Issuer">
 			<xs:selector xpath="xacml:Attribute" />
 			<xs:field xpath="@AttributeId" />
-		</xs:key>
+			<xs:field xpath="@DataType" />
+			<xs:field xpath="@Issuer" />
+		</xs:unique>
 	</xs:element>
 	<xs:complexType name="ResultEntityType">
 		<xs:sequence>
@@ -217,6 +224,25 @@
 		consistently named in all XACML 4.0 / ACAL representation formats including JSON, and type
 		changed to LocalIdentifierType which is more portable to JSON. -->
 		<xs:attribute name="Id" type="xacml:LocalIdentifierType" use="optional" />
+		<!-- Issue #120: xs:unique above cannot express uniqueness over a key that includes an
+		optional field, so it does not catch a duplicate (AttributeId, DataType) pair when Issuer
+		is absent from both Attribute elements. This assert covers that case; XSD 1.0 processors
+		must rely on the Schematron rule instead. Neither this assert nor xs:unique can perform
+		the Section 8.3 short-identifier expansion that identifier equality depends on, so
+		AttributeId/DataType duplicates that differ only by short-id-vs-URI spelling are not
+		caught by any schema-level check; see Section 7.44. -->
+		<xs:assert vc:minVersion="1.1"
+			test="every $elt in xacml:Attribute satisfies (every $following in $elt/following-sibling::xacml:Attribute satisfies not(
+				$elt/@AttributeId = $following/@AttributeId
+				and ($elt/@DataType, 'urn:oasis:names:tc:acal:1.0:data-type:string')[1] = ($following/@DataType, 'urn:oasis:names:tc:acal:1.0:data-type:string')[1]
+				and ((not($elt/@Issuer) and not($following/@Issuer)) or $elt/@Issuer = $following/@Issuer)
+			))">
+			<xs:annotation>
+				<xs:documentation xml:lang="en"> ACAL constraint on ResultEntityType property: {OCL}
+					self->isUnique(Attribute->collect(Sequence{AttributeId, DataType, Issuer}))
+					</xs:documentation>
+			</xs:annotation>
+		</xs:assert>
 	</xs:complexType>
 
 	<!-- Issue #16: PolicyIdentifierList removed, replaced in ResultType with ref to new
@@ -303,10 +329,17 @@ and IncludeInResult is allowed in the RequestAttribute elements, therefore only 
 which is to be used in Results (no Content or IncludeInResult attributes).
 -->
 	<xs:element name="RequestEntity" type="xacml:RequestEntityType">
-		<xs:key name="RequestEntity_RequestAttribute_AttributeId">
+		<!-- Issue #120: relaxed from AttributeId-only to the (AttributeId, DataType, Issuer)
+		triple used for attribute-designator matching (Section 7.17). Issuer is optional, so
+		xs:key (which requires every field present) cannot be used here; xs:unique is used
+		instead. xs:unique still cannot catch a duplicate when Issuer is absent from both
+		compared RequestAttribute elements; see the xs:assert on RequestEntityType below. -->
+		<xs:unique name="RequestEntity_RequestAttribute_AttributeId-DataType-Issuer">
 			<xs:selector xpath="xacml:RequestAttribute" />
 			<xs:field xpath="@AttributeId" />
-		</xs:key>
+			<xs:field xpath="@DataType" />
+			<xs:field xpath="@Issuer" />
+		</xs:unique>
 	</xs:element>
 	<xs:complexType name="RequestEntityType">
 		<xs:sequence>
@@ -328,6 +361,25 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 		consistently named in all XACML 4.0 / ACAL representation formats including JSON, and type
 		changed to LocalIdentifierType which is more portable to JSON. -->
 		<xs:attribute name="Id" type="xacml:LocalIdentifierType" use="optional" />
+		<!-- Issue #120: xs:unique above cannot express uniqueness over a key that includes an
+		optional field, so it does not catch a duplicate (AttributeId, DataType) pair when Issuer
+		is absent from both RequestAttribute elements. This assert covers that case; XSD 1.0
+		processors must rely on the Schematron rule instead. Neither this assert nor xs:unique
+		can perform the Section 8.3 short-identifier expansion that identifier equality depends
+		on, so AttributeId/DataType duplicates that differ only by short-id-vs-URI spelling are
+		not caught by any schema-level check; see Section 7.33. -->
+		<xs:assert vc:minVersion="1.1"
+			test="every $elt in xacml:RequestAttribute satisfies (every $following in $elt/following-sibling::xacml:RequestAttribute satisfies not(
+				$elt/@AttributeId = $following/@AttributeId
+				and ($elt/@DataType, 'urn:oasis:names:tc:acal:1.0:data-type:string')[1] = ($following/@DataType, 'urn:oasis:names:tc:acal:1.0:data-type:string')[1]
+				and ((not($elt/@Issuer) and not($following/@Issuer)) or $elt/@Issuer = $following/@Issuer)
+			))">
+			<xs:annotation>
+				<xs:documentation xml:lang="en"> ACAL constraint on RequestEntityType property: {OCL}
+					self->isUnique(RequestAttribute->collect(Sequence{AttributeId, DataType, Issuer}))
+					</xs:documentation>
+			</xs:annotation>
+		</xs:assert>
 	</xs:complexType>
 
 	<xs:element name="Attribute" type="xacml:AttributeType" />
@@ -485,9 +537,16 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 	</xs:simpleType>
 
 	<xs:element name="PolicyIssuer" type="xacml:EntityType">
-		<xs:unique name="PolicyIssuer_Attribute_AttributeId-Issuer">
+		<!-- Issue #120: fixes a bug where this constraint (AttributeId, Issuer) contradicted
+		Section 7.45's own prose (isUnique(AttributeId) alone) and, independently of that, was
+		missing DataType. Now relaxed/aligned to the (AttributeId, DataType, Issuer) triple used
+		for attribute-designator matching (Section 7.17). Issuer is optional, so xs:unique still
+		cannot catch a duplicate when Issuer is absent from both compared Attribute elements; see
+		the xs:assert on EntityType below. -->
+		<xs:unique name="PolicyIssuer_Attribute_AttributeId-DataType-Issuer">
 			<xs:selector xpath="xacml:Attribute" />
 			<xs:field xpath="@AttributeId" />
+			<xs:field xpath="@DataType" />
 			<xs:field xpath="@Issuer" />
 		</xs:unique>
 	</xs:element>
@@ -498,6 +557,26 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 			<xs:element ref="xacml:Attribute" minOccurs="0" maxOccurs="unbounded" />
 		</xs:sequence>
 		<xs:assert vc:minVersion="1.1" test="xacml:Content or xacml:Attribute" />
+		<!-- Issue #120: xs:unique above cannot express uniqueness over a key that includes an
+		optional field, so it does not catch a duplicate (AttributeId, DataType) pair when Issuer
+		is absent from both Attribute elements. This assert covers that case; XSD 1.0 processors
+		must rely on the Schematron rule instead. Neither this assert nor xs:unique can perform
+		the Section 8.3 short-identifier expansion that identifier equality depends on, so
+		AttributeId/DataType duplicates that differ only by short-id-vs-URI spelling are not
+		caught by any schema-level check; see Section 7.45. This applies to every use of
+		EntityType, including PolicyIssuer above. -->
+		<xs:assert vc:minVersion="1.1"
+			test="every $elt in xacml:Attribute satisfies (every $following in $elt/following-sibling::xacml:Attribute satisfies not(
+				$elt/@AttributeId = $following/@AttributeId
+				and ($elt/@DataType, 'urn:oasis:names:tc:acal:1.0:data-type:string')[1] = ($following/@DataType, 'urn:oasis:names:tc:acal:1.0:data-type:string')[1]
+				and ((not($elt/@Issuer) and not($following/@Issuer)) or $elt/@Issuer = $following/@Issuer)
+			))">
+			<xs:annotation>
+				<xs:documentation xml:lang="en"> ACAL constraint on EntityType property: {OCL}
+					self->isUnique(Attribute->collect(Sequence{AttributeId, DataType, Issuer}))
+					</xs:documentation>
+			</xs:annotation>
+		</xs:assert>
 	</xs:complexType>
 
 	<!-- Change to XACML 3.0 (issue #61): Simple type for local identifiers in general i.e.
