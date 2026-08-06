@@ -1,4 +1,4 @@
--- Replace $(x) where 'x' is one of the metadata (${x} and {{x}} don't work in URLs, handled as delimiter by Pandoc)
+-- Replace %x% where 'x' is one of the metadata (${x} and {{x}} don't work in URLs, handled as delimiter by Pandoc)
 local PLACEHOLDER_START = "%"
 local PLACEHOLDER_END = "%"
 local PLACEHOLDER_START_LEN = string.len(PLACEHOLDER_START)
