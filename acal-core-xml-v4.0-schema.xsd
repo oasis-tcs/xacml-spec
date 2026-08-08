@@ -564,7 +564,8 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 		the Section 8.3 short-identifier expansion that identifier equality depends on, so
 		AttributeId/DataType duplicates that differ only by short-id-vs-URI spelling are not
 		caught by any schema-level check; see Section 7.45. This applies to every use of
-		EntityType, including PolicyIssuer above. -->
+		EntityType, including PolicyIssuer above. Note that the implementation may choose to implement a mechanism (e.g. preliminary XSLT processing) to perform the short-identifier expansion prior to the XML Schema validation step, making the rule enforcement fully effective.-->
+```-->
 		<xs:assert vc:minVersion="1.1"
 			test="every $elt in xacml:Attribute satisfies (every $following in $elt/following-sibling::xacml:Attribute satisfies not(
 				$elt/@AttributeId = $following/@AttributeId
