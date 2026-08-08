@@ -392,6 +392,7 @@ Copyright © OASIS Open 2026. All Rights Reserved.  For license and copyright in
   - [E.7 Permit Unless Deny](#e7-permit-unless-deny)
   - [E.8 First Applicable](#e8-first-applicable)
 - [Annex F How to generate HTML and PDF Versions](#annex-f-how-to-generate-html-and-pdf-versions)
+- [Annex G UML Model](#annex-g-uml-model)
 - [Appendix 1 Acknowledgments](#appendix-1-acknowledgments)
   - [Leadership](#leadership)
   - [Special Thanks](#special-thanks)
@@ -3176,6 +3177,8 @@ The following policy illustrates the combined policies. Rule 1, Rule 2 and Rule 
 ## 7.1 Introduction
 
 The structures in ACAL are described here in abstract terms, both in textual form and [[UML](#uml)] class diagrams. The concrete representations of these structures are defined for a variety of syntaxes each in a separate profile.
+
+The full consolidated UML diagram is provided in [Annex G](#annex-g-uml-model).
 
 ### 7.1.1 Object Type
 
@@ -8689,6 +8692,24 @@ $ pandoc/mkdocs.sh --pdf --output /tmp acal-core-v%version%.md
 The HTML file is generated like the previous command and, in addition, a PDF file is generated with the same name as the input file except the `.md` extension is replaced with `.pdf` in this case.
 
 ---
+
+# Annex G UML model
+
+The full UML Class diagram of the ACAL model is shown in the **Figure G-1** below. 
+
+![ACAL UML Model](images/ACAL_UML_Model.png)
+
+**Fig. G-1.** ACAL UML class diagram
+
+As a courtesy to software architects, the UML Model is also provided in the standard machine-readable format *XMI* (XML Metadata Interchange) on [OASIS XACML TC's github repository](https://github.com/oasis-tcs/xacml-spec/tree/v%version%-%stage_revision%/uml/Eclipse_Papyrus_project) to facilitate reuse in UML-aware software engineering tools.
+
+To facilitate the reading of the model and its implementation in ACAL systems, the model is split in three packages:
+- `PDP_API` contains the part of the model that a PEP should support for interacting with a PDP, i.e. send authorization decision requests to a PDP and receive decision responses from it.
+- `PDP_CONFIG` contains the part of the model that a PAP should typically support for managing the policies and all the associated required configuration of the PDP.
+- `Common` contains the base model that is common to all the packages above.
+
+Obviously, a PDP should support all of them, with the possible exception of certain optional features - see [the Conformance section](#11-conformance) - depending on the implementation.
+
 
 # Appendix 1 Acknowledgments
 

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Profile xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_Sb5IkJJnEfG8OtTJUPX4KA" name="ACAL_UML_Profile" metaclassReference="_DxNnYJJoEfG8OtTJUPX4KA">
+  <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_KBJUYJJoEfG8OtTJUPX4KA" source="http://www.eclipse.org/uml2/2.0.0/UML">
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_wTyI4JJoEfG8OtTJUPX4KA" source="PapyrusVersion">
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_wTyI4ZJoEfG8OtTJUPX4KA" key="Version" value="0.0.0"/>
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_wTyI4pJoEfG8OtTJUPX4KA" key="Comment" value="&lt;undefined>"/>
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_wTyI45JoEfG8OtTJUPX4KA" key="Copyright" value=""/>
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_wTyI5JJoEfG8OtTJUPX4KA" key="Date" value=""/>
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_wTyI5ZJoEfG8OtTJUPX4KA" key="Author" value="&lt;undefined>"/>
+    </eAnnotations>
+    <contents xmi:type="ecore:EPackage" xmi:id="_kRfpcJJtEfG8OtTJUPX4KA" name="ACAL_UML_Profile" nsURI="http:///schemas/ACAL_UML_Profile/_kRfCYJJtEfG8OtTJUPX4KA/2" nsPrefix="ACAL_UML_Profile">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_kRfpepJtEfG8OtTJUPX4KA" source="PapyrusVersion">
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_kRfpe5JtEfG8OtTJUPX4KA" key="Version" value="0.0.3"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_kRfpfJJtEfG8OtTJUPX4KA" key="Comment" value=""/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_kRfpfZJtEfG8OtTJUPX4KA" key="Copyright" value=""/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_kRfpfpJtEfG8OtTJUPX4KA" key="Date" value="2026-08-07"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_kRfpf5JtEfG8OtTJUPX4KA" key="Author" value=""/>
+      </eAnnotations>
+      <eClassifiers xmi:type="ecore:EClass" xmi:id="_kRfpcZJtEfG8OtTJUPX4KA" name="restrictedString">
+        <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_kRfpcpJtEfG8OtTJUPX4KA" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_wTxh0JJoEfG8OtTJUPX4KA"/>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_kRfpc5JtEfG8OtTJUPX4KA" name="pattern" ordered="false" lowerBound="1">
+          <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/uml2/5.0.0/Types#//String"/>
+        </eStructuralFeatures>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_kRfpdZJtEfG8OtTJUPX4KA" name="minLength" ordered="false" unique="false">
+          <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/uml2/5.0.0/Types#//Integer"/>
+        </eStructuralFeatures>
+        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_kRfpd5JtEfG8OtTJUPX4KA" name="base_PrimitiveType" ordered="false">
+          <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//PrimitiveType"/>
+        </eStructuralFeatures>
+      </eClassifiers>
+    </contents>
+    <contents xmi:type="ecore:EPackage" xmi:id="_nweOkJJpEfG8OtTJUPX4KA" name="ACAL_UML_Profile" nsURI="http:///schemas/ACAL_UML_Profile/_nwdAcJJpEfG8OtTJUPX4KA/1" nsPrefix="ACAL_UML_Profile">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_nwe1oJJpEfG8OtTJUPX4KA" source="PapyrusVersion">
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_nwe1oZJpEfG8OtTJUPX4KA" key="Version" value="0.0.2"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_nwe1opJpEfG8OtTJUPX4KA" key="Comment" value=""/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_nwe1o5JpEfG8OtTJUPX4KA" key="Copyright" value=""/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_nwe1pJJpEfG8OtTJUPX4KA" key="Date" value="2026-08-07"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_nwe1pZJpEfG8OtTJUPX4KA" key="Author" value=""/>
+      </eAnnotations>
+      <eClassifiers xmi:type="ecore:EClass" xmi:id="_nweOkZJpEfG8OtTJUPX4KA" name="restrictedString">
+        <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_nweOkpJpEfG8OtTJUPX4KA" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_wTxh0JJoEfG8OtTJUPX4KA"/>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_nweOk5JpEfG8OtTJUPX4KA" name="pattern" ordered="false" lowerBound="1">
+          <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/uml2/5.0.0/Types#//String"/>
+        </eStructuralFeatures>
+        <eStructuralFeatures xmi:type="ecore:EAttribute" xmi:id="_nweOlZJpEfG8OtTJUPX4KA" name="minLength" ordered="false" lowerBound="1">
+          <eType xmi:type="ecore:EDataType" href="http://www.eclipse.org/uml2/5.0.0/Types#//Integer"/>
+        </eStructuralFeatures>
+        <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_nweOl5JpEfG8OtTJUPX4KA" name="base_PrimitiveType" ordered="false">
+          <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//PrimitiveType"/>
+        </eStructuralFeatures>
+      </eClassifiers>
+    </contents>
+    <contents xmi:type="ecore:EPackage" xmi:id="_KBJ7cJJoEfG8OtTJUPX4KA" name="ACAL_UML_Profile" nsURI="http:///schemas/ACAL_UML_Profile/_KBItUJJoEfG8OtTJUPX4KA/0" nsPrefix="ACAL_UML_Profile">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_KBJ7cZJoEfG8OtTJUPX4KA" source="PapyrusVersion">
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_KBJ7cpJoEfG8OtTJUPX4KA" key="Version" value="0.0.1"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_KBJ7c5JoEfG8OtTJUPX4KA" key="Comment" value=""/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_KBJ7dJJoEfG8OtTJUPX4KA" key="Copyright" value=""/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_KBJ7dZJoEfG8OtTJUPX4KA" key="Date" value="2026-08-07"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_KBJ7dpJoEfG8OtTJUPX4KA" key="Author" value=""/>
+      </eAnnotations>
+    </contents>
+  </eAnnotations>
+  <elementImport xmi:type="uml:ElementImport" xmi:id="_DxNnYJJoEfG8OtTJUPX4KA" alias="PrimitiveType">
+    <importedElement xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#PrimitiveType"/>
+  </elementImport>
+  <packageImport xmi:type="uml:PackageImport" xmi:id="_Sez5sJJnEfG8OtTJUPX4KA">
+    <importedPackage xmi:type="uml:Model" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_0"/>
+  </packageImport>
+  <packageImport xmi:type="uml:PackageImport" xmi:id="_Se1H0JJnEfG8OtTJUPX4KA">
+    <importedPackage xmi:type="uml:Model" href="pathmap://UML_METAMODELS/UML.metamodel.uml#_0"/>
+  </packageImport>
+  <packagedElement xmi:type="uml:Stereotype" xmi:id="_wTxh0JJoEfG8OtTJUPX4KA" name="restrictedString">
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_022EYJJoEfG8OtTJUPX4KA" name="pattern">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_RudI4JJpEfG8OtTJUPX4KA" name="minLength" visibility="public" isUnique="false">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_jWFKEJJtEfG8OtTJUPX4KA"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_jWKpoJJtEfG8OtTJUPX4KA" value="1"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_koFhUJJpEfG8OtTJUPX4KA" name="base_PrimitiveType" association="_koB28JJpEfG8OtTJUPX4KA">
+      <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#PrimitiveType"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_koFhUZJpEfG8OtTJUPX4KA"/>
+    </ownedAttribute>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Extension" xmi:id="_koB28JJpEfG8OtTJUPX4KA" name="E_restrictedString_PrimitiveType6" memberEnd="_koE6QJJpEfG8OtTJUPX4KA _koFhUJJpEfG8OtTJUPX4KA">
+    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_koE6QJJpEfG8OtTJUPX4KA" name="extension_restrictedString" type="_wTxh0JJoEfG8OtTJUPX4KA" aggregation="composite" association="_koB28JJpEfG8OtTJUPX4KA"/>
+  </packagedElement>
+</uml:Profile>
