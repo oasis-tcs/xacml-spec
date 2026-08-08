@@ -5066,7 +5066,11 @@ A `RequestEntityType` object contains the following properties:
 
 `RequestAttribute` [Any Number]
 
-: A sequence of `RequestAttributeType` objects associated with the attribute category of the request. `RequestAttribute` objects MUST be unique within a `RequestEntityType` object by the combination of their `AttributeId`, `DataType` and `Issuer` properties. The `AttributeId` and `DataType` properties are compared using identifier equality (see [Section 8.18](#818-identifier-equality)), with `DataType` compared on its effective value after applying its default (see [Section 7.27](#727-attributetype)) if the property is omitted. The `Issuer` property is compared using the `urn:oasis:names:tc:acal:1.0:function:string-equal` function when present on both objects; a `RequestAttribute` object with no `Issuer` is never considered a duplicate of one with an `Issuer`, regardless of the latter's value, consistent with the absent-`Issuer` semantics of [Section 8.4.4](#844-attribute-matching). No representation format's schema fully enforces this constraint: XML schema validation under XSD 1.0 only catches duplicates where `Issuer` is present on both objects, an XSD 1.1 assertion closes that gap, and no representation format's schema can perform the [Section 8.3](#83-identifier-evaluation) short-identifier expansion that identifier equality depends on. See [Section 7.33.1](#7331-uniqueness-example-non-normative) for a worked example.
+: A sequence of `RequestAttributeType` objects associated with the attribute category of the request. `RequestAttribute` objects MUST be unique within a `RequestEntityType` object by the combination of their `AttributeId`, `DataType` and `Issuer` properties. The `AttributeId` and `DataType` properties are compared using identifier equality (see [Section 8.18](#818-identifier-equality)), with `DataType` compared on its effective value after applying its default (see [Section 7.27](#727-attributetype)) if the property is omitted. If the `AttributeId` and `DataType` properties are equal by such comparison in two `RequestAttribute` objects, then the objects are considered equal if and only if either one of the following is true:
+  1. The `Issuer` property is absent from both objects;
+  2. The `Issuer` property is present in both objects and both values of the property are equal by comparing them with the `urn:oasis:names:tc:acal:1.0:function:string-equal` function. 
+
+: See [Section 7.33.1](#7331-uniqueness-example-non-normative) for a worked example.
 
 ### 7.33.1 Uniqueness Example (non-normative)
 
