@@ -278,14 +278,14 @@ Rule:
     Requirement: >
       RequestAttribute values within a RequestEntityType MUST be unique by
       the combination of AttributeId, DataType and Issuer, compared per
-      ACALSection 7.33: AttributeId and DataType by identifier equality on
+      ACAL Section 7.33: AttributeId and DataType by identifier equality on
       their effective (post-default) value, and Issuer such that an absent
       Issuer is never a duplicate of a present one. This rule is a partial,
       best-effort check: it does not perform the short-identifier expansion
       that identifier equality depends on, and depending on how this
       catalog's tooling treats a missing key property, it may not catch a
       duplicate pair where Issuer is absent from both values. See
-      ACALSection 7.33 for the full normative rule.
+      ACAL Section 7.33 for the full normative rule.
     Provenance:
       YACALSection: "5.12.2"
       ACALSection: "7.33"
@@ -601,14 +601,14 @@ Rule:
     Requirement: >
       Attribute values within a ResultEntityType MUST be unique by the
       combination of AttributeId, DataType and Issuer, compared per
-      ACALSection 7.44: AttributeId and DataType by identifier equality on
+      ACAL Section 7.44: AttributeId and DataType by identifier equality on
       their effective (post-default) value, and Issuer such that an absent
       Issuer is never a duplicate of a present one. This rule is a partial,
       best-effort check: it does not perform the short-identifier expansion
       that identifier equality depends on, and depending on how this
       catalog's tooling treats a missing key property, it may not catch a
       duplicate pair where Issuer is absent from both values. See
-      ACALSection 7.44 for the full normative rule.
+      ACAL Section 7.44 for the full normative rule.
     Provenance:
       YACALSection: "5.8.9"
       ACALSection: "7.44"
@@ -626,14 +626,14 @@ Rule:
     Requirement: >
       Attribute values within a Policy's PolicyIssuer MUST be unique by the
       combination of AttributeId, DataType and Issuer, compared per
-      ACALSection 7.45: AttributeId and DataType by identifier equality on
+      ACAL Section 7.45: AttributeId and DataType by identifier equality on
       their effective (post-default) value, and Issuer such that an absent
       Issuer is never a duplicate of a present one. This rule is a partial,
       best-effort check: it does not perform the short-identifier expansion
       that identifier equality depends on, and depending on how this
       catalog's tooling treats a missing key property, it may not catch a
       duplicate pair where Issuer is absent from both values. See
-      ACALSection 7.45 for the full normative rule. (Prior to Issue #120,
+      ACAL Section 7.45 for the full normative rule. (Prior to Issue #120,
       this catalog had no rule at all for PolicyIssuer's Attribute
       uniqueness.)
     Provenance:
