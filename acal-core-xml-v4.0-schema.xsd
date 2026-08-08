@@ -230,7 +230,7 @@
 		must rely on the Schematron rule instead. Neither this assert nor xs:unique can perform
 		the Section 8.3 short-identifier expansion that identifier equality depends on, so
 		AttributeId/DataType duplicates that differ only by short-id-vs-URI spelling are not
-		caught by any schema-level check; see Section 7.44. -->
+		caught by any schema-level check; see Section 7.44.  The implementation may choose to implement a mechanism (e.g. preliminary XSLT processing) to perform the short-identifier expansion prior to the Xml Schema validation step, making the rule enforcement fully effective. -->
 		<xs:assert vc:minVersion="1.1"
 			test="every $elt in xacml:Attribute satisfies (every $following in $elt/following-sibling::xacml:Attribute satisfies not(
 				$elt/@AttributeId = $following/@AttributeId
