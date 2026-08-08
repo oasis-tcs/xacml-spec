@@ -125,6 +125,7 @@
  consumers. Neither these patterns nor xs:unique can perform the Section 8.3 short-identifier
  expansion that identifier equality depends on, so AttributeId/DataType duplicates that differ
  only by short-id-vs-URI spelling are not caught by any schema-level check.
+ Note that the implementation may choose to implement a mechanism (e.g. preliminary XSLT processing) to perform the short-identifier expansion prior to the Schematron schema validation step, making the rule enforcement fully effective.
  -->
  <pattern id="ACAL_constraint_on_ResultEntityType_Attribute_property">
 	<title>ACAL constraint on ResultEntityType property: {OCL} self-&gt;isUnique(Attribute-&gt;collect(Sequence{AttributeId, DataType, Issuer}))</title>
