@@ -730,7 +730,7 @@ HTML/PDF versions are generated automatically online via Github Actions after ea
 
 Install Pandoc **v3.2.1 or later** ( [latest release](https://github.com/jgm/pandoc/releases/latest) ), Graphviz and PlantUML on your system; or simply use Docker with the following shell alias:
 ```
-$ alias pandoc='docker run --rm --volume "$(pwd):/data" cdang/pandoc-plantuml'
+$ alias pandoc='docker run --rm --volume "$(pwd):/data" ghcr.io/oasis-tcs/pandoc-plantuml'
 ```
 _The Dockerfile (named `Dockerfile`) of the docker image used in the alias above is provided in the [pandoc](pandoc) folder next to this markdown file for your convenience if you wish to build it yourself._ 
 
