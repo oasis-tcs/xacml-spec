@@ -8701,7 +8701,7 @@ The full UML Class diagram of the ACAL model is shown in the **Figure G-1** belo
 
 **Fig. G-1.** ACAL UML class diagram
 
-As a courtesy to software architects, the UML Model is also provided in the standard machine-readable format *XMI* (XML Metadata Interchange) on [OASIS XACML TC's github repository](https://github.com/oasis-tcs/xacml-spec/tree/v%version%-%stage_revision%/uml/Eclipse_Papyrus_project) to facilitate reuse in UML-aware software engineering tools.
+As a courtesy to software architects, the UML Model is also provided in the standard machine-readable format *XMI* (XML Metadata Interchange) on [OASIS XACML TC's github repository](https://github.com/oasis-tcs/xacml-spec/tree/v%version%-%stage_revision%/UML/Eclipse_Papyrus_project) to facilitate reuse in UML-aware software engineering tools.
 
 To facilitate the reading of the model and its implementation in ACAL systems, the model is split in three packages:
 - `PDP_API` contains the part of the model that a PEP should support for interacting with a PDP, i.e. send authorization decision requests to a PDP and receive decision responses from it.
