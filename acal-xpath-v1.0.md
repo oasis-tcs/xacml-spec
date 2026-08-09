@@ -1221,7 +1221,7 @@ Either install them on your system or, if you have Docker installed already, sim
 
 Install Pandoc, Graphviz and PlantUML on your system; or simply use Docker with the following shell alias:
 ```
-$ alias pandoc='docker run --rm --volume "$(pwd):/data" cdang/pandoc-plantuml'
+$ alias pandoc='docker run --rm --volume "$(pwd):/data" ghcr.io/oasis-tcs/pandoc-plantuml'
 ```
 _The Dockerfile (named `Dockerfile`) of the docker image used in the alias above is provided in the [pandoc](pandoc) folder next to this markdown file for your convenience if you wish to build it yourself._  
 
