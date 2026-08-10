@@ -239,7 +239,7 @@
 			))">
 			<xs:annotation>
 				<xs:documentation xml:lang="en"> ACAL constraint on ResultEntityType property: {OCL}
-					self->isUnique(Attribute->collect(Sequence{AttributeId, DataType, Issuer}))
+					self->isUnique(Sequence{AttributeId, DataType, Issuer})
 					</xs:documentation>
 			</xs:annotation>
 		</xs:assert>
@@ -376,7 +376,7 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 			))">
 			<xs:annotation>
 				<xs:documentation xml:lang="en"> ACAL constraint on RequestEntityType property: {OCL}
-					self->isUnique(RequestAttribute->collect(Sequence{AttributeId, DataType, Issuer}))
+					self->isUnique(Sequence{AttributeId, DataType, Issuer})
 					</xs:documentation>
 			</xs:annotation>
 		</xs:assert>
@@ -565,7 +565,6 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 		AttributeId/DataType duplicates that differ only by short-id-vs-URI spelling are not
 		caught by any schema-level check; see Section 7.45. This applies to every use of
 		EntityType, including PolicyIssuer above. Note that the implementation may choose to implement a mechanism (e.g. preliminary XSLT processing) to perform the short-identifier expansion prior to the XML Schema validation step, making the rule enforcement fully effective.-->
-```-->
 		<xs:assert vc:minVersion="1.1"
 			test="every $elt in xacml:Attribute satisfies (every $following in $elt/following-sibling::xacml:Attribute satisfies not(
 				$elt/@AttributeId = $following/@AttributeId
@@ -574,7 +573,7 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 			))">
 			<xs:annotation>
 				<xs:documentation xml:lang="en"> ACAL constraint on EntityType property: {OCL}
-					self->isUnique(Attribute->collect(Sequence{AttributeId, DataType, Issuer}))
+					self->isUnique(Sequence{AttributeId, DataType, Issuer})
 					</xs:documentation>
 			</xs:annotation>
 		</xs:assert>

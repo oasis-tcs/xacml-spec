@@ -251,6 +251,7 @@ Copyright © OASIS Open 2026. All Rights Reserved.  For license and copyright in
   - [7.31 RequestType](#731-requesttype)
   - [7.32 RequestDefaultsType (optional)](#732-requestdefaultstype-optional)
   - [7.33 RequestEntityType](#733-requestentitytype)
+    - [7.33.1 Uniqueness Example (non-normative)](#7331-uniqueness-example-non-normative)
   - [7.34 ContentType (optional)](#734-contenttype-optional)
   - [7.35 RequestAttributeType](#735-requestattributetype)
   - [7.36 ResponseType](#736-responsetype)
@@ -5088,7 +5089,7 @@ Adding a fifth object identical to the first would violate the constraint:
 ```xml
 <RequestAttribute AttributeId="urn:example:role"/>
 ```
-This fifth object has the same effective `AttributeId`, `DataType` and `Issuer` (all three absent, the same as the first object) — together they are a duplicate pair, and only one of the two may appear. The same reasoning applies unchanged to the `Attribute` uniqueness constraint on `ResultEntityType` ([Section 7.44](#744-resultentitytype)) and `EntityType` ([Section 7.45](#745-entitytype)).
+This fifth object has the same `AttributeId` and the same effective `DataType` and `Issuer` (both absent, as in the first object) — together they are a duplicate pair, and only one of the two may appear. The same reasoning applies unchanged to the `Attribute` uniqueness constraint on `ResultEntityType` ([Section 7.44](#744-resultentitytype)) and `EntityType` ([Section 7.45](#745-entitytype)).
 
 ## 7.34 ContentType (optional)
 

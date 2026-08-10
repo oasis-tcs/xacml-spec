@@ -128,7 +128,7 @@
  Note that the implementation may choose to implement a mechanism (e.g. preliminary XSLT processing) to perform the short-identifier expansion prior to the Schematron schema validation step, making the rule enforcement fully effective.
  -->
  <pattern id="ACAL_constraint_on_ResultEntityType_Attribute_property">
-	<title>ACAL constraint on ResultEntityType property: {OCL} self-&gt;isUnique(Attribute-&gt;collect(Sequence{AttributeId, DataType, Issuer}))</title>
+	<title>ACAL constraint on ResultEntityType property: {OCL} self-&gt;isUnique(Sequence{AttributeId, DataType, Issuer})</title>
 	<rule context="xacml:ResultEntity">
 	  <assert test="every $elt in xacml:Attribute satisfies (every $following in $elt/following-sibling::xacml:Attribute satisfies not(
 			$elt/@AttributeId = $following/@AttributeId
@@ -138,7 +138,7 @@
 	</rule>
  </pattern>
  <pattern id="ACAL_constraint_on_RequestEntityType_RequestAttribute_property">
-	<title>ACAL constraint on RequestEntityType property: {OCL} self-&gt;isUnique(RequestAttribute-&gt;collect(Sequence{AttributeId, DataType, Issuer}))</title>
+	<title>ACAL constraint on RequestEntityType property: {OCL} self-&gt;isUnique(Sequence{AttributeId, DataType, Issuer})</title>
 	<rule context="xacml:RequestEntity">
 	  <assert test="every $elt in xacml:RequestAttribute satisfies (every $following in $elt/following-sibling::xacml:RequestAttribute satisfies not(
 			$elt/@AttributeId = $following/@AttributeId
@@ -148,8 +148,10 @@
 	</rule>
  </pattern>
  <pattern id="ACAL_constraint_on_PolicyIssuer_Attribute_property">
-	<title>ACAL constraint on EntityType property: {OCL} self-&gt;isUnique(Attribute-&gt;collect(Sequence{AttributeId, DataType, Issuer}))</title>
+	<title>ACAL constraint on EntityType property: {OCL} self-&gt;isUnique(Sequence{AttributeId, DataType, Issuer})</title>
 	<rule context="xacml:PolicyIssuer">
+	<!-- If your implementation uses a XSD-aware Schematron/XSLT processor, you should use the following more generic context instead of the previous one, so that this pattern also applies to any future element of type EntityType, not just PolicyIssuer: -->
+	<!-- <rule context="element(*, xacml:EntityType)"> -->
 	  <assert test="every $elt in xacml:Attribute satisfies (every $following in $elt/following-sibling::xacml:Attribute satisfies not(
 			$elt/@AttributeId = $following/@AttributeId
 			and ($elt/@DataType, 'urn:oasis:names:tc:acal:1.0:data-type:string')[1] = ($following/@DataType, 'urn:oasis:names:tc:acal:1.0:data-type:string')[1]
