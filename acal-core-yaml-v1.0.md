@@ -2432,9 +2432,29 @@ MUST enforce where those properties are supported include:
 - `VariableDefinition` uniqueness by `VariableId`
 - `Parameter` uniqueness by `Name`
 - `ShortId` uniqueness by `Name`
-- `RequestAttribute` uniqueness by `AttributeId` within a
-  `RequestEntityType`
+- `RequestAttribute` uniqueness by the combination of `AttributeId`,
+  `DataType` and `Issuer` within a `RequestEntityType`, compared per ACAL
+  Core Section 7.33's identifier-equality/effective-`DataType`/absent-`Issuer`
+  rules
 - `PolicyDefaults` and `RequestDefaults` uniqueness by concrete subtype
+
+Where a uniqueness constraint's key properties include a value of the
+`IdentifierType` simple type — as `AttributeId` and `DataType` are, in the
+`RequestAttribute`/`Attribute` constraint above — full enforcement additionally
+requires resolving any short identifier name to its full URI per ACAL Core
+Section 8.3 before comparison. This is a processing-time step that no
+structural check over the YAML document alone can perform, so a YACAL
+processor implementing "MUST enforce" above needs to apply that resolution
+itself; two values differing only in short-identifier-name-vs-URI spelling
+are not distinguishable as non-duplicates by structural inspection. Likewise,
+where a key property has an ACAL-defined default (as `DataType` does, per
+ACAL Core Section 7.27), the comparison is over the property's *effective*
+value after applying that default, not its literal YAML presence or absence;
+YAML itself has no defaulting mechanism, so a processor MUST apply the
+default explicitly before comparing. The
+`acal-core-yaml-v1.0-constraints.yaml` catalog's `uniqueByProperty` rules for
+this constraint state both requirements in their `Requirement` field, next
+to the concrete `KeyProperties` list they apply to.
 
 ### 5.12.3 Object-Level Constraints and Cross-Property Invariants
 

@@ -251,6 +251,7 @@ Copyright © OASIS Open 2026. All Rights Reserved.  For license and copyright in
   - [7.31 RequestType](#731-requesttype)
   - [7.32 RequestDefaultsType (optional)](#732-requestdefaultstype-optional)
   - [7.33 RequestEntityType](#733-requestentitytype)
+    - [7.33.1 Uniqueness Example (non-normative)](#7331-uniqueness-example-non-normative)
   - [7.34 ContentType (optional)](#734-contenttype-optional)
   - [7.35 RequestAttributeType](#735-requestattributetype)
   - [7.36 ResponseType](#736-responsetype)
@@ -5045,7 +5046,7 @@ class RequestEntityType <<dataType>> {
   {field} + Category: IdentifierType [1]
   {field} + Id: LocalIdentifierType [0..1]
   {field} + Content: ContentType [0..1]
-  {field} + RequestAttribute: RequestAttributeType [*] {unordered, unique} {{OCL} self->isUnique(AttributeId)}
+  {field} + RequestAttribute: RequestAttributeType [*] {unordered, unique} {{OCL} self->isUnique(Sequence{AttributeId, DataType, Issuer})}
 }
 @enduml
 ```
@@ -5067,7 +5068,29 @@ A `RequestEntityType` object contains the following properties:
 
 `RequestAttribute` [Any Number]
 
-: A sequence of `RequestAttributeType` objects associated with the attribute category of the request.
+: A sequence of `RequestAttributeType` objects associated with the attribute category of the request. `RequestAttribute` objects MUST be unique within a `RequestEntityType` object by the combination of their `AttributeId`, `DataType` and `Issuer` properties. The `AttributeId` and `DataType` properties are compared using identifier equality (see [Section 8.18](#818-identifier-equality)), with `DataType` compared on its effective value after applying its default (see [Section 7.27](#727-attributetype)) if the property is omitted. If the `AttributeId` and `DataType` properties are equal by such comparison in two `RequestAttribute` objects, then the objects are considered equal if and only if either one of the following is true:
+  1. The `Issuer` property is absent from both objects;
+  2. The `Issuer` property is present in both objects and both values of the property are equal by comparing them with the `urn:oasis:names:tc:acal:1.0:function:string-equal` function. 
+
+: See [Section 7.33.1](#7331-uniqueness-example-non-normative) for a worked example.
+
+### 7.33.1 Uniqueness Example (non-normative)
+
+Given the following `RequestAttribute` objects in a single `RequestEntityType` object:
+```xml
+<RequestAttribute AttributeId="urn:example:role"/>
+<RequestAttribute AttributeId="urn:example:role" DataType="urn:oasis:names:tc:acal:1.0:data-type:integer"/>
+<RequestAttribute AttributeId="urn:example:role" Issuer="urn:example:issuer-a"/>
+<RequestAttribute AttributeId="urn:example:role" Issuer="urn:example:issuer-b"/>
+```
+
+None of these four objects is a duplicate of any other: the first two differ in their effective `DataType` (the first defaults to `urn:oasis:names:tc:acal:1.0:data-type:string`, per [Section 7.27](#727-attributetype)); the third and fourth differ in `Issuer`; and the first differs from the third and fourth because an absent `Issuer` is never considered a duplicate of a present one, regardless of its value.
+
+Adding a fifth object identical to the first would violate the constraint:
+```xml
+<RequestAttribute AttributeId="urn:example:role"/>
+```
+This fifth object has the same `AttributeId` and the same effective `DataType` and `Issuer` (both absent, as in the first object) — together they are a duplicate pair, and only one of the two may appear. The same reasoning applies unchanged to the `Attribute` uniqueness constraint on `ResultEntityType` ([Section 7.44](#744-resultentitytype)) and `EntityType` ([Section 7.45](#745-entitytype)).
 
 ## 7.34 ContentType (optional)
 
@@ -5430,7 +5453,7 @@ hide circle
 class ResultEntityType <<dataType>> {
   {field} + Category: IdentifierType [1]
   {field} + Id: LocalIdentifierType [0..1]
-  {field} + Attribute: AttributeType [1..*] {unordered, unique} {{OCL} self->isUnique(AttributeId)}
+  {field} + Attribute: AttributeType [1..*] {unordered, unique} {{OCL} self->isUnique(Sequence{AttributeId, DataType, Issuer})}
 }
 @enduml
 ```
@@ -5448,7 +5471,7 @@ A `ResultEntityType` object contains the following properties:
 
 `Attribute` [One to Many]
 
-: A sequence of `AttributeType` objects representing `RequestAttributeType` objects from the same attribute category in the request.
+: A sequence of `AttributeType` objects representing `RequestAttributeType` objects from the same attribute category in the request. `Attribute` objects MUST be unique within a `ResultEntityType` object by the combination of their `AttributeId`, `DataType` and `Issuer` properties, using the same identifier-equality, effective-`DataType`, and absent-`Issuer` semantics described for `RequestAttribute` in [Section 7.33](#733-requestentitytype).
 
 <a name="entitytype"></a>
 
@@ -5464,7 +5487,7 @@ hide empty members
 hide circle
 class EntityType <<dataType>> {
   {field} + Content: ContentType [0..1]
-  {field} + Attribute: AttributeType [*] {unordered, unique} {{OCL} self->isUnique(AttributeId)}
+  {field} + Attribute: AttributeType [*] {unordered, unique} {{OCL} self->isUnique(Sequence{AttributeId, DataType, Issuer})}
 }
 note "{{OCL} Content <> null or Attribute->notEmpty()}" as constraint
 EntityType .. constraint
@@ -5479,7 +5502,7 @@ An `EntityType` object contains the following properties:
 
 `Attribute` [Any Number]
 
-: A sequence of `AttributeType` objects.
+: A sequence of `AttributeType` objects. `Attribute` objects MUST be unique within an `EntityType` object by the combination of their `AttributeId`, `DataType` and `Issuer` properties, using the same identifier-equality, effective-`DataType`, and absent-`Issuer` semantics described for `RequestAttribute` in [Section 7.33](#733-requestentitytype). This applies to every use of `EntityType`, including the `PolicyIssuer` property of a `PolicyType` object (see [Section 7.4](#74-policytype)).
 
 ## 7.46 BundleType
 

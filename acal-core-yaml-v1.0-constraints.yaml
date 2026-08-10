@@ -273,12 +273,29 @@ Rule:
       CollectionPath: "$.Request.RequestEntity[].RequestAttribute"
     KeyProperties:
       - AttributeId
+      - DataType
+      - Issuer
     Requirement: >
-      RequestAttribute values within a RequestEntityType MUST be unique
-      by AttributeId.
+      RequestAttribute values within a RequestEntityType MUST be unique by
+      the combination of AttributeId, DataType and Issuer, compared per
+      ACAL Section 7.33: AttributeId and DataType by identifier equality on
+      their effective (post-default) value, and Issuer such that an absent
+      Issuer is never a duplicate of a present one. This rule is a partial,
+      best-effort check: it does not perform the short-identifier expansion
+      that identifier equality depends on, and depending on how this
+      catalog's tooling treats a missing key property, it may not catch a
+      duplicate pair where Issuer is absent from both values. See
+      ACAL Section 7.33 for the full normative rule. Therefore, tooling
+      implementing this rule SHALL perform the following normalization
+      before comparing KeyProperties values: 1) apply short-identifier
+      expansion (Section 8.3) to the AttributeId and DataType values; and
+      2) set DataType to its default value
+      (urn:oasis:names:tc:acal:1.0:data-type:string) where the property is
+      absent. A raw, unnormalized property comparison will under-detect
+      duplicates in exactly the cases described above.
     Provenance:
       YACALSection: "5.12.2"
-      ACALSection: "7.35"
+      ACALSection: "7.33"
 
   - Id: "requestreference-requestentityreference-id-unique"
     Kind: uniqueByValue
@@ -586,9 +603,60 @@ Rule:
       CollectionPath: "$.Response.Result[].ResultEntity[].Attribute"
     KeyProperties:
       - AttributeId
+      - DataType
+      - Issuer
     Requirement: >
-      Attribute AttributeId values within a ResultEntityType MUST be
-      unique.
+      Attribute values within a ResultEntityType MUST be unique by the
+      combination of AttributeId, DataType and Issuer, compared per
+      ACAL Section 7.44: AttributeId and DataType by identifier equality on
+      their effective (post-default) value, and Issuer such that an absent
+      Issuer is never a duplicate of a present one. This rule is a partial,
+      best-effort check: it does not perform the short-identifier expansion
+      that identifier equality depends on, and depending on how this
+      catalog's tooling treats a missing key property, it may not catch a
+      duplicate pair where Issuer is absent from both values. See
+      ACAL Section 7.44 for the full normative rule. Therefore, tooling
+      implementing this rule SHALL perform the following normalization
+      before comparing KeyProperties values: 1) apply short-identifier
+      expansion (Section 8.3) to the AttributeId and DataType values; and
+      2) set DataType to its default value
+      (urn:oasis:names:tc:acal:1.0:data-type:string) where the property is
+      absent. A raw, unnormalized property comparison will under-detect
+      duplicates in exactly the cases described above.
     Provenance:
-      YACALSection: "5.8.9"
+      YACALSection: "5.8.8"
+      ACALSection: "7.44"
+
+  - Id: "policyissuer-attribute-attributeid-unique"
+    Kind: uniqueByProperty
+    Severity: error
+    AppliesTo:
+      ObjectType: EntityType
+      CollectionPath: "$.Policy.PolicyIssuer.Attribute"
+    KeyProperties:
+      - AttributeId
+      - DataType
+      - Issuer
+    Requirement: >
+      Attribute values within a Policy's PolicyIssuer MUST be unique by the
+      combination of AttributeId, DataType and Issuer, compared per
+      ACAL Section 7.45: AttributeId and DataType by identifier equality on
+      their effective (post-default) value, and Issuer such that an absent
+      Issuer is never a duplicate of a present one. This rule is a partial,
+      best-effort check: it does not perform the short-identifier expansion
+      that identifier equality depends on, and depending on how this
+      catalog's tooling treats a missing key property, it may not catch a
+      duplicate pair where Issuer is absent from both values. See
+      ACAL Section 7.45 for the full normative rule. Therefore, tooling
+      implementing this rule SHALL perform the following normalization
+      before comparing KeyProperties values: 1) apply short-identifier
+      expansion (Section 8.3) to the AttributeId and DataType values; and
+      2) set DataType to its default value
+      (urn:oasis:names:tc:acal:1.0:data-type:string) where the property is
+      absent. A raw, unnormalized property comparison will under-detect
+      duplicates in exactly the cases described above. (Prior to Issue #120,
+      this catalog had no rule at all for PolicyIssuer's Attribute
+      uniqueness.)
+    Provenance:
+      YACALSection: "5.4.13"
       ACALSection: "7.45"
