@@ -1,12 +1,14 @@
 #! /bin/bash
 
+CHROME_CONTAINER_IMAGE="ghcr.io/oasis-tcs/chrome-headless:latest"
 usage() {
-    echo "Usage: $(basename "$0") [--number-lines] [--pdf] [--output dir] <input.md> [extra pandoc arguments]"
+    echo "Usage: $(basename "$0") [--number-lines] [--pdf] [--official] [--output dir] <input.md> [extra pandoc arguments]"
     echo ""
     echo "  Generates an HTML document from the given markdown file."
     echo "  --number-lines   Number lines in code blocks."
     echo "  --pdf   Also produce a PDF via Chrome headless (requires Chrome)."
     echo "          PDF is generated from the HTML output, not directly from markdown."
+    echo "  --official Uses the official container image (${CHROME_CONTAINER_IMAGE}) for PDF generation (requires Podman/Docker and read access to OASIS TCs' Github Package Registry)"
     echo "  --output dir: output directory (path). By default, it is the same directory as the input."
     exit 1
 }
@@ -22,6 +24,7 @@ for arg in "$@"; do
         --help|-h) usage ;;
         --number-lines) NUMBER_LINES_IN_CODE_BLOCKS=true;;
         --pdf) MAKE_PDF=true ;;
+        --official) USE_CHROME_CONTAINER_IMAGE=true ;;
         --output) SET_OUTPUT_DIR=true;;
         *) if $SET_OUTPUT_DIR; then OUTPUT_DIR="$arg"; SET_OUTPUT_DIR=false; else POSITIONAL+=("$arg"); fi;;
     esac
@@ -82,6 +85,38 @@ find_chrome() {
     echo ""
 }
 
+find_container_command() {
+    # Check PATH first (covers Linux packages and some custom installs)
+    for name in podman docker; do
+        if command -v "$name" >/dev/null 2>&1; then
+            echo "$(command -v "$name")"
+            return
+        fi
+    done
+
+    # macOS: standard and user-level app bundle locations
+    local macos_paths=(
+        "/Applications/Podman Desktop.app/Contents/MacOS/Podman Desktop"
+        "$HOME/Applications/Podman Desktop.app/Contents/MacOS/Podman Desktop"
+        "/Applications/Docker.app/Contents/MacOS/Docker"
+        "$HOME/Applications/Docker.app/Contents/MacOS/Docker"
+    )
+    for p in "${macos_paths[@]}"; do
+        [ -x "$p" ] && echo "$p" && return
+    done
+
+    # WSL / Git Bash: standard Windows install locations
+    local win_paths=(
+        "/mnt/c/Program Files/RedHat/Podman/podman.exe"
+        "/mnt/c/Program Files/Docker/Docker/docker.exe"
+    )
+    for p in "${win_paths[@]}"; do
+        [ -x "$p" ] && echo "$p" && return
+    done
+
+    echo ""
+}
+
 # --- check dependencies ---
 if ! command -v pandoc >/dev/null 2>&1; then
     echo "Error: cannot find pandoc. Exiting." && exit 1
@@ -95,17 +130,35 @@ GIT=$(command -v git)
 
 # --- if PDF requested, resolve Chrome now before doing any work ---
 CHROME=""
+CONTAINER_COMMAND=""
+CONTAINER_RUN_CUSTOM_ARGS=""
 if $MAKE_PDF; then
-    CHROME="$(find_chrome)"
-    if [ -z "$CHROME" ]; then
-        printf "Chrome was not found on this system.\n"
-        printf "PDF generation requires Chrome or Chromium to be installed.\n"
-        printf "Proceed with HTML-only output? [y/N] "
-        read -r answer
-        case "$answer" in
-            [yY]|[yY][eE][sS]) MAKE_PDF=false ;;
-            *) echo "Aborted." && exit 4 ;;
-        esac
+    if $USE_CHROME_CONTAINER_IMAGE; then
+        CONTAINER_COMMAND="$(find_container_command)"
+        if [ -z "$CONTAINER_COMMAND" ]; then
+            printf "Neither Podman nor Docker was found on this system.\n"
+            printf "PDF generation with --official flag requires one of these two container engines CLI.\n"
+            exit 1
+        fi
+        if $CONTAINER_COMMAND pull $CHROME_CONTAINER_IMAGE 2>&1 | grep -iq "unauthorized"; then
+            echo "Unauthorized access to the container image on OASIS TCs' Github Package Registry: $CHROME_CONTAINER_IMAGE."
+            echo "You must be a member of 'oasis-tcs' Github organization, and login first with a Personal Access Token granted with at least 'read:packages' permission (and try again): $CONTAINER_COMMAND login ghcr.io"
+            exit 1
+        fi
+        if echo "$CONTAINER_COMMAND" | grep -iq "podman"; then CONTAINER_RUN_CUSTOM_ARGS="--userns=keep-id"; fi
+        CHROME="(inside a Linux container)"
+    else
+        CHROME="$(find_chrome)"
+        if [ -z "$CHROME" ]; then
+            printf "Chrome was not found on this system.\n"
+            printf "PDF generation requires Chrome or Chromium to be installed.\n"
+            printf "Proceed with HTML-only output? [y/N] "
+            read -r answer
+            case "$answer" in
+                [yY]|[yY][eE][sS]) MAKE_PDF=false ;;
+                *) echo "Aborted." && exit 4 ;;
+            esac
+        fi
     fi
 fi
 
@@ -154,14 +207,20 @@ printf "HTML: %s\n" "$OUTPUT_HTML"
 #       flag is broken in all Chrome versions from 121 onwards.
 #
 if $MAKE_PDF; then
-    printf "PDF:  generating via Chrome --headless=new... "
-    "$CHROME" \
-      --headless=new \
-      --no-sandbox \
-      --no-pdf-header-footer \
-      --disable-gpu \
-      --print-to-pdf="$OUTPUT_PDF" \
-      "file://${OUTPUT_HTML}"
+    if $USE_CHROME_CONTAINER_IMAGE; then
+        printf "PDF:  generating via Chrome --headless=new... inside the official container image ('ghcr.io/oasis-tcs/chrome-headless')"
+        $CONTAINER_COMMAND run $CONTAINER_RUN_CUSTOM_ARGS --rm -v ${OUTPUT_DIR}:/workspace "$CHROME_CONTAINER_IMAGE" --print-to-pdf="${BASENAME}.pdf" "file:///workspace/${BASENAME}.html"
+    else
+        printf "PDF:  generating via Chrome --headless=new... "
+        "$CHROME" \
+        --headless=new \
+        --no-sandbox \
+        --no-pdf-header-footer \
+        --disable-gpu \
+        --print-to-pdf="$OUTPUT_PDF" \
+        "file://${OUTPUT_HTML}"
+    fi
+
     if [ -f "$OUTPUT_PDF" ]; then
         printf "done\n"
         printf "PDF:  %s\n" "$OUTPUT_PDF"
