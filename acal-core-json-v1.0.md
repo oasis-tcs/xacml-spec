@@ -1033,7 +1033,7 @@ In this example, we consider an ACAL implementation that supports the `Attribute
 !include examples/acal-core-json/jacal-root-schema-example-using-jsonpath-profile-only.json
 ```
 
-This schema refers to (and therefore depends on) the [JSONPath Profile's JSON schema](acal-jsonpath-json-v%version%-schema.json) by its identifier `urn:oasis:names:tc:jacal:1.0:jsonpath:schema`, which is also provided by the XACML TC with the core schema.
+This schema refers to (and therefore depends on) the JSONPath Profile's JSON schema (`acal-jsonpath-json-v%version%-schema.json`, published with the JSONPath Profile's own specification) by its identifier `urn:oasis:names:tc:jacal:1.0:jsonpath:schema`.
 
 
 ### 5.4.2 Example using extensions from multiple ACAL Profiles
@@ -1044,7 +1044,7 @@ In this example, we consider an ACAL implementation that supports various extens
 !include examples/acal-core-json/jacal-root-schema-example-using-xpath-and-jsonpath-profiles.json
 ```
 
-This schema refers to (and therefore depends on) to both the [JSONPath Profile's JSON schema](acal-jsonpath-json-v%version%-schema.json) by its identifier `urn:oasis:names:tc:jacal:1.0:jsonpath:schema` and [XPath Profile's JSON schema](acal-xpath-json-v%version%-schema.json) by its identifier `urn:oasis:names:tc:jacal:1.0:xpath:schema`, which are also provided by the XACML TC with the core schema.
+This schema refers to (and therefore depends on) both the JSONPath Profile's JSON schema (`acal-jsonpath-json-v%version%-schema.json`) by its identifier `urn:oasis:names:tc:jacal:1.0:jsonpath:schema` and the XPath Profile's JSON schema (`acal-xpath-json-v%version%-schema.json`) by its identifier `urn:oasis:names:tc:jacal:1.0:xpath:schema`, each published with its respective Profile's own specification.
 
 ### 5.4.3 Example combining a custom extension with a standard profile-defined extension
 
@@ -1193,9 +1193,8 @@ The following machine-readable artifacts accompany this specification:
 |:---|:---:|:---|
 | `acal-core-json-v1.0-schema.json` | M | Core JSON schema |
 | `acal-core-json-v1.0-identifiers.json` | M | Core short identifier set represented in JSON |
-| `acal-xpath-json-v1.0-schema.json` | O | JSON schema for XPath Profile support |
-| `acal-xpath-json-v1.0-identifiers.json` | O | Short identifier set for XPath profile support represented in JSON |
-| `acal-jsonpath-json-v1.0-schema.json` | O | JSON schema for JSONPath Profile support |
+
+The JSON Schemas and short identifier sets for XPath Profile and JSONPath Profile support are artifacts of those Profiles' own Work Products, not of this Core specification.
 
 -------
 

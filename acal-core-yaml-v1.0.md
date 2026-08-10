@@ -45,12 +45,8 @@ Normative artifacts:
 - `acal-core-yaml-v1.0-structure.schema.yaml` (core YACAL structural schema)
 - `acal-core-yaml-v1.0-constraints.yaml` (core YACAL constraint catalog)
 - `acal-core-yaml-v1.0-identifiers.yaml` (core YACAL short-identifier set)
-- `acal-xpath-yaml-v1.0-structure.schema.yaml` (XPath Profile structural
-  schema)
-- `acal-xpath-yaml-v1.0-identifiers.yaml` (XPath Profile short-identifier
-  set)
-- `acal-jsonpath-yaml-v1.0-structure.schema.yaml` (JSONPath Profile
-  structural schema)
+
+The XPath and JSONPath Profiles are separate Work Products with their own machine-readable artifacts; see those profiles' specifications for details.
 
 Informative example artifacts:
 
@@ -93,7 +89,7 @@ When referencing this specification the following citation format should
 be used:
 
 **[YACAL-Core-1.0]**
-_ACAL v1.0 YAML Representation Profile (YACAL) Version 1.0_.
+_YAML Representation of ACAL (YACAL) Version 1.0_.
 Edited by Steven Legg and Cyril Dangerville.
 23 March 2026.
 Working Draft 01.
@@ -127,8 +123,7 @@ Annex B [References](#annex-b-references)
 Annex C [YACAL Identifiers and Machine-Readable Artifacts](#annex-c-yacal-identifiers-and-machine-readable-artifacts)
   - [C.1 Core Short-Identifier Set](#c1-core-short-identifier-set)
   - [C.2 Core YACAL Artifacts](#c2-core-yacal-artifacts)
-  - [C.3 Profile YACAL Artifacts](#c3-profile-yacal-artifacts)
-  - [C.4 Informative Composition Schemas](#c4-informative-composition-schemas)
+  - [C.3 Informative Composition Schemas](#c3-informative-composition-schemas)
 Annex D [Complete Example: Website Content Access Policy](#annex-d-complete-example-website-content-access-policy)
 Annex E [Complete Example: Healthcare Chart Access Policy](#annex-e-complete-example-healthcare-chart-access-policy)
 Appendix 1 [Acknowledgments](#appendix-1-acknowledgments)
@@ -2604,9 +2599,8 @@ The following machine-readable artifacts accompany this specification:
 | `acal-core-yaml-v1.0-structure.schema.yaml` | M | Core structural validation artifact |
 | `acal-core-yaml-v1.0-constraints.yaml` | M | Core constraint catalog |
 | `acal-core-yaml-v1.0-identifiers.yaml` | M | Core short identifier set represented in YAML |
-| `acal-xpath-yaml-v1.0-structure.schema.yaml` | O | Required only for XPath Profile support |
-| `acal-xpath-yaml-v1.0-identifiers.yaml` | O | Short identifier set for XPath Profile support represented in YAML |
-| `acal-jsonpath-yaml-v1.0-structure.schema.yaml` | O | Required only for JSONPath Profile support |
+
+The structural validation artifacts and short identifier sets for XPath Profile and JSONPath Profile support are artifacts of those Profiles' own Work Products, not of this Core specification.
 
 The composition schemas listed in [Annex C](#annex-c-yacal-identifiers-and-machine-readable-artifacts)
 are informative examples showing how core and profile artifacts may be
@@ -2805,22 +2799,11 @@ extension hooks.
 The constraint catalog defines the higher-order YACAL and ACAL
 constraints that are not fully captured by the structural schema alone.
 
-## C.3 Profile YACAL Artifacts
+The XPath and JSONPath Profiles' own structural validation artifacts and
+short identifier sets are catalogued in those Profiles' own
+specifications, not here.
 
-The following normative profile artifacts accompany this specification:
-
-1. `acal-xpath-yaml-v1.0-structure.schema.yaml`
-2. `acal-xpath-yaml-v1.0-identifiers.yaml`
-3. `acal-jsonpath-yaml-v1.0-structure.schema.yaml`
-
-The XPath Profile artifacts enable XPath-specific defaults, selector
-extensions, structured values, and profile identifiers.
-
-The JSONPath Profile artifact enables JSONPath-specific selector
-extensions.  The JSONPath Profile defines no profile-specific
-identifiers and therefore has no companion identifier artifact.
-
-## C.4 Informative Composition Schemas
+## C.3 Informative Composition Schemas
 
 The following informative composition schemas are provided as examples
 for implementations combining the core and profile artifacts:

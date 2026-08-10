@@ -3,7 +3,7 @@
 logo: |
   ![OASIS](images/OASISLogo-v3.0.png)
 # Original logo: http://docs.oasis-open.org/templates/OASISLogo-v3.0.png
-title: eXtensible Access Control Markup Language (XACML) Version 4.0 (XML Representation of ACAL Version 1.0)
+title: eXtensible Access Control Markup Language (XACML) Version 4.0
 subtitle: Committee Specification Draft 02
 version: "4.0"
 stage_revision: csd02 # [stage-abbrev][revisionNumber] as defined in https://docs.oasis-open.org/specGuidelines/ndr/namingDirectives.html
@@ -17,9 +17,9 @@ keywords: ["access", "authorization", "ABAC", "policylanguage", "XML", "standard
 ### This version:
 
 
-- https://docs.oasis-open.org/xacml/acal/xacml/core/v%version%/%stage_revision%/acal-core-xml-v%version%/%stage_revision%.html (Authoritative)
-- https://docs.oasis-open.org/xacml/acal/xacml/core/v%version%/%stage_revision%/acal-core-xml-v%version%/%stage_revision%.pdf
-- https://docs.oasis-open.org/xacml/acal/xacml/core/v%version%/%stage_revision%/acal-core-xml-v%version%/%stage_revision%.md
+- https://docs.oasis-open.org/xacml/acal/xacml/core/v%version%/%stage_revision%/acal-core-xml-v%version%-%stage_revision%.html (Authoritative)
+- https://docs.oasis-open.org/xacml/acal/xacml/core/v%version%/%stage_revision%/acal-core-xml-v%version%-%stage_revision%.pdf
+- https://docs.oasis-open.org/xacml/acal/xacml/core/v%version%/%stage_revision%/acal-core-xml-v%version%-%stage_revision%.md
 
 ### Previous version:
 
@@ -57,9 +57,9 @@ This document is one component of a Work Product that also includes:
 
 * [Core XML schema](acal-core-xml-v%version%-schema.xsd);
 * [Core Schematron rules](acal-core-xml-v%version%-schematron.sch);
-* [Short identifier set](acal-core-xml-v%version%-identifiers.xml);
-* [XPath Profile XML schema](acal-xpath-xml-v%version%-schema.xsd);
-* [JSONPath Profile XML schema](acal-jsonpath-xml-v%version%-schema.xsd).
+* [Short identifier set](acal-core-xml-v%version%-identifiers.xml).
+
+The XPath and JSONPath Profiles are separate Work Products with their own machine-readable artifacts; see those profiles' specifications for details.
 
 <!-- Note: Any normative computer language definitions that are part of the Work Product, such as XML instances, schemas and Java(TM) code, including fragments of such, must be (a) well formed and valid, (b) provided in separate plain text files, (c) referenced from the Work Product; and (d) where any definition in these separate files disagrees with the definition found in the specification, the definition in the separate file prevails. Remove this note before submitting for publication.)
 -->
@@ -153,7 +153,7 @@ Copyright © OASIS Open 2026. All Rights Reserved.  For license and copyright in
 - [4 Introduction (non-normative)](#4-introduction-non-normative)
   - [4.1 Requirements](#41-requirements)
   - [4.2 Abstraction Layer](#42-abstraction-layer)
-  - [4.3 Example Short Identifier Set](#43-example-short-identifier-set)
+  - [4.3 Example Short Identifier Set (Non-normative)](#43-example-short-identifier-set-non-normative)
   - [4.4 Changes From the Previous Version](#44-changes-from-the-previous-version)
 - [5 Syntax (normative, with the exception of the schema fragments)](#5-syntax-normative-with-the-exception-of-the-schema-fragments)
   - [5.1 Mapping ACAL simple types](#51-mapping-acal-simple-types)
@@ -354,7 +354,7 @@ In the case where the native request/response format is specified in XML Schema 
 
 Similarly, in the case where the resource to which access is requested is an XML document, the resource itself may be included in, or referenced by, the request context. Then, through the use of XPath expressions [[XPath](#xpath)] in the policy, values in the resource may be included in the policy evaluation. The use of XPath expressions is not specified here but in the XPath Profile of ACAL.
 
-## 4.3 Example Short Identifier Set
+## 4.3 Example Short Identifier Set (Non-normative)
 
 A set of Short Identifiers with the Id `urn:oasis:names:tc:acal:1.0:core:identifiers` is defined by ACAL in the XML Representation according to this specification, for the various identifiers assigned by ACAL, and provided attached to this profile. However, a deployment will usually have need for additional identifiers, especially for locally-defined attributes, so it is usually desirable to define a set of additional short identifiers to use in the deployment, that may import the first set.
 
@@ -828,17 +828,6 @@ The implementation SHALL support a given content type in this list if and only i
 
 # 6 Safety, Security and Privacy Considerations (non-normative)
 
-<!-- From OASIS Open Specification Template Instructions:
-
-
-This section is **REQUIRED** and **MUST** be the second to last numbered section in the document, right before Conformance. This section contains information about safety, security, data protection, and privacy considerations. These can be divided up into separate subsections as desired. All documents **SHOULD** have at least a security and data protection considerations section, and otherwise **MUST** have a blank section indicating “None.” Any other considerations **MAY** also be added.
-
-
-Please note that any specification that will need to register something with IANA or has plans to go on to ITU/ISO/IEC **MUST** have this section filled out. For an example please see the following section in the CACAO specification here [https://docs.oasis-open.org/cacao/security-playbooks/v2.0/cs01/security-playbooks-v2.0-cs01.html#_Toc152256574](https://docs.oasis-open.org/cacao/security-playbooks/v2.0/cs01/security-playbooks-v2.0-cs01.html#_Toc152256574) 
-
-
--->
-
 This section identifies possible security and privacy compromise scenarios that should be considered when implementing this profile. The section is informative only. It is left to the implementer to decide whether these compromise scenarios are practical in their environment and to select appropriate safeguards.
 
 ## 6.1 Threat model
@@ -896,7 +885,7 @@ For the purposes of this specification:
 - **O** means optional-to-implement
 
 For ACAL object types, these categories are inherited unchanged from
-[[ACAL-Core](#acal-core)] Section 11.2.1. XACML uses the same notation
+[[ACAL-Core](#acal-core-10)] Section 11.2.1. XACML uses the same notation
 again in [Section 7.3.2](#732-machine-readable-artifact-support) for
 XACML-specific artifacts.
 
@@ -932,9 +921,8 @@ The following machine-readable artifacts accompany this specification:
 |:---|:---:|:---|
 | `acal-core-xml-v4.0-schema.xsd` | M | Core XML Schema |
 | `acal-core-xml-v4.0-identifiers.xml` | M | Core short identifier set represented in XML |
-| `acal-xpath-xml-v4.0-schema.xsd` | O | XML Schema for XPath Profile support |
-| `acal-xpath-xml-v4.0-identifiers.xml` | O | Short identifier set for XPath profile support represented in XML |
-| `acal-jsonpath-xml-v4.0-schema.xsd` | O | XML Schema for JSONPath Profile support |
+
+The XML Schemas and short identifier sets for XPath Profile and JSONPath Profile support are artifacts of those Profiles' own Work Products, not of this Core specification.
 
 -------
 
@@ -1118,6 +1106,18 @@ Davis, Mark, Suignard, Michel, Unicode Technical Report #36: Unicode Security Co
 OASIS Committee Draft 03, XACML v3.0 Administration and Delegation Profile Version 1.0. 11 March 2010, https://docs.oasis-open.org/xacml/3.0/xacml-3.0-administration-v1-spec-cd-03-en.doc
 
 ###### [XACMLv1.0]
+
+<!-- Editorial note (pending OASIS guidance): this citation links to an OASIS member-only
+(Kavi) URI, https://www.oasis-open.org/committees/download.php/2406/oasis-xacml-1.0.pdf,
+which Naming Directives v1.7 s6.6 bars from public TC documents. The document being cited
+is the OASIS Standard "Extensible access control markup language (XACML) Version 1.0",
+18 February 2003 (Kavi document ID 2406, file oasis-xacml-1.0.pdf) -- no docs.oasis-open.org
+mirror of this pre-2013 document currently exists. Note that XACML 3.0's own published OASIS
+Standard cites this same member-only URL for the identical reference, so this is a
+long-standing gap in the TC's published record rather than an error introduced here.
+Awaiting confirmation from OASIS TC Administration on either (a) a public mirror location
+for this document, or (b) an approved exception for this legacy citation, before this note
+and the citation below can be finalized. -->
 
 OASIS Standard, Extensible access control markup language (XACML) Version 1.0. 18 February 2003, https://www.oasis-open.org/committees/download.php/2406/oasis-xacml-1.0.pdf
 
