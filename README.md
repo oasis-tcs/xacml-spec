@@ -247,4 +247,8 @@ In the meantime, you may apply the following mapping rules:
 2. Else (*P* is a JSON array) for each JSON value *V<sub>n</sub>* (n=0, 1,...) of *P*, create an XML element `<P>` with the following XML attributes and/or child nodes:
    1. If *V<sub>n</sub>* is primitive, the only child node is a text node whose content is *V<sub>n</sub>* possibly modified after applying XML character escaping rules. No XML attribute. 
    1. Else if *V<sub>n</sub>* is a JSON object, the attributes and child elements are the results of re-applying the full mapping rules to each property *P<sub>n</sub>* of this object. The order of child elements must match the order defined in the XACML schema for the corresponding `<P>` element.
-   1. Else (*V<sub>n</sub>* is a JSON array) reject as invalid (JSON arrays of arrays are not allowed). 
+   1. Else (*V<sub>n</sub>* is a JSON array) reject as invalid (JSON arrays of arrays are not allowed).
+  
+### If I just need to implement a PEP (Policy Enforcement Point) or whatever to make access requests to a PDP, do I have to support the full XACML/JACAL schema(s)?
+
+Rest assured, you don't. Whether you want to use XACML, JACAL or other ACAL representation format, you only need to support the `Request` and `Response` objects and all their dependencies, which is only a subset of the full XACML/JACAL schema. This is referred to as the `PDP API` package in the ACAL UML model (Annex G of ACAL core specification)). The [ACAL Community Tools repository](https://github.com/acal-community/tools) provides you with [simple tools](https://github.com/acal-community/tools#minimal-pdp-api-schema-generation-tools-for-peps) to help you generate the minimal PDP API schema in XACML/JACAL for your PEP implementation.
