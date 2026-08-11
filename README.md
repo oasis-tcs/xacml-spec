@@ -6,7 +6,7 @@ OASIS TC GitHub repositories, as described in <a href="https://www.oasis-open.or
 
 ## Description
 
-The OASIS XACML Technical Committee is developing ACAL (Attribute-Centric Authorization Language) v1.0, the successor to XACML 3.0. ACAL separates policy semantics from serialization syntax, enabling the same authorization policies to be expressed in XML (XACML v4.0), JSON (JACAL v1.0), or YAML (YACAL v1.0). This repository contains the specifications, schemas, and supplementary artifacts for all three representations. Requests for modification can be made via <a href="https://github.com/oasis-tcs/xacml-spec/issues">GitHub Issues</a>.
+The OASIS XACML Technical Committee is developing ACAL (Attribute-Centric Authorization Language) v1.0, the successor to XACML 3.0. ACAL separates policy semantics from serialization syntax, enabling the same authorization policies to be expressed in XML (XACML v4.0), JSON (JACAL v1.0), or YAML (YACAL v1.0). New representation formats can be more easily added on the same model. This repository contains the specifications, schemas, and supplementary artifacts for all three representations. Requests for modification can be made via <a href="https://github.com/oasis-tcs/xacml-spec/issues">GitHub Issues</a>.
 
 ### Specification Family
 
@@ -19,15 +19,20 @@ The OASIS XACML Technical Committee is developing ACAL (Attribute-Centric Author
 
 ### Key Changes from XACML 3.0
 
-- **Policy absorbs PolicySet**: nested policies use a single `Policy` type with a `CombinerInput` sequence; `PolicySet` is eliminated
-- **Target simplification**: the `AnyOf / AllOf / Match` structure is replaced by a plain boolean `Apply` expression — the same language as `Condition`
-- **NoticeExpression**: `ObligationExpression` and `AdviceExpression` are unified into a single `NoticeExpression` type with an `IsObligation` flag
+- **New data representation formats (JSON, YAML)** sharing a common (XML-agnostic) abstract model (ACAL), which facilitates **extensibility to other formats** via ACAL Profiles.
+- **Model / Structure simplifications** including:
+  - **Target simplification**: the `AnyOf / AllOf / Match` structure is replaced by a plain boolean `Apply` expression — the same language as `Condition`
+  - **Policy absorbs PolicySet**: nested policies use a single `Policy` type with a `CombinerInput` sequence; `PolicySet` is eliminated
+  - **NoticeExpression**: `ObligationExpression` and `AdviceExpression` are unified into a single `NoticeExpression` type with an `IsObligation` flag
+  - **XPath moved to a profile**: XPath-based `AttributeSelector` and functions are in the separate ACAL XPath Profile; a new JSONPath Profile is also defined
+
 - **Attribute DataType**: `DataType` is declared once per `Attribute`, not per value, preventing mixed-type bags
 - **Short identifiers (ShortIdSet)**: user-defined URI aliases reduce verbosity; a standard ACAL identifier set covers all built-ins
 - **QuantifiedExpression**: `ForAny`, `ForAll`, `Map`, and `Select` enable iteration over attribute value bags
 - **Bundle**: portable container for policies, shared variable definitions, and identifier sets
 - **Identifier namespace**: standard identifiers move from `urn:oasis:names:tc:xacml:` to `urn:oasis:names:tc:acal:`
-- **XPath moved to a profile**: XPath-based `AttributeSelector` and functions are in the separate ACAL XPath Profile; a new JSONPath Profile is also defined
+- **New functions**: conditional/ternary operator, min, max, etc.
+
 
 For a complete description of changes with worked examples in all three representations, see the [ACAL Adoption and Implementation Guide](acal-adoption-guide.md).
 
