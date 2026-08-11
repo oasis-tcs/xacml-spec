@@ -5009,7 +5009,7 @@ URIs starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are
 
 `RequestEntity` [One to Many]
 
-: A sequence of `RequestEntityType` objects, each containing a sequence of `RequestAttributeType` objects associated with an attribute category of the request context. Different `RequestEntityType` objects with different category identifiers are used to represent information about the subject, resource, action, environment or other categories of the access request. There may be multiple `RequestEntityType` objects with the same `Category` property value if the PDP implements the multiple decision profile, see [[Multi](#multi)]. Under other conditions, it is a syntax error if there are multiple `RequestEntityType` objects with the same `Category` (see [Section 8.17.2](#8172-syntax-and-type-errors) for error codes).
+: A sequence of `RequestEntityType` objects, each containing a sequence of `RequestAttributeType` objects associated with an attribute category of the request context. Different `RequestEntityType` objects with different category identifiers are used to represent information about the subject, resource, action, environment or other categories of the access request. There may be multiple `RequestEntityType` objects with the same `Category` property value if the PDP implements the ACAL Multiple Decision Profile, see [[Multi](#multi)]. Under other conditions, it is a syntax error if there are multiple `RequestEntityType` objects with the same `Category` (see [Section 8.17.2](#8172-syntax-and-type-errors) for error codes).
 
 `MultiRequests` [Optional]
 
@@ -5159,7 +5159,7 @@ The `RequestAttributeType` object type extends the `AttributeType` object type w
 
 The `ResponseType` object type is an abstraction layer used by the policy language. Any proprietary system using the ACAL specification MUST transform an ACAL context `ResponseType` object into the form of its authorization decision.
 
-A `ResponseType` object encapsulates the authorization decision produced by the PDP. It includes a sequence of one or more results, with one `ResultType` object per requested resource. Multiple results MAY be returned by some implementations, in particular those that support the ACAL Profile for Requests for Multiple Resources [[Multi](#multi)]. Support for multiple results is OPTIONAL.
+A `ResponseType` object encapsulates the authorization decision produced by the PDP. It includes a sequence of one or more results, with one `ResultType` object per requested resource. Multiple results MAY be returned by some implementations, in particular those that support the ACAL Multiple Decision Profile [[Multi](#multi)]. Support for multiple results is OPTIONAL.
 
 UML definition (class diagram):
 ```plantuml
@@ -5924,7 +5924,7 @@ A policy reference containing circular references is invalid. The PDP MUST detec
 
 ## 8.14 Hierarchical Resources
 
-It is often the case that a resource is organized as a hierarchy (e.g., file system, XML document). ACAL provides several optional mechanisms for supporting hierarchical resources. These are described in the ACAL Profile for Hierarchical Resources [[Hier](#hier)] and in the ACAL Profile for Requests for Multiple Resources [[Multi](#multi)].
+It is often the case that a resource is organized as a hierarchy (e.g., file system, XML document). ACAL provides several optional mechanisms for supporting hierarchical resources. These are described in the ACAL Hierarchical Resource Profile [[Hier](#hier)] and in the ACAL Multiple Decision Profile [[Multi](#multi)].
 
 ## 8.15 Authorization Decision
 
@@ -6821,7 +6821,7 @@ Mathematical Markup Language (MathML), Version 2.0, W3C Recommendation, 21 Octob
 
 ###### [Multi]
 
-OASIS Committee Draft 03, XACML v3.0 Multiple Decision Profile Version 1.0, 11 March 2010, https://docs.oasis-open.org/xacml/3.0/xacml-3.0-multiple-v1-spec-cd-03-en.doc
+XACML v3.0 Multiple Decision Profile Version 1.0. 18 May 2014. Committee Specification 02. https://docs.oasis-open.org/xacml/3.0/multiple/v1.0/xacml-3.0-multiple-v1.0.html
 
 ###### [OCL]
 
