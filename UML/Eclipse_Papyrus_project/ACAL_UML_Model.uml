@@ -95,7 +95,7 @@
       <packagedElement xmi:type="uml:DataType" xmi:id="_GMwVoGhLEfGiArG33d46Ow" name="IdReferenceType" isAbstract="true">
         <ownedAttribute xmi:type="uml:Property" xmi:id="_NAjksGhLEfGiArG33d46Ow" name="Id" type="_b7tt8LKvEe-pQ64h6l17hA"/>
       </packagedElement>
-      <packagedElement xmi:type="uml:DataType" xmi:id="_C7i-MJG5EfGIqaJUVdhE7w" name="ContentType2">
+      <packagedElement xmi:type="uml:DataType" xmi:id="_C7i-MJG5EfGIqaJUVdhE7w" name="ContentType">
         <ownedAttribute xmi:type="uml:Property" xmi:id="_NflksJG5EfGIqaJUVdhE7w" name="MediaType" type="__r23oGhOEfGiArG33d46Ow">
           <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_cZq-YJG5EfGIqaJUVdhE7w" name="LiteralInteger1"/>
           <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_cZyTIJG5EfGIqaJUVdhE7w" name="LiteralUnlimitedNatural1" value="1"/>
