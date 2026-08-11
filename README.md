@@ -236,7 +236,7 @@ Apply the constraint catalog (`acal-core-yaml-v1.0-constraints.yaml`) using a co
 
 ### How to convert a JACAL document to XACML 4.0?
 
-The XACML TC will provide an example of JACAL-to-XACML conversion tool as a reference, on this repository. 
+By the time that ACAL 1.0 is officially released as OASIS standard, it is the intention of the XACML TC to provide an example of JACAL-to-XACML conversion tool as a reference, on the [ACAL Community tools repository](https://github.com/acal-community/tools/). 
 In the meantime, you may apply the following mapping rules:
 
 *For each JSON property *P* with value *V* in the JACAL document,*
