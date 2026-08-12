@@ -186,7 +186,7 @@ if $NUMBER_LINES_IN_CODE_BLOCKS; then
 fi
 
 $PANDOC -f "$INPUT_FORMAT" -t html \
-  -c "$SCRIPT_DIR/styles/markdown-styles-v1.7.3a.css" \
+  -c "$SCRIPT_DIR/styles/markdown-styles-v1.7.3b.css" \
   -s \
   --template "$SCRIPT_DIR/templates/default.html" \
   --filter pandoc-include \
