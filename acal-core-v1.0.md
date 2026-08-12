@@ -3392,7 +3392,7 @@ The version number is expressed as a sequence of decimal numbers, each separated
 
 ##### 7.1.2.3.5 VersionMatchType
 
-Properties of this type SHALL contain a restricted regular expression matching a version number (see [Section 7.1.2.3.3](#versiontype)). The expression SHALL match versions of a referenced policy that are acceptable for inclusion in the referencing policy.
+Properties of this type SHALL contain a restricted regular expression matching a version number (see [Section 7.1.2.3.4](#71234-versiontype)). The expression SHALL match versions of a referenced policy that are acceptable for inclusion in the referencing policy.
 
 UML definition:
 ```plantuml
@@ -3978,11 +3978,11 @@ class ExactMatchIdReferenceType <<dataType>> extends IdReferenceType {
 @enduml
 ```
 
-The `ExactMatchIdReferenceType` object type extends the [`IdReferenceType` object type (Section 7.8)](#idreferencetype) with the following property:
+The `ExactMatchIdReferenceType` object type extends the [`IdReferenceType` object type (Section 7.8)](#78-idreferencetype) with the following property:
 
 `Version` [Required]
 
-: A `VersionType` value indicating the version of a policy that was applicable to the request. See [PolicyReferenceType (Section 7.11)](#policyreferencetype).
+: A `VersionType` value indicating the version of a policy that was applicable to the request. See [PolicyReferenceType (Section 7.11)](#711-policyreferencetype).
 
 ## 7.10 PatternMatchIdReferenceType
 
@@ -4004,7 +4004,7 @@ The `PatternMatchIdReferenceType` object type extends the `IdReferenceType` obje
 
 `Version` [Optional]
 
-: Specifies a matching expression for selecting an acceptable version of the referenced policy. The matching operation is defined by [VersionMatchType (Section 7.1.2.3.4)](#versionmatchtype). If this property is present, then the selected version of the policy MUST match the expression. If the property is absent, then any version of the policy is acceptable. In the case that more than one version matches, then the most recent one (latest version) SHOULD be used.
+: Specifies a matching expression for selecting an acceptable version of the referenced policy. The matching operation is defined by [VersionMatchType (Section 7.1.2.3.5)](#71235-versionmatchtype). If this property is present, then the selected version of the policy MUST match the expression. If the property is absent, then any version of the policy is acceptable. In the case that more than one version matches, then the most recent one (latest version) SHOULD be used.
 
 <a name="policyreferencetype"></a>
 
@@ -4086,7 +4086,7 @@ A `RuleType` object contains the following properties:
 
 `NoticeExpression` [Any Number]
 
-: A sequence of `NoticeExpressionType` objects, each defining a notice expression potentially evaluated into a notice by the PDP. See [NoticeExpressionType](#noticeexpressiontype). Objects' `Id` values are not required to be unique in this sequence; the same `Id` MAY occur more than once, typically with different `AttributeAssignmentExpression`s. See [Section 8.16](#816-notices) for a description of how the notices to be returned by the PDP shall be determined. See [Section 8.2](#82-policy-enforcement-point) about enforcement of obligation notices.
+: A sequence of `NoticeExpressionType` objects, each defining a notice expression potentially evaluated into a notice by the PDP. See [NoticeExpressionType](#729-noticeexpressiontype). Objects' `Id` values are not required to be unique in this sequence; the same `Id` MAY occur more than once, typically with different `AttributeAssignmentExpression`s. See [Section 8.16](#816-notices) for a description of how the notices to be returned by the PDP shall be determined. See [Section 8.2](#82-policy-enforcement-point) about enforcement of obligation notices.
 
 ## 7.13 VariableDefinitionType
 
@@ -4949,7 +4949,7 @@ An `AttributeAssignmentExpressionType` object contains the following properties:
 
 `Expression` [Required]
 
-: An `ExpressionType` object defining an expression which evaluates to a constant attribute value or a bag of zero or more attribute values. See [Section 7.14](#expressiontype). If the `Expression` value is a `ValueType` object (literal value) without a defined `DataType` identifier, it SHALL be handled as String (with DataType identifier `urn:oasis:names:tc:acal:1.0:data-type:string`) by default. *Note that the way the DataType identifier is defined depends on the concrete type (subtype of `ValueType`) of that value. For example, `ValueType` subtypes stereotyped `<<fixedDatatype>>` have the `DataType` identifier globally defined and fixed as a Stereotype property (therefore implicitly predefined for every instance), whereas the `LiteralRestrictedStringType` have a UML attribute `DataType` that can be set to a different value (identifier) for each instance.*
+: An `ExpressionType` object defining an expression which evaluates to a constant attribute value or a bag of zero or more attribute values. See [Section 7.14](#714-expressiontype). If the `Expression` value is a `ValueType` object (literal value) without a defined `DataType` identifier, it SHALL be handled as String (with DataType identifier `urn:oasis:names:tc:acal:1.0:data-type:string`) by default. *Note that the way the DataType identifier is defined depends on the concrete type (subtype of `ValueType`) of that value. For example, `ValueType` subtypes stereotyped `<<fixedDatatype>>` have the `DataType` identifier globally defined and fixed as a Stereotype property (therefore implicitly predefined for every instance), whereas the `LiteralRestrictedStringType` have a UML attribute `DataType` that can be set to a different value (identifier) for each instance.*
 
 `AttributeId` [Required]
 
@@ -5004,7 +5004,7 @@ URIs starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are
 
 `RequestDefaults` [Any Number]
 
-: sequence of `RequestDefaultsType` objects; each contains default values specific to an ACAL Profile, for processing the request (e.g. ACAL XPath Profile defines the default XPath version). In particular, each object SHALL have a different concrete type (per ACAL profile). See [Section 7.32](#requestdefaultstype).
+: sequence of `RequestDefaultsType` objects; each contains default values specific to an ACAL Profile, for processing the request (e.g. ACAL XPath Profile defines the default XPath version). In particular, each object SHALL have a different concrete type (per ACAL profile). See [Section 7.32](#732-requestdefaultstype-optional).
 
 
 `RequestEntity` [One to Many]
@@ -5013,7 +5013,7 @@ URIs starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are
 
 `MultiRequests` [Optional]
 
-: A `MultiRequestsType` object listing multiple request contexts using references to the `RequestEntityType` objects. Implementation of this property is optional. The semantics of this property are defined in [[Multi](#multi)]. If the implementation does not implement this property, it MUST return an `Indeterminate` result if it encounters this property. See [Section 7.38](#multirequeststype).
+: A `MultiRequestsType` object listing multiple request contexts using references to the `RequestEntityType` objects. Implementation of this property is optional. The semantics of this property are defined in [[Multi](#multi)]. If the implementation does not implement this property, it MUST return an `Indeterminate` result if it encounters this property. See [Section 7.38](#738-multirequeststype-optional).
 
 <a name="requestdefaultstype">
 
@@ -5182,7 +5182,7 @@ URIs starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are
 
 `Result` [One to Many]
 
-: A sequence of `ResultType` objects, each an authorization decision result. See [Section 7.37](#resulttype).
+: A sequence of `ResultType` objects, each an authorization decision result. See [Section 7.37](#737-resulttype).
 
 <a name="resulttype"></a>
 
@@ -5217,15 +5217,15 @@ A `ResultType` object contains the following properties:
 
 `Notice` [Any Number]
 
-: A sequence of `NoticeType` objects, each a notice to be interpreted by the PEP. Objects' `Id` values are not required to be unique in the sequence; the same `Id` MAY occur more than once, typically with different `AttributeAssignment`s, for instance when it is drawn from more than one rule or policy. See [Section 7.26](#noticetype). If the PEP does not understand or cannot fulfill an obligation notice, then the action of the PEP is determined by its bias, see [Section 8.2](#82-policy-enforcement-point). If the PEP does not understand an advice notice, the PEP may safely ignore the notice. See [Section 8.16](#816-notices) for a description of how the list of notices to be returned by the PDP is determined.
+: A sequence of `NoticeType` objects, each a notice to be interpreted by the PEP. Objects' `Id` values are not required to be unique in the sequence; the same `Id` MAY occur more than once, typically with different `AttributeAssignment`s, for instance when it is drawn from more than one rule or policy. See [Section 7.26](#726-noticetype). If the PEP does not understand or cannot fulfill an obligation notice, then the action of the PEP is determined by its bias, see [Section 8.2](#82-policy-enforcement-point). If the PEP does not understand an advice notice, the PEP may safely ignore the notice. See [Section 8.16](#816-notices) for a description of how the list of notices to be returned by the PDP is determined.
 
 `ResultEntity` [Any Number]
 
-: A sequence of `ResultEntityType` objects, each an attribute category containing attributes that were part of the request. The choice of which attributes are included here is made with the `IncludeInResult` property of the `RequestAttributeType` objects of the request. See [Section 7.27](#attributetype).
+: A sequence of `ResultEntityType` objects, each an attribute category containing attributes that were part of the request. The choice of which attributes are included here is made with the `IncludeInResult` property of the `RequestAttributeType` objects of the request. See [Section 7.27](#727-attributetype).
 
 `ApplicablePolicyReference` [Any Number]
 
-: A sequence of `ExactMatchIdReferenceType` objects. If the `ReturnPolicyIdList` property in the `RequestType` object is `true` (see [Section 7.31](#requesttype)), a PDP that implements this optional feature MUST return a sequence that includes the identifiers of all policies which were found to be fully applicable, whether or not the effect (after rule combining) was the same or different from the decision. The sequence is unordered. The sequence MAY include the identifiers of other policies that are currently in force, as long as no policies required for the decision are omitted. A PDP MAY satisfy this requirement by including all policies currently in force, or by including all policies which were evaluated in making the decision, or by including all policies which did not evaluate to `NotApplicable`, or by any other algorithm which does not omit any policies which contributed to the decision. However, a decision which returns `NotApplicable` MUST return an empty list.
+: A sequence of `ExactMatchIdReferenceType` objects. If the `ReturnPolicyIdList` property in the `RequestType` object is `true` (see [Section 7.31](#731-requesttype)), a PDP that implements this optional feature MUST return a sequence that includes the identifiers of all policies which were found to be fully applicable, whether or not the effect (after rule combining) was the same or different from the decision. The sequence is unordered. The sequence MAY include the identifiers of other policies that are currently in force, as long as no policies required for the decision are omitted. A PDP MAY satisfy this requirement by including all policies currently in force, or by including all policies which were evaluated in making the decision, or by including all policies which did not evaluate to `NotApplicable`, or by any other algorithm which does not omit any policies which contributed to the decision. However, a decision which returns `NotApplicable` MUST return an empty list.
 
 <a name="multirequeststype"></a>
 
@@ -5250,7 +5250,7 @@ A `MultiRequestsType` object contains the following properties.
 
 `RequestReference` [one to many]
 
-: A sequence of `RequestReferenceType` objects, each defining a request instance by reference to `RequestEntityType` objects in the enclosing `RequestType` object. See [Section 7.39](#requestreferencetype).
+: A sequence of `RequestReferenceType` objects, each defining a request instance by reference to `RequestEntityType` objects in the enclosing `RequestType` object. See [Section 7.39](#739-requestreferencetype-optional).
 
 <a name="requestreferencetype"></a>
 
@@ -5960,11 +5960,11 @@ If a policy that contains invalid static data types is evaluated by the ACAL PDP
 
 ### 8.17.3 Missing Attributes
 
-The absence of matching attributes in the request context for any of the attribute designators, entity attribute designators, attribute selectors or entity attribute selectors that are found in the policy potentially results in the policy evaluating to `Indeterminate`, if the designator or selector has the `MustBePresent` property set to `true`, as described in [Section 7.17](#namedattributedesignatortype) and [Section 7.20](#baseattributeselectortype) and potentially results in a `Decision` property containing the `Indeterminate` value. In this case, if a status code is supplied, then the value
+The absence of matching attributes in the request context for any of the attribute designators, entity attribute designators, attribute selectors or entity attribute selectors that are found in the policy potentially results in the policy evaluating to `Indeterminate`, if the designator or selector has the `MustBePresent` property set to `true`, as described in [Section 7.17](#717-namedattributedesignatortype) and [Section 7.20](#720-baseattributeselectortype-optional) and potentially results in a `Decision` property containing the `Indeterminate` value. In this case, if a status code is supplied, then the value
 
 `urn:oasis:names:tc:acal:1.0:status:missing-attribute`
 
-SHALL be used, to indicate that more information is needed in order for a definitive decision to be rendered. In this case, the `StatusType` object MAY list the names and data types of any attributes that are needed by the PDP to refine its decision (see [Section 7.43](#missingattributedetailtype)). A PEP MAY resubmit a refined request context in response to a `Decision` property value of `Indeterminate` with a status code of
+SHALL be used, to indicate that more information is needed in order for a definitive decision to be rendered. In this case, the `StatusType` object MAY list the names and data types of any attributes that are needed by the PDP to refine its decision (see [Section 7.43](#743-missingattributedetailtype)). A PEP MAY resubmit a refined request context in response to a `Decision` property value of `Indeterminate` with a status code of
 
 `urn:oasis:names:tc:acal:1.0:status:missing-attribute`
 
@@ -7049,7 +7049,7 @@ where `portnumber` is a decimal port number. If the port number is of the form `
 
 ### C.2.6 Entity
 
-The `urn:oasis:names:tc:acal:1.0:data-type:entity` data type is used to represent an entity nested within another entity. Values of this data type are objects of the `EntityType` object type [Section 7.45](#entitytype).
+The `urn:oasis:names:tc:acal:1.0:data-type:entity` data type is used to represent an entity nested within another entity. Values of this data type are objects of the `EntityType` object type [Section 7.45](#745-entitytype).
 
 ## C.3 Functions
 
@@ -8281,7 +8281,7 @@ This identifier indicates success:
 
 `urn:oasis:names:tc:acal:1.0:status:ok`
 
-This identifier indicates that all the attributes necessary to make a policy decision were not available (see [Section 7.43](#missingattributedetailtype)):
+This identifier indicates that all the attributes necessary to make a policy decision were not available (see [Section 7.43](#743-missingattributedetailtype)):
 
 `urn:oasis:names:tc:acal:1.0:status:missing-attribute`
 
@@ -8350,7 +8350,7 @@ Note that in each case an implementation is conformant as long as it produces th
 
 ## E.1 Extended Indeterminate Values
 
-Some combining algorithms are defined in terms of an extended set of `Indeterminate` values. See [Section 8.10](#extended-indeterminate) for the definition of the Extended Indeterminate values. For these algorithms, the PDP MUST keep track of the extended set of `Indeterminate` values during rule and policy combining.
+Some combining algorithms are defined in terms of an extended set of `Indeterminate` values. See [Section 8.10](#E1-extended-indeterminate-values) for the definition of the Extended Indeterminate values. For these algorithms, the PDP MUST keep track of the extended set of `Indeterminate` values during rule and policy combining.
 
 The output of a combining algorithm which does not track the extended set of `Indeterminate` values MUST be treated as `Indeterminate{DP}` for the value `Indeterminate` by a combining algorithm which tracks the extended set of `Indeterminate` values.
 

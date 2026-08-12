@@ -176,7 +176,8 @@ Copyright © OASIS Open 2026. All Rights Reserved.  For license and copyright in
   - [7.1 Introduction](#71-introduction)
   - [7.2 Conformance Categories](#72-conformance-categories)
   - [7.3 Conformance Tables](#73-conformance-tables)
-    - [7.2.1 Schema objects](#721-schema-objects)
+    - [7.3.1 ACAL Object-Type Conformance](#731-acal-object-type-conformance)
+    - [7.3.2 Machine-Readable Artifact Support](#732-machine-readable-artifact-support)
 - [Annex A License, Document Status and Notices](#annex-a-license-document-status-and-notices)
   - [A.1 Document Status](#a1-document-status)
   - [A.2 License and Notices](#a2-license-and-notices)
@@ -1157,13 +1158,13 @@ For the purposes of this specification:
 - **O** means optional-to-implement
 
 For ACAL object types, these categories are inherited unchanged from
-[[ACAL-Core](#acal-core)] Section 11.2.1. JACAL uses the same notation
+[[ACAL-Core](#acal-core-10)] Section 11.2.1. JACAL uses the same notation
 again in [Section 7.3.2](#732-machine-readable-artifact-support) for
 JACAL-specific artifacts.
 
 An implementation MUST follow
 [Section 5](#5-syntax-normative-with-the-exception-of-the-schema-fragments)
-and [Annex C](#annex-c-xacml-identifiers-normative) where they apply to
+and [Annex C](#annex-c-jacal-identifiers-normative) where they apply to
 implemented items in the following tables.
 
 ## 7.3 Conformance Tables
