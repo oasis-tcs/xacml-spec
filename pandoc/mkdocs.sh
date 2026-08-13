@@ -136,17 +136,11 @@ if $MAKE_PDF; then
     if $USE_CHROME_CONTAINER_IMAGE; then
         CONTAINER_COMMAND="$(find_container_command)"
         if [ -z "$CONTAINER_COMMAND" ]; then
-            printf "Neither Podman nor Docker was found on this system.\n"
-            printf "PDF generation with --official flag requires one of these two container engines CLI.\n"
-            exit 1
-        fi
-        if $CONTAINER_COMMAND pull $CHROME_CONTAINER_IMAGE 2>&1 | grep -iq "unauthorized"; then
-            echo "Unauthorized access to the container image on OASIS TCs' Github Package Registry: $CHROME_CONTAINER_IMAGE."
-            echo "You must be a member of 'oasis-tcs' Github organization, and login first with a Personal Access Token granted with at least 'read:packages' permission (and try again): $CONTAINER_COMMAND login ghcr.io"
+            printf "Neither Podman nor Docker was found on this system.\nPDF generation with --official flag requires one of these two container engines to be installed.\n"
             exit 1
         fi
         if echo "$CONTAINER_COMMAND" | grep -iq "podman"; then CONTAINER_RUN_CUSTOM_ARGS="--userns=keep-id"; fi
-        CHROME="(inside a Linux container)"
+        CHROME="(from Linux container image $CHROME_CONTAINER_IMAGE)"
     else
         CHROME="$(find_chrome)"
         if [ -z "$CHROME" ]; then

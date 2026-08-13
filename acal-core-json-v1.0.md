@@ -1486,6 +1486,16 @@ $ pandoc/mkdocs.sh --pdf --output /tmp acal-core-json-v%version%.md
 
 The HTML file is generated like the previous command and, in addition, a PDF file is generated with the same name as the input file except the `.md` extension is replaced with `.pdf` in this case.
 
+Beware that **the result PDF - the embedded fonts in particular - may differ depending on the system/machine** where you run this command. Mainly, it depends on which fonts are actually installed on the system, as the HTML-to-PDF converter (Chrome / Chromium in this case) selects available fonts according to the prioritized lists defined by `font-family` properties in the CSS.
+
+**For official TC publications**, add the `--official` argument to avoid this issue and produce a system-independent output:
+
+```console
+$ pandoc/mkdocs.sh --pdf --official --output /tmp acal-core-v%version%.md
+```
+
+In this case, the generation will use a public Linux container image (`ghcr.io/oasis-tcs/chrome-headless`) with a fixed installed set of fonts to generate the PDF.
+
 -------
 
 
