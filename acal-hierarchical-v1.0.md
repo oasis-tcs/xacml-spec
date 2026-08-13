@@ -246,8 +246,8 @@ This is the first ACAL version of this profile, ported from _XACML v3.0 Hierarch
 The following substantive changes and decisions apply relative to the XACML 3.0 source:
 
 - **No narrowing of the ancestor-attribute scheme.** An earlier analysis of this port considered requiring a single data type per ancestor attribute per request, because ACAL's original `isUnique(AttributeId)` constraint on `RequestEntityType`/`ResultEntityType`/`EntityType` made [XACML 3.0 HRP](#hier) §2.3's mixed-data-type ancestor representations unrepresentable. That constraint was independently identified as contradicting ACAL Core's own designator-matching rule (Section 7.17) and was relaxed by issue #120 to `isUnique(Sequence{AttributeId, DataType, Issuer})` before this profile was drafted. As a result, **no narrowing is needed**: a node's ancestors, and a node itself, MAY be identified using attributes of any ACAL data type, and there is no requirement that different nodes, or nodes in the same hierarchy, use the same data type — exactly as [XACML 3.0 HRP](#hier) §2.3 permits. See [Section 5.3](#53-nodes-identified-by-ancestor-attributes).
-- **Erratum 1 (identifier naming).** The published CS02 body (§2.2, §2.3, §3.2, §3.3, §7.2, §7.3) and its §6 identifier summary disagree on the names of two of the three scheme identifiers — the body uses `URI-node-id` and `attribute-node-id`, §6 instead lists `non-xml-node-id` and `non-xml-node-req` (and omits `attribute-node-id` entirely). This document follows the body's spelling, which is used three times each against §6's one occurrence each: `urn:oasis:names:tc:acal:1.0:profile:hierarchical:URI-node-id` and `urn:oasis:names:tc:acal:1.0:profile:hierarchical:attribute-node-id`.
-- **Erratum 2 (version-segment contradiction).** The three optional sub-identifiers for partial ancestor-attribute support appear in CS02 §3.3 as `…:xacml:2.0:profile:hierarchical:non-xml-node-req:resource-*` and in §6 as `…:xacml:3.0:profile:…`. This document uses the `3.0` segment consistently, matching the version segment already used by the rest of this profile's identifiers.
+- **Erratum 1 (identifier naming).** The published CS02 body (§2.2, §2.3, §3.2, §3.3, §7.2, §7.3) and its §6 identifier summary disagree on the names of two of the three scheme identifiers — the body uses `URI-node-id` and `attribute-node-id`, §6 instead lists `non-xml-node-id` and `non-xml-node-req` (and omits `attribute-node-id` entirely). This document follows the body's spelling, which is used three times each against §6's one occurrence each: `urn:oasis:names:tc:acal:1.0:profile:hierarchical:URI-node-id` and `urn:oasis:names:tc:acal:1.0:profile:hierarchical:attribute-node-id`. Because an implementation of the published profile could have followed either spelling, [Section 9.2.1](#921-profile-identifiers) records both as deprecated identifiers rather than only the one this document follows.
+- **Erratum 2 (version-segment contradiction).** The three optional sub-identifiers for partial ancestor-attribute support appear in CS02 §3.3 as `…:xacml:2.0:profile:hierarchical:non-xml-node-req:resource-*` and in §6 as `…:xacml:3.0:profile:…`. This document uses the `3.0` segment consistently, matching the version segment already used by the rest of this profile's identifiers. As with Erratum 1, [Section 9.2.1](#921-profile-identifiers) records both version segments as deprecated identifiers, since an implementation of the published profile could have followed either.
 - **Erratum 3 (malformed URNs).** CS02 §5 gives five attribute identifiers with a doubled colon after `oasis` (`urn:oasis::names:tc:xacml:…`). This document's identifiers ([Annex C.3](#c3-attributes)) correct this.
 - **Erratum 4 (non-existent datatype).** CS02 §2.2/§5.2 specify the `resource-id`/`document-id` DataType as `http://urn:oasis:names:tc:xacml:1.0:data-type:anyURI` (§2.2) or the same URN without the `http://` prefix (§5.2) — neither identifies an actual XACML or ACAL data type. This document uses ACAL's own `urn:oasis:names:tc:acal:1.0:data-type:anyURI`.
 - **Erratum 5 (XACML 2.0 leftover).** CS02 §3.1 refers to XACML 2.0's `<Resource>` element, which does not exist in XACML 3.0 or ACAL. This document uses `RequestEntityType`.
@@ -298,7 +298,7 @@ A node is identified by a single, fully-resolved hierarchical URI, such as a fil
 
 Parent and ancestor attributes ([Section 5.3](#53-nodes-identified-by-ancestor-attributes)) SHALL NOT be provided for a resource identified using this scheme — the URI already encodes the node's position in the hierarchy, so separate ancestor attributes would be redundant and could contradict it.
 
-**Profile identifier.** `urn:oasis:names:tc:acal:1.0:profile:hierarchical:URI-node-id` (deprecated identifier: `urn:oasis:names:tc:xacml:3.0:profile:hierarchical:URI-node-id`; see Erratum 1 in [Section 4.3](#43-changes-from-the-previous-version)).
+**Profile identifier.** `urn:oasis:names:tc:acal:1.0:profile:hierarchical:URI-node-id` (deprecated identifiers: `urn:oasis:names:tc:xacml:3.0:profile:hierarchical:URI-node-id` and `urn:oasis:names:tc:xacml:3.0:profile:hierarchical:non-xml-node-id`; see Erratum 1 in [Section 4.3](#43-changes-from-the-previous-version)).
 
 ## 5.3 Nodes Identified by Ancestor Attributes
 
@@ -326,11 +326,11 @@ A `RequestAttributeType` object's `Value` property is a bag of one or more value
 
 **Partial support.** An implementation MAY support producing or consuming a subset of the three `AttributeId`s above. The following identifiers each independently name support for one of them, for conformance purposes ([Section 9](#9-conformance); see Erratum 2 in [Section 4.3](#43-changes-from-the-previous-version)):
 
-- `urn:oasis:names:tc:acal:1.0:profile:hierarchical:attribute-node-req:resource-parent` (deprecated identifier: `urn:oasis:names:tc:xacml:3.0:profile:hierarchical:non-xml-node-req:resource-parent`)
-- `urn:oasis:names:tc:acal:1.0:profile:hierarchical:attribute-node-req:resource-ancestor` (deprecated identifier: `urn:oasis:names:tc:xacml:3.0:profile:hierarchical:non-xml-node-req:resource-ancestor`)
-- `urn:oasis:names:tc:acal:1.0:profile:hierarchical:attribute-node-req:resource-ancestor-or-self` (deprecated identifier: `urn:oasis:names:tc:xacml:3.0:profile:hierarchical:non-xml-node-req:resource-ancestor-or-self`)
+- `urn:oasis:names:tc:acal:1.0:profile:hierarchical:attribute-node-req:resource-parent` (deprecated identifiers: `urn:oasis:names:tc:xacml:3.0:profile:hierarchical:non-xml-node-req:resource-parent` and `urn:oasis:names:tc:xacml:2.0:profile:hierarchical:non-xml-node-req:resource-parent`; see Erratum 2 in [Section 4.3](#43-changes-from-the-previous-version))
+- `urn:oasis:names:tc:acal:1.0:profile:hierarchical:attribute-node-req:resource-ancestor` (deprecated identifiers: `urn:oasis:names:tc:xacml:3.0:profile:hierarchical:non-xml-node-req:resource-ancestor` and `urn:oasis:names:tc:xacml:2.0:profile:hierarchical:non-xml-node-req:resource-ancestor`; see Erratum 2 in [Section 4.3](#43-changes-from-the-previous-version))
+- `urn:oasis:names:tc:acal:1.0:profile:hierarchical:attribute-node-req:resource-ancestor-or-self` (deprecated identifiers: `urn:oasis:names:tc:xacml:3.0:profile:hierarchical:non-xml-node-req:resource-ancestor-or-self` and `urn:oasis:names:tc:xacml:2.0:profile:hierarchical:non-xml-node-req:resource-ancestor-or-self`; see Erratum 2 in [Section 4.3](#43-changes-from-the-previous-version))
 
-**Profile identifier.** `urn:oasis:names:tc:acal:1.0:profile:hierarchical:attribute-node-id` (deprecated identifier: `urn:oasis:names:tc:xacml:3.0:profile:hierarchical:attribute-node-id`; see Erratum 1 in [Section 4.3](#43-changes-from-the-previous-version)).
+**Profile identifier.** `urn:oasis:names:tc:acal:1.0:profile:hierarchical:attribute-node-id` (deprecated identifiers: `urn:oasis:names:tc:xacml:3.0:profile:hierarchical:attribute-node-id` and `urn:oasis:names:tc:xacml:3.0:profile:hierarchical:non-xml-node-req`; see Erratum 1 in [Section 4.3](#43-changes-from-the-previous-version)).
 
 : Note (non-normative): [[Hier](#hier)] §3.3.1 gives non-normative pseudo-code (`ResHierId`, `collectAncestorNodes`, `walkUpHierarchyDag`) for one way to compute the set of ancestor representations to include in a request; this document does not reproduce it, but the technique carries over directly since this scheme's request-construction rule is otherwise unchanged from XACML 3.0.
 
@@ -473,16 +473,16 @@ The implementation MUST follow [Section 5](#5-node-identity-schemes) and [Annex 
 
 The implementation MUST support the node-identity schemes associated with the following identifiers marked `M`.
 
-| Identifier | M/O | Deprecated Identifier |
+| Identifier | M/O | Deprecated Identifier(s) |
 | :--- | :--- | :--- |
 | urn:oasis:names:tc:acal:1.0:profile:hierarchical:xml-node-id | O | urn:oasis:names:tc:xacml:3.0:profile:hierarchical:xml-node-id |
-| urn:oasis:names:tc:acal:1.0:profile:hierarchical:URI-node-id | O | urn:oasis:names:tc:xacml:3.0:profile:hierarchical:URI-node-id |
-| urn:oasis:names:tc:acal:1.0:profile:hierarchical:attribute-node-id | O | urn:oasis:names:tc:xacml:3.0:profile:hierarchical:attribute-node-id |
-| urn:oasis:names:tc:acal:1.0:profile:hierarchical:attribute-node-req:resource-parent | O | urn:oasis:names:tc:xacml:3.0:profile:hierarchical:non-xml-node-req:resource-parent |
-| urn:oasis:names:tc:acal:1.0:profile:hierarchical:attribute-node-req:resource-ancestor | O | urn:oasis:names:tc:xacml:3.0:profile:hierarchical:non-xml-node-req:resource-ancestor |
-| urn:oasis:names:tc:acal:1.0:profile:hierarchical:attribute-node-req:resource-ancestor-or-self | O | urn:oasis:names:tc:xacml:3.0:profile:hierarchical:non-xml-node-req:resource-ancestor-or-self |
+| urn:oasis:names:tc:acal:1.0:profile:hierarchical:URI-node-id | O | urn:oasis:names:tc:xacml:3.0:profile:hierarchical:URI-node-id <br> urn:oasis:names:tc:xacml:3.0:profile:hierarchical:non-xml-node-id |
+| urn:oasis:names:tc:acal:1.0:profile:hierarchical:attribute-node-id | O | urn:oasis:names:tc:xacml:3.0:profile:hierarchical:attribute-node-id <br> urn:oasis:names:tc:xacml:3.0:profile:hierarchical:non-xml-node-req |
+| urn:oasis:names:tc:acal:1.0:profile:hierarchical:attribute-node-req:resource-parent | O | urn:oasis:names:tc:xacml:3.0:profile:hierarchical:non-xml-node-req:resource-parent <br> urn:oasis:names:tc:xacml:2.0:profile:hierarchical:non-xml-node-req:resource-parent |
+| urn:oasis:names:tc:acal:1.0:profile:hierarchical:attribute-node-req:resource-ancestor | O | urn:oasis:names:tc:xacml:3.0:profile:hierarchical:non-xml-node-req:resource-ancestor <br> urn:oasis:names:tc:xacml:2.0:profile:hierarchical:non-xml-node-req:resource-ancestor |
+| urn:oasis:names:tc:acal:1.0:profile:hierarchical:attribute-node-req:resource-ancestor-or-self | O | urn:oasis:names:tc:xacml:3.0:profile:hierarchical:non-xml-node-req:resource-ancestor-or-self <br> urn:oasis:names:tc:xacml:2.0:profile:hierarchical:non-xml-node-req:resource-ancestor-or-self |
 
-Note: all six are `O` because each names an independently optional scheme, or partial support within the ancestor-attribute scheme ([Section 5.3](#53-nodes-identified-by-ancestor-attributes)).
+Note: all six are `O` because each names an independently optional scheme, or partial support within the ancestor-attribute scheme ([Section 5.3](#53-nodes-identified-by-ancestor-attributes)). Rows with two deprecated identifiers reflect [Section 4.3](#43-changes-from-the-previous-version)'s Erratum 1 and Erratum 2: the published CS02's own body and §6 identifier summary disagree on the identifier's spelling or version segment, so both forms are recognized as deprecated equivalents of the current ACAL identifier — see [Section 4.3](#43-changes-from-the-previous-version) for which erratum applies to which row.
 
 ### 9.2.2 Attributes
 
