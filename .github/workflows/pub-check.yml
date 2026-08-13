@@ -1,0 +1,51 @@
+# Fork-local publication-assurance gate for the issue-40-section-numbering
+# work (PR #127): runs the OASIS publication acceptance criteria
+# (oasis-pub-check, github.com/OASIS-Docs/publication-assurance, pinned to
+# the v1.1.6 release) against the ACAL JSONPath Profile csd02 candidate
+# package built from this branch's own pandoc/mkdocs.sh pipeline and
+# committed under pubcheck-pkg/.
+#
+# Any blocker fails the job; warnings do not. The Step Summary carries the
+# per-check report; the full report files upload as a run artifact.
+
+name: pub-check
+
+on:
+  push:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "Stage directory or package .zip to check (overrides the matrix below when set)"
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  pub-check:
+    name: "pub-check / ${{ matrix.package.name }}"
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        package:
+          - id: acal-jsonpath-v1.0
+            name: "ACAL JSONPath Profile v1.0 csd02"
+            target: pubcheck-pkg/acal/profiles/jsonpath/v1.0/csd02
+    steps:
+      - name: Checkout xacml-spec
+        uses: actions/checkout@v4
+
+      - name: Run oasis-pub-check (${{ matrix.package.name }})
+        uses: OASIS-Docs/publication-assurance@v1.1.6
+        with:
+          target: ${{ github.event.inputs.target || matrix.package.target }}
+          report-dir: pubcheck-report-${{ matrix.package.id }}
+          summary-title: ${{ matrix.package.name }}
+
+      - name: Upload report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pubcheck-report-${{ matrix.package.id }}
+          path: pubcheck-report-${{ matrix.package.id }}
