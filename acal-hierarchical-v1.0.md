@@ -192,6 +192,9 @@ None.
 
 : Directed Acyclic Graph.
 
+`HRP`
+
+: Hierarchical Resource Profile
 ---
 
 
