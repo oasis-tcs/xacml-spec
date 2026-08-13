@@ -353,7 +353,7 @@ A policy that must match a node located by [Section 5.1](#51-nodes-in-xml-docume
 
 A policy that must match a URI produced by [Section 5.2](#52-nodes-identified-by-uri) typically applies `urn:oasis:names:tc:acal:1.0:function:anyURI-equal` for an exact match, or `urn:oasis:names:tc:acal:1.0:function:anyURI-regexp-match` for a pattern match.
 
-: **Note**: unlike XACML 3.0 HRP §4.3's `regexp-uri-match`, which takes the URI argument first and the regular expression second, `urn:oasis:names:tc:acal:1.0:function:anyURI-regexp-match` takes the regular expression first — matching the argument order of ACAL's other `*-regexp-match` functions. Any policy text carried over from an XACML 3.0 HRP example must have its arguments swapped.
+: **Note**: unlike [XACML 3.0 HRP](#hier) §4.3's `regexp-uri-match`, which takes the URI argument first and the regular expression second, `urn:oasis:names:tc:acal:1.0:function:anyURI-regexp-match` takes the regular expression first — matching the argument order of ACAL's other `*-regexp-match` functions. Any policy text carried over from an [XACML 3.0 HRP](#hier) example must have its arguments swapped.
 
 ---
 
