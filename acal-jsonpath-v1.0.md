@@ -1,7 +1,7 @@
 ---
 # Document metadata processed by Pandoc:
 logo: |
-  ![OASIS](images/OASISLogo-v3.0.png)
+  ![](images/OASISLogo-v3.0.png)
 # Original logo: http://docs.oasis-open.org/templates/OASISLogo-v3.0.png
 title: ACAL v1.0 JSONPath Profile Version 1.0
 subtitle: Committee Specification Draft 02
@@ -10,59 +10,71 @@ stage_revision: csd02 # [stage-abbrev][revisionNumber] as defined in https://doc
 lang: en
 keywords: ["access", "authorization", "ABAC", "policylanguage", "JSON", "JSONPath", "standard"]
 # date metadata is set automatically to current date, unless specified on pandoc commandline: --metadata date="..."
-
 # If metadata 'x' is a string, any placeholder %x% will be replaced with the value of metadata 'x' (using meta_vars.lua filter), e.g. %version% will be replaced with the version metadata value.
+
+# Filters-specific metadata
+#   - pandoc-xnos filter configuration ( https://github.com/tomduck/pandoc-secnos#markdown-syntax )
+#     In generated section references, the section number is automatically preceded by the reference name "section", e.g. "section X.Y.Z".
+xnos-cleveref: True
+
+#   - abstract-section.lua filter configuration
+#      This will put the section with ID 'prologue' in an eponymous variable ($prologue$) used in the Pandoc template to put the section content (all its subsections) in the right place before the ToC.
+abstract-section:
+  section-identifiers:
+    - prologue
 ---
 
-### This version:
+# Prologue {#prologue .unnumbered .unlisted}
+
+### This version: {.unnumbered .unlisted}
 
 
 - https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v%version%/%stage_revision%/acal-jsonpath-v%version%-%stage_revision%.html (Authoritative)
 - https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/%version%/%stage_revision%/acal-jsonpath-v%version%-%stage_revision%.pdf
 - https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v%version%/%stage_revision%/acal-jsonpath-v%version%-%stage_revision%.md
 
-### Previous version:
+### Previous version: {.unnumbered .unlisted}
 
 N/A
 
-### Latest version:
+### Latest version: {.unnumbered .unlisted}
 
 - https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/acal-jsonpath-v1.0.html (Authoritative)
 - https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/acal-jsonpath-v1.0.pdf
 - https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/acal-jsonpath-v1.0.md
 
 
-### Technical Committee
+### Technical Committee {.unnumbered .unlisted}
 
 [OASIS eXtensible Access Control Markup Language (XACML) TC](https://groups.oasis-open.org/communities/tc-community-home2?CommunityKey=67afe552-0921-49b7-9a85-018dc7d3ef1d)
 
 
-### Chairs
+### Chairs {.unnumbered .unlisted}
 
 
 - Bill Parducci (bill@parducci.net), Individual
 
 
-### Secretaries
+### Secretaries {.unnumbered .unlisted}
 
 
 - Bill Parducci (bill@parducci.net), Individual 
 
 
-### Editors
+### Editors {.unnumbered .unlisted}
 
 
 - Steven Legg (steven.legg@viewds.com), [ViewDS Identity Solutions](https://www.viewds.com/)
 - Cyril Dangerville (cyril.dangerville@thalesgroup.com), [THALES](https://www.thalesgroup.com/)
 
 
-### Abstract
+### Abstract {.unnumbered .unlisted}
 
 
 This specification is a profile of ACAL that provides ACAL extensions based on the JSONPath standard, such as JSONPath-based AttributeSelector. 
 
 
-### Citation Format
+### Citation Format {.unnumbered .unlisted}
 
 
 When referencing this document, the following citation format should be used:
@@ -72,14 +84,14 @@ _%title%_.
 Edited by Steven Legg and Cyril Dangerville. %date%. OASIS %subtitle%. https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v%version%/%stage_revision%/acal-jsonpath-v%version%-%stage_revision%.html. Latest stage: https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/acal-jsonpath-v1.0.html.
 
 
-### Related Work
+### Related Work {.unnumbered .unlisted}
 
 This document is related to:
 
 - _Attribute-Centric Authorization Language (ACAL) Version 1.0_.
 
 
-## License, Document Status, and Notices
+## License, Document Status, and Notices {.unnumbered .unlisted}
 
 
 Copyright © OASIS Open 2026. All Rights Reserved.  For license and copyright information, and complete status, please see Annex A which contains the License, Document Status and Notices.
@@ -87,8 +99,8 @@ Copyright © OASIS Open 2026. All Rights Reserved.  For license and copyright in
 ---
 
 
-## Table of Contents
 <!-- ToC template from OASIS Open Specification Template Instructions:
+## Table of Contents
 
 - [1 Scope](#1-scope)
 - [2 Definitions and Acronyms](#2-definitions-and-acronyms)
@@ -131,52 +143,12 @@ Copyright © OASIS Open 2026. All Rights Reserved.  For license and copyright in
 - [Sub-subsection](#sub-subsection)
 -->
 
-<!-- Generated ToC -->
-- [1 Scope](#1-scope)
-- [2 Definitions and Acronyms](#2-definitions-and-acronyms)
-  - [2.1 Definitions](#21-definitions)
-    - [2.1.1 Terms Defined Elsewhere](#211-terms-defined-elsewhere)
-    - [2.1.2 Terms Defined in this Document](#212-terms-defined-in-this-document)
-    - [2.1.3 Related terms](#213-related-terms)
-  - [2.2 Abbreviations and Acronyms](#22-abbreviations-and-acronyms)
-- [3 Document Conventions](#3-document-conventions)
-  - [3.1 Key Words](#31-key-words)
-  - [3.2 Typographical Conventions](#32-typographical-conventions)
-- [4 Introduction (non-normative)](#4-introduction-non-normative)
-  - [4.1 Requirements](#41-requirements)
-  - [4.2 Policies Based on Subject and Resource Attributes](#42-policies-based-on-subject-and-resource-attributes)
-  - [4.3 Changes From the Previous Version](#43-changes-from-the-previous-version)
-- [5 Structures](#5-structures)
-  - [5.1 ContentType restrictions](#51-contenttype-restrictions) 
-  - [5.2 ACAL extensions](#52-acal-extensions)
-    - [5.2.1 AttributeSelectorType extension - JSONPathAttributeSelectorType](#521-attributeselectortype-extension---jsonpathattributeselectortype)
-    - [5.2.2 EntityAttributeSelectorType extension - JSONPathEntityAttributeSelectorType (optional)](#522-entityattributeselectortype-extension---jsonpathentityattributeselectortype)
-- [6 Attribute Selector Evaluation](#6-attribute-selector-evaluation)
-- [7 Safety, Security, and Data Protection Considerations](#7-safety-security-and-data-protection-considerations)
-- [8 Conformance](#8-conformance)
-  - [8.1 Introduction](#81-introduction)
-  - [8.2 Conformance Tables](#82-conformance-tables)
-    - [8.2.1 Object Types](#821-object-types)
-- [Annex A License, Document Status and Notices](#annex-a-license-document-status-and-notices)
-  - [A.1 Document Status](#a1-document-status)
-  - [A.2 License and Notices](#a2-license-and-notices)
-- [Annex B References](#annex-b-references)
-  - [B.1 Normative References](#b1-normative-references)
-  - [B.2 Informative References](#b2-informative-references)
-- [Annex C ACAL Identifiers](#annex-c-acal-identifiers)
-  - [C.1 ACAL Namespaces](#c1-acal-namespaces)
-- [Annex D How to generate HTML and PDF Versions](#annex-d-how-to-generate-html-and-pdf-versions)
-- [Appendix 1 Acknowledgments](#appendix-1-acknowledgments)
-  - [Leadership](#leadership)
-  - [Special Thanks](#special-thanks)
-  - [Participants](#participants)
-- [Appendix 2 Changes From Previous Version](#appendix-2-changes-from-previous-version)
-  - [Revision History](#revision-history)
+<!-- ToC auto-generated by Pandoc (including the section numbers, except for Annexes/Appendices which don't follow the same numbering scheme (start with a letter)) with ToC title coming from -- variable toc-title="..." argument -->
 
 ---
 
 
-# 1 Scope
+# Scope
 
 <!-- OASIS Open Specification Template Instructions: 
 
@@ -198,13 +170,13 @@ Concrete representations (data formats) are to be provided as separate specifica
 ---
 
 
-# 2 Definitions and Acronyms
+# Definitions and Acronyms
 
 
-## 2.1 Definitions
+## Definitions
 
 
-### 2.1.1 Terms Defined Elsewhere
+### Terms Defined Elsewhere
 
 
 This document uses the following terms defined elsewhere:
@@ -212,32 +184,32 @@ This document uses the following terms defined elsewhere:
 <!-- The following syntax (: definition) for definition lists requires the 'definition_lists' extension enabled in the pandoc command (-f gfm+definition_lists) to be rendered properly. -->
 See Section 2 of [[ACAL-Core-1.0](#acal-core-10)].
 
-### 2.1.2 Terms Defined in this Document
+### Terms Defined in this Document
 
 None.
 
-### 2.1.3 Related terms
+### Related terms
 
 None.
 
 
-## 2.2 Abbreviations and Acronyms
+## Abbreviations and Acronyms
 
 None.
 
 ---
 
 
-# 3 Document Conventions
+# Document Conventions
 
 
-## 3.1 Key Words
+## Key Words
 
 
 The key words "**MUST**", "**MUST NOT**", "**REQUIRED**", "**SHALL**", "**SHALL NOT**", "**SHOULD**", "**SHOULD NOT**", "**RECOMMENDED**", "**NOT RECOMMENDED**", "**MAY**", and "**OPTIONAL**" in this document are to be interpreted as described in BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all capitals, as shown here.
 
 
-## 3.2 Typographical Conventions
+## Typographical Conventions
 
 <!-- From OASIS Open Specification Template Instructions: Describe any standards or typographical conventions that were followed when writing this document, such as fonts or highlighting that have special significance. If there are no typographical conventions than one is to put "None". -->
 None.
@@ -245,19 +217,19 @@ None.
 ---
 
 
-# 4 Introduction (non-normative)
+# Introduction (non-normative)
 
 
-## 4.1 Requirements
+## Requirements
 
 JSON is a common format to represent structured objects that may be supplied by the PEP as subject attribute or resource attribute's Content inside the Request to the PDP, typically a JSON Web token (JWT) in the case of subject attributes (JWT is commonly used in OpenID Connect and OAuth protocols), or any JSON document as resource data. JSON is a common data exchange format used by Web APIs. For such cases, supporting JSONPath [RFC9535] expressions in ACAL is the standard way and therefore a must-have to extract the necessary values from the JSON content for policy evaluation. For instance, a common rule of a privacy policy is that a person should be allowed to read records (in JSON) for which he or she is the subject. The corresponding policy must contain a reference - JSONPath expression - to the subject identified in the information resource - JSON record - itself.
 
-## 4.2 Policies Based on Subject and Resource Attributes
+## Policies Based on Subject and Resource Attributes
 
 Attribute selectors (`AttributeSelectorType` objects) defined by this profile use a JSONPath expression [RFC9535] over the `ContentType` object of the subject (resp. resource) to identify a particular subject (resp. resource) attribute value by its location in the context (see Section 4.11 of [[ACAL-Core-1.0](#acal-core-10)] for an explanation of context).
 
 
-## 4.3 Changes From the Previous Version
+## Changes From the Previous Version
 
 
 <!-- From OASIS Open Specification Template Instructions: This section is **REQUIRED** and **MUST** be the last numbered subsection in this section. -->
@@ -266,25 +238,25 @@ None. This is the first version of this profile.
 
 ---
 
-# 5 Structures
+# Structures
 
-## 5.1 ContentType restrictions
+## ContentType restrictions
 
 This profile applies to a `Content` object (defined in [[ACAL-Core-1.0](#acal-core-10)]) in the Request if and only if:
 - The `MediaType` property is set to `application/json`.
 - The `Body` property value is a JSON object. *Note that it is always possible to encapsulate a JSON array inside a JSON object if a JSON array is really needed.*
 
-## 5.2 ACAL extensions
+## ACAL extensions
 
 The structures in this profile are extensions to [[ACAL-Core-1.0](#acal-core-10)] model and described here in abstract terms. The concrete representations of these structures are defined for a variety of syntaxes each in a separate profile.
 
 The types `AttributeSelectorType` and `EntityAttributeSelectorType` used in the next UML models are defined in [[ACAL-Core-1.0](#acal-core-10)].
 
-### 5.2.1 AttributeSelectorType extension - JSONPathAttributeSelectorType
+### AttributeSelectorType extension - JSONPathAttributeSelectorType
 
 A `JSONPathAttributeSelectorType` object is a concrete type of `AttributeSelectorType` from [[ACAL-Core-1.0](#acal-core-10)] that uses JSONPath ([RFC9535](#rfc9535)) for `Path` expressions and expects a JSON object as value of the `Body` property of a `RequestEntityType` object's `Content` object. More precisely, the returned values shall be constructed from the node(s) selected by applying the JSONPath expression given by the attribute selector's `Path` property to the JSON object in the `Body` property of the `Content` object in the `RequestEntityType` object matching the attribute selector's `Category` property. 
 
-See the section 9 for details of attribute selector evaluation.
+See the @sec:attribute-selector-evaluation for details of attribute selector evaluation.
 
 UML definition (class diagram):
 ```plantuml
@@ -299,11 +271,11 @@ class JSONPathAttributeSelectorType <<dataType>> extends AttributeSelectorType
 In the context of this profile, the required `Path` property inherited from the supertype `AttributeSelectorType` SHALL be a JSONPath expression [RFC9535](#rfc9535).
 
 
-## 5.2.2 EntityAttributeSelectorType extension - JSONPathEntityAttributeSelectorType
+## EntityAttributeSelectorType extension - JSONPathEntityAttributeSelectorType
 
 A `JSONPathEntityAttributeSelectorType` object is a concrete type of `EntityAttributeSelectorType` [[ACAL-Core-1.0](#acal-core-10)] that uses JSONPath [RFC9535](#rfc9535) for `Path` expressions and expects a JSON object in the value returned by the attribute selector's `Expression` property. In other words, the values shall be constructed from the node(s) selected by applying the JSONPath expression given by the entity attribute selector's `Path` property to the JSON object of the `Body` property of the `Content` object in either an attribute category in the request context (`RequestEntity`) or the value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type returned by its `Expression` evaluation.
 
-See the Section 9 for details of entity attribute selector evaluation.
+See the @sec:attribute-selector-evaluation for details of entity attribute selector evaluation.
 
 UML definition (class diagram):
 ```plantuml
@@ -320,7 +292,7 @@ The `Path` property is also defined the same as in `JSONPathAttributeSelectorTyp
 ---
 
 
-# 6 Attribute Selector Evaluation
+# Attribute Selector Evaluation
 
 
 A `JSONPathAttributeSelectorType` or `JSONPathEntityAttributeSelector` object SHALL be evaluated according to the following processing model.
@@ -414,7 +386,7 @@ An implementation can be optimized to emit errors without going to the effort of
 ---
 
 
-# 7 Safety, Security, and Data Protection Considerations
+# Safety, Security, and Data Protection Considerations
 
 
 <!-- From OASIS Open Specification Template Instructions:
@@ -431,7 +403,7 @@ Refer to [[ACAL-Core-1.0](#acal-core-10)] section 10, and Section 4 (Security Co
 ---
 
 
-# 8 Conformance
+# Conformance
 
 
 <!-- From OASIS Open Specification Template Instructions: 
@@ -442,23 +414,23 @@ This section is **REQUIRED** and **MUST** be the last numbered section in the do
 
 -->
 
-## 8.1 Introduction
+## Introduction
 
 The specification addresses the following aspect of conformance:
 
 The specification defines a number of functions, etc. that have somewhat special applications, therefore they are not required to be implemented in an implementation that claims to conform with to this specification.
 
-## 8.2 Conformance Tables
+## Conformance Tables
 
 This section lists those portions of the specification that MUST be included in an implementation of a PDP that claims to conform to this profile.
 
 : Note: "M" means mandatory-to-implement. "O" means optional.
 
-The implementation MUST follow [Section 5](#5-structures), [Section 6](#6-attribute-selector-evaluation) and [Annex D](#annex-c-acal-identifiers) where they apply to implemented items in the following tables.
+The implementation MUST follow the @sec:structures, @sec:attribute-selector-evaluation and [Annex C](#annex-c-acal-identifiers) where they apply to implemented items in the following tables.
 
 Many of these items are associated with versions of XACML preceding ACAL but have been assigned new identifiers with the `urn:oasis:names:tc:acal:1.0:` prefix. The older XACML identifiers have been listed in the tables as deprecated identifiers. Implementations MUST support a new identifier defined in this specification but MAY recognize the corresponding deprecated identifier as equivalent. It is RECOMMENDED that these deprecated identifiers not be used in new policies and requests; they are planned to be removed in a subsequent version of ACAL. Note that some items appear to be carried over from a preceding version of XACML but do not list the XACML identifier. This is because ACAL has redefined the item in some way that means it is no longer identical to the original definition in XACML, and so the identifiers can no longer be considered equivalent. Items new to ACAL 1.0 will also not list an XACML identifier.
 
-### 8.2.1 Object Types
+### Object Types
 
 The implementation MUST support the object types that are marked `M`.
 
@@ -470,13 +442,13 @@ The implementation MUST support the object types that are marked `M`.
 ---
 
 
-# Annex A License, Document Status and Notices
+# Annex A License, Document Status and Notices {.unnumbered}
 
 
 (This annex forms an integral part of this Specification.)
 
 
-## A.1 Document Status
+## A.1 Document Status {.unnumbered}
 
 
 This document was last revised or approved by the OASIS eXtensible Access Control Markup Language (XACML) TC on the above date. The level of approval is also listed above. Check the "Latest version" location noted above for possible later revisions of this document. Any other numbered Versions and other technical work produced by the Technical Committee (TC) are listed at https://groups.oasis-open.org/communities/tc-community-home2?CommunityKey=67afe552-0921-49b7-9a85-018dc7d3ef1d#technical.
@@ -488,7 +460,7 @@ TC members should send comments on this document to the TC's email list. Others 
 NOTE: any machine-readable content (Computer Language Definitions) declared Normative for this Work Product is provided in separate plain text files. In the event of a discrepancy between any such plain text file and display content in the Work Product's prose narrative document(s), the content in the separate plain text file prevails.
 
 
-## A.2 License and Notices
+## A.2 License and Notices {.unnumbered}
 
 
 Copyright © OASIS Open 2026. All Rights Reserved.
@@ -527,7 +499,7 @@ The name "OASIS" is a trademark of OASIS, the owner and developer of this docume
 ---
 
 
-# Annex B References
+# Annex B References {.unnumbered}
 
 
 (This annex forms an integral part of this Specification.)
@@ -539,7 +511,7 @@ This section contains the normative and informative references that are used in 
 Normative references are specific (identified by date of publication and/or edition number or version number) and Informative references are either specific or non-specific. For specific references, only the cited version applies. For non-specific references, the latest version of the reference document (including any amendments) applies. While any hyperlinks included in this section were valid at the time of publication, OASIS cannot guarantee their long term validity.
 
 
-## B.1 Normative References
+## B.1 Normative References {.unnumbered}
 
 
 The following documents are referenced in such a way that some or all of their content constitutes requirements of this document.
@@ -670,7 +642,7 @@ W3C XQuery, XPath, and XSLT Functions and Operators Namespace Document (XPath an
 XSL Transformations (XSLT) Version 1.0, W3C Recommendation 16 November 1999, https://www.w3.org/TR/xslt/
 
 
-## B.2 Informative References
+## B.2 Informative References {.unnumbered}
 
 
 The following referenced documents are not required for the application of this document but may assist the reader with regard to a particular subject area.
@@ -703,14 +675,14 @@ _XACML v3.0 Related and Nested Entities Profile Version 1.0_. Edited by Steven L
 ---
 
 
-# Annex C ACAL Identifiers
+# Annex C ACAL Identifiers {.unnumbered}
 
 
 (This annex forms an integral part of this Specification.)
 
 This section defines standard identifiers for commonly used definitions.
 
-## C.1 ACAL Namespaces
+## C.1 ACAL Namespaces {.unnumbered}
 
 This ACAL Profile is defined using this identifier.
 
@@ -718,17 +690,23 @@ This ACAL Profile is defined using this identifier.
 
 ---
 
-# Annex D How to generate HTML and PDF versions
+# Annex D How to generate HTML and PDF versions {.unnumbered}
 
-## Online generation
+## D.1 Online generation {.unnumbered}
 
 HTML/PDF versions are generated automatically online via Github Actions after each update pushed to the main branch of [OASIS XACML TC Github repository](https://github.com/oasis-tcs/xacml-spec/). Go to  Github Actions on the github repository, then go to the latest workflow run, and, if the run succeeded, the summary should display the links to the generated HTML/PDF documents.
 
-## Offline generation
+## D.2 Offline generation {.unnumbered}
 
-### Prerequisites
+### Prerequisites {.unnumbered}
 
-Install Pandoc **v3.2.1 or later** ( [latest release](https://github.com/jgm/pandoc/releases/latest) ), Graphviz and PlantUML on your system; or simply use Docker with the following shell alias:
+The following software must be installed on the sytem:
+- Pandoc **v3.2.1 or later** ( [latest release](https://github.com/jgm/pandoc/releases/latest) )
+- Pandoc filters: [pandoc-include](https://github.com/DCsunset/pandoc-include), [pandoc-xnos filter (Timothy Elder's fork! not the original one) ](https://github.com/TimothyElder/pandoc-xnos), [pandoc-secnos](https://github.com/tomduck/pandoc-secnos). The two latter MUST be installed in that order (make sure any old pandoc-xnos install that is not coming from Elder's fork has been removed and replaced with the fork);
+- Graphviz;
+- PlantUML.
+
+As an alternative to installing the above manually, you may simply use Docker with the following shell alias instead:
 ```
 $ alias pandoc='docker run --rm --volume "$(pwd):/data" ghcr.io/oasis-tcs/pandoc-plantuml'
 ```
@@ -736,25 +714,25 @@ _The Dockerfile (named `Dockerfile`) of the docker image used in the alias above
 
 Git clone or get a local copy of [OASIS XACML TC Github repository](https://github.com/oasis-tcs/xacml-spec/), open a terminal and **change your working directory to the root directory of your local copy of the repository**.
 
-### CSS stylesheet
+### CSS stylesheet {.unnumbered}
 
 The generation command uses a CSS stylesheet file (`-c` argument) provided by OASIS. It may be changed to one of these (or the local version in the `styles` folder) to get a different style of output:
 - https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3.css
 - https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3a.css (this one produces HTML that resembles the github display more closely, especially for blocks of code) This template already includes a reference (in HTML code) to this .css file.
 - https://docs.oasis-open.org/templates/css/markdown-styles-v1.8.1-cn_final.css
 
-### HTML generation
+### HTML generation {.unnumbered}
 
 Run the following command line to generate the HTML from this markdown file (input file specified as last argument):
 
 ```console
-$ pandoc/mkdocs.sh --output /tmp acal-jsonpath-v%version%.md
+$ pandoc/mkdocs.sh --number-lines --output /tmp acal-jsonpath-v%version%.md --number-sections=true --filter pandoc-secnos --lua-filter=pandoc/abstract-section.lua --toc=true --variable toc-title="Table of Contents" --toc-depth=5
 ```
 The `--output` option sets the output directory, and the output filename is the same as the input file (last argument) except `.md` extension is replaced with `.html`.
 
 The publication date is automatically set to the current date by default (using Lua filter `pandoc/meta_vars.lua`). However, you may set a specific date of your choice instead, by adding the argument `--metadata date="My date in the form DD Month YYYY"` at the end of the command. 
 
-### PDF generation
+### PDF generation {.unnumbered}
 
 For PDF output, add the `--pdf` option as follows:
 
@@ -765,7 +743,7 @@ $ pandoc/mkdocs.sh --pdf --output /tmp acal-jsonpath-v%version%.md
 The HTML file is generated like the previous command and, in addition, a PDF file is generated with the same name as the input file except the `.md` extension is replaced with `.pdf` in this case.
 
 
-# Appendix 1 Acknowledgments
+# Appendix 1 Acknowledgments {.unnumbered}
 
 
 (This appendix does not form an integral part of this Specification and is informational.)
@@ -780,7 +758,7 @@ All parts in this appendix are optional to the TC. Individuals or companies, pas
 -->
 
 
-## Leadership
+## Leadership {.unnumbered}
 
 
 The following individuals have had significant leadership positions during the development of this document, not just this version of the document, and they are gratefully acknowledged:
@@ -805,7 +783,7 @@ This section **SHOULD** include the leadership (chairs, sub committees chairs, s
   - Cyril Dangerville, THALES
 
 
-## Special Thanks
+## Special Thanks {.unnumbered}
 
 
 The following individuals have made substantial contributions to this document, not just this version of the document, and their contributions are gratefully acknowledged:
@@ -820,7 +798,7 @@ This section **SHOULD** include individuals that have made significant contribut
 - Cyril Dangerville, THALES
 
 
-## Participants
+## Participants {.unnumbered}
 
 
 The following individuals were members of this committee during the creation of this document, not just this version of the document, and their contributions are gratefully acknowledged:
@@ -836,7 +814,7 @@ The following individuals were members of this committee during the creation of 
 ---
 
 
-# Appendix 2 Changes From Previous Version
+# Appendix 2 Changes From Previous Version {.unnumbered}
 
 
 (This appendix does not form an integral part of this Specification and is informational.)
@@ -849,7 +827,7 @@ The appendix **SHOULD** contain any explanatory text about the reason for this v
 
 This is the first version of this profile.
 
-## Revision History
+## Revision History {.unnumbered}
 
 Latest revision history can be obtained from [OASIS XACML TC's github repository](https://github.com/oasis-tcs/xacml-spec/blob/v%version%-%stage_revision%/acal-jsonpath-v%version%-%stage_revision%.md).
 
