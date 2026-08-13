@@ -10,7 +10,7 @@ stage_revision: csd02 # [stage-abbrev][revisionNumber] as defined in https://doc
 lang: en
 keywords: ["access", "authorization", "ABAC", "policylanguage", "JSON", "JSONPath", "standard"]
 # date metadata is set automatically to current date, unless specified on pandoc commandline: --metadata date="..."
-# If metadata 'x' is a string, any placeholder %x% will be replaced with the value of metadata 'x' (using meta_vars.lua filter), e.g. %version% will be replaced with the version metadata value.
+# If metadata 'x' is a string, any placeholder %x% will be replaced with the value of metadata 'x' (using meta_vars.lua filter), e.g. 1.0 will be replaced with the version metadata value.
 
 # Filters-specific metadata
 #   - pandoc-xnos filter configuration ( https://github.com/tomduck/pandoc-secnos#markdown-syntax )
@@ -29,13 +29,15 @@ abstract-section:
 ### This version: {.unnumbered .unlisted}
 
 
-- https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v%version%/%stage_revision%/acal-jsonpath-v%version%-%stage_revision%.html (Authoritative)
-- https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/%version%/%stage_revision%/acal-jsonpath-v%version%-%stage_revision%.pdf
-- https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v%version%/%stage_revision%/acal-jsonpath-v%version%-%stage_revision%.md
+- https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/csd02/acal-jsonpath-v1.0-csd02.html (Authoritative)
+- https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/csd02/acal-jsonpath-v1.0-csd02.pdf
+- https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/csd02/acal-jsonpath-v1.0-csd02.md
 
 ### Previous version: {.unnumbered .unlisted}
 
-N/A
+- https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/csd01/acal-jsonpath-v1.0-csd01.html (Authoritative)
+- https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/csd01/acal-jsonpath-v1.0-csd01.pdf
+- https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/csd01/acal-jsonpath-v1.0-csd01.md
 
 ### Latest version: {.unnumbered .unlisted}
 
@@ -81,7 +83,7 @@ When referencing this document, the following citation format should be used:
 
 **[ACAL-JSONPath-1.0]**
 _%title%_.
-Edited by Steven Legg and Cyril Dangerville. %date%. OASIS %subtitle%. https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v%version%/%stage_revision%/acal-jsonpath-v%version%-%stage_revision%.html. Latest stage: https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/acal-jsonpath-v1.0.html.
+Edited by Steven Legg and Cyril Dangerville. 13 August 2026. OASIS Committee Specification Draft 02. https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/csd02/acal-jsonpath-v1.0-csd02.html. Latest stage: https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/acal-jsonpath-v1.0.html.
 
 
 ### Related Work {.unnumbered .unlisted}
@@ -516,7 +518,7 @@ Normative references are specific (identified by date of publication and/or edit
 
 The following documents are referenced in such a way that some or all of their content constitutes requirements of this document.
 
-###### [ACAL-Core-1.0]
+###### [ACAL-Core-1.0] {#acal-core-10}
 
 Attribute-Centric Authorization Language (ACAL) Version 1.0. Edited by Steven Legg and Cyril Dangerville. 18 February 2026. OASIS Committee Specification Draft 01.
 
@@ -710,7 +712,7 @@ As an alternative to installing the above manually, you may simply use Docker wi
 ```
 $ alias pandoc='docker run --rm --volume "$(pwd):/data" ghcr.io/oasis-tcs/pandoc-plantuml'
 ```
-_The Dockerfile (named `Dockerfile`) of the docker image used in the alias above is provided in the [pandoc](pandoc) folder next to this markdown file for your convenience if you wish to build it yourself._ 
+_The Dockerfile (named `Dockerfile`) of the docker image used in the alias above is provided in the [pandoc](https://github.com/oasis-tcs/xacml-spec/tree/main/pandoc) folder next to this markdown file for your convenience if you wish to build it yourself._ 
 
 Git clone or get a local copy of [OASIS XACML TC Github repository](https://github.com/oasis-tcs/xacml-spec/), open a terminal and **change your working directory to the root directory of your local copy of the repository**.
 
@@ -726,7 +728,7 @@ The generation command uses a CSS stylesheet file (`-c` argument) provided by OA
 Run the following command line to generate the HTML from this markdown file (input file specified as last argument):
 
 ```console
-$ pandoc/mkdocs.sh --number-lines --output /tmp acal-jsonpath-v%version%.md --number-sections=true --filter pandoc-secnos --lua-filter=pandoc/abstract-section.lua --toc=true --variable toc-title="Table of Contents" --toc-depth=5
+$ pandoc/mkdocs.sh --number-lines --output /tmp acal-jsonpath-v1.0.md --number-sections=true --filter pandoc-secnos --lua-filter=pandoc/abstract-section.lua --toc=true --variable toc-title="Table of Contents" --toc-depth=5
 ```
 The `--output` option sets the output directory, and the output filename is the same as the input file (last argument) except `.md` extension is replaced with `.html`.
 
@@ -737,7 +739,7 @@ The publication date is automatically set to the current date by default (using 
 For PDF output, add the `--pdf` option as follows:
 
 ```console
-$ pandoc/mkdocs.sh --number-lines --pdf --output /tmp acal-jsonpath-v%version%.md --number-sections=true --filter pandoc-secnos --lua-filter=pandoc/abstract-section.lua --toc=true --variable toc-title="Table of Contents" --toc-depth=5
+$ pandoc/mkdocs.sh --number-lines --pdf --output /tmp acal-jsonpath-v1.0.md --number-sections=true --filter pandoc-secnos --lua-filter=pandoc/abstract-section.lua --toc=true --variable toc-title="Table of Contents" --toc-depth=5
 ```
 
 The HTML file is generated like the previous command and, in addition, a PDF file is generated with the same name as the input file except the `.md` extension is replaced with `.pdf` in this case.
@@ -829,7 +831,7 @@ This is the first version of this profile.
 
 ## Revision History {.unnumbered}
 
-Latest revision history can be obtained from [OASIS XACML TC's github repository](https://github.com/oasis-tcs/xacml-spec/blob/v%version%-%stage_revision%/acal-jsonpath-v%version%-%stage_revision%.md).
+Latest revision history can be obtained from [OASIS XACML TC's github repository](https://github.com/oasis-tcs/xacml-spec/blob/v1.0-csd02/acal-jsonpath-v1.0-csd02.md).
 
 <!--
 - \< Date in yyyy-mm-dd format \>, \< Revision number \>  
