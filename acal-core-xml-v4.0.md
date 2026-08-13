@@ -1099,17 +1099,7 @@ OASIS Committee Draft 03, XACML v3.0 Administration and Delegation Profile Versi
 
 ###### [XACMLv1.0]
 
-<!-- Editorial note (pending OASIS guidance): this citation links to an OASIS member-only
-(Kavi) URI, https://www.oasis-open.org/committees/download.php/2406/oasis-xacml-1.0.pdf,
-which Naming Directives v1.7 s6.6 bars from public TC documents. The document being cited
-is the OASIS Standard "Extensible access control markup language (XACML) Version 1.0",
-18 February 2003 (Kavi document ID 2406, file oasis-xacml-1.0.pdf) -- no docs.oasis-open.org
-mirror of this pre-2013 document currently exists. Note that XACML 3.0's own published OASIS
-Standard cites this same member-only URL for the identical reference, so this is a
-long-standing gap in the TC's published record rather than an error introduced here.
-Awaiting confirmation from OASIS TC Administration on either (a) a public mirror location
-for this document, or (b) an approved exception for this legacy citation, before this note
-and the citation below can be finalized. -->
+eXtensible Access Control Markup Language (XACML) Version 1.0. OASIS Standard, 18 February 2003. https://docs.oasis-open.org/xacml/1.0/oasis-xacml-1.0.pdf
 
 OASIS Standard, Extensible access control markup language (XACML) Version 1.0. 18 February 2003, https://www.oasis-open.org/committees/download.php/2406/oasis-xacml-1.0.pdf
 
