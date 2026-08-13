@@ -696,7 +696,7 @@ The publication date is automatically set to the current date by default (using 
 For PDF output, add the `--pdf` option as follows:
 
 ```console
-$ pandoc/mkdocs.sh --pdf --output /tmp acal-hierarchical-v%version%.md
+$ pandoc/mkdocs.sh --number-lines --pdf --output /tmp acal-hierarchical-v%version%.md
 ```
 
 The HTML file is generated like the previous command and, in addition, a PDF file is generated with the same name as the input file except the `.md` extension is replaced with `.pdf` in this case.
