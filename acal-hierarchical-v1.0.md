@@ -410,19 +410,14 @@ A request for read access to a budget document identified by its file-system pat
 
 ## 7.3 Nodes Identified by Ancestor Attributes
 
-A request for read access to a project node, using [Section 5.3](#53-nodes-identified-by-ancestor-attributes)'s scheme, whose immediate ancestor department happens to be represented in two data types at once — an `anyURI` path representation and a `string` display-name representation sharing the same `AttributeId`. This is the exact case [Section 4.3](#43-changes-from-the-previous-version) describes as fully representable without narrowing:
+A request for read access to a project node, using [Section 5.3](#53-nodes-identified-by-ancestor-attributes)'s scheme. Unlike [Section 7.2](#72-nodes-identified-by-uri)'s example, the node's own identity (`resource-id`) is an opaque `string` name rather than a URI that already encodes its position in a hierarchy — the [Section 5.2](#52-nodes-identified-by-uri) scheme could not express this node's position on its own, so the ancestor attributes below are what carry it. Its immediate ancestor is, separately, represented in two data types at once — a `string` display name and an `anyURI` alias sharing the same `AttributeId`. This is the exact case [Section 4.3](#43-changes-from-the-previous-version) describes as fully representable without narrowing:
 
 ```xml {.numberLines}
 <RequestEntity Category="urn:oasis:names:tc:acal:1.0:attribute-category:resource">
     <RequestAttribute
         AttributeId="urn:oasis:names:tc:acal:1.0:resource:resource-id"
-        DataType="urn:oasis:names:tc:acal:1.0:data-type:anyURI">
-        <Value>acme:org/engineering/platform-team/project-falcon</Value>
-    </RequestAttribute>
-    <RequestAttribute
-        AttributeId="urn:oasis:names:tc:acal:1.0:resource:resource-parent"
-        DataType="urn:oasis:names:tc:acal:1.0:data-type:anyURI">
-        <Value>acme:org/engineering/platform-team</Value>
+        DataType="urn:oasis:names:tc:acal:1.0:data-type:string">
+        <Value>Project Falcon</Value>
     </RequestAttribute>
     <RequestAttribute
         AttributeId="urn:oasis:names:tc:acal:1.0:resource:resource-parent"
@@ -430,11 +425,16 @@ A request for read access to a project node, using [Section 5.3](#53-nodes-ident
         <Value>Platform Engineering Team</Value>
     </RequestAttribute>
     <RequestAttribute
-        AttributeId="urn:oasis:names:tc:acal:1.0:resource:resource-ancestor-or-self"
+        AttributeId="urn:oasis:names:tc:acal:1.0:resource:resource-parent"
         DataType="urn:oasis:names:tc:acal:1.0:data-type:anyURI">
-        <Value>acme:org/engineering</Value>
-        <Value>acme:org/engineering/platform-team</Value>
-        <Value>acme:org/engineering/platform-team/project-falcon</Value>
+        <Value>acme:org/platform-team</Value>
+    </RequestAttribute>
+    <RequestAttribute
+        AttributeId="urn:oasis:names:tc:acal:1.0:resource:resource-ancestor-or-self"
+        DataType="urn:oasis:names:tc:acal:1.0:data-type:string">
+        <Value>Engineering Teams</Value>
+        <Value>Platform Engineering Team</Value>
+        <Value>Project Falcon</Value>
     </RequestAttribute>
 </RequestEntity>
 ```
