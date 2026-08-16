@@ -1099,7 +1099,6 @@ OASIS Committee Draft 03, XACML v3.0 Administration and Delegation Profile Versi
 
 
 
-OASIS Standard, Extensible access control markup language (XACML) Version 1.0. 18 February 2003, https://www.oasis-open.org/committees/download.php/2406/oasis-xacml-1.0.pdf
 
 ###### [XACMLv1.1]
 
