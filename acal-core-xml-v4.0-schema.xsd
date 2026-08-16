@@ -437,7 +437,12 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 		</xs:assert>
 	</xs:complexType>
 
-	<xs:element name="RequestReference" type="xacml:RequestReferenceType" />
+	<xs:element name="RequestReference" type="xacml:RequestReferenceType">
+		<xs:unique name="RequestReference_RequestEntityReference">
+			<xs:selector xpath="xacml:RequestEntityReference" />
+			<xs:field xpath="." />
+		</xs:unique>
+	</xs:element>
 	<xs:complexType name="RequestReferenceType">
 		<xs:sequence>
 			<!-- Change to XACML 3.0 (issue #18): Attributes renamed to RequestEntity in the
