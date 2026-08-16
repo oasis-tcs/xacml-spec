@@ -660,7 +660,7 @@ The generation command uses a CSS stylesheet file (`-c` argument) provided by OA
 Run the following command line to generate the HTML from this markdown file (input file specified as last argument):
 
 ```console
-$ pandoc/mkdocs.sh --output /tmp acal-multiple-v%version%.md
+$ pandoc/mkdocs.sh --number-lines --output /tmp acal-multiple-v%version%.md
 ```
 The `--output` option sets the output directory, and the output filename is the same as the input file (last argument) except `.md` extension is replaced with `.html`.
 
