@@ -300,7 +300,7 @@ A request names several other requests by reference to `RequestEntityType` objec
 
 Both layers exist so the same guarantee holds whether or not an implementation validates against the schema before evaluating.
 
-**Sibling uniqueness.** Sibling `RequestReferenceType` objects MUST NOT denote the same set of `RequestEntityType` objects (`[[ACAL-Core-1.0](#acal-core-10)]`'s `MultiRequestsType` OCL constraint `self->isUnique(RequestEntityReference->asSet())`) — a constraint XACML 3.0 MDP did not have, introduced by ACAL Core independent of this profile.
+**Sibling uniqueness.** Sibling `RequestReferenceType` objects MUST NOT denote the same set of `RequestEntityType` objects (`[[ACAL-Core-1.0](#acal-core-10)]`'s `MultiRequestsType` OCL constraint `self->isUnique(RequestEntityReference->asSet())`) — a constraint XACML 3.0 MDP [[Multi](#multi)] did not have, introduced by ACAL Core independent of this profile.
 
 **Request resolution.** One `Individual Decision Request` is produced per `RequestReferenceType` object, containing exactly the `RequestEntityType` objects its `RequestEntityReference` values name (by reference, resolved to the actual objects), and no others. Results become the `Result` objects of a single `ResponseType` object.
 
