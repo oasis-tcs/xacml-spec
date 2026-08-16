@@ -1097,7 +1097,6 @@ Davis, Mark, Suignard, Michel, Unicode Technical Report #36: Unicode Security Co
 
 OASIS Committee Draft 03, XACML v3.0 Administration and Delegation Profile Version 1.0. 11 March 2010, https://docs.oasis-open.org/xacml/3.0/xacml-3.0-administration-v1-spec-cd-03-en.doc
 
-###### [XACMLv1.0]
 
 eXtensible Access Control Markup Language (XACML) Version 1.0. OASIS Standard, 18 February 2003. https://docs.oasis-open.org/xacml/1.0/oasis-xacml-1.0.pdf
 
