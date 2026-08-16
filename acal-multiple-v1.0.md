@@ -187,7 +187,13 @@ None.
 
 ## 2.2 Abbreviations and Acronyms
 
-None.
+`HRP`
+
+: Hierarchical Resource Profile [ACAL-Hierarchical-1.0].
+
+`MDP`
+
+: Multiple Decision Profile (this document or the previous version [Multi], depending on the context).
 
 ---
 
