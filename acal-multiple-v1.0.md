@@ -581,7 +581,7 @@ RFC 8174, *Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words*, BCP 14, R
 
 The following referenced documents are not required for the application of this document but may assist the reader with regard to a particular subject area.
 
-###### [XACML]
+###### [XACML-Core-4.0]
 
 _eXtensible Access Control Markup Language (XACML) Version 3.0 Plus Errata 01_. Edited by Erik Rissanen. OASIS Standard incorporating Approved Errata. https://docs.oasis-open.org/xacml/3.0/xacml-3.0-core-spec-en.html.
 
