@@ -4980,7 +4980,7 @@ class RequestType <<dataType>> {
   {field} + ShortIdSetReference: URI [*] {unique}
   {field} + RequestDefaults: RequestDefaultsType [*] {unordered, unique} {{OCL} self->isUnique(oclType())}
   {field} + RequestEntity: RequestEntityType [1..*] {unordered, unique} {{OCL} self->select(Id <> null)->isUnique(Id)}
-  {field} + MultiRequests: MultiRequestsType [0..1]
+  {field} + MultiRequests: MultiRequestsType [0..1] {{OCL} self.RequestReference.RequestEntityReference->forAll(entityRef | RequestEntity.allInstances->exists(entity | entityRef = entity.Id ))}
   {field} + ReturnPolicyIdList: Boolean [0..1] = false
   {field} + CombinedDecision: Boolean [0..1] = false
 }
