@@ -308,6 +308,8 @@ Both layers exist so the same guarantee holds whether or not an implementation v
 
 **Sibling uniqueness.** Sibling `RequestReferenceType` objects MUST NOT denote the same set of `RequestEntityType` objects (`[[ACAL-Core-1.0](#acal-core-10)]`'s `MultiRequestsType` OCL constraint `self->isUnique(RequestEntityReference->asSet())`) — a constraint XACML 3.0 MDP [[Multi](#multi)] did not have, introduced by ACAL Core independent of this profile.
 
+**RequestEntityReference uniqueness**: no duplicate `RequestEntityReference` SHALL occur in a `RequestReferenceType` object, as per `[[ACAL-Core-1.0](#acal-core-10)]`'s `RequestEntityReference` property definition (`unique` modifier).
+
 **Request resolution.** One `Individual Decision Request` is produced per `RequestReferenceType` object, containing exactly the `RequestEntityType` objects its `RequestEntityReference` values name (by reference, resolved to the actual objects), and no others. Results become the `Result` objects of a single `ResponseType` object.
 
 **Profile identifier.** `urn:oasis:names:tc:acal:1.0:profile:multiple:reference` (deprecated identifier: `urn:oasis:names:tc:xacml:3.0:profile:multiple:reference`).
