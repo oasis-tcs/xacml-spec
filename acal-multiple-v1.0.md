@@ -319,7 +319,7 @@ Both layers exist so the same guarantee holds whether or not an implementation v
 
 # 6 Combined Decision
 
-Triggered by the `RequestType` object's `CombinedDecision` property ([[ACAL-Core-1.0](#acal-core-10)] Section 7.31) set to `true`. If the implementation does not support this property, [[ACAL-Core-1.0](#acal-core-10)] Section 7.31 already requires `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`; the rules below apply once support is confirmed.
+A *Combined Decision* is triggered by the `RequestType` object's `CombinedDecision` property ([[ACAL-Core-1.0](#acal-core-10)] Section 7.31) set to `true`. If the implementation does not support this property, [[ACAL-Core-1.0](#acal-core-10)] Section 7.31 already requires the Response to be  a single `Indeterminate` Result with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`; the rules below apply once support is confirmed.
 
 1. The `ResponseType` object MUST contain only a single combined decision, in a single `ResultType` object.
 2. The combined `ResultType` object MUST NOT contain any `ResultEntity` objects ([[ACAL-Core-1.0](#acal-core-10)] Section 7.37), regardless of the `IncludeInResult` properties of any `RequestAttributeType` object in any of the individual requests.
