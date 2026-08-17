@@ -36,6 +36,9 @@ jobs:
       - name: Checkout xacml-spec
         uses: actions/checkout@v4
 
+      - name: Create target directory
+        run: |
+          mkdir -p pubcheck-pkg/acal/profiles/jsonpath/v1.0/csd02
       - name: Run oasis-pub-check (${{ matrix.package.name }})
         uses: OASIS-Docs/publication-assurance@v1.1.6
         with:
