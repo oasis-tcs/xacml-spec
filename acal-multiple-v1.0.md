@@ -301,7 +301,7 @@ A request names several other requests by reference to `RequestEntityType` objec
 
 **Dangling references.** A `RequestEntityReference` value that does not match the `Id` of any `RequestEntityType` object in the request is invalid. Two enforcement layers apply and are both normative:
 
-1. A schema-validating implementation rejects a dangling reference at validation time, before evaluation begins ([[ACAL-Core-1.0](#acal-core-10)]'s XSD `keyref`, and the equivalent JSON Schema/YAML constraints).
+1. A schema-validating implementation rejects a dangling reference at validation time, before evaluation begins (e.g. [[XACML-Core-4.0](#xacml-core-40)]'s XSD keyref, and the equivalent JSON Schema/YAML constraints).
 2. A non-schema-validating implementation MUST still detect a dangling reference at evaluation time and produce `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error` for the corresponding `Individual Decision Request`.
 
 Both layers exist so the same guarantee holds whether or not an implementation validates against the schema before evaluating.
