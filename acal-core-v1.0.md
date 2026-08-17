@@ -4535,14 +4535,20 @@ If the expression evaluates to a value of the `urn:oasis:names:tc:acal:1.0:data-
 A `ValueType` object is a kind of expression that contains a literal ACAL value.
 
 UML model (class diagram):
+
 ```plantuml
 @startuml
+skinparam nodesep 20
+skinparam ranksep 20
 hide empty members
 hide circle
 
 abstract class ExpressionType
 abstract class ValueType extends ExpressionType
 abstract class PrimitiveValueType extends ValueType
+abstract class StructuredValueType extends ValueType
+note bottom of StructuredValueType: Structured data-types, \neither user-defined or \ndefined by an ACAL Profile \n(e.g. XPath Profile's \n'xpathExpression' datatype), \nmay derive this type.
+
 class LiteralBooleanType <<fixedDatatype>> extends PrimitiveValueType {
     <<fixedDatatype>>
     DataType='urn:oasis:names:tc:acal:1.0:data-type:boolean'
@@ -4572,17 +4578,20 @@ class LiteralRestrictedStringType <<restrictedString>> extends PrimitiveValueTyp
     +Value: String [1]
 }
 
-note bottom of LiteralRestrictedStringType: Other ACAL datatypes with lexical representation can be derived from this type,\n e.g. standard time, date, dateTime, anyURI, hexBinary, base64Binary, \ndayTimeDuration, yearMonthDuration, x50Name, rfc822Name, ipAddress, dnsName.
+note bottom of LiteralRestrictedStringType: Other ACAL datatypes with lexical representation \ncan be derived from this type, \ne.g. standard time, date, dateTime, \nanyURI, hexBinary, base64Binary, \ndayTimeDuration, yearMonthDuration, \nx50Name, rfc822Name, ipAddress, dnsName.
 
-abstract class StructuredValueType extends ValueType
-
-note bottom of StructuredValueType: Structured data-types, either user-defined or defined by an ACAL Profile\n (e.g. XPath Profile's 'xpathExpression' datatype), may derive this type.
+PrimitiveValueType -[hidden]- LiteralBooleanType
+LiteralBooleanType -[hidden]- LiteralIntegerType
+LiteralIntegerType -[hidden]- LiteralDoubleType
+LiteralDoubleType -[hidden]- LiteralStringType
+LiteralStringType -[hidden]- LiteralRestrictedStringType
 
 class DataType <<Metaclass>>
 class FixedDatatype <<Stereotype>> extends DataType {
      DataType: URI [1]
 }
-@enduml 
+
+@enduml
 ```
 
 A `ValueType` object has the following properties:
@@ -8688,10 +8697,7 @@ Git clone or get a local copy of [OASIS XACML TC Github repository](https://gith
 
 ### CSS stylesheet
 
-The generation command uses a CSS stylesheet file (`-c` argument) provided by OASIS. It may be changed to one of these (or the local version in the `styles` folder) to get a different style of output:
-- https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3.css
-- https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3a.css (this one produces HTML that resembles the github display more closely, especially for blocks of code) This template already includes a reference (in HTML code) to this .css file.
-- https://docs.oasis-open.org/templates/css/markdown-styles-v1.8.1-cn_final.css
+The generation command uses the CSS stylesheet file `pandoc/styles/markdown-styles-v1.7.3b.css` (with `-c` argument) based on the [v1.7.3a](https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3a.css) provided by OASIS.
 
 ### HTML generation
 
@@ -8713,6 +8719,16 @@ $ pandoc/mkdocs.sh --pdf --output /tmp acal-core-v%version%.md
 ```
 
 The HTML file is generated like the previous command and, in addition, a PDF file is generated with the same name as the input file except the `.md` extension is replaced with `.pdf` in this case.
+
+Beware that **the result PDF - the embedded fonts in particular - may differ depending on the system/machine** where you run this command. Mainly, it depends on which fonts are actually installed on the system, as the HTML-to-PDF converter (Chrome / Chromium in this case) selects available fonts according to the prioritized lists defined by `font-family` properties in the CSS.
+
+**For official TC publications**, add the `--official` argument to avoid this issue and produce a system-independent output:
+
+```console
+$ pandoc/mkdocs.sh --pdf --official --output /tmp acal-core-v%version%.md
+```
+
+In this case, the generation will use a public Linux container image (`ghcr.io/oasis-tcs/chrome-headless`) with a fixed installed set of fonts to generate the PDF.
 
 ---
 
