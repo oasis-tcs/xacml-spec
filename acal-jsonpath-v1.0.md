@@ -30,12 +30,14 @@ abstract-section:
 
 
 - https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v%version%/%stage_revision%/acal-jsonpath-v%version%-%stage_revision%.html (Authoritative)
-- https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/%version%/%stage_revision%/acal-jsonpath-v%version%-%stage_revision%.pdf
+- https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v%version%/%stage_revision%/acal-jsonpath-v%version%-%stage_revision%.pdf
 - https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v%version%/%stage_revision%/acal-jsonpath-v%version%-%stage_revision%.md
 
 ### Previous version: {.unnumbered .unlisted}
 
-N/A
+- https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/csd01/acal-jsonpath-v1.0-csd01.html (Authoritative)
+- https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/csd01/acal-jsonpath-v1.0-csd01.pdf
+- https://docs.oasis-open.org/xacml/acal/acal/profiles/jsonpath/v1.0/csd01/acal-jsonpath-v1.0-csd01.md
 
 ### Latest version: {.unnumbered .unlisted}
 
@@ -516,7 +518,7 @@ Normative references are specific (identified by date of publication and/or edit
 
 The following documents are referenced in such a way that some or all of their content constitutes requirements of this document.
 
-###### [ACAL-Core-1.0]
+###### [ACAL-Core-1.0] {#acal-core-10}
 
 Attribute-Centric Authorization Language (ACAL) Version 1.0. Edited by Steven Legg and Cyril Dangerville. 18 February 2026. OASIS Committee Specification Draft 01.
 
@@ -710,7 +712,7 @@ As an alternative to installing the above manually, you may simply use Docker wi
 ```
 $ alias pandoc='docker run --rm --volume "$(pwd):/data" ghcr.io/oasis-tcs/pandoc-plantuml'
 ```
-_The Dockerfile (named `Dockerfile`) of the docker image used in the alias above is provided in the [pandoc](pandoc) folder next to this markdown file for your convenience if you wish to build it yourself._ 
+_The Dockerfile (named `Dockerfile`) of the docker image used in the alias above is provided in the [pandoc](https://github.com/oasis-tcs/xacml-spec/tree/main/pandoc) folder next to this markdown file for your convenience if you wish to build it yourself._ 
 
 Git clone or get a local copy of [OASIS XACML TC Github repository](https://github.com/oasis-tcs/xacml-spec/), open a terminal and **change your working directory to the root directory of your local copy of the repository**.
 
