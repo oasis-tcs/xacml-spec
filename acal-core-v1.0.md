@@ -3484,7 +3484,7 @@ Whenever a property of this type (`IdentifierType`) is used in ACAL data model, 
 
 ##### 7.1.2.3.9 LocalIdentifierType
 
-`LocalIdentifierType` values are local identifiers, i.e. identifiers that are unique only within a limited scope. Examples of local identifiers are Request-local identifiers (e.g. the `Id` properties of `RequestEntity` and `RequestEntityReference`), Policy-local identifiers (e.g. the `VariableId` of a policy's variable or the `ParameterName` of a policy parameter or the `RuleId` of a policy's rule), Rule-local identifiers (e.g. the `VariableId` of a rule's variable), etc.
+`LocalIdentifierType` values are local identifiers, i.e. identifiers that are unique only within a limited scope. Examples of local identifiers are Request-local identifiers (e.g. the `Id` property of `RequestEntity`, and the value of `RequestEntityReference` itself, which is typed directly as `LocalIdentifierType` rather than having its own `Id` property), Policy-local identifiers (e.g. the `VariableId` of a policy's variable or the `ParameterName` of a policy parameter or the `RuleId` of a policy's rule), Rule-local identifiers (e.g. the `VariableId` of a rule's variable), etc.
 
 <!-- WARNING: for ALFA compatibility, the pattern should not be more restrictive than ALFA identifiers. 
    Pattern agreed with ALFA working group, except the hypen is allowed as separator in addition to the dot: 
@@ -6798,7 +6798,7 @@ Hancock, Polymorphic Type Checking, in Simon L. Peyton Jones, Implementation of 
 
 ###### [Hier]
 
-XACML v3.0 Hierarchical Resource Profile Version 1.0. 11 March 2010. Committee Specification Draft 03. https://docs.oasis-open.org/xacml/3.0/xacml-3.0-hierarchical-v1-spec-cd-03-en.html
+XACML v3.0 Hierarchical Resource Profile Version 1.0. 18 May 2014. Committee Specification 02. https://docs.oasis-open.org/xacml/3.0/hierarchical/v1.0/xacml-3.0-hierarchical-v1.0.html
 
 ###### [IEEE754]
 
