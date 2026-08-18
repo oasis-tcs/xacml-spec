@@ -1057,10 +1057,6 @@ RFC2798, Definition of the inetOrgPerson, M. Smith, April 2000, https://www.ietf
 
 Mathematical Markup Language (MathML), Version 2.0, W3C Recommendation, 21 October 2003, https://www.w3.org/TR/2003/REC-MathML2-20031021/
 
-###### [Multi]
-
-OASIS Committee Draft 03, XACML v3.0 Multiple Decision Profile Version 1.0, 11 March 2010, https://docs.oasis-open.org/xacml/3.0/xacml-3.0-multiple-v1-spec-cd-03-en.doc
-
 ###### [Perritt93]
 
 Perritt, H. Knowbots, Permissions Headers and Contract Law, Conference on Technological Strategies for Protecting Intellectual Property in the Networked Multimedia Environment, April 1993. Available at: https://www.cni.org/resources/historical-resources/technological-strategies-for-protecting-intellectual-property-in-the-networked-multimedia-environment/permission-headers-and-contract-law
@@ -1101,21 +1097,8 @@ Davis, Mark, Suignard, Michel, Unicode Technical Report #36: Unicode Security Co
 
 OASIS Committee Draft 03, XACML v3.0 Administration and Delegation Profile Version 1.0. 11 March 2010, https://docs.oasis-open.org/xacml/3.0/xacml-3.0-administration-v1-spec-cd-03-en.doc
 
-###### [XACMLv1.0]
 
-<!-- Editorial note (pending OASIS guidance): this citation links to an OASIS member-only
-(Kavi) URI, https://www.oasis-open.org/committees/download.php/2406/oasis-xacml-1.0.pdf,
-which Naming Directives v1.7 s6.6 bars from public TC documents. The document being cited
-is the OASIS Standard "Extensible access control markup language (XACML) Version 1.0",
-18 February 2003 (Kavi document ID 2406, file oasis-xacml-1.0.pdf) -- no docs.oasis-open.org
-mirror of this pre-2013 document currently exists. Note that XACML 3.0's own published OASIS
-Standard cites this same member-only URL for the identical reference, so this is a
-long-standing gap in the TC's published record rather than an error introduced here.
-Awaiting confirmation from OASIS TC Administration on either (a) a public mirror location
-for this document, or (b) an approved exception for this legacy citation, before this note
-and the citation below can be finalized. -->
 
-OASIS Standard, Extensible access control markup language (XACML) Version 1.0. 18 February 2003, https://www.oasis-open.org/committees/download.php/2406/oasis-xacml-1.0.pdf
 
 ###### [XACMLv1.1]
 
