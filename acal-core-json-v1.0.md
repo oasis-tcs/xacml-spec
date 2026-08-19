@@ -298,7 +298,7 @@ The key words "**MUST**", "**MUST NOT**", "**REQUIRED**", "**SHALL**", "**SHALL 
 
 <!-- From OASIS Open Specification Template Instructions: Describe any standards or typographical conventions that were followed when writing this document, such as fonts or highlighting that have special significance. If there are no typographical conventions than one is to put "None". -->
 
-This specification contains schema conforming to [JSON Schema](#JsonSchemaValidation) and normative text to describe the syntax and semantics of JSON-encoded ACAL objects.
+This specification contains schema conforming to [JSON Schema](#jsonschemavalidation) and normative text to describe the syntax and semantics of JSON-encoded ACAL objects.
 
 ```json
 Listings of JSON schema and code listings appear like this.
@@ -309,7 +309,7 @@ This specification uses the following typographical conventions in text: `JSONPr
 
 ## 3.3 Schema organization and identifier(s)
 
-The JACAL syntax is defined in a [JSON Schema](#JsonSchemaValidation) associated with the following identifier:
+The JACAL syntax is defined in a [JSON Schema](#jsonschemavalidation) associated with the following identifier:
 <!-- Newline to fit on PDF page -->
 `urn:oasis:names:tc:jacal:1.0:core:schema`
 
@@ -349,7 +349,7 @@ abstract model elements; it defines only their JSON representation.
 
 ## 4.2 Abstraction Layer
 
-In the case where the native request/response format is specified in [JSON Schema](#JsonSchemaValidation) (e.g. an OpenID-Connect-conformant PEP), the transformation between the native format and the ACAL context may be specified in the form of a JSON Query And Transformation Language expression [[JSLT](#jslt)].
+In the case where the native request/response format is specified in [JSON Schema](#jsonschemavalidation) (e.g. an OpenID-Connect-conformant PEP), the transformation between the native format and the ACAL context may be specified in the form of a JSON Query And Transformation Language expression [[JSLT](#jslt)].
 
 Similarly, in the case where the resource to which access is requested is a JSON document, the resource itself may be included in, or referenced by, the request context. Then, through the use of JSONPath expressions [[RFC9535](#rfc9535)] in the policy, values in the resource may be included in the policy evaluation. The use of JSONPath expressions is not specified here but in the JSONPath Profile of ACAL.
 

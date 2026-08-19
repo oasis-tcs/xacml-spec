@@ -300,7 +300,7 @@ The ACAL method of representing XPath-based functions borrows from the XPath and
 
 ## 4.4 Example
 
-This section contains an example XML document, an example request *context* and example ACAL *rules* illustrating the use of XPathAttributeSelectors and xpathExpression data-type defined in this Profile. The XML document is a medical record. Four separate *rules* are defined.
+This section contains an example XML document, an example request *context* and example ACAL *rules* illustrating the use of XPathAttributeSelectors and xpathExpression data-type defined in this Profile. The XML document is a medical record. Three separate *rules* are defined.
 
 ### 4.4.1 Example medical record instance
 

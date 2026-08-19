@@ -71,6 +71,18 @@ No new schema files, same as HRP: no XSD, JSON Schema, or YAML constraint catalo
 
 ---
 
+## Worked Example Walkthrough
+
+[MDP-ACAL] Section 8 gives one example per applicable scheme, and — like [HRP-ACAL]'s Section 7 — deliberately spans all three ACAL representations, one per example, precisely to demonstrate that this profile's schemes are representation-agnostic rather than XML-specific:
+
+- [Section 8.1](acal-multiple-v1.0.md#81-repeated-categories) (Repeated Categories) is XACML v4.0/XML.
+- [Section 8.2](acal-multiple-v1.0.md#82-reference) (Reference) is JACAL/JSON, requesting the same two resources shown in 8.1 by `RequestReference` instead of by repeated categories.
+- [Section 8.3](acal-multiple-v1.0.md#83-combined-decision) (Combined Decision) reuses 8.1's scenario again, this time in YACAL/YAML, with `CombinedDecision` set to `true`.
+
+**What to check as a reviewer:** the three examples are not independent scenarios — 8.2 and 8.3 both request the same underlying two-resource access as 8.1, just via a different scheme and a different representation. If you are checking that this profile is genuinely format-agnostic (not merely format-agnostic in its normative prose while its only worked examples stay XML), confirming that the JSON and YAML examples parse and validate against `acal-core-json-v1.0-schema.json` and the YACAL structural conventions is the concrete way to do that, rather than taking the representation-agnostic claim on faith. The XPath-expression scheme ([Section 5.2](acal-multiple-v1.0.md#52-nodes-identified-by-xpath-expression)) is the one exception — it is XML-only by design (see above) and has no example of its own in Section 8; do not expect a JSON or YAML worked example for it.
+
+---
+
 ## Review Guidance for ACAL Reviewers New to This Profile
 
 - **Don't grade this PR against issue #59's stated scope** — grade it against Section 4.2's actual accounting, which is considerably larger than two renames.
@@ -78,6 +90,7 @@ No new schema files, same as HRP: no XSD, JSON Schema, or YAML constraint catalo
 - **Confirm the combined-decision `Notice` rule** (Section 6, rule 3) actually covers both obligations and advice, not just one — this is a deliberate broadening from XACML 3.0's "obligations or advice" wording collapsing onto ACAL's single `Notice`/`IsObligation` model.
 - **Check the dangling-reference layering paragraph is actually there and says something concrete** (Section 5.4) — a profile that mentions a layering conflict exists without resolving it would be worse than not mentioning it at all.
 - **Treat the XML-only scoping the same way you treated HRP's** — same decision, same reasoning, not a fresh judgment call each time it appears in a new document.
+- **Verify the JSON and YAML worked examples independently, not just the XML one** — Section 8.2's JACAL example and Section 8.3's YACAL example are the profile's evidence that its schemes are genuinely representation-agnostic, not XML with a format-agnostic claim attached. Parse and, ideally, schema-validate them rather than reading them as prose illustrations.
 
 ---
 

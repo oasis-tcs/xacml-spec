@@ -454,7 +454,7 @@ This section lists those portions of the specification that MUST be included in 
 
 : Note: "M" means mandatory-to-implement. "O" means optional.
 
-The implementation MUST follow [Section 5](#5-structures), [Section 6](#6-attribute-selector-evaluation) and [Annex D](#annex-c-acal-identifiers) where they apply to implemented items in the following tables.
+The implementation MUST follow [Section 5](#5-structures), [Section 6](#6-attribute-selector-evaluation) and [Annex C](#annex-c-acal-identifiers) where they apply to implemented items in the following tables.
 
 Many of these items are associated with versions of XACML preceding ACAL but have been assigned new identifiers with the `urn:oasis:names:tc:acal:1.0:` prefix. The older XACML identifiers have been listed in the tables as deprecated identifiers. Implementations MUST support a new identifier defined in this specification but MAY recognize the corresponding deprecated identifier as equivalent. It is RECOMMENDED that these deprecated identifiers not be used in new policies and requests; they are planned to be removed in a subsequent version of ACAL. Note that some items appear to be carried over from a preceding version of XACML but do not list the XACML identifier. This is because ACAL has redefined the item in some way that means it is no longer identical to the original definition in XACML, and so the identifiers can no longer be considered equivalent. Items new to ACAL 1.0 will also not list an XACML identifier.
 

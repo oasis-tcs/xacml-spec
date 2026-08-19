@@ -146,18 +146,22 @@ JACAL v1.0 is the JSON representation of ACAL.
 | Aspect | Details |
 |---|---|
 | Schema mechanism | JSON Schema Draft 2020-12, using `$dynamicRef`/`$dynamicAnchor` for profile extensibility |
-| Type discrimination | Wrapper keys identify expression types (`"Rule": {...}`, `"Apply": {...}`) within `Expression` arrays |
+| Type discrimination | Wrapper keys identify polymorphic types by name (`"Apply": {...}` inside `Apply`'s own `Argument` array; `"Rule": {...}` inside `Policy`'s `CombinerInput` array) rather than by element name as XML does |
 | Literal typing | JSON booleans, integers, and non-integer numbers imply the fixed ACAL primitive literal types; strings rely on context or explicit `DataType` when needed |
 | Namespace handling | Not applicable; namespaced identifiers are plain string URIs |
 | Short identifier support | Present; `{name}` notation in string values |
 | Validation toolchain | Any JSON Schema Draft 2020-12 validator (e.g. jsonschema by Sourcemeta, AJV) |
 | Best fit | REST API ecosystems, microservices, cloud-native deployments, OpenID Connect environments |
 
-JACAL uses `Expression` arrays for all polymorphic contexts. Where XML
-uses element name to identify expression type, JACAL uses a wrapper key
-around the value. The `Expression` array is the primary polymorphic
-container — each element is a mapping with exactly one key identifying
-the type.
+JACAL identifies polymorphic values by wrapper key rather than by
+element name — the `{"Apply": {...}}` / `{"Value": ...}` pattern used
+throughout this document. Where XML uses element name to identify
+expression type, JACAL uses a wrapper key around the value, and each
+polymorphic array property holds a mix of such wrapped values. `Apply`'s
+own `Argument` array is the most common example (not an `Expression`
+property — see the worked examples below), but `Policy`'s
+`CombinerInput` and `Rule`'s `NoticeExpression` follow the same
+wrapper-key convention.
 
 ### YACAL v1.0 (YAML)
 
@@ -380,11 +384,11 @@ The smallest complete ACAL construct. A single `Rule` with a
     "Condition": {
       "Apply": {
         "FunctionId": "urn:oasis:names:tc:acal:1.0:function:and",
-        "Expression": [
+        "Argument": [
           {
             "Apply": {
               "FunctionId": "urn:oasis:names:tc:acal:1.0:function:string-is-in",
-              "Expression": [
+              "Argument": [
                 { "Value": "doctor" },
                 {
                   "AttributeDesignator": {
@@ -398,7 +402,7 @@ The smallest complete ACAL construct. A single `Rule` with a
           {
             "Apply": {
               "FunctionId": "urn:oasis:names:tc:acal:1.0:function:string-is-in",
-              "Expression": [
+              "Argument": [
                 { "Value": "read" },
                 {
                   "AttributeDesignator": {
@@ -426,17 +430,17 @@ Rule:
   Condition:
     Apply:
       FunctionId: "urn:oasis:names:tc:acal:1.0:function:and"
-      Expression:
+      Argument:
         - Apply:
             FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-is-in"
-            Expression:
+            Argument:
               - Value: doctor
               - AttributeDesignator:
                   Category: "urn:oasis:names:tc:acal:1.0:subject-category:access-subject"
                   AttributeId: "urn:example:attribute:role"
         - Apply:
             FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-is-in"
-            Expression:
+            Argument:
               - Value: read
               - AttributeDesignator:
                   Category: "urn:oasis:names:tc:acal:1.0:attribute-category:action"
@@ -448,7 +452,7 @@ Rule:
 - In XML, child elements of `<Apply>` are the function arguments. Each
   expression type is identified by its element name (`<Value>`,
   `<AttributeDesignator>`, `<Apply>`).
-- In JACAL and YACAL, the `Expression` array carries the function
+- In JACAL and YACAL, the `Argument` array carries the function
   arguments. Each entry is a mapping with a single key that identifies
   the expression type — this is the *wrapper key* pattern shared across
   both JSON and YAML representations.
@@ -523,11 +527,11 @@ entry adds a deployment-specific alias for the `role` attribute.
     "Condition": {
       "Apply": {
         "FunctionId": "{and}",
-        "Expression": [
+        "Argument": [
           {
             "Apply": {
               "FunctionId": "{string-is-in}",
-              "Expression": [
+              "Argument": [
                 { "Value": "doctor" },
                 {
                   "AttributeDesignator": {
@@ -541,7 +545,7 @@ entry adds a deployment-specific alias for the `role` attribute.
           {
             "Apply": {
               "FunctionId": "{string-is-in}",
-              "Expression": [
+              "Argument": [
                 { "Value": "read" },
                 {
                   "AttributeDesignator": {
@@ -569,17 +573,17 @@ Rule:
   Condition:
     Apply:
       FunctionId: "{and}"
-      Expression:
+      Argument:
         - Apply:
             FunctionId: "{string-is-in}"
-            Expression:
+            Argument:
               - Value: doctor
               - AttributeDesignator:
                   Category: "{access-subject}"
                   AttributeId: "{role}"
         - Apply:
             FunctionId: "{string-is-in}"
-            Expression:
+            Argument:
               - Value: read
               - AttributeDesignator:
                   Category: "{action}"
@@ -716,12 +720,12 @@ registered or premium users; premium pages to premium users only.
           "Condition": {
             "Apply": {
               "FunctionId": "{and}",
-              "Expression": [
-                { "Apply": { "FunctionId": "{string-is-in}", "Expression": [
+              "Argument": [
+                { "Apply": { "FunctionId": "{string-is-in}", "Argument": [
                     { "Value": "view" },
                     { "AttributeDesignator": { "Category": "{action}", "AttributeId": "{action-id}", "MustBePresent": true } }
                 ] } },
-                { "Apply": { "FunctionId": "{string-is-in}", "Expression": [
+                { "Apply": { "FunctionId": "{string-is-in}", "Argument": [
                     { "Value": "public" },
                     { "AttributeDesignator": { "Category": "{resource}", "AttributeId": "{content-tier}", "MustBePresent": true } }
                 ] } }
@@ -738,21 +742,21 @@ registered or premium users; premium pages to premium users only.
           "Condition": {
             "Apply": {
               "FunctionId": "{and}",
-              "Expression": [
-                { "Apply": { "FunctionId": "{string-is-in}", "Expression": [
+              "Argument": [
+                { "Apply": { "FunctionId": "{string-is-in}", "Argument": [
                     { "Value": "view" },
                     { "AttributeDesignator": { "Category": "{action}", "AttributeId": "{action-id}", "MustBePresent": true } }
                 ] } },
-                { "Apply": { "FunctionId": "{string-is-in}", "Expression": [
+                { "Apply": { "FunctionId": "{string-is-in}", "Argument": [
                     { "Value": "registered" },
                     { "AttributeDesignator": { "Category": "{resource}", "AttributeId": "{content-tier}", "MustBePresent": true } }
                 ] } },
-                { "Apply": { "FunctionId": "{or}", "Expression": [
-                    { "Apply": { "FunctionId": "{string-is-in}", "Expression": [
+                { "Apply": { "FunctionId": "{or}", "Argument": [
+                    { "Apply": { "FunctionId": "{string-is-in}", "Argument": [
                         { "Value": "registered" },
                         { "AttributeDesignator": { "Category": "{access-subject}", "AttributeId": "{account-type}", "MustBePresent": true } }
                     ] } },
-                    { "Apply": { "FunctionId": "{string-is-in}", "Expression": [
+                    { "Apply": { "FunctionId": "{string-is-in}", "Argument": [
                         { "Value": "premium" },
                         { "AttributeDesignator": { "Category": "{access-subject}", "AttributeId": "{account-type}", "MustBePresent": true } }
                     ] } }
@@ -770,16 +774,16 @@ registered or premium users; premium pages to premium users only.
           "Condition": {
             "Apply": {
               "FunctionId": "{and}",
-              "Expression": [
-                { "Apply": { "FunctionId": "{string-is-in}", "Expression": [
+              "Argument": [
+                { "Apply": { "FunctionId": "{string-is-in}", "Argument": [
                     { "Value": "view" },
                     { "AttributeDesignator": { "Category": "{action}", "AttributeId": "{action-id}", "MustBePresent": true } }
                 ] } },
-                { "Apply": { "FunctionId": "{string-is-in}", "Expression": [
+                { "Apply": { "FunctionId": "{string-is-in}", "Argument": [
                     { "Value": "premium" },
                     { "AttributeDesignator": { "Category": "{resource}", "AttributeId": "{content-tier}", "MustBePresent": true } }
                 ] } },
-                { "Apply": { "FunctionId": "{string-is-in}", "Expression": [
+                { "Apply": { "FunctionId": "{string-is-in}", "Argument": [
                     { "Value": "premium" },
                     { "AttributeDesignator": { "Category": "{access-subject}", "AttributeId": "{account-type}", "MustBePresent": true } }
                 ] } }
@@ -810,10 +814,10 @@ Policy:
         Condition:
           Apply:
             FunctionId: "{and}"
-            Expression:
+            Argument:
               - Apply:
                   FunctionId: "{string-is-in}"
-                  Expression:
+                  Argument:
                     - Value: view
                     - AttributeDesignator:
                         Category: "{action}"
@@ -821,7 +825,7 @@ Policy:
                         MustBePresent: true
               - Apply:
                   FunctionId: "{string-is-in}"
-                  Expression:
+                  Argument:
                     - Value: public
                     - AttributeDesignator:
                         Category: "{resource}"
@@ -834,10 +838,10 @@ Policy:
         Condition:
           Apply:
             FunctionId: "{and}"
-            Expression:
+            Argument:
               - Apply:
                   FunctionId: "{string-is-in}"
-                  Expression:
+                  Argument:
                     - Value: view
                     - AttributeDesignator:
                         Category: "{action}"
@@ -845,7 +849,7 @@ Policy:
                         MustBePresent: true
               - Apply:
                   FunctionId: "{string-is-in}"
-                  Expression:
+                  Argument:
                     - Value: registered
                     - AttributeDesignator:
                         Category: "{resource}"
@@ -853,10 +857,10 @@ Policy:
                         MustBePresent: true
               - Apply:
                   FunctionId: "{or}"
-                  Expression:
+                  Argument:
                     - Apply:
                         FunctionId: "{string-is-in}"
-                        Expression:
+                        Argument:
                           - Value: registered
                           - AttributeDesignator:
                               Category: "{access-subject}"
@@ -864,7 +868,7 @@ Policy:
                               MustBePresent: true
                     - Apply:
                         FunctionId: "{string-is-in}"
-                        Expression:
+                        Argument:
                           - Value: premium
                           - AttributeDesignator:
                               Category: "{access-subject}"
@@ -877,10 +881,10 @@ Policy:
         Condition:
           Apply:
             FunctionId: "{and}"
-            Expression:
+            Argument:
               - Apply:
                   FunctionId: "{string-is-in}"
-                  Expression:
+                  Argument:
                     - Value: view
                     - AttributeDesignator:
                         Category: "{action}"
@@ -888,7 +892,7 @@ Policy:
                         MustBePresent: true
               - Apply:
                   FunctionId: "{string-is-in}"
-                  Expression:
+                  Argument:
                     - Value: premium
                     - AttributeDesignator:
                         Category: "{resource}"
@@ -896,7 +900,7 @@ Policy:
                         MustBePresent: true
               - Apply:
                   FunctionId: "{string-is-in}"
-                  Expression:
+                  Argument:
                     - Value: premium
                     - AttributeDesignator:
                         Category: "{access-subject}"
@@ -990,11 +994,11 @@ they do, an email notification must be sent to the patient.
     "Condition": {
       "Apply": {
         "FunctionId": "{and}",
-        "Expression": [
+        "Argument": [
           {
             "Apply": {
               "FunctionId": "{string-is-in}",
-              "Expression": [
+              "Argument": [
                 { "Value": "physician" },
                 { "AttributeDesignator": { "Category": "{access-subject}", "AttributeId": "{role}" } }
               ]
@@ -1003,7 +1007,7 @@ they do, an email notification must be sent to the patient.
           {
             "Apply": {
               "FunctionId": "{string-is-in}",
-              "Expression": [
+              "Argument": [
                 { "Value": "write" },
                 { "AttributeDesignator": { "Category": "{action}", "AttributeId": "{action-id}" } }
               ]
@@ -1050,17 +1054,17 @@ Rule:
   Condition:
     Apply:
       FunctionId: "{and}"
-      Expression:
+      Argument:
         - Apply:
             FunctionId: "{string-is-in}"
-            Expression:
+            Argument:
               - Value: physician
               - AttributeDesignator:
                   Category: "{access-subject}"
                   AttributeId: "{role}"
         - Apply:
             FunctionId: "{string-is-in}"
-            Expression:
+            Argument:
               - Value: write
               - AttributeDesignator:
                   Category: "{action}"

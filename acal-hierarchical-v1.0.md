@@ -396,47 +396,51 @@ A request for read access to the `<md:patientDoB>` node inside a medical-record 
 
 ## 7.2 Nodes Identified by URI
 
-A request for read access to a budget document identified by its file-system path, using [Section 5.2](#52-nodes-identified-by-uri)'s scheme. Note that no ancestor attributes are present — the URI already encodes the node's position in the hierarchy:
+A request for read access to a budget document identified by its file-system path, using [Section 5.2](#52-nodes-identified-by-uri)'s scheme, in JACAL representation (JSON representation of ACAL) — this scheme has no dependency on any particular representation ([Section 5](#5-node-identity-schemes)'s dependency table), so this example and [Section 7.3](#73-nodes-identified-by-ancestor-attributes)'s intentionally use JSON and YAML rather than repeating [Section 7.1](#71-nodes-in-xml-documents)'s XML. Note that no ancestor attributes are present — the URI already encodes the node's position in the hierarchy:
 
-```xml {.numberLines}
-<RequestEntity Category="urn:oasis:names:tc:acal:1.0:attribute-category:resource">
-    <RequestAttribute
-        AttributeId="urn:oasis:names:tc:acal:1.0:resource:resource-id"
-        DataType="urn:oasis:names:tc:acal:1.0:data-type:anyURI">
-        <Value>file:///acme-docs/finance/2026/budget.xml</Value>
-    </RequestAttribute>
-</RequestEntity>
+```json {.numberLines}
+{
+    "RequestEntity": {
+        "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
+        "RequestAttribute": [
+            {
+                "AttributeId": "urn:oasis:names:tc:acal:1.0:resource:resource-id",
+                "DataType": "urn:oasis:names:tc:acal:1.0:data-type:anyURI",
+                "Value": [
+                    "file:///acme-docs/finance/2026/budget.xml"
+                ]
+            }
+        ]
+    }
+}
 ```
 
 ## 7.3 Nodes Identified by Ancestor Attributes
 
-A request for read access to a project node, using [Section 5.3](#53-nodes-identified-by-ancestor-attributes)'s scheme. Unlike [Section 7.2](#72-nodes-identified-by-uri)'s example, the node's own identity (`resource-id`) is an opaque `string` name rather than a URI that already encodes its position in a hierarchy — the [Section 5.2](#52-nodes-identified-by-uri) scheme could not express this node's position on its own, so the ancestor attributes below are what carry it. Its immediate ancestor is, separately, represented in two data types at once — a `string` display name and an `anyURI` alias sharing the same `AttributeId`. This is the exact case [Section 4.3](#43-changes-from-the-previous-version) describes as fully representable without narrowing:
+A request for read access to a project node, using [Section 5.3](#53-nodes-identified-by-ancestor-attributes)'s scheme, in YACAL representation (YAML representation of ACAL). Unlike [Section 7.2](#72-nodes-identified-by-uri)'s example, the node's own identity (`resource-id`) is an opaque `string` name rather than a URI that already encodes its position in a hierarchy — the [Section 5.2](#52-nodes-identified-by-uri) scheme could not express this node's position on its own, so the ancestor attributes below are what carry it. Its immediate ancestor is, separately, represented in two data types at once — a `string` display name and an `anyURI` alias sharing the same `AttributeId`. This is the exact case [Section 4.3](#43-changes-from-the-previous-version) describes as fully representable without narrowing:
 
-```xml {.numberLines}
-<RequestEntity Category="urn:oasis:names:tc:acal:1.0:attribute-category:resource">
-    <RequestAttribute
-        AttributeId="urn:oasis:names:tc:acal:1.0:resource:resource-id"
-        DataType="urn:oasis:names:tc:acal:1.0:data-type:string">
-        <Value>Project Falcon</Value>
-    </RequestAttribute>
-    <RequestAttribute
-        AttributeId="urn:oasis:names:tc:acal:1.0:resource:resource-parent"
-        DataType="urn:oasis:names:tc:acal:1.0:data-type:string">
-        <Value>Platform Engineering Team</Value>
-    </RequestAttribute>
-    <RequestAttribute
-        AttributeId="urn:oasis:names:tc:acal:1.0:resource:resource-parent"
-        DataType="urn:oasis:names:tc:acal:1.0:data-type:anyURI">
-        <Value>acme:org/platform-team</Value>
-    </RequestAttribute>
-    <RequestAttribute
-        AttributeId="urn:oasis:names:tc:acal:1.0:resource:resource-ancestor-or-self"
-        DataType="urn:oasis:names:tc:acal:1.0:data-type:string">
-        <Value>Engineering Teams</Value>
-        <Value>Platform Engineering Team</Value>
-        <Value>Project Falcon</Value>
-    </RequestAttribute>
-</RequestEntity>
+```yaml {.numberLines}
+RequestEntity:
+  Category: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
+  RequestAttribute:
+    - AttributeId: "urn:oasis:names:tc:acal:1.0:resource:resource-id"
+      DataType: "urn:oasis:names:tc:acal:1.0:data-type:string"
+      Value:
+        - Project Falcon
+    - AttributeId: "urn:oasis:names:tc:acal:1.0:resource:resource-parent"
+      DataType: "urn:oasis:names:tc:acal:1.0:data-type:string"
+      Value:
+        - Platform Engineering Team
+    - AttributeId: "urn:oasis:names:tc:acal:1.0:resource:resource-parent"
+      DataType: "urn:oasis:names:tc:acal:1.0:data-type:anyURI"
+      Value:
+        - acme:org/platform-team
+    - AttributeId: "urn:oasis:names:tc:acal:1.0:resource:resource-ancestor-or-self"
+      DataType: "urn:oasis:names:tc:acal:1.0:data-type:string"
+      Value:
+        - Engineering Teams
+        - Platform Engineering Team
+        - Project Falcon
 ```
 
 The two `resource-parent` objects are not duplicates of one another: they share an `AttributeId` but differ in `DataType`, so both are permitted by [[ACAL-Core-1.0](#acal-core-10)] Section 7.33's uniqueness rule ([Section 4.3](#43-changes-from-the-previous-version)). A policy that only understands `anyURI`-typed ancestor representations can ignore the `string`-typed one, and vice versa, without either being invalid.

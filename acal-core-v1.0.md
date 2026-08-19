@@ -3213,7 +3213,7 @@ Property-level constraints are defined at the level of a specific property as an
 
 ###### 7.1.1.1.1.2 OCL constraints
 
-More advanced constraints are expressed in [[OCL](#OCL)] in the form `{{OCL} expression}` as specified by Section 8.3.4.2 (and 8.3.5.2 for the example) of [[UML](#uml)].
+More advanced constraints are expressed in [[OCL](#ocl)] in the form `{{OCL} expression}` as specified by Section 8.3.4.2 (and 8.3.5.2 for the example) of [[UML](#uml)].
 Let refer to *prop* as the property to which the constraint is applied. In each OCL expression below, *prop* is used as the OCL context. Therefore, the `self` keyword in particular refers to *prop* itself.
 
 **Mandatory-property-based uniqueness constraint:**
@@ -8359,7 +8359,7 @@ Note that in each case an implementation is conformant as long as it produces th
 
 ## E.1 Extended Indeterminate Values
 
-Some combining algorithms are defined in terms of an extended set of `Indeterminate` values. See [Section 8.10](#E1-extended-indeterminate-values) for the definition of the Extended Indeterminate values. For these algorithms, the PDP MUST keep track of the extended set of `Indeterminate` values during rule and policy combining.
+Some combining algorithms are defined in terms of an extended set of `Indeterminate` values. See [Section 8.10](#810-extended-indeterminate) for the definition of the Extended Indeterminate values. For these algorithms, the PDP MUST keep track of the extended set of `Indeterminate` values during rule and policy combining.
 
 The output of a combining algorithm which does not track the extended set of `Indeterminate` values MUST be treated as `Indeterminate{DP}` for the value `Indeterminate` by a combining algorithm which tracks the extended set of `Indeterminate` values.
 
