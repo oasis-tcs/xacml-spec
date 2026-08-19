@@ -356,7 +356,9 @@ A request naming access to two resources at once, using [Section 5.3](#53-repeat
 ```xml {.numberLines}
 <Request xmlns="urn:oasis:names:tc:xacml:4.0:core:schema">
     <RequestEntity Category="urn:oasis:names:tc:acal:1.0:subject-category:access-subject">
-        <RequestAttribute AttributeId="urn:oasis:names:tc:acal:1.0:subject:subject-id">
+        <RequestAttribute
+            AttributeId="urn:oasis:names:tc:acal:1.0:subject:subject-id"
+            DataType="urn:oasis:names:tc:acal:1.0:data-type:rfc822Name">
             <Value>bs@simpsons.com</Value>
         </RequestAttribute>
     </RequestEntity>
@@ -398,6 +400,7 @@ The same two resources, requested by reference instead of by repetition, in JACA
                 "RequestAttribute": [
                     {
                         "AttributeId": "urn:oasis:names:tc:acal:1.0:subject:subject-id",
+                        "DataType": "urn:oasis:names:tc:acal:1.0:data-type:rfc822Name",
                         "Value": [
                             "bs@simpsons.com"
                         ]
@@ -470,6 +473,7 @@ Request:
     - Category: "urn:oasis:names:tc:acal:1.0:subject-category:access-subject"
       RequestAttribute:
         - AttributeId: "urn:oasis:names:tc:acal:1.0:subject:subject-id"
+          DataType: "urn:oasis:names:tc:acal:1.0:data-type:rfc822Name"
           Value:
             - bs@simpsons.com
     - Category: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
