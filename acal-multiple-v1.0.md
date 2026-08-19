@@ -356,7 +356,9 @@ A request naming access to two resources at once, using [Section 5.3](#53-repeat
 ```xml {.numberLines}
 <Request xmlns="urn:oasis:names:tc:xacml:4.0:core:schema">
     <RequestEntity Category="urn:oasis:names:tc:acal:1.0:subject-category:access-subject">
-        <RequestAttribute AttributeId="urn:oasis:names:tc:acal:1.0:subject:subject-id">
+        <RequestAttribute
+            AttributeId="urn:oasis:names:tc:acal:1.0:subject:subject-id"
+            DataType="urn:oasis:names:tc:acal:1.0:data-type:rfc822Name">
             <Value>bs@simpsons.com</Value>
         </RequestAttribute>
     </RequestEntity>
@@ -386,54 +388,114 @@ Resolves to two `Individual Decision Request`s, one per resource, each pairing t
 
 ## 8.2 Reference
 
-The same two resources, requested by reference instead of by repetition:
+The same two resources, requested by reference instead of by repetition, in JACAL representation (JSON representation of ACAL):
 
-```xml {.numberLines}
-<Request xmlns="urn:oasis:names:tc:xacml:4.0:core:schema">
-    <RequestEntity Category="urn:oasis:names:tc:acal:1.0:subject-category:access-subject" Id="subj">
-        <RequestAttribute AttributeId="urn:oasis:names:tc:acal:1.0:subject:subject-id">
-            <Value>bs@simpsons.com</Value>
-        </RequestAttribute>
-    </RequestEntity>
-    <RequestEntity Category="urn:oasis:names:tc:acal:1.0:attribute-category:resource" Id="res1">
-        <RequestAttribute
-            AttributeId="urn:oasis:names:tc:acal:1.0:resource:resource-id"
-            DataType="urn:oasis:names:tc:acal:1.0:data-type:anyURI">
-            <Value>file:///records/bart-simpson.xml</Value>
-        </RequestAttribute>
-    </RequestEntity>
-    <RequestEntity Category="urn:oasis:names:tc:acal:1.0:attribute-category:resource" Id="res2">
-        <RequestAttribute
-            AttributeId="urn:oasis:names:tc:acal:1.0:resource:resource-id"
-            DataType="urn:oasis:names:tc:acal:1.0:data-type:anyURI">
-            <Value>file:///records/lisa-simpson.xml</Value>
-        </RequestAttribute>
-    </RequestEntity>
-    <RequestEntity Category="urn:oasis:names:tc:acal:1.0:attribute-category:action" Id="act">
-        <RequestAttribute AttributeId="urn:oasis:names:tc:acal:1.0:action:action-id">
-            <Value>read</Value>
-        </RequestAttribute>
-    </RequestEntity>
-    <MultiRequests>
-        <RequestReference>
-            <RequestEntityReference>subj</RequestEntityReference>
-            <RequestEntityReference>res1</RequestEntityReference>
-            <RequestEntityReference>act</RequestEntityReference>
-        </RequestReference>
-        <RequestReference>
-            <RequestEntityReference>subj</RequestEntityReference>
-            <RequestEntityReference>res2</RequestEntityReference>
-            <RequestEntityReference>act</RequestEntityReference>
-        </RequestReference>
-    </MultiRequests>
-</Request>
+```json {.numberLines}
+{
+    "Request": {
+        "RequestEntity": [
+            {
+                "Category": "urn:oasis:names:tc:acal:1.0:subject-category:access-subject",
+                "Id": "subj",
+                "RequestAttribute": [
+                    {
+                        "AttributeId": "urn:oasis:names:tc:acal:1.0:subject:subject-id",
+                        "DataType": "urn:oasis:names:tc:acal:1.0:data-type:rfc822Name",
+                        "Value": [
+                            "bs@simpsons.com"
+                        ]
+                    }
+                ]
+            },
+            {
+                "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
+                "Id": "res1",
+                "RequestAttribute": [
+                    {
+                        "AttributeId": "urn:oasis:names:tc:acal:1.0:resource:resource-id",
+                        "DataType": "urn:oasis:names:tc:acal:1.0:data-type:anyURI",
+                        "Value": [
+                            "file:///records/bart-simpson.xml"
+                        ]
+                    }
+                ]
+            },
+            {
+                "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
+                "Id": "res2",
+                "RequestAttribute": [
+                    {
+                        "AttributeId": "urn:oasis:names:tc:acal:1.0:resource:resource-id",
+                        "DataType": "urn:oasis:names:tc:acal:1.0:data-type:anyURI",
+                        "Value": [
+                            "file:///records/lisa-simpson.xml"
+                        ]
+                    }
+                ]
+            },
+            {
+                "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:action",
+                "Id": "act",
+                "RequestAttribute": [
+                    {
+                        "AttributeId": "urn:oasis:names:tc:acal:1.0:action:action-id",
+                        "Value": [
+                            "read"
+                        ]
+                    }
+                ]
+            }
+        ],
+        "MultiRequests": {
+            "RequestReference": [
+                {
+                    "RequestEntityReference": ["subj", "res1", "act"]
+                },
+                {
+                    "RequestEntityReference": ["subj", "res2", "act"]
+                }
+            ]
+        }
+    }
+}
 ```
 
 Each `RequestReference` names exactly the three entities its `Individual Decision Request` should contain; a `RequestEntityReference` value of, say, `res3` (no matching `Id`) would be a dangling reference per [Section 5.4](#54-reference).
 
 ## 8.3 Combined Decision
 
-Adding `CombinedDecision="true"` to either example above requests that the two individual `Permit`/`Deny`/etc. decisions be merged into one, per [Section 6](#6-combined-decision), rather than returned as two separate `ResultType` objects.
+The [Section 8.1](#81-repeated-categories) example above, in YACAL representation (YAML representation of ACAL), with `CombinedDecision` set to `true`:
+
+```yaml {.numberLines}
+Request:
+  CombinedDecision: true
+  RequestEntity:
+    - Category: "urn:oasis:names:tc:acal:1.0:subject-category:access-subject"
+      RequestAttribute:
+        - AttributeId: "urn:oasis:names:tc:acal:1.0:subject:subject-id"
+          DataType: "urn:oasis:names:tc:acal:1.0:data-type:rfc822Name"
+          Value:
+            - bs@simpsons.com
+    - Category: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
+      RequestAttribute:
+        - AttributeId: "urn:oasis:names:tc:acal:1.0:resource:resource-id"
+          DataType: "urn:oasis:names:tc:acal:1.0:data-type:anyURI"
+          Value:
+            - file:///records/bart-simpson.xml
+    - Category: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
+      RequestAttribute:
+        - AttributeId: "urn:oasis:names:tc:acal:1.0:resource:resource-id"
+          DataType: "urn:oasis:names:tc:acal:1.0:data-type:anyURI"
+          Value:
+            - file:///records/lisa-simpson.xml
+    - Category: "urn:oasis:names:tc:acal:1.0:attribute-category:action"
+      RequestAttribute:
+        - AttributeId: "urn:oasis:names:tc:acal:1.0:action:action-id"
+          Value:
+            - read
+```
+
+Setting `CombinedDecision` to `true` on either example above requests that the two individual `Permit`/`Deny`/etc. decisions be merged into one, per [Section 6](#6-combined-decision), rather than returned as two separate `ResultType` objects.
 
 ---
 
