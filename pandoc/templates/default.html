@@ -62,8 +62,12 @@ $if(abstract)$
 $abstract$
 </div>
 $endif$
-
 $endif$
+<!-- $prologue$ is filled in by abstract-section.lua filter with the content of the 'Prologue' section which is supposed to contain all the sections before the ToC and therefore not included in the ToC. -->
+$if(prologue)$
+$prologue$
+$endif$
+<!-- end prologue-->
 $if(toc)$
 <nav id="$idprefix$TOC" role="doc-toc">
 $if(toc-title)$
