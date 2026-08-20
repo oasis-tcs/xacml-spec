@@ -111,6 +111,17 @@ end
 
 function Pandoc(doc)
   print("Publication date changed to '"..vars["date"].."'. If this is official, remember to update the date also in References from other documents to this one.")
-  local doc_after_meta_vars_replaced =  doc:walk { Meta = get_vars }:walk { Str = replace_Str, Link = replace_Link_target, CodeBlock = replace_CodeBlock }
+  local doc_after_meta_vars_replaced = doc:walk { Str = replace_Str, Link = replace_Link_target, CodeBlock = replace_CodeBlock }
+  -- Also walk metadata values. Filters that run earlier in the chain (e.g.
+  -- abstract-section.lua) lift prologue blocks into metadata, and template
+  -- variables render outside the document body, so placeholders there would
+  -- otherwise survive into the output (raw %version%/%stage_revision% in the
+  -- cover URLs).
+  for k, v in pairs(doc_after_meta_vars_replaced.meta) do
+    local t = pandoc.utils.type(v)
+    if t == 'Blocks' or t == 'Inlines' then
+      doc_after_meta_vars_replaced.meta[k] = v:walk { Str = replace_Str, Link = replace_Link_target, CodeBlock = replace_CodeBlock }
+    end
+  end
   return pandoc.utils.run_lua_filter(doc_after_meta_vars_replaced, "pandoc/diagram.lua")
 end
