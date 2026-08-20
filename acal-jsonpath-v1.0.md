@@ -539,10 +539,6 @@ J. Boyer et al, eds., Exclusive XML Canonicalization, Version 1.0, W3C Recommend
 
 Hancock, Polymorphic Type Checking, in Simon L. Peyton Jones, Implementation of Functional Programming Languages, Section 8, Prentice-Hall International, 1987.
 
-###### [Hier]
-
-XACML v3.0 Hierarchical Resource Profile Version 1.0. 11 March 2010. Committee Specification Draft 03. https://docs.oasis-open.org/xacml/3.0/xacml-3.0-hierarchical-v1-spec-cd-03-en.html
-
 ###### [IEEE754]
 
 IEEE Standard for Binary Floating-Point Arithmetic 1985, ISBN 1-5593-7653-8, IEEE Product No. SH10116-TBR.
@@ -570,10 +566,6 @@ RFC 2798, Definition of the inetOrgPerson, M. Smith, April 2000, https://www.iet
 ###### [MathML]
 
 Mathematical Markup Language (MathML), Version 2.0, W3C Recommendation, 21 October 2003, https://www.w3.org/TR/2003/REC-MathML2-20031021/
-
-###### [Multi]
-
-OASIS Committee Draft 03, XACML v3.0 Multiple Decision Profile Version 1.0, 11 March 2010, https://docs.oasis-open.org/xacml/3.0/xacml-3.0-multiple-v1-spec-cd-03-en.doc
 
 ###### [Perritt93]
 
@@ -718,10 +710,7 @@ Git clone or get a local copy of [OASIS XACML TC Github repository](https://gith
 
 ### CSS stylesheet {.unnumbered}
 
-The generation command uses a CSS stylesheet file (`-c` argument) provided by OASIS. It may be changed to one of these (or the local version in the `styles` folder) to get a different style of output:
-- https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3.css
-- https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3a.css (this one produces HTML that resembles the github display more closely, especially for blocks of code) This template already includes a reference (in HTML code) to this .css file.
-- https://docs.oasis-open.org/templates/css/markdown-styles-v1.8.1-cn_final.css
+The generation command uses the CSS stylesheet file `pandoc/styles/markdown-styles-v1.7.3b.css` (with `-c` argument) based on the [v1.7.3a](https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3a.css) provided by OASIS.
 
 ### HTML generation {.unnumbered}
 
@@ -744,6 +733,15 @@ $ pandoc/mkdocs.sh --number-lines --pdf --output /tmp acal-jsonpath-v%version%.m
 
 The HTML file is generated like the previous command and, in addition, a PDF file is generated with the same name as the input file except the `.md` extension is replaced with `.pdf` in this case.
 
+Beware that **the result PDF - the embedded fonts in particular - may differ depending on the system/machine** where you run this command. Mainly, it depends on which fonts are actually installed on the system, as the HTML-to-PDF converter (Chrome / Chromium in this case) selects available fonts according to the prioritized lists defined by `font-family` properties in the CSS.
+
+**For official TC publications**, add the `--official` argument to avoid this issue and produce a system-independent output:
+
+```console
+$ pandoc/mkdocs.sh --pdf --official --output /tmp acal-core-v%version%.md
+```
+
+In this case, the generation will use a public Linux container image (`ghcr.io/oasis-tcs/chrome-headless`) with a fixed installed set of fonts to generate the PDF.
 
 # Appendix 1 Acknowledgments {.unnumbered}
 

@@ -3213,7 +3213,7 @@ Property-level constraints are defined at the level of a specific property as an
 
 ###### 7.1.1.1.1.2 OCL constraints
 
-More advanced constraints are expressed in [[OCL](#OCL)] in the form `{{OCL} expression}` as specified by Section 8.3.4.2 (and 8.3.5.2 for the example) of [[UML](#uml)].
+More advanced constraints are expressed in [[OCL](#ocl)] in the form `{{OCL} expression}` as specified by Section 8.3.4.2 (and 8.3.5.2 for the example) of [[UML](#uml)].
 Let refer to *prop* as the property to which the constraint is applied. In each OCL expression below, *prop* is used as the OCL context. Therefore, the `self` keyword in particular refers to *prop* itself.
 
 **Mandatory-property-based uniqueness constraint:**
@@ -3484,7 +3484,7 @@ Whenever a property of this type (`IdentifierType`) is used in ACAL data model, 
 
 ##### 7.1.2.3.9 LocalIdentifierType
 
-`LocalIdentifierType` values are local identifiers, i.e. identifiers that are unique only within a limited scope. Examples of local identifiers are Request-local identifiers (e.g. the `Id` properties of `RequestEntity` and `RequestEntityReference`), Policy-local identifiers (e.g. the `VariableId` of a policy's variable or the `ParameterName` of a policy parameter or the `RuleId` of a policy's rule), Rule-local identifiers (e.g. the `VariableId` of a rule's variable), etc.
+`LocalIdentifierType` values are local identifiers, i.e. identifiers that are unique only within a limited scope. Examples of local identifiers are Request-local identifiers (e.g. the `Id` property of `RequestEntity`, and the value of `RequestEntityReference` itself, which is typed directly as `LocalIdentifierType` rather than having its own `Id` property), Policy-local identifiers (e.g. the `VariableId` of a policy's variable or the `ParameterName` of a policy parameter or the `RuleId` of a policy's rule), Rule-local identifiers (e.g. the `VariableId` of a rule's variable), etc.
 
 <!-- WARNING: for ALFA compatibility, the pattern should not be more restrictive than ALFA identifiers. 
    Pattern agreed with ALFA working group, except the hypen is allowed as separator in addition to the dot: 
@@ -4535,14 +4535,20 @@ If the expression evaluates to a value of the `urn:oasis:names:tc:acal:1.0:data-
 A `ValueType` object is a kind of expression that contains a literal ACAL value.
 
 UML model (class diagram):
+
 ```plantuml
 @startuml
+skinparam nodesep 20
+skinparam ranksep 20
 hide empty members
 hide circle
 
 abstract class ExpressionType
 abstract class ValueType extends ExpressionType
 abstract class PrimitiveValueType extends ValueType
+abstract class StructuredValueType extends ValueType
+note bottom of StructuredValueType: Structured data-types, \neither user-defined or \ndefined by an ACAL Profile \n(e.g. XPath Profile's \n'xpathExpression' datatype), \nmay derive this type.
+
 class LiteralBooleanType <<fixedDatatype>> extends PrimitiveValueType {
     <<fixedDatatype>>
     DataType='urn:oasis:names:tc:acal:1.0:data-type:boolean'
@@ -4572,17 +4578,20 @@ class LiteralRestrictedStringType <<restrictedString>> extends PrimitiveValueTyp
     +Value: String [1]
 }
 
-note bottom of LiteralRestrictedStringType: Other ACAL datatypes with lexical representation can be derived from this type,\n e.g. standard time, date, dateTime, anyURI, hexBinary, base64Binary, \ndayTimeDuration, yearMonthDuration, x50Name, rfc822Name, ipAddress, dnsName.
+note bottom of LiteralRestrictedStringType: Other ACAL datatypes with lexical representation \ncan be derived from this type, \ne.g. standard time, date, dateTime, \nanyURI, hexBinary, base64Binary, \ndayTimeDuration, yearMonthDuration, \nx50Name, rfc822Name, ipAddress, dnsName.
 
-abstract class StructuredValueType extends ValueType
-
-note bottom of StructuredValueType: Structured data-types, either user-defined or defined by an ACAL Profile\n (e.g. XPath Profile's 'xpathExpression' datatype), may derive this type.
+PrimitiveValueType -[hidden]- LiteralBooleanType
+LiteralBooleanType -[hidden]- LiteralIntegerType
+LiteralIntegerType -[hidden]- LiteralDoubleType
+LiteralDoubleType -[hidden]- LiteralStringType
+LiteralStringType -[hidden]- LiteralRestrictedStringType
 
 class DataType <<Metaclass>>
 class FixedDatatype <<Stereotype>> extends DataType {
      DataType: URI [1]
 }
-@enduml 
+
+@enduml
 ```
 
 A `ValueType` object has the following properties:
@@ -4980,7 +4989,7 @@ class RequestType <<dataType>> {
   {field} + ShortIdSetReference: URI [*] {unique}
   {field} + RequestDefaults: RequestDefaultsType [*] {unordered, unique} {{OCL} self->isUnique(oclType())}
   {field} + RequestEntity: RequestEntityType [1..*] {unordered, unique} {{OCL} self->select(Id <> null)->isUnique(Id)}
-  {field} + MultiRequests: MultiRequestsType [0..1]
+  {field} + MultiRequests: MultiRequestsType [0..1] {{OCL} self.RequestReference.RequestEntityReference->forAll(entityRef | RequestEntity.allInstances->exists(entity | entityRef = entity.Id ))}
   {field} + ReturnPolicyIdList: Boolean [0..1] = false
   {field} + CombinedDecision: Boolean [0..1] = false
 }
@@ -5009,7 +5018,7 @@ URIs starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are
 
 `RequestEntity` [One to Many]
 
-: A sequence of `RequestEntityType` objects, each containing a sequence of `RequestAttributeType` objects associated with an attribute category of the request context. Different `RequestEntityType` objects with different category identifiers are used to represent information about the subject, resource, action, environment or other categories of the access request. There may be multiple `RequestEntityType` objects with the same `Category` property value if the PDP implements the multiple decision profile, see [[Multi](#multi)]. Under other conditions, it is a syntax error if there are multiple `RequestEntityType` objects with the same `Category` (see [Section 8.17.2](#8172-syntax-and-type-errors) for error codes).
+: A sequence of `RequestEntityType` objects, each containing a sequence of `RequestAttributeType` objects associated with an attribute category of the request context. Different `RequestEntityType` objects with different category identifiers are used to represent information about the subject, resource, action, environment or other categories of the access request. There may be multiple `RequestEntityType` objects with the same `Category` property value if the PDP implements the ACAL Multiple Decision Profile, see [[Multi](#multi)]. Under other conditions, it is a syntax error if there are multiple `RequestEntityType` objects with the same `Category` (see [Section 8.17.2](#8172-syntax-and-type-errors) for error codes).
 
 `MultiRequests` [Optional]
 
@@ -5159,7 +5168,7 @@ The `RequestAttributeType` object type extends the `AttributeType` object type w
 
 The `ResponseType` object type is an abstraction layer used by the policy language. Any proprietary system using the ACAL specification MUST transform an ACAL context `ResponseType` object into the form of its authorization decision.
 
-A `ResponseType` object encapsulates the authorization decision produced by the PDP. It includes a sequence of one or more results, with one `ResultType` object per requested resource. Multiple results MAY be returned by some implementations, in particular those that support the ACAL Profile for Requests for Multiple Resources [[Multi](#multi)]. Support for multiple results is OPTIONAL.
+A `ResponseType` object encapsulates the authorization decision produced by the PDP. It includes a sequence of one or more results, with one `ResultType` object per requested resource. Multiple results MAY be returned by some implementations, in particular those that support the ACAL Multiple Decision Profile [[Multi](#multi)]. Support for multiple results is OPTIONAL.
 
 UML definition (class diagram):
 ```plantuml
@@ -5924,7 +5933,7 @@ A policy reference containing circular references is invalid. The PDP MUST detec
 
 ## 8.14 Hierarchical Resources
 
-It is often the case that a resource is organized as a hierarchy (e.g., file system, XML document). ACAL provides several optional mechanisms for supporting hierarchical resources. These are described in the ACAL Profile for Hierarchical Resources [[Hier](#hier)] and in the ACAL Profile for Requests for Multiple Resources [[Multi](#multi)].
+It is often the case that a resource is organized as a hierarchy (e.g., file system, XML document). ACAL provides several optional mechanisms for supporting hierarchical resources. These are described in the ACAL Hierarchical Resource Profile [[Hier](#hier)] and in the ACAL Multiple Decision Profile [[Multi](#multi)].
 
 ## 8.15 Authorization Decision
 
@@ -6789,7 +6798,7 @@ Hancock, Polymorphic Type Checking, in Simon L. Peyton Jones, Implementation of 
 
 ###### [Hier]
 
-XACML v3.0 Hierarchical Resource Profile Version 1.0. 11 March 2010. Committee Specification Draft 03. https://docs.oasis-open.org/xacml/3.0/xacml-3.0-hierarchical-v1-spec-cd-03-en.html
+XACML v3.0 Hierarchical Resource Profile Version 1.0. 18 May 2014. Committee Specification 02. https://docs.oasis-open.org/xacml/3.0/hierarchical/v1.0/xacml-3.0-hierarchical-v1.0.html
 
 ###### [IEEE754]
 
@@ -6821,7 +6830,7 @@ Mathematical Markup Language (MathML), Version 2.0, W3C Recommendation, 21 Octob
 
 ###### [Multi]
 
-OASIS Committee Draft 03, XACML v3.0 Multiple Decision Profile Version 1.0, 11 March 2010, https://docs.oasis-open.org/xacml/3.0/xacml-3.0-multiple-v1-spec-cd-03-en.doc
+XACML v3.0 Multiple Decision Profile Version 1.0. 18 May 2014. Committee Specification 02. https://docs.oasis-open.org/xacml/3.0/multiple/v1.0/xacml-3.0-multiple-v1.0.html
 
 ###### [OCL]
 
@@ -8350,7 +8359,7 @@ Note that in each case an implementation is conformant as long as it produces th
 
 ## E.1 Extended Indeterminate Values
 
-Some combining algorithms are defined in terms of an extended set of `Indeterminate` values. See [Section 8.10](#E1-extended-indeterminate-values) for the definition of the Extended Indeterminate values. For these algorithms, the PDP MUST keep track of the extended set of `Indeterminate` values during rule and policy combining.
+Some combining algorithms are defined in terms of an extended set of `Indeterminate` values. See [Section 8.10](#810-extended-indeterminate) for the definition of the Extended Indeterminate values. For these algorithms, the PDP MUST keep track of the extended set of `Indeterminate` values during rule and policy combining.
 
 The output of a combining algorithm which does not track the extended set of `Indeterminate` values MUST be treated as `Indeterminate{DP}` for the value `Indeterminate` by a combining algorithm which tracks the extended set of `Indeterminate` values.
 
@@ -8688,10 +8697,7 @@ Git clone or get a local copy of [OASIS XACML TC Github repository](https://gith
 
 ### CSS stylesheet
 
-The generation command uses a CSS stylesheet file (`-c` argument) provided by OASIS. It may be changed to one of these (or the local version in the `styles` folder) to get a different style of output:
-- https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3.css
-- https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3a.css (this one produces HTML that resembles the github display more closely, especially for blocks of code) This template already includes a reference (in HTML code) to this .css file.
-- https://docs.oasis-open.org/templates/css/markdown-styles-v1.8.1-cn_final.css
+The generation command uses the CSS stylesheet file `pandoc/styles/markdown-styles-v1.7.3b.css` (with `-c` argument) based on the [v1.7.3a](https://docs.oasis-open.org/templates/css/markdown-styles-v1.7.3a.css) provided by OASIS.
 
 ### HTML generation
 
@@ -8713,6 +8719,16 @@ $ pandoc/mkdocs.sh --pdf --output /tmp acal-core-v%version%.md
 ```
 
 The HTML file is generated like the previous command and, in addition, a PDF file is generated with the same name as the input file except the `.md` extension is replaced with `.pdf` in this case.
+
+Beware that **the result PDF - the embedded fonts in particular - may differ depending on the system/machine** where you run this command. Mainly, it depends on which fonts are actually installed on the system, as the HTML-to-PDF converter (Chrome / Chromium in this case) selects available fonts according to the prioritized lists defined by `font-family` properties in the CSS.
+
+**For official TC publications**, add the `--official` argument to avoid this issue and produce a system-independent output:
+
+```console
+$ pandoc/mkdocs.sh --pdf --official --output /tmp acal-core-v%version%.md
+```
+
+In this case, the generation will use a public Linux container image (`ghcr.io/oasis-tcs/chrome-headless`) with a fixed installed set of fonts to generate the PDF.
 
 ---
 
