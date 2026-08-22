@@ -442,7 +442,7 @@ A request selecting every `<md:patient>` node inside a batch medical-records doc
 **XACML v4.0 (XML)**
 
 ```xml
-<RequestEntity Category="urn:oasis:names:tc:acal:1.0:attribute-category:resource">
+<RequestEntity Category="urn:oasis:names:tc:acal:1.0:attribute-category:resource" xmlns:md="urn:example:med:schemas:record">
     <Content>
         <Body>
             <md:records xmlns:md="urn:example:med:schemas:record">
@@ -465,20 +465,37 @@ A request selecting every `<md:patient>` node inside a batch medical-records doc
 
 ```json
 {
-    "RequestEntity": {
-        "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
-        "Content": {
-            "MediaType": "application/xml",
-            "Body": "<md:records xmlns:md=\"urn:example:med:schemas:record\"><md:patient><md:patientDoB>1992-03-21</md:patientDoB></md:patient><md:patient><md:patientDoB>2014-07-09</md:patientDoB></md:patient></md:records>"
-        },
-        "RequestAttribute": [
+    "Request": {
+        "RequestDefaults": [
             {
-                "AttributeId": "urn:oasis:names:tc:acal:1.0:profile:multiple:content-selector",
-                "DataType": "urn:oasis:names:tc:acal:1.0:data-type:xpathExpression",
-                "Value": [
+                "XPathRequestDefaults": {
+                    "XPathVersion": "https://www.w3.org/TR/xpath20/",
+                    "Namespace": [
+                        {
+                            "Prefix": "md",
+                            "Name": "urn:example:med:schemas:record"
+                        }
+                    ]
+                }
+            }
+        ],
+        "RequestEntity": [
+            {
+                "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
+                "Content": {
+                    "MediaType": "application/xml",
+                    "Body": "<md:records xmlns:md=\"urn:example:med:schemas:record\"><md:patient><md:patientDoB>1992-03-21</md:patientDoB></md:patient><md:patient><md:patientDoB>2014-07-09</md:patientDoB></md:patient></md:records>"
+                },
+                "RequestAttribute": [
                     {
-                        "XPathCategory": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
-                        "XPath": "md:records/md:patient"
+                        "AttributeId": "urn:oasis:names:tc:acal:1.0:profile:multiple:content-selector",
+                        "DataType": "urn:oasis:names:tc:acal:1.0:data-type:xpathExpression",
+                        "Value": [
+                            {
+                                "XPathCategory": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
+                                "XPath": "md:records/md:patient"
+                            }
+                        ]
                     }
                 ]
             }
@@ -490,24 +507,31 @@ A request selecting every `<md:patient>` node inside a batch medical-records doc
 **YACAL v1.0 (YAML)**
 
 ```yaml
-RequestEntity:
-  Category: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
-  Content:
-    MediaType: "application/xml"
-    Body: |
-      <md:records xmlns:md="urn:example:med:schemas:record"><md:patient><md:patientDoB>1992-03-21</md:patientDoB></md:patient><md:patient><md:patientDoB>2014-07-09</md:patientDoB></md:patient></md:records>
-  RequestAttribute:
-    - AttributeId: "urn:oasis:names:tc:acal:1.0:profile:multiple:content-selector"
-      DataType: "urn:oasis:names:tc:acal:1.0:data-type:xpathExpression"
-      Value:
-        - XPathCategory: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
-          XPath: "md:records/md:patient"
+Request:
+  RequestDefaults:
+    - XPathRequestDefaults:
+        XPathVersion: "https://www.w3.org/TR/xpath20/"
+        Namespace:
+          - Prefix: md
+            Name: "urn:example:med:schemas:record"
+  RequestEntity:
+    - Category: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
+      Content:
+        MediaType: "application/xml"
+        Body: |
+          <md:records xmlns:md="urn:example:med:schemas:record"><md:patient><md:patientDoB>1992-03-21</md:patientDoB></md:patient><md:patient><md:patientDoB>2014-07-09</md:patientDoB></md:patient></md:records>
+      RequestAttribute:
+        - AttributeId: "urn:oasis:names:tc:acal:1.0:profile:multiple:content-selector"
+          DataType: "urn:oasis:names:tc:acal:1.0:data-type:xpathExpression"
+          Value:
+            - XPathCategory: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
+              XPath: "md:records/md:patient"
 ```
 
 **What this shows**
 
 - Resolves, per [Section 5.2](#52-nodes-identified-by-xpath-expression), into one `Individual Decision Request` per matched `<md:patient>` node, each carrying the same `Content` with `…:multiple:content-selector` replaced by a plain `content-selector` attribute ([[ACAL-XPath-1.0](#acal-xpath-10)] Annex D.3) selecting that single node.
-- As in [Section 7.1](acal-hierarchical-v1.0.md#71-nodes-in-xml-documents) of the ACAL Hierarchical Resource Profile, only `Content.Body`'s own encoding changes across representations (literal elements in XML, an escaped string in JACAL, a block scalar in YACAL) — the XPath expression and its structured `xpathExpression` value are identical in all three.
+- The `md` prefix inside the `XPath` expression needs its own namespace binding, separate from `Content.Body`'s embedded `xmlns:md`, for the same reason as [[ACAL-Hierarchical-1.0](#acal-hierarchical-10)] Section 7.1's equivalent example: declared as an ordinary in-scope XML namespace on `RequestEntity` here, or via `RequestDefaults`/`XPathRequestDefaults`/`Namespace` in JACAL/YACAL — which is why, as in that example, this one needs the full `Request` wrapper rather than a bare `RequestEntity` fragment. `Content.Body`'s own encoding (literal elements in XML, an escaped string in JACAL, a block scalar in YACAL) is what stays representation-specific beyond that; the XPath expression and its structured `xpathExpression` value are identical in all three once the namespace binding is in place.
 
 ---
 
@@ -963,11 +987,11 @@ Request:
 
 ## 9.1 XML
 
-Dangling-reference detection is enforced by the *Core XML Schema*'s `<xs:keyref name="Request_RequestEntityReference">`, which requires every `RequestEntityReference` value to match some `RequestEntity`'s `Id`. Sibling uniqueness (`self->isUnique(RequestEntityReference->asSet())`, [Section 5.4](#54-reference)) is enforced by an XSD 1.1 `<xs:assert>` on `MultiRequestsType`; where only XSD 1.0 is available, [[ACAL-Core-1.0](#acal-core-10)]'s XML representation Section 5.2.6.2's Schematron option covers the same rule. `RequestEntityReference` value uniqueness within one `RequestReferenceType` object is enforced by `<xs:unique name="RequestReference_RequestEntityReference">`. **All three of this profile's referential rules are fully covered by structural validation alone in the XML representation** — unlike the JSON and YAML cases below.
+Dangling-reference detection is enforced by the *Core XML Schema*'s `<xs:keyref name="Request_RequestEntityReference">`, which requires every `RequestEntityReference` value to match some `RequestEntity`'s `Id`. Sibling uniqueness (`self->isUnique(RequestEntityReference->asSet())`, [Section 5.4](#54-reference)) is enforced by an XSD 1.1 `<xs:assert>` on `MultiRequestsType`; where only XSD 1.0 is available, [[XACML-Core-4.0](#xacml-core-40)] Section 5.2.6.2's Schematron option covers the same rule. `RequestEntityReference` value uniqueness within one `RequestReferenceType` object is enforced by `<xs:unique name="RequestReference_RequestEntityReference">`. **All three of this profile's referential rules are fully covered by structural validation alone in the XML representation** — unlike the JSON and YAML cases below.
 
 ## 9.2 JSON
 
-JSON Schema 2020-12 has no keyword analogous to XSD's `keyref`: nothing in the vocabulary can require that a string value elsewhere in the document match some other value used as a key. **Dangling-reference detection is not enforced by JSON Schema validation at all**, so a JACAL implementation is necessarily in [Section 5.4](#54-reference) item 2's "non-schema-validating" case for this specific rule regardless of whether it validates the rest of the request against JSON Schema — that item's `MUST` therefore governs unconditionally for JACAL, not merely as a fallback. Sibling uniqueness fares no better: the *Core JSON Schema* itself marks the corresponding constraint an open TODO (`"$comment": "TODO: translate/enforce ACAL constraint: {OCL} self->isUnique(RequestEntityReference->asSet())"`), since it is a uniqueness test over *derived sets* of values rather than over individual values, which neither `uniqueItems` nor the `uniqueKeys` extension [[ACAL-Core-1.0](#acal-core-10)]'s JSON representation Section 5.2.4 discusses can express.
+JSON Schema 2020-12 has no keyword analogous to XSD's `keyref`: nothing in the vocabulary can require that a string value elsewhere in the document match some other value used as a key. **Dangling-reference detection is not enforced by JSON Schema validation at all**, so a JACAL implementation is necessarily in [Section 5.4](#54-reference) item 2's "non-schema-validating" case for this specific rule regardless of whether it validates the rest of the request against JSON Schema — that item's `MUST` therefore governs unconditionally for JACAL, not merely as a fallback. Sibling uniqueness fares no better: the *Core JSON Schema* itself marks the corresponding constraint an open TODO (`"$comment": "TODO: translate/enforce ACAL constraint: {OCL} self->isUnique(RequestEntityReference->asSet())"`), since it is a uniqueness test over *derived sets* of values rather than over individual values, which neither `uniqueItems` nor the `uniqueKeys` extension [[JACAL-Core-1.0](#jacal-core-10)] Section 5.2.4 discusses can express.
 
 ## 9.3 YAML
 
@@ -1129,6 +1153,14 @@ The following referenced documents are not required for the application of this 
 ###### [XACML-Core-4.0]
 
 _eXtensible Access Control Markup Language (XACML) Version 4.0_. Edited by Steven Legg and Cyril Dangerville. 18 February 2026. OASIS Committee Specification Draft 01. https://docs.oasis-open.org/xacml/acal/xacml/core/v4.0/csd01/acal-core-xml-v4.0-csd01.html. Latest stage: https://docs.oasis-open.org/xacml/acal/xacml/core/v4.0/csd01/acal-core-xml-v4.0-csd01.html.
+
+###### [JACAL-Core-1.0]
+
+_JSON Representation of ACAL Version 1.0 (JACAL)_. Edited by Steven Legg and Cyril Dangerville. OASIS Committee Specification Draft 02. https://docs.oasis-open.org/xacml/acal/jacal/core/v1.0/csd02/acal-core-json-v1.0-csd02.html.
+
+###### [YACAL-Core-1.0]
+
+_YAML Representation of ACAL (YACAL) Version 1.0_. Edited by Steven Legg and Cyril Dangerville. 23 March 2026. Working Draft 01. Not yet submitted to OASIS for consideration; no stable publication URL exists at this stage.
 
 
 ---

@@ -377,7 +377,7 @@ A request for read access to the `<md:patientDoB>` node inside a medical-record 
 **XACML v4.0 (XML)**
 
 ```xml
-<RequestEntity Category="urn:oasis:names:tc:acal:1.0:attribute-category:resource">
+<RequestEntity Category="urn:oasis:names:tc:acal:1.0:attribute-category:resource" xmlns:md="urn:example:med:schemas:record">
     <Content>
         <Body>
             <md:record xmlns:md="urn:example:med:schemas:record">
@@ -406,28 +406,45 @@ A request for read access to the `<md:patientDoB>` node inside a medical-record 
 
 ```json
 {
-    "RequestEntity": {
-        "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
-        "Content": {
-            "MediaType": "application/xml",
-            "Body": "<md:record xmlns:md=\"urn:example:med:schemas:record\"><md:patient><md:patientDoB>1992-03-21</md:patientDoB></md:patient></md:record>"
-        },
-        "RequestAttribute": [
+    "Request": {
+        "RequestDefaults": [
             {
-                "AttributeId": "urn:oasis:names:tc:acal:1.0:content-selector",
-                "DataType": "urn:oasis:names:tc:acal:1.0:data-type:xpathExpression",
-                "Value": [
+                "XPathRequestDefaults": {
+                    "XPathVersion": "https://www.w3.org/TR/xpath20/",
+                    "Namespace": [
+                        {
+                            "Prefix": "md",
+                            "Name": "urn:example:med:schemas:record"
+                        }
+                    ]
+                }
+            }
+        ],
+        "RequestEntity": [
+            {
+                "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
+                "Content": {
+                    "MediaType": "application/xml",
+                    "Body": "<md:record xmlns:md=\"urn:example:med:schemas:record\"><md:patient><md:patientDoB>1992-03-21</md:patientDoB></md:patient></md:record>"
+                },
+                "RequestAttribute": [
                     {
-                        "XPathCategory": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
-                        "XPath": "md:record/md:patient/md:patientDoB"
+                        "AttributeId": "urn:oasis:names:tc:acal:1.0:content-selector",
+                        "DataType": "urn:oasis:names:tc:acal:1.0:data-type:xpathExpression",
+                        "Value": [
+                            {
+                                "XPathCategory": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
+                                "XPath": "md:record/md:patient/md:patientDoB"
+                            }
+                        ]
+                    },
+                    {
+                        "AttributeId": "urn:oasis:names:tc:acal:1.0:resource:document-id",
+                        "DataType": "urn:oasis:names:tc:acal:1.0:data-type:anyURI",
+                        "Value": [
+                            "urn:example:med:record:BartSimpson"
+                        ]
                     }
-                ]
-            },
-            {
-                "AttributeId": "urn:oasis:names:tc:acal:1.0:resource:document-id",
-                "DataType": "urn:oasis:names:tc:acal:1.0:data-type:anyURI",
-                "Value": [
-                    "urn:example:med:record:BartSimpson"
                 ]
             }
         ]
@@ -438,27 +455,35 @@ A request for read access to the `<md:patientDoB>` node inside a medical-record 
 **YACAL v1.0 (YAML)**
 
 ```yaml
-RequestEntity:
-  Category: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
-  Content:
-    MediaType: "application/xml"
-    Body: |
-      <md:record xmlns:md="urn:example:med:schemas:record"><md:patient><md:patientDoB>1992-03-21</md:patientDoB></md:patient></md:record>
-  RequestAttribute:
-    - AttributeId: "urn:oasis:names:tc:acal:1.0:content-selector"
-      DataType: "urn:oasis:names:tc:acal:1.0:data-type:xpathExpression"
-      Value:
-        - XPathCategory: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
-          XPath: "md:record/md:patient/md:patientDoB"
-    - AttributeId: "urn:oasis:names:tc:acal:1.0:resource:document-id"
-      DataType: "urn:oasis:names:tc:acal:1.0:data-type:anyURI"
-      Value:
-        - urn:example:med:record:BartSimpson
+Request:
+  RequestDefaults:
+    - XPathRequestDefaults:
+        XPathVersion: "https://www.w3.org/TR/xpath20/"
+        Namespace:
+          - Prefix: md
+            Name: "urn:example:med:schemas:record"
+  RequestEntity:
+    - Category: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
+      Content:
+        MediaType: "application/xml"
+        Body: |
+          <md:record xmlns:md="urn:example:med:schemas:record"><md:patient><md:patientDoB>1992-03-21</md:patientDoB></md:patient></md:record>
+      RequestAttribute:
+        - AttributeId: "urn:oasis:names:tc:acal:1.0:content-selector"
+          DataType: "urn:oasis:names:tc:acal:1.0:data-type:xpathExpression"
+          Value:
+            - XPathCategory: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
+              XPath: "md:record/md:patient/md:patientDoB"
+        - AttributeId: "urn:oasis:names:tc:acal:1.0:resource:document-id"
+          DataType: "urn:oasis:names:tc:acal:1.0:data-type:anyURI"
+          Value:
+            - urn:example:med:record:BartSimpson
 ```
 
 **What this shows**
 
-- In XML, `Content.Body` holds the medical-record document as literal child elements. In JACAL, the same document is a JSON string, escaped per [[ACAL-Core-1.0](#acal-core-10)] Section 5.3's rules for XML content in a JSON `Content` object. In YACAL, a block scalar (`|`) carries the same string without JSON's escaping.
+- The `md` prefix used inside the `XPath` expression string needs its own namespace binding, independent of `Content.Body`'s embedded `xmlns:md` declaration — the two are separate namespace scopes, one for the embedded document, one for the expression text itself ([[ACAL-XPath-1.0](#acal-xpath-10)] Annex C.2.1). In XML, that binding comes from ordinary in-scope namespaces, so declaring `xmlns:md` on `RequestEntity` (an ancestor of the `Value` element carrying the expression) is sufficient. JACAL and YACAL have no ancestor-based namespace inheritance at all, so the same binding is carried explicitly instead, via `RequestDefaults`/`XPathRequestDefaults`/`Namespace` — which is why, unlike [Section 7.2](#72-nodes-identified-by-uri) and [Section 7.3](#73-nodes-identified-by-ancestor-attributes)'s examples, this one needs the full `Request` wrapper rather than a bare `RequestEntity` fragment.
+- In XML, `Content.Body` holds the medical-record document as literal child elements. In JACAL, the same document is a JSON string, escaped per [[JACAL-Core-1.0](#jacal-core-10)] Section 5.3's rules for XML content in a JSON `Content` object. In YACAL, a block scalar (`|`) carries the same string without JSON's escaping.
 - The `content-selector` attribute's value — an `xpathExpression` — is itself a structured value (`XPathCategory` plus `XPath`), not a plain string, in every representation; only its syntax (XML attributes, a JSON object, a YAML mapping) changes.
 - `document-id` is included to disambiguate which document instance the `content-selector` expression applies to, in case the same request references more than one such document.
 
@@ -644,15 +669,15 @@ RequestEntity:
 
 ## 8.1 XML
 
-`RequestAttribute` objects are unique within a `RequestEntityType` object by `(AttributeId, DataType, Issuer)`, enforced by the *Core XML Schema*'s `<xs:unique name="RequestEntity_RequestAttribute_AttributeId-DataType-Issuer">` key. That key is subject to two distinct limitations [[ACAL-Core-1.0](#acal-core-10)]'s XML representation states generally for this constraint, each with a different remedy. First (Section 5.2.5 rule 4.5): where `DataType` is omitted from one of two otherwise-identical `RequestAttribute` objects, XSD §3.11.4 excludes that object from the key's qualified node set entirely rather than comparing it as holding the type's default (`string`) value, so the pair validates as if it were not a duplicate. **Implementations requiring full enforcement of this case SHOULD additionally apply [[ACAL-Core-1.0](#acal-core-10)]'s XML representation Section 5.2.6's Option 1 (XSD 1.1 assertions) or Option 2 (Schematron rules)**, exactly as that section already requires for the constraint generally. Second, and distinct (Section 5.2.6.3): where two `DataType` values differ only in short-identifier-name-vs-URI spelling, **neither `<xs:unique>` nor Option 1 nor Option 2 can recognize them as equal** — full enforcement of this case requires the identifier-expansion step of [[ACAL-Core-1.0](#acal-core-10)] Section 8.3, which none of XML Schema validation, XSD 1.1 assertions, or Schematron rules perform; **implementers requiring full enforcement MUST perform this expansion themselves**, before validation, exactly as Section 5.2.6.3 already requires for the constraint generally. This profile introduces no new limitation in either case, only a scheme ([Section 5.3](#53-nodes-identified-by-ancestor-attributes)) that reliably exercises the general one.
+`RequestAttribute` objects are unique within a `RequestEntityType` object by `(AttributeId, DataType, Issuer)`, enforced by the *Core XML Schema*'s `<xs:unique name="RequestEntity_RequestAttribute_AttributeId-DataType-Issuer">` key. That key is subject to two distinct limitations [[XACML-Core-4.0](#xacml-core-40)] states generally for this constraint, each with a different remedy. First ([[XACML-Core-4.0](#xacml-core-40)] Section 5.2.5 rule 4.5): where `DataType` is omitted from one of two otherwise-identical `RequestAttribute` objects, [[XS11](#xs11)] §3.11.4 excludes that object from the key's qualified node set entirely rather than comparing it as holding the type's default (`string`) value, so the pair validates as if it were not a duplicate. **Implementations requiring full enforcement of this case SHOULD additionally apply [[XACML-Core-4.0](#xacml-core-40)] Section 5.2.6's Option 1 (XSD 1.1 assertions) or Option 2 (Schematron rules)**, exactly as that section already requires for the constraint generally. Second, and distinct ([[XACML-Core-4.0](#xacml-core-40)] Section 5.2.6.3): where two `DataType` values differ only in short-identifier-name-vs-URI spelling, **neither `<xs:unique>` nor Option 1 nor Option 2 can recognize them as equal** — full enforcement of this case requires the identifier-expansion step of [[ACAL-Core-1.0](#acal-core-10)] Section 8.3, which none of XML Schema validation, XSD 1.1 assertions, or Schematron rules perform; **implementers requiring full enforcement MUST perform this expansion themselves**, before validation, exactly as Section 5.2.6.3 already requires for the constraint generally. This profile introduces no new limitation in either case, only a scheme ([Section 5.3](#53-nodes-identified-by-ancestor-attributes)) that reliably exercises the general one.
 
 ## 8.2 JSON
 
-The same `(AttributeId, DataType, Issuer)` constraint is **not enforced by the JSON subschemas** Core's JSON representation Section 5.2.4 generates for `RequestAttribute`: the standard `uniqueItems` keyword cannot express a keyed comparison, and the third-party `uniqueKeys` extension it discusses as a candidate does not correctly enforce this constraint either, since `DataType` is a key property carrying a schema default. This applies unchanged to ancestor-attribute `RequestAttribute` objects — the two `resource-parent` objects in [Section 7.3](#73-nodes-identified-by-ancestor-attributes)'s example, differing only in `DataType`, are exactly the pair this gap concerns. **Implementations enforcing this constraint SHALL do so outside JSON Schema validation**, first applying [[ACAL-Core-1.0](#acal-core-10)] Section 8.3's short-identifier expansion to `AttributeId` and `DataType`, then setting `DataType` to its default (`urn:oasis:names:tc:acal:1.0:data-type:string`) wherever absent, per Core's JSON representation Section 5.2.4.
+The same `(AttributeId, DataType, Issuer)` constraint is **not enforced by the JSON subschemas** [[JACAL-Core-1.0](#jacal-core-10)] Section 5.2.4 generates for `RequestAttribute`: the standard `uniqueItems` keyword cannot express a keyed comparison, and the third-party `uniqueKeys` extension it discusses as a candidate does not correctly enforce this constraint either, since `DataType` is a key property carrying a schema default. This applies unchanged to ancestor-attribute `RequestAttribute` objects — the two `resource-parent` objects in [Section 7.3](#73-nodes-identified-by-ancestor-attributes)'s example, differing only in `DataType`, are exactly the pair this gap concerns. **Implementations enforcing this constraint SHALL do so outside JSON Schema validation**, first applying [[ACAL-Core-1.0](#acal-core-10)] Section 8.3's short-identifier expansion to `AttributeId` and `DataType`, then setting `DataType` to its default (`urn:oasis:names:tc:acal:1.0:data-type:string`) wherever absent, per [[JACAL-Core-1.0](#jacal-core-10)] Section 5.2.4.
 
 ## 8.3 YAML
 
-The `acal-core-yaml-v1.0-constraints.yaml` catalog's `request-attribute-id-unique-within-entity` rule states the same requirement — resolve short identifiers to their full URI, and compare `DataType` on its effective value after applying its default — in its `Requirement` field, per Core's YAML representation Section 5.12.2. No structural check over the YAML document alone can perform either step; a YACAL processor implementing this profile's ancestor-attribute scheme needs to apply both explicitly before treating two `RequestAttribute` objects as distinct.
+The `acal-core-yaml-v1.0-constraints.yaml` catalog's `request-attribute-id-unique-within-entity` rule states the same requirement — resolve short identifiers to their full URI, and compare `DataType` on its effective value after applying its default — in its `Requirement` field, per [[YACAL-Core-1.0](#yacal-core-10)] Section 5.12.2. No structural check over the YAML document alone can perform either step; a YACAL processor implementing this profile's ancestor-attribute scheme needs to apply both explicitly before treating two `RequestAttribute` objects as distinct.
 
 ---
 
@@ -817,6 +842,22 @@ The following referenced documents are not required for the application of this 
 ###### [XACML]
 
 _eXtensible Access Control Markup Language (XACML) Version 3.0 Plus Errata 01_. Edited by Erik Rissanen. OASIS Standard incorporating Approved Errata. https://docs.oasis-open.org/xacml/3.0/xacml-3.0-core-spec-en.html.
+
+###### [XACML-Core-4.0]
+
+_eXtensible Access Control Markup Language (XACML) Version 4.0_. Edited by Steven Legg and Cyril Dangerville. 18 February 2026. OASIS Committee Specification Draft 01. https://docs.oasis-open.org/xacml/acal/xacml/core/v4.0/csd01/acal-core-xml-v4.0-csd01.html. Latest stage: https://docs.oasis-open.org/xacml/acal/xacml/core/v4.0/csd01/acal-core-xml-v4.0-csd01.html.
+
+###### [JACAL-Core-1.0]
+
+_JSON Representation of ACAL Version 1.0 (JACAL)_. Edited by Steven Legg and Cyril Dangerville. OASIS Committee Specification Draft 02. https://docs.oasis-open.org/xacml/acal/jacal/core/v1.0/csd02/acal-core-json-v1.0-csd02.html.
+
+###### [YACAL-Core-1.0]
+
+_YAML Representation of ACAL (YACAL) Version 1.0_. Edited by Steven Legg and Cyril Dangerville. 23 March 2026. Working Draft 01. Not yet submitted to OASIS for consideration; no stable publication URL exists at this stage.
+
+###### [XS11]
+
+XML Schema 1.1, parts 1 and 2. Available at: https://www.w3.org/TR/xmlschema11-1/ and https://www.w3.org/TR/xmlschema11-2/
 
 
 ---
