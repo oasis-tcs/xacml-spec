@@ -114,15 +114,21 @@ Copyright © OASIS Open 2026. All Rights Reserved.  For license and copyright in
 - [6 Combined Decision](#6-combined-decision)
 - [7 Conceptual Model for Creating Individual Decision Requests](#7-conceptual-model-for-creating-individual-decision-requests)
 - [8 Examples (non-normative)](#8-examples-non-normative)
-  - [8.1 Repeated Categories](#81-repeated-categories)
-  - [8.2 Reference](#82-reference)
-  - [8.3 Combined Decision](#83-combined-decision)
-- [9 Safety, Security, and Data Protection Considerations](#9-safety-security-and-data-protection-considerations)
-- [10 Conformance](#10-conformance)
-  - [10.1 Introduction](#101-introduction)
-  - [10.2 Conformance Tables](#102-conformance-tables)
-    - [10.2.1 Profile Identifiers](#1021-profile-identifiers)
-    - [10.2.2 Attributes](#1022-attributes)
+  - [8.1 Nodes Identified by Scope](#81-nodes-identified-by-scope)
+  - [8.2 Nodes Identified by XPath Expression](#82-nodes-identified-by-xpath-expression)
+  - [8.3 Repeated Categories](#83-repeated-categories)
+  - [8.4 Reference](#84-reference)
+  - [8.5 Combined Decision](#85-combined-decision)
+- [9 Representation Considerations](#9-representation-considerations)
+  - [9.1 XML](#91-xml)
+  - [9.2 JSON](#92-json)
+  - [9.3 YAML](#93-yaml)
+- [10 Safety, Security, and Data Protection Considerations](#10-safety-security-and-data-protection-considerations)
+- [11 Conformance](#11-conformance)
+  - [11.1 Introduction](#111-introduction)
+  - [11.2 Conformance Tables](#112-conformance-tables)
+    - [11.2.1 Profile Identifiers](#1121-profile-identifiers)
+    - [11.2.2 Attributes](#1122-attributes)
 - [Annex A License, Document Status and Notices](#annex-a-license-document-status-and-notices)
   - [A.1 Document Status](#a1-document-status)
   - [A.2 License and Notices](#a2-license-and-notices)
@@ -233,7 +239,7 @@ Issue #59, which requested this port, named two specific renames as its full sco
 - **`AttributesReference ReferenceId="x"` → `RequestEntityReference` whose value *is* `x`.** After issue #59 was filed, issue #101 removed `RequestEntityReferenceType` as an unnecessary wrapper around its own `Id` property; the reference element is now typed directly as `LocalIdentifierType`, so `RequestEntityReference` *is* a `LocalIdentifierType` value, not an element with its own `Id`/`ReferenceId` attribute. `LocalIdentifierType` is a restricted `String`, not `xs:ID`/`xs:IDREF` — referenced ids need not be XML NCNames and do not share a document-wide `xml:id` namespace.
 - **The `Notice` merge (issue #6) rewrites the combined-decision rules.** XACML 3.0 MDP's combined-decision rule about "obligations or advice" is restated over ACAL's merged `NoticeType`/`IsObligation` model — see [Section 6](#6-combined-decision).
 - **Two schemes depend on the ACAL Hierarchical Resource Profile.** The scope scheme's `Children`/`Descendants` values need a definition of hierarchy membership; the XPath-expression scheme rewrites its `multiple:content-selector` attribute into the plain `content-selector` HRP takes a normative dependency on. This is why this profile was blocked behind issue #119, and why it ships complete — all four schemes, no split — now that HRP is drafted.
-- **This version is XML-only for the XPath-expression scheme** ([Section 5.2](#52-nodes-identified-by-xpath-expression)), for the same reason and by the same decision as the ACAL Hierarchical Resource Profile's XML-document scheme: the ACAL JSONPath Profile does not yet define the identifier and conformance apparatus a JSON counterpart would depend on. Disclosed here as a deliberate, tracked gap, not silent incompleteness.
+- **The XPath-expression scheme** ([Section 5.2](#52-nodes-identified-by-xpath-expression)) **applies only when the resource's `Content` is itself an XML document**, for the same reason and by the same decision as the ACAL Hierarchical Resource Profile's XML-document scheme: the ACAL JSONPath Profile does not yet define the identifier and conformance apparatus a JSON-*content* counterpart would depend on. This restricts the resource's `Content`, not the serialization carrying the request — see [Section 8.2](#82-nodes-identified-by-xpath-expression) for a worked example of this scheme in all three ACAL representations. Disclosed here as a deliberate, tracked gap, not silent incompleteness.
 - **The dangling-reference layering question** ([Section 5.4](#54-reference)) is resolved: both the schema-validation layer and the runtime-evaluation layer apply, and a non-validating implementation MUST still produce the runtime error.
 - **Identifier namespace.** All identifiers introduced by this profile use the `urn:oasis:names:tc:acal:1.0:` prefix, with the XACML 3.0 identifiers recorded as deprecated equivalents. The XACML identifier `…:multiple:repeated-attribute-categories` is respelled `…:multiple:repeated-categories`, since ACAL's `RequestEntity` rename already dropped "Attributes" from the underlying object type's name.
 - **Target restructure.** Example policies in this document use the boolean `Apply` form rather than XACML 3.0's `AnyOf`/`AllOf`/`Match` structure, consistent with ACAL Core.
@@ -301,7 +307,7 @@ A request names several other requests by reference to `RequestEntityType` objec
 
 **Dangling references.** A `RequestEntityReference` value that does not match the `Id` of any `RequestEntityType` object in the request is invalid. Two enforcement layers apply and are both normative:
 
-1. A schema-validating implementation rejects a dangling reference at validation time, before evaluation begins (e.g. [[XACML-Core-4.0](#xacml-core-40)]'s XSD keyref, and the equivalent JSON Schema/YAML constraints).
+1. A schema-validating implementation using the XML representation rejects a dangling reference at validation time, before evaluation begins, via [[XACML-Core-4.0](#xacml-core-40)]'s XSD keyref. Neither JSON Schema nor a structural YAML check provides an equivalent validation-time mechanism for this rule — see [Section 9](#9-representation-considerations) for what each representation's own schema tooling actually enforces.
 2. A non-schema-validating implementation MUST still detect a dangling reference at evaluation time and produce `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error` for the corresponding `Individual Decision Request`.
 
 Both layers exist so the same guarantee holds whether or not an implementation validates against the schema before evaluating.
@@ -349,11 +355,197 @@ This profile does **NOT** require that an implementation's actual evaluation of 
 
 # 8 Examples (non-normative)
 
-## 8.1 Repeated Categories
+This section gives one worked example for each of the five schemes in [Section 5](#5-request-construction-schemes) and [Section 6](#6-combined-decision), in the same order as [Section 5](#5-request-construction-schemes) itself. Attribute categories other than the ones relevant to each scheme are omitted for brevity.
 
-A request naming access to two resources at once, using [Section 5.3](#53-repeated-categories)'s scheme:
+## 8.1 Nodes Identified by Scope
 
-```xml {.numberLines}
+A request naming a single folder resource, using [Section 5.1](#51-nodes-identified-by-scope)'s scheme with `scope` set to `Children`.
+
+**Plain language**: Resolve to one decision request for the folder itself, and one for each of its immediate children.
+
+---
+
+**XACML v4.0 (XML)**
+
+```xml
+<RequestEntity Category="urn:oasis:names:tc:acal:1.0:attribute-category:resource">
+    <RequestAttribute
+        AttributeId="urn:oasis:names:tc:acal:1.0:resource:resource-id"
+        DataType="urn:oasis:names:tc:acal:1.0:data-type:anyURI">
+        <Value>file:///acme-docs/finance/2026/</Value>
+    </RequestAttribute>
+    <RequestAttribute
+        AttributeId="urn:oasis:names:tc:acal:1.0:resource:scope"
+        DataType="urn:oasis:names:tc:acal:1.0:data-type:string">
+        <Value>Children</Value>
+    </RequestAttribute>
+</RequestEntity>
+```
+
+**JACAL v1.0 (JSON)**
+
+```json
+{
+    "RequestEntity": {
+        "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
+        "RequestAttribute": [
+            {
+                "AttributeId": "urn:oasis:names:tc:acal:1.0:resource:resource-id",
+                "DataType": "urn:oasis:names:tc:acal:1.0:data-type:anyURI",
+                "Value": [
+                    "file:///acme-docs/finance/2026/"
+                ]
+            },
+            {
+                "AttributeId": "urn:oasis:names:tc:acal:1.0:resource:scope",
+                "DataType": "urn:oasis:names:tc:acal:1.0:data-type:string",
+                "Value": [
+                    "Children"
+                ]
+            }
+        ]
+    }
+}
+```
+
+**YACAL v1.0 (YAML)**
+
+```yaml
+RequestEntity:
+  Category: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
+  RequestAttribute:
+    - AttributeId: "urn:oasis:names:tc:acal:1.0:resource:resource-id"
+      DataType: "urn:oasis:names:tc:acal:1.0:data-type:anyURI"
+      Value:
+        - "file:///acme-docs/finance/2026/"
+    - AttributeId: "urn:oasis:names:tc:acal:1.0:resource:scope"
+      DataType: "urn:oasis:names:tc:acal:1.0:data-type:string"
+      Value:
+        - Children
+```
+
+**What this shows**
+
+- Resolves, per [Section 5.1](#51-nodes-identified-by-scope), into one `Individual Decision Request` for the folder itself and one per `Child` ([Section 2.1.2](#212-terms-defined-in-this-document)) — which nodes those are is determined externally to this request, by the hierarchy the resource belongs to (e.g. via [[ACAL-Hierarchical-1.0](#acal-hierarchical-10)]), not by anything the request itself states.
+- Each generated request drops the `scope` attribute and keeps `resource-id` naming the individual node, unchanged across all three representations.
+
+---
+
+## 8.2 Nodes Identified by XPath Expression
+
+A request selecting every `<md:patient>` node inside a batch medical-records document, using [Section 5.2](#52-nodes-identified-by-xpath-expression)'s scheme. This scheme applies only to XML `Content` ([Section 4.2](#42-changes-from-the-previous-version)), but — as with [[ACAL-Hierarchical-1.0](#acal-hierarchical-10)] Section 7.1's equivalent case — that restricts the resource's `Content.Body`, not the serialization carrying the request.
+
+**Plain language**: Resolve to one decision request per patient record found inside the batch document.
+
+---
+
+**XACML v4.0 (XML)**
+
+```xml
+<RequestEntity Category="urn:oasis:names:tc:acal:1.0:attribute-category:resource" xmlns:md="urn:example:med:schemas:record">
+    <Content>
+        <Body>
+            <md:records xmlns:md="urn:example:med:schemas:record">
+                <md:patient><md:patientDoB>1992-03-21</md:patientDoB></md:patient>
+                <md:patient><md:patientDoB>2014-07-09</md:patientDoB></md:patient>
+            </md:records>
+        </Body>
+    </Content>
+    <RequestAttribute
+        AttributeId="urn:oasis:names:tc:acal:1.0:profile:multiple:content-selector"
+        DataType="urn:oasis:names:tc:acal:1.0:data-type:xpathExpression">
+        <Value
+            XPathCategory="urn:oasis:names:tc:acal:1.0:attribute-category:resource"
+            XPath="md:records/md:patient" />
+    </RequestAttribute>
+</RequestEntity>
+```
+
+**JACAL v1.0 (JSON)**
+
+```json
+{
+    "Request": {
+        "RequestDefaults": [
+            {
+                "XPathRequestDefaults": {
+                    "XPathVersion": "https://www.w3.org/TR/xpath20/",
+                    "Namespace": [
+                        {
+                            "Prefix": "md",
+                            "Name": "urn:example:med:schemas:record"
+                        }
+                    ]
+                }
+            }
+        ],
+        "RequestEntity": [
+            {
+                "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
+                "Content": {
+                    "MediaType": "application/xml",
+                    "Body": "<md:records xmlns:md=\"urn:example:med:schemas:record\"><md:patient><md:patientDoB>1992-03-21</md:patientDoB></md:patient><md:patient><md:patientDoB>2014-07-09</md:patientDoB></md:patient></md:records>"
+                },
+                "RequestAttribute": [
+                    {
+                        "AttributeId": "urn:oasis:names:tc:acal:1.0:profile:multiple:content-selector",
+                        "DataType": "urn:oasis:names:tc:acal:1.0:data-type:xpathExpression",
+                        "Value": [
+                            {
+                                "XPathCategory": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
+                                "XPath": "md:records/md:patient"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}
+```
+
+**YACAL v1.0 (YAML)**
+
+```yaml
+Request:
+  RequestDefaults:
+    - XPathRequestDefaults:
+        XPathVersion: "https://www.w3.org/TR/xpath20/"
+        Namespace:
+          - Prefix: md
+            Name: "urn:example:med:schemas:record"
+  RequestEntity:
+    - Category: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
+      Content:
+        MediaType: "application/xml"
+        Body: |
+          <md:records xmlns:md="urn:example:med:schemas:record"><md:patient><md:patientDoB>1992-03-21</md:patientDoB></md:patient><md:patient><md:patientDoB>2014-07-09</md:patientDoB></md:patient></md:records>
+      RequestAttribute:
+        - AttributeId: "urn:oasis:names:tc:acal:1.0:profile:multiple:content-selector"
+          DataType: "urn:oasis:names:tc:acal:1.0:data-type:xpathExpression"
+          Value:
+            - XPathCategory: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
+              XPath: "md:records/md:patient"
+```
+
+**What this shows**
+
+- Resolves, per [Section 5.2](#52-nodes-identified-by-xpath-expression), into one `Individual Decision Request` per matched `<md:patient>` node, each carrying the same `Content` with `…:multiple:content-selector` replaced by a plain `content-selector` attribute ([[ACAL-XPath-1.0](#acal-xpath-10)] Annex D.3) selecting that single node.
+- The `md` prefix inside the `XPath` expression needs its own namespace binding, separate from `Content.Body`'s embedded `xmlns:md`, for the same reason as [[ACAL-Hierarchical-1.0](#acal-hierarchical-10)] Section 7.1's equivalent example: declared as an ordinary in-scope XML namespace on `RequestEntity` here, or via `RequestDefaults`/`XPathRequestDefaults`/`Namespace` in JACAL/YACAL — which is why, as in that example, this one needs the full `Request` wrapper rather than a bare `RequestEntity` fragment. `Content.Body`'s own encoding (literal elements in XML, an escaped string in JACAL, a block scalar in YACAL) is what stays representation-specific beyond that; the XPath expression and its structured `xpathExpression` value are identical in all three once the namespace binding is in place.
+
+---
+
+## 8.3 Repeated Categories
+
+A request naming access to two resources at once, using [Section 5.3](#53-repeated-categories)'s scheme.
+
+**Plain language**: Permit or deny read access to two patient records for the same subject and action, as two separate decisions.
+
+---
+
+**XACML v4.0 (XML)**
+
+```xml
 <Request xmlns="urn:oasis:names:tc:xacml:4.0:core:schema">
     <RequestEntity Category="urn:oasis:names:tc:acal:1.0:subject-category:access-subject">
         <RequestAttribute
@@ -384,13 +576,158 @@ A request naming access to two resources at once, using [Section 5.3](#53-repeat
 </Request>
 ```
 
-Resolves to two `Individual Decision Request`s, one per resource, each pairing the shared subject and action with one of the two `resource` entities.
+**JACAL v1.0 (JSON)**
 
-## 8.2 Reference
+```json
+{
+    "Request": {
+        "RequestEntity": [
+            {
+                "Category": "urn:oasis:names:tc:acal:1.0:subject-category:access-subject",
+                "RequestAttribute": [
+                    {
+                        "AttributeId": "urn:oasis:names:tc:acal:1.0:subject:subject-id",
+                        "DataType": "urn:oasis:names:tc:acal:1.0:data-type:rfc822Name",
+                        "Value": [
+                            "bs@simpsons.com"
+                        ]
+                    }
+                ]
+            },
+            {
+                "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
+                "RequestAttribute": [
+                    {
+                        "AttributeId": "urn:oasis:names:tc:acal:1.0:resource:resource-id",
+                        "DataType": "urn:oasis:names:tc:acal:1.0:data-type:anyURI",
+                        "Value": [
+                            "file:///records/bart-simpson.xml"
+                        ]
+                    }
+                ]
+            },
+            {
+                "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
+                "RequestAttribute": [
+                    {
+                        "AttributeId": "urn:oasis:names:tc:acal:1.0:resource:resource-id",
+                        "DataType": "urn:oasis:names:tc:acal:1.0:data-type:anyURI",
+                        "Value": [
+                            "file:///records/lisa-simpson.xml"
+                        ]
+                    }
+                ]
+            },
+            {
+                "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:action",
+                "RequestAttribute": [
+                    {
+                        "AttributeId": "urn:oasis:names:tc:acal:1.0:action:action-id",
+                        "Value": [
+                            "read"
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}
+```
 
-The same two resources, requested by reference instead of by repetition, in JACAL representation (JSON representation of ACAL):
+**YACAL v1.0 (YAML)**
 
-```json {.numberLines}
+```yaml
+Request:
+  RequestEntity:
+    - Category: "urn:oasis:names:tc:acal:1.0:subject-category:access-subject"
+      RequestAttribute:
+        - AttributeId: "urn:oasis:names:tc:acal:1.0:subject:subject-id"
+          DataType: "urn:oasis:names:tc:acal:1.0:data-type:rfc822Name"
+          Value:
+            - bs@simpsons.com
+    - Category: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
+      RequestAttribute:
+        - AttributeId: "urn:oasis:names:tc:acal:1.0:resource:resource-id"
+          DataType: "urn:oasis:names:tc:acal:1.0:data-type:anyURI"
+          Value:
+            - file:///records/bart-simpson.xml
+    - Category: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
+      RequestAttribute:
+        - AttributeId: "urn:oasis:names:tc:acal:1.0:resource:resource-id"
+          DataType: "urn:oasis:names:tc:acal:1.0:data-type:anyURI"
+          Value:
+            - file:///records/lisa-simpson.xml
+    - Category: "urn:oasis:names:tc:acal:1.0:attribute-category:action"
+      RequestAttribute:
+        - AttributeId: "urn:oasis:names:tc:acal:1.0:action:action-id"
+          Value:
+            - read
+```
+
+**What this shows**
+
+- Resolves to two `Individual Decision Request`s, one per resource, each pairing the shared subject and action with one of the two `resource` entities.
+- No `Id` properties are needed on any `RequestEntity` object — repetition, not reference, is what identifies the combinations, unlike [Section 8.4](#84-reference) below.
+- This example reappears, unchanged, in [Section 8.5](#85-combined-decision) with `CombinedDecision` added.
+
+---
+
+## 8.4 Reference
+
+The same two resources, requested by reference instead of by repetition, using [Section 5.4](#54-reference)'s scheme.
+
+**Plain language**: The same two decisions as [Section 8.3](#83-repeated-categories), constructed by naming entities instead of repeating a category.
+
+---
+
+**XACML v4.0 (XML)**
+
+```xml
+<Request xmlns="urn:oasis:names:tc:xacml:4.0:core:schema">
+    <RequestEntity Category="urn:oasis:names:tc:acal:1.0:subject-category:access-subject" Id="subj">
+        <RequestAttribute
+            AttributeId="urn:oasis:names:tc:acal:1.0:subject:subject-id"
+            DataType="urn:oasis:names:tc:acal:1.0:data-type:rfc822Name">
+            <Value>bs@simpsons.com</Value>
+        </RequestAttribute>
+    </RequestEntity>
+    <RequestEntity Category="urn:oasis:names:tc:acal:1.0:attribute-category:resource" Id="res1">
+        <RequestAttribute
+            AttributeId="urn:oasis:names:tc:acal:1.0:resource:resource-id"
+            DataType="urn:oasis:names:tc:acal:1.0:data-type:anyURI">
+            <Value>file:///records/bart-simpson.xml</Value>
+        </RequestAttribute>
+    </RequestEntity>
+    <RequestEntity Category="urn:oasis:names:tc:acal:1.0:attribute-category:resource" Id="res2">
+        <RequestAttribute
+            AttributeId="urn:oasis:names:tc:acal:1.0:resource:resource-id"
+            DataType="urn:oasis:names:tc:acal:1.0:data-type:anyURI">
+            <Value>file:///records/lisa-simpson.xml</Value>
+        </RequestAttribute>
+    </RequestEntity>
+    <RequestEntity Category="urn:oasis:names:tc:acal:1.0:attribute-category:action" Id="act">
+        <RequestAttribute AttributeId="urn:oasis:names:tc:acal:1.0:action:action-id">
+            <Value>read</Value>
+        </RequestAttribute>
+    </RequestEntity>
+    <MultiRequests>
+        <RequestReference>
+            <RequestEntityReference>subj</RequestEntityReference>
+            <RequestEntityReference>res1</RequestEntityReference>
+            <RequestEntityReference>act</RequestEntityReference>
+        </RequestReference>
+        <RequestReference>
+            <RequestEntityReference>subj</RequestEntityReference>
+            <RequestEntityReference>res2</RequestEntityReference>
+            <RequestEntityReference>act</RequestEntityReference>
+        </RequestReference>
+    </MultiRequests>
+</Request>
+```
+
+**JACAL v1.0 (JSON)**
+
+```json
 {
     "Request": {
         "RequestEntity": [
@@ -460,13 +797,154 @@ The same two resources, requested by reference instead of by repetition, in JACA
 }
 ```
 
-Each `RequestReference` names exactly the three entities its `Individual Decision Request` should contain; a `RequestEntityReference` value of, say, `res3` (no matching `Id`) would be a dangling reference per [Section 5.4](#54-reference).
+**YACAL v1.0 (YAML)**
 
-## 8.3 Combined Decision
+```yaml
+Request:
+  RequestEntity:
+    - Category: "urn:oasis:names:tc:acal:1.0:subject-category:access-subject"
+      Id: subj
+      RequestAttribute:
+        - AttributeId: "urn:oasis:names:tc:acal:1.0:subject:subject-id"
+          DataType: "urn:oasis:names:tc:acal:1.0:data-type:rfc822Name"
+          Value:
+            - bs@simpsons.com
+    - Category: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
+      Id: res1
+      RequestAttribute:
+        - AttributeId: "urn:oasis:names:tc:acal:1.0:resource:resource-id"
+          DataType: "urn:oasis:names:tc:acal:1.0:data-type:anyURI"
+          Value:
+            - file:///records/bart-simpson.xml
+    - Category: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
+      Id: res2
+      RequestAttribute:
+        - AttributeId: "urn:oasis:names:tc:acal:1.0:resource:resource-id"
+          DataType: "urn:oasis:names:tc:acal:1.0:data-type:anyURI"
+          Value:
+            - file:///records/lisa-simpson.xml
+    - Category: "urn:oasis:names:tc:acal:1.0:attribute-category:action"
+      Id: act
+      RequestAttribute:
+        - AttributeId: "urn:oasis:names:tc:acal:1.0:action:action-id"
+          Value:
+            - read
+  MultiRequests:
+    RequestReference:
+      - RequestEntityReference: [subj, res1, act]
+      - RequestEntityReference: [subj, res2, act]
+```
 
-The [Section 8.1](#81-repeated-categories) example above, in YACAL representation (YAML representation of ACAL), with `CombinedDecision` set to `true`:
+**What this shows**
 
-```yaml {.numberLines}
+- Each `RequestReference` names exactly the three entities its `Individual Decision Request` should contain; a `RequestEntityReference` value of, say, `res3` (no matching `Id`) would be a dangling reference per [Section 5.4](#54-reference).
+- `Id` is an ordinary attribute/property in every representation (an XML attribute, a JSON/YAML property); `RequestEntityReference` values are plain strings matching it, not a cross-format construct.
+
+---
+
+## 8.5 Combined Decision
+
+The [Section 8.3](#83-repeated-categories) example above, with `CombinedDecision` set to `true`.
+
+**Plain language**: The same two resources as [Section 8.3](#83-repeated-categories), but returned as a single merged decision instead of two.
+
+---
+
+**XACML v4.0 (XML)**
+
+```xml
+<Request xmlns="urn:oasis:names:tc:xacml:4.0:core:schema" CombinedDecision="true">
+    <RequestEntity Category="urn:oasis:names:tc:acal:1.0:subject-category:access-subject">
+        <RequestAttribute
+            AttributeId="urn:oasis:names:tc:acal:1.0:subject:subject-id"
+            DataType="urn:oasis:names:tc:acal:1.0:data-type:rfc822Name">
+            <Value>bs@simpsons.com</Value>
+        </RequestAttribute>
+    </RequestEntity>
+    <RequestEntity Category="urn:oasis:names:tc:acal:1.0:attribute-category:resource">
+        <RequestAttribute
+            AttributeId="urn:oasis:names:tc:acal:1.0:resource:resource-id"
+            DataType="urn:oasis:names:tc:acal:1.0:data-type:anyURI">
+            <Value>file:///records/bart-simpson.xml</Value>
+        </RequestAttribute>
+    </RequestEntity>
+    <RequestEntity Category="urn:oasis:names:tc:acal:1.0:attribute-category:resource">
+        <RequestAttribute
+            AttributeId="urn:oasis:names:tc:acal:1.0:resource:resource-id"
+            DataType="urn:oasis:names:tc:acal:1.0:data-type:anyURI">
+            <Value>file:///records/lisa-simpson.xml</Value>
+        </RequestAttribute>
+    </RequestEntity>
+    <RequestEntity Category="urn:oasis:names:tc:acal:1.0:attribute-category:action">
+        <RequestAttribute AttributeId="urn:oasis:names:tc:acal:1.0:action:action-id">
+            <Value>read</Value>
+        </RequestAttribute>
+    </RequestEntity>
+</Request>
+```
+
+**JACAL v1.0 (JSON)**
+
+```json
+{
+    "Request": {
+        "CombinedDecision": true,
+        "RequestEntity": [
+            {
+                "Category": "urn:oasis:names:tc:acal:1.0:subject-category:access-subject",
+                "RequestAttribute": [
+                    {
+                        "AttributeId": "urn:oasis:names:tc:acal:1.0:subject:subject-id",
+                        "DataType": "urn:oasis:names:tc:acal:1.0:data-type:rfc822Name",
+                        "Value": [
+                            "bs@simpsons.com"
+                        ]
+                    }
+                ]
+            },
+            {
+                "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
+                "RequestAttribute": [
+                    {
+                        "AttributeId": "urn:oasis:names:tc:acal:1.0:resource:resource-id",
+                        "DataType": "urn:oasis:names:tc:acal:1.0:data-type:anyURI",
+                        "Value": [
+                            "file:///records/bart-simpson.xml"
+                        ]
+                    }
+                ]
+            },
+            {
+                "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
+                "RequestAttribute": [
+                    {
+                        "AttributeId": "urn:oasis:names:tc:acal:1.0:resource:resource-id",
+                        "DataType": "urn:oasis:names:tc:acal:1.0:data-type:anyURI",
+                        "Value": [
+                            "file:///records/lisa-simpson.xml"
+                        ]
+                    }
+                ]
+            },
+            {
+                "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:action",
+                "RequestAttribute": [
+                    {
+                        "AttributeId": "urn:oasis:names:tc:acal:1.0:action:action-id",
+                        "Value": [
+                            "read"
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}
+```
+
+**YACAL v1.0 (YAML)**
+
+```yaml
 Request:
   CombinedDecision: true
   RequestEntity:
@@ -495,12 +973,33 @@ Request:
             - read
 ```
 
-Setting `CombinedDecision` to `true` on either example above requests that the two individual `Permit`/`Deny`/etc. decisions be merged into one, per [Section 6](#6-combined-decision), rather than returned as two separate `ResultType` objects.
+**What this shows**
+
+- Setting `CombinedDecision` to `true` (or omitting it from [Section 8.4](#84-reference)'s reference-based request instead) requests that the two individual `Permit`/`Deny`/etc. decisions be merged into one, per [Section 6](#6-combined-decision), rather than returned as two separate `ResultType` objects.
+- `CombinedDecision` is a property of the `RequestType` object itself in every representation — an XML attribute on `<Request>`, a JSON/YAML property alongside `RequestEntity` — not tied to either the repeated-categories or reference scheme specifically.
 
 ---
 
 
-# 9 Safety, Security, and Data Protection Considerations
+# 9 Representation Considerations
+
+[Section 4.2](#42-changes-from-the-previous-version) states that this profile needs no new schema artifacts: `MultiRequestsType`, `RequestReferenceType` and `RequestEntityReference` already exist in [[ACAL-Core-1.0](#acal-core-10)]'s XSD, JSON Schema and YAML structure schema. This section states, for each representation, what that existing schema actually enforces of [Section 5.4](#54-reference)'s dangling-reference and sibling-uniqueness rules — [Section 5.4](#54-reference) itself already requires both a schema-validation layer and a runtime-evaluation layer precisely because the schema-validation layer's coverage is uneven across representations, as this section makes concrete.
+
+## 9.1 XML
+
+Dangling-reference detection is enforced by the *Core XML Schema*'s `<xs:keyref name="Request_RequestEntityReference">`, which requires every `RequestEntityReference` value to match some `RequestEntity`'s `Id`. Sibling uniqueness (`self->isUnique(RequestEntityReference->asSet())`, [Section 5.4](#54-reference)) is enforced by an XSD 1.1 `<xs:assert>` on `MultiRequestsType`; where only XSD 1.0 is available, [[XACML-Core-4.0](#xacml-core-40)] Section 5.2.6.2's Schematron option covers the same rule. `RequestEntityReference` value uniqueness within one `RequestReferenceType` object is enforced by `<xs:unique name="RequestReference_RequestEntityReference">`. **All three of this profile's referential rules are fully covered by structural validation alone in the XML representation** — unlike the JSON and YAML cases below.
+
+## 9.2 JSON
+
+JSON Schema 2020-12 has no keyword analogous to XSD's `keyref`: nothing in the vocabulary can require that a string value elsewhere in the document match some other value used as a key. **Dangling-reference detection is not enforced by JSON Schema validation at all**, so a JACAL implementation is necessarily in [Section 5.4](#54-reference) item 2's "non-schema-validating" case for this specific rule regardless of whether it validates the rest of the request against JSON Schema — that item's `MUST` therefore governs unconditionally for JACAL, not merely as a fallback. Sibling uniqueness fares no better: the *Core JSON Schema* itself marks the corresponding constraint an open TODO (`"$comment": "TODO: translate/enforce ACAL constraint: {OCL} self->isUnique(RequestEntityReference->asSet())"`), since it is a uniqueness test over *derived sets* of values rather than over individual values, which neither `uniqueItems` nor the `uniqueKeys` extension [[JACAL-Core-1.0](#jacal-core-10)] Section 5.2.4 discusses can express.
+
+## 9.3 YAML
+
+The `acal-core-yaml-v1.0-constraints.yaml` catalog documents both rules explicitly — `requestreference-requestentityreference-resolves` (`Kind: referenceMustResolve`) for dangling references, and `multirequests-requestreference-unique-by-entity-id-set` (`Kind: uniqueByDerivedSet`) for sibling uniqueness. The catalog is a declarative statement of each requirement, not a JSON-Schema-loadable artifact a generic YAML validator executes, so **no standard YAML or JSON Schema mechanism enforces either rule mechanically**; both, like their JSON counterparts, depend entirely on [Section 5.4](#54-reference)'s runtime-evaluation layer for actual enforcement. The catalog's value is telling an implementer precisely what that runtime check must do — the durable record of the requirement — not replacing the check itself.
+
+---
+
+# 10 Safety, Security, and Data Protection Considerations
 
 Refer to [[ACAL-Core-1.0](#acal-core-10)] Section 11.
 
@@ -509,13 +1008,13 @@ An implementation supporting [Section 5.1](#51-nodes-identified-by-scope) (scope
 ---
 
 
-# 10 Conformance
+# 11 Conformance
 
-## 10.1 Introduction
+## 11.1 Introduction
 
 The specification defines four independently optional request-construction schemes and one combined-decision scheme, plus a conceptual model whose observable results are mandatory for any implementation claiming one or more of them.
 
-## 10.2 Conformance Tables
+## 11.2 Conformance Tables
 
 This section lists those portions of the specification that MUST be included in an implementation of a PDP, PAP or PEP that claims to conform to this profile.
 
@@ -523,7 +1022,7 @@ This section lists those portions of the specification that MUST be included in 
 
 The implementation MUST follow [Section 5](#5-request-construction-schemes), [Section 6](#6-combined-decision), [Section 7](#7-conceptual-model-for-creating-individual-decision-requests) and [Annex C](#annex-c-acal-identifiers) where they apply to implemented items in the following tables. `urn:oasis:names:tc:acal:1.0:content-selector` is defined, and its conformance status given, by [[ACAL-XPath-1.0](#acal-xpath-10)] Annex D.3/Section 9.2.4; this profile references it without restating its conformance status.
 
-### 10.2.1 Profile Identifiers
+### 11.2.1 Profile Identifiers
 
 The implementation MUST support the schemes associated with the following identifiers marked `M`. An implementation supporting any one of them MUST also support [Section 7](#7-conceptual-model-for-creating-individual-decision-requests)'s observable results.
 
@@ -535,7 +1034,7 @@ The implementation MUST support the schemes associated with the following identi
 | urn:oasis:names:tc:acal:1.0:profile:multiple:reference | O | urn:oasis:names:tc:xacml:3.0:profile:multiple:reference |
 | urn:oasis:names:tc:acal:1.0:profile:multiple:combined-decision | O | urn:oasis:names:tc:xacml:3.0:profile:multiple:combined-decision |
 
-### 10.2.2 Attributes
+### 11.2.2 Attributes
 
 The implementation MUST use the attributes associated with the following identifiers in the way this profile has defined (see [Annex C.3](#c3-attributes)).
 
@@ -655,6 +1154,14 @@ The following referenced documents are not required for the application of this 
 
 _eXtensible Access Control Markup Language (XACML) Version 4.0_. Edited by Steven Legg and Cyril Dangerville. 18 February 2026. OASIS Committee Specification Draft 01. https://docs.oasis-open.org/xacml/acal/xacml/core/v4.0/csd01/acal-core-xml-v4.0-csd01.html. Latest stage: https://docs.oasis-open.org/xacml/acal/xacml/core/v4.0/csd01/acal-core-xml-v4.0-csd01.html.
 
+###### [JACAL-Core-1.0]
+
+_JSON Representation of ACAL Version 1.0 (JACAL)_. Edited by Steven Legg and Cyril Dangerville. OASIS Committee Specification Draft 02. https://docs.oasis-open.org/xacml/acal/jacal/core/v1.0/csd02/acal-core-json-v1.0-csd02.html.
+
+###### [YACAL-Core-1.0]
+
+_YAML Representation of ACAL (YACAL) Version 1.0_. Edited by Steven Legg and Cyril Dangerville. 23 March 2026. Working Draft 01. Not yet submitted to OASIS for consideration; no stable publication URL exists at this stage.
+
 
 ---
 
@@ -674,7 +1181,7 @@ This ACAL Profile is defined using this identifier.
 
 ## C.2 Profile Identifiers
 
-See [Section 10.2.1](#1021-profile-identifiers) for the five profile identifiers this document defines, their meaning, and their deprecated XACML 3.0 equivalents.
+See [Section 11.2.1](#1121-profile-identifiers) for the five profile identifiers this document defines, their meaning, and their deprecated XACML 3.0 equivalents.
 
 ## C.3 Attributes
 
@@ -724,9 +1231,11 @@ The generation command uses a CSS stylesheet file (`-c` argument) provided by OA
 Run the following command line to generate the HTML from this markdown file (input file specified as last argument):
 
 ```console
-$ pandoc/mkdocs.sh --number-lines --output /tmp acal-multiple-v%version%.md
+$ pandoc/mkdocs.sh --output /tmp acal-multiple-v%version%.md
 ```
 The `--output` option sets the output directory, and the output filename is the same as the input file (last argument) except `.md` extension is replaced with `.html`.
+
+Do not add `--number-lines`: this document has no `{.numberLines}` code fences, and the flag switches pandoc's markdown reader in a way that strips the leading section-number segment from every auto-generated heading anchor (`#1-scope` becomes `#scope`), breaking this document's own cross-references.
 
 The publication date is automatically set to the current date by default (using Lua filter `pandoc/meta_vars.lua`). However, you may set a specific date of your choice instead, by adding the argument `--metadata date="My date in the form DD Month YYYY"` at the end of the command.
 
@@ -735,7 +1244,7 @@ The publication date is automatically set to the current date by default (using 
 For PDF output, add the `--pdf` option as follows:
 
 ```console
-$ pandoc/mkdocs.sh  --number-lines --pdf --output /tmp acal-multiple-v%version%.md
+$ pandoc/mkdocs.sh --pdf --output /tmp acal-multiple-v%version%.md
 ```
 
 The HTML file is generated like the previous command and, in addition, a PDF file is generated with the same name as the input file except the `.md` extension is replaced with `.pdf` in this case.
