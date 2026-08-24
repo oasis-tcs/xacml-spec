@@ -351,7 +351,7 @@ A policy that must grant access based on a specific ancestor value typically app
 
 ## 6.2 Matching Nodes in XML Documents
 
-A policy that must match a node located by [Section 5.1](#51-nodes-in-xml-documents) typically uses an `XPathAttributeSelectorType` or `XPathEntityAttributeSelectorType` object ([[ACAL-XPath-1.0](#acal-xpath-10)] Section 5.3.3/5.3.4) with `ContextSelectorId` set to `urn:oasis:names:tc:acal:1.0:content-selector`, or applies `urn:oasis:names:tc:acal:1.0:function:xpath-node-match` ([[ACAL-XPath-1.0](#acal-xpath-10)] Annex C.3.1) directly.
+A policy that must match a node located by [Section 5.1](#51-nodes-in-xml-documents) typically uses an `XPathAttributeSelectorType` or `XPathEntityAttributeSelectorType` object ([[ACAL-XPath-1.0](#acal-xpath-10)] Section 5.3.2/5.3.3) with `ContextSelectorId` set to `urn:oasis:names:tc:acal:1.0:content-selector`, or applies `urn:oasis:names:tc:acal:1.0:function:xpath-node-match` ([[ACAL-XPath-1.0](#acal-xpath-10)] Annex C.3.1) directly.
 
 ## 6.3 Matching URIs
 
@@ -377,7 +377,7 @@ A request for read access to the `<md:patientDoB>` node inside a medical-record 
 **XACML v4.0 (XML)**
 
 ```xml
-<RequestEntity Category="urn:oasis:names:tc:acal:1.0:attribute-category:resource" xmlns:md="urn:example:med:schemas:record">
+<RequestEntity Category="urn:oasis:names:tc:acal:1.0:attribute-category:resource">
     <Content>
         <Body>
             <md:record xmlns:md="urn:example:med:schemas:record">
@@ -391,6 +391,8 @@ A request for read access to the `<md:patientDoB>` node inside a medical-record 
         AttributeId="urn:oasis:names:tc:acal:1.0:content-selector"
         DataType="urn:oasis:names:tc:acal:1.0:data-type:xpathExpression">
         <Value
+            xmlns:md="urn:example:med:schemas:record"
+            XPathVersion="https://www.w3.org/TR/xpath20/"
             XPathCategory="urn:oasis:names:tc:acal:1.0:attribute-category:resource"
             XPath="md:record/md:patient/md:patientDoB" />
     </RequestAttribute>
@@ -406,45 +408,32 @@ A request for read access to the `<md:patientDoB>` node inside a medical-record 
 
 ```json
 {
-    "Request": {
-        "RequestDefaults": [
+    "RequestEntity": {
+        "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
+        "Content": {
+            "MediaType": "application/xml",
+            "Body": "<md:record xmlns:md=\"urn:example:med:schemas:record\"><md:patient><md:patientDoB>1992-03-21</md:patientDoB></md:patient></md:record>"
+        },
+        "RequestAttribute": [
             {
-                "XPathRequestDefaults": {
-                    "XPathVersion": "https://www.w3.org/TR/xpath20/",
-                    "Namespace": [
-                        {
-                            "Prefix": "md",
-                            "Name": "urn:example:med:schemas:record"
-                        }
-                    ]
-                }
-            }
-        ],
-        "RequestEntity": [
-            {
-                "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
-                "Content": {
-                    "MediaType": "application/xml",
-                    "Body": "<md:record xmlns:md=\"urn:example:med:schemas:record\"><md:patient><md:patientDoB>1992-03-21</md:patientDoB></md:patient></md:record>"
-                },
-                "RequestAttribute": [
+                "AttributeId": "urn:oasis:names:tc:acal:1.0:content-selector",
+                "DataType": "urn:oasis:names:tc:acal:1.0:data-type:xpathExpression",
+                "Value": [
                     {
-                        "AttributeId": "urn:oasis:names:tc:acal:1.0:content-selector",
-                        "DataType": "urn:oasis:names:tc:acal:1.0:data-type:xpathExpression",
-                        "Value": [
-                            {
-                                "XPathCategory": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
-                                "XPath": "md:record/md:patient/md:patientDoB"
-                            }
-                        ]
-                    },
-                    {
-                        "AttributeId": "urn:oasis:names:tc:acal:1.0:resource:document-id",
-                        "DataType": "urn:oasis:names:tc:acal:1.0:data-type:anyURI",
-                        "Value": [
-                            "urn:example:med:record:BartSimpson"
-                        ]
+                        "XPathVersion": "https://www.w3.org/TR/xpath20/",
+                        "Namespace": {
+                            "md": "urn:example:med:schemas:record"
+                        },
+                        "XPathCategory": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
+                        "XPath": "md:record/md:patient/md:patientDoB"
                     }
+                ]
+            },
+            {
+                "AttributeId": "urn:oasis:names:tc:acal:1.0:resource:document-id",
+                "DataType": "urn:oasis:names:tc:acal:1.0:data-type:anyURI",
+                "Value": [
+                    "urn:example:med:record:BartSimpson"
                 ]
             }
         ]
@@ -455,36 +444,32 @@ A request for read access to the `<md:patientDoB>` node inside a medical-record 
 **YACAL v1.0 (YAML)**
 
 ```yaml
-Request:
-  RequestDefaults:
-    - XPathRequestDefaults:
-        XPathVersion: "https://www.w3.org/TR/xpath20/"
-        Namespace:
-          - Prefix: md
-            Name: "urn:example:med:schemas:record"
-  RequestEntity:
-    - Category: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
-      Content:
-        MediaType: "application/xml"
-        Body: |
-          <md:record xmlns:md="urn:example:med:schemas:record"><md:patient><md:patientDoB>1992-03-21</md:patientDoB></md:patient></md:record>
-      RequestAttribute:
-        - AttributeId: "urn:oasis:names:tc:acal:1.0:content-selector"
-          DataType: "urn:oasis:names:tc:acal:1.0:data-type:xpathExpression"
-          Value:
-            - XPathCategory: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
-              XPath: "md:record/md:patient/md:patientDoB"
-        - AttributeId: "urn:oasis:names:tc:acal:1.0:resource:document-id"
-          DataType: "urn:oasis:names:tc:acal:1.0:data-type:anyURI"
-          Value:
-            - urn:example:med:record:BartSimpson
+RequestEntity:
+  Category: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
+  Content:
+    MediaType: "application/xml"
+    Body: |
+      <md:record xmlns:md="urn:example:med:schemas:record"><md:patient><md:patientDoB>1992-03-21</md:patientDoB></md:patient></md:record>
+  RequestAttribute:
+    - AttributeId: "urn:oasis:names:tc:acal:1.0:content-selector"
+      DataType: "urn:oasis:names:tc:acal:1.0:data-type:xpathExpression"
+      Value:
+        - XPathVersion: "https://www.w3.org/TR/xpath20/"
+          Namespace:
+            md: "urn:example:med:schemas:record"
+          XPathCategory: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
+          XPath: "md:record/md:patient/md:patientDoB"
+    - AttributeId: "urn:oasis:names:tc:acal:1.0:resource:document-id"
+      DataType: "urn:oasis:names:tc:acal:1.0:data-type:anyURI"
+      Value:
+        - urn:example:med:record:BartSimpson
 ```
 
 **What this shows**
 
-- The `md` prefix used inside the `XPath` expression string needs its own namespace binding, independent of `Content.Body`'s embedded `xmlns:md` declaration — the two are separate namespace scopes, one for the embedded document, one for the expression text itself ([[ACAL-XPath-1.0](#acal-xpath-10)] Annex C.2.1). In XML, that binding comes from ordinary in-scope namespaces, so declaring `xmlns:md` on `RequestEntity` (an ancestor of the `Value` element carrying the expression) is sufficient. JACAL and YACAL have no ancestor-based namespace inheritance at all, so the same binding is carried explicitly instead, via `RequestDefaults`/`XPathRequestDefaults`/`Namespace` — which is why, unlike [Section 7.2](#72-nodes-identified-by-uri) and [Section 7.3](#73-nodes-identified-by-ancestor-attributes)'s examples, this one needs the full `Request` wrapper rather than a bare `RequestEntity` fragment.
+- The `md` prefix used inside the `XPath` expression string needs its own namespace binding, independent of `Content.Body`'s embedded `xmlns:md` declaration — the two are separate namespace scopes, one for the embedded document, one for the expression text itself ([[ACAL-XPath-1.0](#acal-xpath-10)] Annex C.2.1). The `xpathExpression` value carries that binding directly on itself in every representation, including XML: `xmlns:md` is declared on the `Value` element itself, not inherited from `RequestEntity` or any other ancestor, because an `xpathExpression` value — unlike an attribute selector's `Path` — is not confined to the request it originated in and must stay self-describing if copied elsewhere (e.g., into a response `Notice`). JACAL and YACAL carry the same binding via the value's own `Namespace` property, a mapping from prefix to namespace name ([[ACAL-XPath-1.0](#acal-xpath-10)] Section 5.2), and its own `XPathVersion` property, for the same reason.
 - In XML, `Content.Body` holds the medical-record document as literal child elements. In JACAL, the same document is a JSON string, escaped per [[JACAL-Core-1.0](#jacal-core-10)] Section 5.3's rules for XML content in a JSON `Content` object. In YACAL, a block scalar (`|`) carries the same string without JSON's escaping.
-- The `content-selector` attribute's value — an `xpathExpression` — is itself a structured value (`XPathCategory` plus `XPath`), not a plain string, in every representation; only its syntax (XML attributes, a JSON object, a YAML mapping) changes.
+- The `content-selector` attribute's value — an `xpathExpression` — is itself a structured value (`XPathVersion`, `Namespace`, `XPathCategory`, and `XPath`), not a plain string, in every representation; only its syntax (XML attributes, a JSON object, a YAML mapping) changes.
 - `document-id` is included to disambiguate which document instance the `content-selector` expression applies to, in case the same request references more than one such document.
 
 ---

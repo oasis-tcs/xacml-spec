@@ -442,7 +442,7 @@ A request selecting every `<md:patient>` node inside a batch medical-records doc
 **XACML v4.0 (XML)**
 
 ```xml
-<RequestEntity Category="urn:oasis:names:tc:acal:1.0:attribute-category:resource" xmlns:md="urn:example:med:schemas:record">
+<RequestEntity Category="urn:oasis:names:tc:acal:1.0:attribute-category:resource">
     <Content>
         <Body>
             <md:records xmlns:md="urn:example:med:schemas:record">
@@ -455,6 +455,8 @@ A request selecting every `<md:patient>` node inside a batch medical-records doc
         AttributeId="urn:oasis:names:tc:acal:1.0:profile:multiple:content-selector"
         DataType="urn:oasis:names:tc:acal:1.0:data-type:xpathExpression">
         <Value
+            xmlns:md="urn:example:med:schemas:record"
+            XPathVersion="https://www.w3.org/TR/xpath20/"
             XPathCategory="urn:oasis:names:tc:acal:1.0:attribute-category:resource"
             XPath="md:records/md:patient" />
     </RequestAttribute>
@@ -465,37 +467,24 @@ A request selecting every `<md:patient>` node inside a batch medical-records doc
 
 ```json
 {
-    "Request": {
-        "RequestDefaults": [
+    "RequestEntity": {
+        "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
+        "Content": {
+            "MediaType": "application/xml",
+            "Body": "<md:records xmlns:md=\"urn:example:med:schemas:record\"><md:patient><md:patientDoB>1992-03-21</md:patientDoB></md:patient><md:patient><md:patientDoB>2014-07-09</md:patientDoB></md:patient></md:records>"
+        },
+        "RequestAttribute": [
             {
-                "XPathRequestDefaults": {
-                    "XPathVersion": "https://www.w3.org/TR/xpath20/",
-                    "Namespace": [
-                        {
-                            "Prefix": "md",
-                            "Name": "urn:example:med:schemas:record"
-                        }
-                    ]
-                }
-            }
-        ],
-        "RequestEntity": [
-            {
-                "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
-                "Content": {
-                    "MediaType": "application/xml",
-                    "Body": "<md:records xmlns:md=\"urn:example:med:schemas:record\"><md:patient><md:patientDoB>1992-03-21</md:patientDoB></md:patient><md:patient><md:patientDoB>2014-07-09</md:patientDoB></md:patient></md:records>"
-                },
-                "RequestAttribute": [
+                "AttributeId": "urn:oasis:names:tc:acal:1.0:profile:multiple:content-selector",
+                "DataType": "urn:oasis:names:tc:acal:1.0:data-type:xpathExpression",
+                "Value": [
                     {
-                        "AttributeId": "urn:oasis:names:tc:acal:1.0:profile:multiple:content-selector",
-                        "DataType": "urn:oasis:names:tc:acal:1.0:data-type:xpathExpression",
-                        "Value": [
-                            {
-                                "XPathCategory": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
-                                "XPath": "md:records/md:patient"
-                            }
-                        ]
+                        "XPathVersion": "https://www.w3.org/TR/xpath20/",
+                        "Namespace": {
+                            "md": "urn:example:med:schemas:record"
+                        },
+                        "XPathCategory": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
+                        "XPath": "md:records/md:patient"
                     }
                 ]
             }
@@ -507,31 +496,27 @@ A request selecting every `<md:patient>` node inside a batch medical-records doc
 **YACAL v1.0 (YAML)**
 
 ```yaml
-Request:
-  RequestDefaults:
-    - XPathRequestDefaults:
-        XPathVersion: "https://www.w3.org/TR/xpath20/"
-        Namespace:
-          - Prefix: md
-            Name: "urn:example:med:schemas:record"
-  RequestEntity:
-    - Category: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
-      Content:
-        MediaType: "application/xml"
-        Body: |
-          <md:records xmlns:md="urn:example:med:schemas:record"><md:patient><md:patientDoB>1992-03-21</md:patientDoB></md:patient><md:patient><md:patientDoB>2014-07-09</md:patientDoB></md:patient></md:records>
-      RequestAttribute:
-        - AttributeId: "urn:oasis:names:tc:acal:1.0:profile:multiple:content-selector"
-          DataType: "urn:oasis:names:tc:acal:1.0:data-type:xpathExpression"
-          Value:
-            - XPathCategory: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
-              XPath: "md:records/md:patient"
+RequestEntity:
+  Category: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
+  Content:
+    MediaType: "application/xml"
+    Body: |
+      <md:records xmlns:md="urn:example:med:schemas:record"><md:patient><md:patientDoB>1992-03-21</md:patientDoB></md:patient><md:patient><md:patientDoB>2014-07-09</md:patientDoB></md:patient></md:records>
+  RequestAttribute:
+    - AttributeId: "urn:oasis:names:tc:acal:1.0:profile:multiple:content-selector"
+      DataType: "urn:oasis:names:tc:acal:1.0:data-type:xpathExpression"
+      Value:
+        - XPathVersion: "https://www.w3.org/TR/xpath20/"
+          Namespace:
+            md: "urn:example:med:schemas:record"
+          XPathCategory: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
+          XPath: "md:records/md:patient"
 ```
 
 **What this shows**
 
 - Resolves, per [Section 5.2](#52-nodes-identified-by-xpath-expression), into one `Individual Decision Request` per matched `<md:patient>` node, each carrying the same `Content` with `…:multiple:content-selector` replaced by a plain `content-selector` attribute ([[ACAL-XPath-1.0](#acal-xpath-10)] Annex D.3) selecting that single node.
-- The `md` prefix inside the `XPath` expression needs its own namespace binding, separate from `Content.Body`'s embedded `xmlns:md`, for the same reason as [[ACAL-Hierarchical-1.0](#acal-hierarchical-10)] Section 7.1's equivalent example: declared as an ordinary in-scope XML namespace on `RequestEntity` here, or via `RequestDefaults`/`XPathRequestDefaults`/`Namespace` in JACAL/YACAL — which is why, as in that example, this one needs the full `Request` wrapper rather than a bare `RequestEntity` fragment. `Content.Body`'s own encoding (literal elements in XML, an escaped string in JACAL, a block scalar in YACAL) is what stays representation-specific beyond that; the XPath expression and its structured `xpathExpression` value are identical in all three once the namespace binding is in place.
+- The `md` prefix inside the `XPath` expression needs its own namespace binding, separate from `Content.Body`'s embedded `xmlns:md`, for the same reason as [[ACAL-Hierarchical-1.0](#acal-hierarchical-10)] Section 7.1's equivalent example: the `xpathExpression` value carries that binding directly on itself in every representation — `xmlns:md` on the `Value` element in XML, a `Namespace` property (a mapping from prefix to namespace name) in JACAL/YACAL — rather than inheriting it from `RequestEntity` or any Defaults property, since a value like this one is not confined to the request it originated in. The value's own `XPathVersion` property travels with it for the same reason. `Content.Body`'s own encoding (literal elements in XML, an escaped string in JACAL, a block scalar in YACAL) is what stays representation-specific beyond that; the XPath expression itself is identical in all three.
 
 ---
 

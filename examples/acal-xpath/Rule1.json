@@ -6,13 +6,7 @@
         "PolicyDefaults": [
             {
                 "XPathPolicyDefaults": {
-                    "XPathVersion": "https://www.w3.org/TR/xpath20/",
-                    "Namespace": [
-                        {
-                            "Prefix": "md",
-                            "Name": "urn:example:med:schemas:record"
-                        }
-                    ]
+                    "XPathVersion": "https://www.w3.org/TR/xpath20/"
                 }
             }
         ],
@@ -43,6 +37,9 @@
                                         {
                                             "XPathAttributeSelector": {
                                                 "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
+                                                "Namespace": {
+                                                    "md": "urn:example:med:schemas:record"
+                                                },
                                                 "Path": "md:record/md:patient/md:patient-number/text()"
                                             }
                                         }
@@ -112,6 +109,10 @@
                                             },
                                             {
                                                 "Value": {
+                                                    "XPathVersion": "https://www.w3.org/TR/xpath20/",
+                                                    "Namespace": {
+                                                        "md": "urn:example:med:schemas:record"
+                                                    },
                                                     "XPathCategory": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
                                                     "XPath": "md:record"
                                                 }

@@ -162,10 +162,9 @@ Copyright © OASIS Open 2026. All Rights Reserved.  For license and copyright in
   - [5.2 NamespaceDeclarationType (optional)](#52-namespacedeclarationtype-optional)
   - [5.3 ACAL extension types](#53-acal-extension-types)
     - [5.3.1 PolicyDefaultsType extension - XPathPolicyDefaultsType](#531-policydefaultstype-extension---xpathpolicydefaultstype)
-    - [5.3.2 RequestDefaultsType extension - XPathRequestDefaultsType](#532-requestdefaultstype-extension---xpathrequestdefaultstype)
-    - [5.3.3 AttributeSelectorType extension - XPathAttributeSelectorType](#533-attributeselectortype-extension---xpathattributeselectortype)
-    - [5.3.4 EntityAttributeSelectorType extension - XPathEntityAttributeSelectorType](#534-entityattributeselectortype-extension---xpathentityattributeselectortype)
-  - [5.3.5 DataType extension - XPathExpressionValueType](#535-datatype-extension---xpathexpressionvaluetype)
+    - [5.3.2 AttributeSelectorType extension - XPathAttributeSelectorType](#532-attributeselectortype-extension---xpathattributeselectortype)
+    - [5.3.3 EntityAttributeSelectorType extension - XPathEntityAttributeSelectorType](#533-entityattributeselectortype-extension---xpathentityattributeselectortype)
+    - [5.3.4 DataType extension - XPathExpressionValueType](#534-datatype-extension---xpathexpressionvaluetype)
 - [6 XPath Definitions](#6-xpath-definitions)
   - [Supported XPath versions](#supported-xpath-versions)
   - [XPath 2.0 Implementation-Defined Items](#xpath-20-implementation-defined-items)
@@ -229,7 +228,7 @@ Best practices:
 
 -->
 
-This ACAL profile defines an ACAL data-type for XPath expressions, ACAL functions based on XPath, concrete types of `AttributeSelector` and `EntityAttributeSelector` using XPath expressions to extract attributes from ACAL Request's `Content`, as well as default values for XPath evaluation, i.e. concrete types of `RequestDefaults` and `PolicyDefaults`.
+This ACAL profile defines an ACAL data-type for XPath expressions, ACAL functions based on XPath, concrete types of `AttributeSelector` and `EntityAttributeSelector` using XPath expressions to extract attributes from ACAL Request's `Content`, as well as a default XPath version for those selectors, i.e. a concrete type of `PolicyDefaults`.
 
 Concrete representations (data formats) are to be provided as separate specifications and therefore out of scope of this document.
 
@@ -418,7 +417,9 @@ This profile applies to a `Content` object (defined in [[ACAL-Core-1.0](#acal-co
 
 ## 5.2 NamespaceDeclarationType (optional)
 
-A `NamespaceDeclarationType` object describes a single XML namespace declaration [NAMESPACES] that is usable in any XPath expression property specified in this profile, i.e. in `XPathAttributeSelectorType`, `XPathEntityAttributeSelectorType` objects, and `xpathExpression` values. This object type is not used in the XML representation of ACAL (XACML) which has native support for XML namespaces. However, it is useful in any non-XML representation of ACAL that does not support namespaces (e.g. JSON) in a standard native way.
+A `NamespaceDeclarationType` object describes a single XML namespace declaration [NAMESPACES] — a binding of a namespace prefix to a namespace name (URI) — that is usable in the XPath expression carried by an `XPathAttributeSelectorType` object, an `XPathEntityAttributeSelectorType` object, or an `xpathExpression` value. This object type is not used in the XML representation of ACAL (XACML), which has native support for XML namespaces: an implementation MAY, and where the expression crosses into a context with no other source of namespace bindings (see [Section 5.3.4](#534-datatype-extension---xpathexpressionvaluetype)) MUST, declare the namespaces an XPath expression relies on directly on the XML element carrying that expression, using ordinary XML namespace declaration syntax. In any non-XML representation of ACAL that does not support namespaces in a standard native way (e.g. JSON, YAML), `NamespaceDeclarationType` objects are how those bindings are carried instead.
+
+In a non-XML representation, and for an `xpathExpression` value in every representation including XML, each namespace prefix used by a given expression is bound by exactly one `NamespaceDeclarationType` object (or, for XML values, one `xmlns:*` declaration) local to that expression (see [Section 5.3.2](#532-attributeselectortype-extension---xpathattributeselectortype), [Section 5.3.3](#533-entityattributeselectortype-extension---xpathentityattributeselectortype) and [Section 5.3.4](#534-datatype-extension---xpathexpressionvaluetype)); there is no document-wide or request-wide/policy-wide table of namespace bindings that an expression's own bindings are merged with. (An XML selector's `Path` is the one exception: it continues to resolve prefixes from ordinary XML in-scope namespaces, which can include ancestor declarations — see [Section 5.3.2](#532-attributeselectortype-extension---xpathattributeselectortype).) This is a deliberate design choice, not an oversight: XML permits the same prefix to be bound to different namespace names in different parts of one document (via ordinary XML nested-scope namespace declarations), so a single global table cannot always represent every combination of XML-sourced expressions faithfully, and a value that depended on an external, container-supplied table would stop being self-describing the moment it was copied somewhere else — into a response, a cache, or another policy.
 
 UML definition (class diagram):
 ```plantuml
@@ -436,21 +437,25 @@ A `NamespaceDeclarationType` object contains the following properties:
 
 `Prefix` [Optional, Default `""`]
 
-: This property defines the namespace prefix. In the case of a namespace declaration for the default namespace, the value SHALL be omitted (default value is the empty string) or set to the empty string.
+: This property defines the namespace prefix. In the case of a namespace declaration for the default namespace, the value SHALL be omitted (default value is the empty string) or set to the empty string. A non-empty value SHALL be a valid `NCName` as defined by [NAMESPACES] and SHALL NOT be `xmlns`, which [NAMESPACES] reserves and never permits as a prefix. This is a narrower lexical space than ACAL's general-purpose `IdentifierType` (which supports `{ShortId}` macro substitution, a concept with no meaning for an XML namespace prefix); a representation-specific schema enforcing `Prefix`/`Namespace` MUST validate against the `NCName` production, not merely reuse `IdentifierType`.
 
 `Name` [Required]
 
 : This property defines the namespace name (URI) itself to which the prefix is mapped. The `URI` datatype is defined in [[ACAL-Core-1.0](#acal-core-10)].
 
+In a non-XML representation, a set of `NamespaceDeclarationType` objects is represented as a single mapping (a JSON object in JACAL, a YAML mapping in YACAL) from each `Prefix` value to its corresponding `Name` value, rather than as an array of `{Prefix, Name}` pair-objects — the empty string key denotes the default-namespace declaration. This mapping representation makes prefix uniqueness structural (a mapping cannot carry the same key twice) rather than a separately-stated constraint, and reads naturally in both JSON and YAML — unlike a repeated array-of-objects shape would, now that namespace bindings are declared once per expression rather than once per document, the way an earlier draft of this profile declared them (see the `XPathRequestDefaultsType` discussion in Appendix 2, [Changes From the Previous Version](#appendix-2-changes-from-previous-version)). A producer SHALL NOT emit a `Namespace` mapping containing the same key twice; a consumer SHALL reject a `Namespace` mapping that does. This requirement cannot be expressed as a JSON Schema constraint, since a JSON Schema validator only ever sees an already-parsed instance, and how a parser resolves a duplicate key before that point is implementation-defined (RFC 8259 recommends but does not require uniqueness); it is stated here as a requirement on the parsing/deserialization step itself.
+
+The "complete effective in-scope namespace context" required wherever a `Namespace` property is REQUIRED (see [Section 5.3.2](#532-attributeselectortype-extension---xpathattributeselectortype), [Section 5.3.3](#533-entityattributeselectortype-extension---xpathentityattributeselectortype), [Section 5.3.4](#534-datatype-extension---xpathexpressionvaluetype)) excludes bindings XPath and XML define implicitly, such as the reserved `xml` prefix (always bound to `http://www.w3.org/XML/1998/namespace`); implementations MUST treat this binding as available without it appearing in `Namespace`, in every representation.
+
 ## 5.3 ACAL extension types
 
 The structures in this section are extensions to [[ACAL-Core-1.0](#acal-core-10)] model and described here in abstract terms. The concrete representations of these structures are defined for a variety of syntaxes each in a separate profile.
 
-The types `IdentifierType`, `ValueType`, `SimpleValueType`, `PolicyDefaultsType` and `RequestDefaultsType`, `AttributeSelectorType` and `EntityAttributeSelectorType` used in the next UML models are defined in [[ACAL-Core-1.0](#acal-core-10)].
+The types `IdentifierType`, `ValueType`, `SimpleValueType`, `PolicyDefaultsType`, `AttributeSelectorType` and `EntityAttributeSelectorType` used in the next UML models are defined in [[ACAL-Core-1.0](#acal-core-10)].
 
 ### 5.3.1 PolicyDefaultsType extension - XPathPolicyDefaultsType
 
-A `XPathPolicyDefaultsType` object extends `PolicyDefaultsType` from [[ACAL-Core-1.0](#acal-core-10)] to specify default XPath settings that apply to the evaluation of `XPathAttributeSelectorType` and `XPathEntityAttributeSelectorType` objects, `xpathExpression` values and XPath-based functions in the enclosing `PolicyType` object.
+A `XPathPolicyDefaultsType` object extends `PolicyDefaultsType` from [[ACAL-Core-1.0](#acal-core-10)] to specify the default XPath version that applies to the evaluation of `XPathAttributeSelectorType` and `XPathEntityAttributeSelectorType` objects' `Path` expressions in the enclosing `PolicyType` object. It does not govern XPath-based functions ([Annex C.3.1](#c31-xpath-based-functions)): their arguments are `xpathExpression` values, which carry their own `XPathVersion` (see below and [Section 5.3.4](#534-datatype-extension---xpathexpressionvaluetype)).
 
 UML definition (class diagram):
 ```plantuml
@@ -460,71 +465,17 @@ hide circle
 abstract class PolicyDefaultsType <<dataType>>
 class XPathPolicyDefaultsType <<dataType>> extends PolicyDefaultsType {
   {field} +XPathVersion: IdentifierType[1]
-  {field} +Namespace: NamespaceDeclarationType[*] {unordered, unique} {{OCL} self->isUnique(Prefix)}
 }
 @enduml
 ```
 
-A `XPathDefaultsType` object contains the following properties:
+A `XPathPolicyDefaultsType` object contains the following property:
 
 `XPathVersion` [Required]
 
-: An `IdentifierType` value specifying the XPath version for XPath expressions occurring in the policy. XPath expressions are used by attribute selectors and as arguments to XPath-based functions. See the Supported XPath versions in [XPath Definitions] section.
+: An `IdentifierType` value specifying the XPath version for an attribute selector's `Path` expression occurring in the policy. See the Supported XPath versions in [XPath Definitions] section. Unlike namespace bindings (see [Section 5.2](#52-namespacedeclarationtype-optional)), the XPath version for a `Path` expression is not declared locally on the selector: a `Path` expression is policy syntax that never leaves the policy it is written in, so a single policy-wide version continues to serve every selector in the policy. `xpathExpression` *values* — including those used as XPath-based function arguments ([Annex C.3.1](#c31-xpath-based-functions)) — are governed by no property of `XPathPolicyDefaultsType` at all; they carry their own `XPathVersion` locally (see [Section 5.3.4](#534-datatype-extension---xpathexpressionvaluetype)), since a value can move into a response, a cache, or another policy where no `XPathPolicyDefaultsType` object is in scope to supply one.
 
-`Namespace` [Any number]
-
-: Optional collection of XML namespace declaration(s) (zero or more) that SHALL contain a `NamespaceDeclarationType` object for each of the namespace prefixes used in the XPath expression(s) ocurring in the Policy. There SHALL NOT be more than one `NamespaceDeclarationType` object for the same namespace prefix (`Prefix` property). In other words, each `Prefix` SHALL be unique.
-
-
-### 5.3.2 RequestDefaultsType extension - XPathRequestDefaultsType
-
-A `XPathRequestDefaultsType` object extends `RequestDefaultsType` from [[ACAL-Core-1.0](#acal-core-10)] to specify default XPath settings that apply to the evaluation of `XPathAttributeSelectorType` and `XPathEntityAttributeSelectorType` objects, `xpathExpression` values and XPath-based functions in the enclosing `RequestType` object.
-
-UML definition (class diagram):
-```plantuml
-@startuml
-hide empty members 
-hide circle
-abstract class RequestDefaultsType <<dataType>>
-class XPathRequestDefaultsType <<dataType>> extends RequestDefaultsType {
-  {field} + XPathVersion: IdentifierType [1]
-  {field} + Namespace: NamespaceDeclarationType [*] {unordered, unique} {{OCL} self->isUnique(Prefix)}
-}
-@enduml
-```
-
-Same property(ies) as `XPathPolicyDefaultsType` in the previous section.
-
-<!--
-The alternative based on multiple-inheritance, i.e. `XPathDefaultsType` extending both `PolicyDefaultsType` and `RequestDefaultsType` at the same time, might be useful in the future as JSON schema and XSD 1.1 have a way of supporting this feature (XSD 1.1 can have multivalued substitutionGroups). So this text is kept as backup for future use. 
-
-### 5.3.2 Multiple-inheritance alternative - XPathDefaultsType
-
-A `XPathDefaultsType` object extends `PolicyDefaultsType` and `RequestDefaultsType` from [[ACAL-Core-1.0](#acal-core-10)] to specify default XPath settings that apply to the evaluation of `XPathAttributeSelectorType` and `XPathEntityAttributeSelectorType` objects, `xpathExpression` values and XPath-based functions in the enclosing `PolicyType` or `RequestType` object.
-
-UML definition (class diagram):
-```plantuml
-@startuml
-hide empty members 
-hide circle
-abstract class PolicyDefaultsType <<dataType>>
-abstract class RequestDefaultsType <<dataType>>
-class XPathDefaultsType <<dataType>> extends PolicyDefaultsType, RequestDefaultsType {
-   + XPathVersion: IdentifierType [1]
-}
-@enduml
-```
-
-Concrete data representation formats which do not support multiple inheritance cannot use this model as is, in which case they should use the alternative model presented in the next section.
-
-A `XPathDefaultsType` object contains the following property:
-
-`XPathVersion` [Required]
-
-: An `IdentifierType` value specifying the XPath version for XPath expressions occurring in the policy. XPath expressions are used by attribute selectors and as arguments to XPath-based functions. See the section 6 for the supported `XPathVersion` values.
--->
-
-### 5.3.3 AttributeSelectorType extension - XPathAttributeSelectorType
+### 5.3.2 AttributeSelectorType extension - XPathAttributeSelectorType
 
 An `XPatAttributeSelectorType` object is a concrete type of `AttributeSelectorType` from [[ACAL-Core-1.0](#acal-core-10)] that uses [XPath] for `Path` expressions and expect an XML document in the `Body` property of the `Content` object of the `RequestEntityType` object matching the `Category` property. More precisely, the returned values shall be constructed from the node(s) selected by applying the XPath expression given by the attribute selector's `Path` property to the XML document in the `Body` property of the `Content` object of the `RequestEntityType` object matching the attribute selector's `Category` property. 
 
@@ -538,15 +489,20 @@ hide circle
 abstract class AttributeSelectorType <<datatype>>
 class XPathAttributeSelectorType <<dataType>> extends AttributeSelectorType {
   + ContextSelectorId: IdentifierType [0..1]
+  {field} + Namespace: NamespaceDeclarationType [*] {unordered, unique} {{OCL} self->isUnique(Prefix)}
 }
 @enduml
 ```
 
-The `XPathAttributeSelectorType` object type extends the `AttributeSelectorType` object type with the following property:
+The `XPathAttributeSelectorType` object type extends the `AttributeSelectorType` object type with the following properties:
 
 `ContextSelectorId` [Optional]
 
 : An `IdentifierType` value specifying an ACAL attribute (by its `AttributeId`) in the attribute category (`RequestEntityType` object with `Category` matching this attribute selector's `Category`) containing the XML content. The referenced attribute MUST have a single value of data type `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` (see Annex C) and the XPath expression represented by that value must select a single node in the XML content. The `XPathCategory` property of the referenced ACAL attribute value SHALL be ignored. This profile defines the standard attribute identifier `urn:oasis:names:tc:acal:1.0:content-selector` for this purpose (see [Annex D.3](#d3-attributes)); any other attribute satisfying the conditions above MAY be named instead.
+
+`Namespace` [Required]
+
+: The namespace prefix bindings (zero or more `NamespaceDeclarationType` objects, see [Section 5.2](#52-namespacedeclarationtype-optional)) needed to resolve the namespace prefixes used within the `Path` expression. A producer SHALL include the complete effective in-scope namespace context available at the point the expression was written; omitting a binding for a prefix the expression does not actually reference is OPTIONAL (unlike the "visibly utilized" [[exc-c14n](#exc-c14n)] test used elsewhere in this profile for XML infoset content, this is not a normatively-defined minimization — no such algorithm is defined over the lexical content of an XPath expression string, so a producer that is not confident in some other minimization approach SHALL simply include every namespace binding in scope rather than attempt to determine which are referenced). This property is REQUIRED — an expression using no prefixed names still carries an empty `Namespace` — so that a selector's namespace resolution never depends on anything other than the selector itself. There SHALL NOT be more than one `NamespaceDeclarationType` object for the same `Prefix`.
 
 More importantly, in the context of this profile, the value of the `Path` property inherited from supertype `AttributeSelectorType` SHALL be an XPath expression [XPath]. In addition, this XPath expression may reference one or more XPath variables, in which case each XPath variable's value(s) is taken(s) from the corresponding so-called *ACAL variable*, i.e. the variable defined by a `<VariableDefinition>` with a `VariableId` matching the XPath variable name, in the scope of this element. Only XPath variables of primitive atomic type or array of primitive atomic type are allowed in this XPath expression; in the first case (respectively the second case), the corresponding ACAL variable must return a single value (respectively a bag) of a primitive datatype that is convertible to that XPath atomic type. How to do this conversion is described in section 8.4.7 of [[ACAL-Core-1.0](#acal-core-10)].
 
@@ -564,11 +520,9 @@ For example, in the following `XPathAttributeSelectorType` object in XML represe
 If no such variable is found (in the current scope) or the datatype is incompatible (ACAL-to-XPath type conversion is not possible), the XPath expression and therefore this `Path` attribute must be considered invalid and a syntax error returned (status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`). See [Section 7](#7-attribute-selector-evaluation) for more details. 
 
 
-**The namespace context for the value of the Path attribute is given by the [in-scope namespaces] [[INFOSET](#infoset)] of the `<XPathAttributeSelector>` element.**
+**In an XML representation, the namespace context for the value of the `Path` attribute is given by the [in-scope namespaces] [[INFOSET](#infoset)] of the `<XPathAttributeSelector>` element** — this ordinary XML ancestor-based lookup remains valid here because a selector's `Path` expression never leaves the policy document it is written in, so the same in-scope-namespaces mechanism this profile has always used continues to apply unchanged. **In a non-XML representation, the namespace context is given entirely by the selector's own `Namespace` property** (see above); there is no ancestor or document-wide table it is resolved against.
 
-
-
-### 5.3.4 EntityAttributeSelectorType extension - XPathEntityAttributeSelectorType
+### 5.3.3 EntityAttributeSelectorType extension - XPathEntityAttributeSelectorType
 
 An `XPathEntityAttributeSelectorType` object is a concrete type of `EntityAttributeSelectorType` [[ACAL-Core-1.0](#acal-core-10)] that uses [XPath] for `Path` expressions and expects XML content in the value returned by the attribute selector's `Expression` property. In other words, the values shall be constructed from the node(s) selected by applying the XPath expression given by the entity attribute selector's `Path` property to the XML document in the `Body` property of the `Content` property in either an attribute category in the request context (`RequestEntity`) or the value of the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type returned by its `Expression` evaluation. 
 
@@ -582,16 +536,19 @@ hide circle
 abstract class EntityAttributeSelectorType <<datatype>>
 class XPathEntityAttributeSelectorType <<dataType>> extends EntityAttributeSelectorType {
    + ContextSelectorId: IdentifierType [0..1]
+   {field} + Namespace: NamespaceDeclarationType [*] {unordered, unique} {{OCL} self->isUnique(Prefix)}
 }
 @enduml
 ```
 
-The `XPathEntityAttributeSelectorType` object type extends the `EntityAttributeSelectorType` object type with the same `ContextSelectorId` property as `XPathAttributeSelectorType`. 
+The `XPathEntityAttributeSelectorType` object type extends the `EntityAttributeSelectorType` object type with the same `ContextSelectorId` and `Namespace` properties as `XPathAttributeSelectorType` ([Section 5.3.2](#532-attributeselectortype-extension---xpathattributeselectortype)).
 The `Path` property is also defined the same as in `XPathAttributeSelectorType`.
 
-## 5.3.5 DataType extension - XPathExpressionValueType
+### 5.3.4 DataType extension - XPathExpressionValueType
 
-The `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` values (Annex C) can be modeled as a subtype of `SimpleValueType` [[ACAL-Core-1.0](#acal-core-10)] called `XPathExpressionValueType`.
+The `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` values (Annex C) can be modeled as a subtype of `StructuredValueType` [[ACAL-Core-1.0](#acal-core-10)] called `XPathExpressionValueType`.
+
+A `XPathExpressionValueType` object is a first-class *value*: unlike a selector's `Path`, it can be produced in one context (a request, a policy) and consumed or copied in another (a response `Notice`, a cache, another policy's evaluation) — so, unlike `XPathAttributeSelectorType`/`XPathEntityAttributeSelectorType`, it does not rely on any externally-scoped `XPathPolicyDefaultsType`/`XPathRequestDefaultsType` object for either its namespace context or its XPath version. Both are carried locally on the value itself, making it fully self-describing wherever it travels.
 
 UML model (class diagram):
 ```plantuml
@@ -605,6 +562,8 @@ class XPathExpressionValueType <<fixedDatatype>> extends StructuredValueType {
     <<fixedDatatype>>
     DataType='urn:oasis:names:tc:acal:1.0:data-type:xpathExpression'
     __
+    + XPathVersion: IdentifierType [1]
+    {field} + Namespace: NamespaceDeclarationType [*] {unordered, unique} {{OCL} self->isUnique(Prefix)}
     + XPathCategory: IdentifierType [1]
     + XPath: AttributeSelectorPathType [1]
 }
@@ -613,7 +572,15 @@ class XPathExpressionValueType <<fixedDatatype>> extends StructuredValueType {
 
 A `XPathExpressionValueType` object has the following properties:
 
-`Value` [Required]
+`XPathVersion` [Required]
+
+: An `IdentifierType` value specifying the XPath version for this expression (see the Supported XPath versions in [Section 6](#6-xpath-definitions)). Required unconditionally, including in an XML representation: unlike a selector's `Path`, there is no ancestor `XPathPolicyDefaultsType`/`XPathRequestDefaultsType` object this value can be guaranteed to still be nested inside once it is copied elsewhere, so the version travels with the value itself in every representation.
+
+`Namespace` [Required]
+
+: The namespace prefix bindings (zero or more `NamespaceDeclarationType` objects, see [Section 5.2](#52-namespacedeclarationtype-optional)) needed to resolve the namespace prefixes used within the `Value` expression. As with `XPathAttributeSelectorType`'s `Namespace` property ([Section 5.3.2](#532-attributeselectortype-extension---xpathattributeselectortype)), a producer SHALL include the complete effective in-scope namespace context; omitting bindings for prefixes the expression does not reference is OPTIONAL, and not something this profile defines a normative minimization algorithm for. Required unconditionally, for the same reason as `XPathVersion`: in an XML representation this means the namespace declarations MUST be present directly on the XML element carrying the `Value` itself, rather than relying on in-scope namespaces inherited from an ancestor outside that element — an XML element copied out of its original document does not carry its former ancestors' namespace declarations with it. An implementation producing a `xpathExpression` value from an XML source — including when materializing one for a response `Notice`, which has no `XPathRequestDefaultsType`/`XPathPolicyDefaultsType`-equivalent property to fall back on in any representation — MUST resolve the expression's complete effective in-scope namespace context at that point and attach it to the value directly. `Namespace` being empty (`{}` in JSON/YAML, or simply no `xmlns:*` declarations on the carrying element in XML) is a valid, meaningful statement that the expression uses no prefixed names, distinct from having forgotten to state the namespace context.
+
+`XPath` [Required]
 
 : The XPath expression (the `AttributeSelectorPathType` is defined in [[ACAL-Core-1.0](#acal-core-10)])
 
@@ -628,7 +595,7 @@ A `XPathExpressionValueType` object has the following properties:
 
 ## Supported XPath versions
 
-The `XPathVersion` property in a `XPathDefaultsType`, `XPathPolicyDefaultsType` or `XPathRequestDefaultsType` object contains an `IdentifierType` value that specifies the XPath version that applies for a policy or request, respectively.
+The `XPathVersion` property — of a `XPathPolicyDefaultsType` object for an attribute selector's `Path` expression, or of a `XPathExpressionValueType` object for an `xpathExpression` value (see [Section 5.3.4](#534-datatype-extension---xpathexpressionvaluetype)) — contains an `IdentifierType` value that specifies the XPath version that applies to that expression or value.
 
 To specify XPath 2.0 the `IdentifierType` value MUST evaluate to `https://www.w3.org/TR/xpath20/`. Therefore the former XPath 2.0 identifier from [[XACML 3.0](#xacml)] - `http://www.w3.org/TR/2007/REC-xpath20-20070123` - is deprecated.
 
@@ -795,9 +762,9 @@ If the designated attribute category or entity value has a `Content` property, t
 
 1. Construct an XML data structure suitable for XPath processing from the value of the `Body` property of the `Content` object. The data structure shall be constructed so that the document node of this structure contains a single document element which corresponds to the single child element of the `Body` property. The constructed data structure shall be equivalent to one that would result from parsing a stand-alone XML document consisting of the contents of the `Body` property (including any comment and processing-instruction markup). **In a XML representation, namespace declarations from the `<Body>` element and its ancestor elements for namespace prefixes that are "visibly utilized", as defined by [[exc-c14n](#exc-c14n)], within the contents MUST be present.** Namespace declarations from the single child element or its ancestor elements for namespace prefixes that are not "visibly utilized" MAY be present. The data structure must meet the requirements of the applicable XPath version.
 
-2. If there is a `ContextSelectorId` property, the context node shall be the node selected by applying the XPath expression given in the attribute value of the designated ACAL attribute. It shall be an error if this evaluation returns no node or more than one node, in which case the return value MUST be `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`. If there is no `ContextSelectorId` property, then the document node of the data structure shall be the context node.
+2. If there is a `ContextSelectorId` property, the context node shall be the node selected by applying the XPath expression given in the attribute value of the designated ACAL attribute, evaluated according to that `XPathExpressionValueType` object's own `XPathVersion` and `Namespace` properties ([Section 5.3.4](#534-datatype-extension---xpathexpressionvaluetype)) rather than any Defaults property. It shall be an error if this evaluation returns no node or more than one node, in which case the return value MUST be `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`. If there is no `ContextSelectorId` property, then the document node of the data structure shall be the context node.
 
-3. Evaluate the XPath expression given in the `Path` property against the context node selected in the previous step, according to the [XPath] standard in the version indicated in the `PolicyDefaults` property for this profile. This XPath expression may reference one or more XPath variables, in which case each XPath variable's value(s) is taken(s) from the corresponding so-called *ACAL variable*, i.e. the variable defined by a `<VariableDefinition>` with a `VariableId` matching the XPath variable name, in the scope of this element. Only XPath variables of primitive atomic type or array of primitive atomic type are allowed in this XPath expression; in the first case (respectively the second case), the corresponding ACAL variable must return a single value (respectively a bag) of a primitive datatype that is convertible to that XPath atomic type. How to do this conversion is the same as in step 4 below. If no such variable is found (in the current scope) or the datatype is incompatible (ACAL-to-XPath type conversion is not possible), the XPath expression and therefore this `Path` attribute must be considered invalid and a syntax error returned (status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`).
+3. Evaluate the XPath expression given in the `Path` property against the context node selected in the previous step, according to the [XPath] standard in the version indicated in the `PolicyDefaults` property for this profile, resolving namespace prefixes in `Path` from the `XPathAttributeSelectorType`/`XPathEntityAttributeSelectorType` object's own `Namespace` property ([Section 5.3.2](#532-attributeselectortype-extension---xpathattributeselectortype)) in a non-XML representation, or from the object's own in-scope namespaces ([Section 5.3.2](#532-attributeselectortype-extension---xpathattributeselectortype)) in an XML representation. This XPath expression may reference one or more XPath variables, in which case each XPath variable's value(s) is taken(s) from the corresponding so-called *ACAL variable*, i.e. the variable defined by a `<VariableDefinition>` with a `VariableId` matching the XPath variable name, in the scope of this element. Only XPath variables of primitive atomic type or array of primitive atomic type are allowed in this XPath expression; in the first case (respectively the second case), the corresponding ACAL variable must return a single value (respectively a bag) of a primitive datatype that is convertible to that XPath atomic type. How to do this conversion is the same as in step 4 below. If no such variable is found (in the current scope) or the datatype is incompatible (ACAL-to-XPath type conversion is not possible), the XPath expression and therefore this `Path` attribute must be considered invalid and a syntax error returned (status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`).
 
 4. The result of step 3 is converted to ACAL value(s) according to the same rules as in the last step of [[ACAL-Core-1.0](#acal-core-10)] section 8.4.7 (Attribute Selector evaluation).
 
@@ -857,8 +824,7 @@ The implementation MUST support the object types that are marked `M`.
 | XPathAttributeSelectorType | M |
 | XPathEntityAttributeSelectorType | O |
 | XPathExpressionValueType | O |
-| XPathPolicyDefaultsType or XPathDefaultsType | M |
-| XPathRequestDefaultsType or XPathDefaultsType | M |
+| XPathPolicyDefaultsType | M |
 
 ### 9.2.2 Data Types
 
@@ -1144,9 +1110,7 @@ Although a syntactic representation of ACAL objects may represent most data type
 
 _**Support for this data-type is OPTIONAL.**_
 
-_This section needs to be aligned with the JSON profile's handling of values of the xpathExpression data type._
-
-The `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` data type represents an XPath expression over the XML in a `ContentType` object. The syntax is defined by the XPath W3C recommendation. The content of this data-type also includes the context in which namespaces prefixes in the expression are resolved, which distinguishes it from a plain string and the ACAL attribute category of the `ContentType` object to which it applies. When the value is encoded in a `ValueType` object, the namespace context is given by the [in-scope namespaces] (see [INFOSET]) of the `ValueType` object for the XML representation, or, for non-XML representations, the `Namespaces` property in the Request's `XPathRequestDefaults` property or the Policy's `XPathPolicyDefaults`, and an XML attribute called `XPathCategory` gives the category of the `ContentType` object where the expression applies.
+The `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` data type represents an XPath expression over the XML in a `ContentType` object. The syntax is defined by the XPath W3C recommendation. The content of this data-type also includes the XPath version the expression is written against and the context in which namespace prefixes in the expression are resolved, which distinguishes it from a plain string and the ACAL attribute category of the `ContentType` object to which it applies. Both are carried locally on the value itself, in every representation including XML — the `XPathVersion` and `Namespace` properties of `XPathExpressionValueType` ([Section 5.3.4](#534-datatype-extension---xpathexpressionvaluetype)) — rather than resolved from any Request- or Policy-level Defaults property, since a value of this data type is not confined to the request or policy it originated in: it can be copied into a response `Notice`, cached, or moved between policies, none of which carry a `XPathRequestDefaultsType`/`XPathPolicyDefaultsType` object of their own for it to inherit from. An XML attribute called `XPathCategory` gives the category of the `ContentType` object where the expression applies.
 
 The XPath expression MUST be evaluated in a context which is equivalent of a stand alone XML document with the only child of the `ContentType` object's `Body` property value as the document element. The context node of the XPath expression is the document node of this standalone document. Namespace declarations from the `ContentType` object and its ancestor elements for namespace prefixes that are "visibly utilized", as defined by [[exc-c14n](#exc-c14n)], within the contents MUST be present. **In a XML representation, namespace declarations from the `<Body>` element or its ancestor elements for namespace prefixes that are not "visibly utilized" MAY be present.**
 
@@ -1205,7 +1169,7 @@ This attribute identifies a node of the XML document in the `Body` property of t
 
 : The corresponding ACAL attribute SHALL have a single value of data type `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` (see [Annex C.2.1](#c21-xpath-expression)), and the XPath expression represented by that value SHALL select a single node of that XML document. As with any value of that data type, the `XPathCategory` property of the value gives the `Category` of the `RequestEntityType` object holding the `Content` object to which the expression applies.
 
-: This is the standard attribute identifier for use as the value of the `ContextSelectorId` property of an `XPathAttributeSelectorType` or `XPathEntityAttributeSelectorType` object (see [Section 5.3.3](#533-attributeselectortype-extension---xpathattributeselectortype)). Use of this identifier is RECOMMENDED where no more specific attribute applies; `ContextSelectorId` MAY name any other attribute satisfying the conditions stated in [Section 5.3.3](#533-attributeselectortype-extension---xpathattributeselectortype).
+: This is the standard attribute identifier for use as the value of the `ContextSelectorId` property of an `XPathAttributeSelectorType` or `XPathEntityAttributeSelectorType` object (see [Section 5.3.2](#532-attributeselectortype-extension---xpathattributeselectortype)). Use of this identifier is RECOMMENDED where no more specific attribute applies; `ContextSelectorId` MAY name any other attribute satisfying the conditions stated in [Section 5.3.2](#532-attributeselectortype-extension---xpathattributeselectortype).
 
 In [[XACML 3.0](#xacml)] the corresponding identifier `urn:oasis:names:tc:xacml:3.0:content-selector` is defined by the XACML v3.0 Hierarchical Resource Profile [[Hier](#hier)], although it is consumed by the `ContextSelectorId` mechanism of XACML core. ACAL reverses that arrangement and defines the identifier here, alongside the mechanism that consumes it, because the identifier is not specific to hierarchical resources. An ACAL Profile for Hierarchical Resources is expected to reference this definition rather than restate it.
 
@@ -1371,7 +1335,7 @@ This ACAL Profile is a successor to the set of XPath-based features of [[XACML 3
 
 - Deprecated prefixes `urn:oasis:names:tc:xacml:` and `https://www.w3.org/2001/XMLSchema#` in favor of `urn:oasis:names:tc:acal:` for all standard identifiers (algorithms, status codes, data-types, functions, attributes and categories)
 
-- Namespaces (prefix-to-namespace bindings) may be be declared as part of `XPathRequestDefaultsType`/`XPathPolicyDefaultsType` to allow using namespace prefixes in non-XML representations of ACAL (e.g. JSON) like it was the case for Requests in JSON Profile of XACML 3.0.
+- Namespaces (prefix-to-namespace bindings) are declared locally on each `xpathExpression` value and on each `XPathAttributeSelectorType`/`XPathEntityAttributeSelectorType` object (see [Section 5.2](#52-namespacedeclarationtype-optional)), rather than in a single Request- or Policy-wide table, since XML permits the same prefix to be bound to different namespace names in different parts of one document — a global table cannot always represent that faithfully, and a value carrying its own binding remains self-describing if copied into a response, a cache, or another policy. `xpathExpression` values likewise carry their own `XPathVersion` locally, for the same reason. This differs from the corresponding mechanism in the JSON Profile of XACML 3.0, which used a single Request-wide table; an earlier draft of this profile followed that model directly via `XPathRequestDefaultsType`, since removed (issue #134).
 
 - The `content-selector` attribute identifier is defined by this profile ([Annex D.3](#d3-attributes)), whereas its XACML 3.0 counterpart `urn:oasis:names:tc:xacml:3.0:content-selector` is defined by the XACML v3.0 Hierarchical Resource Profile [[Hier](#hier)] even though it is consumed by the `ContextSelectorId` mechanism of XACML core. The identifier is not specific to hierarchical resources, so ACAL defines it alongside the mechanism that consumes it.
 

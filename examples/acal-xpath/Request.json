@@ -1,18 +1,5 @@
 {
     "Request": {
-        "RequestDefaults": [
-            {
-                "XPathRequestDefaults": {
-                    "XPathVersion": "https://www.w3.org/TR/xpath20/",
-                    "Namespace": [
-                        {
-                            "Prefix": "md",
-                            "Name": "urn:example:med:schemas:record"
-                        }
-                    ]
-                }
-            }
-        ],
         "RequestEntity": [
             {
                 "Category": "urn:oasis:names:tc:acal:1.0:subject-category:access-subject",
@@ -44,7 +31,7 @@
                 "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
                 "Content": {
                     "MediaType": "application/xml",
-                    "Body": "<md:record xmlns:md=\"urn:example:med:schemas:record\" xsi:schemaLocation=\"urn:example:med:schemas:record http://www.med.example.com/schemas/record.xsd\"><md:patient><md:patientDoB>1992-03-21</md:patientDoB><md:patient-number>555555</md:patient-number><md:patientContact><md:email>b.simpson@example.com</md:email></md:patientContact></md:patient></md:record>"
+                    "Body": "<md:record xmlns:md=\"urn:example:med:schemas:record\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"urn:example:med:schemas:record http://www.med.example.com/schemas/record.xsd\"><md:patient><md:patientDoB>1992-03-21</md:patientDoB><md:patient-number>555555</md:patient-number><md:patientContact><md:email>b.simpson@example.com</md:email></md:patientContact></md:patient></md:record>"
                 },
                 "RequestAttribute": [
                     {
@@ -52,6 +39,10 @@
                         "DataType": "urn:oasis:names:tc:acal:1.0:data-type:xpathExpression",
                         "Value": [
                             {
+                                "XPathVersion": "https://www.w3.org/TR/xpath20/",
+                                "Namespace": {
+                                    "md": "urn:example:med:schemas:record"
+                                },
                                 "XPathCategory": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
                                 "XPath": "md:record/md:patient/md:patientDoB"
                             }
@@ -78,7 +69,7 @@
                 ]
             },
             {
-                "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:action",
+                "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:environment",
                 "RequestAttribute": [
                     {
                         "AttributeId": "urn:oasis:names:tc:acal:1.0:environment:current-date",

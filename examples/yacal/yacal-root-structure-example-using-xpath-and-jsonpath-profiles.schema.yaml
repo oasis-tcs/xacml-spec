@@ -15,11 +15,6 @@ $defs:
     anyOf:
       - $ref: "acal-xpath-yaml-v1.0-structure.schema.yaml#/$defs/XPathPolicyDefaultsTypeExtension"
 
-  EnabledRequestDefaultsTypeExtensions:
-    $dynamicAnchor: "RequestDefaultsTypeExtensions"
-    anyOf:
-      - $ref: "acal-xpath-yaml-v1.0-structure.schema.yaml#/$defs/XPathRequestDefaultsTypeExtension"
-
   EnabledAttributeSelectorTypeExtensions:
     $dynamicAnchor: "AttributeSelectorTypeExtensions"
     anyOf:

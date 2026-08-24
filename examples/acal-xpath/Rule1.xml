@@ -41,6 +41,8 @@
                 <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:any-of">
                     <Function Id="urn:oasis:names:tc:acal:1.0:function:xpath-node-match" />
                     <Value
+                        xmlns:md="urn:example:med:schemas:record"
+                        XPathVersion="https://www.w3.org/TR/xpath20/"
                         XPathCategory="urn:oasis:names:tc:acal:1.0:attribute-category:resource" XPath="md:record" />
                     <AttributeDesignator
                         Category="urn:oasis:names:tc:acal:1.0:attribute-category:resource"
