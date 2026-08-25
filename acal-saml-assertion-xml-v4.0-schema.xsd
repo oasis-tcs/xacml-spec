@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xacml="urn:oasis:names:tc:xacml:4.0:core:schema"
+	xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="urn:oasis:names:tc:xacml:4.0:profile:saml2.0:schema:assertion"
+	xmlns="urn:oasis:names:tc:xacml:4.0:profile:saml2.0:schema:assertion"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:annotation>
+		<xs:documentation> XACML v4.0 (XML Representation of ACAL Version 1.0) - SAML Profile schema,
+			assertion-side extensions. Scope: the Policies mechanism only (ACAL v1.0 SAML Profile
+			Version 1.0, Section 5) — ported from XACML SAML Profile Version 2.0, Committee
+			Specification 02, Section 6, plus the ReferencedPoliciesType definition shared with that
+			source document's Section 4.10. Declared in a separate namespace from the protocol-side
+			extensions (acal-saml-protocol-xml-v4.0-schema.xsd), matching the source document's own
+			xacml-saml/xacml-samlp split and issue #60's own working assumption — see
+			acal-saml-v1.0.md Section 4.2, Changes From the Previous Version, "assertion/protocol
+			namespace split" bullet, for the full reasoning.
+			Copyright (c) OASIS Open 2026. All Rights Reserved. For more license and copyright
+			information, and complete status, please see Annex A of ACAL v1.0 SAML Profile Version 1.0,
+			which contains the License, Document Status and Notices. </xs:documentation>
+	</xs:annotation>
+
+	<xs:import namespace="urn:oasis:names:tc:xacml:4.0:core:schema"
+		schemaLocation="acal-core-xml-v4.0-schema.xsd" />
+	<xs:import namespace="urn:oasis:names:tc:SAML:2.0:assertion"
+		schemaLocation="https://docs.oasis-open.org/security/saml/v2.0/saml-schema-assertion-2.0.xsd" />
+
+	<!-- Change from XACML SAML Profile v2.0 (issue #60, issue #16's PolicySet removal): the source
+	document's <xacml:PolicySet> choice branch is dropped throughout this schema — ACAL Core merged
+	Policy and PolicySet into a single PolicyType (see acal-core-v1.0.md Section 7.4) — leaving a
+	single repeated xacml:Policy element wherever the source alternated between the two.
+
+	No new top-level element is declared for this type, matching the source document's own idiom:
+	an instance sets xsi:type="XACMLPolicyStatementType" on the existing, non-abstract saml:Statement
+	element (declared in the SAML 2.0 assertion schema as type saml:StatementAbstractType, which IS
+	abstract) rather than substituting a new element for it. -->
+	<xs:complexType name="XACMLPolicyStatementType">
+		<xs:complexContent>
+			<xs:extension base="saml:StatementAbstractType">
+				<xs:sequence>
+					<xs:element ref="xacml:Policy" minOccurs="0" maxOccurs="unbounded" />
+					<xs:element ref="ReferencedPolicies" minOccurs="0" maxOccurs="1" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<!-- Shared by XACMLPolicyStatementType above; the source document's Section 4.10 use of this
+	same type (XACMLAuthzDecisionQueryType, Section 4.4) is deferred along with the rest of Section 4
+	Authorization Decisions — see acal-saml-v1.0.md Section 4.2, Changes From the Previous Version. -->
+	<xs:element name="ReferencedPolicies" type="ReferencedPoliciesType" />
+	<xs:complexType name="ReferencedPoliciesType">
+		<xs:sequence>
+			<xs:element ref="xacml:Policy" minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

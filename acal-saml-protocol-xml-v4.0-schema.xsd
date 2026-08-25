@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xacml="urn:oasis:names:tc:xacml:4.0:core:schema"
+	xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="urn:oasis:names:tc:xacml:4.0:profile:saml2.0:schema:protocol"
+	xmlns="urn:oasis:names:tc:xacml:4.0:profile:saml2.0:schema:protocol"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:annotation>
+		<xs:documentation> XACML v4.0 (XML Representation of ACAL Version 1.0) - SAML Profile schema,
+			protocol-side extensions. Scope: the Policies mechanism only (ACAL v1.0 SAML Profile
+			Version 1.0, Section 5) — ported from XACML SAML Profile Version 2.0, Committee
+			Specification 02, Section 6. Declared in a separate namespace from the assertion-side
+			extensions (acal-saml-assertion-xml-v4.0-schema.xsd), matching the source document's own
+			xacml-saml/xacml-samlp split and issue #60's own working assumption, whose agreed
+			resolution (quoted in acal-saml-v1.0.md Section 4.2) declares PolicyPatternMatchReference
+			in the protocol-side namespace, not a shared or assertion-side one.
+			Copyright (c) OASIS Open 2026. All Rights Reserved. For more license and copyright
+			information, and complete status, please see Annex A of ACAL v1.0 SAML Profile Version 1.0,
+			which contains the License, Document Status and Notices. </xs:documentation>
+	</xs:annotation>
+
+	<xs:import namespace="urn:oasis:names:tc:xacml:4.0:core:schema"
+		schemaLocation="acal-core-xml-v4.0-schema.xsd" />
+	<xs:import namespace="urn:oasis:names:tc:SAML:2.0:protocol"
+		schemaLocation="https://docs.oasis-open.org/security/saml/v2.0/saml-schema-protocol-2.0.xsd" />
+
+	<!-- Change from XACML SAML Profile v2.0 (issue #60): the source document's <xacml:PolicySetIdReference>
+	choice branch is dropped (no PolicySet to reference, since ACAL Core merged Policy and PolicySet
+	into a single PolicyType — see acal-core-v1.0.md Section 7.4); <xacml:PolicyIdReference>, a bare
+	XACML IdReferenceType with no ACAL equivalent, is replaced by PolicyPatternMatchReference, of ACAL
+	Core's existing PatternMatchIdReferenceType (acal-core-v1.0.md Section 7.10) — the exact schema
+	fragment agreed in issue #60's own comment thread, renamed to this profile's protocol namespace. -->
+	<xs:element name="PolicyPatternMatchReference" type="xacml:PatternMatchIdReferenceType" />
+
+	<xs:element name="XACMLPolicyQuery" type="XACMLPolicyQueryType" />
+	<xs:complexType name="XACMLPolicyQueryType">
+		<xs:complexContent>
+			<xs:extension base="samlp:RequestAbstractType">
+				<xs:choice minOccurs="1" maxOccurs="unbounded">
+					<xs:element ref="xacml:Request" />
+					<xs:element ref="PolicyPatternMatchReference" />
+				</xs:choice>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+</xs:schema>
