@@ -351,7 +351,7 @@ A policy that must grant access based on a specific ancestor value typically app
 
 ## 6.2 Matching Nodes in XML Documents
 
-A policy that must match a node located by [Section 5.1](#51-nodes-in-xml-documents) typically uses an `XPathAttributeSelectorType` or `XPathEntityAttributeSelectorType` object ([[ACAL-XPath-1.0](#acal-xpath-10)] Section 5.3.2/5.3.3) with `ContextSelectorId` set to `urn:oasis:names:tc:acal:1.0:content-selector`, or applies `urn:oasis:names:tc:acal:1.0:function:xpath-node-match` ([[ACAL-XPath-1.0](#acal-xpath-10)] Annex C.3.1) directly.
+A policy that must match a node located by [Section 5.1](#51-nodes-in-xml-documents) typically uses an `XPathAttributeSelectorType` or `XPathEntityAttributeSelectorType` object ([[ACAL-XPath-1.0](#acal-xpath-10)] Section 5.3.3/5.3.4) with `ContextSelectorId` set to `urn:oasis:names:tc:acal:1.0:content-selector`, or applies `urn:oasis:names:tc:acal:1.0:function:xpath-node-match` ([[ACAL-XPath-1.0](#acal-xpath-10)] Annex C.3.1) directly.
 
 ## 6.3 Matching URIs
 
@@ -364,7 +364,7 @@ A policy that must match a URI produced by [Section 5.2](#52-nodes-identified-by
 
 # 7 Examples (non-normative)
 
-This section gives one worked, self-contained example request for each of the three schemes in [Section 5](#5-node-identity-schemes). Attribute categories other than the resource category (subject, action, environment) are omitted for brevity; a complete request would include them as shown in [[ACAL-Core-1.0](#acal-core-10)] Section 6.1.2.
+This section gives one worked example for each of the three schemes in [Section 5](#5-node-identity-schemes), each a single resource `RequestEntity` shown on its own rather than inside a full `Request`. The other attribute categories (subject, action, environment) are omitted for brevity; a complete request would include them, and would wrap the `RequestEntity` in a `Request`, as shown in [[ACAL-Core-1.0](#acal-core-10)] Section 6.1.2.
 
 ## 7.1 Nodes in XML Documents
 
@@ -377,7 +377,7 @@ A request for read access to the `<md:patientDoB>` node inside a medical-record 
 **XACML v4.0 (XML)**
 
 ```xml
-<RequestEntity Category="urn:oasis:names:tc:acal:1.0:attribute-category:resource">
+<RequestEntity Category="urn:oasis:names:tc:acal:1.0:attribute-category:resource" xmlns:md="urn:example:med:schemas:record">
     <Content>
         <Body>
             <md:record xmlns:md="urn:example:med:schemas:record">
@@ -391,7 +391,6 @@ A request for read access to the `<md:patientDoB>` node inside a medical-record 
         AttributeId="urn:oasis:names:tc:acal:1.0:content-selector"
         DataType="urn:oasis:names:tc:acal:1.0:data-type:xpathExpression">
         <Value
-            xmlns:md="urn:example:med:schemas:record"
             XPathVersion="https://www.w3.org/TR/xpath20/"
             XPathCategory="urn:oasis:names:tc:acal:1.0:attribute-category:resource"
             XPath="md:record/md:patient/md:patientDoB" />
@@ -467,9 +466,10 @@ RequestEntity:
 
 **What this shows**
 
-- The `md` prefix used inside the `XPath` expression string needs its own namespace binding, independent of `Content.Body`'s embedded `xmlns:md` declaration — the two are separate namespace scopes, one for the embedded document, one for the expression text itself ([[ACAL-XPath-1.0](#acal-xpath-10)] Annex C.2.1). The `xpathExpression` value carries that binding directly on itself in every representation, including XML: `xmlns:md` is declared on the `Value` element itself, not inherited from `RequestEntity` or any other ancestor, because an `xpathExpression` value — unlike an attribute selector's `Path` — is not confined to the request it originated in and must stay self-describing if copied elsewhere (e.g., into a response `Notice`). JACAL and YACAL carry the same binding via the value's own `Namespace` property, a mapping from prefix to namespace name ([[ACAL-XPath-1.0](#acal-xpath-10)] Section 5.2), and its own `XPathVersion` property, for the same reason.
+- The `md` prefix used inside the `XPath` expression string needs its own namespace binding, independent of `Content.Body`'s embedded `xmlns:md` declaration — the two are separate namespace scopes, one for the embedded document, one for the expression text itself ([[ACAL-XPath-1.0](#acal-xpath-10)] Annex C.2.1). In XML that binding comes from ordinary in-scope namespaces, so declaring `xmlns:md` on `RequestEntity` (an ancestor of the `Value` element carrying the expression) is sufficient — XML namespace resolution here is unchanged from XACML 3.0. JACAL and YACAL have no ancestor-based namespace inheritance, so the same binding is carried explicitly on the value's own `Namespace` property, a mapping from prefix to namespace name ([[ACAL-XPath-1.0](#acal-xpath-10)] Section 5.2).
+- The `xpathExpression` value carries its own `XPathVersion` here — in all three representations — because these examples are bare `RequestEntity` fragments with no enclosing `Request` and therefore no `XPathRequestDefaults` for the value to take its version from ([[ACAL-XPath-1.0](#acal-xpath-10)] Section 5.3.5). In a complete `Request` carrying an `XPathRequestDefaults`, the local `XPathVersion` could be omitted.
 - In XML, `Content.Body` holds the medical-record document as literal child elements. In JACAL, the same document is a JSON string, escaped per [[JACAL-Core-1.0](#jacal-core-10)] Section 5.3's rules for XML content in a JSON `Content` object. In YACAL, a block scalar (`|`) carries the same string without JSON's escaping.
-- The `content-selector` attribute's value — an `xpathExpression` — is itself a structured value (`XPathVersion`, `Namespace`, `XPathCategory`, and `XPath`), not a plain string, in every representation; only its syntax (XML attributes, a JSON object, a YAML mapping) changes.
+- The `content-selector` attribute's value — an `xpathExpression` — is itself a structured value (`XPath`, `XPathCategory`, a namespace context, and an XPath version), not a plain string, in every representation. In JACAL/YACAL the namespace context is the value's own `Namespace` property; in XML it is ordinary in-scope namespaces.
 - `document-id` is included to disambiguate which document instance the `content-selector` expression applies to, in case the same request references more than one such document.
 
 ---

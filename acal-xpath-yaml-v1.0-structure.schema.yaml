@@ -8,11 +8,11 @@ description: >
 $comment: >
   This schema does not replace the YACAL core structural schema. It defines the
   profile-specific object shapes that composition schemas may attach to the core
-  extension hooks for PolicyDefaultsType, AttributeSelectorType,
-  EntityAttributeSelectorType, and StructuredValueType. There is no
-  RequestDefaultsType extension hook attachment here: XPathRequestDefaultsType
-  was removed (issue #134) once request-side xpathExpression values became
-  fully self-contained.
+  extension hooks for PolicyDefaultsType, RequestDefaultsType,
+  AttributeSelectorType, EntityAttributeSelectorType, and StructuredValueType.
+  Issue #134: XPathDefaultsType lost its Namespace table; XPathRequestDefaults is
+  retained version-only, and a value's XPathVersion is optional (defaulting from
+  the applicable XPathRequestDefaults / XPathPolicyDefaults).
 $defs:
   NamespaceMapType:
     type: object
@@ -63,6 +63,15 @@ $defs:
         $ref: "#/$defs/XPathDefaultsType"
     additionalProperties: false
 
+  XPathRequestDefaultsTypeTree:
+    type: object
+    required:
+      - XPathRequestDefaults
+    properties:
+      XPathRequestDefaults:
+        $ref: "#/$defs/XPathDefaultsType"
+    additionalProperties: false
+
   XPathAttributeSelectorType:
     allOf:
       - $ref: "acal-core-yaml-v1.0-structure.schema.yaml#/$defs/AttributeSelectorType"
@@ -92,7 +101,6 @@ $defs:
   XPathExpressionValueType:
     type: object
     required:
-      - XPathVersion
       - Namespace
       - XPathCategory
       - XPath
@@ -106,11 +114,16 @@ $defs:
       XPath:
         $ref: "acal-core-yaml-v1.0-structure.schema.yaml#/$defs/AttributeSelectorPathType"
     unevaluatedProperties: false
+    $comment: >
+      XPathVersion is OPTIONAL (issue #134). In a Request or Policy a value with
+      no local XPathVersion takes it from the applicable XPathRequestDefaults /
+      XPathPolicyDefaults; a value in a response, or with no applicable Defaults,
+      MUST carry XPathVersion locally. That contextual requirement is not
+      expressible here - see acal-xpath-v1.0.md Section 5.3.5.
 
   XPathStructuredValueTypeExtension:
     type: object
     required:
-      - XPathVersion
       - Namespace
       - XPathCategory
       - XPath
@@ -130,12 +143,17 @@ $defs:
       Composition-facing helper for the core StructuredValueType extension
       hook. The optional DataType property is permitted here so the same
       helper works in both explicit-DataType and parent-inferred contexts.
-      XPathVersion and Namespace are required, matching XPathExpressionValueType
-      above (issue #134): a self-contained value carries both regardless of
-      which extension hook composes it in.
+      Namespace is required, matching XPathExpressionValueType above; XPathVersion
+      is optional there (issue #134) and defaults from the applicable
+      XPathRequestDefaults / XPathPolicyDefaults - but a value in a response, or
+      with no applicable Defaults, MUST carry XPathVersion locally (prose-only;
+      acal-xpath-v1.0.md Section 5.3.5).
 
   XPathPolicyDefaultsTypeExtension:
     $ref: "#/$defs/XPathPolicyDefaultsTypeTree"
+
+  XPathRequestDefaultsTypeExtension:
+    $ref: "#/$defs/XPathRequestDefaultsTypeTree"
 
   XPathAttributeSelectorTypeExtension:
     $ref: "#/$defs/XPathAttributeSelectorType"

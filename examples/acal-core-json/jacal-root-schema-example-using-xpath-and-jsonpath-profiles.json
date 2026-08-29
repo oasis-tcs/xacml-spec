@@ -2,6 +2,10 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "urn:example:implementation:specific:root:schema",
     "$defs": {
+        "EnabledRequestDefaultsExtensions": {
+            "$dynamicAnchor": "RequestDefaultsTypeExtensions",
+            "$ref": "urn:oasis:names:tc:jacal:1.0:xpath:schema#/$defs/XPathRequestDefaultsTypeTree"
+        },
         "EnabledPolicyDefaultsExtensions": {
             "$dynamicAnchor": "PolicyDefaultsTypeExtensions",
             "$ref": "urn:oasis:names:tc:jacal:1.0:xpath:schema#/$defs/XPathPolicyDefaultsTypeTree"

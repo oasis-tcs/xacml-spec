@@ -53,12 +53,19 @@
 		</xs:complexContent>
 	</xs:complexType>
 
-	<!-- Change (issue #134): XPathRequestDefaults removed. xpathExpression values now
-	carry their own XPathVersion attribute directly (see Annex C.2.1 of the XPath Profile
-	specification), since a value can be copied into a response, a cache, or another
-	policy where no RequestDefaults object is in scope to supply one; nothing in a
-	Request consumed XPathRequestDefaults for anything else. XPathPolicyDefaults is
-	unaffected: an attribute selector's Path expression never leaves the policy it is
-	written in, so a single policy-wide XPathVersion continues to serve every selector. -->
+	<!-- Change (issue #134): XPathDefaultsType lost its Namespace attribute/table.
+	Namespace bindings for XPath expressions are now attached per expression: to each
+	xpathExpression value and to each JACAL/YACAL attribute selector (in XML, selectors
+	and values both use ordinary in-scope namespaces). XPathDefaultsType now carries only
+	XPathVersion. XPathRequestDefaults is retained (version-only): an xpathExpression
+	value's XPathVersion attribute is OPTIONAL and, when absent, is taken from the
+	applicable XPathRequestDefaults (in a Request) or XPathPolicyDefaults (in a Policy);
+	a value in a response, or with no applicable Defaults, carries XPathVersion locally.
+	See Section 5.3.1, 5.3.2 and 5.3.5 of the XPath Profile specification. -->
 	<xs:element name="XPathPolicyDefaults" type="XPathDefaultsType" substitutionGroup="xacml:PolicyDefaults"/>
+	<xs:element name="XPathRequestDefaults" type="XPathDefaultsType" substitutionGroup="xacml:RequestDefaults"/>
+	<!-- In XSD 1.1, the 2 lines above may be replaced with:
+	<xs:element vc:minVersion="1.1" name="XPathDefaults" type="XPathDefaultsType" substitutionGroup="xacml:PolicyDefaults xacml:RequestDefaults"/>
+	-->
+
 </xs:schema>

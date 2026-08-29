@@ -47,6 +47,18 @@
 			},
 			"additionalProperties": false
 		},
+		"XPathRequestDefaultsTypeTree": {
+			"type": "object",
+			"required": [
+				"XPathRequestDefaults"
+			],
+			"properties": {
+				"XPathRequestDefaults": {
+					"$ref": "#/$defs/XPathDefaultsType"
+				}
+			},
+			"additionalProperties": false
+		},
 		"XPathAttributeSelectorType": {
 			"allOf": [
 				{
@@ -118,11 +130,11 @@
 		"XPathExpressionValueType": {
 			"type": "object",
 			"required": [
-				"XPathVersion",
 				"Namespace",
 				"XPathCategory",
 				"XPath"
 			],
+			"$comment": "XPathVersion is OPTIONAL here (issue #134). In a Request or Policy, a value with no local XPathVersion takes it from the applicable XPathRequestDefaults / XPathPolicyDefaults; a value in a response, or with no applicable Defaults in scope, MUST carry XPathVersion locally. That contextual requirement cannot be expressed in JSON Schema - see acal-xpath-v1.0.md Section 5.3.5.",
 			"properties": {
 				"XPathVersion": {
 					"$ref": "urn:oasis:names:tc:jacal:1.0:core:schema#/$defs/IdentifierType"

@@ -1205,7 +1205,7 @@
 		},
 		"RequestDefaultsTypeExtensionsDisabled": {
 			"$dynamicAnchor": "RequestDefaultsTypeExtensions",
-			"$comment": "No RequestDefaults extension supported by default. Create your own implementation-specific schema that overrides this $dynamicAnchor to support a profile-defined extension, if any ACAL Profile you support defines one. As of issue #134, no profile in this repository defines a RequestDefaults extension: the XPath Profile's XPathRequestDefaultsType was removed once xpathExpression values became self-contained, and the JSONPath Profile never defined one.",
+			"$comment": "No RequestDefaults extension supported by default. Create your own implementation-specific schema that overrides this $dynamicAnchor to support extensions (e.g. XPathRequestDefaults from XPath Profile). See jacal-root-schema-example-using-xpath-and-jsonpath-profiles.json for example.",
 			"not": true
 		},
 		"RequestType": {
