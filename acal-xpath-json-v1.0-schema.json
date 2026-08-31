@@ -4,7 +4,7 @@
 	"title": "JACAL - XPath Profile schema",
 	"description": "JACAL v1.0 (JSON Representation of ACAL Version 1.0) - XPath Profile schema. Copyright (c) OASIS Open 2026. All Rights Reserved. For more license and copyright information, and complete status, please see Annex A of the XPath Profile of JACAL v1.0 specification, which contains the License, Document Status and Notices.",
 	"$defs": {
-		"NamespaceMapType": {
+		"NamespaceDeclarationsType": {
 			"type": "object",
 			"propertyNames": {
 				"anyOf": [
@@ -15,7 +15,7 @@
 						"not": { "const": "xmlns" }
 					}
 				],
-				"$comment": "A namespace Prefix is an XML NCName [NAMESPACES], not an ACAL IdentifierType - it has no {ShortId} macro-substitution concept, and its lexical space is narrower. This pattern is an ASCII-practical approximation of NCName, in the same spirit as IdentifierType's own documented looseness (see that $def's $comment) but for a different, narrower grammar; 'xmlns' is excluded because [NAMESPACES] reserves it and never permits it as a prefix. The empty string key is the separate, valid default-namespace declaration."
+				"$comment": "A namespace Prefix is an XML NCName [NAMESPACES], not an ACAL IdentifierType (no {ShortId} macro-substitution). The normative lexical space is the full NCName production - see acal-xpath-v1.0.md Section 5.2 - which includes non-ASCII name characters. This pattern is an ASCII-only approximation: a portable JSON Schema 'pattern' cannot express the full NCName character ranges. It is a validation floor, not a narrowing - an instance whose prefix is a valid non-ASCII NCName is conformant per Section 5.2 even though it will not match here. 'xmlns' is excluded because [NAMESPACES] reserves it and never permits it as a prefix. The empty string key is the separate, valid default-namespace declaration."
 			},
 			"additionalProperties": {
 				"type": "string",
@@ -67,14 +67,14 @@
 				{
 					"type": "object",
 					"required": [
-						"Namespace"
+						"Namespaces"
 					],
 					"properties": {
 						"ContextSelectorId": {
 							"$ref": "urn:oasis:names:tc:jacal:1.0:core:schema#/$defs/IdentifierType"
 						},
-						"Namespace": {
-							"$ref": "#/$defs/NamespaceMapType"
+						"Namespaces": {
+							"$ref": "#/$defs/NamespaceDeclarationsType"
 						}
 					}
 				}
@@ -89,14 +89,14 @@
 				{
 					"type": "object",
 					"required": [
-						"Namespace"
+						"Namespaces"
 					],
 					"properties": {
 						"ContextSelectorId": {
 							"$ref": "urn:oasis:names:tc:jacal:1.0:core:schema#/$defs/IdentifierType"
 						},
-						"Namespace": {
-							"$ref": "#/$defs/NamespaceMapType"
+						"Namespaces": {
+							"$ref": "#/$defs/NamespaceDeclarationsType"
 						}
 					}
 				}
@@ -130,7 +130,7 @@
 		"XPathExpressionValueType": {
 			"type": "object",
 			"required": [
-				"Namespace",
+				"Namespaces",
 				"XPathCategory",
 				"XPath"
 			],
@@ -139,8 +139,8 @@
 				"XPathVersion": {
 					"$ref": "urn:oasis:names:tc:jacal:1.0:core:schema#/$defs/IdentifierType"
 				},
-				"Namespace": {
-					"$ref": "#/$defs/NamespaceMapType"
+				"Namespaces": {
+					"$ref": "#/$defs/NamespaceDeclarationsType"
 				},
 				"XPathCategory": {
 					"$ref": "urn:oasis:names:tc:jacal:1.0:core:schema#/$defs/IdentifierType"

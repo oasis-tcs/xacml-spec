@@ -479,7 +479,7 @@ A request selecting every `<md:patient>` node inside a batch medical-records doc
                 "Value": [
                     {
                         "XPathVersion": "https://www.w3.org/TR/xpath20/",
-                        "Namespace": {
+                        "Namespaces": {
                             "md": "urn:example:med:schemas:record"
                         },
                         "XPathCategory": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
@@ -506,7 +506,7 @@ RequestEntity:
       DataType: "urn:oasis:names:tc:acal:1.0:data-type:xpathExpression"
       Value:
         - XPathVersion: "https://www.w3.org/TR/xpath20/"
-          Namespace:
+          Namespaces:
             md: "urn:example:med:schemas:record"
           XPathCategory: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
           XPath: "md:records/md:patient"
@@ -515,7 +515,7 @@ RequestEntity:
 **What this shows**
 
 - Resolves, per [Section 5.2](#52-nodes-identified-by-xpath-expression), into one `Individual Decision Request` per matched `<md:patient>` node, each carrying the same `Content` with `…:multiple:content-selector` replaced by a plain `content-selector` attribute ([[ACAL-XPath-1.0](#acal-xpath-10)] Annex D.3) selecting that single node.
-- The `md` prefix inside the `XPath` expression needs its own namespace binding, separate from `Content.Body`'s embedded `xmlns:md`, for the same reason as [[ACAL-Hierarchical-1.0](#acal-hierarchical-10)] Section 7.1's equivalent example: in XML it comes from ordinary in-scope namespaces (here, `xmlns:md` on `RequestEntity`, an ancestor of the `Value` element), unchanged from XACML 3.0; in JACAL/YACAL, which have no ancestor inheritance, it is carried on the value's own `Namespace` property (a mapping from prefix to namespace name). The value also carries its own `XPathVersion` in all three representations, because this is a bare `RequestEntity` fragment with no enclosing `Request` and hence no `XPathRequestDefaults` for the value to take its version from ([[ACAL-XPath-1.0](#acal-xpath-10)] Section 5.3.5) — in a complete `Request` with an `XPathRequestDefaults` it could be omitted. `Content.Body`'s own encoding (literal elements in XML, an escaped string in JACAL, a block scalar in YACAL) is what stays representation-specific beyond that; the XPath expression itself is identical in all three.
+- The `md` prefix inside the `XPath` expression needs its own namespace binding, separate from `Content.Body`'s embedded `xmlns:md`, for the same reason as [[ACAL-Hierarchical-1.0](#acal-hierarchical-10)] Section 7.1's equivalent example: in XML it comes from ordinary in-scope namespaces (here, `xmlns:md` on `RequestEntity`, an ancestor of the `Value` element), unchanged from XACML 3.0; in JACAL/YACAL, which have no ancestor inheritance, it is carried on the value's own `Namespaces` property (a mapping from prefix to namespace name). The value also carries its own `XPathVersion` in all three representations, because this is a bare `RequestEntity` fragment with no enclosing `Request` and hence no `XPathRequestDefaults` for the value to take its version from ([[ACAL-XPath-1.0](#acal-xpath-10)] Section 5.3.5) — in a complete `Request` with an `XPathRequestDefaults` it could be omitted. `Content.Body`'s own encoding (literal elements in XML, an escaped string in JACAL, a block scalar in YACAL) is what stays representation-specific beyond that; the XPath expression itself is identical in all three.
 
 ---
 

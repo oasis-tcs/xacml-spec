@@ -10,11 +10,11 @@ $comment: >
   profile-specific object shapes that composition schemas may attach to the core
   extension hooks for PolicyDefaultsType, RequestDefaultsType,
   AttributeSelectorType, EntityAttributeSelectorType, and StructuredValueType.
-  Issue #134: XPathDefaultsType lost its Namespace table; XPathRequestDefaults is
+  Issue #134: XPathDefaultsType lost its namespace table; XPathRequestDefaults is
   retained version-only, and a value's XPathVersion is optional (defaulting from
   the applicable XPathRequestDefaults / XPathPolicyDefaults).
 $defs:
-  NamespaceMapType:
+  NamespaceDeclarationsType:
     type: object
     propertyNames:
       anyOf:
@@ -25,13 +25,16 @@ $defs:
             const: "xmlns"
       $comment: >
         A namespace Prefix is an XML NCName [NAMESPACES], not an ACAL
-        IdentifierType - it has no {ShortId} macro-substitution concept, and
-        its lexical space is narrower. This pattern is an ASCII-practical
-        approximation of NCName, in the same spirit as IdentifierType's own
-        documented looseness (see that $def's $comment) but for a different,
-        narrower grammar; 'xmlns' is excluded because [NAMESPACES] reserves it
-        and never permits it as a prefix. The empty string key is the
-        separate, valid default-namespace declaration.
+        IdentifierType (no {ShortId} macro-substitution). The normative lexical
+        space is the full NCName production - see acal-xpath-v1.0.md Section 5.2
+        - which includes non-ASCII name characters. This pattern is an
+        ASCII-only approximation: a portable JSON Schema 'pattern' cannot
+        express the full NCName character ranges. It is a validation floor, not
+        a narrowing - an instance whose prefix is a valid non-ASCII NCName is
+        conformant per Section 5.2 even though it will not match here. 'xmlns'
+        is excluded because [NAMESPACES] reserves it and never permits it as a
+        prefix. The empty string key is the separate, valid default-namespace
+        declaration.
     additionalProperties:
       type: string
       format: uri-reference
@@ -77,12 +80,12 @@ $defs:
       - $ref: "acal-core-yaml-v1.0-structure.schema.yaml#/$defs/AttributeSelectorType"
       - type: object
         required:
-          - Namespace
+          - Namespaces
         properties:
           ContextSelectorId:
             $ref: "acal-core-yaml-v1.0-structure.schema.yaml#/$defs/IdentifierType"
-          Namespace:
-            $ref: "#/$defs/NamespaceMapType"
+          Namespaces:
+            $ref: "#/$defs/NamespaceDeclarationsType"
     unevaluatedProperties: false
 
   XPathEntityAttributeSelectorType:
@@ -90,25 +93,25 @@ $defs:
       - $ref: "acal-core-yaml-v1.0-structure.schema.yaml#/$defs/EntityAttributeSelectorType"
       - type: object
         required:
-          - Namespace
+          - Namespaces
         properties:
           ContextSelectorId:
             $ref: "acal-core-yaml-v1.0-structure.schema.yaml#/$defs/IdentifierType"
-          Namespace:
-            $ref: "#/$defs/NamespaceMapType"
+          Namespaces:
+            $ref: "#/$defs/NamespaceDeclarationsType"
     unevaluatedProperties: false
 
   XPathExpressionValueType:
     type: object
     required:
-      - Namespace
+      - Namespaces
       - XPathCategory
       - XPath
     properties:
       XPathVersion:
         $ref: "acal-core-yaml-v1.0-structure.schema.yaml#/$defs/IdentifierType"
-      Namespace:
-        $ref: "#/$defs/NamespaceMapType"
+      Namespaces:
+        $ref: "#/$defs/NamespaceDeclarationsType"
       XPathCategory:
         $ref: "acal-core-yaml-v1.0-structure.schema.yaml#/$defs/IdentifierType"
       XPath:
@@ -124,7 +127,7 @@ $defs:
   XPathStructuredValueTypeExtension:
     type: object
     required:
-      - Namespace
+      - Namespaces
       - XPathCategory
       - XPath
     properties:
@@ -132,8 +135,8 @@ $defs:
         $ref: "acal-core-yaml-v1.0-structure.schema.yaml#/$defs/IdentifierType"
       XPathVersion:
         $ref: "acal-core-yaml-v1.0-structure.schema.yaml#/$defs/IdentifierType"
-      Namespace:
-        $ref: "#/$defs/NamespaceMapType"
+      Namespaces:
+        $ref: "#/$defs/NamespaceDeclarationsType"
       XPathCategory:
         $ref: "acal-core-yaml-v1.0-structure.schema.yaml#/$defs/IdentifierType"
       XPath:
@@ -143,7 +146,7 @@ $defs:
       Composition-facing helper for the core StructuredValueType extension
       hook. The optional DataType property is permitted here so the same
       helper works in both explicit-DataType and parent-inferred contexts.
-      Namespace is required, matching XPathExpressionValueType above; XPathVersion
+      Namespaces is required, matching XPathExpressionValueType above; XPathVersion
       is optional there (issue #134) and defaults from the applicable
       XPathRequestDefaults / XPathPolicyDefaults - but a value in a response, or
       with no applicable Defaults, MUST carry XPathVersion locally (prose-only;

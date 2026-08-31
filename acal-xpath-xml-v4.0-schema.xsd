@@ -53,7 +53,7 @@
 		</xs:complexContent>
 	</xs:complexType>
 
-	<!-- Change (issue #134): XPathDefaultsType lost its Namespace attribute/table.
+	<!-- Change (issue #134): XPathDefaultsType lost its namespace attribute/table.
 	Namespace bindings for XPath expressions are now attached per expression: to each
 	xpathExpression value and to each JACAL/YACAL attribute selector (in XML, selectors
 	and values both use ordinary in-scope namespaces). XPathDefaultsType now carries only

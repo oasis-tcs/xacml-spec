@@ -37,7 +37,7 @@
                                         {
                                             "XPathAttributeSelector": {
                                                 "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
-                                                "Namespace": {
+                                                "Namespaces": {
                                                     "md": "urn:example:med:schemas:record"
                                                 },
                                                 "Path": "md:record/md:patient/md:patient-number/text()"
@@ -109,7 +109,7 @@
                                             },
                                             {
                                                 "Value": {
-                                                    "Namespace": {
+                                                    "Namespaces": {
                                                         "md": "urn:example:med:schemas:record"
                                                     },
                                                     "XPathCategory": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",

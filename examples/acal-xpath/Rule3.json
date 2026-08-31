@@ -64,7 +64,7 @@
                                             },
                                             {
                                                 "Value": {
-                                                    "Namespace": {
+                                                    "Namespaces": {
                                                         "md": "urn:example:med:schemas:record"
                                                     },
                                                     "XPathCategory": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
@@ -120,7 +120,7 @@
                                                         {
                                                             "XPathAttributeSelector": {
                                                                 "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
-                                                                "Namespace": {
+                                                                "Namespaces": {
                                                                     "md": "urn:example:med:schemas:record"
                                                                 },
                                                                 "Path": "md:record/md:primaryCarePhysician/md:registrationID/text()"
@@ -150,7 +150,7 @@
                             "XPathAttributeSelector": {
                                 "MustBePresent": true,
                                 "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
-                                "Namespace": {
+                                "Namespaces": {
                                     "md": "urn:example:med:schemas:record"
                                 },
                                 "Path": "md:record/md:patient/md:patientContact/md:email/text()"
