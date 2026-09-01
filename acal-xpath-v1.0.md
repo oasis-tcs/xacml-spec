@@ -644,6 +644,8 @@ A `XPathExpressionValueType` object has the following properties:
 
 ## Supported XPath versions
 
+ACAL supports XPath 2.0, XPath 3.0, and XPath 3.1. An `XPathVersion` value MUST evaluate to one of the three identifiers given below (after any `{ShortId}` expansion); no other XPath version is available.
+
 The `XPathVersion` property contains an `IdentifierType` value that specifies an XPath version. It appears on a `XPathPolicyDefaultsType` object ([Section 5.3.1](#531-policydefaultstype-extension---xpathpolicydefaultstype)), a `XPathRequestDefaultsType` object ([Section 5.3.2](#532-requestdefaultstype-extension---xpathrequestdefaultstype)), and — optionally — a `XPathExpressionValueType` object ([Section 5.3.5](#535-datatype-extension---xpathexpressionvaluetype)); [Section 5.3.5](#535-datatype-extension---xpathexpressionvaluetype) gives the rule for resolving the effective version of an `xpathExpression` value from a local `XPathVersion` or, absent one, the applicable Defaults object.
 
 To specify XPath 2.0 the `IdentifierType` value MUST evaluate to `https://www.w3.org/TR/xpath20/`. The former XPath 2.0 identifier from [[XACML 3.0](#xacml)], `http://www.w3.org/TR/2007/REC-xpath20-20070123`, is not a valid ACAL XPath-version identifier: it is not recognized as an alias for the identifier above, and this profile states no equivalence between the two. Translating an XACML 3.0 policy or request to ACAL substitutes `https://www.w3.org/TR/xpath20/` for it.
@@ -652,9 +654,9 @@ To specify XPath 3.0, the `IdentifierType` value MUST evaluate to `https://www.w
 
 To specify XPath 3.1, the `IdentifierType` value MUST evaluate to `https://www.w3.org/TR/xpath-31/`.
 
-XPath 1.0, and therefore the XPath 1.0 identifier `https://www.w3.org/TR/1999/REC-xpath-19991116/`, is deprecated.
+XPath 1.0 is not a supported XPath version for ACAL. The implementation-defined-behavior rules in the sections below, and the XPath-based functions ([Annex C.3.1](#c31-xpath-based-functions)), are defined only for the supported versions listed above, whose result data model — a sequence of items — is not the one XPath 1.0 uses (a node-set, a boolean, a number, or a string). The XPath 1.0 identifier `https://www.w3.org/TR/1999/REC-xpath-19991116/` is correspondingly not a valid ACAL `XPathVersion` value.
 
-The XPath specification leaves a number of aspects of behavior implementation-defined. The following sections defines how XPath 2.0 and later versions SHALL behave in an ACAL implementation.
+The XPath specification leaves a number of aspects of behavior implementation-defined. The following sections define how the supported XPath versions SHALL behave in an ACAL implementation.
 
 ## XPath 2.0 Implementation-Defined Items
 
@@ -1168,7 +1170,7 @@ The XPath expression MUST be evaluated in a context which is equivalent of a sta
 
 ## C.3 Functions
 
-Unless otherwise specified, if an argument of one of these functions were to evaluate to `Indeterminate`, then the function SHALL evaluates to `Indeterminate`.
+Unless otherwise specified, if an argument of one of these functions were to evaluate to `Indeterminate`, then the function SHALL evaluate to `Indeterminate`.
 
 Note that in each case an implementation is conformant as long as it produces the same result as is specified here, regardless of how and in what order the implementation behaves internally.
 
@@ -1177,19 +1179,30 @@ Note that in each case an implementation is conformant as long as it produces th
 
 _**Supporting these functions is optional.**_
 
-This section specifies functions that take XPath expressions for arguments. An XPath expression evaluates to a node-set, which is a set of XML nodes that match the expression. A node or node-set is not in the formal data type system of ACAL. All comparison or other operations on node-sets are performed in isolation of the particular function specified. The context nodes and namespace mappings of the XPath expressions are defined by the XPath data type, see [Annex C.2.1](#c21-xpath-expression). The following functions are defined:
+This section specifies functions that take XPath expressions for arguments. Each such expression is evaluated using the effective XPath version and the namespace context carried by the `xpathExpression` value ([Section 5.3.5](#535-datatype-extension---xpathexpressionvaluetype)); its context node is the document node defined in [Annex C.2.1](#c21-xpath-expression) for the `ContentType` object of the value's `XPathCategory`.
+
+An argument expression is expected to evaluate to a sequence of nodes. Each function below operates on the **set of distinct nodes** in that sequence: two occurrences of the same node — the same node identity, the `is` relationship of [XPath] — count once, and the order of the sequence is immaterial. Nodes and sets of nodes are not part of ACAL's formal data type system; they exist only within the evaluation of these functions, and every comparison or other operation on them is local to the evaluation of the particular function.
+
+The following apply to every function in this section, in the order given:
+
+1. An argument expression whose category's `ContentType` object is not present in the request contributes no nodes; steps 2 and 3 consider only the remaining ("present") argument expressions.
+2. If evaluating a present argument expression raises an XPath error, the function SHALL evaluate to `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:processing-error` — the same rule [Section 6](#6-xpath-definitions) states for an XPath error in an attribute selector.
+3. If a present argument expression evaluates to a sequence that contains an item which is not a node, the function SHALL evaluate to `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`.
+4. Otherwise the function is computed over the set of nodes each argument selects. An argument that selects no nodes — whether by step 1, or because its expression matched nothing — contributes the empty set: `xpath-node-count` then returns zero, and `xpath-node-equal` and `xpath-node-match` return `false` whenever *either* argument's set is empty. (For the cases that reach this step, this generalizes [[XACML 3.0](#xacml)]'s rule that an absent `ContentType` makes `xpath-node-count` return zero and the comparison functions return `false`.)
+
+The following functions are defined:
 
 `urn:oasis:names:tc:acal:1.0:function:xpath-node-count`
 
-: This function SHALL take an `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` as an argument and evaluates to an `urn:oasis:names:tc:acal:1.0:data-type:integer`. The value returned from the function SHALL be the count of the nodes within the node-set that match the given XPath expression. If the `ContentType` object of the category to which the XPath expression applies is not present in the request, this function SHALL return a value of zero.
+: This function SHALL take an `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` as an argument and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:integer`. The value returned from the function SHALL be the number of distinct nodes selected by the given XPath expression (see step 4 of the preamble for the case where the expression selects no nodes).
 
 `urn:oasis:names:tc:acal:1.0:function:xpath-node-equal`
 
-: This function SHALL take two `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` arguments and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The function SHALL return `true` if any of the XML nodes in the node-set matched by the first argument equals any of the XML nodes in the node-set matched by the second argument. Two nodes are considered equal if they have the same identity. If the `ContentType` object of the category to which either XPath expression applies is not present in the request, this function SHALL return a value of `false`.
+: This function SHALL take two `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` arguments and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The function SHALL return `true` if some node selected by the first argument is the same node as some node selected by the second argument — that is, if the two nodes have the same identity (the `is` relationship of [XPath]) — and `false` otherwise (including whenever either argument selects no nodes; see step 4 of the preamble).
 
 `urn:oasis:names:tc:acal:1.0:function:xpath-node-match`
 
-: This function SHALL take two `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` arguments and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. This function SHALL evaluate to `true` if one of the following two conditions is satisfied: (1) Any of the XML nodes in the node-set matched by the first argument is equal to any of the XML nodes in the node-set matched by the second argument; (2) any node below any of the XML nodes in the node-set matched by the first argument is equal to any of the XML nodes in the node-set matched by the second argument. Two nodes are considered equal if they have the same identity. If the `ContentType` object of the category to which either XPath expression applies is not present in the request, this function SHALL return a value of `false`. Note: The first condition is equivalent to `xpath-node-equal`, and guarantees that `xpath-node-equal` is a special case of `xpath-node-match`.
+: This function SHALL take two `urn:oasis:names:tc:acal:1.0:data-type:xpathExpression` arguments and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. The function SHALL return `true` if either of the following holds: (1) some node selected by the first argument is the same node as some node selected by the second argument; (2) some node selected by the second argument is a descendant of some node selected by the first argument. Node sameness is node identity (the `is` relationship of [XPath]). The function SHALL return `false` if neither condition holds, including whenever either argument selects no nodes (see step 4 of the preamble). Note: condition (1) is equivalent to `xpath-node-equal`, so `xpath-node-equal` is a special case of `xpath-node-match`.
 
 
 # Annex D ACAL Identifiers
@@ -1381,7 +1394,7 @@ This ACAL Profile is a successor to the set of XPath-based features of [[XACML 3
    * `Path` expression (XPath) can use *ACAL* variables from `VariableDefinition`s as XPath variables.
 
 - XPath versions: 
-  - Deprecated XPath version 1.0;
+  - Dropped XPath 1.0: it is not a supported XPath version for ACAL (it was an option in [[XACML 3.0](#xacml)]), and its identifier `https://www.w3.org/TR/1999/REC-xpath-19991116/` is not a valid ACAL `XPathVersion` value. XPath 1.0's result data model is incompatible with the sequence-of-items model the rest of this profile assumes (see [Section 6](#6-xpath-definitions)).
   - Replaced XACML 3.0's XPath 2.0 identifier `http://www.w3.org/TR/2007/REC-xpath20-20070123` with `https://www.w3.org/TR/xpath20/`; the old identifier is not a valid ACAL value and is not a recognized alias (see [Section 6](#6-xpath-definitions)), so an XACML 3.0 → ACAL translation substitutes it.
   - Added support for XPath 3.0 and 3.1.
 
@@ -1392,6 +1405,8 @@ This ACAL Profile is a successor to the set of XPath-based features of [[XACML 3
 - An `xpathExpression` value MAY now carry its own `XPathVersion` ([Section 5.3.5](#535-datatype-extension---xpathexpressionvaluetype)). In a `Request` or `Policy` the property is optional and defaults from the applicable `XPathRequestDefaultsType`/`XPathPolicyDefaultsType` object, as in [[XACML 3.0](#xacml)]; a value in a decision response (`Notice`, `AttributeAssignment`), or one with no applicable Defaults object, carries it locally. The version is resolved once, when the value is constructed, and does not change if the value is later moved or copied. [[XACML 3.0](#xacml)] could already carry an `xpathExpression` in an obligation or advice `AttributeAssignment`, but it had no per-value XPath version and defined no XPath-version default on a response — so a response-side value had no specified version. This closes that gap without forcing every request-side value to restate a version its `Request` already establishes. A response-side value does **not** inherit the version of the request that produced it: a response can be logged, forwarded, or evaluated apart from its request, so the version travels in the value itself.
 
 - The `content-selector` attribute identifier is defined by this profile ([Annex D.3](#d3-attributes)), whereas its XACML 3.0 counterpart `urn:oasis:names:tc:xacml:3.0:content-selector` is defined by the XACML v3.0 Hierarchical Resource Profile [[Hier](#hier)] even though it is consumed by the `ContextSelectorId` mechanism of XACML core. The identifier is not specific to hierarchical resources, so ACAL defines it alongside the mechanism that consumes it.
+
+- The XPath-based functions `xpath-node-count`, `xpath-node-equal` and `xpath-node-match` ([Annex C.3.1](#c31-xpath-based-functions)) are restated in terms of the data model of the supported [XPath] versions — an argument expression yields a **sequence of nodes**, which each function treats as a set (repeated occurrences of the same node are ignored, order is immaterial), and node sameness is the `is` relationship — rather than the XPath 1.0 "node-set" vocabulary [[XACML 3.0](#xacml)] inherited, XPath 1.0 no longer being a supported version ([Section 6](#6-xpath-definitions)). Two cases [[XACML 3.0](#xacml)] left unstated are now defined: an argument expression that raises an XPath error, and one that evaluates to a sequence containing a non-node item, each makes the function return `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`. The absent-`ContentType` case is generalized to "an argument that selects no nodes" (the previous zero / `false` results still follow when no present argument raises an XPath error or yields a non-node item). The functions' results are otherwise unchanged for any expression that evaluates to nodes.
 
 ## Revision History
 
