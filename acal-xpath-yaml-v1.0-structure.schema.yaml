@@ -87,11 +87,11 @@ $defs:
           Namespaces:
             $ref: "#/$defs/NamespaceDeclarationsType"
         $comment: >
-          Namespaces is OPTIONAL (issue #134): absent means the Path expression
-          needs no namespace-prefix bindings (e.g. it uses no prefixed names, or
-          matches namespaces via wildcards / namespace-uri() / URIQualifiedNames).
-          There is no Defaults-level namespace table to fall back on - see
-          acal-xpath-v1.0.md Section 5.3.3.
+          Namespaces is OPTIONAL (issue #134): absent (equivalently empty) means
+          the Path expression needs no supplied namespace-prefix bindings - all
+          its names resolve without one, or it matches namespaces via wildcards /
+          namespace-uri() / URIQualifiedNames. There is no Defaults-level
+          namespace table to fall back on - see acal-xpath-v1.0.md Section 5.3.3.
     unevaluatedProperties: false
 
   XPathEntityAttributeSelectorType:
