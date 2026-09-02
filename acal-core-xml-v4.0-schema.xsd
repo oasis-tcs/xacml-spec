@@ -72,25 +72,20 @@
 		<!-- 
 		As an alternative, you may collect all the QNames of the elements in RequestDefaults substitution
 		group (of type xacml:DefaultsType) from the ACAL Profiles supported by your implementation
-		(no profile in this repository currently contributes one - see the note below), i.e.
-		ns1:SomeDefaults1, ns2:SomeDefaults2, etc. and use an assertion
+		(e.g. XPath Profile), i.e. ns1:SomeDefaults1, ns2:SomeDefaults2, etc. and use an assertion
 		as follows:
 
 		<xs:assert vc:minVersion="1.1" test="count(ns1:SomeDefaults1) le 1 and count(ns2:SomeDefaults2) le
 		1
 		and..."/>
 		
-		Here is an example for a hypothetical profile "SomeProfile" contributing a RequestDefaults
-		extension element "SomeProfileRequestDefaults":
-
-			<xs:assert vc:minVersion="1.1" test="count(sp:SomeProfileRequestDefaults) le 1">
-
+		Here is an example when the XPath profile is supported: (you may comment this if this is not the
+		case):
+							
+			<xs:assert vc:minVersion="1.1" test="count(xpath:XPathRequestDefaults) le 1">
+							
 		Then add the namespace declarations to the xs:schema root element as necessary for each
-		RequestDefaults element, e.g. xmlns:sp="urn:oasis:names:tc:xacml:4.0:someprofile:schema"
-
-		(The XPath Profile no longer contributes a RequestDefaults extension element as of issue
-		#134 - XPathRequestDefaults was removed, since xpathExpression values now carry their own
-		XPathVersion directly rather than relying on a Request-wide default.)
+		RequestDefaults element, e.g. xmlns:xpath="urn:oasis:names:tc:xacml:4.0:xpath:schema"
 		-->
 	</xs:complexType>
 
@@ -659,9 +654,7 @@ which is to be used in Results (no Content or IncludeInResult attributes).
 		<xs:annotation>
 			<xs:documentation xml:lang="en"> ACAL Profiles may extend DefaultsType to support both
 				PolicyDefaults and RequestDefaults with one single complexType and
-				substitutionGroup(s) as follows. (The XPath Profile's XSD no longer does this as of
-				issue #134 - its XPathDefaultsType now supports XPathPolicyDefaults only, since
-				XPathRequestDefaults was removed once xpathExpression values became self-contained.):
+				substitutionGroup(s) as follows (see XPath Profile's XSD for another example):
 						
 				<xs:complexType name="MyProfileDefaultsType">
 					<xs:complexContent> 

@@ -22,7 +22,7 @@ $defs:
         - type: string
           pattern: "^[A-Za-z_][A-Za-z0-9_.-]*$"
           not:
-            const: "xmlns"
+            enum: ["xmlns", "xml"]
       $comment: >
         A namespace Prefix is an XML NCName [NAMESPACES], not an ACAL
         IdentifierType (no {ShortId} macro-substitution). The normative lexical
@@ -32,9 +32,11 @@ $defs:
         express the full NCName character ranges. It is a validation floor, not
         a narrowing - an instance whose prefix is a valid non-ASCII NCName is
         conformant per Section 5.2 even though it will not match here. 'xmlns'
-        is excluded because [NAMESPACES] reserves it and never permits it as a
-        prefix. The empty string key is the separate, valid default-namespace
-        declaration.
+        is never permitted as a prefix by [NAMESPACES]; 'xml' is permitted only
+        when bound to its own fixed URI, and Section 5.2 already treats that
+        binding as implicitly available in every representation - so neither is
+        a useful key here and both are excluded. The empty string key is the
+        separate, valid default-namespace declaration.
     additionalProperties:
       type: string
       format: uri-reference
@@ -79,32 +81,37 @@ $defs:
     allOf:
       - $ref: "acal-core-yaml-v1.0-structure.schema.yaml#/$defs/AttributeSelectorType"
       - type: object
-        required:
-          - Namespaces
         properties:
           ContextSelectorId:
             $ref: "acal-core-yaml-v1.0-structure.schema.yaml#/$defs/IdentifierType"
           Namespaces:
             $ref: "#/$defs/NamespaceDeclarationsType"
+        $comment: >
+          Namespaces is OPTIONAL (issue #134): absent means the Path expression
+          needs no namespace-prefix bindings (e.g. it uses no prefixed names, or
+          matches namespaces via wildcards / namespace-uri() / URIQualifiedNames).
+          There is no Defaults-level namespace table to fall back on - see
+          acal-xpath-v1.0.md Section 5.3.3.
     unevaluatedProperties: false
 
   XPathEntityAttributeSelectorType:
     allOf:
       - $ref: "acal-core-yaml-v1.0-structure.schema.yaml#/$defs/EntityAttributeSelectorType"
       - type: object
-        required:
-          - Namespaces
         properties:
           ContextSelectorId:
             $ref: "acal-core-yaml-v1.0-structure.schema.yaml#/$defs/IdentifierType"
           Namespaces:
             $ref: "#/$defs/NamespaceDeclarationsType"
+        $comment: >
+          Namespaces is OPTIONAL (issue #134): absent means the Path expression
+          needs no namespace-prefix bindings. Same rule as
+          XPathAttributeSelectorType - see acal-xpath-v1.0.md Section 5.3.4.
     unevaluatedProperties: false
 
   XPathExpressionValueType:
     type: object
     required:
-      - Namespaces
       - XPathCategory
       - XPath
     properties:
@@ -118,16 +125,17 @@ $defs:
         $ref: "acal-core-yaml-v1.0-structure.schema.yaml#/$defs/AttributeSelectorPathType"
     unevaluatedProperties: false
     $comment: >
-      XPathVersion is OPTIONAL (issue #134). In a Request or Policy a value with
-      no local XPathVersion takes it from the applicable XPathRequestDefaults /
-      XPathPolicyDefaults; a value in a response, or with no applicable Defaults,
-      MUST carry XPathVersion locally. That contextual requirement is not
-      expressible here - see acal-xpath-v1.0.md Section 5.3.5.
+      XPathVersion and Namespaces are both OPTIONAL (issue #134). XPathVersion:
+      in a Request or Policy a value with no local XPathVersion takes it from
+      the applicable XPathRequestDefaults / XPathPolicyDefaults; a value in a
+      response, or with no applicable Defaults, MUST carry XPathVersion locally
+      (not expressible here). Namespaces: absent means the XPath expression
+      needs no namespace-prefix bindings; there is no Defaults-level namespace
+      table to fall back on. See acal-xpath-v1.0.md Section 5.3.5.
 
   XPathStructuredValueTypeExtension:
     type: object
     required:
-      - Namespaces
       - XPathCategory
       - XPath
     properties:
@@ -146,11 +154,13 @@ $defs:
       Composition-facing helper for the core StructuredValueType extension
       hook. The optional DataType property is permitted here so the same
       helper works in both explicit-DataType and parent-inferred contexts.
-      Namespaces is required, matching XPathExpressionValueType above; XPathVersion
-      is optional there (issue #134) and defaults from the applicable
-      XPathRequestDefaults / XPathPolicyDefaults - but a value in a response, or
-      with no applicable Defaults, MUST carry XPathVersion locally (prose-only;
-      acal-xpath-v1.0.md Section 5.3.5).
+      Namespaces is optional, matching XPathExpressionValueType above (issue
+      #134): absent means the XPath expression needs no namespace-prefix
+      bindings, and there is no Defaults-level namespace table. XPathVersion is
+      likewise optional and defaults from the applicable XPathRequestDefaults /
+      XPathPolicyDefaults - but a value in a response, or with no applicable
+      Defaults, MUST carry XPathVersion locally (prose-only; acal-xpath-v1.0.md
+      Section 5.3.5).
 
   XPathPolicyDefaultsTypeExtension:
     $ref: "#/$defs/XPathPolicyDefaultsTypeTree"

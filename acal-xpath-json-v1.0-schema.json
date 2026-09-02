@@ -12,10 +12,10 @@
 					{
 						"type": "string",
 						"pattern": "^[A-Za-z_][A-Za-z0-9_.-]*$",
-						"not": { "const": "xmlns" }
+						"not": { "enum": ["xmlns", "xml"] }
 					}
 				],
-				"$comment": "A namespace Prefix is an XML NCName [NAMESPACES], not an ACAL IdentifierType (no {ShortId} macro-substitution). The normative lexical space is the full NCName production - see acal-xpath-v1.0.md Section 5.2 - which includes non-ASCII name characters. This pattern is an ASCII-only approximation: a portable JSON Schema 'pattern' cannot express the full NCName character ranges. It is a validation floor, not a narrowing - an instance whose prefix is a valid non-ASCII NCName is conformant per Section 5.2 even though it will not match here. 'xmlns' is excluded because [NAMESPACES] reserves it and never permits it as a prefix. The empty string key is the separate, valid default-namespace declaration."
+				"$comment": "A namespace Prefix is an XML NCName [NAMESPACES], not an ACAL IdentifierType (no {ShortId} macro-substitution). The normative lexical space is the full NCName production - see acal-xpath-v1.0.md Section 5.2 - which includes non-ASCII name characters. This pattern is an ASCII-only approximation: a portable JSON Schema 'pattern' cannot express the full NCName character ranges. It is a validation floor, not a narrowing - an instance whose prefix is a valid non-ASCII NCName is conformant per Section 5.2 even though it will not match here. 'xmlns' is never permitted as a prefix by [NAMESPACES]; 'xml' is permitted only when bound to its own fixed URI, and Section 5.2 already treats that binding as implicitly available in every representation - so neither is a useful key here and both are excluded. The empty string key is the separate, valid default-namespace declaration."
 			},
 			"additionalProperties": {
 				"type": "string",
@@ -66,9 +66,6 @@
 				},
 				{
 					"type": "object",
-					"required": [
-						"Namespaces"
-					],
 					"properties": {
 						"ContextSelectorId": {
 							"$ref": "urn:oasis:names:tc:jacal:1.0:core:schema#/$defs/IdentifierType"
@@ -76,7 +73,8 @@
 						"Namespaces": {
 							"$ref": "#/$defs/NamespaceDeclarationsType"
 						}
-					}
+					},
+					"$comment": "Namespaces is OPTIONAL (issue #134): absent means the Path expression needs no namespace-prefix bindings (e.g. it uses no prefixed names, or matches namespaces via wildcards / namespace-uri() / URIQualifiedNames). There is no Defaults-level namespace table to fall back on - see acal-xpath-v1.0.md Section 5.3.3."
 				}
 			],
 			"unevaluatedProperties": false
@@ -88,9 +86,6 @@
 				},
 				{
 					"type": "object",
-					"required": [
-						"Namespaces"
-					],
 					"properties": {
 						"ContextSelectorId": {
 							"$ref": "urn:oasis:names:tc:jacal:1.0:core:schema#/$defs/IdentifierType"
@@ -98,7 +93,8 @@
 						"Namespaces": {
 							"$ref": "#/$defs/NamespaceDeclarationsType"
 						}
-					}
+					},
+					"$comment": "Namespaces is OPTIONAL (issue #134): absent means the Path expression needs no namespace-prefix bindings. Same rule as XPathAttributeSelectorType - see acal-xpath-v1.0.md Section 5.3.4."
 				}
 			],
 			"unevaluatedProperties": false
@@ -130,11 +126,10 @@
 		"XPathExpressionValueType": {
 			"type": "object",
 			"required": [
-				"Namespaces",
 				"XPathCategory",
 				"XPath"
 			],
-			"$comment": "XPathVersion is OPTIONAL here (issue #134). In a Request or Policy, a value with no local XPathVersion takes it from the applicable XPathRequestDefaults / XPathPolicyDefaults; a value in a response, or with no applicable Defaults in scope, MUST carry XPathVersion locally. That contextual requirement cannot be expressed in JSON Schema - see acal-xpath-v1.0.md Section 5.3.5.",
+			"$comment": "XPathVersion and Namespaces are both OPTIONAL here (issue #134). XPathVersion: in a Request or Policy, a value with no local XPathVersion takes it from the applicable XPathRequestDefaults / XPathPolicyDefaults; a value in a response, or with no applicable Defaults in scope, MUST carry XPathVersion locally - that contextual requirement cannot be expressed in JSON Schema. Namespaces: absent means the XPath expression needs no namespace-prefix bindings; there is no Defaults-level namespace table to fall back on. See acal-xpath-v1.0.md Section 5.3.5.",
 			"properties": {
 				"XPathVersion": {
 					"$ref": "urn:oasis:names:tc:jacal:1.0:core:schema#/$defs/IdentifierType"
