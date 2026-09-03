@@ -3819,7 +3819,7 @@ URIs starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are
 
 `PolicyDefaults` [Any Number]
 
-: sequence of `PolicyDefaultsType` objects containing each a set of default values specific to a particular ACAL Profile, applicable to the policy (e.g. ACAL XPath Profile's default XPath version). In particular, each object SHALL have a different concrete type (per ACAL profile). The scope of the `PolicyDefaults` property SHALL be the enclosing policy. The use of `PolicyDefaults` property is specified by particular ACAL Profiles (e.g. XPath Profile).
+: sequence of `PolicyDefaultsType` objects containing each a set of default values specific to a particular ACAL Profile, applicable to the policy (e.g. ACAL XPath Profile's default XPath version). In particular, each object SHALL have a different concrete type (per ACAL profile). The scope of the `PolicyDefaults` property SHALL be the enclosing policy and any policy nested within it; where a nested policy carries its own `PolicyDefaults` object of a given concrete type, that object applies within the nested policy in place of the enclosing policy's object of that type. The use of `PolicyDefaults` property is specified by particular ACAL Profiles (e.g. XPath Profile).
 
 `Parameter` [Any Number]
 
