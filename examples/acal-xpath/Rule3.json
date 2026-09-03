@@ -7,13 +7,7 @@
         "PolicyDefaults": [
             {
                 "XPathPolicyDefaults": {
-                    "XPathVersion": "https://www.w3.org/TR/xpath20/",
-                    "Namespace": [
-                        {
-                            "Prefix": "md",
-                            "Name": "urn:example:med:schemas:record"
-                        }
-                    ]
+                    "XPathVersion": "https://www.w3.org/TR/xpath20/"
                 }
             }
         ],
@@ -70,6 +64,9 @@
                                             },
                                             {
                                                 "Value": {
+                                                    "Namespaces": {
+                                                        "md": "urn:example:med:schemas:record"
+                                                    },
                                                     "XPathCategory": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
                                                     "XPath": "md:record/md:medical"
                                                 }
@@ -123,6 +120,9 @@
                                                         {
                                                             "XPathAttributeSelector": {
                                                                 "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
+                                                                "Namespaces": {
+                                                                    "md": "urn:example:med:schemas:record"
+                                                                },
                                                                 "Path": "md:record/md:primaryCarePhysician/md:registrationID/text()"
                                                             }
                                                         }
@@ -150,6 +150,9 @@
                             "XPathAttributeSelector": {
                                 "MustBePresent": true,
                                 "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
+                                "Namespaces": {
+                                    "md": "urn:example:med:schemas:record"
+                                },
                                 "Path": "md:record/md:patient/md:patientContact/md:email/text()"
                             }
                         }

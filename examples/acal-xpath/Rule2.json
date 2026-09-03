@@ -6,13 +6,7 @@
         "PolicyDefaults": [
             {
                 "XPathPolicyDefaults": {
-                    "XPathVersion": "https://www.w3.org/TR/xpath20/",
-                    "Namespace": [
-                        {
-                            "Prefix": "md",
-                            "Name": "urn:example:med:schemas:record"
-                        }
-                    ]
+                    "XPathVersion": "https://www.w3.org/TR/xpath20/"
                 }
             }
         ],
@@ -47,6 +41,9 @@
                                                     {
                                                         "XPathAttributeSelector": {
                                                             "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
+                                                            "Namespaces": {
+                                                                "md": "urn:example:med:schemas:record"
+                                                            },
                                                             "Path": "md:record/md:patient/md:patientDoB/text()"
                                                         }
                                                     }
@@ -122,6 +119,9 @@
                                             },
                                             {
                                                 "Value": {
+                                                    "Namespaces": {
+                                                        "md": "urn:example:med:schemas:record"
+                                                    },
                                                     "XPathCategory": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
                                                     "XPath": "md:record"
                                                 }
@@ -159,6 +159,9 @@
                                                         {
                                                             "XPathAttributeSelector": {
                                                                 "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
+                                                                "Namespaces": {
+                                                                    "md": "urn:example:med:schemas:record"
+                                                                },
                                                                 "Path": "md:record/md:parentGuardian/md:parentGuardianId/text()"
                                                             }
                                                         }

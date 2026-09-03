@@ -364,7 +364,7 @@ A policy that must match a URI produced by [Section 5.2](#52-nodes-identified-by
 
 # 7 Examples (non-normative)
 
-This section gives one worked, self-contained example request for each of the three schemes in [Section 5](#5-node-identity-schemes). Attribute categories other than the resource category (subject, action, environment) are omitted for brevity; a complete request would include them as shown in [[ACAL-Core-1.0](#acal-core-10)] Section 6.1.2.
+This section gives one worked example for each of the three schemes in [Section 5](#5-node-identity-schemes), each a single resource `RequestEntity` shown on its own rather than inside a full `Request`. The other attribute categories (subject, action, environment) are omitted for brevity; a complete request would include them, and would wrap the `RequestEntity` in a `Request`, as shown in [[ACAL-Core-1.0](#acal-core-10)] Section 6.1.2.
 
 ## 7.1 Nodes in XML Documents
 
@@ -391,6 +391,7 @@ A request for read access to the `<md:patientDoB>` node inside a medical-record 
         AttributeId="urn:oasis:names:tc:acal:1.0:content-selector"
         DataType="urn:oasis:names:tc:acal:1.0:data-type:xpathExpression">
         <Value
+            XPathVersion="https://www.w3.org/TR/xpath20/"
             XPathCategory="urn:oasis:names:tc:acal:1.0:attribute-category:resource"
             XPath="md:record/md:patient/md:patientDoB" />
     </RequestAttribute>
@@ -406,45 +407,32 @@ A request for read access to the `<md:patientDoB>` node inside a medical-record 
 
 ```json
 {
-    "Request": {
-        "RequestDefaults": [
+    "RequestEntity": {
+        "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
+        "Content": {
+            "MediaType": "application/xml",
+            "Body": "<md:record xmlns:md=\"urn:example:med:schemas:record\"><md:patient><md:patientDoB>1992-03-21</md:patientDoB></md:patient></md:record>"
+        },
+        "RequestAttribute": [
             {
-                "XPathRequestDefaults": {
-                    "XPathVersion": "https://www.w3.org/TR/xpath20/",
-                    "Namespace": [
-                        {
-                            "Prefix": "md",
-                            "Name": "urn:example:med:schemas:record"
-                        }
-                    ]
-                }
-            }
-        ],
-        "RequestEntity": [
-            {
-                "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
-                "Content": {
-                    "MediaType": "application/xml",
-                    "Body": "<md:record xmlns:md=\"urn:example:med:schemas:record\"><md:patient><md:patientDoB>1992-03-21</md:patientDoB></md:patient></md:record>"
-                },
-                "RequestAttribute": [
+                "AttributeId": "urn:oasis:names:tc:acal:1.0:content-selector",
+                "DataType": "urn:oasis:names:tc:acal:1.0:data-type:xpathExpression",
+                "Value": [
                     {
-                        "AttributeId": "urn:oasis:names:tc:acal:1.0:content-selector",
-                        "DataType": "urn:oasis:names:tc:acal:1.0:data-type:xpathExpression",
-                        "Value": [
-                            {
-                                "XPathCategory": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
-                                "XPath": "md:record/md:patient/md:patientDoB"
-                            }
-                        ]
-                    },
-                    {
-                        "AttributeId": "urn:oasis:names:tc:acal:1.0:resource:document-id",
-                        "DataType": "urn:oasis:names:tc:acal:1.0:data-type:anyURI",
-                        "Value": [
-                            "urn:example:med:record:BartSimpson"
-                        ]
+                        "XPathVersion": "https://www.w3.org/TR/xpath20/",
+                        "Namespaces": {
+                            "md": "urn:example:med:schemas:record"
+                        },
+                        "XPathCategory": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
+                        "XPath": "md:record/md:patient/md:patientDoB"
                     }
+                ]
+            },
+            {
+                "AttributeId": "urn:oasis:names:tc:acal:1.0:resource:document-id",
+                "DataType": "urn:oasis:names:tc:acal:1.0:data-type:anyURI",
+                "Value": [
+                    "urn:example:med:record:BartSimpson"
                 ]
             }
         ]
@@ -455,36 +443,33 @@ A request for read access to the `<md:patientDoB>` node inside a medical-record 
 **YACAL v1.0 (YAML)**
 
 ```yaml
-Request:
-  RequestDefaults:
-    - XPathRequestDefaults:
-        XPathVersion: "https://www.w3.org/TR/xpath20/"
-        Namespace:
-          - Prefix: md
-            Name: "urn:example:med:schemas:record"
-  RequestEntity:
-    - Category: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
-      Content:
-        MediaType: "application/xml"
-        Body: |
-          <md:record xmlns:md="urn:example:med:schemas:record"><md:patient><md:patientDoB>1992-03-21</md:patientDoB></md:patient></md:record>
-      RequestAttribute:
-        - AttributeId: "urn:oasis:names:tc:acal:1.0:content-selector"
-          DataType: "urn:oasis:names:tc:acal:1.0:data-type:xpathExpression"
-          Value:
-            - XPathCategory: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
-              XPath: "md:record/md:patient/md:patientDoB"
-        - AttributeId: "urn:oasis:names:tc:acal:1.0:resource:document-id"
-          DataType: "urn:oasis:names:tc:acal:1.0:data-type:anyURI"
-          Value:
-            - urn:example:med:record:BartSimpson
+RequestEntity:
+  Category: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
+  Content:
+    MediaType: "application/xml"
+    Body: |
+      <md:record xmlns:md="urn:example:med:schemas:record"><md:patient><md:patientDoB>1992-03-21</md:patientDoB></md:patient></md:record>
+  RequestAttribute:
+    - AttributeId: "urn:oasis:names:tc:acal:1.0:content-selector"
+      DataType: "urn:oasis:names:tc:acal:1.0:data-type:xpathExpression"
+      Value:
+        - XPathVersion: "https://www.w3.org/TR/xpath20/"
+          Namespaces:
+            md: "urn:example:med:schemas:record"
+          XPathCategory: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
+          XPath: "md:record/md:patient/md:patientDoB"
+    - AttributeId: "urn:oasis:names:tc:acal:1.0:resource:document-id"
+      DataType: "urn:oasis:names:tc:acal:1.0:data-type:anyURI"
+      Value:
+        - urn:example:med:record:BartSimpson
 ```
 
 **What this shows**
 
-- The `md` prefix used inside the `XPath` expression string needs its own namespace binding, independent of `Content.Body`'s embedded `xmlns:md` declaration — the two are separate namespace scopes, one for the embedded document, one for the expression text itself ([[ACAL-XPath-1.0](#acal-xpath-10)] Annex C.2.1). In XML, that binding comes from ordinary in-scope namespaces, so declaring `xmlns:md` on `RequestEntity` (an ancestor of the `Value` element carrying the expression) is sufficient. JACAL and YACAL have no ancestor-based namespace inheritance at all, so the same binding is carried explicitly instead, via `RequestDefaults`/`XPathRequestDefaults`/`Namespace` — which is why, unlike [Section 7.2](#72-nodes-identified-by-uri) and [Section 7.3](#73-nodes-identified-by-ancestor-attributes)'s examples, this one needs the full `Request` wrapper rather than a bare `RequestEntity` fragment.
+- The `md` prefix used inside the `XPath` expression string needs its own namespace binding, independent of `Content.Body`'s embedded `xmlns:md` declaration — the two are separate namespace scopes, one for the embedded document, one for the expression text itself ([[ACAL-XPath-1.0](#acal-xpath-10)] Annex C.2.1). In XML that binding comes from ordinary in-scope namespaces, so declaring `xmlns:md` on `RequestEntity` (an ancestor of the `Value` element carrying the expression) is sufficient — XML namespace resolution here is unchanged from XACML 3.0. JACAL and YACAL have no ancestor-based namespace inheritance, so the same binding is carried explicitly on the value's own `Namespaces` property, a mapping from prefix to namespace name ([[ACAL-XPath-1.0](#acal-xpath-10)] Section 5.2).
+- The `xpathExpression` value carries its own `XPathVersion` here — in all three representations — because these examples are bare `RequestEntity` fragments with no enclosing `Request` and therefore no `XPathRequestDefaults` for the value to take its version from ([[ACAL-XPath-1.0](#acal-xpath-10)] Section 5.3.5). In a complete `Request` carrying an `XPathRequestDefaults`, the local `XPathVersion` could be omitted.
 - In XML, `Content.Body` holds the medical-record document as literal child elements. In JACAL, the same document is a JSON string, escaped per [[JACAL-Core-1.0](#jacal-core-10)] Section 5.3's rules for XML content in a JSON `Content` object. In YACAL, a block scalar (`|`) carries the same string without JSON's escaping.
-- The `content-selector` attribute's value — an `xpathExpression` — is itself a structured value (`XPathCategory` plus `XPath`), not a plain string, in every representation; only its syntax (XML attributes, a JSON object, a YAML mapping) changes.
+- The `content-selector` attribute's value — an `xpathExpression` — is itself a structured value (`XPath`, `XPathCategory`, a namespace context, and an XPath version), not a plain string, in every representation. In JACAL/YACAL the namespace context is the value's own `Namespaces` property; in XML it is ordinary in-scope namespaces.
 - `document-id` is included to disambiguate which document instance the `content-selector` expression applies to, in case the same request references more than one such document.
 
 ---

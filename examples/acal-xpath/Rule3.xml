@@ -11,7 +11,7 @@
             <Value>urn:example:med:schemas:record</Value>
             <AttributeDesignator
                 Category="urn:oasis:names:tc:acal:1.0:attribute-category:resource"
-                AttributeId="urn:oasis:names:tc:acal:2.0:resource:target-namespace"/>
+                AttributeId="urn:oasis:names:tc:acal:1.0:resource:target-namespace"/>
         </Apply>
     </Target>
     <Rule Id="example_rule_3" Effect="Permit">

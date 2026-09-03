@@ -4,23 +4,24 @@
 	"title": "JACAL - XPath Profile schema",
 	"description": "JACAL v1.0 (JSON Representation of ACAL Version 1.0) - XPath Profile schema. Copyright (c) OASIS Open 2026. All Rights Reserved. For more license and copyright information, and complete status, please see Annex A of the XPath Profile of JACAL v1.0 specification, which contains the License, Document Status and Notices.",
 	"$defs": {
-		"NamespaceDeclarationType": {
+		"NamespaceDeclarationsType": {
 			"type": "object",
-			"required": [
-				"Name"
-			],
-			"properties": {
-				"Prefix": {
-					"$ref": "urn:oasis:names:tc:jacal:1.0:core:schema#/$defs/IdentifierType",
-					"$comment": "Default empty value is used to define the default namespace",
-					"default": ""
-				},
-				"Name": {
-					"type": "string",
-					"format": "uri-reference"
-				}
+			"propertyNames": {
+				"anyOf": [
+					{ "const": "" },
+					{
+						"type": "string",
+						"pattern": "^[A-Za-z_][A-Za-z0-9_.-]*$",
+						"not": { "enum": ["xmlns", "xml"] }
+					}
+				],
+				"$comment": "A namespace Prefix is an XML NCName [NAMESPACES], not an ACAL IdentifierType (no {ShortId} macro-substitution). The normative lexical space is the full NCName production - see acal-xpath-v1.0.md Section 5.2 - which includes non-ASCII name characters. This pattern is an ASCII-only approximation: a portable JSON Schema 'pattern' cannot express the full NCName character ranges. It is a validation floor, not a narrowing - an instance whose prefix is a valid non-ASCII NCName is conformant per Section 5.2 even though it will not match here. 'xmlns' is never permitted as a prefix by [NAMESPACES]; 'xml' is permitted only when bound to its own fixed URI, and Section 5.2 already treats that binding as implicitly available in every representation - so neither is a useful key here and both are excluded. The empty string key is the separate, valid default-namespace declaration."
 			},
-			"additionalProperties": false
+			"additionalProperties": {
+				"type": "string",
+				"format": "uri-reference"
+			},
+			"$comment": "Maps each namespace Prefix (the empty string denotes the default namespace) directly to its Name (URI), rather than an array of {Prefix, Name} pair-objects, per issue #134. A producer SHALL NOT emit a duplicate key; a consumer SHALL reject one. JSON Schema cannot enforce this, since a validator only sees the instance after parsing, by which point a duplicate key has already been resolved in an implementation-defined way (RFC 8259) - see acal-xpath-v1.0.md Section 5.2 for the normative producer/consumer requirement."
 		},
 		"XPathDefaultsType": {
 			"type": "object",
@@ -30,27 +31,6 @@
 			"properties": {
 				"XPathVersion": {
 					"$ref": "urn:oasis:names:tc:jacal:1.0:core:schema#/$defs/IdentifierType"
-				},
-				"Namespace": {
-					"type": "array",
-					"minItems": 1,
-					"uniqueItems": true,
-					"items": {
-						"$ref": "#/$defs/NamespaceDeclarationType"
-					},
-					"$comment": "TODO: add 'uniqueKeys': ['/Prefix'] from ArrayExt vocabulary - https://docs.json-everything.net/schema/vocabs/array-ext/ to ensure uniqueness of Prefix values"
-				}
-			},
-			"additionalProperties": false
-		},
-		"XPathRequestDefaultsTypeTree": {
-			"type": "object",
-			"required": [
-				"XPathRequestDefaults"
-			],
-			"properties": {
-				"XPathRequestDefaults": {
-					"$ref": "#/$defs/XPathDefaultsType"
 				}
 			},
 			"additionalProperties": false
@@ -67,6 +47,18 @@
 			},
 			"additionalProperties": false
 		},
+		"XPathRequestDefaultsTypeTree": {
+			"type": "object",
+			"required": [
+				"XPathRequestDefaults"
+			],
+			"properties": {
+				"XPathRequestDefaults": {
+					"$ref": "#/$defs/XPathDefaultsType"
+				}
+			},
+			"additionalProperties": false
+		},
 		"XPathAttributeSelectorType": {
 			"allOf": [
 				{
@@ -74,12 +66,15 @@
 				},
 				{
 					"type": "object",
-					"required": [],
 					"properties": {
 						"ContextSelectorId": {
 							"$ref": "urn:oasis:names:tc:jacal:1.0:core:schema#/$defs/IdentifierType"
+						},
+						"Namespaces": {
+							"$ref": "#/$defs/NamespaceDeclarationsType"
 						}
-					}
+					},
+					"$comment": "Namespaces is OPTIONAL (issue #134): absent (equivalently empty) means the Path expression needs no supplied namespace-prefix bindings - all its names resolve without one, or it matches namespaces via wildcards / namespace-uri() / URIQualifiedNames. There is no Defaults-level namespace table to fall back on - see acal-xpath-v1.0.md Section 5.3.3."
 				}
 			],
 			"unevaluatedProperties": false
@@ -91,12 +86,15 @@
 				},
 				{
 					"type": "object",
-					"required": [],
 					"properties": {
 						"ContextSelectorId": {
 							"$ref": "urn:oasis:names:tc:jacal:1.0:core:schema#/$defs/IdentifierType"
+						},
+						"Namespaces": {
+							"$ref": "#/$defs/NamespaceDeclarationsType"
 						}
-					}
+					},
+					"$comment": "Namespaces is OPTIONAL (issue #134): absent means the Path expression needs no namespace-prefix bindings. Same rule as XPathAttributeSelectorType - see acal-xpath-v1.0.md Section 5.3.4."
 				}
 			],
 			"unevaluatedProperties": false
@@ -131,7 +129,14 @@
 				"XPathCategory",
 				"XPath"
 			],
+			"$comment": "XPathVersion and Namespaces are both OPTIONAL here (issue #134). XPathVersion: in a Request or Policy, a value with no local XPathVersion takes it from the applicable XPathRequestDefaults / XPathPolicyDefaults; a value in a response, or with no applicable Defaults in scope, MUST carry XPathVersion locally - that contextual requirement cannot be expressed in JSON Schema. Namespaces: absent means the XPath expression needs no namespace-prefix bindings; there is no Defaults-level namespace table to fall back on. See acal-xpath-v1.0.md Section 5.3.5.",
 			"properties": {
+				"XPathVersion": {
+					"$ref": "urn:oasis:names:tc:jacal:1.0:core:schema#/$defs/IdentifierType"
+				},
+				"Namespaces": {
+					"$ref": "#/$defs/NamespaceDeclarationsType"
+				},
 				"XPathCategory": {
 					"$ref": "urn:oasis:names:tc:jacal:1.0:core:schema#/$defs/IdentifierType"
 				},
