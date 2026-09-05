@@ -3957,7 +3957,7 @@ The `IdReferenceType` object type contains the following property:
 
 `Id` [Required]
 
-: A URI being the `PolicyId` of the referenced policy. If the URI is a URL, then it MAY be resolvable to the policy. However, the mechanism for resolving a policy reference to the corresponding policy is outside the scope of this specification.
+: A URI being the `PolicyId` of the referenced policy. If the URI is a URL, then it MAY be resolvable to the policy. Resolution against the policies that define the PDP is specified in [Section 8.13](#813-policyreference-evaluation); any further mechanism for locating a policy that is not among them (for example retrieving it from a URL, or from an external repository or protocol) is outside the scope of this specification.
 `Id` values starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are reserved by the XACML TC for their exclusive use.
 
 ## 7.9 ExactMatchIdReferenceType (optional)
@@ -5880,7 +5880,7 @@ Some combining algorithms are defined in terms of an extended set of `Indetermin
 
 The combining algorithms that are defined in terms of the extended `Indeterminate` make use of the additional information to allow for better treatment of errors in the processing.
 
-The final decision returned by a PDP cannot be an extended `Indeterminate`. Any such decision at the top level policy is returned as a plain `Indeterminate` in the response from the PDP.
+The final decision returned by a PDP cannot be an extended `Indeterminate`. Any such decision at the top level policy — the policy referenced by the `PolicyReference` property of the `BundleType` object that defines the PDP (see [Section 8.15](#815-authorization-decision)) — is returned as a plain `Indeterminate` in the response from the PDP.
 
 The tables in the following four sections define how extended `Indeterminate` values are produced during rule and policy evaluation.
 
@@ -5925,6 +5925,8 @@ The policy truth table is shown in Table 5.
 ## 8.13 PolicyReference Evaluation
 
 A policy reference is evaluated by resolving the reference and evaluating the referenced policy.
+
+Resolving a reference means selecting, from the set of policies that the PDP evaluates requests against — represented conceptually by the `Policy` property of the `BundleType` object that defines the PDP ([Section 7.46](#746-bundletype), [Section 8.15](#815-authorization-decision)) — the policy whose `PolicyId` equals the reference's `Id` property (compared as an absolute URI, see [Section 8.3](#83-identifier-evaluation)) and whose `Version` satisfies the reference's version-matching expression if one is present ([Section 7.10](#710-patternmatchidreferencetype)). This applies to every policy reference that appears within the `CombinerInput` of another policy. The entry-point reference — a `BundleType` object's own `PolicyReference` property — MUST resolve to a policy in that set ([Section 7.46](#746-bundletype)). For any other reference, if no policy in that set matches and the `Id` property is a URL, then the reference MAY instead be resolved by retrieving the policy from that URL.
 
 If resolving the reference fails, the reference evaluates to `Indeterminate` with status code: <!--Newline to fit on PDF page -->
 `urn:oasis:names:tc:acal:1.0:status:processing-error`.
