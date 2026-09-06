@@ -298,7 +298,6 @@ The following substantive changes and decisions apply relative to the XACML 3.0 
   - [[ACAL-Core-1.0](#acal-core-10)] Section 8.13 now specifies how a policy reference is resolved against the policies that define the PDP — by `PolicyId` and version, for any reference in a policy's `CombinerInput`; the entry-point reference must resolve within that set ([[ACAL-Core-1.0](#acal-core-10)] Section 7.46). Section 7.8's "outside the scope" sentence is narrowed to cover only locating a policy that is *not* among those that define the PDP (a URL, an external repository). This is a resolution-model clarification, not a change of any evaluation outcome for a well-formed policy set; reviewers should read it against Sections 7.8, 7.46 and 8.15.
   - [[ACAL-Core-1.0](#acal-core-10)] Section 8.10's phrase "the top level policy" now points at its definition in Section 8.15.
 
-  See this profile's PR for the exact wording of both.
 - **No new schema artifacts.** Like the ACAL Hierarchical Resource and Multiple Decision Profiles, this profile defines identifiers and policy-authoring rules, not new object types; `PolicyType`, `PolicyReferenceType`, `RuleType` and `BundleType` already exist in ACAL Core's XSD, JSON Schema and YAML structure/constraint artifacts.
 - **Renames**, consistent with ACAL Core: `<PolicySet>` → `PolicyType` (a *policy*); `<PolicySetIdReference>` → `PolicyReference`; `<Policy>` → nested `PolicyType`; `<Rule>` → `RuleType`; `<AttributeValue>` → `Value`; `<Subjects>`/`<Subject>`/`<SubjectMatch>` → a boolean `Apply` expression.
 
