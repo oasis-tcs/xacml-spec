@@ -328,7 +328,7 @@ One or more entities outside the PDP, here called Role Enablement Authorities, a
 
 ## 5.3 Access Control
 
-An ACAL PDP implements RBAC using two kinds of policy: a **Role Policy** and a **Permission Policy**. For each role there SHALL be exactly one Role Policy and exactly one Permission Policy. A permission set that requires several roles held at once is treated, for the purposes of this section, as its own (composite) role with its own Role Policy and Permission Policy — see [Section 5.4](#54-multi-role-permissions).
+An ACAL PDP implements RBAC using two kinds of policy: a **Role Policy** and a **Permission Policy**. For each role, there SHALL be exactly one Role Policy and exactly one Permission Policy. A permission set that requires several roles held at once is treated, for the purposes of this section, as its own (composite) role with its own Role Policy and Permission Policy — see [Section 5.4](#54-multi-role-permissions).
 
 The `CombiningAlgId` of a Role Policy, of a Permission Policy, and of the entry-point policy ([Section 5.3.5](#535-the-pdp-entry-point)) SHALL identify a combining algorithm that evaluates to `NotApplicable` when every policy and rule it combines evaluates to `NotApplicable` — for example `deny-overrides`, `permit-overrides`, `first-applicable`, or their ordered variants. Algorithms that synthesize a decision in the absence of any applicable child, such as `permit-unless-deny` and `deny-unless-permit`, SHALL NOT be used at these three places: at a Role Policy or the entry point they would grant access to a subject for whom no permission applies; at a Permission Policy they would grant every access the role's rules do not explicitly deny. See [Section 6.1](#61-combining-algorithms).
 
