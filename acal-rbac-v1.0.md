@@ -394,7 +394,7 @@ The composite role's Permission Policy MAY reference the Permission Policies of 
 
 ## 6.1 Combining Algorithms
 
-This profile mandates no *specific* combining algorithm, but [Section 5.3](#53-access-control) does rule out, at a Role Policy, a Permission Policy, and the entry point, any algorithm that can produce a decision when none of its children apply (`permit-unless-deny`, `deny-unless-permit`) — with a single `NotApplicable` child such an algorithm would still yield `Permit`, granting access where no permission matched. Within those bounds, `urn:oasis:names:tc:acal:1.0:combining-algorithm:permit-overrides` is the natural choice at three places:
+This profile mandates no *specific* combining algorithm, but [Section 5.3](#53-access-control) does rule out, at a Role Policy and a Permission Policy, any algorithm that can produce a Permit decision when none of its children apply (`permit-unless-deny`) — with a single `NotApplicable` child such an algorithm would still yield `Permit`, granting access where no permission matched. Within those bounds, `urn:oasis:names:tc:acal:1.0:combining-algorithm:permit-overrides`, its ordered variant or `urn:oasis:names:tc:acal:1.0:combining-algorithm:deny-unless-permit` are the natural choices at these places:
 
 - **within a Permission Policy**, so that a subject is permitted an access if *any* rule, nested policy, or inherited junior Permission Policy permits it;
 - **within a Role Policy** — with a single `PolicyReference` child and a permission-preserving algorithm the Role Policy's value is just that of its one child, so `permit-overrides` and `deny-overrides` behave identically here; the point of the [Section 5.3](#53-access-control) rule is to keep an author from choosing one of the two that do not;
