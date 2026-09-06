@@ -566,7 +566,7 @@ Five policies: an entry-point policy combining the two Role Policies; a Role Pol
             {
                 "PolicyId": "urn:example:rbac:entry-point",
                 "Version": "1.0",
-                "CombiningAlgId": "urn:oasis:names:tc:acal:1.0:combining-algorithm:permit-overrides",
+                "CombiningAlgId": "urn:oasis:names:tc:acal:1.0:combining-algorithm:deny-unless-permit",
                 "Description": "RBAC entry point: combine the Role Policies.",
                 "CombinerInput": [
                     { "PolicyReference": { "Id": "urn:example:rbac:rp:manager" } },
