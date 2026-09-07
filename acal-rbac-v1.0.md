@@ -36,7 +36,7 @@ N/A
 
 ### Technical Committee
 
-[OASIS eXtensible Access Control Markup Language (XACML) TC](https://groups.oasis-open.org/communities/tc-community-home2?CommunityKey=67afe552-0921-49b7-9a85-018dc7d3ef1d)
+[OASIS Attribute-Centric Authorization Language (ACAL) TC](https://groups.oasis-open.org/communities/tc-community-home2?CommunityKey=67afe552-0921-49b7-9a85-018dc7d3ef1d)
 
 
 ### Chairs
@@ -54,8 +54,9 @@ N/A
 ### Editors
 
 
-- Steven Legg (steven.legg@viewds.com), [ViewDS Identity Solutions](https://www.viewds.com/)
-- Cyril Dangerville (cyril.dangerville@thalesgroup.com), [THALES](https://www.thalesgroup.com/)
+- Steven Legg (steven.legg@viewds.com), ViewDS Identity Solutions
+- Cyril Dangerville (cyril.dangerville@thalesgroup.com), THALES
+- William Parducci (bill@parducci.net), Individual
 
 
 ### Abstract
@@ -71,7 +72,7 @@ When referencing this document, the following citation format should be used:
 
 **[ACAL-RBAC-1.0]**
 _%title%_.
-Edited by Steven Legg and Cyril Dangerville. %date%. OASIS %subtitle%. https://docs.oasis-open.org/xacml/acal/acal/profiles/rbac/v%version%/%stage_revision%/acal-rbac-v%version%-%stage_revision%.html . Latest stage: https://docs.oasis-open.org/xacml/acal/acal/profiles/rbac/v1.0/acal-rbac-v1.0.html .
+Edited by Steven Legg, Cyril Dangerville and William Parducci. %date%. OASIS %subtitle%. https://docs.oasis-open.org/xacml/acal/acal/profiles/rbac/v%version%/%stage_revision%/acal-rbac-v%version%-%stage_revision%.html . Latest stage: https://docs.oasis-open.org/xacml/acal/acal/profiles/rbac/v1.0/acal-rbac-v1.0.html .
 
 
 ### Related Work
@@ -149,7 +150,6 @@ Copyright © OASIS Open 2026. All Rights Reserved.  For license and copyright in
 - [Annex D How to generate HTML and PDF versions](#annex-d-how-to-generate-html-and-pdf-versions)
 - [Appendix 1 Acknowledgments](#appendix-1-acknowledgments)
   - [Leadership](#leadership)
-  - [Special Thanks](#special-thanks)
   - [Participants](#participants)
 - [Appendix 2 Changes From Previous Version](#appendix-2-changes-from-previous-version)
   - [Revision History](#revision-history)
@@ -291,11 +291,11 @@ The following substantive changes and decisions apply relative to the XACML 3.0 
 - **Identifier namespace.** All identifiers this profile uses in place of an XACML 3.0 RBAC identifier use the `urn:oasis:names:tc:acal:1.0:` prefix, with the XACML identifier recorded as a deprecated equivalent, per the standard ACAL convention ([Section 10.2](#102-conformance-tables)): the profile identifier `urn:oasis:names:tc:xacml:3.0:profiles:rbac:core-hierarchical` → `urn:oasis:names:tc:acal:1.0:profile:rbac`; the role attribute `urn:oasis:names:tc:xacml:2.0:subject:role` → `urn:oasis:names:tc:acal:1.0:subject:role`; the HasPrivilegesOfRole action value `urn:oasis:names:tc:xacml:2.0:actions:hasPrivilegesOfRole` → `urn:oasis:names:tc:acal:1.0:action:has-privileges-of-role`.
 - **The role attribute's use stays RECOMMENDED, not required** — a deployment MAY use one or more other attribute identifiers for roles, exactly as [[RBAC](#rbac)] §5.1 allows. See [Section 5.1](#51-roles-and-role-attributes).
 - **The "initial policy" constraint is expressed against the ACAL PDP model, and its "reachable only through the Role PolicySet" half is written as a normative rule.** [[RBAC](#rbac)] §5.3 requires that "the PDP can never use a Permission `<PolicySet>` as the PDP's initial policy" and §1.9 adds that a Permission `<PolicySet>` be "reachable only through the corresponding Role `<PolicySet>`". ACAL Core defines the PDP's entry point precisely — the policy named by the `PolicyReference` of the `BundleType` object that defines the PDP ([[ACAL-Core-1.0](#acal-core-10)] Section 8.15). [Section 5.3.5](#535-the-pdp-entry-point) constraint 3, together with [Section 5.3.1](#531-role-policy) constraint 3 and [Section 5.3.2](#532-permission-policy) constraint 3, states both halves as one graph invariant: on every evaluation path from the entry point, a Permission Policy is reached only through its own Role Policy or through the hierarchy.
-- **Combining-algorithm safety rule.** [[RBAC](#rbac)] §5.3 and §6 mandate no combining algorithm (the examples in [[RBAC](#rbac)] §2 use permit-overrides for illustration only), and this profile mandates no *specific* one. It does, in [Section 5.3](#53-access-control), forbid at a Role Policy, a Permission Policy, or the entry point any algorithm that produces a decision with no applicable child (`permit-unless-deny`, `deny-unless-permit`) — those would grant access where no permission applies. This is new relative to [[RBAC](#rbac)], which does not address it; it is necessary because ACAL Core's algorithm set includes such algorithms.
+- **Combining-algorithm safety rule.** [[RBAC](#rbac)] §5.3 and §6 mandate no combining algorithm (the examples in [[RBAC](#rbac)] §2 use permit-overrides for illustration only), and this profile mandates no *specific* one. It does, in [Section 5.3](#53-access-control), forbid at a Role Policy, a Permission Policy, a HasPrivilegesOfRole Policy, or any policy that combines Role Policies (including the entry point) any algorithm that yields `Permit` when no child applies (`permit-unless-deny`) — that would grant access, or falsely answer "has privileges", where no permission or role applied. `deny-unless-permit` is *not* forbidden: it yields `Deny`, not `Permit`, in that case, and is the recommended entry-point algorithm ([Section 6.1](#61-combining-algorithms)). This is new relative to [[RBAC](#rbac)], which does not address it; it is necessary because ACAL Core's algorithm set includes `permit-unless-deny`.
 - **Role Policy Target restated as an expression constraint.** A Role Policy's `Target` is an ACAL `BooleanExpressionType` — one boolean expression — not XACML's `<AnyOf>`/`<AllOf>`/`<Match>` structure. [[RBAC](#rbac)] §5.3's "applicable only to Subjects having the [role]; the `<Target>` … SHALL NOT restrict the Resource, Action, or Environment" is restated in [Section 5.3.1](#531-role-policy) as: the expression is true only if the role is present, and it references only subject-category attributes. The direction of the applicability rule is preserved (only-if, not iff) so that a Role Policy Target testing several roles at once ([Section 5.4](#54-multi-role-permissions)) or an additional subject predicate remains valid. This matches the ACAL Hierarchical Resource and Multiple Decision Profiles, whose example policies also use the boolean `Apply` form.
 - **HasPrivilegesOfRole is a nested `PolicyType`, with the action test on its `Target`.** [[RBAC](#rbac)] §5.3 defines it as a `<Policy>` with a Permit `<Rule>`, and its §2.5 example puts both the action test and the queried-role test in the `<Rule>`'s condition. In ACAL a `RuleType` object has no `Target`, and a bare Permit rule whose condition tested only the queried role would permit every action on every resource carrying that role attribute. [Section 5.3.4](#534-hasprivilegesofrole-policy) therefore requires a nested `PolicyType` object whose `Target` carries the `has-privileges-of-role` action test and whose single Permit `Rule` carries the queried-role test.
 - **Two clarifications to ACAL Core** accompany this profile, because RBAC is the first ACAL profile to lean on the PDP's policy-set and reference-resolution model directly:
-  - [[ACAL-Core-1.0](#acal-core-10)] Section 8.13 now specifies how a policy reference is resolved against the policies that define the PDP — by `PolicyId` and version, for any reference in a policy's `CombinerInput`; the entry-point reference must resolve within that set ([[ACAL-Core-1.0](#acal-core-10)] Section 7.46). Section 7.8's "outside the scope" sentence is narrowed to cover only locating a policy that is *not* among those that define the PDP (a URL, an external repository). This is a resolution-model clarification, not a change of any evaluation outcome for a well-formed policy set; reviewers should read it against Sections 7.8, 7.46 and 8.15.
+  - [[ACAL-Core-1.0](#acal-core-10)] Section 8.13 now specifies how a policy reference is resolved against the policies that define the PDP — by `PolicyId` and version, for any reference in a policy's `CombinerInput`; the entry-point reference must resolve within that set ([[ACAL-Core-1.0](#acal-core-10)] Section 7.46). Section 7.8's "outside the scope" sentence is narrowed to cover only locating a policy that is *not* among those that define the PDP (a URL, an external repository). This is a resolution-model clarification, not a change of any evaluation outcome for a policy set whose `CombinerInput` references all resolve within the PDP's policy set; reviewers should read it against Sections 7.8, 7.46 and 8.15.
   - [[ACAL-Core-1.0](#acal-core-10)] Section 8.10's phrase "the top level policy" now points at its definition in Section 8.15.
 
 - **No new schema artifacts.** Like the ACAL Hierarchical Resource and Multiple Decision Profiles, this profile defines identifiers and policy-authoring rules, not new object types; `PolicyType`, `PolicyReferenceType`, `RuleType` and `BundleType` already exist in ACAL Core's XSD, JSON Schema and YAML structure/constraint artifacts.
@@ -330,7 +330,13 @@ One or more entities outside the PDP, here called Role Enablement Authorities, a
 
 An ACAL PDP implements RBAC using two kinds of policy: a **Role Policy** and a **Permission Policy**. For each role, there SHALL be exactly one Role Policy and exactly one Permission Policy. A permission set that requires several roles held at once is treated, for the purposes of this section, as its own (composite) role with its own Role Policy and Permission Policy — see [Section 5.4](#54-multi-role-permissions).
 
-The `CombiningAlgId` of a Role Policy, of a Permission Policy, and of the entry-point policy ([Section 5.3.5](#535-the-pdp-entry-point)) SHALL identify a combining algorithm that evaluates to `NotApplicable` when every policy and rule it combines evaluates to `NotApplicable` — for example `deny-overrides`, `permit-overrides`, `first-applicable`, or their ordered variants. Algorithms that synthesize a decision in the absence of any applicable child, such as `permit-unless-deny` and `deny-unless-permit`, SHALL NOT be used at these three places: at a Role Policy or the entry point they would grant access to a subject for whom no permission applies; at a Permission Policy they would grant every access the role's rules do not explicitly deny. See [Section 6.1](#61-combining-algorithms).
+The `CombiningAlgId` of a Role Policy, of a Permission Policy, of a HasPrivilegesOfRole Policy ([Section 5.3.4](#534-hasprivilegesofrole-policy)), or of any policy whose `CombinerInput` combines Role Policies — including the entry-point policy ([Section 5.3.5](#535-the-pdp-entry-point)) — SHALL NOT be `permit-unless-deny`, or any other combining algorithm that yields `Permit` when every policy and rule it combines evaluates to `NotApplicable`. Such an algorithm turns an absent decision into a grant:
+
+- at a Permission Policy, it would grant every access the role's rules do not explicitly `Deny`;
+- at a Role Policy or a HasPrivilegesOfRole Policy, it would grant — or answer "has privileges" — when the policy's own rules and references produced no decision;
+- at a policy that combines Role Policies, including the entry point, it would grant to a subject that no Role Policy matched.
+
+`permit-overrides`, `deny-overrides`, `first-applicable`, their ordered variants, and `deny-unless-permit` all satisfy this rule; `deny-unless-permit` is the recommended choice at the entry point, where it produces a definite `Deny` rather than `NotApplicable` when no Role Policy matches. See [Section 6.1](#61-combining-algorithms).
 
 ### 5.3.1 Role Policy
 
@@ -366,6 +372,7 @@ A HasPrivilegesOfRole Policy:
 1. SHALL have a `Target` that evaluates to `true` only when the `urn:oasis:names:tc:acal:1.0:action:action-id` attribute has the value `urn:oasis:names:tc:acal:1.0:action:has-privileges-of-role`, so that the HasPrivilegesOfRole Policy is `NotApplicable` to every ordinary access request.
 2. SHALL be answered by a request that carries the role being asked about as a **resource** attribute — a `RequestAttributeType` object in the resource category, using the same role attribute identifier as [Section 5.1](#51-roles-and-role-attributes) but in the resource `RequestEntityType`. (The same `AttributeId` may appear in both a subject entity and the resource entity of one request; ACAL's attribute-uniqueness constraint is scoped per `RequestEntityType` — [[ACAL-Core-1.0](#acal-core-10)] Section 7.33.)
 3. SHALL contain a single `Rule` with `Effect` `Permit` whose `Condition` evaluates to `true` for such a request only if the resource role attribute names this Permission Policy's role.
+4. SHALL have a `CombiningAlgId` permitted by [Section 5.3](#53-access-control): an algorithm that synthesizes `Permit` when its single rule does not apply (`permit-unless-deny`) would answer "has privileges" for a role the subject does not hold.
 
 Because a HasPrivilegesOfRole Policy sits inside a Permission Policy, a senior role's holders correctly test as having the privileges of any junior role, through the same inheritance references as ordinary permissions.
 
@@ -394,11 +401,11 @@ The composite role's Permission Policy MAY reference the Permission Policies of 
 
 ## 6.1 Combining Algorithms
 
-This profile mandates no *specific* combining algorithm, but [Section 5.3](#53-access-control) does rule out, at a Role Policy and a Permission Policy, any algorithm that can produce a Permit decision when none of its children apply (`permit-unless-deny`) — with a single `NotApplicable` child such an algorithm would still yield `Permit`, granting access where no permission matched. Within those bounds, `urn:oasis:names:tc:acal:1.0:combining-algorithm:permit-overrides`, its ordered variant or `urn:oasis:names:tc:acal:1.0:combining-algorithm:deny-unless-permit` are the natural choices at these places:
+This profile mandates no *specific* combining algorithm, but [Section 5.3](#53-access-control) does rule out — at a Role Policy, a Permission Policy, a HasPrivilegesOfRole Policy, and any policy that combines Role Policies (the entry point) — any algorithm that can produce a `Permit` when none of its children apply (`permit-unless-deny`): with a single `NotApplicable` child such an algorithm would still yield `Permit`, granting access, or falsely confirming a role, where nothing matched. `deny-unless-permit` is not ruled out — it yields `Deny`, not `Permit`, in that case. Within that bound, the recommended choices are:
 
-- **within a Permission Policy**, so that a subject is permitted an access if *any* rule, nested policy, or inherited junior Permission Policy permits it;
-- **within a Role Policy** — with a single `PolicyReference` child and a permission-preserving algorithm the Role Policy's value is just that of its one child, so `permit-overrides` and `deny-overrides` behave identically here; the point of the [Section 5.3](#53-access-control) rule is to keep an author from choosing one of the two that do not;
-- **at the entry point** ([Section 5.3.5](#535-the-pdp-entry-point)), so that a subject holding several roles receives the union of their permissions.
+- **within a Permission Policy** — `urn:oasis:names:tc:acal:1.0:combining-algorithm:permit-overrides` (or its ordered variant), so that a subject is permitted an access if *any* rule, nested policy, or inherited junior Permission Policy permits it;
+- **within a Role Policy** — `permit-overrides`; with a single `PolicyReference` child a permission-preserving algorithm just takes the value of that one child, so `permit-overrides` and `deny-overrides` behave identically here — the [Section 5.3](#53-access-control) rule only keeps an author from choosing `permit-unless-deny`;
+- **at the entry point** ([Section 5.3.5](#535-the-pdp-entry-point)) — `urn:oasis:names:tc:acal:1.0:combining-algorithm:deny-unless-permit`, so that the final decision is `Permit` if and only if at least one Role Policy returns `Permit`, and a definite `Deny` otherwise rather than `NotApplicable`. A subject holding several roles is thereby permitted an access that any one of their roles permits.
 
 A deployment that needs a `Deny` to override a `Permit` from any role — for example a prohibition that must hold regardless of which roles a subject has — SHOULD name, as the `BundleType` object's `PolicyReference`, a policy that combines the entry-point policy and a separate prohibition policy under a deny-biased algorithm (`deny-overrides`, or `ordered-deny-overrides` where order matters). The prohibition policy references no Permission Policy, so [Section 5.3.5](#535-the-pdp-entry-point) constraint 3 still holds. Do not instead place the prohibition as a `Deny` rule inside a Permission Policy: it would be inherited by every senior role, which a prohibition rarely intends.
 
@@ -423,85 +430,12 @@ Role attribute values are `urn:example:roles:employee` and `urn:example:roles:ma
 
 ## 7.1 Role and Permission Policies
 
-Five policies: an entry-point policy combining the two Role Policies; a Role Policy and a Permission Policy for each role. The entry point is the policy a `BundleType` object's `PolicyReference` names ([Section 5.3.5](#535-the-pdp-entry-point)); all five appear in that object's `Policy` property.
+Five policies: an entry-point policy combining the two Role Policies; a Role Policy and a Permission Policy for each role. The entry point is the policy a `BundleType` object's `PolicyReference` names ([Section 5.3.5](#535-the-pdp-entry-point)); all five appear in that object's `Policy` property. Within `Bundle.Policy` they are ordered so that each policy precedes the policy whose `PolicyReference` names it — each Permission Policy before its Role Policy, a junior role's policies before a senior role's, the entry-point policy last. ACAL does not require this order, but it keeps the set readable and avoids forward references that some implementations handle poorly.
 
 **XACML v4.0 (XML)**
 
 ```xml
 <Bundle xmlns="urn:oasis:names:tc:xacml:4.0:core:schema">
-    <Policy PolicyId="urn:example:rbac:entry-point" Version="1.0"
-            CombiningAlgId="urn:oasis:names:tc:acal:1.0:combining-algorithm:deny-unless-permit">
-        <Description>RBAC entry point: combine the Role Policies.</Description>
-        <PolicyReference Id="urn:example:rbac:rp:manager"/>
-        <PolicyReference Id="urn:example:rbac:rp:employee"/>
-    </Policy>
-
-    <Policy PolicyId="urn:example:rbac:rp:manager" Version="1.0"
-            CombiningAlgId="urn:oasis:names:tc:acal:1.0:combining-algorithm:permit-overrides">
-        <Description>Role Policy: manager.</Description>
-        <Target>
-            <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:anyURI-is-in">
-                <Value DataType="urn:oasis:names:tc:acal:1.0:data-type:anyURI">urn:example:roles:manager</Value>
-                <AttributeDesignator
-                    Category="urn:oasis:names:tc:acal:1.0:subject-category:access-subject"
-                    AttributeId="urn:oasis:names:tc:acal:1.0:subject:role"
-                    DataType="urn:oasis:names:tc:acal:1.0:data-type:anyURI"/>
-            </Apply>
-        </Target>
-        <PolicyReference Id="urn:example:rbac:pp:manager"/>
-    </Policy>
-
-    <Policy PolicyId="urn:example:rbac:rp:employee" Version="1.0"
-            CombiningAlgId="urn:oasis:names:tc:acal:1.0:combining-algorithm:permit-overrides">
-        <Description>Role Policy: employee.</Description>
-        <Target>
-            <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:anyURI-is-in">
-                <Value DataType="urn:oasis:names:tc:acal:1.0:data-type:anyURI">urn:example:roles:employee</Value>
-                <AttributeDesignator
-                    Category="urn:oasis:names:tc:acal:1.0:subject-category:access-subject"
-                    AttributeId="urn:oasis:names:tc:acal:1.0:subject:role"
-                    DataType="urn:oasis:names:tc:acal:1.0:data-type:anyURI"/>
-            </Apply>
-        </Target>
-        <PolicyReference Id="urn:example:rbac:pp:employee"/>
-    </Policy>
-
-    <Policy PolicyId="urn:example:rbac:pp:manager" Version="1.0"
-            CombiningAlgId="urn:oasis:names:tc:acal:1.0:combining-algorithm:permit-overrides">
-        <Description>Permission Policy: manager. Inherits employee.</Description>
-        <Rule Id="manager-expense-report" Effect="Permit">
-            <Description>A manager may read and approve expense reports.</Description>
-            <Condition>
-                <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:and">
-                    <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:anyURI-is-in">
-                        <Value DataType="urn:oasis:names:tc:acal:1.0:data-type:anyURI">urn:example:resources:expense-report</Value>
-                        <AttributeDesignator
-                            Category="urn:oasis:names:tc:acal:1.0:attribute-category:resource"
-                            AttributeId="urn:oasis:names:tc:acal:1.0:resource:resource-id"
-                            DataType="urn:oasis:names:tc:acal:1.0:data-type:anyURI"/>
-                    </Apply>
-                    <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:or">
-                        <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:string-is-in">
-                            <Value DataType="urn:oasis:names:tc:acal:1.0:data-type:string">read</Value>
-                            <AttributeDesignator
-                                Category="urn:oasis:names:tc:acal:1.0:attribute-category:action"
-                                AttributeId="urn:oasis:names:tc:acal:1.0:action:action-id"
-                                DataType="urn:oasis:names:tc:acal:1.0:data-type:string"/>
-                        </Apply>
-                        <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:string-is-in">
-                            <Value DataType="urn:oasis:names:tc:acal:1.0:data-type:string">approve</Value>
-                            <AttributeDesignator
-                                Category="urn:oasis:names:tc:acal:1.0:attribute-category:action"
-                                AttributeId="urn:oasis:names:tc:acal:1.0:action:action-id"
-                                DataType="urn:oasis:names:tc:acal:1.0:data-type:string"/>
-                        </Apply>
-                    </Apply>
-                </Apply>
-            </Condition>
-        </Rule>
-        <PolicyReference Id="urn:example:rbac:pp:employee"/>
-    </Policy>
-
     <Policy PolicyId="urn:example:rbac:pp:employee" Version="1.0"
             CombiningAlgId="urn:oasis:names:tc:acal:1.0:combining-algorithm:permit-overrides">
         <Description>Permission Policy: employee.</Description>
@@ -552,6 +486,73 @@ Five policies: an entry-point policy combining the two Role Policies; a Role Pol
         </Policy>
     </Policy>
 
+    <Policy PolicyId="urn:example:rbac:rp:employee" Version="1.0"
+            CombiningAlgId="urn:oasis:names:tc:acal:1.0:combining-algorithm:permit-overrides">
+        <Description>Role Policy: employee.</Description>
+        <Target>
+            <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:anyURI-is-in">
+                <Value DataType="urn:oasis:names:tc:acal:1.0:data-type:anyURI">urn:example:roles:employee</Value>
+                <AttributeDesignator
+                    Category="urn:oasis:names:tc:acal:1.0:subject-category:access-subject"
+                    AttributeId="urn:oasis:names:tc:acal:1.0:subject:role"
+                    DataType="urn:oasis:names:tc:acal:1.0:data-type:anyURI"/>
+            </Apply>
+        </Target>
+        <PolicyReference Id="urn:example:rbac:pp:employee"/>
+    </Policy>
+
+    <Policy PolicyId="urn:example:rbac:pp:manager" Version="1.0"
+            CombiningAlgId="urn:oasis:names:tc:acal:1.0:combining-algorithm:permit-overrides">
+        <Description>Permission Policy: manager. Inherits employee.</Description>
+        <Rule Id="manager-expense-report" Effect="Permit">
+            <Description>A manager may read and approve expense reports.</Description>
+            <Condition>
+                <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:and">
+                    <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:anyURI-is-in">
+                        <Value DataType="urn:oasis:names:tc:acal:1.0:data-type:anyURI">urn:example:resources:expense-report</Value>
+                        <AttributeDesignator
+                            Category="urn:oasis:names:tc:acal:1.0:attribute-category:resource"
+                            AttributeId="urn:oasis:names:tc:acal:1.0:resource:resource-id"
+                            DataType="urn:oasis:names:tc:acal:1.0:data-type:anyURI"/>
+                    </Apply>
+                    <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:string-at-least-one-member-of">
+                        <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:string-bag">
+                            <Value DataType="urn:oasis:names:tc:acal:1.0:data-type:string">read</Value>
+                            <Value DataType="urn:oasis:names:tc:acal:1.0:data-type:string">approve</Value>
+                        </Apply>
+                        <AttributeDesignator
+                            Category="urn:oasis:names:tc:acal:1.0:attribute-category:action"
+                            AttributeId="urn:oasis:names:tc:acal:1.0:action:action-id"
+                            DataType="urn:oasis:names:tc:acal:1.0:data-type:string"/>
+                    </Apply>
+                </Apply>
+            </Condition>
+        </Rule>
+        <PolicyReference Id="urn:example:rbac:pp:employee"/>
+    </Policy>
+
+    <Policy PolicyId="urn:example:rbac:rp:manager" Version="1.0"
+            CombiningAlgId="urn:oasis:names:tc:acal:1.0:combining-algorithm:permit-overrides">
+        <Description>Role Policy: manager.</Description>
+        <Target>
+            <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:anyURI-is-in">
+                <Value DataType="urn:oasis:names:tc:acal:1.0:data-type:anyURI">urn:example:roles:manager</Value>
+                <AttributeDesignator
+                    Category="urn:oasis:names:tc:acal:1.0:subject-category:access-subject"
+                    AttributeId="urn:oasis:names:tc:acal:1.0:subject:role"
+                    DataType="urn:oasis:names:tc:acal:1.0:data-type:anyURI"/>
+            </Apply>
+        </Target>
+        <PolicyReference Id="urn:example:rbac:pp:manager"/>
+    </Policy>
+
+    <Policy PolicyId="urn:example:rbac:entry-point" Version="1.0"
+            CombiningAlgId="urn:oasis:names:tc:acal:1.0:combining-algorithm:deny-unless-permit">
+        <Description>RBAC entry point: combine the Role Policies.</Description>
+        <PolicyReference Id="urn:example:rbac:rp:manager"/>
+        <PolicyReference Id="urn:example:rbac:rp:employee"/>
+    </Policy>
+
     <PolicyReference Id="urn:example:rbac:entry-point"/>
 </Bundle>
 ```
@@ -563,108 +564,6 @@ Five policies: an entry-point policy combining the two Role Policies; a Role Pol
     "Bundle": {
         "PolicyReference": { "Id": "urn:example:rbac:entry-point" },
         "Policy": [
-            {
-                "PolicyId": "urn:example:rbac:entry-point",
-                "Version": "1.0",
-                "CombiningAlgId": "urn:oasis:names:tc:acal:1.0:combining-algorithm:deny-unless-permit",
-                "Description": "RBAC entry point: combine the Role Policies.",
-                "CombinerInput": [
-                    { "PolicyReference": { "Id": "urn:example:rbac:rp:manager" } },
-                    { "PolicyReference": { "Id": "urn:example:rbac:rp:employee" } }
-                ]
-            },
-            {
-                "PolicyId": "urn:example:rbac:rp:manager",
-                "Version": "1.0",
-                "CombiningAlgId": "urn:oasis:names:tc:acal:1.0:combining-algorithm:permit-overrides",
-                "Description": "Role Policy: manager.",
-                "Target": {
-                    "Apply": {
-                        "FunctionId": "urn:oasis:names:tc:acal:1.0:function:anyURI-is-in",
-                        "Argument": [
-                            { "Value": { "DataType": "urn:oasis:names:tc:acal:1.0:data-type:anyURI", "Value": "urn:example:roles:manager" } },
-                            { "AttributeDesignator": {
-                                "Category": "urn:oasis:names:tc:acal:1.0:subject-category:access-subject",
-                                "AttributeId": "urn:oasis:names:tc:acal:1.0:subject:role",
-                                "DataType": "urn:oasis:names:tc:acal:1.0:data-type:anyURI" } }
-                        ]
-                    }
-                },
-                "CombinerInput": [ { "PolicyReference": { "Id": "urn:example:rbac:pp:manager" } } ]
-            },
-            {
-                "PolicyId": "urn:example:rbac:rp:employee",
-                "Version": "1.0",
-                "CombiningAlgId": "urn:oasis:names:tc:acal:1.0:combining-algorithm:permit-overrides",
-                "Description": "Role Policy: employee.",
-                "Target": {
-                    "Apply": {
-                        "FunctionId": "urn:oasis:names:tc:acal:1.0:function:anyURI-is-in",
-                        "Argument": [
-                            { "Value": { "DataType": "urn:oasis:names:tc:acal:1.0:data-type:anyURI", "Value": "urn:example:roles:employee" } },
-                            { "AttributeDesignator": {
-                                "Category": "urn:oasis:names:tc:acal:1.0:subject-category:access-subject",
-                                "AttributeId": "urn:oasis:names:tc:acal:1.0:subject:role",
-                                "DataType": "urn:oasis:names:tc:acal:1.0:data-type:anyURI" } }
-                        ]
-                    }
-                },
-                "CombinerInput": [ { "PolicyReference": { "Id": "urn:example:rbac:pp:employee" } } ]
-            },
-            {
-                "PolicyId": "urn:example:rbac:pp:manager",
-                "Version": "1.0",
-                "CombiningAlgId": "urn:oasis:names:tc:acal:1.0:combining-algorithm:permit-overrides",
-                "Description": "Permission Policy: manager. Inherits employee.",
-                "CombinerInput": [
-                    {
-                        "Rule": {
-                            "Id": "manager-expense-report",
-                            "Effect": "Permit",
-                            "Description": "A manager may read and approve expense reports.",
-                            "Condition": {
-                                "Apply": {
-                                    "FunctionId": "urn:oasis:names:tc:acal:1.0:function:and",
-                                    "Argument": [
-                                        { "Apply": {
-                                            "FunctionId": "urn:oasis:names:tc:acal:1.0:function:anyURI-is-in",
-                                            "Argument": [
-                                                { "Value": { "DataType": "urn:oasis:names:tc:acal:1.0:data-type:anyURI", "Value": "urn:example:resources:expense-report" } },
-                                                { "AttributeDesignator": {
-                                                    "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
-                                                    "AttributeId": "urn:oasis:names:tc:acal:1.0:resource:resource-id",
-                                                    "DataType": "urn:oasis:names:tc:acal:1.0:data-type:anyURI" } }
-                                            ] } },
-                                        { "Apply": {
-                                            "FunctionId": "urn:oasis:names:tc:acal:1.0:function:or",
-                                            "Argument": [
-                                                { "Apply": {
-                                                    "FunctionId": "urn:oasis:names:tc:acal:1.0:function:string-is-in",
-                                                    "Argument": [
-                                                        { "Value": { "DataType": "urn:oasis:names:tc:acal:1.0:data-type:string", "Value": "read" } },
-                                                        { "AttributeDesignator": {
-                                                            "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:action",
-                                                            "AttributeId": "urn:oasis:names:tc:acal:1.0:action:action-id",
-                                                            "DataType": "urn:oasis:names:tc:acal:1.0:data-type:string" } }
-                                                    ] } },
-                                                { "Apply": {
-                                                    "FunctionId": "urn:oasis:names:tc:acal:1.0:function:string-is-in",
-                                                    "Argument": [
-                                                        { "Value": { "DataType": "urn:oasis:names:tc:acal:1.0:data-type:string", "Value": "approve" } },
-                                                        { "AttributeDesignator": {
-                                                            "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:action",
-                                                            "AttributeId": "urn:oasis:names:tc:acal:1.0:action:action-id",
-                                                            "DataType": "urn:oasis:names:tc:acal:1.0:data-type:string" } }
-                                                    ] } }
-                                            ] } }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    { "PolicyReference": { "Id": "urn:example:rbac:pp:employee" } }
-                ]
-            },
             {
                 "PolicyId": "urn:example:rbac:pp:employee",
                 "Version": "1.0",
@@ -744,6 +643,100 @@ Five policies: an entry-point policy combining the two Role Policies; a Role Pol
                         }
                     }
                 ]
+            },
+            {
+                "PolicyId": "urn:example:rbac:rp:employee",
+                "Version": "1.0",
+                "CombiningAlgId": "urn:oasis:names:tc:acal:1.0:combining-algorithm:permit-overrides",
+                "Description": "Role Policy: employee.",
+                "Target": {
+                    "Apply": {
+                        "FunctionId": "urn:oasis:names:tc:acal:1.0:function:anyURI-is-in",
+                        "Argument": [
+                            { "Value": { "DataType": "urn:oasis:names:tc:acal:1.0:data-type:anyURI", "Value": "urn:example:roles:employee" } },
+                            { "AttributeDesignator": {
+                                "Category": "urn:oasis:names:tc:acal:1.0:subject-category:access-subject",
+                                "AttributeId": "urn:oasis:names:tc:acal:1.0:subject:role",
+                                "DataType": "urn:oasis:names:tc:acal:1.0:data-type:anyURI" } }
+                        ]
+                    }
+                },
+                "CombinerInput": [ { "PolicyReference": { "Id": "urn:example:rbac:pp:employee" } } ]
+            },
+            {
+                "PolicyId": "urn:example:rbac:pp:manager",
+                "Version": "1.0",
+                "CombiningAlgId": "urn:oasis:names:tc:acal:1.0:combining-algorithm:permit-overrides",
+                "Description": "Permission Policy: manager. Inherits employee.",
+                "CombinerInput": [
+                    {
+                        "Rule": {
+                            "Id": "manager-expense-report",
+                            "Effect": "Permit",
+                            "Description": "A manager may read and approve expense reports.",
+                            "Condition": {
+                                "Apply": {
+                                    "FunctionId": "urn:oasis:names:tc:acal:1.0:function:and",
+                                    "Argument": [
+                                        { "Apply": {
+                                            "FunctionId": "urn:oasis:names:tc:acal:1.0:function:anyURI-is-in",
+                                            "Argument": [
+                                                { "Value": { "DataType": "urn:oasis:names:tc:acal:1.0:data-type:anyURI", "Value": "urn:example:resources:expense-report" } },
+                                                { "AttributeDesignator": {
+                                                    "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
+                                                    "AttributeId": "urn:oasis:names:tc:acal:1.0:resource:resource-id",
+                                                    "DataType": "urn:oasis:names:tc:acal:1.0:data-type:anyURI" } }
+                                            ] } },
+                                        { "Apply": {
+                                            "FunctionId": "urn:oasis:names:tc:acal:1.0:function:string-at-least-one-member-of",
+                                            "Argument": [
+                                                { "Apply": {
+                                                    "FunctionId": "urn:oasis:names:tc:acal:1.0:function:string-bag",
+                                                    "Argument": [
+                                                        { "Value": { "DataType": "urn:oasis:names:tc:acal:1.0:data-type:string", "Value": "read" } },
+                                                        { "Value": { "DataType": "urn:oasis:names:tc:acal:1.0:data-type:string", "Value": "approve" } }
+                                                    ] } },
+                                                { "AttributeDesignator": {
+                                                    "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:action",
+                                                    "AttributeId": "urn:oasis:names:tc:acal:1.0:action:action-id",
+                                                    "DataType": "urn:oasis:names:tc:acal:1.0:data-type:string" } }
+                                            ] } }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    { "PolicyReference": { "Id": "urn:example:rbac:pp:employee" } }
+                ]
+            },
+            {
+                "PolicyId": "urn:example:rbac:rp:manager",
+                "Version": "1.0",
+                "CombiningAlgId": "urn:oasis:names:tc:acal:1.0:combining-algorithm:permit-overrides",
+                "Description": "Role Policy: manager.",
+                "Target": {
+                    "Apply": {
+                        "FunctionId": "urn:oasis:names:tc:acal:1.0:function:anyURI-is-in",
+                        "Argument": [
+                            { "Value": { "DataType": "urn:oasis:names:tc:acal:1.0:data-type:anyURI", "Value": "urn:example:roles:manager" } },
+                            { "AttributeDesignator": {
+                                "Category": "urn:oasis:names:tc:acal:1.0:subject-category:access-subject",
+                                "AttributeId": "urn:oasis:names:tc:acal:1.0:subject:role",
+                                "DataType": "urn:oasis:names:tc:acal:1.0:data-type:anyURI" } }
+                        ]
+                    }
+                },
+                "CombinerInput": [ { "PolicyReference": { "Id": "urn:example:rbac:pp:manager" } } ]
+            },
+            {
+                "PolicyId": "urn:example:rbac:entry-point",
+                "Version": "1.0",
+                "CombiningAlgId": "urn:oasis:names:tc:acal:1.0:combining-algorithm:deny-unless-permit",
+                "Description": "RBAC entry point: combine the Role Policies.",
+                "CombinerInput": [
+                    { "PolicyReference": { "Id": "urn:example:rbac:rp:manager" } },
+                    { "PolicyReference": { "Id": "urn:example:rbac:rp:employee" } }
+                ]
             }
         ]
     }
@@ -757,88 +750,6 @@ Bundle:
   PolicyReference:
     Id: "urn:example:rbac:entry-point"
   Policy:
-    - PolicyId: "urn:example:rbac:entry-point"
-      Version: "1.0"
-      CombiningAlgId: "urn:oasis:names:tc:acal:1.0:combining-algorithm:deny-unless-permit"
-      Description: "RBAC entry point: combine the Role Policies."
-      CombinerInput:
-        - PolicyReference: { Id: "urn:example:rbac:rp:manager" }
-        - PolicyReference: { Id: "urn:example:rbac:rp:employee" }
-
-    - PolicyId: "urn:example:rbac:rp:manager"
-      Version: "1.0"
-      CombiningAlgId: "urn:oasis:names:tc:acal:1.0:combining-algorithm:permit-overrides"
-      Description: "Role Policy: manager."
-      Target:
-        Apply:
-          FunctionId: "urn:oasis:names:tc:acal:1.0:function:anyURI-is-in"
-          Argument:
-            - Value: { DataType: "urn:oasis:names:tc:acal:1.0:data-type:anyURI", Value: "urn:example:roles:manager" }
-            - AttributeDesignator:
-                Category: "urn:oasis:names:tc:acal:1.0:subject-category:access-subject"
-                AttributeId: "urn:oasis:names:tc:acal:1.0:subject:role"
-                DataType: "urn:oasis:names:tc:acal:1.0:data-type:anyURI"
-      CombinerInput:
-        - PolicyReference: { Id: "urn:example:rbac:pp:manager" }
-
-    - PolicyId: "urn:example:rbac:rp:employee"
-      Version: "1.0"
-      CombiningAlgId: "urn:oasis:names:tc:acal:1.0:combining-algorithm:permit-overrides"
-      Description: "Role Policy: employee."
-      Target:
-        Apply:
-          FunctionId: "urn:oasis:names:tc:acal:1.0:function:anyURI-is-in"
-          Argument:
-            - Value: { DataType: "urn:oasis:names:tc:acal:1.0:data-type:anyURI", Value: "urn:example:roles:employee" }
-            - AttributeDesignator:
-                Category: "urn:oasis:names:tc:acal:1.0:subject-category:access-subject"
-                AttributeId: "urn:oasis:names:tc:acal:1.0:subject:role"
-                DataType: "urn:oasis:names:tc:acal:1.0:data-type:anyURI"
-      CombinerInput:
-        - PolicyReference: { Id: "urn:example:rbac:pp:employee" }
-
-    - PolicyId: "urn:example:rbac:pp:manager"
-      Version: "1.0"
-      CombiningAlgId: "urn:oasis:names:tc:acal:1.0:combining-algorithm:permit-overrides"
-      Description: "Permission Policy: manager. Inherits employee."
-      CombinerInput:
-        - Rule:
-            Id: "manager-expense-report"
-            Effect: "Permit"
-            Description: "A manager may read and approve expense reports."
-            Condition:
-              Apply:
-                FunctionId: "urn:oasis:names:tc:acal:1.0:function:and"
-                Argument:
-                  - Apply:
-                      FunctionId: "urn:oasis:names:tc:acal:1.0:function:anyURI-is-in"
-                      Argument:
-                        - Value: { DataType: "urn:oasis:names:tc:acal:1.0:data-type:anyURI", Value: "urn:example:resources:expense-report" }
-                        - AttributeDesignator:
-                            Category: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
-                            AttributeId: "urn:oasis:names:tc:acal:1.0:resource:resource-id"
-                            DataType: "urn:oasis:names:tc:acal:1.0:data-type:anyURI"
-                  - Apply:
-                      FunctionId: "urn:oasis:names:tc:acal:1.0:function:or"
-                      Argument:
-                        - Apply:
-                            FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-is-in"
-                            Argument:
-                              - Value: { DataType: "urn:oasis:names:tc:acal:1.0:data-type:string", Value: "read" }
-                              - AttributeDesignator:
-                                  Category: "urn:oasis:names:tc:acal:1.0:attribute-category:action"
-                                  AttributeId: "urn:oasis:names:tc:acal:1.0:action:action-id"
-                                  DataType: "urn:oasis:names:tc:acal:1.0:data-type:string"
-                        - Apply:
-                            FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-is-in"
-                            Argument:
-                              - Value: { DataType: "urn:oasis:names:tc:acal:1.0:data-type:string", Value: "approve" }
-                              - AttributeDesignator:
-                                  Category: "urn:oasis:names:tc:acal:1.0:attribute-category:action"
-                                  AttributeId: "urn:oasis:names:tc:acal:1.0:action:action-id"
-                                  DataType: "urn:oasis:names:tc:acal:1.0:data-type:string"
-        - PolicyReference: { Id: "urn:example:rbac:pp:employee" }
-
     - PolicyId: "urn:example:rbac:pp:employee"
       Version: "1.0"
       CombiningAlgId: "urn:oasis:names:tc:acal:1.0:combining-algorithm:permit-overrides"
@@ -895,11 +806,86 @@ Bundle:
                             Category: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
                             AttributeId: "urn:oasis:names:tc:acal:1.0:subject:role"
                             DataType: "urn:oasis:names:tc:acal:1.0:data-type:anyURI"
+
+    - PolicyId: "urn:example:rbac:rp:employee"
+      Version: "1.0"
+      CombiningAlgId: "urn:oasis:names:tc:acal:1.0:combining-algorithm:permit-overrides"
+      Description: "Role Policy: employee."
+      Target:
+        Apply:
+          FunctionId: "urn:oasis:names:tc:acal:1.0:function:anyURI-is-in"
+          Argument:
+            - Value: { DataType: "urn:oasis:names:tc:acal:1.0:data-type:anyURI", Value: "urn:example:roles:employee" }
+            - AttributeDesignator:
+                Category: "urn:oasis:names:tc:acal:1.0:subject-category:access-subject"
+                AttributeId: "urn:oasis:names:tc:acal:1.0:subject:role"
+                DataType: "urn:oasis:names:tc:acal:1.0:data-type:anyURI"
+      CombinerInput:
+        - PolicyReference: { Id: "urn:example:rbac:pp:employee" }
+
+    - PolicyId: "urn:example:rbac:pp:manager"
+      Version: "1.0"
+      CombiningAlgId: "urn:oasis:names:tc:acal:1.0:combining-algorithm:permit-overrides"
+      Description: "Permission Policy: manager. Inherits employee."
+      CombinerInput:
+        - Rule:
+            Id: "manager-expense-report"
+            Effect: "Permit"
+            Description: "A manager may read and approve expense reports."
+            Condition:
+              Apply:
+                FunctionId: "urn:oasis:names:tc:acal:1.0:function:and"
+                Argument:
+                  - Apply:
+                      FunctionId: "urn:oasis:names:tc:acal:1.0:function:anyURI-is-in"
+                      Argument:
+                        - Value: { DataType: "urn:oasis:names:tc:acal:1.0:data-type:anyURI", Value: "urn:example:resources:expense-report" }
+                        - AttributeDesignator:
+                            Category: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
+                            AttributeId: "urn:oasis:names:tc:acal:1.0:resource:resource-id"
+                            DataType: "urn:oasis:names:tc:acal:1.0:data-type:anyURI"
+                  - Apply:
+                      FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-at-least-one-member-of"
+                      Argument:
+                        - Apply:
+                            FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-bag"
+                            Argument:
+                              - Value: { DataType: "urn:oasis:names:tc:acal:1.0:data-type:string", Value: "read" }
+                              - Value: { DataType: "urn:oasis:names:tc:acal:1.0:data-type:string", Value: "approve" }
+                        - AttributeDesignator:
+                            Category: "urn:oasis:names:tc:acal:1.0:attribute-category:action"
+                            AttributeId: "urn:oasis:names:tc:acal:1.0:action:action-id"
+                            DataType: "urn:oasis:names:tc:acal:1.0:data-type:string"
+        - PolicyReference: { Id: "urn:example:rbac:pp:employee" }
+
+    - PolicyId: "urn:example:rbac:rp:manager"
+      Version: "1.0"
+      CombiningAlgId: "urn:oasis:names:tc:acal:1.0:combining-algorithm:permit-overrides"
+      Description: "Role Policy: manager."
+      Target:
+        Apply:
+          FunctionId: "urn:oasis:names:tc:acal:1.0:function:anyURI-is-in"
+          Argument:
+            - Value: { DataType: "urn:oasis:names:tc:acal:1.0:data-type:anyURI", Value: "urn:example:roles:manager" }
+            - AttributeDesignator:
+                Category: "urn:oasis:names:tc:acal:1.0:subject-category:access-subject"
+                AttributeId: "urn:oasis:names:tc:acal:1.0:subject:role"
+                DataType: "urn:oasis:names:tc:acal:1.0:data-type:anyURI"
+      CombinerInput:
+        - PolicyReference: { Id: "urn:example:rbac:pp:manager" }
+
+    - PolicyId: "urn:example:rbac:entry-point"
+      Version: "1.0"
+      CombiningAlgId: "urn:oasis:names:tc:acal:1.0:combining-algorithm:deny-unless-permit"
+      Description: "RBAC entry point: combine the Role Policies."
+      CombinerInput:
+        - PolicyReference: { Id: "urn:example:rbac:rp:manager" }
+        - PolicyReference: { Id: "urn:example:rbac:rp:employee" }
 ```
 
 **What this shows**
 
-- All five policies are carried in a single `BundleType` object — a `<Bundle>` element in XML, a `Bundle` object in JACAL/YACAL — whose `PolicyReference` names the **entry-point policy** (`urn:example:rbac:entry-point`), an ordinary `PolicyType` object whose `CombinerInput` is exactly the two Role Policies, referenced ([Section 5.3.5](#535-the-pdp-entry-point)). Trace any path from here: it reaches a Permission Policy only through that role's Role Policy (`rp:*` → `pp:*`) or through the hierarchy (`pp:manager` → `pp:employee`) — the [Section 5.3.5](#535-the-pdp-entry-point) constraint 3 invariant. A deployment need not physically build a `BundleType` object ([[ACAL-Core-1.0](#acal-core-10)] Section 7.46) — the PDP configuration may hold the policies and the starting reference in any form — but it is the clearest way to show the whole set at once.
+- All five policies are carried in a single `BundleType` object — a `<Bundle>` element in XML, a `Bundle` object in JACAL/YACAL — whose `PolicyReference` names the **entry-point policy** (`urn:example:rbac:entry-point`), an ordinary `PolicyType` object whose `CombinerInput` is exactly the two Role Policies, referenced ([Section 5.3.5](#535-the-pdp-entry-point)). Trace any path from here: it reaches a Permission Policy only through that role's Role Policy (`rp:*` → `pp:*`) or through the hierarchy (`pp:manager` → `pp:employee`) — the [Section 5.3.5](#535-the-pdp-entry-point) constraint 3 invariant. A deployment need not physically build a `BundleType` object ([[ACAL-Core-1.0](#acal-core-10)] Section 7.46) — the PDP configuration may hold the policies and the starting reference in any form — but it is the clearest way to show the whole set at once. The entry-point policy uses `deny-unless-permit` so a request that matches no role yields a definite `Deny`; every other policy here uses `permit-overrides` ([Section 6.1](#61-combining-algorithms)).
 - Each **Role Policy** carries the role test in its `Target` and nothing else, and a single `PolicyReference` to its Permission Policy ([Section 5.3.1](#531-role-policy)). The `Target` references only the `access-subject` role attribute.
 - The **manager Permission Policy** grants its own permission (expense reports) and then `PolicyReference`s the employee Permission Policy — that one line is the entire role hierarchy ([Section 5.3.3](#533-role-hierarchy)). A request from a manager to `read` a `timesheet` is permitted through this reference.
 - The **HasPrivilegesOfRole Policy** is nested in the employee Permission Policy. Its `Target` matches only the `has-privileges-of-role` action; its rule tests the role carried as a **resource** attribute ([Section 5.3.4](#534-hasprivilegesofrole-policy)). A manager asking whether they have the employee role's privileges reaches it by the same inheritance reference.
@@ -1001,7 +987,7 @@ Request:
           Value: [ "read" ]
 ```
 
-**Evaluation.** The entry point combines the two Role Policies. The `manager` Role Policy's `Target` matches (the subject holds `urn:example:roles:manager`); the `employee` Role Policy's `Target` does not. The `manager` Role Policy references the `manager` Permission Policy, whose own `manager-expense-report` rule does not match (`timesheet` ≠ `expense-report`) but whose `PolicyReference` to the `employee` Permission Policy does: the `employee-timesheet` rule matches `read` on `timesheet` and yields `Permit`. Under permit-overrides the decision is **`Permit`**.
+**Evaluation.** The entry point combines the two Role Policies. The `manager` Role Policy's `Target` matches (the subject holds `urn:example:roles:manager`); the `employee` Role Policy's `Target` does not. The `manager` Role Policy references the `manager` Permission Policy, whose own `manager-expense-report` rule does not match (`timesheet` ≠ `expense-report`) but whose `PolicyReference` to the `employee` Permission Policy does: the `employee-timesheet` rule matches `read` on `timesheet` and yields `Permit`. Under `permit-overrides` the `manager` Role Policy therefore yields `Permit`, and the entry point — `deny-unless-permit` — yields **`Permit`**.
 
 ## 7.3 A HasPrivilegesOfRole Request
 
@@ -1132,7 +1118,7 @@ The correctness of every decision made under this profile depends on the role at
 Several structural mistakes change access silently — no error, just a wrong answer — and are worth checking for explicitly, because none is caught by schema validation ([Section 8](#8-representation-considerations)):
 
 - A **Permission Policy reachable other than through its Role Policy** ([Section 5.3.5](#535-the-pdp-entry-point) constraint 3 forbids it) — named as the entry point, combined by the entry-point policy, referenced by an unrelated policy, or nested — grants that role's permissions to every subject, because nothing then tests for the role. **This is the most serious mistake the profile guards against.**
-- A **`permit-unless-deny` combining algorithm** on a Role Policy, a Permission Policy, or the entry point ([Section 5.3](#53-access-control) forbids it) turns "no permission applied" into `Permit`.
+- A **`permit-unless-deny` combining algorithm** on a Role Policy, a Permission Policy, a HasPrivilegesOfRole Policy, or any policy that combines Role Policies including the entry point ([Section 5.3](#53-access-control) forbids it) turns "no permission applied" — or "role not held" — into `Permit`.
 - A **subject restriction in a Permission Policy's `Target`** ([Section 5.3.2](#532-permission-policy) constraint 2 forbids it) does not cause an error; it makes the Permission Policy `NotApplicable` for a senior role's holders, breaking inheritance — the failure here *narrows* access, but silently, and a policy set with it is not conformant.
 - A **`Deny` rule in a Permission Policy** is inherited by every senior role. A prohibition that must hold regardless of role belongs above the entry point under a deny-biased algorithm, not inside a role's permissions — see [Section 6.1](#61-combining-algorithms).
 - A **multi-role Permission Policy referenced by another Permission Policy** ([Section 5.4](#54-multi-role-permissions) forbids it) hands the multi-role permissions to a subject who holds only the referencing role, bypassing the simultaneous-role requirement.
@@ -1198,7 +1184,7 @@ Note: `O` because the HasPrivilegesOfRole Policy is itself optional.
 ## A.1 Document Status
 
 
-This document was last revised or approved by the OASIS eXtensible Access Control Markup Language (XACML) TC on the above date. The level of approval is also listed above. Check the "Latest version" location noted above for possible later revisions of this document. Any other numbered Versions and other technical work produced by the Technical Committee (TC) are listed at https://groups.oasis-open.org/communities/tc-community-home2?CommunityKey=67afe552-0921-49b7-9a85-018dc7d3ef1d#technical.
+This document was last revised or approved by the OASIS Attribute-Centric Authorization Language (ACAL) TC on the above date. The level of approval is also listed above. Check the "Latest version" location noted above for possible later revisions of this document. Any other numbered Versions and other technical work produced by the Technical Committee (TC) are listed at https://groups.oasis-open.org/communities/tc-community-home2?CommunityKey=67afe552-0921-49b7-9a85-018dc7d3ef1d#technical.
 
 
 TC members should send comments on this document to the TC's email list. Others should send comments to the TC's public comment list, after subscribing to it by following the instructions at the "Send A Comment" button on the TC's web page at https://www.oasis-open.org/committees/xacml/.
@@ -1222,7 +1208,7 @@ This document and translations of it may be copied and furnished to others, and 
 The limited permissions granted above are perpetual and will not be revoked by OASIS or its successors or assigns, as provided in the OASIS IPR Policy.
 
 
-This document is provided under the [RF on Limited Terms](https://www.oasis-open.org/policies-guidelines/ipr/#RF-on-Limited-Mode) IPR mode that was chosen when the project was established, as defined in the IPR Policy. For information on whether any patents have been disclosed that may be essential to implementing this document, and any offers of patent licensing terms, please refer to the Intellectual Property Rights section of the project's web page ([XACML IPR Policy](https://www.oasis-open.org/committees/xacml/ipr.php)).
+This document is provided under the [RF on Limited Terms](https://www.oasis-open.org/policies-guidelines/ipr/#RF-on-Limited-Mode) IPR mode that was chosen when the project was established, as defined in the IPR Policy. For information on whether any patents have been disclosed that may be essential to implementing this document, and any offers of patent licensing terms, please refer to the Intellectual Property Rights section of the project's web page ([ACAL IPR Policy](https://www.oasis-open.org/committees/xacml/ipr.php)).
 
 
 This document and the information contained herein is provided on an "AS IS" basis and OASIS DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. OASIS AND ITS MEMBERS WILL NOT BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF ANY USE OF THIS DOCUMENT OR ANY PART THEREOF.
@@ -1265,7 +1251,7 @@ The following documents are referenced in such a way that some or all of their c
 
 ###### [ACAL-Core-1.0]
 
-Attribute-Centric Authorization Language (ACAL) Version 1.0. Edited by Steven Legg and Cyril Dangerville. 18 February 2026. OASIS Committee Specification Draft 01.
+Attribute-Centric Authorization Language (ACAL) Version 1.0. Edited by Steven Legg, Cyril Dangerville and William Parducci. 18 February 2026. OASIS Committee Specification Draft 01.
 
 ###### [RBAC]
 
@@ -1291,15 +1277,15 @@ INCITS 359-2004, *Information Technology — Role Based Access Control*, America
 
 ###### [XACML-Core-4.0]
 
-_eXtensible Access Control Markup Language (XACML) Version 4.0_. Edited by Steven Legg and Cyril Dangerville. 18 February 2026. OASIS Committee Specification Draft 01. https://docs.oasis-open.org/xacml/acal/xacml/core/v4.0/csd01/acal-core-xml-v4.0-csd01.html.
+_eXtensible Access Control Markup Language (XACML) Version 4.0_. Edited by Steven Legg, Cyril Dangerville and William Parducci. 18 February 2026. OASIS Committee Specification Draft 01. https://docs.oasis-open.org/xacml/acal/xacml/core/v4.0/csd01/acal-core-xml-v4.0-csd01.html.
 
 ###### [JACAL-Core-1.0]
 
-_JSON Representation of ACAL Version 1.0 (JACAL)_. Edited by Steven Legg and Cyril Dangerville. OASIS Committee Specification Draft 02. https://docs.oasis-open.org/xacml/acal/jacal/core/v1.0/csd02/acal-core-json-v1.0-csd02.html.
+_JSON Representation of ACAL Version 1.0 (JACAL)_. Edited by Steven Legg, Cyril Dangerville and William Parducci. OASIS Committee Specification Draft 02. https://docs.oasis-open.org/xacml/acal/jacal/core/v1.0/csd02/acal-core-json-v1.0-csd02.html.
 
 ###### [YACAL-Core-1.0]
 
-_YAML Representation of ACAL (YACAL) Version 1.0_. Edited by Steven Legg and Cyril Dangerville. 23 March 2026. Working Draft 01. Not yet submitted to OASIS for consideration; no stable publication URL exists at this stage.
+_YAML Representation of ACAL (YACAL) Version 1.0_. Edited by Steven Legg, Cyril Dangerville and William Parducci. 23 March 2026. Working Draft 01. Not yet submitted to OASIS for consideration; no stable publication URL exists at this stage.
 
 
 ---
@@ -1344,7 +1330,7 @@ This profile defines one standard value for the `urn:oasis:names:tc:acal:1.0:act
 
 ## Online generation
 
-HTML/PDF versions are generated automatically online via Github Actions after each update pushed to the main branch of [OASIS XACML TC Github repository](https://github.com/oasis-tcs/xacml-spec/). Go to  Github Actions on the github repository, then go to the latest workflow run, and, if the run succeeded, the summary should display the links to the generated HTML/PDF documents.
+HTML/PDF versions are generated automatically online via Github Actions after each update pushed to the main branch of [OASIS ACAL TC Github repository](https://github.com/oasis-tcs/xacml-spec/). Go to  Github Actions on the github repository, then go to the latest workflow run, and, if the run succeeded, the summary should display the links to the generated HTML/PDF documents.
 
 ## Offline generation
 
@@ -1356,7 +1342,7 @@ $ alias pandoc='docker run --rm --volume "$(pwd):/data" ghcr.io/oasis-tcs/pandoc
 ```
 _The Dockerfile (named `Dockerfile`) of the docker image used in the alias above is provided in the [pandoc](pandoc) folder next to this markdown file for your convenience if you wish to build it yourself._
 
-Git clone or get a local copy of [OASIS XACML TC Github repository](https://github.com/oasis-tcs/xacml-spec/), open a terminal and **change your working directory to the root directory of your local copy of the repository**.
+Git clone or get a local copy of [OASIS ACAL TC Github repository](https://github.com/oasis-tcs/xacml-spec/), open a terminal and **change your working directory to the root directory of your local copy of the repository**.
 
 ### CSS stylesheet
 
@@ -1402,15 +1388,7 @@ The following individuals have had significant leadership positions during the d
 - Editors
   - Steven Legg, ViewDS Identity Solutions
   - Cyril Dangerville, THALES
-
-
-## Special Thanks
-
-
-The following individuals have made substantial contributions to this document, not just this version of the document, and their contributions are gratefully acknowledged:
-
-- Steven Legg, ViewDS Identity Solutions
-- Cyril Dangerville, THALES
+  - William Parducci, Individual
 
 
 ## Participants
@@ -1418,9 +1396,8 @@ The following individuals have made substantial contributions to this document, 
 
 The following individuals were members of this committee during the creation of this document, not just this version of the document, and their contributions are gratefully acknowledged:
 
-**XACML TC Members:**
+**ACAL TC Members:**
 
-- Hal Lockhart, Individual
 - Bill Parducci, Individual
 - Steven Legg, ViewDS Identity Solutions
 - Cyril Dangerville, THALES
@@ -1438,7 +1415,7 @@ This is the first version of this profile. See [Section 4.3](#43-changes-from-th
 
 ## Revision History
 
-Latest revision history can be obtained from [OASIS XACML TC's github repository](https://github.com/oasis-tcs/xacml-spec/blob/v%version%-%stage_revision%/acal-rbac-v%version%-%stage_revision%.md).
+Latest revision history can be obtained from [OASIS ACAL TC's github repository](https://github.com/oasis-tcs/xacml-spec/blob/v%version%-%stage_revision%/acal-rbac-v%version%-%stage_revision%.md).
 
 <!-- The following centered line represents the end of the document -->
 \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
