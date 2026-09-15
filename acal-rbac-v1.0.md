@@ -297,7 +297,9 @@ The following substantive changes and decisions apply relative to the XACML 3.0 
 - **A single combining algorithm and Permit-only rules.** [[RBAC](#rbac)] §5.3 and §6 mandate no combining algorithm (the examples in [[RBAC](#rbac)] §2 use permit-overrides for illustration only). This profile does mandate one, in [Section 5.3](#53-access-control): every `Rule` beneath a Permission Policy has an `Effect` of `Permit`, and every Role Policy, Permission Policy, and policy nested within or referenced from a Permission Policy uses `permit-overrides` or `ordered-permit-overrides`. This is new relative to [[RBAC](#rbac)], which does not address the question. The reason is not that other algorithms would break inheritance — given the Permit-only rule they would not; fed only `Permit`, `NotApplicable` and `Indeterminate{P}`, `deny-overrides` reaches the same decisions as `permit-overrides`. It is that the algorithms which *synthesize* a decision where nothing applied (`permit-unless-deny`, `deny-unless-permit`) must be excluded, and that naming a single algorithm keeps a role hierarchy re-parentable without re-examining the combining behaviour of the policies involved. The rules also make an RBAC policy set composable with non-RBAC policies: with no `Deny` rule beneath it, a Permission Policy never returns `Deny`, so it cannot deny an access that a policy evaluated alongside it intends to permit. A prohibition is expressed outside the RBAC policy set ([Section 6.1](#61-combining-algorithms)).
 - **Role Policy Target restated as an expression constraint.** A Role Policy's `Target` is an ACAL `BooleanExpressionType` — one boolean expression — not XACML's `<AnyOf>`/`<AllOf>`/`<Match>` structure. [[RBAC](#rbac)] §5.3's "applicable only to Subjects having the [role]; the `<Target>` … SHALL NOT restrict the Resource, Action, or Environment" is restated in [Section 5.3.1](#531-role-policy) as: the expression is true only if the role is present, and it references only subject-category attributes. The direction of the applicability rule is preserved (only-if, not iff) so that a Role Policy Target testing several roles at once ([Section 5.4](#54-multi-role-permissions)) or an additional subject predicate remains valid. This matches the ACAL Hierarchical Resource and Multiple Decision Profiles, whose example policies also use the boolean `Apply` form.
 - **HasPrivilegesOfRole is a `Rule`, not a wrapped `<Policy>`.** [[RBAC](#rbac)] §5.3 defines the feature as a HasPrivilegesOfRole `<Policy>` — a `<Policy>` wrapping one Permit `<Rule>` — inside the Permission `<PolicySet>`, and [[RBAC](#rbac)] §2.5's example carries the whole test (action *and* queried role) in that `<Rule>`'s `<Condition>`. XACML needs the wrapper only because a `<PolicySet>` cannot contain a `<Rule>` directly. An ACAL `PolicyType` object's `CombinerInput` holds `Rule` objects freely, so this profile drops the wrapper: the HasPrivilegesOfRole Rule sits directly in the Permission Policy ([Section 5.3.4](#534-hasprivilegesofrole-rule)). A `Rule` has no `Target` and no `CombiningAlgId`, so the action test is necessarily in its `Condition` and there is no combining algorithm to constrain.
-- **A multi-role Permission Policy is not inheritable — a deliberate restriction relative to [[RBAC](#rbac)].** [[RBAC](#rbac)] §1.10 expressly permits it: "The permissions associated with a given multi-role `<PolicySet>` may also be inherited by another role if the other role includes a reference to the Permission `<PolicySet>` associated with the multi-role policy in its own Permission `<PolicySet>`." [Section 5.4](#54-multi-role-permissions) forbids it. A senior role that reached a composite role's permissions by inheritance would obtain them without its holders necessarily holding every role the composite role requires, defeating the simultaneous-role requirement that is the whole point of the construct. The restriction is absolute rather than conditional: inheritance would be safe where the referencing role itself requires a superset of the composite role's roles, but stating that as a rule would require comparing `Target` expressions for subsumption — not mechanically checkable, and a silent leak of the composite role's permissions whenever an author judged it wrong. A deployment that wants a permission set shared between roles gives it its own ordinary role, junior to both.
+- **A composite-role Permission Policy is inheritable, matching [[RBAC](#rbac)].** [[RBAC](#rbac)] §1.10 expressly permits a senior role to inherit a multi-role `<PolicySet>`'s permissions; [Section 5.4](#54-multi-role-permissions) preserves that. The judgment involved — is the senior role a suitable guarantor of the permission set a composite role's required roles, held together, represent — is the same kind of judgment already relied on for every other inheritance edge in the hierarchy, not a distinct risk this profile singles out; see [Section 6.3](#63-structuring-a-role-hierarchy).
+- **HasPrivilegesOfRole is isolated from ordinary permission rules, where supported.** [[RBAC](#rbac)] does not address whether an ordinary permission rule may itself answer a HasPrivilegesOfRole query; nothing in a naive port of CS02's structure prevents one from doing so by accident, which makes a HasPrivilegesOfRole `Permit` indistinguishable from an ordinary `Permit` that merely happened to match. [Section 5.3.2](#532-permission-policy) constraint 4 requires that, where a PDP supports HasPrivilegesOfRole, every ordinary `Rule` and nested `Policy` in a Permission Policy sit inside one nested `Policy` whose `Target` excludes the reserved action, leaving the HasPrivilegesOfRole Rule and the junior-role hierarchy as the only children able to answer such a query. This is new relative to [[RBAC](#rbac)]. A PDP that does not support HasPrivilegesOfRole is not subject to this constraint.
+- **HasPrivilegesOfRole action and resource-role cardinality are now constrained.** [[RBAC](#rbac)] does not say whether the reserved action or the queried role may be multi-valued. [Section 5.3.4](#534-hasprivilegesofrole-rule) constraint 1 now requires the `action-id` attribute to carry exactly the reserved value and no other, and treats a resource role attribute naming more than one role existentially — `Permit` if the subject has the privileges of any one of the named roles. This is new relative to [[RBAC](#rbac)].
 - **The subject-restriction ban applies only to the Permission Policy's own `Target`.** [[RBAC](#rbac)] §5.3 forbids a subject restriction in the `<Target>` of the Permission `<PolicySet>` *and* of every `<PolicySet>`, `<Policy>` and `<Rule>` it includes or references. [Section 5.3.2](#532-permission-policy) constraint 2 keeps the ban only on the Permission Policy's own `Target` — the construct that alone gates the whole policy's applicability, and therefore inheritance. The XACML-wide `<Target>` ban was in any case porous: an ACAL `RuleType` object has no `Target`, and an ordinary `Rule`'s `Condition` MAY reference subject attributes. A subject predicate deeper in the policy — a nested `PolicyType` object's `Target`, or an ordinary `Rule`'s `Condition` — is permitted but still narrows the access beneath it ([Section 9](#9-safety-security-and-data-protection-considerations)). (A HasPrivilegesOfRole Rule is the exception: [Section 5.3.4](#534-hasprivilegesofrole-rule) constraint 3 forbids a subject test in *its* `Condition`.)
 - **Two clarifications to ACAL Core** accompany this profile, because RBAC is the first ACAL profile to lean on the PDP's policy-set and reference-resolution model directly:
   - [[ACAL-Core-1.0](#acal-core-10)] Section 8.13 now specifies how a policy reference is resolved against the policies that define the PDP — by `PolicyId` and version, for any reference in a policy's `CombinerInput`; the entry-point reference must resolve within that set ([[ACAL-Core-1.0](#acal-core-10)] Section 7.46). Section 7.8's "outside the scope" sentence is narrowed to cover only locating a policy that is *not* among those that define the PDP (a URL, an external repository). This is a resolution-model clarification, not a change of any evaluation outcome for a policy set whose `CombinerInput` references all resolve within the PDP's policy set; reviewers should read it against Sections 7.8, 7.46 and 8.15.
@@ -353,7 +355,7 @@ They also keep an RBAC policy set composable. When every policy reachable from a
 
 A Role Policy for a role is a `PolicyType` object that:
 
-1. SHALL have a `Target`. The `Target` expression SHALL evaluate to `true` for a request only if the request context contains, in a subject category, the role attribute and value (or, for an identifier-per-role deployment, the role attribute) for this role. The `Target` expression SHALL reference only subject-category attributes — every `AttributeDesignator` or `AttributeSelector` in the expression, including those reached through a `VariableReference`, SHALL name a subject category; it SHALL NOT reference a resource, action or environment attribute. (This is the ACAL form of [[RBAC](#rbac)] §5.3's rule that a Role `<PolicySet>`'s `<Target>` makes it applicable only to the subject and SHALL NOT restrict the Resource, Action, or Environment.)
+1. SHALL have a `Target`. The `Target` expression SHALL evaluate to `true` for a request only if the request context contains, in a subject category, the role attribute and value (or, for an identifier-per-role deployment, the role attribute) for this role, or, for a composite role ([Section 5.4](#54-multi-role-permissions)), each of its constituent roles. The `Target` expression SHALL reference only subject-category attributes — every `AttributeDesignator` or `AttributeSelector` in the expression, including those reached through a `VariableReference`, SHALL name a subject category; it SHALL NOT reference a resource, action or environment attribute. (This is the ACAL form of [[RBAC](#rbac)] §5.3's rule that a Role `<PolicySet>`'s `<Target>` makes it applicable only to the subject and SHALL NOT restrict the Resource, Action, or Environment.)
 2. SHALL contain, in its `CombinerInput`, exactly one `PolicyReference` — to the Permission Policy for this role ([Section 5.3.2](#532-permission-policy)) — and SHALL NOT contain any other `PolicyReference`, any nested `Policy`, or any `Rule`.
 
 Because a Role Policy's `Target` is the only thing that gates a subject's access to a role's permissions, a `Target` that is stricter than "the role is present" silently withholds permissions rather than causing an error. See [Section 6.2](#62-matching-role-attributes-in-a-target).
@@ -366,6 +368,13 @@ A Permission Policy for a role is a `PolicyType` object that:
 2. SHALL NOT restrict, in its own `Target`, the subjects to which it applies. ([[RBAC](#rbac)] §5.3 requires that "the `<Target>` of the `<PolicySet>` and its included or referenced `<PolicySet>`, `<Policy>`, and `<Rule>` elements SHALL NOT limit the Subjects". This profile keeps the ban only on the Permission Policy's own `Target`: an ACAL `RuleType` object has no `Target`, and an ordinary `Rule`'s `Condition` MAY reference subject attributes — for example to permit access only to a subject who owns the requested resource — so a subject predicate on a nested `PolicyType` object's `Target` has no greater effect and is likewise permitted. A HasPrivilegesOfRole Rule is the exception — [Section 5.3.4](#534-hasprivilegesofrole-rule) constraint 3 forbids a subject test in its `Condition`.) What is forbidden is gating a Permission Policy's *applicability* on the subject: a Permission Policy is made applicable to a subject solely by being referenced from that role's Role Policy, and a subject restriction in its own `Target` would break inheritance, because a senior role's holders — who do not necessarily hold the junior role's attribute — reach the junior Permission Policy by reference.
 3. SHALL be reached only through its own Role Policy or through the hierarchy, per [Section 5.3.5](#535-the-pdp-entry-point) constraints 2, 3 and 4: it SHALL be the target of a `PolicyReference` only from this role's Role Policy ([Section 5.3.1](#531-role-policy)) or from the Permission Policy of a role senior to it ([Section 5.3.3](#533-role-hierarchy)), SHALL NOT be named by the `PolicyReference` of a `BundleType` object, and SHALL NOT be nested as a `Policy` in any policy. 
    (This is what makes a Permission Policy "reachable only through the corresponding Role `<PolicySet>`" ([[RBAC](#rbac)] §1.9) in ACAL terms.)
+4. If the PDP supports HasPrivilegesOfRole ([Section 5.3.4](#534-hasprivilegesofrole-rule)), the Permission Policy's `CombinerInput` SHALL contain only: its HasPrivilegesOfRole Rule; the `PolicyReference` objects constraint 1 permits; and at most one nested `Policy` object, which SHALL hold every `Rule` and nested `Policy` object describing the resources and actions the holders of this role may access. Those rules and policies keep whatever structure they would otherwise have had; only their common parent is new. A Permission Policy that has no permissions of its own — one that only inherits — has no such nested `Policy`.
+
+   That nested `Policy`'s `Target` SHALL evaluate to `false` whenever the request's `urn:oasis:names:tc:acal:1.0:action:action-id` attribute contains the value `urn:oasis:names:tc:acal:1.0:action:has-privileges-of-role`, and SHALL evaluate to `true` or `false` — never `Indeterminate` — for every other request. A `Target` that is `Indeterminate` where the `action-id` attribute is absent (a designator with `MustBePresent` `true`, for instance) turns an inherited grant into an error, the failure [Section 5.3.6](#536-notices) guards against for notice expressions on the same path.
+
+   A PDP that does not support HasPrivilegesOfRole is not subject to this constraint; its Permission Policies hold their `Rule` and nested `Policy` objects as constraint 1 describes.
+
+   Without this separation, an ordinary `Rule` or nested `Policy` that happens to evaluate to `Permit` for a HasPrivilegesOfRole query — nothing about constraint 1 requires it not to — is indistinguishable in the response from a `Permit` produced by the HasPrivilegesOfRole Rule itself: the query stops being about the queried role and starts being about whatever else in the Permission Policy happened to match, silently, with no status code or marker. The exclusion isolates the HasPrivilegesOfRole Rule (and, through the junior-role `PolicyReference`s left outside it, the hierarchy's own HasPrivilegesOfRole Rules) as the only children able to answer such a query. [Section 5.3.4](#534-hasprivilegesofrole-rule) constraint 3 establishes that a matching Rule yields a `Permit`; this constraint establishes the converse, which nothing else in this profile secures: that a `Permit` from a Permission Policy on this action means the HasPrivilegesOfRole Rule for some reachable role actually matched.
 
 ### 5.3.3 Role Hierarchy
 
@@ -375,15 +384,17 @@ Inheritance is resolved by ordinary ACAL policy-reference evaluation ([[ACAL-Cor
 
 ### 5.3.4 HasPrivilegesOfRole Rule
 
-Support for requests asking whether a subject has the privileges of a role is OPTIONAL. A PDP that supports them SHALL include a HasPrivilegesOfRole Rule in **every** Permission Policy; a PDP that does not support them SHALL include one in no Permission Policy. Partial support — the Rule in some Permission Policies but not others — is not conformant: a query about a role whose Permission Policy carries no such Rule is answered as though the subject lacked the role's privileges, which is indistinguishable from a correct negative answer. (This is [[RBAC](#rbac)] §1.9's rule that "if this type of request is to be supported, then a HasPrivilegesOfRole `<Policy>` must be included in each Permission `<PolicySet>`", restated for the ACAL form of the construct; §2.5 states it the same way.)
+Support for requests asking whether a subject has the privileges of a role is OPTIONAL. A PDP that supports them SHALL include a HasPrivilegesOfRole Rule in **every** Permission Policy; a PDP that does not support them SHALL NOT include one in any Permission Policy. Partial support — the Rule in some Permission Policies but not others — is not conformant: a query about a role whose Permission Policy carries no such Rule is answered as though the subject lacked the role's privileges, which is indistinguishable from a correct negative answer. (This is [[RBAC](#rbac)] §1.9's rule that "if this type of request is to be supported, then a HasPrivilegesOfRole `<Policy>` must be included in each Permission `<PolicySet>`", restated for the ACAL form of the construct; §2.5 states it the same way.)
 
 A HasPrivilegesOfRole Rule is a `Rule` with `Effect` `Permit`, directly in the Permission Policy's `CombinerInput`, that lets a request ask whether a subject has the privileges of this role without naming any resource or action of it. ([[RBAC](#rbac)] §5.3 defines the feature as a HasPrivilegesOfRole `<Policy>` — a `<Policy>` wrapping one Permit `<Rule>` — inside the Permission `<PolicySet>`. XACML needs the wrapper because a `<PolicySet>` cannot contain a `<Rule>`; an ACAL `PolicyType` object can, so this profile places the rule directly. [[RBAC](#rbac)] §2.5's example already carries the whole test in the `<Rule>`'s `<Condition>`. See [Section 4.3](#43-changes-from-the-previous-version).)
 
 A HasPrivilegesOfRole Rule:
 
-1. SHALL have a `Condition` that evaluates to `true` if and only if (a) the request's `urn:oasis:names:tc:acal:1.0:action:action-id` attribute has the value `urn:oasis:names:tc:acal:1.0:action:has-privileges-of-role`, and (b) the resource role attribute names this Permission Policy's role. Test (a) makes the rule `NotApplicable` — and so without effect — for every request that is not a HasPrivilegesOfRole query.
+1. SHALL have a `Condition` that evaluates to `true` where both (a) the request's `urn:oasis:names:tc:acal:1.0:action:action-id` attribute contains exactly one value, `urn:oasis:names:tc:acal:1.0:action:has-privileges-of-role`, and (b) the resource role attribute names this Permission Policy's role among however many role values it carries; and that evaluates to `false` — never `Indeterminate` — for every other request. (A cardinality test written with `urn:oasis:names:tc:acal:1.0:function:string-one-and-only` would not satisfy this: that function is `Indeterminate`, not `false`, where the attribute does not carry exactly one value. A `string-bag-size` comparison is determinate and does.) Test (a) makes the rule `NotApplicable` — and so without effect — for every request that is not a HasPrivilegesOfRole query, including a request whose `action-id` attribute carries the reserved value alongside any other action value: mixing the reserved action with an ordinary one does not yield a defined HasPrivilegesOfRole answer, and this profile does not give it one. A resource role attribute naming more than one role is answered existentially: the Rule's own role need only be one of the values named, so a query about several roles at once asks whether the subject has the privileges of at least one of them.
 2. SHALL be answered by a request that carries the role being asked about as a **resource** attribute — a `RequestAttributeType` object in the resource category, using the same role attribute identifier as [Section 5.1](#51-roles-and-role-attributes) but in the resource `RequestEntityType`. (The same `AttributeId` may appear in both a subject entity and the resource entity of one request; ACAL's attribute-uniqueness constraint is scoped per `RequestEntityType` — [[ACAL-Core-1.0](#acal-core-10)] Section 7.33.)
 3. SHALL NOT test any subject attribute in its `Condition`, including through a `VariableReference` — [[RBAC](#rbac)] §5.3 requires the rule to "permit any Subject" to make the query. With constraint 1, the rule then returns `Permit` for every matching query, whichever subject makes it, once evaluation reaches this Permission Policy — through this role's Role Policy, or through a senior role's Permission Policy in the hierarchy. (That `Permit` is the Permission Policy's overall result: [Section 5.3](#53-access-control) constraint 2 requires `permit-overrides` or `ordered-permit-overrides`, under which any `Permit` among the combined children decides the policy.)
+
+A request MAY carry resource attributes other than the role or roles being asked about; a HasPrivilegesOfRole Rule's `Condition` does not reference them, and this profile places no requirement on them. A PEP constructing a HasPrivilegesOfRole request SHOULD NOT include a resource attribute other than the role attribute carrying the role or roles being queried, so that the request cannot be read as also asking an ordinary access question.
 
 Because the HasPrivilegesOfRole Rule sits inside a Permission Policy, a senior role's holders correctly test as having the privileges of any junior role, through the same inheritance references as ordinary permissions.
 
@@ -418,7 +429,7 @@ This constraint is on the notice expression, not on the decision: a notice that 
 
 A permission set that a subject may exercise only while holding several roles *simultaneously* is treated as a single *composite role* with its own Role Policy and Permission Policy ([Section 5.3](#53-access-control)). The composite role's Role Policy has a `Target` that evaluates to `true` only when the request context contains all of the required role attributes and values — for example a boolean `and` of one role test per required role, still referencing only subject-category attributes ([Section 5.3.1](#531-role-policy)).
 
-The composite role's Permission Policy MAY reference the Permission Policies of junior roles for inheritance, exactly as in [Section 5.3.3](#533-role-hierarchy). It SHALL NOT be the target of a `PolicyReference` from any other Permission Policy: a senior role that could reach the composite role's permissions by inheritance would obtain them without its holders necessarily holding every required role, defeating the simultaneous-role requirement.
+The composite role's Permission Policy MAY reference the Permission Policies of junior roles for inheritance, exactly as in [Section 5.3.3](#533-role-hierarchy), and MAY itself be the target of a `PolicyReference` from another role's Permission Policy, exactly as any other Permission Policy ([Section 5.3.3](#533-role-hierarchy)). A senior role that inherits a composite role's permissions this way extends its own holders the same guarantee the composite role's own definition already rests on: that its required roles, held together, are a suitable basis for the permission set. Whether a given senior role is itself a suitable guarantor of that same permission set — for example, whether every holder of the senior role can be trusted with what would otherwise require holding every one of the composite's roles at once — is a judgment for whoever designs the hierarchy, the same judgment already relied on for every other inheritance edge in it; see [Section 6.3](#63-structuring-a-role-hierarchy).
 
 ---
 
@@ -435,6 +446,10 @@ The composite role's Permission Policy MAY reference the Permission Policies of 
 
 Above the Role Policies this profile constrains nothing ([Section 5.3.5](#535-the-pdp-entry-point)). For an RBAC-only PDP it recommends one shape: a single policy that is both the PDP entry point and the policy combining the Role Policies, using `deny-unless-permit`, so the final decision is `Permit` if and only if at least one Role Policy returns `Permit`. A subject holding several roles is thereby permitted an access that any one of their roles permits. Where these policies are evaluated alongside non-RBAC policies, that arrangement is a deployment decision the profile does not make.
 
+Where HasPrivilegesOfRole is supported, a deployment relying on it should extend the reserved-action exclusion that [Section 5.3.2](#532-permission-policy) constraint 4 requires inside a Permission Policy to every policy that combines Role Policies with anything else, up to the PDP's entry point. The exclusion goes on the *other* inputs, not on the combining policy itself: group the non-RBAC children under a policy whose `Target` is `false` whenever `action-id` contains the reserved value, and leave the `PolicyReference`s to the Role Policies outside that group, exactly as constraint 4 leaves the HasPrivilegesOfRole Rule and the junior-role references outside the Permission Policy's wrapper. Putting the exclusion on the combining policy itself would make the Role Policies `NotApplicable` too, and the feature would never answer at all.
+
+The reason to do this above the Role Policies is narrower than it may look. Within the RBAC policy set constraint 4 is sufficient: a Role Policy can return `Permit` for a reserved-action request only because a HasPrivilegesOfRole Rule reachable from it matched, so a subject holding several roles gets a correct existential answer, not a spurious one. The residual risk is a non-RBAC policy combined alongside the Role Policies, which this profile does not constrain and which may return `Permit` for the reserved action for reasons of its own. That matters because `deny-unless-permit`, like `permit-overrides`, returns on the first `Permit` among its children (Annex E.4, E.6) and its children may be processed in any order, so such a policy can decide the request without the Role Policy that would have answered it ever being evaluated. This is guidance, not a constraint this profile enforces — everything above the Role Policies is a deployment decision, per [Section 5.3.5](#535-the-pdp-entry-point).
+
 **Prohibitions.** A prohibition cannot be expressed inside the RBAC policy set: [Section 5.3](#53-access-control) requires every `Rule` beneath a Permission Policy to have an `Effect` of `Permit`, so a `Deny` rule there is not conformant. A deployment that needs a `Deny` to override a `Permit` from any role — for example a prohibition that is to hold regardless of which roles a subject holds — expresses it in a policy outside the RBAC policy set, and combines that policy with the Role Policies under a deny-biased algorithm (`deny-overrides`, or `ordered-deny-overrides` where order matters). Such an algorithm is consistent with `permit-overrides` as far as the Role Policies themselves are concerned — none of them can return `Deny` — while still letting the prohibition override every role's grant. The prohibition policy references no Permission Policy, so [Section 5.3.5](#535-the-pdp-entry-point) constraints 2, 3 and 4 still hold.
 
 ## 6.2 Matching Role Attributes in a Target
@@ -447,18 +462,20 @@ Keep the `Target` expression to exactly the role test. Anything more — a resou
 
 Give each role its own Role Policy and Permission Policy, and express seniority only as `PolicyReference` objects from the senior Permission Policy to each immediately-junior Permission Policy. Do not flatten a hierarchy by copying a junior role's rules into a senior role's Permission Policy — the copy has to be maintained in two places, and the point of the by-reference structure is that each seniority edge lives in exactly one place (the senior role's Permission Policy), so making one role junior to another is a single added `PolicyReference` and never touches a rule.
 
+A composite role's Permission Policy ([Section 5.4](#54-multi-role-permissions)) can be the target of an inheritance reference like any other, but the judgment behind that reference is sharper: inheriting an ordinary junior role's permissions relies on the senior role being a suitable guarantor of that one role's permissions, while inheriting a composite role's permissions relies on the senior role being a suitable guarantor of the *combination* its required roles represent — for example, a `(doctor, staff)` role inheriting from a `(nurse, staff)` role's permissions is a defensible design because a staff doctor is a reasonable guarantor of what a staff nurse is trusted with, not because `doctor` happens to satisfy the individual attributes `nurse` and `staff` would have. That is a judgment made once, at the point the `PolicyReference` is added, exactly like every other seniority edge in the hierarchy — not a distinct kind of constraint this profile enforces.
+
 ---
 
 
 # 7 Examples (non-normative)
 
-This section works one small hierarchy end to end: an `employee` role and a `manager` role, with `manager` senior to `employee`. An employee may `read` a timesheet; a manager may additionally `read` and `approve` expense reports, and — by inheritance — do anything an employee may do. Each Permission Policy also carries a HasPrivilegesOfRole Rule for its own role — this PDP supports those queries, so every Permission Policy has one ([Section 5.3.4](#534-hasprivilegesofrole-rule)). (A real deployment would narrow "read a timesheet" to the subject's *own* timesheet with a `Condition` comparing a subject attribute to a resource attribute — permitted by [Section 5.3.2](#532-permission-policy) constraint 2, which forbids subject gating only in a Permission Policy's `Target`, not in a `Rule`'s `Condition` — but that is elided here to keep the example focused on the RBAC structure.)
+This section works one small hierarchy end to end: an `employee` role and a `manager` role, with `manager` senior to `employee`. An employee may `read` a timesheet; a manager may additionally `read` and `approve` expense reports, and — by inheritance — do anything an employee may do. Each Permission Policy also carries a HasPrivilegesOfRole Rule for its own role — this PDP supports those queries, so every Permission Policy has one ([Section 5.3.4](#534-hasprivilegesofrole-rule)), and each Permission Policy's ordinary permissions accordingly sit inside a nested `Policy` excluding the reserved action, per [Section 5.3.2](#532-permission-policy) constraint 4. (A real deployment would narrow "read a timesheet" to the subject's *own* timesheet with a `Condition` comparing a subject attribute to a resource attribute — permitted by [Section 5.3.2](#532-permission-policy) constraint 2, which forbids subject gating only in a Permission Policy's `Target`, not in a `Rule`'s `Condition` — but that is elided here to keep the example focused on the RBAC structure.)
 
 Role attribute values are `urn:example:roles:employee` and `urn:example:roles:manager`. Identifiers are shown in full; a real deployment would use a short identifier set ([[ACAL-Core-1.0](#acal-core-10)] Section 7.2) to abbreviate them.
 
 ## 7.1 Role and Permission Policies
 
-Five policies: one that is both the PDP entry point and the policy combining the two Role Policies ([Section 5.3.5](#535-the-pdp-entry-point) — this is an RBAC-only PDP); a Role Policy and a Permission Policy for each role. The entry point is the policy a `BundleType` object's `PolicyReference` names ([Section 5.3.5](#535-the-pdp-entry-point)); all five appear in that object's `Policy` property. Within `Bundle.Policy` they are ordered so that each policy precedes the policy whose `PolicyReference` names it — each Permission Policy before its Role Policy, a junior role's policies before a senior role's, the entry point last. ACAL does not require this order; it is used here only to keep the set readable.
+Five top-level policies: one that is both the PDP entry point and the policy combining the two Role Policies ([Section 5.3.5](#535-the-pdp-entry-point) — this is an RBAC-only PDP); a Role Policy and a Permission Policy for each role. Each Permission Policy in turn holds one nested `Policy` object for its ordinary permissions ([Section 5.3.2](#532-permission-policy) constraint 4), so the example contains seven `PolicyType` objects in all. The entry point is the policy a `BundleType` object's `PolicyReference` names ([Section 5.3.5](#535-the-pdp-entry-point)); the five top-level policies appear in that object's `Policy` property. Within `Bundle.Policy` they are ordered so that each policy precedes the policy whose `PolicyReference` names it — each Permission Policy before its Role Policy, a junior role's policies before a senior role's, the entry point last. ACAL does not require this order; it is used here only to keep the set readable.
 
 **XACML v4.0 (XML)**
 
@@ -467,37 +484,27 @@ Five policies: one that is both the PDP entry point and the policy combining the
     <Policy PolicyId="urn:example:rbac:pp:employee" Version="1.0"
             CombiningAlgId="urn:oasis:names:tc:acal:1.0:combining-algorithm:permit-overrides">
         <Description>Permission Policy: employee.</Description>
-        <Rule Id="employee-timesheet" Effect="Permit">
-            <Description>An employee may read a timesheet.</Description>
-            <Condition>
-                <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:and">
-                    <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:anyURI-is-in">
-                        <Value DataType="urn:oasis:names:tc:acal:1.0:data-type:anyURI">urn:example:resources:timesheet</Value>
-                        <AttributeDesignator
-                            Category="urn:oasis:names:tc:acal:1.0:attribute-category:resource"
-                            AttributeId="urn:oasis:names:tc:acal:1.0:resource:resource-id"
-                            DataType="urn:oasis:names:tc:acal:1.0:data-type:anyURI"/>
-                    </Apply>
-                    <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:string-is-in">
-                        <Value DataType="urn:oasis:names:tc:acal:1.0:data-type:string">read</Value>
-                        <AttributeDesignator
-                            Category="urn:oasis:names:tc:acal:1.0:attribute-category:action"
-                            AttributeId="urn:oasis:names:tc:acal:1.0:action:action-id"
-                            DataType="urn:oasis:names:tc:acal:1.0:data-type:string"/>
-                    </Apply>
-                </Apply>
-            </Condition>
-        </Rule>
         <Rule Id="employee-has-privileges" Effect="Permit">
             <Description>HasPrivilegesOfRole: employee.</Description>
             <Condition>
                 <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:and">
-                    <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:string-is-in">
-                        <Value DataType="urn:oasis:names:tc:acal:1.0:data-type:string">urn:oasis:names:tc:acal:1.0:action:has-privileges-of-role</Value>
-                        <AttributeDesignator
-                            Category="urn:oasis:names:tc:acal:1.0:attribute-category:action"
-                            AttributeId="urn:oasis:names:tc:acal:1.0:action:action-id"
-                            DataType="urn:oasis:names:tc:acal:1.0:data-type:string"/>
+                    <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:and">
+                        <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:integer-equal">
+                            <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:string-bag-size">
+                                <AttributeDesignator
+                                    Category="urn:oasis:names:tc:acal:1.0:attribute-category:action"
+                                    AttributeId="urn:oasis:names:tc:acal:1.0:action:action-id"
+                                    DataType="urn:oasis:names:tc:acal:1.0:data-type:string"/>
+                            </Apply>
+                            <Value DataType="urn:oasis:names:tc:acal:1.0:data-type:integer">1</Value>
+                        </Apply>
+                        <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:string-is-in">
+                            <Value DataType="urn:oasis:names:tc:acal:1.0:data-type:string">urn:oasis:names:tc:acal:1.0:action:has-privileges-of-role</Value>
+                            <AttributeDesignator
+                                Category="urn:oasis:names:tc:acal:1.0:attribute-category:action"
+                                AttributeId="urn:oasis:names:tc:acal:1.0:action:action-id"
+                                DataType="urn:oasis:names:tc:acal:1.0:data-type:string"/>
+                        </Apply>
                     </Apply>
                     <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:anyURI-is-in">
                         <Value DataType="urn:oasis:names:tc:acal:1.0:data-type:anyURI">urn:example:roles:employee</Value>
@@ -509,6 +516,42 @@ Five policies: one that is both the PDP entry point and the policy combining the
                 </Apply>
             </Condition>
         </Rule>
+        <Policy PolicyId="urn:example:rbac:pp:employee-ordinary" Version="1.0"
+                CombiningAlgId="urn:oasis:names:tc:acal:1.0:combining-algorithm:permit-overrides">
+            <Description>Ordinary permissions: employee. Excluded from HasPrivilegesOfRole queries — Section 5.3.2 constraint 4.</Description>
+            <Target>
+                <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:not">
+                    <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:string-is-in">
+                        <Value DataType="urn:oasis:names:tc:acal:1.0:data-type:string">urn:oasis:names:tc:acal:1.0:action:has-privileges-of-role</Value>
+                        <AttributeDesignator
+                            Category="urn:oasis:names:tc:acal:1.0:attribute-category:action"
+                            AttributeId="urn:oasis:names:tc:acal:1.0:action:action-id"
+                            DataType="urn:oasis:names:tc:acal:1.0:data-type:string"/>
+                    </Apply>
+                </Apply>
+            </Target>
+            <Rule Id="employee-timesheet" Effect="Permit">
+                <Description>An employee may read a timesheet.</Description>
+                <Condition>
+                    <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:and">
+                        <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:anyURI-is-in">
+                            <Value DataType="urn:oasis:names:tc:acal:1.0:data-type:anyURI">urn:example:resources:timesheet</Value>
+                            <AttributeDesignator
+                                Category="urn:oasis:names:tc:acal:1.0:attribute-category:resource"
+                                AttributeId="urn:oasis:names:tc:acal:1.0:resource:resource-id"
+                                DataType="urn:oasis:names:tc:acal:1.0:data-type:anyURI"/>
+                        </Apply>
+                        <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:string-is-in">
+                            <Value DataType="urn:oasis:names:tc:acal:1.0:data-type:string">read</Value>
+                            <AttributeDesignator
+                                Category="urn:oasis:names:tc:acal:1.0:attribute-category:action"
+                                AttributeId="urn:oasis:names:tc:acal:1.0:action:action-id"
+                                DataType="urn:oasis:names:tc:acal:1.0:data-type:string"/>
+                        </Apply>
+                    </Apply>
+                </Condition>
+            </Rule>
+        </Policy>
     </Policy>
 
     <Policy PolicyId="urn:example:rbac:rp:employee" Version="1.0"
@@ -529,40 +572,27 @@ Five policies: one that is both the PDP entry point and the policy combining the
     <Policy PolicyId="urn:example:rbac:pp:manager" Version="1.0"
             CombiningAlgId="urn:oasis:names:tc:acal:1.0:combining-algorithm:permit-overrides">
         <Description>Permission Policy: manager. Inherits employee.</Description>
-        <Rule Id="manager-expense-report" Effect="Permit">
-            <Description>A manager may read and approve expense reports.</Description>
-            <Condition>
-                <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:and">
-                    <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:anyURI-is-in">
-                        <Value DataType="urn:oasis:names:tc:acal:1.0:data-type:anyURI">urn:example:resources:expense-report</Value>
-                        <AttributeDesignator
-                            Category="urn:oasis:names:tc:acal:1.0:attribute-category:resource"
-                            AttributeId="urn:oasis:names:tc:acal:1.0:resource:resource-id"
-                            DataType="urn:oasis:names:tc:acal:1.0:data-type:anyURI"/>
-                    </Apply>
-                    <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:string-at-least-one-member-of">
-                        <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:string-bag">
-                            <Value DataType="urn:oasis:names:tc:acal:1.0:data-type:string">read</Value>
-                            <Value DataType="urn:oasis:names:tc:acal:1.0:data-type:string">approve</Value>
-                        </Apply>
-                        <AttributeDesignator
-                            Category="urn:oasis:names:tc:acal:1.0:attribute-category:action"
-                            AttributeId="urn:oasis:names:tc:acal:1.0:action:action-id"
-                            DataType="urn:oasis:names:tc:acal:1.0:data-type:string"/>
-                    </Apply>
-                </Apply>
-            </Condition>
-        </Rule>
         <Rule Id="manager-has-privileges" Effect="Permit">
             <Description>HasPrivilegesOfRole: manager.</Description>
             <Condition>
                 <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:and">
-                    <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:string-is-in">
-                        <Value DataType="urn:oasis:names:tc:acal:1.0:data-type:string">urn:oasis:names:tc:acal:1.0:action:has-privileges-of-role</Value>
-                        <AttributeDesignator
-                            Category="urn:oasis:names:tc:acal:1.0:attribute-category:action"
-                            AttributeId="urn:oasis:names:tc:acal:1.0:action:action-id"
-                            DataType="urn:oasis:names:tc:acal:1.0:data-type:string"/>
+                    <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:and">
+                        <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:integer-equal">
+                            <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:string-bag-size">
+                                <AttributeDesignator
+                                    Category="urn:oasis:names:tc:acal:1.0:attribute-category:action"
+                                    AttributeId="urn:oasis:names:tc:acal:1.0:action:action-id"
+                                    DataType="urn:oasis:names:tc:acal:1.0:data-type:string"/>
+                            </Apply>
+                            <Value DataType="urn:oasis:names:tc:acal:1.0:data-type:integer">1</Value>
+                        </Apply>
+                        <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:string-is-in">
+                            <Value DataType="urn:oasis:names:tc:acal:1.0:data-type:string">urn:oasis:names:tc:acal:1.0:action:has-privileges-of-role</Value>
+                            <AttributeDesignator
+                                Category="urn:oasis:names:tc:acal:1.0:attribute-category:action"
+                                AttributeId="urn:oasis:names:tc:acal:1.0:action:action-id"
+                                DataType="urn:oasis:names:tc:acal:1.0:data-type:string"/>
+                        </Apply>
                     </Apply>
                     <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:anyURI-is-in">
                         <Value DataType="urn:oasis:names:tc:acal:1.0:data-type:anyURI">urn:example:roles:manager</Value>
@@ -574,6 +604,45 @@ Five policies: one that is both the PDP entry point and the policy combining the
                 </Apply>
             </Condition>
         </Rule>
+        <Policy PolicyId="urn:example:rbac:pp:manager-ordinary" Version="1.0"
+                CombiningAlgId="urn:oasis:names:tc:acal:1.0:combining-algorithm:permit-overrides">
+            <Description>Ordinary permissions: manager. Excluded from HasPrivilegesOfRole queries — Section 5.3.2 constraint 4.</Description>
+            <Target>
+                <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:not">
+                    <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:string-is-in">
+                        <Value DataType="urn:oasis:names:tc:acal:1.0:data-type:string">urn:oasis:names:tc:acal:1.0:action:has-privileges-of-role</Value>
+                        <AttributeDesignator
+                            Category="urn:oasis:names:tc:acal:1.0:attribute-category:action"
+                            AttributeId="urn:oasis:names:tc:acal:1.0:action:action-id"
+                            DataType="urn:oasis:names:tc:acal:1.0:data-type:string"/>
+                    </Apply>
+                </Apply>
+            </Target>
+            <Rule Id="manager-expense-report" Effect="Permit">
+                <Description>A manager may read and approve expense reports.</Description>
+                <Condition>
+                    <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:and">
+                        <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:anyURI-is-in">
+                            <Value DataType="urn:oasis:names:tc:acal:1.0:data-type:anyURI">urn:example:resources:expense-report</Value>
+                            <AttributeDesignator
+                                Category="urn:oasis:names:tc:acal:1.0:attribute-category:resource"
+                                AttributeId="urn:oasis:names:tc:acal:1.0:resource:resource-id"
+                                DataType="urn:oasis:names:tc:acal:1.0:data-type:anyURI"/>
+                        </Apply>
+                        <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:string-at-least-one-member-of">
+                            <Apply FunctionId="urn:oasis:names:tc:acal:1.0:function:string-bag">
+                                <Value DataType="urn:oasis:names:tc:acal:1.0:data-type:string">read</Value>
+                                <Value DataType="urn:oasis:names:tc:acal:1.0:data-type:string">approve</Value>
+                            </Apply>
+                            <AttributeDesignator
+                                Category="urn:oasis:names:tc:acal:1.0:attribute-category:action"
+                                AttributeId="urn:oasis:names:tc:acal:1.0:action:action-id"
+                                DataType="urn:oasis:names:tc:acal:1.0:data-type:string"/>
+                        </Apply>
+                    </Apply>
+                </Condition>
+            </Rule>
+        </Policy>
         <PolicyReference Id="urn:example:rbac:pp:employee"/>
     </Policy>
 
@@ -618,38 +687,6 @@ Five policies: one that is both the PDP entry point and the policy combining the
                 "CombinerInput": [
                     {
                         "Rule": {
-                            "Id": "employee-timesheet",
-                            "Effect": "Permit",
-                            "Description": "An employee may read a timesheet.",
-                            "Condition": {
-                                "Apply": {
-                                    "FunctionId": "urn:oasis:names:tc:acal:1.0:function:and",
-                                    "Argument": [
-                                        { "Apply": {
-                                            "FunctionId": "urn:oasis:names:tc:acal:1.0:function:anyURI-is-in",
-                                            "Argument": [
-                                                { "Value": { "DataType": "urn:oasis:names:tc:acal:1.0:data-type:anyURI", "Value": "urn:example:resources:timesheet" } },
-                                                { "AttributeDesignator": {
-                                                    "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
-                                                    "AttributeId": "urn:oasis:names:tc:acal:1.0:resource:resource-id",
-                                                    "DataType": "urn:oasis:names:tc:acal:1.0:data-type:anyURI" } }
-                                            ] } },
-                                        { "Apply": {
-                                            "FunctionId": "urn:oasis:names:tc:acal:1.0:function:string-is-in",
-                                            "Argument": [
-                                                { "Value": { "DataType": "urn:oasis:names:tc:acal:1.0:data-type:string", "Value": "read" } },
-                                                { "AttributeDesignator": {
-                                                    "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:action",
-                                                    "AttributeId": "urn:oasis:names:tc:acal:1.0:action:action-id",
-                                                    "DataType": "urn:oasis:names:tc:acal:1.0:data-type:string" } }
-                                            ] } }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    {
-                        "Rule": {
                             "Id": "employee-has-privileges",
                             "Effect": "Permit",
                             "Description": "HasPrivilegesOfRole: employee.",
@@ -658,13 +695,30 @@ Five policies: one that is both the PDP entry point and the policy combining the
                                     "FunctionId": "urn:oasis:names:tc:acal:1.0:function:and",
                                     "Argument": [
                                         { "Apply": {
-                                            "FunctionId": "urn:oasis:names:tc:acal:1.0:function:string-is-in",
+                                            "FunctionId": "urn:oasis:names:tc:acal:1.0:function:and",
                                             "Argument": [
-                                                { "Value": { "DataType": "urn:oasis:names:tc:acal:1.0:data-type:string", "Value": "urn:oasis:names:tc:acal:1.0:action:has-privileges-of-role" } },
-                                                { "AttributeDesignator": {
-                                                    "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:action",
-                                                    "AttributeId": "urn:oasis:names:tc:acal:1.0:action:action-id",
-                                                    "DataType": "urn:oasis:names:tc:acal:1.0:data-type:string" } }
+                                                { "Apply": {
+                                                    "FunctionId": "urn:oasis:names:tc:acal:1.0:function:integer-equal",
+                                                    "Argument": [
+                                                        { "Apply": {
+                                                            "FunctionId": "urn:oasis:names:tc:acal:1.0:function:string-bag-size",
+                                                            "Argument": [
+                                                                { "AttributeDesignator": {
+                                                                    "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:action",
+                                                                    "AttributeId": "urn:oasis:names:tc:acal:1.0:action:action-id",
+                                                                    "DataType": "urn:oasis:names:tc:acal:1.0:data-type:string" } }
+                                                            ] } },
+                                                        { "Value": { "DataType": "urn:oasis:names:tc:acal:1.0:data-type:integer", "Value": "1" } }
+                                                    ] } },
+                                                { "Apply": {
+                                                    "FunctionId": "urn:oasis:names:tc:acal:1.0:function:string-is-in",
+                                                    "Argument": [
+                                                        { "Value": { "DataType": "urn:oasis:names:tc:acal:1.0:data-type:string", "Value": "urn:oasis:names:tc:acal:1.0:action:has-privileges-of-role" } },
+                                                        { "AttributeDesignator": {
+                                                            "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:action",
+                                                            "AttributeId": "urn:oasis:names:tc:acal:1.0:action:action-id",
+                                                            "DataType": "urn:oasis:names:tc:acal:1.0:data-type:string" } }
+                                                    ] } }
                                             ] } },
                                         { "Apply": {
                                             "FunctionId": "urn:oasis:names:tc:acal:1.0:function:anyURI-is-in",
@@ -678,6 +732,64 @@ Five policies: one that is both the PDP entry point and the policy combining the
                                     ]
                                 }
                             }
+                        }
+                    },
+                    {
+                        "Policy": {
+                            "PolicyId": "urn:example:rbac:pp:employee-ordinary",
+                            "Version": "1.0",
+                            "CombiningAlgId": "urn:oasis:names:tc:acal:1.0:combining-algorithm:permit-overrides",
+                            "Description": "Ordinary permissions: employee. Excluded from HasPrivilegesOfRole queries — Section 5.3.2 constraint 4.",
+                            "Target": {
+                                "Apply": {
+                                    "FunctionId": "urn:oasis:names:tc:acal:1.0:function:not",
+                                    "Argument": [
+                                        { "Apply": {
+                                            "FunctionId": "urn:oasis:names:tc:acal:1.0:function:string-is-in",
+                                            "Argument": [
+                                                { "Value": { "DataType": "urn:oasis:names:tc:acal:1.0:data-type:string", "Value": "urn:oasis:names:tc:acal:1.0:action:has-privileges-of-role" } },
+                                                { "AttributeDesignator": {
+                                                    "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:action",
+                                                    "AttributeId": "urn:oasis:names:tc:acal:1.0:action:action-id",
+                                                    "DataType": "urn:oasis:names:tc:acal:1.0:data-type:string" } }
+                                            ] } }
+                                    ]
+                                }
+                            },
+                            "CombinerInput": [
+                                {
+                                    "Rule": {
+                                        "Id": "employee-timesheet",
+                                        "Effect": "Permit",
+                                        "Description": "An employee may read a timesheet.",
+                                        "Condition": {
+                                            "Apply": {
+                                                "FunctionId": "urn:oasis:names:tc:acal:1.0:function:and",
+                                                "Argument": [
+                                                    { "Apply": {
+                                                        "FunctionId": "urn:oasis:names:tc:acal:1.0:function:anyURI-is-in",
+                                                        "Argument": [
+                                                            { "Value": { "DataType": "urn:oasis:names:tc:acal:1.0:data-type:anyURI", "Value": "urn:example:resources:timesheet" } },
+                                                            { "AttributeDesignator": {
+                                                                "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
+                                                                "AttributeId": "urn:oasis:names:tc:acal:1.0:resource:resource-id",
+                                                                "DataType": "urn:oasis:names:tc:acal:1.0:data-type:anyURI" } }
+                                                        ] } },
+                                                    { "Apply": {
+                                                        "FunctionId": "urn:oasis:names:tc:acal:1.0:function:string-is-in",
+                                                        "Argument": [
+                                                            { "Value": { "DataType": "urn:oasis:names:tc:acal:1.0:data-type:string", "Value": "read" } },
+                                                            { "AttributeDesignator": {
+                                                                "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:action",
+                                                                "AttributeId": "urn:oasis:names:tc:acal:1.0:action:action-id",
+                                                                "DataType": "urn:oasis:names:tc:acal:1.0:data-type:string" } }
+                                                        ] } }
+                                                ]
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 ]
@@ -709,43 +821,6 @@ Five policies: one that is both the PDP entry point and the policy combining the
                 "CombinerInput": [
                     {
                         "Rule": {
-                            "Id": "manager-expense-report",
-                            "Effect": "Permit",
-                            "Description": "A manager may read and approve expense reports.",
-                            "Condition": {
-                                "Apply": {
-                                    "FunctionId": "urn:oasis:names:tc:acal:1.0:function:and",
-                                    "Argument": [
-                                        { "Apply": {
-                                            "FunctionId": "urn:oasis:names:tc:acal:1.0:function:anyURI-is-in",
-                                            "Argument": [
-                                                { "Value": { "DataType": "urn:oasis:names:tc:acal:1.0:data-type:anyURI", "Value": "urn:example:resources:expense-report" } },
-                                                { "AttributeDesignator": {
-                                                    "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
-                                                    "AttributeId": "urn:oasis:names:tc:acal:1.0:resource:resource-id",
-                                                    "DataType": "urn:oasis:names:tc:acal:1.0:data-type:anyURI" } }
-                                            ] } },
-                                        { "Apply": {
-                                            "FunctionId": "urn:oasis:names:tc:acal:1.0:function:string-at-least-one-member-of",
-                                            "Argument": [
-                                                { "Apply": {
-                                                    "FunctionId": "urn:oasis:names:tc:acal:1.0:function:string-bag",
-                                                    "Argument": [
-                                                        { "Value": { "DataType": "urn:oasis:names:tc:acal:1.0:data-type:string", "Value": "read" } },
-                                                        { "Value": { "DataType": "urn:oasis:names:tc:acal:1.0:data-type:string", "Value": "approve" } }
-                                                    ] } },
-                                                { "AttributeDesignator": {
-                                                    "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:action",
-                                                    "AttributeId": "urn:oasis:names:tc:acal:1.0:action:action-id",
-                                                    "DataType": "urn:oasis:names:tc:acal:1.0:data-type:string" } }
-                                            ] } }
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    {
-                        "Rule": {
                             "Id": "manager-has-privileges",
                             "Effect": "Permit",
                             "Description": "HasPrivilegesOfRole: manager.",
@@ -754,13 +829,30 @@ Five policies: one that is both the PDP entry point and the policy combining the
                                     "FunctionId": "urn:oasis:names:tc:acal:1.0:function:and",
                                     "Argument": [
                                         { "Apply": {
-                                            "FunctionId": "urn:oasis:names:tc:acal:1.0:function:string-is-in",
+                                            "FunctionId": "urn:oasis:names:tc:acal:1.0:function:and",
                                             "Argument": [
-                                                { "Value": { "DataType": "urn:oasis:names:tc:acal:1.0:data-type:string", "Value": "urn:oasis:names:tc:acal:1.0:action:has-privileges-of-role" } },
-                                                { "AttributeDesignator": {
-                                                    "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:action",
-                                                    "AttributeId": "urn:oasis:names:tc:acal:1.0:action:action-id",
-                                                    "DataType": "urn:oasis:names:tc:acal:1.0:data-type:string" } }
+                                                { "Apply": {
+                                                    "FunctionId": "urn:oasis:names:tc:acal:1.0:function:integer-equal",
+                                                    "Argument": [
+                                                        { "Apply": {
+                                                            "FunctionId": "urn:oasis:names:tc:acal:1.0:function:string-bag-size",
+                                                            "Argument": [
+                                                                { "AttributeDesignator": {
+                                                                    "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:action",
+                                                                    "AttributeId": "urn:oasis:names:tc:acal:1.0:action:action-id",
+                                                                    "DataType": "urn:oasis:names:tc:acal:1.0:data-type:string" } }
+                                                            ] } },
+                                                        { "Value": { "DataType": "urn:oasis:names:tc:acal:1.0:data-type:integer", "Value": "1" } }
+                                                    ] } },
+                                                { "Apply": {
+                                                    "FunctionId": "urn:oasis:names:tc:acal:1.0:function:string-is-in",
+                                                    "Argument": [
+                                                        { "Value": { "DataType": "urn:oasis:names:tc:acal:1.0:data-type:string", "Value": "urn:oasis:names:tc:acal:1.0:action:has-privileges-of-role" } },
+                                                        { "AttributeDesignator": {
+                                                            "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:action",
+                                                            "AttributeId": "urn:oasis:names:tc:acal:1.0:action:action-id",
+                                                            "DataType": "urn:oasis:names:tc:acal:1.0:data-type:string" } }
+                                                    ] } }
                                             ] } },
                                         { "Apply": {
                                             "FunctionId": "urn:oasis:names:tc:acal:1.0:function:anyURI-is-in",
@@ -774,6 +866,69 @@ Five policies: one that is both the PDP entry point and the policy combining the
                                     ]
                                 }
                             }
+                        }
+                    },
+                    {
+                        "Policy": {
+                            "PolicyId": "urn:example:rbac:pp:manager-ordinary",
+                            "Version": "1.0",
+                            "CombiningAlgId": "urn:oasis:names:tc:acal:1.0:combining-algorithm:permit-overrides",
+                            "Description": "Ordinary permissions: manager. Excluded from HasPrivilegesOfRole queries — Section 5.3.2 constraint 4.",
+                            "Target": {
+                                "Apply": {
+                                    "FunctionId": "urn:oasis:names:tc:acal:1.0:function:not",
+                                    "Argument": [
+                                        { "Apply": {
+                                            "FunctionId": "urn:oasis:names:tc:acal:1.0:function:string-is-in",
+                                            "Argument": [
+                                                { "Value": { "DataType": "urn:oasis:names:tc:acal:1.0:data-type:string", "Value": "urn:oasis:names:tc:acal:1.0:action:has-privileges-of-role" } },
+                                                { "AttributeDesignator": {
+                                                    "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:action",
+                                                    "AttributeId": "urn:oasis:names:tc:acal:1.0:action:action-id",
+                                                    "DataType": "urn:oasis:names:tc:acal:1.0:data-type:string" } }
+                                            ] } }
+                                    ]
+                                }
+                            },
+                            "CombinerInput": [
+                                {
+                                    "Rule": {
+                                        "Id": "manager-expense-report",
+                                        "Effect": "Permit",
+                                        "Description": "A manager may read and approve expense reports.",
+                                        "Condition": {
+                                            "Apply": {
+                                                "FunctionId": "urn:oasis:names:tc:acal:1.0:function:and",
+                                                "Argument": [
+                                                    { "Apply": {
+                                                        "FunctionId": "urn:oasis:names:tc:acal:1.0:function:anyURI-is-in",
+                                                        "Argument": [
+                                                            { "Value": { "DataType": "urn:oasis:names:tc:acal:1.0:data-type:anyURI", "Value": "urn:example:resources:expense-report" } },
+                                                            { "AttributeDesignator": {
+                                                                "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:resource",
+                                                                "AttributeId": "urn:oasis:names:tc:acal:1.0:resource:resource-id",
+                                                                "DataType": "urn:oasis:names:tc:acal:1.0:data-type:anyURI" } }
+                                                        ] } },
+                                                    { "Apply": {
+                                                        "FunctionId": "urn:oasis:names:tc:acal:1.0:function:string-at-least-one-member-of",
+                                                        "Argument": [
+                                                            { "Apply": {
+                                                                "FunctionId": "urn:oasis:names:tc:acal:1.0:function:string-bag",
+                                                                "Argument": [
+                                                                    { "Value": { "DataType": "urn:oasis:names:tc:acal:1.0:data-type:string", "Value": "read" } },
+                                                                    { "Value": { "DataType": "urn:oasis:names:tc:acal:1.0:data-type:string", "Value": "approve" } }
+                                                                ] } },
+                                                            { "AttributeDesignator": {
+                                                                "Category": "urn:oasis:names:tc:acal:1.0:attribute-category:action",
+                                                                "AttributeId": "urn:oasis:names:tc:acal:1.0:action:action-id",
+                                                                "DataType": "urn:oasis:names:tc:acal:1.0:data-type:string" } }
+                                                        ] } }
+                                                ]
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     },
                     { "PolicyReference": { "Id": "urn:example:rbac:pp:employee" } }
@@ -826,36 +981,51 @@ Bundle:
       Description: "Permission Policy: employee."
       CombinerInput:
         - Rule:
-            Id: "employee-timesheet"
-            Effect: "Permit"
-            Description: "An employee may read a timesheet."
-            Condition:
-              Apply:
-                FunctionId: "urn:oasis:names:tc:acal:1.0:function:and"
-                Argument:
-                  - Apply:
-                      FunctionId: "urn:oasis:names:tc:acal:1.0:function:anyURI-is-in"
-                      Argument:
-                        - Value: { DataType: "urn:oasis:names:tc:acal:1.0:data-type:anyURI", Value: "urn:example:resources:timesheet" }
-                        - AttributeDesignator:
-                            Category: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
-                            AttributeId: "urn:oasis:names:tc:acal:1.0:resource:resource-id"
-                            DataType: "urn:oasis:names:tc:acal:1.0:data-type:anyURI"
-                  - Apply:
-                      FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-is-in"
-                      Argument:
-                        - Value: { DataType: "urn:oasis:names:tc:acal:1.0:data-type:string", Value: "read" }
-                        - AttributeDesignator:
-                            Category: "urn:oasis:names:tc:acal:1.0:attribute-category:action"
-                            AttributeId: "urn:oasis:names:tc:acal:1.0:action:action-id"
-                            DataType: "urn:oasis:names:tc:acal:1.0:data-type:string"
-        - Rule:
             Id: "employee-has-privileges"
             Effect: "Permit"
             Description: "HasPrivilegesOfRole: employee."
             Condition:
               Apply:
                 FunctionId: "urn:oasis:names:tc:acal:1.0:function:and"
+                Argument:
+                  - Apply:
+                      FunctionId: "urn:oasis:names:tc:acal:1.0:function:and"
+                      Argument:
+                        - Apply:
+                            FunctionId: "urn:oasis:names:tc:acal:1.0:function:integer-equal"
+                            Argument:
+                              - Apply:
+                                  FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-bag-size"
+                                  Argument:
+                                    - AttributeDesignator:
+                                        Category: "urn:oasis:names:tc:acal:1.0:attribute-category:action"
+                                        AttributeId: "urn:oasis:names:tc:acal:1.0:action:action-id"
+                                        DataType: "urn:oasis:names:tc:acal:1.0:data-type:string"
+                              - Value: { DataType: "urn:oasis:names:tc:acal:1.0:data-type:integer", Value: "1" }
+                        - Apply:
+                            FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-is-in"
+                            Argument:
+                              - Value: { DataType: "urn:oasis:names:tc:acal:1.0:data-type:string", Value: "urn:oasis:names:tc:acal:1.0:action:has-privileges-of-role" }
+                              - AttributeDesignator:
+                                  Category: "urn:oasis:names:tc:acal:1.0:attribute-category:action"
+                                  AttributeId: "urn:oasis:names:tc:acal:1.0:action:action-id"
+                                  DataType: "urn:oasis:names:tc:acal:1.0:data-type:string"
+                  - Apply:
+                      FunctionId: "urn:oasis:names:tc:acal:1.0:function:anyURI-is-in"
+                      Argument:
+                        - Value: { DataType: "urn:oasis:names:tc:acal:1.0:data-type:anyURI", Value: "urn:example:roles:employee" }
+                        - AttributeDesignator:
+                            Category: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
+                            AttributeId: "urn:oasis:names:tc:acal:1.0:subject:role"
+                            DataType: "urn:oasis:names:tc:acal:1.0:data-type:anyURI"
+        - Policy:
+            PolicyId: "urn:example:rbac:pp:employee-ordinary"
+            Version: "1.0"
+            CombiningAlgId: "urn:oasis:names:tc:acal:1.0:combining-algorithm:permit-overrides"
+            Description: "Ordinary permissions: employee. Excluded from HasPrivilegesOfRole queries — Section 5.3.2 constraint 4."
+            Target:
+              Apply:
+                FunctionId: "urn:oasis:names:tc:acal:1.0:function:not"
                 Argument:
                   - Apply:
                       FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-is-in"
@@ -865,14 +1035,31 @@ Bundle:
                             Category: "urn:oasis:names:tc:acal:1.0:attribute-category:action"
                             AttributeId: "urn:oasis:names:tc:acal:1.0:action:action-id"
                             DataType: "urn:oasis:names:tc:acal:1.0:data-type:string"
-                  - Apply:
-                      FunctionId: "urn:oasis:names:tc:acal:1.0:function:anyURI-is-in"
+            CombinerInput:
+              - Rule:
+                  Id: "employee-timesheet"
+                  Effect: "Permit"
+                  Description: "An employee may read a timesheet."
+                  Condition:
+                    Apply:
+                      FunctionId: "urn:oasis:names:tc:acal:1.0:function:and"
                       Argument:
-                        - Value: { DataType: "urn:oasis:names:tc:acal:1.0:data-type:anyURI", Value: "urn:example:roles:employee" }
-                        - AttributeDesignator:
-                            Category: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
-                            AttributeId: "urn:oasis:names:tc:acal:1.0:subject:role"
-                            DataType: "urn:oasis:names:tc:acal:1.0:data-type:anyURI"
+                        - Apply:
+                            FunctionId: "urn:oasis:names:tc:acal:1.0:function:anyURI-is-in"
+                            Argument:
+                              - Value: { DataType: "urn:oasis:names:tc:acal:1.0:data-type:anyURI", Value: "urn:example:resources:timesheet" }
+                              - AttributeDesignator:
+                                  Category: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
+                                  AttributeId: "urn:oasis:names:tc:acal:1.0:resource:resource-id"
+                                  DataType: "urn:oasis:names:tc:acal:1.0:data-type:anyURI"
+                        - Apply:
+                            FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-is-in"
+                            Argument:
+                              - Value: { DataType: "urn:oasis:names:tc:acal:1.0:data-type:string", Value: "read" }
+                              - AttributeDesignator:
+                                  Category: "urn:oasis:names:tc:acal:1.0:attribute-category:action"
+                                  AttributeId: "urn:oasis:names:tc:acal:1.0:action:action-id"
+                                  DataType: "urn:oasis:names:tc:acal:1.0:data-type:string"
 
     - PolicyId: "urn:example:rbac:rp:employee"
       Version: "1.0"
@@ -896,40 +1083,51 @@ Bundle:
       Description: "Permission Policy: manager. Inherits employee."
       CombinerInput:
         - Rule:
-            Id: "manager-expense-report"
-            Effect: "Permit"
-            Description: "A manager may read and approve expense reports."
-            Condition:
-              Apply:
-                FunctionId: "urn:oasis:names:tc:acal:1.0:function:and"
-                Argument:
-                  - Apply:
-                      FunctionId: "urn:oasis:names:tc:acal:1.0:function:anyURI-is-in"
-                      Argument:
-                        - Value: { DataType: "urn:oasis:names:tc:acal:1.0:data-type:anyURI", Value: "urn:example:resources:expense-report" }
-                        - AttributeDesignator:
-                            Category: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
-                            AttributeId: "urn:oasis:names:tc:acal:1.0:resource:resource-id"
-                            DataType: "urn:oasis:names:tc:acal:1.0:data-type:anyURI"
-                  - Apply:
-                      FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-at-least-one-member-of"
-                      Argument:
-                        - Apply:
-                            FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-bag"
-                            Argument:
-                              - Value: { DataType: "urn:oasis:names:tc:acal:1.0:data-type:string", Value: "read" }
-                              - Value: { DataType: "urn:oasis:names:tc:acal:1.0:data-type:string", Value: "approve" }
-                        - AttributeDesignator:
-                            Category: "urn:oasis:names:tc:acal:1.0:attribute-category:action"
-                            AttributeId: "urn:oasis:names:tc:acal:1.0:action:action-id"
-                            DataType: "urn:oasis:names:tc:acal:1.0:data-type:string"
-        - Rule:
             Id: "manager-has-privileges"
             Effect: "Permit"
             Description: "HasPrivilegesOfRole: manager."
             Condition:
               Apply:
                 FunctionId: "urn:oasis:names:tc:acal:1.0:function:and"
+                Argument:
+                  - Apply:
+                      FunctionId: "urn:oasis:names:tc:acal:1.0:function:and"
+                      Argument:
+                        - Apply:
+                            FunctionId: "urn:oasis:names:tc:acal:1.0:function:integer-equal"
+                            Argument:
+                              - Apply:
+                                  FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-bag-size"
+                                  Argument:
+                                    - AttributeDesignator:
+                                        Category: "urn:oasis:names:tc:acal:1.0:attribute-category:action"
+                                        AttributeId: "urn:oasis:names:tc:acal:1.0:action:action-id"
+                                        DataType: "urn:oasis:names:tc:acal:1.0:data-type:string"
+                              - Value: { DataType: "urn:oasis:names:tc:acal:1.0:data-type:integer", Value: "1" }
+                        - Apply:
+                            FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-is-in"
+                            Argument:
+                              - Value: { DataType: "urn:oasis:names:tc:acal:1.0:data-type:string", Value: "urn:oasis:names:tc:acal:1.0:action:has-privileges-of-role" }
+                              - AttributeDesignator:
+                                  Category: "urn:oasis:names:tc:acal:1.0:attribute-category:action"
+                                  AttributeId: "urn:oasis:names:tc:acal:1.0:action:action-id"
+                                  DataType: "urn:oasis:names:tc:acal:1.0:data-type:string"
+                  - Apply:
+                      FunctionId: "urn:oasis:names:tc:acal:1.0:function:anyURI-is-in"
+                      Argument:
+                        - Value: { DataType: "urn:oasis:names:tc:acal:1.0:data-type:anyURI", Value: "urn:example:roles:manager" }
+                        - AttributeDesignator:
+                            Category: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
+                            AttributeId: "urn:oasis:names:tc:acal:1.0:subject:role"
+                            DataType: "urn:oasis:names:tc:acal:1.0:data-type:anyURI"
+        - Policy:
+            PolicyId: "urn:example:rbac:pp:manager-ordinary"
+            Version: "1.0"
+            CombiningAlgId: "urn:oasis:names:tc:acal:1.0:combining-algorithm:permit-overrides"
+            Description: "Ordinary permissions: manager. Excluded from HasPrivilegesOfRole queries — Section 5.3.2 constraint 4."
+            Target:
+              Apply:
+                FunctionId: "urn:oasis:names:tc:acal:1.0:function:not"
                 Argument:
                   - Apply:
                       FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-is-in"
@@ -939,14 +1137,35 @@ Bundle:
                             Category: "urn:oasis:names:tc:acal:1.0:attribute-category:action"
                             AttributeId: "urn:oasis:names:tc:acal:1.0:action:action-id"
                             DataType: "urn:oasis:names:tc:acal:1.0:data-type:string"
-                  - Apply:
-                      FunctionId: "urn:oasis:names:tc:acal:1.0:function:anyURI-is-in"
+            CombinerInput:
+              - Rule:
+                  Id: "manager-expense-report"
+                  Effect: "Permit"
+                  Description: "A manager may read and approve expense reports."
+                  Condition:
+                    Apply:
+                      FunctionId: "urn:oasis:names:tc:acal:1.0:function:and"
                       Argument:
-                        - Value: { DataType: "urn:oasis:names:tc:acal:1.0:data-type:anyURI", Value: "urn:example:roles:manager" }
-                        - AttributeDesignator:
-                            Category: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
-                            AttributeId: "urn:oasis:names:tc:acal:1.0:subject:role"
-                            DataType: "urn:oasis:names:tc:acal:1.0:data-type:anyURI"
+                        - Apply:
+                            FunctionId: "urn:oasis:names:tc:acal:1.0:function:anyURI-is-in"
+                            Argument:
+                              - Value: { DataType: "urn:oasis:names:tc:acal:1.0:data-type:anyURI", Value: "urn:example:resources:expense-report" }
+                              - AttributeDesignator:
+                                  Category: "urn:oasis:names:tc:acal:1.0:attribute-category:resource"
+                                  AttributeId: "urn:oasis:names:tc:acal:1.0:resource:resource-id"
+                                  DataType: "urn:oasis:names:tc:acal:1.0:data-type:anyURI"
+                        - Apply:
+                            FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-at-least-one-member-of"
+                            Argument:
+                              - Apply:
+                                  FunctionId: "urn:oasis:names:tc:acal:1.0:function:string-bag"
+                                  Argument:
+                                    - Value: { DataType: "urn:oasis:names:tc:acal:1.0:data-type:string", Value: "read" }
+                                    - Value: { DataType: "urn:oasis:names:tc:acal:1.0:data-type:string", Value: "approve" }
+                              - AttributeDesignator:
+                                  Category: "urn:oasis:names:tc:acal:1.0:attribute-category:action"
+                                  AttributeId: "urn:oasis:names:tc:acal:1.0:action:action-id"
+                                  DataType: "urn:oasis:names:tc:acal:1.0:data-type:string"
         - PolicyReference: { Id: "urn:example:rbac:pp:employee" }
 
     - PolicyId: "urn:example:rbac:rp:manager"
@@ -976,10 +1195,11 @@ Bundle:
 
 **What this shows**
 
-- All five policies are carried in a single `BundleType` object — a `<Bundle>` element in XML, a `Bundle` object in JACAL/YACAL — whose `PolicyReference` names the **PDP entry point** (`urn:example:rbac:entry-point`), which here is also the policy combining the Role Policies — an ordinary `PolicyType` object whose `CombinerInput` is exactly the two Role Policies, referenced ([Section 5.3.5](#535-the-pdp-entry-point)). Trace any path from here: it reaches a Permission Policy only through that role's Role Policy (`rp:*` → `pp:*`) or through the hierarchy (`pp:manager` → `pp:employee`) — the reachability invariant of [Section 5.3.5](#535-the-pdp-entry-point) (constraints 2, 3 and 4). A deployment need not physically build a `BundleType` object ([[ACAL-Core-1.0](#acal-core-10)] Section 7.46) — the PDP configuration may hold the policies and the starting reference in any form — but it is the clearest way to show the whole set at once. The entry point uses `deny-unless-permit` so a request that matches no role yields a definite `Deny` — the shape [Section 5.3.5](#535-the-pdp-entry-point) recommends for an RBAC-only PDP; every other policy here uses `permit-overrides` ([Section 6.1](#61-combining-algorithms)).
+- All five top-level policies are carried in a single `BundleType` object — a `<Bundle>` element in XML, a `Bundle` object in JACAL/YACAL — whose `PolicyReference` names the **PDP entry point** (`urn:example:rbac:entry-point`), which here is also the policy combining the Role Policies — an ordinary `PolicyType` object whose `CombinerInput` is exactly the two Role Policies, referenced ([Section 5.3.5](#535-the-pdp-entry-point)). Trace any path from here: it reaches a Permission Policy only through that role's Role Policy (`rp:*` → `pp:*`) or through the hierarchy (`pp:manager` → `pp:employee`) — the reachability invariant of [Section 5.3.5](#535-the-pdp-entry-point) (constraints 2, 3 and 4). A deployment need not physically build a `BundleType` object ([[ACAL-Core-1.0](#acal-core-10)] Section 7.46) — the PDP configuration may hold the policies and the starting reference in any form — but it is the clearest way to show the whole set at once. The entry point uses `deny-unless-permit` so a request that matches no role yields a definite `Deny` — the shape [Section 5.3.5](#535-the-pdp-entry-point) recommends for an RBAC-only PDP; every other policy here uses `permit-overrides` ([Section 6.1](#61-combining-algorithms)).
 - Each **Role Policy** carries the role test in its `Target` and nothing else, and a single `PolicyReference` to its Permission Policy ([Section 5.3.1](#531-role-policy)). The `Target` references only the `access-subject` role attribute.
-- The **manager Permission Policy** grants its own permission (expense reports) and then `PolicyReference`s the employee Permission Policy — that one line is the entire role hierarchy ([Section 5.3.3](#533-role-hierarchy)). A request from a manager to `read` a `timesheet` is permitted through this reference.
-- A **HasPrivilegesOfRole Rule** sits directly in each Permission Policy's `CombinerInput`. Its `Condition` tests the `has-privileges-of-role` action and the queried role carried as a **resource** attribute ([Section 5.3.4](#534-hasprivilegesofrole-rule)) — no wrapper `Policy`, no `Target`, no combining algorithm. Each rule names **its own** role, which is why every Permission Policy carries one: a manager asking about the `employee` role reaches the employee Permission Policy's rule through the inheritance reference, and a manager asking about the `manager` role is answered by the manager Permission Policy's own rule. A PDP either supports these queries and carries the Rule in every Permission Policy, or supports none of them ([Section 5.3.4](#534-hasprivilegesofrole-rule)).
+- The **manager Permission Policy** grants its own permission (expense reports), by way of the nested `pp:manager-ordinary` policy described next, and then `PolicyReference`s the employee Permission Policy — that one line is the entire role hierarchy ([Section 5.3.3](#533-role-hierarchy)). A request from a manager to `read` a `timesheet` is permitted through this reference.
+- Each Permission Policy's **ordinary permissions** sit inside one nested `Policy` (`pp:employee-ordinary`, `pp:manager-ordinary`) whose `Target` is `false` whenever the request's `action-id` carries the reserved HasPrivilegesOfRole value — [Section 5.3.2](#532-permission-policy) constraint 4, required because this PDP supports HasPrivilegesOfRole. `employee-timesheet` and `manager-expense-report` sit inside their role's wrapper; the `PolicyReference` to a junior role's Permission Policy stays outside it, so inherited HasPrivilegesOfRole Rules stay reachable.
+- A **HasPrivilegesOfRole Rule** sits directly in each Permission Policy's `CombinerInput`, as a sibling of that nested wrapper rather than inside it. Its `Condition` tests the `has-privileges-of-role` action and the queried role carried as a **resource** attribute ([Section 5.3.4](#534-hasprivilegesofrole-rule)) — the Rule itself has no `Target` and no `CombiningAlgId`. Each rule names **its own** role, which is why every Permission Policy carries one: a manager asking about the `employee` role reaches the employee Permission Policy's rule through the inheritance reference, and a manager asking about the `manager` role is answered by the manager Permission Policy's own rule. A PDP either supports these queries and carries the Rule in every Permission Policy, or supports none of them ([Section 5.3.4](#534-hasprivilegesofrole-rule)).
 - No construct here is specific to this profile: `PolicyType`, `PolicyReferenceType`, `RuleType`, `BooleanExpressionType` and `BundleType` are all ACAL Core.
 
 ## 7.2 An Access Request
@@ -1078,7 +1298,7 @@ Request:
           Value: [ "read" ]
 ```
 
-**Evaluation.** The entry point combines the two Role Policies. The `manager` Role Policy's `Target` matches (the subject holds `urn:example:roles:manager`); the `employee` Role Policy's `Target` does not. The `manager` Role Policy references the `manager` Permission Policy, whose own `manager-expense-report` rule does not match (`timesheet` ≠ `expense-report`) but whose `PolicyReference` to the `employee` Permission Policy does: the `employee-timesheet` rule matches `read` on `timesheet` and yields `Permit`. Under `permit-overrides` the `manager` Role Policy therefore yields `Permit`, and the entry point — `deny-unless-permit` — yields **`Permit`**.
+**Evaluation.** The entry point combines the two Role Policies. The `manager` Role Policy's `Target` matches (the subject holds `urn:example:roles:manager`); the `employee` Role Policy's `Target` does not. The `manager` Role Policy references the `manager` Permission Policy: its nested `pp:manager-ordinary` policy is applicable (`action-id` is `read`, not the reserved value), but its own `manager-expense-report` rule does not match (`timesheet` ≠ `expense-report`); the `manager` Permission Policy's `PolicyReference` to the `employee` Permission Policy does, though — the `employee-timesheet` rule, inside `pp:employee-ordinary`, matches `read` on `timesheet` and yields `Permit`. Under `permit-overrides` the `manager` Role Policy therefore yields `Permit`, and the entry point — `deny-unless-permit` — yields **`Permit`**.
 
 ## 7.3 A HasPrivilegesOfRole Request
 
@@ -1166,7 +1386,7 @@ Request:
           Value: [ "urn:oasis:names:tc:acal:1.0:action:has-privileges-of-role" ]
 ```
 
-**Evaluation.** The `manager` Role Policy's `Target` matches. Its Permission Policy references the `employee` Permission Policy, whose HasPrivilegesOfRole Rule has a `Condition` — the action is `has-privileges-of-role` and the resource role attribute contains `urn:example:roles:employee` — that is `true`. Decision: **`Permit`**. Note that the same `urn:oasis:names:tc:acal:1.0:subject:role` `AttributeId` appears in both the subject entity and the resource entity of this one request, which is well-formed because ACAL scopes attribute uniqueness per `RequestEntityType` ([[ACAL-Core-1.0](#acal-core-10)] Section 7.33). Had the same subject asked about `urn:example:roles:manager` instead, the `manager` Permission Policy's own HasPrivilegesOfRole Rule would answer `Permit` directly, without the inheritance reference being involved.
+**Evaluation.** The `manager` Role Policy's `Target` matches. In the `manager` Permission Policy the nested `pp:manager-ordinary` policy is `NotApplicable` — its `Target` is `false` because `action-id` carries the reserved value — and the `manager-has-privileges` Rule does not match the queried role, so neither answers. The `PolicyReference` to the `employee` Permission Policy, which sits outside that wrapper, is what carries the query onward: there `pp:employee-ordinary` is likewise `NotApplicable`, and the `employee-has-privileges` Rule has a `Condition` — `action-id` carries exactly the one value `has-privileges-of-role`, and the resource role attribute contains `urn:example:roles:employee` — that is `true`. Decision: **`Permit`**. Note that the same `urn:oasis:names:tc:acal:1.0:subject:role` `AttributeId` appears in both the subject entity and the resource entity of this one request, which is well-formed because ACAL scopes attribute uniqueness per `RequestEntityType` ([[ACAL-Core-1.0](#acal-core-10)] Section 7.33). Had the same subject asked about `urn:example:roles:manager` instead, the `manager` Permission Policy's own HasPrivilegesOfRole Rule would answer `Permit` directly, without the inheritance reference being involved.
 
 ---
 
@@ -1182,6 +1402,7 @@ The profile's constraints on how policies are shaped and connected are, by their
 - **A Permission Policy does not restrict subjects in its `Target`** ([Section 5.3.2](#532-permission-policy) constraint 2).
 - **The reachability graph** ([Section 5.3.5](#535-the-pdp-entry-point) constraints 2, 3 and 4): the `BundleType` object's `PolicyReference` does not name a Permission Policy, and a Permission Policy is reached only through its Role Policy or the hierarchy. Which policies are Permission Policies is a fact about the deployment's RBAC design, not the document structure.
 - **The combining-algorithm safety rule** ([Section 5.3](#53-access-control)) and the **HasPrivilegesOfRole Rule shape** ([Section 5.3.4](#534-hasprivilegesofrole-rule)).
+- **Ordinary permissions are isolated from HasPrivilegesOfRole, where supported** ([Section 5.3.2](#532-permission-policy) constraint 4) — that the nested `Policy` holding a Permission Policy's ordinary `Rule`s and nested `Policy` objects has a `Target` excluding the reserved action is a property of that `Target` expression's evaluation, not its shape.
 
 Core schema validation checks object *shapes* (a `Policy` has a `CombiningAlgId`, a `CombinerInput` entry is one of `Policy`/`Rule`/`PolicyReference`, and so on); it does not check any of the above.
 
@@ -1213,7 +1434,7 @@ Several structural mistakes change access silently — no error, just a wrong an
 - A **subject restriction in a Permission Policy's own `Target`** ([Section 5.3.2](#532-permission-policy) constraint 2 forbids it) does not cause an error; it makes the whole Permission Policy `NotApplicable` for a senior role's holders, breaking inheritance — the failure here *narrows* access, but silently, and a policy set with it is not conformant.
 - A **subject predicate below that `Target`** — in the `Target` of a nested `PolicyType` object, or in an ordinary `Rule`'s `Condition` — is conformant but silently withholds the permission beneath it from a senior role's holders who do not carry the tested attribute. A permission meant to be inherited unconditionally should not be gated on the junior role's own attribute. (A subject test in a HasPrivilegesOfRole Rule's `Condition` would do the same to the "has privileges" answer, and is forbidden — [Section 5.3.4](#534-hasprivilegesofrole-rule) constraint 3.)
 - A **`Deny` rule beneath a Permission Policy** at any depth ([Section 5.3](#53-access-control) constraint 1 forbids it) makes that Permission Policy able to return `Deny`. A prohibition written this way is unreliable as well as non-conformant: whether the `Deny` decides the outcome depends on the combining algorithm of every policy above it, so it holds in some role hierarchies and not others, and it denies accesses that policies evaluated alongside the RBAC policy set intend to permit. A prohibition that is to hold regardless of role belongs outside the RBAC policy set — see [Section 6.1](#61-combining-algorithms).
-- A **multi-role Permission Policy referenced by another Permission Policy** ([Section 5.4](#54-multi-role-permissions) forbids it) hands the multi-role permissions to a subject who holds only the referencing role, bypassing the simultaneous-role requirement.
+- An **ordinary `Rule` or nested `Policy` left outside the reserved-action-excluding wrapper**, in a Permission Policy that supports HasPrivilegesOfRole ([Section 5.3.2](#532-permission-policy) constraint 4 requires the wrapper) can itself evaluate to `Permit` for a `has-privileges-of-role` query it was never written to answer — a `Permit` indistinguishable in the response from one produced by the HasPrivilegesOfRole Rule, with no status code or marker showing which rule actually matched.
 
 Finally, a HasPrivilegesOfRole Rule answers "does this subject have the privileges associated with role R?" (which a senior role's holder does, without holding R) without the subject attempting any resource access — an information channel that is deliberate but that a deployment should be aware it exposes.
 
@@ -1242,7 +1463,7 @@ For an item marked `M` below, an implementation MUST support the ACAL (`urn:oasi
 | :--- | :--- | :--- |
 | urn:oasis:names:tc:acal:1.0:profile:rbac | M | urn:oasis:names:tc:xacml:3.0:profiles:rbac:core-hierarchical |
 
-An implementation claiming conformance to this profile MUST support the Role Policy / Permission Policy construction of [Section 5.3](#53-access-control), including role hierarchy ([Section 5.3.3](#533-role-hierarchy)) and the entry-point constraint ([Section 5.3.5](#535-the-pdp-entry-point)). Support for HasPrivilegesOfRole queries ([Section 5.3.4](#534-hasprivilegesofrole-rule)) is OPTIONAL; an implementation that supports them MUST carry a HasPrivilegesOfRole Rule in every Permission Policy it evaluates.
+An implementation claiming conformance to this profile MUST support the Role Policy / Permission Policy construction of [Section 5.3](#53-access-control), including role hierarchy ([Section 5.3.3](#533-role-hierarchy)) and the entry-point constraint ([Section 5.3.5](#535-the-pdp-entry-point)). Support for HasPrivilegesOfRole queries ([Section 5.3.4](#534-hasprivilegesofrole-rule)) is OPTIONAL; an implementation that supports them MUST require a HasPrivilegesOfRole Rule in every Permission Policy it evaluates, and MUST require those Permission Policies to isolate their ordinary permissions as [Section 5.3.2](#532-permission-policy) constraint 4 specifies. The two go together: without the isolation, an ordinary rule can answer a HasPrivilegesOfRole query in place of the Rule.
 
 ### 10.2.2 Attributes
 
