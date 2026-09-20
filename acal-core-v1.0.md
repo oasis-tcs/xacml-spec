@@ -3819,7 +3819,9 @@ URIs starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are
 
 `PolicyDefaults` [Any Number]
 
-: sequence of `PolicyDefaultsType` objects containing each a set of default values specific to a particular ACAL Profile, applicable to the policy (e.g. ACAL XPath Profile's default XPath version). In particular, each object SHALL have a different concrete type (per ACAL profile). The scope of the `PolicyDefaults` property SHALL be the enclosing policy and any policy nested within it; where a nested policy carries its own `PolicyDefaults` object of a given concrete type, that object applies within the nested policy in place of the enclosing policy's object of that type. The use of `PolicyDefaults` property is specified by particular ACAL Profiles (e.g. XPath Profile).
+: sequence of `PolicyDefaultsType` objects containing each a set of default values specific to a particular ACAL Profile, applicable to the policy (e.g. ACAL XPath Profile's default XPath version). In particular, each object SHALL have a different concrete type (per ACAL profile). The scope of the `PolicyDefaults` property SHALL be the enclosing policy and any policy nested within it; where a nested policy carries its own `PolicyDefaults` object of a given concrete type, that object applies within the nested policy in place of the enclosing policy's object of that type. A policy that is included in another policy by a `PolicyReference` is not nested within the referencing policy for the purposes of this scope rule; the `PolicyDefaults` objects of the referencing policy do not apply within the referenced policy. The use of `PolicyDefaults` property is specified by particular ACAL Profiles (e.g. XPath Profile).
+
+: Note: A nested policy's `PolicyDefaults` object overriding the enclosing policy's object of the same concrete type is deliberate, and differs from `VariableDefinition`, which forbids a `VariableId` that repeats one declared by an enclosing policy ([Section 7.13](#713-variabledefinitiontype)). A Defaults object can affect how a policy's expressions are interpreted — under the XPath Profile, the default XPath version governs the `Path` of every XPath attribute selector in its scope — so a policy authored against one setting would change meaning if, when nested beneath a policy that declares another, it could not declare its own.
 
 `Parameter` [Any Number]
 
@@ -3861,7 +3863,7 @@ Each `CombinerInputType` object contains exactly one of the following properties
 
 _**Supporting this part is optional.**_ _It is required only for supporting ACAL Profiles that define extensions (subtypes) of `PolicyDefaultsType` (e.g. XPath Profile)._
 
-`PolicyDefaultsType` is an abstract object type for default values that apply to the parent `PolicyType` object. Concrete subtypes of `PolicyDefaultsType` are defined in separate ACAL Profiles, e.g. XPath Profile.
+`PolicyDefaultsType` is an abstract object type for default values that apply to the parent `PolicyType` object and to any policy nested within it, as specified for the `PolicyDefaults` property in [Section 7.4](#74-policytype). Concrete subtypes of `PolicyDefaultsType` are defined in separate ACAL Profiles, e.g. XPath Profile.
 
 UML definition (class diagram):
 ```plantuml
@@ -5750,70 +5752,19 @@ If the designated attribute category or entity value has a `Content` property, t
 
 2. Evaluate the expression given in the `Path` property against the data structure obtained in the previous step, according to the syntax and semantics of the respective ACAL Profile in use (as indicated by the concrete subtype of `AttributeSelectorType` being used).
 
-3. The result of step 3 is converted to a bag of values of the data type specified by the `DataType` property as follows:
+3. The result of step 2 is converted to a bag of values of the data type specified by the `DataType` property, according to the conversion rules of the ACAL Profile in use (e.g. those of the XPath Profile or the JSONPath Profile). An ACAL Profile that defines a concrete type of `AttributeSelectorType` or `EntityAttributeSelectorType` SHALL specify those conversion rules, i.e. which results of step 2 can be converted to a value of each data type the profile supports for this purpose (including, if the profile supports it, the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type) and how each is converted. The following rules apply in addition, whatever the ACAL Profile:
 
 &nbsp;
-: If the result is a Boolean and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:boolean`, then convert the result using the `xs:boolean()` constructor function from [[XF](#xf)] Section 18.1.
+: If the result of step 2 is empty, then the return value is either `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`, or an empty bag, as determined by the `MustBePresent` property. This rule applies before, and instead of, any conversion case of the ACAL Profile in use, including a case that would otherwise be satisfied vacuously by an empty result.
 
 &nbsp;
-: If the result is a string and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:string`, then convert the result using the `xs:string()` constructor function from [[XF](#xf)] Section 18.1.
+: If the data type is one for which the ACAL Profile in use defines a conversion and the result of step 2 does not satisfy any of the cases the profile defines for it, then the attribute selector MUST return `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`.
 
 &nbsp;
-: If the result is a number and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:integer`, then convert the result using the `xs:integer()` constructor function from [[XF](#xf)] Section 18.1.
-
-&nbsp;
-: If the result is a number and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:double`, then convert the result using the `xs:double()` constructor function from [[XF](#xf)] Section 18.1.
-
-&nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:boolean`, then convert the string value of each node using the `xs:boolean()` constructor function from [[XF](#xf)] Section 18.1.
-
-&nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:string`, then convert the string value of each node using the `xs:string()` constructor function from [[XF](#xf)] Section 18.1.
-
-&nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:integer`, then convert the string value of each node using the `xs:integer()` constructor function from [[XF](#xf)] Section 18.1.
-
-&nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:double`, then convert the string value of each node using the `xs:double()` constructor function from [[XF](#xf)] Section 18.1.
-
-&nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:dateTime`, then convert the string value of each node using the `xs:dateTime()` constructor function from [[XF](#xf)] Section 18.1.
-
-&nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:date`, then convert the string value of each node using the `xs:date()` constructor function from [[XF](#xf)] Section 18.1.
-
-&nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:time`, then convert the string value of each node using the `xs:time()` constructor function from [[XF](#xf)] Section 18.1.
-
-&nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:hexBinary`, then convert the string value of each node using the `xs:hexBinary()` constructor function from [[XF](#xf)] Section 18.1.
-
-&nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:base64Binary`, then convert the string value of each node using the `xs:base64Binary()` constructor function from [[XF](#xf)] Section 18.1.
-
-&nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:anyURI`, then convert the string value of each node using the `xs:anyURI()` constructor function from [[XF](#xf)] Section 18.1.
-
-&nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:yearMonthDuration`, then convert the string value of each node using the `xs:yearMonthDuration()` constructor function from [[XF](#xf)] Section 18.1.
-
-&nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:dayTimeDuration`, then convert the string value of each node using the `xs:dayTimeDuration()` constructor function from [[XF](#xf)] Section 18.1.
-
-&nbsp;
-: If the result is a node-set and every node is an element node and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:entity`, then convert each node to an `EntityType` object. Each object SHALL have a `Content` property and SHALL NOT have an `Attribute` property. The child element of the `Content`'s `Body` property SHALL be a copy of the element corresponding to the node, along with its entire content, plus whatever namespace declarations from ancestor elements as are required to define namespace prefixes used in the content. Namespace declarations from ancestor elements that are not visibly used in the content MAY be added.
-
-&nbsp;
-: If the data type is one of the types referred to above and the result of step 3 does not satisfy any of the cases, then the attribute selector MUST return `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`.
-
-&nbsp;
-: If the data type is not one of the types referred to above, then the return values SHALL be constructed from the node-set in a manner specified by the particular data type extension specification. If the data type extension does not specify an appropriate constructor function, then the attribute selector MUST return `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`.
+: If the data type is not one for which the ACAL Profile in use defines a conversion, then the return values SHALL be constructed from the result of step 2 in a manner specified by the definition of that data type in this specification or in the particular data type extension specification. If no appropriate constructor is specified, then the attribute selector MUST return `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`.
 
 &nbsp;
 : If an error occurs when converting the values returned by the expression to the specified data type, then the result of the attribute selector MUST be `Indeterminate`, with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`
-
-&nbsp;
-: If the result of step 3 is an empty node-set, then the return value is either `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`, or an empty bag, as determined by the `MustBePresent` property.
 
 ## 8.5 Expression Evaluation
 
@@ -6997,9 +6948,11 @@ Although a syntactic representation of ACAL objects may represent most data type
 
 * `urn:oasis:names:tc:acal:1.0:data-type:dnsName`
 
+The definitions of the twelve data types that correspond to XML Schema datatypes are given in [Annex C.2.7](#c27-data-types-defined-by-reference-to-xml-schema).
+
 For the sake of improved interoperability, it is RECOMMENDED that all time references be in UTC time.
 
-An ACAL PDP SHALL be capable of converting string representations into various data types. For double values, implementations SHALL use the conversions described in [IEEE754].
+An ACAL PDP SHALL be capable of converting string representations into various data types. For the twelve data types defined by reference to XML Schema ([Annex C.2.7](#c27-data-types-defined-by-reference-to-xml-schema)), including `urn:oasis:names:tc:acal:1.0:data-type:double`, the conversion SHALL use the lexical mapping given there. Implementations SHALL represent and operate on `double` values in a manner consistent with [IEEE754].
 
 ACAL defines four data types representing identifiers for subjects or resources; these are:
 
@@ -7061,6 +7014,35 @@ where `portnumber` is a decimal port number. If the port number is of the form `
 ### C.2.6 Entity
 
 The `urn:oasis:names:tc:acal:1.0:data-type:entity` data type is used to represent an entity nested within another entity. Values of this data type are objects of the `EntityType` object type [Section 7.45](#745-entitytype).
+
+### C.2.7 Data Types Defined by Reference to XML Schema
+
+Each of the twelve data types in the table below is defined as follows, for every ACAL representation format and every ACAL Profile. Its *value space* (the set of values that a value of the data type can be), its *lexical space* (the set of character strings that represent those values) and its *lexical mapping* (the mapping from each string of the lexical space to the value it represents) are those of the built-in datatype of the same name defined by [[XS](#xs)] Part 2, in the section given in the table.
+
+| ACAL data type | XML Schema 1.1 Part 2 datatype | Section of [[XS](#xs)] Part 2 |
+| :--- | :--- | :--- |
+| `urn:oasis:names:tc:acal:1.0:data-type:string` | `xs:string` | 3.3.1 |
+| `urn:oasis:names:tc:acal:1.0:data-type:boolean` | `xs:boolean` | 3.3.2 |
+| `urn:oasis:names:tc:acal:1.0:data-type:integer` | `xs:integer` | 3.4.13 |
+| `urn:oasis:names:tc:acal:1.0:data-type:double` | `xs:double` | 3.3.5 |
+| `urn:oasis:names:tc:acal:1.0:data-type:dateTime` | `xs:dateTime` | 3.3.7 |
+| `urn:oasis:names:tc:acal:1.0:data-type:time` | `xs:time` | 3.3.8 |
+| `urn:oasis:names:tc:acal:1.0:data-type:date` | `xs:date` | 3.3.9 |
+| `urn:oasis:names:tc:acal:1.0:data-type:hexBinary` | `xs:hexBinary` | 3.3.15 |
+| `urn:oasis:names:tc:acal:1.0:data-type:base64Binary` | `xs:base64Binary` | 3.3.16 |
+| `urn:oasis:names:tc:acal:1.0:data-type:anyURI` | `xs:anyURI` | 3.3.17 |
+| `urn:oasis:names:tc:acal:1.0:data-type:yearMonthDuration` | `xs:yearMonthDuration` | 3.4.26 |
+| `urn:oasis:names:tc:acal:1.0:data-type:dayTimeDuration` | `xs:dayTimeDuration` | 3.4.27 |
+
+This specification uses those definitions of value space, lexical space and lexical mapping only. An implementation is not required to process XML, or to perform XML Schema validation, in order to support these data types. A value of one of these data types is a member of the value space of the corresponding XML Schema datatype; it is not a character string, even where an ACAL representation format represents it as one.
+
+Two consequences of this definition are stated here because they are easily overlooked. First, the value space of `urn:oasis:names:tc:acal:1.0:data-type:string` is the set of finite-length sequences of characters that match the `Char` production of [XML], and [[XS](#xs)] leaves it implementation-defined whether the XML 1.0 production, the XML 1.1 production, or both are supported. A sequence of characters that an ACAL representation format can carry but that is outside that set (for example a control character that XML excludes) is therefore not a value of the `string` data type. Second, the lexical space of `urn:oasis:names:tc:acal:1.0:data-type:anyURI` is the same set of character sequences, and its values represent IRI references; it is not the type `URI` of [Section 7.1.2.3.1](#71231-uri), which is an [[RFC3986](#rfc3986)] URI, and a value of the `anyURI` data type need not conform to [[RFC3986](#rfc3986)].
+
+The equality and ordering of values of these data types in ACAL expressions, and all other operations on them, are specified by the functions in [Annex C.3](#c3-functions).
+
+The data types `urn:oasis:names:tc:acal:1.0:data-type:x500Name`, `urn:oasis:names:tc:acal:1.0:data-type:rfc822Name`, `urn:oasis:names:tc:acal:1.0:data-type:ipAddress` and `urn:oasis:names:tc:acal:1.0:data-type:dnsName` are not defined by reference to XML Schema (see [Annex C.2.1](#c21-x500-directory-name) to [Annex C.2.4](#c24-dns-name)).
+
+An ACAL Profile that converts a value between a profile-specific form and a value of one of these data types SHALL specify the conversion in terms of the value spaces defined here.
 
 ## C.3 Functions
 
@@ -8143,7 +8125,7 @@ The following identifiers indicate data types that are defined in [Annex C.2](#c
 
 * `urn:oasis:names:tc:acal:1.0:data-type:dnsName`
 
-The following data type identifiers are defined by W3C XML Schema [[XS](#xs)] (each `urn:oasis:names:tc:acal:1.0:data-type:<name>` below corresponds to the `xs:<name>` type in the XML schema Data Types specification):
+The following data type identifiers are defined in [Annex C.2.7](#c27-data-types-defined-by-reference-to-xml-schema) by reference to W3C XML Schema [[XS](#xs)] (each `urn:oasis:names:tc:acal:1.0:data-type:<name>` below corresponds to the `xs:<name>` type in the XML schema Data Types specification):
 
 * `urn:oasis:names:tc:acal:1.0:data-type:string`
 
@@ -8845,6 +8827,8 @@ ACAL 1.0 is a successor to XACML 3.0. ACAL 1.0 differs from XACML 3.0 in the fol
 
   - Compared to XACML 3.0, a `Policy` may contain more than one `PolicyDefaults` element, one per ACAL Profile possibly. 
 
+  - A `PolicyDefaults` object applies to the enclosing policy and to any policy nested within it; a nested policy's own `PolicyDefaults` object of the same concrete type applies within that policy in place of the enclosing policy's. A policy included by a `PolicyReference` is not nested within the referencing policy, and does not use the referencing policy's `PolicyDefaults`.
+
   - Separate rule and policy combining algorithms have been replaced with a single collection of combining algorithms. Legacy combining algorithms have been removed. The `only-one-applicable` policy combining algorithm has been removed.
 
   - EarliestVersion and LatestVersion attributes removed from `<PolicyReference>`
@@ -8881,6 +8865,9 @@ ACAL 1.0 is a successor to XACML 3.0. ACAL 1.0 differs from XACML 3.0 in the fol
   - `DataType` attribute changed to be optional with the standard string type as default value to simplify the element declaration in most cases.
    * `MustBePresent`: changed to be optional with `false` as default value, to simplify the element declaration in most cases.
    * `AttributeSelector` and `Path` type of expression are abstract in ACAL model, concrete types of AttributeSelector Path expressions to be defined in ACAL Profiles, e.g. XPath Profile.
+   * The conversion of the result of a `Path` expression to a bag of values of the `DataType` ([Section 8.4.7](#847-selector-evaluation)) is likewise specified by the ACAL Profile that defines the concrete selector type; Core keeps only the rules that apply whatever the profile (an empty result, a result matching no conversion case, a data type extension, an error during conversion). The XPath Profile's conversion is in its Section 7, written for the sequence-of-items result of the supported XPath versions instead of XPath 1.0's node-set, and differs from the former Core table in ways that section's changes list describes.
+
+- The value space, lexical space and lexical mapping of the twelve data types that correspond to XML Schema datatypes are stated explicitly ([Annex C.2.7](#c27-data-types-defined-by-reference-to-xml-schema)), by reference to the like-named XML Schema 1.1 Part 2 datatype and independently of any ACAL representation format.
 
 - `AttributeDesignator` changes to simplify the declaration in most cases: 
 

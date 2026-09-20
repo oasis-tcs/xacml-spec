@@ -301,7 +301,7 @@ A `JSONPathAttributeSelectorType` or `JSONPathEntityAttributeSelector` object SH
 
 : Note: It is not necessary for an implementation to exactly follow this model. It is only necessary to produce results identical to those that would be produced by following this model.
 
-The first steps are already described in [[ACAL-Core-1.0](#acal-core-10)] section 9.4.7 and provided here as a reminder:
+The first steps are already described in [[ACAL-Core-1.0](#acal-core-10)] section 8.4.7 and provided here as a reminder:
 
 - If the attribute category given by the `Category` property is not found or does not have a `Content` property, then the return value is either `Indeterminate` or an empty bag as determined by the `MustBePresent` property.
 
