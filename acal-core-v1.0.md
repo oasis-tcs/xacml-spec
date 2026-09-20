@@ -7038,6 +7038,8 @@ This specification uses those definitions of value space, lexical space and lexi
 
 Two consequences of this definition are stated here because they are easily overlooked. First, the value space of `urn:oasis:names:tc:acal:1.0:data-type:string` is the set of finite-length sequences of characters that match the `Char` production of [XML], and [[XS](#xs)] leaves it implementation-defined whether the XML 1.0 production, the XML 1.1 production, or both are supported. A sequence of characters that an ACAL representation format can carry but that is outside that set (for example a control character that XML excludes) is therefore not a value of the `string` data type. Second, the lexical space of `urn:oasis:names:tc:acal:1.0:data-type:anyURI` is the same set of character sequences, and its values represent IRI references; it is not the type `URI` of [Section 7.1.2.3.1](#71231-uri), which is an [[RFC3986](#rfc3986)] URI, and a value of the `anyURI` data type need not conform to [[RFC3986](#rfc3986)].
 
+The value space of `urn:oasis:names:tc:acal:1.0:data-type:integer` is the set of all mathematical integers. An ACAL implementation SHALL support `integer` values without an implementation-defined bound on their magnitude. An ACAL implementation SHALL NOT replace an `integer` value with one produced by wraparound, modular reduction, saturation, clipping, rounding or any other loss of precision. An ACAL implementation that cannot preserve an `integer` value because an execution resource is exhausted SHALL return `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:processing-error` for the evaluation that requires the value, and SHALL NOT continue that evaluation with an altered value. An ACAL implementation SHALL NOT treat a predetermined limit on the number of bits or decimal digits of an `integer`, including the width of a machine integer type, as exhaustion of an execution resource. If a PDP evaluates a policy that contains an `integer` literal and cannot preserve the exact value of the literal because an execution resource is exhausted, the result of that policy SHALL be `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`, and the PDP SHALL NOT evaluate the policy with an altered value.
+
 The equality and ordering of values of these data types in ACAL expressions, and all other operations on them, are specified by the functions in [Annex C.3](#c3-functions).
 
 The data types `urn:oasis:names:tc:acal:1.0:data-type:x500Name`, `urn:oasis:names:tc:acal:1.0:data-type:rfc822Name`, `urn:oasis:names:tc:acal:1.0:data-type:ipAddress` and `urn:oasis:names:tc:acal:1.0:data-type:dnsName` are not defined by reference to XML Schema (see [Annex C.2.1](#c21-x500-directory-name) to [Annex C.2.4](#c24-dns-name)).
@@ -7128,9 +7130,13 @@ The following functions are the equality functions for the various data types. E
 
 All of the following functions SHALL take two arguments of the specified data type, integer, or double, and SHALL return a value of integer or double data type, respectively. However, the `add` and `multiply` functions MAY take more than two arguments. Each function evaluation operating on doubles SHALL proceed as specified by their logical counterparts in IEEE 754 [IEEE754]. For all of these functions, if any argument is `Indeterminate`, then the function SHALL evaluate to `Indeterminate`. In the case of the divide functions, if the divisor is zero, then the function SHALL evaluate to `Indeterminate`.
 
+An arithmetic function defined in this section whose result is of data type `urn:oasis:names:tc:acal:1.0:data-type:integer`, and that completes, SHALL return exactly the result that its definition prescribes. Such a function SHALL NOT return a different value because the prescribed result exceeds the range of a fixed-width representation, and SHALL NOT wrap around, reduce modulo, saturate or lose precision. Such a function that cannot produce its prescribed result because an execution resource is exhausted SHALL return `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`, and SHALL NOT continue the evaluation with an altered value. An ACAL implementation SHALL NOT treat a predetermined limit on the number of bits or decimal digits of an `integer`, including the width of a machine integer type, as exhaustion of an execution resource.
+
+: Note: An `Indeterminate` result is not a `Deny` result. A combining algorithm that does not treat an `Indeterminate` child as `Deny`, such as `permit-unless-deny` ([Annex E.7](#e7-permit-unless-deny)), can therefore return `Permit` when an integer function returns `Indeterminate` inside a rule that would otherwise have denied. Such an algorithm therefore does not protect a policy that needs such a failure to prevent access.
+
 `urn:oasis:names:tc:acal:1.0:function:integer-add`
 
-: This function MUST accept two or more arguments.
+: This function MUST accept two or more arguments. The result is the sum of the arguments.
 
 `urn:oasis:names:tc:acal:1.0:function:double-add`
 
@@ -7146,7 +7152,7 @@ All of the following functions SHALL take two arguments of the specified data ty
 
 `urn:oasis:names:tc:acal:1.0:function:integer-multiply`
 
-: This function MUST accept two or more arguments.
+: This function MUST accept two or more arguments. The result is the product of the arguments.
 
 `urn:oasis:names:tc:acal:1.0:function:double-multiply`
 
@@ -7154,7 +7160,7 @@ All of the following functions SHALL take two arguments of the specified data ty
 
 `urn:oasis:names:tc:acal:1.0:function:integer-divide`
 
-: The result is the first argument divided by the second argument.
+: The result is the first argument divided by the second argument, truncated toward zero to a whole number.
 
 `urn:oasis:names:tc:acal:1.0:function:double-divide`
 
@@ -7162,7 +7168,7 @@ All of the following functions SHALL take two arguments of the specified data ty
 
 `urn:oasis:names:tc:acal:1.0:function:integer-mod`
 
-: The result is the remainder of the first argument divided by the second argument.
+: The result is the first argument minus the product of the second argument and the result of `urn:oasis:names:tc:acal:1.0:function:integer-divide` applied to the same arguments; the result is zero or has the sign of the first argument.
 
 The following functions SHALL take a single argument of the specified data type. The round and floor functions SHALL take a single argument of data type `urn:oasis:names:tc:acal:1.0:data-type:double` and return a value of the data type `urn:oasis:names:tc:acal:1.0:data-type:double`.
 
@@ -7173,6 +7179,8 @@ The following functions SHALL take a single argument of the specified data type.
 * `urn:oasis:names:tc:acal:1.0:function:round`
 
 * `urn:oasis:names:tc:acal:1.0:function:floor`
+
+The result of `urn:oasis:names:tc:acal:1.0:function:integer-abs` is the absolute value of its argument.
 
 ### C.3.3 String Conversion Functions
 
@@ -7192,12 +7200,11 @@ The following functions convert values between the `urn:oasis:names:tc:acal:1.0:
 
 `urn:oasis:names:tc:acal:1.0:function:double-to-integer`
 
-: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:double` and SHALL truncate its numeric value to a whole number and return a value of data type `urn:oasis:names:tc:acal:1.0:data-type:integer`.
+: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:double` and SHALL return a value of data type `urn:oasis:names:tc:acal:1.0:data-type:integer`. If the argument is NaN or infinite, then the result SHALL be `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`. Otherwise the result SHALL be exactly the argument with its fractional part discarded (truncated toward zero), whatever its magnitude, unless the implementation cannot produce that integer because an execution resource is exhausted, in which case the result SHALL be `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`.
 
 `urn:oasis:names:tc:acal:1.0:function:integer-to-double`
 
-: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:integer` and SHALL promote its value to a value of data type `urn:oasis:names:tc:acal:1.0:data-type:double` with the same numeric value. If the integer argument is outside the range that can be represented by a double, the result SHALL be `Indeterminate,` with status code <!-- Newline added to fit on PDF page -->
-`urn:oasis:names:tc:acal:1.0:status:processing-error`.
+: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:integer` and SHALL convert the exact value of the argument to a `urn:oasis:names:tc:acal:1.0:data-type:double` value using the round-to-nearest, ties-to-even rounding of [[IEEE754](#ieee754)]. If that conversion would produce positive or negative infinity, then the result SHALL be `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`. Otherwise the result SHALL be the converted value, which MAY differ from the argument when the argument cannot be represented exactly.
 
 ### C.3.5 Logical Functions
 
@@ -7374,7 +7381,7 @@ The following functions operate on strings and convert to and from other data ty
 
 `urn:oasis:names:tc:acal:1.0:function:integer-from-string`
 
-: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:string`, and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:integer`. The result SHALL be the string converted to an integer. If the argument is not a valid lexical representation of an integer, then the result SHALL be `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`.
+: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:string`, and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:integer`. The result SHALL be the string converted to an integer. If the argument is not a valid lexical representation of an integer, then the result SHALL be `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`. If the argument is a valid lexical representation of an integer, then the result SHALL be exactly that integer, whatever its magnitude. If the implementation cannot produce that integer because an execution resource is exhausted, then the result SHALL be `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`.
 
 `urn:oasis:names:tc:acal:1.0:function:string-from-integer`
 
@@ -8615,6 +8622,8 @@ Decision permitUnlessDenyCombiningAlgorithm(Node[] children)
 
 Notices SHALL be combined as described in [Section 8.16](#816-notices).
 
+: Note: A child that evaluates to `Indeterminate` does not prevent this algorithm from returning `Permit`. In particular, an integer function that returns `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:processing-error` inside a rule that would otherwise have evaluated to `Deny` can result in `Permit` ([Annex C.3.2](#c32-arithmetic-functions)).
+
 ## E.8 First Applicable
 
 This section defines the `first-applicable` combining algorithm of a policy.
@@ -8868,6 +8877,8 @@ ACAL 1.0 is a successor to XACML 3.0. ACAL 1.0 differs from XACML 3.0 in the fol
    * The conversion of the result of a `Path` expression to a bag of values of the `DataType` ([Section 8.4.7](#847-selector-evaluation)) is likewise specified by the ACAL Profile that defines the concrete selector type; Core keeps only the rules that apply whatever the profile (an empty result, a result matching no conversion case, a data type extension, an error during conversion). The XPath Profile's conversion is in its Section 7, written for the sequence-of-items result of the supported XPath versions instead of XPath 1.0's node-set, and differs from the former Core table in ways that section's changes list describes.
 
 - The value space, lexical space and lexical mapping of the twelve data types that correspond to XML Schema datatypes are stated explicitly ([Annex C.2.7](#c27-data-types-defined-by-reference-to-xml-schema)), by reference to the like-named XML Schema 1.1 Part 2 datatype and independently of any ACAL representation format.
+
+- The unbounded value space of the `integer` data type, and the behavior of integer results, are now stated explicitly: an integer result is exact, or is `Indeterminate` with status code `processing-error` when an execution resource is exhausted, and is never wrapped around, reduced modulo a bound, saturated or rounded ([Annex C.2.7](#c27-data-types-defined-by-reference-to-xml-schema), [Annex C.3.2](#c32-arithmetic-functions)). `integer-divide`, `integer-mod` and `integer-abs` now state their results, and `integer-to-double` and `double-to-integer` state their rounding and error behavior ([Annex C.3.4](#c34-numeric-data-type-conversion-functions)).
 
 - `AttributeDesignator` changes to simplify the declaration in most cases: 
 

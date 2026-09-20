@@ -714,7 +714,7 @@ The XPath specification leaves a number of aspects of behavior implementation-de
 
 2. For `xs:integer` operations, implementations that support limited-precision integer operations must either raise an error [err:FOAR0002] or provide an implementation-defined mechanism that allows users to choose between raising an error and returning a result that is modulo the largest representable integer value.
 
-    : ACAL leaves this implementation defined. If an implementation chooses to raise an error, the status code SHALL be `urn:oasis:names:tc:acal:1.0:status:processing-error`. Implementations MAY provide additional details about the error in the response or by some other means.
+    : ACAL does not leave this implementation defined. An implementation SHALL evaluate `xs:integer` operations in the unbounded value space of `xs:integer` ([[ACAL-Core-1.0](#acal-core-10)] Annex C.2.7), and SHALL NOT provide a mechanism that returns a result modulo a representable bound. An implementation SHALL NOT raise `err:FOAR0002` or `err:FOCA0003` solely because an `xs:integer` value exceeds a fixed-width or implementation-defined precision limit. A dynamic error in an `xs:integer` operation, including one caused by exhausted execution resources, SHALL cause the containing ACAL expression to return `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`. Implementations MAY provide additional details about the error in the response or by some other means.
 
 3. For `xs:decimal` values the number of digits of precision returned by the numeric operators is implementation-defined.
 
@@ -722,7 +722,7 @@ The XPath specification leaves a number of aspects of behavior implementation-de
 
 4. If the number of digits in the result of a numeric operation exceeds the number of digits that the implementation supports, the result is truncated or rounded in an implementation-defined manner.
 
-    : ACAL leaves this implementation defined.
+    : ACAL leaves this implementation defined, except that this item does not apply to an operation whose result is of type `xs:integer`, which item 2 governs.
 
 5. It is implementation-defined which version of Unicode is supported.
 
@@ -1441,6 +1441,8 @@ This ACAL Profile is a successor to the set of XPath-based features of [[XACML 3
 - The `content-selector` attribute identifier is defined by this profile ([Annex D.3](#d3-attributes)), whereas its XACML 3.0 counterpart `urn:oasis:names:tc:xacml:3.0:content-selector` is defined by the XACML v3.0 Hierarchical Resource Profile [[Hier](#hier)] even though it is consumed by the `ContextSelectorId` mechanism of XACML core. The identifier is not specific to hierarchical resources, so ACAL defines it alongside the mechanism that consumes it.
 
 - The conversion of an attribute selector's XPath result to ACAL values, previously specified in [[ACAL-Core-1.0](#acal-core-10)] section 8.4.7, is now specified by this profile ([Section 7](#7-attribute-selector-evaluation) step 4), for the sequence-of-items result of the supported [XPath] versions. Relative to the former Core table: (1) a sequence of several items now converts, each item to one value, including a mix of nodes and atomic values, and the bag keeps duplicates; (2) a node still converts through its string value, as before; (3) an atomic value converts only if its type is the requested XML Schema type or a type derived from it, or is `xs:untypedAtomic`, or — for `double` — is an `xs:float` or `xs:decimal` (including `xs:integer`), which the former Core table's Boolean-to-`boolean`, string-to-`string` and number-to-`integer`-or-`double` cases correspond to, except that a number that is not already of the requested type (for example a decimal or a double requested as `integer`) no longer converts and returns `syntax-error`, where the former table applied the `xs:integer()` constructor function to it and so truncated it; (4) a map, array or function item returns `processing-error`; (5) an empty sequence is governed by the empty-result rule of [[ACAL-Core-1.0](#acal-core-10)] section 8.4.7 before any conversion case is considered.
+
+- `xs:integer` operations no longer have an implementation-defined limit or a modulo mode ([Section 6](#6-xpath-definitions)): an implementation evaluates them in the unbounded value space and returns `processing-error` on a dynamic error, matching the unbounded ACAL `integer` of [[ACAL-Core-1.0](#acal-core-10)] Annex C.2.7.
 
 - The ACAL-to-XPath conversion of the value(s) of an ACAL variable referenced by an XPath expression is now specified ([Section 5.3.3](#533-attributeselectortype-extension---xpathattributeselectortype)): a value of one of the twelve XML-Schema-defined data types becomes the atomic value of the same-named `xs` type, and a bag becomes a sequence in a specified order. The text it replaces pointed to [[ACAL-Core-1.0](#acal-core-10)] section 8.4.7, which contains no such conversion, and described a bag as an XPath array, which XPath 2.0 does not have.
 
