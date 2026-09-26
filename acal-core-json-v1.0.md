@@ -570,14 +570,19 @@ The authoritative definition of ACAL `ValueType` and subtypes is in [[ACAL-Core-
 #### 5.2.2.1 Primitive value mappings
 
 1. A `LiteralBooleanType` object is represented as a JSON boolean. The ACAL data-type is implicitly set to the standard ACAL Boolean (`urn:oasis:names:tc:acal:1.0:data-type:boolean`).
-2. A `LiteralIntegerType` object is represented as a JSON integer as defined by [[JsonSchemaValidation](#jsonschemavalidation)] section 6.1.1 (JSON number with a zero fractional part), in absence of a `DataType` property. The ACAL data-type is implicitly set to `urn:oasis:names:tc:acal:1.0:data-type:integer`. A `DataType` property may be specified explicitly to override this data-type with a different type of number, e.g. ACAL Double.
-3. A `LiteralDoubleType` object is represented as a JSON number with one of these:
+2. A `LiteralIntegerType` object is represented as a JSON integer as defined by [[JsonSchemaValidation](#jsonschemavalidation)] section 6.1.1 (JSON number with a zero fractional part), in absence of a `DataType` property. The ACAL data-type is implicitly set to `urn:oasis:names:tc:acal:1.0:data-type:integer`. A `DataType` property may be specified explicitly to override this data-type with a different type of number, e.g. ACAL Double. An ACAL integer whose value lies outside the interval −9007199254740991 to 9007199254740991 inclusive SHALL NOT be represented as a JSON number; it SHALL be represented as a JSON object with a `DataType` property set to the standard ACAL Integer and a `Value` property holding the integer as a JSON string in the lexical space of `xs:integer` ([[ACAL-Core-1.0](#acal-core-10)] Annex C.2.7). A JACAL processor SHALL accept a JSON number as an ACAL integer only if it can determine that the exact mathematical value of the number is an integer within that interval. A JACAL processor SHALL accept the `Value` string of such an object only if the string is in the lexical space of `xs:integer` and the processor preserves the exact value it denotes. A JACAL processor SHALL NOT continue with an altered integer value in place of a representation that it does not accept.
+3. A `LiteralDoubleType` object is represented as one of these:
    
-   - Either a non-zero fractional part, in absence of a `DataType` property, in which case the ACAL data-type is implicitly set to the standard ACAL Double (`urn:oasis:names:tc:acal:1.0:data-type:double`).
-   - Or a zero fractional part, if and only if the `DataType` property is explicitly set to the standard ACAL Double type. For example:
+   - A JSON number with a non-zero fractional part, in absence of a `DataType` property, in which case the ACAL data-type is implicitly set to the standard ACAL Double (`urn:oasis:names:tc:acal:1.0:data-type:double`).
+   - A JSON object with a `DataType` property explicitly set to the standard ACAL Double type and a `Value` property holding the value as a JSON string in the lexical space of `xs:double`, used for a value with a zero fractional part, which item 2 would otherwise read as an ACAL integer. For example:
      ```json
      {"DataType": "urn:oasis:names:tc:acal:1.0:data-type:double", "Value": "1.0" }
      ```
+   - A JSON object, for a value that is one of the `xs:double` special values a JSON number cannot represent — positive infinity, negative infinity, or not-a-number. Such a value SHALL NOT be represented as a JSON number; it SHALL be represented as a JSON object with a `DataType` property set to the standard ACAL Double and a `Value` property holding the value as a JSON string in the lexical space of `xs:double` given in [[ACAL-Core-1.0](#acal-core-10)] Annex C.2.7 (`INF`, `-INF` or `NaN`). For example:
+     ```json
+     {"DataType": "urn:oasis:names:tc:acal:1.0:data-type:double", "Value": "INF" }
+     ```
+     A JACAL processor SHALL accept the `Value` string of such an object only if the string is in the lexical space of `xs:double` and the processor preserves the exact value it denotes.
 4. A `LiteralStringType` object is represented as a JSON string without any JSON property named `DataType`. If a `DataType` property is present at an upper level, i.e. in the parent or an ancestor object (e.g. `AttributeType` object), its value MUST be `urn:oasis:names:tc:acal:1.0:data-type:string`. Else the ACAL data-type is implicitly set to `urn:oasis:names:tc:acal:1.0:data-type:string`.
 5. A `LiteralRestrictedStringType` object, which may be used for any primitive type with a lexical representation, is represented in either of two forms:
    - If the `DataType` property is already present at an upper level, i.e. in the parent or an ancestor object (e.g. an `AttributeType` object), then this object may be represented simply as a JSON string. The ACAL data-type is inferred from the aforementioned `DataType` property.
@@ -1305,10 +1310,6 @@ J. Boyer et al, eds., Exclusive XML Canonicalization, Version 1.0, W3C Recommend
 ###### [Hancock]
 
 Hancock, Polymorphic Type Checking, in Simon L. Peyton Jones, Implementation of Functional Programming Languages, Section 8, Prentice-Hall International, 1987.
-
-###### [IEEE754]
-
-IEEE Standard for Binary Floating-Point Arithmetic 1985, ISBN 1-5593-7653-8, IEEE Product No. SH10116-TBR.
 
 ###### [INFOSET]
 

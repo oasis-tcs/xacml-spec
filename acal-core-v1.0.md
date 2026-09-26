@@ -3297,7 +3297,7 @@ Here are the simple types based on UML standard primitive types.
    @enduml
    ```
 
-* `Real`: real number in UML, typically represented using a floating point standard such as ISO/IEC/IEEE 60559:2011 (whose content is identical to the predecessor IEEE 754 standard).
+* `Real`: real number in UML, typically represented using a floating point standard such as ISO/IEC/IEEE 60559:2011, the joint ISO/IEC/IEEE edition harmonized with IEEE 754.
    ```plantuml
    @startuml
    hide empty members
@@ -3819,7 +3819,9 @@ URIs starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are
 
 `PolicyDefaults` [Any Number]
 
-: sequence of `PolicyDefaultsType` objects containing each a set of default values specific to a particular ACAL Profile, applicable to the policy (e.g. ACAL XPath Profile's default XPath version). In particular, each object SHALL have a different concrete type (per ACAL profile). The scope of the `PolicyDefaults` property SHALL be the enclosing policy and any policy nested within it; where a nested policy carries its own `PolicyDefaults` object of a given concrete type, that object applies within the nested policy in place of the enclosing policy's object of that type. The use of `PolicyDefaults` property is specified by particular ACAL Profiles (e.g. XPath Profile).
+: sequence of `PolicyDefaultsType` objects containing each a set of default values specific to a particular ACAL Profile, applicable to the policy (e.g. ACAL XPath Profile's default XPath version). In particular, each object SHALL have a different concrete type (per ACAL profile). The scope of the `PolicyDefaults` property SHALL be the enclosing policy and any policy nested within it; where a nested policy carries its own `PolicyDefaults` object of a given concrete type, that object applies within the nested policy in place of the enclosing policy's object of that type. A policy that is included in another policy by a `PolicyReference` is not nested within the referencing policy for the purposes of this scope rule; the `PolicyDefaults` objects of the referencing policy do not apply within the referenced policy. The use of `PolicyDefaults` property is specified by particular ACAL Profiles (e.g. XPath Profile).
+
+: Note: A nested policy's `PolicyDefaults` object overriding the enclosing policy's object of the same concrete type is deliberate, and differs from `VariableDefinition`, which forbids a `VariableId` that repeats one declared by an enclosing policy ([Section 7.13](#713-variabledefinitiontype)). A Defaults object can affect how a policy's expressions are interpreted — under the XPath Profile, the default XPath version governs the `Path` of every XPath attribute selector in its scope — so a policy authored against one setting would change meaning if, when nested beneath a policy that declares another, it could not declare its own.
 
 `Parameter` [Any Number]
 
@@ -3861,7 +3863,7 @@ Each `CombinerInputType` object contains exactly one of the following properties
 
 _**Supporting this part is optional.**_ _It is required only for supporting ACAL Profiles that define extensions (subtypes) of `PolicyDefaultsType` (e.g. XPath Profile)._
 
-`PolicyDefaultsType` is an abstract object type for default values that apply to the parent `PolicyType` object. Concrete subtypes of `PolicyDefaultsType` are defined in separate ACAL Profiles, e.g. XPath Profile.
+`PolicyDefaultsType` is an abstract object type for default values that apply to the parent `PolicyType` object and to any policy nested within it, as specified for the `PolicyDefaults` property in [Section 7.4](#74-policytype). Concrete subtypes of `PolicyDefaultsType` are defined in separate ACAL Profiles, e.g. XPath Profile.
 
 UML definition (class diagram):
 ```plantuml
@@ -5750,70 +5752,19 @@ If the designated attribute category or entity value has a `Content` property, t
 
 2. Evaluate the expression given in the `Path` property against the data structure obtained in the previous step, according to the syntax and semantics of the respective ACAL Profile in use (as indicated by the concrete subtype of `AttributeSelectorType` being used).
 
-3. The result of step 3 is converted to a bag of values of the data type specified by the `DataType` property as follows:
+3. The result of step 2 is converted to a bag of values of the data type specified by the `DataType` property, according to the conversion rules of the ACAL Profile in use (e.g. those of the XPath Profile or the JSONPath Profile). An ACAL Profile that defines a concrete type of `AttributeSelectorType` or `EntityAttributeSelectorType` SHALL specify those conversion rules, i.e. which results of step 2 can be converted to a value of each data type the profile supports for this purpose (including, if the profile supports it, the `urn:oasis:names:tc:acal:1.0:data-type:entity` data type) and how each is converted. The following rules apply in addition, whatever the ACAL Profile:
 
 &nbsp;
-: If the result is a Boolean and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:boolean`, then convert the result using the `xs:boolean()` constructor function from [[XF](#xf)] Section 18.1.
+: If the result of step 2 is empty, then the return value is either `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`, or an empty bag, as determined by the `MustBePresent` property. This rule applies before, and instead of, any conversion case of the ACAL Profile in use, including a case that would otherwise be satisfied vacuously by an empty result.
 
 &nbsp;
-: If the result is a string and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:string`, then convert the result using the `xs:string()` constructor function from [[XF](#xf)] Section 18.1.
+: If the data type is one for which the ACAL Profile in use defines a conversion and the result of step 2 does not satisfy any of the cases the profile defines for it, then the attribute selector MUST return `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`.
 
 &nbsp;
-: If the result is a number and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:integer`, then convert the result using the `xs:integer()` constructor function from [[XF](#xf)] Section 18.1.
-
-&nbsp;
-: If the result is a number and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:double`, then convert the result using the `xs:double()` constructor function from [[XF](#xf)] Section 18.1.
-
-&nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:boolean`, then convert the string value of each node using the `xs:boolean()` constructor function from [[XF](#xf)] Section 18.1.
-
-&nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:string`, then convert the string value of each node using the `xs:string()` constructor function from [[XF](#xf)] Section 18.1.
-
-&nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:integer`, then convert the string value of each node using the `xs:integer()` constructor function from [[XF](#xf)] Section 18.1.
-
-&nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:double`, then convert the string value of each node using the `xs:double()` constructor function from [[XF](#xf)] Section 18.1.
-
-&nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:dateTime`, then convert the string value of each node using the `xs:dateTime()` constructor function from [[XF](#xf)] Section 18.1.
-
-&nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:date`, then convert the string value of each node using the `xs:date()` constructor function from [[XF](#xf)] Section 18.1.
-
-&nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:time`, then convert the string value of each node using the `xs:time()` constructor function from [[XF](#xf)] Section 18.1.
-
-&nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:hexBinary`, then convert the string value of each node using the `xs:hexBinary()` constructor function from [[XF](#xf)] Section 18.1.
-
-&nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:base64Binary`, then convert the string value of each node using the `xs:base64Binary()` constructor function from [[XF](#xf)] Section 18.1.
-
-&nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:anyURI`, then convert the string value of each node using the `xs:anyURI()` constructor function from [[XF](#xf)] Section 18.1.
-
-&nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:yearMonthDuration`, then convert the string value of each node using the `xs:yearMonthDuration()` constructor function from [[XF](#xf)] Section 18.1.
-
-&nbsp;
-: If the result is a node-set and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:dayTimeDuration`, then convert the string value of each node using the `xs:dayTimeDuration()` constructor function from [[XF](#xf)] Section 18.1.
-
-&nbsp;
-: If the result is a node-set and every node is an element node and the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:entity`, then convert each node to an `EntityType` object. Each object SHALL have a `Content` property and SHALL NOT have an `Attribute` property. The child element of the `Content`'s `Body` property SHALL be a copy of the element corresponding to the node, along with its entire content, plus whatever namespace declarations from ancestor elements as are required to define namespace prefixes used in the content. Namespace declarations from ancestor elements that are not visibly used in the content MAY be added.
-
-&nbsp;
-: If the data type is one of the types referred to above and the result of step 3 does not satisfy any of the cases, then the attribute selector MUST return `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`.
-
-&nbsp;
-: If the data type is not one of the types referred to above, then the return values SHALL be constructed from the node-set in a manner specified by the particular data type extension specification. If the data type extension does not specify an appropriate constructor function, then the attribute selector MUST return `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`.
+: If the data type is not one for which the ACAL Profile in use defines a conversion, then the return values SHALL be constructed from the result of step 2 in a manner specified by the definition of that data type in this specification or in the particular data type extension specification. If no appropriate constructor is specified, then the attribute selector MUST return `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`.
 
 &nbsp;
 : If an error occurs when converting the values returned by the expression to the specified data type, then the result of the attribute selector MUST be `Indeterminate`, with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`
-
-&nbsp;
-: If the result of step 3 is an empty node-set, then the return value is either `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`, or an empty bag, as determined by the `MustBePresent` property.
 
 ## 8.5 Expression Evaluation
 
@@ -5834,15 +5785,13 @@ An ACAL expression is a choice between the following object types:
 
 ## 8.6 Arithmetic Evaluation
 
-IEEE 754 [[IEEE754](#ieee754)] specifies how to evaluate arithmetic functions in a context, which specifies defaults for precision, rounding, etc. ACAL SHALL use this specification for the evaluation of all integer and double functions relying on the Extended Default Context, enhanced with double precision:
+This section specifies the required behavior of `double` arithmetic. `integer` arithmetic is exact and is fully specified by [Annex C.2.7](#c27-data-types-defined-by-reference-to-xml-schema) and [Annex C.3.2](#c32-arithmetic-functions); it does not depend on this section and is not subject to rounding, a designated precision, or a trap-enabler, none of which apply to an unbounded, exact value.
 
-: flags -  all set to 0
+A `double` value is a binary64 (double-precision) floating-point value, as given by the value space of `xs:double` ([Annex C.2.7](#c27-data-types-defined-by-reference-to-xml-schema)). An ACAL arithmetic function (`urn:oasis:names:tc:acal:1.0:function:double-add`, `-subtract`, `-multiply`, `-divide` and `-abs`, [Annex C.3.2](#c32-arithmetic-functions)) SHALL produce the mathematically exact result of the corresponding operation, rounded to the nearest binary64 value as if the exponent range were unbounded, with a tie rounded to the value whose least significant bit is zero (round-to-nearest, ties-to-even); if no finite binary64 value can represent that rounded result, the result SHALL be positive or negative infinity, matching the sign of the exact result. An operation with a NaN operand, or an operation such as `0 × ∞` that has no defined mathematically exact result, SHALL produce NaN — except where this specification states a different result, such as [Annex C.3.2](#c32-arithmetic-functions)'s rule that a division whose divisor is zero evaluates to `Indeterminate` rather than to a signed infinity or NaN. A representational detail not otherwise stated here, such as the sign of a zero result, the handling of a subnormal value, or the result of an operation on an infinite operand not covered above, follows ordinary binary64 arithmetic.
 
-: trap-enablers -  all set to 0 (IEEE 854 §7) with the exception of the "division-by-zero" trap enabler, which SHALL be set to 1
+An ACAL function comparing two `double` values — `urn:oasis:names:tc:acal:1.0:function:double-equal` ([Annex C.3.1](#c31-equality-predicates)) and the `double` functions of [Annex C.3.6](#c36-numeric-comparison-functions) — SHALL follow binary64 comparison: NaN compares unordered with every `double` value, including itself, so each of these functions SHALL evaluate to `false` if either argument is NaN; these functions SHALL treat positive zero and negative zero as equal in value, consistent with ordinary numeric comparison (so `double-equal` returns `true` for a positive-zero/negative-zero pair, and neither is greater than or less than the other).
 
-: precision - is set to the designated double precision
-
-: rounding -  is set to round-half-even (IEEE 854 §4.1)
+This is the arithmetic and comparison behavior that a binary64 (or equivalent) floating-point type native to essentially every general-purpose programming language and hardware platform already performs in its default configuration. An implementation conforms by using that native type and its ordinary arithmetic operators and comparisons for `double` values, in a default configuration (standard rounding, no flush-to-zero or "fast-math"-style relaxation, no fused or reduced-precision evaluation of a single ACAL function), together with this specification's own override for a zero divisor ([Annex C.3.2](#c32-arithmetic-functions)) — the one case above where this specification requires a result to differ from a native binary64 operator's ordinary result. [[IEEE754](#ieee754)] is the formal origin of the rest of these rules and MAY be consulted for detail beyond what this section states; conformance with this section does not require access to it.
 
 ## 8.7 Target Evaluation
 
@@ -6802,10 +6751,6 @@ Hancock, Polymorphic Type Checking, in Simon L. Peyton Jones, Implementation of 
 
 XACML v3.0 Hierarchical Resource Profile Version 1.0. 18 May 2014. Committee Specification 02. https://docs.oasis-open.org/xacml/3.0/hierarchical/v1.0/xacml-3.0-hierarchical-v1.0.html
 
-###### [IEEE754]
-
-IEEE Standard for Binary Floating-Point Arithmetic 1985, ISBN 1-5593-7653-8, IEEE Product No. SH10116-TBR.
-
 ###### [INFOSET]
 
 XML Information Set (Second Edition), W3C Recommendation, 4 February 2004, https://www.w3.org/TR/xml-infoset/
@@ -6933,6 +6878,10 @@ Character Model for the World Wide Web: String Matching W3C Working Group Note 1
 
 Hinton, H, M, Lee, E, S, The Compatibility of Policies, Proceedings 2nd ACM Conference on Computer and Communications Security, Nov 1994, Fairfax, Virginia, USA.
 
+###### [IEEE754]
+
+IEEE Std 754-2019, IEEE Standard for Floating-Point Arithmetic, DOI: 10.1109/IEEESTD.2019.8766229. [Section 8.6](#86-arithmetic-evaluation) states the `double` arithmetic and comparison behavior this specification requires in terms that do not depend on this document; it is cited here as the formal origin of those rules, for readers who want more detail.
+
 ###### [NISTIR8318] 
 
 Black, P. (2020), DADS: The On-Line Dictionary of Algorithms and Data Structures, NIST Interagency/Internal Report (NISTIR), National Institute of Standards and Technology, Gaithersburg, MD, [online](https://doi.org/10.6028/NIST.IR.8318) (Accessed December 16, 2025) 
@@ -6997,9 +6946,11 @@ Although a syntactic representation of ACAL objects may represent most data type
 
 * `urn:oasis:names:tc:acal:1.0:data-type:dnsName`
 
-For the sake of improved interoperability, it is RECOMMENDED that all time references be in UTC time.
+The definitions of the twelve data types that correspond to XML Schema datatypes are given in [Annex C.2.7](#c27-data-types-defined-by-reference-to-xml-schema).
 
-An ACAL PDP SHALL be capable of converting string representations into various data types. For double values, implementations SHALL use the conversions described in [IEEE754].
+If a value of data type `dateTime` or `date` does not include a time zone, the equality, comparison and ordering functions of that data type ([Annex C.3.1](#c31-equality-predicates), [Annex C.3.8](#c38-non-numeric-comparison-functions)) resolve it using the *implicit timezone* of the PDP's dynamic evaluation context, as defined by [[XF](#xf)]. (A `time` value without a time zone is resolved differently; see the `time-*` functions and `time-in-range` in [Annex C.3.8](#c38-non-numeric-comparison-functions).) This document does not specify the implicit timezone; a PDP ordinarily configures it, so two conformant PDPs MAY configure different implicit time zones and MAY therefore reach different comparison results, and different decisions, for the identical policy and the identical request when a comparison combines a value that has an explicit time zone with one that does not, or otherwise depends on the implicit timezone. It is RECOMMENDED that every `dateTime`, `time` and `date` value carried in a request or a policy include an explicit time zone, to avoid this hazard; it is not necessary that every value use the same time zone, or that any value use UTC specifically. Independently, for the sake of improved interoperability, it is RECOMMENDED that all time references be in UTC time where a choice of time zone is otherwise unconstrained.
+
+An ACAL PDP SHALL be capable of converting string representations into various data types. For the twelve data types defined by reference to XML Schema ([Annex C.2.7](#c27-data-types-defined-by-reference-to-xml-schema)), including `urn:oasis:names:tc:acal:1.0:data-type:double`, the conversion SHALL use the lexical mapping given there. Implementations SHALL represent and operate on `double` values as specified in [Section 8.6](#86-arithmetic-evaluation).
 
 ACAL defines four data types representing identifiers for subjects or resources; these are:
 
@@ -7021,9 +6972,13 @@ ACAL defines a data type for representing structured data:
 
 The `urn:oasis:names:tc:acal:1.0:data-type:x500Name` data type represents an ITU-T Rec. X.520 Distinguished Name. The valid syntax for such a name is described in IETF RFC 2253 "Lightweight Directory Access Protocol (v3): UTF-8 String Representation of Distinguished Names".
 
+The value space of `x500Name` is the set of ITU-T Rec. X.520 Distinguished Names, together with the lexical string from which each value was constructed; a Distinguished Name is a sequence of Relative Distinguished Names (RDNs), each an unordered set of attribute-type-and-value pairs. The lexical space is the set of character strings conforming to the RFC 2253 syntax above, and the lexical mapping from such a string to the Distinguished Name it denotes is given by RFC 2253's parsing rules. `urn:oasis:names:tc:acal:1.0:function:x500Name-equal` ([Annex C.3.1](#c31-equality-predicates)) determines whether two `x500Name` values are equivalent; two values MAY be equivalent while retaining different original lexical strings, which `urn:oasis:names:tc:acal:1.0:function:string-from-x500Name` preserves rather than normalizing.
+
 ### C.2.2 RFC 822 Name
 
 The `urn:oasis:names:tc:acal:1.0:data-type:rfc822Name` data type represents an electronic mail address. The valid syntax for such a name is described in IETF RFC 2821, Section 4.1.2, Command Argument Syntax, under the term "Mailbox".
+
+The value space of `rfc822Name` is the set of pairs of a local-part and a domain-part conforming to the Mailbox syntax above, together with the lexical string from which each value was constructed. The lexical space is the set of character strings conforming to that syntax, and the lexical mapping from such a string to the pair it denotes is given by parsing the string according to that syntax. `urn:oasis:names:tc:acal:1.0:function:rfc822Name-equal` ([Annex C.3.1](#c31-equality-predicates)) determines whether two `rfc822Name` values are equivalent, comparing the domain-part case-insensitively and the local-part case-sensitively; two values MAY be equivalent while retaining different original lexical strings, which `urn:oasis:names:tc:acal:1.0:function:string-from-rfc822Name` preserves rather than normalizing.
 
 ### C.2.3 IP Address
 
@@ -7038,6 +6993,8 @@ For an IPv4 address, the address and mask SHALL each conform to the `IPv4address
 For an IPv6 address, the address and mask SHALL each conform to the `IP-literal` rule (using the `IPv6address` alternative) defined in [[RFC3986](#rfc3986)], Section 3.2.2 and Appendix A. (Note that an IPv6 address or mask, in this syntax, is enclosed in literal `[` `]` brackets.)
 
 The mask, where present, uses the same syntactic rule as the address component (i.e., `IPv4address` for IPv4, `IP-literal` for IPv6) and represents a network address mask (e.g., `255.255.255.0` for IPv4 or `[ffff:ffff::]` for IPv6). The mask format is defined by this specification and is not derived from any external RFC.
+
+The value space of `ipAddress` is the set of triples of an IPv4 or IPv6 address, an optional network address mask of the same address family, and an optional port or port range (the port-range syntax, common to `ipAddress` and `dnsName`, is given below). The lexical mapping from a string to the triple it denotes is given by the syntax above and below. This specification defines no equality or matching relation on `ipAddress` values other than identity of the parsed triple (for example, it does not define whether two address strings that denote overlapping or numerically equal address ranges are related by any standard ACAL function). No standard ACAL function currently depends on such a relation.
 
 ### C.2.4 DNS Name
 
@@ -7058,9 +7015,42 @@ portrange = portnumber | `-`portnumber | portnumber`-`[portnumber]
 
 where `portnumber` is a decimal port number. If the port number is of the form `-x`, where `x` is a port number, then the range is all ports numbered `x` and below. If the port number is of the form `x-`, then the range is all ports numbered `x` and above. [This syntax is taken from the Java SocketPermission.]
 
+The value space of `dnsName` is the set of pairs of a hostname (optionally beginning with a wildcard label) and an optional port or port range, each as constrained by the syntax above, together with the lexical string from which each value was constructed. The lexical mapping from a string to the pair it denotes preserves the hostname's original letter case. Per IETF RFC 4343, DNS name comparison is conventionally case-insensitive, but this specification currently defines no comparison or matching function for `dnsName` values, so no standard ACAL function depends on case sensitivity or insensitivity. Two `dnsName` values are the same value if and only if their parsed pairs are identical.
+
 ### C.2.6 Entity
 
 The `urn:oasis:names:tc:acal:1.0:data-type:entity` data type is used to represent an entity nested within another entity. Values of this data type are objects of the `EntityType` object type [Section 7.45](#745-entitytype).
+
+### C.2.7 Data Types Defined by Reference to XML Schema
+
+Each of the twelve data types in the table below is defined as follows, for every ACAL representation format and every ACAL Profile. Its *value space* (the set of values that a value of the data type can be), its *lexical space* (the set of character strings that represent those values) and its *lexical mapping* (the mapping from each string of the lexical space to the value it represents) are those of the built-in datatype of the same name defined by [[XS](#xs)] Part 2, in the section given in the table.
+
+| ACAL data type | XML Schema 1.1 Part 2 datatype | Section of [[XS](#xs)] Part 2 |
+| :--- | :--- | :--- |
+| `urn:oasis:names:tc:acal:1.0:data-type:string` | `xs:string` | 3.3.1 |
+| `urn:oasis:names:tc:acal:1.0:data-type:boolean` | `xs:boolean` | 3.3.2 |
+| `urn:oasis:names:tc:acal:1.0:data-type:integer` | `xs:integer` | 3.4.13 |
+| `urn:oasis:names:tc:acal:1.0:data-type:double` | `xs:double` | 3.3.5 |
+| `urn:oasis:names:tc:acal:1.0:data-type:dateTime` | `xs:dateTime` | 3.3.7 |
+| `urn:oasis:names:tc:acal:1.0:data-type:time` | `xs:time` | 3.3.8 |
+| `urn:oasis:names:tc:acal:1.0:data-type:date` | `xs:date` | 3.3.9 |
+| `urn:oasis:names:tc:acal:1.0:data-type:hexBinary` | `xs:hexBinary` | 3.3.15 |
+| `urn:oasis:names:tc:acal:1.0:data-type:base64Binary` | `xs:base64Binary` | 3.3.16 |
+| `urn:oasis:names:tc:acal:1.0:data-type:anyURI` | `xs:anyURI` | 3.3.17 |
+| `urn:oasis:names:tc:acal:1.0:data-type:yearMonthDuration` | `xs:yearMonthDuration` | 3.4.26 |
+| `urn:oasis:names:tc:acal:1.0:data-type:dayTimeDuration` | `xs:dayTimeDuration` | 3.4.27 |
+
+This specification uses those definitions of value space, lexical space and lexical mapping only. An implementation is not required to process XML, or to perform XML Schema validation, in order to support these data types. A value of one of these data types is a member of the value space of the corresponding XML Schema datatype; it is not a character string, even where an ACAL representation format represents it as one.
+
+Two consequences of this definition are stated here because they are easily overlooked. First, the value space of `urn:oasis:names:tc:acal:1.0:data-type:string` is the set of finite-length sequences of characters that match the `Char` production of [XML], and [[XS](#xs)] leaves it implementation-defined whether the XML 1.0 production, the XML 1.1 production, or both are supported. A sequence of characters that an ACAL representation format can carry but that is outside that set (for example a control character that XML excludes) is therefore not a value of the `string` data type. Second, the lexical space of `urn:oasis:names:tc:acal:1.0:data-type:anyURI` is the same set of character sequences, and its values represent IRI references; it is not the type `URI` of [Section 7.1.2.3.1](#71231-uri), which is an [[RFC3986](#rfc3986)] URI, and a value of the `anyURI` data type need not conform to [[RFC3986](#rfc3986)].
+
+The value space of `urn:oasis:names:tc:acal:1.0:data-type:integer` is the set of all mathematical integers. An ACAL implementation SHALL support `integer` values without an implementation-defined bound on their magnitude. An ACAL implementation SHALL NOT replace an `integer` value with one produced by wraparound, modular reduction, saturation, clipping, rounding or any other loss of precision. An ACAL implementation that cannot preserve an `integer` value because an execution resource is exhausted SHALL return `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:processing-error` for the evaluation that requires the value, and SHALL NOT continue that evaluation with an altered value. An ACAL implementation SHALL NOT treat a predetermined limit on the number of bits or decimal digits of an `integer`, including the width of a machine integer type, as exhaustion of an execution resource. If a PDP evaluates a policy that contains an `integer` literal and cannot preserve the exact value of the literal because an execution resource is exhausted, the result of that policy SHALL be `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`, and the PDP SHALL NOT evaluate the policy with an altered value.
+
+The equality and ordering of values of these data types in ACAL expressions, and all other operations on them, are specified by the functions in [Annex C.3](#c3-functions).
+
+The data types `urn:oasis:names:tc:acal:1.0:data-type:x500Name`, `urn:oasis:names:tc:acal:1.0:data-type:rfc822Name`, `urn:oasis:names:tc:acal:1.0:data-type:ipAddress` and `urn:oasis:names:tc:acal:1.0:data-type:dnsName` are not defined by reference to XML Schema (see [Annex C.2.1](#c21-x500-directory-name) to [Annex C.2.4](#c24-dns-name)).
+
+An ACAL Profile that converts a value between a profile-specific form and a value of one of these data types SHALL specify the conversion in terms of the value spaces defined here.
 
 ## C.3 Functions
 
@@ -7090,7 +7080,7 @@ The following functions are the equality functions for the various data types. E
 
 `urn:oasis:names:tc:acal:1.0:function:double-equal`
 
-: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:double` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL perform its evaluation on doubles according to IEEE 754 [IEEE754].
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:double` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL perform its evaluation as specified in [Section 8.6](#86-arithmetic-evaluation).
 
 `urn:oasis:names:tc:acal:1.0:function:date-equal`
 
@@ -7144,11 +7134,15 @@ The following functions are the equality functions for the various data types. E
 
 ### C.3.2 Arithmetic Functions
 
-All of the following functions SHALL take two arguments of the specified data type, integer, or double, and SHALL return a value of integer or double data type, respectively. However, the `add` and `multiply` functions MAY take more than two arguments. Each function evaluation operating on doubles SHALL proceed as specified by their logical counterparts in IEEE 754 [IEEE754]. For all of these functions, if any argument is `Indeterminate`, then the function SHALL evaluate to `Indeterminate`. In the case of the divide functions, if the divisor is zero, then the function SHALL evaluate to `Indeterminate`.
+All of the following functions SHALL take two arguments of the specified data type, integer, or double, and SHALL return a value of integer or double data type, respectively. However, the `add` and `multiply` functions MAY take more than two arguments. Each function evaluation operating on doubles SHALL proceed as specified in [Section 8.6](#86-arithmetic-evaluation). For all of these functions, if any argument is `Indeterminate`, then the function SHALL evaluate to `Indeterminate`. In the case of `urn:oasis:names:tc:acal:1.0:function:integer-divide`, `urn:oasis:names:tc:acal:1.0:function:double-divide` and `urn:oasis:names:tc:acal:1.0:function:integer-mod`, if the second argument (the divisor) is zero, then the function SHALL evaluate to `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`.
+
+An arithmetic function defined in this section whose result is of data type `urn:oasis:names:tc:acal:1.0:data-type:integer`, and that completes, SHALL return exactly the result that its definition prescribes. Such a function SHALL NOT return a different value because the prescribed result exceeds the range of a fixed-width representation, and SHALL NOT wrap around, reduce modulo, saturate or lose precision. Such a function that cannot produce its prescribed result because an execution resource is exhausted SHALL return `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`, and SHALL NOT continue the evaluation with an altered value. An ACAL implementation SHALL NOT treat a predetermined limit on the number of bits or decimal digits of an `integer`, including the width of a machine integer type, as exhaustion of an execution resource.
+
+: Note: An `Indeterminate` result is not a `Deny` result. A combining algorithm that does not treat an `Indeterminate` child as `Deny`, such as `permit-unless-deny` ([Annex E.7](#e7-permit-unless-deny)), can therefore return `Permit` when an integer function returns `Indeterminate` inside a rule that would otherwise have denied. Such an algorithm therefore does not protect a policy that needs such a failure to prevent access.
 
 `urn:oasis:names:tc:acal:1.0:function:integer-add`
 
-: This function MUST accept two or more arguments.
+: This function MUST accept two or more arguments. The result is the sum of the arguments.
 
 `urn:oasis:names:tc:acal:1.0:function:double-add`
 
@@ -7164,7 +7158,7 @@ All of the following functions SHALL take two arguments of the specified data ty
 
 `urn:oasis:names:tc:acal:1.0:function:integer-multiply`
 
-: This function MUST accept two or more arguments.
+: This function MUST accept two or more arguments. The result is the product of the arguments.
 
 `urn:oasis:names:tc:acal:1.0:function:double-multiply`
 
@@ -7172,7 +7166,7 @@ All of the following functions SHALL take two arguments of the specified data ty
 
 `urn:oasis:names:tc:acal:1.0:function:integer-divide`
 
-: The result is the first argument divided by the second argument.
+: The result is the first argument divided by the second argument, truncated toward zero to a whole number.
 
 `urn:oasis:names:tc:acal:1.0:function:double-divide`
 
@@ -7180,7 +7174,7 @@ All of the following functions SHALL take two arguments of the specified data ty
 
 `urn:oasis:names:tc:acal:1.0:function:integer-mod`
 
-: The result is the remainder of the first argument divided by the second argument.
+: The result is the first argument minus the product of the second argument and the result of `urn:oasis:names:tc:acal:1.0:function:integer-divide` applied to the same arguments; the result is zero or has the sign of the first argument.
 
 The following functions SHALL take a single argument of the specified data type. The round and floor functions SHALL take a single argument of data type `urn:oasis:names:tc:acal:1.0:data-type:double` and return a value of the data type `urn:oasis:names:tc:acal:1.0:data-type:double`.
 
@@ -7191,6 +7185,8 @@ The following functions SHALL take a single argument of the specified data type.
 * `urn:oasis:names:tc:acal:1.0:function:round`
 
 * `urn:oasis:names:tc:acal:1.0:function:floor`
+
+The result of `urn:oasis:names:tc:acal:1.0:function:integer-abs` is the absolute value of its argument.
 
 ### C.3.3 String Conversion Functions
 
@@ -7210,12 +7206,11 @@ The following functions convert values between the `urn:oasis:names:tc:acal:1.0:
 
 `urn:oasis:names:tc:acal:1.0:function:double-to-integer`
 
-: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:double` and SHALL truncate its numeric value to a whole number and return a value of data type `urn:oasis:names:tc:acal:1.0:data-type:integer`.
+: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:double` and SHALL return a value of data type `urn:oasis:names:tc:acal:1.0:data-type:integer`. If the argument is NaN or infinite, then the result SHALL be `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`. Otherwise the result SHALL be exactly the argument with its fractional part discarded (truncated toward zero), whatever its magnitude, unless the implementation cannot produce that integer because an execution resource is exhausted, in which case the result SHALL be `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`.
 
 `urn:oasis:names:tc:acal:1.0:function:integer-to-double`
 
-: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:integer` and SHALL promote its value to a value of data type `urn:oasis:names:tc:acal:1.0:data-type:double` with the same numeric value. If the integer argument is outside the range that can be represented by a double, the result SHALL be `Indeterminate,` with status code <!-- Newline added to fit on PDF page -->
-`urn:oasis:names:tc:acal:1.0:status:processing-error`.
+: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:integer` and SHALL convert the exact value of the argument to a `urn:oasis:names:tc:acal:1.0:data-type:double` value using the round-to-nearest, ties-to-even rounding specified in [Section 8.6](#86-arithmetic-evaluation). If that conversion would produce positive or negative infinity, then the result SHALL be `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`. Otherwise the result SHALL be the converted value, which MAY differ from the argument when the argument cannot be represented exactly.
 
 ### C.3.5 Logical Functions
 
@@ -7253,7 +7248,7 @@ This section contains the specification for logical functions that operate on ar
 
 ### C.3.6 Numeric Comparison Functions
 
-These functions form a minimal set for comparing two numbers, yielding a Boolean result. For doubles they SHALL comply with the rules governed by IEEE 754 [IEEE754].
+These functions form a minimal set for comparing two numbers, yielding a Boolean result. For doubles they SHALL comply with [Section 8.6](#86-arithmetic-evaluation).
 
 * `urn:oasis:names:tc:acal:1.0:function:integer-greater-than`
 
@@ -7344,35 +7339,35 @@ These functions perform comparison operations on two arguments of non-numerical 
 
 `urn:oasis:names:tc:acal:1.0:function:dateTime-greater-than`
 
-: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:dateTime` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is greater than the second argument according to the order relation specified for `https://www.w3.org/2001/XMLSchema#dateTime` by [[XS](#xs)] part 2, Section 3.2.7. Otherwise, it SHALL return `false`. Note: if a dateTime value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [[XS](#xs)].
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:dateTime` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is greater than the second argument according to the order relation specified for `https://www.w3.org/2001/XMLSchema#dateTime` by [[XS](#xs)] part 2, Section 3.2.7. Otherwise, it SHALL return `false`. Note: if a `dateTime` value does not include a time-zone value, this function SHALL resolve it using the implicit timezone of the PDP's dynamic evaluation context, as defined by [[XF](#xf)]; see [Annex C.2](#c2-data-types) for the resulting cross-PDP hazard and the recommendation that every value carry an explicit time zone.
 
 `urn:oasis:names:tc:acal:1.0:function:dateTime-greater-than-or-equal`
 
-: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:dateTime` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is greater than or equal to the second argument according to the order relation specified for `https://www.w3.org/2001/XMLSchema#dateTime` by [[XS](#xs)] part 2, Section 3.2.7. Otherwise, it SHALL return `false`. Note: if a dateTime value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [[XS](#xs)].
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:dateTime` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is greater than or equal to the second argument according to the order relation specified for `https://www.w3.org/2001/XMLSchema#dateTime` by [[XS](#xs)] part 2, Section 3.2.7. Otherwise, it SHALL return `false`. Note: if a `dateTime` value does not include a time-zone value, this function SHALL resolve it using the implicit timezone of the PDP's dynamic evaluation context, as defined by [[XF](#xf)]; see [Annex C.2](#c2-data-types) for the resulting cross-PDP hazard and the recommendation that every value carry an explicit time zone.
 
 `urn:oasis:names:tc:acal:1.0:function:dateTime-less-than`
 
-: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:dateTime` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is less than the second argument according to the order relation specified for `urn:oasis:names:tc:acal:1.0:data-type:dateTime` by [XS, part 2, Section 3.2.7]. Otherwise, it SHALL return `false`. Note: if a dateTime value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [[XS](#xs)].
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:dateTime` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is less than the second argument according to the order relation specified for `urn:oasis:names:tc:acal:1.0:data-type:dateTime` by [XS, part 2, Section 3.2.7]. Otherwise, it SHALL return `false`. Note: if a `dateTime` value does not include a time-zone value, this function SHALL resolve it using the implicit timezone of the PDP's dynamic evaluation context, as defined by [[XF](#xf)]; see [Annex C.2](#c2-data-types) for the resulting cross-PDP hazard and the recommendation that every value carry an explicit time zone.
 
 `urn:oasis:names:tc:acal:1.0:function:dateTime-less-than-or-equal`
 
-: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type: dateTime` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is less than or equal to the second argument according to the order relation specified for `https://www.w3.org/2001/XMLSchema#dateTime` by [[XS](#xs)] part 2, Section 3.2.7. Otherwise, it SHALL return `false`. Note: if a dateTime value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [[XS](#xs)].
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type: dateTime` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is less than or equal to the second argument according to the order relation specified for `https://www.w3.org/2001/XMLSchema#dateTime` by [[XS](#xs)] part 2, Section 3.2.7. Otherwise, it SHALL return `false`. Note: if a `dateTime` value does not include a time-zone value, this function SHALL resolve it using the implicit timezone of the PDP's dynamic evaluation context, as defined by [[XF](#xf)]; see [Annex C.2](#c2-data-types) for the resulting cross-PDP hazard and the recommendation that every value carry an explicit time zone.
 
 `urn:oasis:names:tc:acal:1.0:function:date-greater-than`
 
-: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:date` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is greater than the second argument according to the order relation specified for `https://www.w3.org/2001/XMLSchema#date` by [[XS](#xs)] part 2, Section 3.2.9. Otherwise, it SHALL return `false`. Note: if a date value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [[XS](#xs)].
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:date` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is greater than the second argument according to the order relation specified for `https://www.w3.org/2001/XMLSchema#date` by [[XS](#xs)] part 2, Section 3.2.9. Otherwise, it SHALL return `false`. Note: if a `date` value does not include a time-zone value, this function SHALL resolve it using the implicit timezone of the PDP's dynamic evaluation context, as defined by [[XF](#xf)]; see [Annex C.2](#c2-data-types) for the resulting cross-PDP hazard and the recommendation that every value carry an explicit time zone.
 
 `urn:oasis:names:tc:acal:1.0:function:date-greater-than-or-equal`
 
-: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:date` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is greater than or equal to the second argument according to the order relation specified for `https://www.w3.org/2001/XMLSchema#date` by [[XS](#xs)] part 2, Section 3.2.9. Otherwise, it SHALL return `false`. Note: if a date value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [[XS](#xs)].
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:date` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is greater than or equal to the second argument according to the order relation specified for `https://www.w3.org/2001/XMLSchema#date` by [[XS](#xs)] part 2, Section 3.2.9. Otherwise, it SHALL return `false`. Note: if a `date` value does not include a time-zone value, this function SHALL resolve it using the implicit timezone of the PDP's dynamic evaluation context, as defined by [[XF](#xf)]; see [Annex C.2](#c2-data-types) for the resulting cross-PDP hazard and the recommendation that every value carry an explicit time zone.
 
 `urn:oasis:names:tc:acal:1.0:function:date-less-than`
 
-: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:date` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is less than the second argument according to the order relation specified for `https://www.w3.org/2001/XMLSchema#date` by [[XS](#xs)] part 2, Section 3.2.9. Otherwise, it SHALL return `false`. Note: if a date value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [[XS](#xs)].
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:date` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is less than the second argument according to the order relation specified for `https://www.w3.org/2001/XMLSchema#date` by [[XS](#xs)] part 2, Section 3.2.9. Otherwise, it SHALL return `false`. Note: if a `date` value does not include a time-zone value, this function SHALL resolve it using the implicit timezone of the PDP's dynamic evaluation context, as defined by [[XF](#xf)]; see [Annex C.2](#c2-data-types) for the resulting cross-PDP hazard and the recommendation that every value carry an explicit time zone.
 
 `urn:oasis:names:tc:acal:1.0:function:date-less-than-or-equal`
 
-: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:date` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is less than or equal to the second argument according to the order relation specified for `https://www.w3.org/2001/XMLSchema#date` by [[XS](#xs)] part 2, Section 3.2.9. Otherwise, it SHALL return `false`. Note: if a date value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [[XS](#xs)].
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:date` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is less than or equal to the second argument according to the order relation specified for `https://www.w3.org/2001/XMLSchema#date` by [[XS](#xs)] part 2, Section 3.2.9. Otherwise, it SHALL return `false`. Note: if a `date` value does not include a time-zone value, this function SHALL resolve it using the implicit timezone of the PDP's dynamic evaluation context, as defined by [[XF](#xf)]; see [Annex C.2](#c2-data-types) for the resulting cross-PDP hazard and the recommendation that every value carry an explicit time zone.
 
 ### C.3.9 String Functions
 
@@ -7392,7 +7387,7 @@ The following functions operate on strings and convert to and from other data ty
 
 `urn:oasis:names:tc:acal:1.0:function:integer-from-string`
 
-: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:string`, and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:integer`. The result SHALL be the string converted to an integer. If the argument is not a valid lexical representation of an integer, then the result SHALL be `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`.
+: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:string`, and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:integer`. The result SHALL be the string converted to an integer. If the argument is not a valid lexical representation of an integer, then the result SHALL be `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`. If the argument is a valid lexical representation of an integer, then the result SHALL be exactly that integer, whatever its magnitude. If the implementation cannot produce that integer because an execution resource is exhausted, then the result SHALL be `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`.
 
 `urn:oasis:names:tc:acal:1.0:function:string-from-integer`
 
@@ -8143,7 +8138,7 @@ The following identifiers indicate data types that are defined in [Annex C.2](#c
 
 * `urn:oasis:names:tc:acal:1.0:data-type:dnsName`
 
-The following data type identifiers are defined by W3C XML Schema [[XS](#xs)] (each `urn:oasis:names:tc:acal:1.0:data-type:<name>` below corresponds to the `xs:<name>` type in the XML schema Data Types specification):
+The following data type identifiers are defined in [Annex C.2.7](#c27-data-types-defined-by-reference-to-xml-schema) by reference to W3C XML Schema [[XS](#xs)] (each `urn:oasis:names:tc:acal:1.0:data-type:<name>` below corresponds to the `xs:<name>` type in the XML schema Data Types specification):
 
 * `urn:oasis:names:tc:acal:1.0:data-type:string`
 
@@ -8633,6 +8628,8 @@ Decision permitUnlessDenyCombiningAlgorithm(Node[] children)
 
 Notices SHALL be combined as described in [Section 8.16](#816-notices).
 
+: Note: A child that evaluates to `Indeterminate` does not prevent this algorithm from returning `Permit`. In particular, an integer function that returns `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:processing-error` inside a rule that would otherwise have evaluated to `Deny` can result in `Permit` ([Annex C.3.2](#c32-arithmetic-functions)).
+
 ## E.8 First Applicable
 
 This section defines the `first-applicable` combining algorithm of a policy.
@@ -8845,6 +8842,8 @@ ACAL 1.0 is a successor to XACML 3.0. ACAL 1.0 differs from XACML 3.0 in the fol
 
   - Compared to XACML 3.0, a `Policy` may contain more than one `PolicyDefaults` element, one per ACAL Profile possibly. 
 
+  - A `PolicyDefaults` object applies to the enclosing policy and to any policy nested within it; a nested policy's own `PolicyDefaults` object of the same concrete type applies within that policy in place of the enclosing policy's. A policy included by a `PolicyReference` is not nested within the referencing policy, and does not use the referencing policy's `PolicyDefaults`.
+
   - Separate rule and policy combining algorithms have been replaced with a single collection of combining algorithms. Legacy combining algorithms have been removed. The `only-one-applicable` policy combining algorithm has been removed.
 
   - EarliestVersion and LatestVersion attributes removed from `<PolicyReference>`
@@ -8881,6 +8880,11 @@ ACAL 1.0 is a successor to XACML 3.0. ACAL 1.0 differs from XACML 3.0 in the fol
   - `DataType` attribute changed to be optional with the standard string type as default value to simplify the element declaration in most cases.
    * `MustBePresent`: changed to be optional with `false` as default value, to simplify the element declaration in most cases.
    * `AttributeSelector` and `Path` type of expression are abstract in ACAL model, concrete types of AttributeSelector Path expressions to be defined in ACAL Profiles, e.g. XPath Profile.
+   * The conversion of the result of a `Path` expression to a bag of values of the `DataType` ([Section 8.4.7](#847-selector-evaluation)) is likewise specified by the ACAL Profile that defines the concrete selector type; Core keeps only the rules that apply whatever the profile (an empty result, a result matching no conversion case, a data type extension, an error during conversion). The XPath Profile's conversion is in its Section 7, written for the sequence-of-items result of the supported XPath versions instead of XPath 1.0's node-set, and differs from the former Core table in ways that section's changes list describes.
+
+- The value space, lexical space and lexical mapping of the twelve data types that correspond to XML Schema datatypes are stated explicitly ([Annex C.2.7](#c27-data-types-defined-by-reference-to-xml-schema)), by reference to the like-named XML Schema 1.1 Part 2 datatype and independently of any ACAL representation format.
+
+- The unbounded value space of the `integer` data type, and the behavior of integer results, are now stated explicitly: an integer result is exact, or is `Indeterminate` with status code `processing-error` when an execution resource is exhausted, and is never wrapped around, reduced modulo a bound, saturated or rounded ([Annex C.2.7](#c27-data-types-defined-by-reference-to-xml-schema), [Annex C.3.2](#c32-arithmetic-functions)). `integer-divide`, `integer-mod` and `integer-abs` now state their results, and `integer-to-double` and `double-to-integer` state their rounding and error behavior ([Annex C.3.4](#c34-numeric-data-type-conversion-functions)).
 
 - `AttributeDesignator` changes to simplify the declaration in most cases: 
 

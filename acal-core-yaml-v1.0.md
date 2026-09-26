@@ -697,7 +697,17 @@ The following rules apply to primitive `ValueType` forms:
    `urn:oasis:names:tc:acal:1.0:data-type:boolean`.
 2. A YAML integer scalar represents `LiteralIntegerType`.  Its ACAL
    `DataType` is fixed to
-   `urn:oasis:names:tc:acal:1.0:data-type:integer`.
+   `urn:oasis:names:tc:acal:1.0:data-type:integer`.  A YACAL
+   processor SHALL preserve the exact value denoted by a YAML integer
+   scalar. A YACAL processor that cannot determine that value from the
+   decimal digits of the scalar (for example because a YAML parser has
+   replaced it with a fixed-width or floating-point approximation)
+   SHALL NOT accept the scalar as an ACAL integer, and SHALL NOT
+   continue with an altered integer value.  An ACAL integer that cannot
+   be carried as a YAML integer scalar without loss of precision MAY be
+   represented as a mapping with a `DataType` of
+   `urn:oasis:names:tc:acal:1.0:data-type:integer` and a `Value` string
+   in the lexical space of `xs:integer`.
 3. A YAML float scalar represents `LiteralDoubleType`.  Its ACAL
    `DataType` is fixed to
    `urn:oasis:names:tc:acal:1.0:data-type:double`.
