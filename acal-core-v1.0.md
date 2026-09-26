@@ -3288,7 +3288,7 @@ Here are the simple types based on UML standard primitive types.
    ```
 
 * `Integer`: An integer number that may be constrained to a particular range.
-   Defined in UML by UML standard primitive type `Inter`:
+   Defined in UML by UML standard primitive type `Integer`:
    ```plantuml
    @startuml
    hide empty members
