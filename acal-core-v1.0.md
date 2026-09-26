@@ -3297,7 +3297,7 @@ Here are the simple types based on UML standard primitive types.
    @enduml
    ```
 
-* `Real`: real number in UML, typically represented using a floating point standard such as ISO/IEC/IEEE 60559:2011 (whose content is identical to the predecessor IEEE 754 standard).
+* `Real`: real number in UML, typically represented using a floating point standard such as ISO/IEC/IEEE 60559:2011, the joint ISO/IEC/IEEE edition harmonized with IEEE 754.
    ```plantuml
    @startuml
    hide empty members
@@ -5785,15 +5785,13 @@ An ACAL expression is a choice between the following object types:
 
 ## 8.6 Arithmetic Evaluation
 
-IEEE 754 [[IEEE754](#ieee754)] specifies how to evaluate arithmetic functions in a context, which specifies defaults for precision, rounding, etc. ACAL SHALL use this specification for the evaluation of all integer and double functions relying on the Extended Default Context, enhanced with double precision:
+This section specifies the required behavior of `double` arithmetic. `integer` arithmetic is exact and is fully specified by [Annex C.2.7](#c27-data-types-defined-by-reference-to-xml-schema) and [Annex C.3.2](#c32-arithmetic-functions); it does not depend on this section and is not subject to rounding, a designated precision, or a trap-enabler, none of which apply to an unbounded, exact value.
 
-: flags -  all set to 0
+A `double` value is a binary64 (double-precision) floating-point value, as given by the value space of `xs:double` ([Annex C.2.7](#c27-data-types-defined-by-reference-to-xml-schema)). An ACAL arithmetic function (`urn:oasis:names:tc:acal:1.0:function:double-add`, `-subtract`, `-multiply`, `-divide` and `-abs`, [Annex C.3.2](#c32-arithmetic-functions)) SHALL produce the mathematically exact result of the corresponding operation, rounded to the nearest binary64 value as if the exponent range were unbounded, with a tie rounded to the value whose least significant bit is zero (round-to-nearest, ties-to-even); if no finite binary64 value can represent that rounded result, the result SHALL be positive or negative infinity, matching the sign of the exact result. An operation with a NaN operand, or an operation such as `0 × ∞` that has no defined mathematically exact result, SHALL produce NaN — except where this specification states a different result, such as [Annex C.3.2](#c32-arithmetic-functions)'s rule that a division whose divisor is zero evaluates to `Indeterminate` rather than to a signed infinity or NaN. A representational detail not otherwise stated here, such as the sign of a zero result, the handling of a subnormal value, or the result of an operation on an infinite operand not covered above, follows ordinary binary64 arithmetic.
 
-: trap-enablers -  all set to 0 (IEEE 854 §7) with the exception of the "division-by-zero" trap enabler, which SHALL be set to 1
+An ACAL function comparing two `double` values — `urn:oasis:names:tc:acal:1.0:function:double-equal` ([Annex C.3.1](#c31-equality-predicates)) and the `double` functions of [Annex C.3.6](#c36-numeric-comparison-functions) — SHALL follow binary64 comparison: NaN compares unordered with every `double` value, including itself, so each of these functions SHALL evaluate to `false` if either argument is NaN; these functions SHALL treat positive zero and negative zero as equal in value, consistent with ordinary numeric comparison (so `double-equal` returns `true` for a positive-zero/negative-zero pair, and neither is greater than or less than the other).
 
-: precision - is set to the designated double precision
-
-: rounding -  is set to round-half-even (IEEE 854 §4.1)
+This is the arithmetic and comparison behavior that a binary64 (or equivalent) floating-point type native to essentially every general-purpose programming language and hardware platform already performs in its default configuration. An implementation conforms by using that native type and its ordinary arithmetic operators and comparisons for `double` values, in a default configuration (standard rounding, no flush-to-zero or "fast-math"-style relaxation, no fused or reduced-precision evaluation of a single ACAL function), together with this specification's own override for a zero divisor ([Annex C.3.2](#c32-arithmetic-functions)) — the one case above where this specification requires a result to differ from a native binary64 operator's ordinary result. [[IEEE754](#ieee754)] is the formal origin of the rest of these rules and MAY be consulted for detail beyond what this section states; conformance with this section does not require access to it.
 
 ## 8.7 Target Evaluation
 
@@ -6753,10 +6751,6 @@ Hancock, Polymorphic Type Checking, in Simon L. Peyton Jones, Implementation of 
 
 XACML v3.0 Hierarchical Resource Profile Version 1.0. 18 May 2014. Committee Specification 02. https://docs.oasis-open.org/xacml/3.0/hierarchical/v1.0/xacml-3.0-hierarchical-v1.0.html
 
-###### [IEEE754]
-
-IEEE Standard for Binary Floating-Point Arithmetic 1985, ISBN 1-5593-7653-8, IEEE Product No. SH10116-TBR.
-
 ###### [INFOSET]
 
 XML Information Set (Second Edition), W3C Recommendation, 4 February 2004, https://www.w3.org/TR/xml-infoset/
@@ -6884,6 +6878,10 @@ Character Model for the World Wide Web: String Matching W3C Working Group Note 1
 
 Hinton, H, M, Lee, E, S, The Compatibility of Policies, Proceedings 2nd ACM Conference on Computer and Communications Security, Nov 1994, Fairfax, Virginia, USA.
 
+###### [IEEE754]
+
+IEEE Std 754-2019, IEEE Standard for Floating-Point Arithmetic, DOI: 10.1109/IEEESTD.2019.8766229. [Section 8.6](#86-arithmetic-evaluation) states the `double` arithmetic and comparison behavior this specification requires in terms that do not depend on this document; it is cited here as the formal origin of those rules, for readers who want more detail.
+
 ###### [NISTIR8318] 
 
 Black, P. (2020), DADS: The On-Line Dictionary of Algorithms and Data Structures, NIST Interagency/Internal Report (NISTIR), National Institute of Standards and Technology, Gaithersburg, MD, [online](https://doi.org/10.6028/NIST.IR.8318) (Accessed December 16, 2025) 
@@ -6950,9 +6948,9 @@ Although a syntactic representation of ACAL objects may represent most data type
 
 The definitions of the twelve data types that correspond to XML Schema datatypes are given in [Annex C.2.7](#c27-data-types-defined-by-reference-to-xml-schema).
 
-For the sake of improved interoperability, it is RECOMMENDED that all time references be in UTC time.
+If a value of data type `dateTime` or `date` does not include a time zone, the equality, comparison and ordering functions of that data type ([Annex C.3.1](#c31-equality-predicates), [Annex C.3.8](#c38-non-numeric-comparison-functions)) resolve it using the *implicit timezone* of the PDP's dynamic evaluation context, as defined by [[XF](#xf)]. (A `time` value without a time zone is resolved differently; see the `time-*` functions and `time-in-range` in [Annex C.3.8](#c38-non-numeric-comparison-functions).) This document does not specify the implicit timezone; a PDP ordinarily configures it, so two conformant PDPs MAY configure different implicit time zones and MAY therefore reach different comparison results, and different decisions, for the identical policy and the identical request when a comparison combines a value that has an explicit time zone with one that does not, or otherwise depends on the implicit timezone. It is RECOMMENDED that every `dateTime`, `time` and `date` value carried in a request or a policy include an explicit time zone, to avoid this hazard; it is not necessary that every value use the same time zone, or that any value use UTC specifically. Independently, for the sake of improved interoperability, it is RECOMMENDED that all time references be in UTC time where a choice of time zone is otherwise unconstrained.
 
-An ACAL PDP SHALL be capable of converting string representations into various data types. For the twelve data types defined by reference to XML Schema ([Annex C.2.7](#c27-data-types-defined-by-reference-to-xml-schema)), including `urn:oasis:names:tc:acal:1.0:data-type:double`, the conversion SHALL use the lexical mapping given there. Implementations SHALL represent and operate on `double` values in a manner consistent with [IEEE754].
+An ACAL PDP SHALL be capable of converting string representations into various data types. For the twelve data types defined by reference to XML Schema ([Annex C.2.7](#c27-data-types-defined-by-reference-to-xml-schema)), including `urn:oasis:names:tc:acal:1.0:data-type:double`, the conversion SHALL use the lexical mapping given there. Implementations SHALL represent and operate on `double` values as specified in [Section 8.6](#86-arithmetic-evaluation).
 
 ACAL defines four data types representing identifiers for subjects or resources; these are:
 
@@ -6974,9 +6972,13 @@ ACAL defines a data type for representing structured data:
 
 The `urn:oasis:names:tc:acal:1.0:data-type:x500Name` data type represents an ITU-T Rec. X.520 Distinguished Name. The valid syntax for such a name is described in IETF RFC 2253 "Lightweight Directory Access Protocol (v3): UTF-8 String Representation of Distinguished Names".
 
+The value space of `x500Name` is the set of ITU-T Rec. X.520 Distinguished Names, together with the lexical string from which each value was constructed; a Distinguished Name is a sequence of Relative Distinguished Names (RDNs), each an unordered set of attribute-type-and-value pairs. The lexical space is the set of character strings conforming to the RFC 2253 syntax above, and the lexical mapping from such a string to the Distinguished Name it denotes is given by RFC 2253's parsing rules. `urn:oasis:names:tc:acal:1.0:function:x500Name-equal` ([Annex C.3.1](#c31-equality-predicates)) determines whether two `x500Name` values are equivalent; two values MAY be equivalent while retaining different original lexical strings, which `urn:oasis:names:tc:acal:1.0:function:string-from-x500Name` preserves rather than normalizing.
+
 ### C.2.2 RFC 822 Name
 
 The `urn:oasis:names:tc:acal:1.0:data-type:rfc822Name` data type represents an electronic mail address. The valid syntax for such a name is described in IETF RFC 2821, Section 4.1.2, Command Argument Syntax, under the term "Mailbox".
+
+The value space of `rfc822Name` is the set of pairs of a local-part and a domain-part conforming to the Mailbox syntax above, together with the lexical string from which each value was constructed. The lexical space is the set of character strings conforming to that syntax, and the lexical mapping from such a string to the pair it denotes is given by parsing the string according to that syntax. `urn:oasis:names:tc:acal:1.0:function:rfc822Name-equal` ([Annex C.3.1](#c31-equality-predicates)) determines whether two `rfc822Name` values are equivalent, comparing the domain-part case-insensitively and the local-part case-sensitively; two values MAY be equivalent while retaining different original lexical strings, which `urn:oasis:names:tc:acal:1.0:function:string-from-rfc822Name` preserves rather than normalizing.
 
 ### C.2.3 IP Address
 
@@ -6991,6 +6993,8 @@ For an IPv4 address, the address and mask SHALL each conform to the `IPv4address
 For an IPv6 address, the address and mask SHALL each conform to the `IP-literal` rule (using the `IPv6address` alternative) defined in [[RFC3986](#rfc3986)], Section 3.2.2 and Appendix A. (Note that an IPv6 address or mask, in this syntax, is enclosed in literal `[` `]` brackets.)
 
 The mask, where present, uses the same syntactic rule as the address component (i.e., `IPv4address` for IPv4, `IP-literal` for IPv6) and represents a network address mask (e.g., `255.255.255.0` for IPv4 or `[ffff:ffff::]` for IPv6). The mask format is defined by this specification and is not derived from any external RFC.
+
+The value space of `ipAddress` is the set of triples of an IPv4 or IPv6 address, an optional network address mask of the same address family, and an optional port or port range (the port-range syntax, common to `ipAddress` and `dnsName`, is given below). The lexical mapping from a string to the triple it denotes is given by the syntax above and below. This specification defines no equality or matching relation on `ipAddress` values other than identity of the parsed triple (for example, it does not define whether two address strings that denote overlapping or numerically equal address ranges are related by any standard ACAL function). No standard ACAL function currently depends on such a relation.
 
 ### C.2.4 DNS Name
 
@@ -7010,6 +7014,8 @@ portrange = portnumber | `-`portnumber | portnumber`-`[portnumber]
 ```
 
 where `portnumber` is a decimal port number. If the port number is of the form `-x`, where `x` is a port number, then the range is all ports numbered `x` and below. If the port number is of the form `x-`, then the range is all ports numbered `x` and above. [This syntax is taken from the Java SocketPermission.]
+
+The value space of `dnsName` is the set of pairs of a hostname (optionally beginning with a wildcard label) and an optional port or port range, each as constrained by the syntax above, together with the lexical string from which each value was constructed. The lexical mapping from a string to the pair it denotes preserves the hostname's original letter case. Per IETF RFC 4343, DNS name comparison is conventionally case-insensitive, but this specification currently defines no comparison or matching function for `dnsName` values, so no standard ACAL function depends on case sensitivity or insensitivity. Two `dnsName` values are the same value if and only if their parsed pairs are identical.
 
 ### C.2.6 Entity
 
@@ -7074,7 +7080,7 @@ The following functions are the equality functions for the various data types. E
 
 `urn:oasis:names:tc:acal:1.0:function:double-equal`
 
-: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:double` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL perform its evaluation on doubles according to IEEE 754 [IEEE754].
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:double` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL perform its evaluation as specified in [Section 8.6](#86-arithmetic-evaluation).
 
 `urn:oasis:names:tc:acal:1.0:function:date-equal`
 
@@ -7128,7 +7134,7 @@ The following functions are the equality functions for the various data types. E
 
 ### C.3.2 Arithmetic Functions
 
-All of the following functions SHALL take two arguments of the specified data type, integer, or double, and SHALL return a value of integer or double data type, respectively. However, the `add` and `multiply` functions MAY take more than two arguments. Each function evaluation operating on doubles SHALL proceed as specified by their logical counterparts in IEEE 754 [IEEE754]. For all of these functions, if any argument is `Indeterminate`, then the function SHALL evaluate to `Indeterminate`. In the case of the divide functions, if the divisor is zero, then the function SHALL evaluate to `Indeterminate`.
+All of the following functions SHALL take two arguments of the specified data type, integer, or double, and SHALL return a value of integer or double data type, respectively. However, the `add` and `multiply` functions MAY take more than two arguments. Each function evaluation operating on doubles SHALL proceed as specified in [Section 8.6](#86-arithmetic-evaluation). For all of these functions, if any argument is `Indeterminate`, then the function SHALL evaluate to `Indeterminate`. In the case of `urn:oasis:names:tc:acal:1.0:function:integer-divide`, `urn:oasis:names:tc:acal:1.0:function:double-divide` and `urn:oasis:names:tc:acal:1.0:function:integer-mod`, if the second argument (the divisor) is zero, then the function SHALL evaluate to `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`.
 
 An arithmetic function defined in this section whose result is of data type `urn:oasis:names:tc:acal:1.0:data-type:integer`, and that completes, SHALL return exactly the result that its definition prescribes. Such a function SHALL NOT return a different value because the prescribed result exceeds the range of a fixed-width representation, and SHALL NOT wrap around, reduce modulo, saturate or lose precision. Such a function that cannot produce its prescribed result because an execution resource is exhausted SHALL return `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`, and SHALL NOT continue the evaluation with an altered value. An ACAL implementation SHALL NOT treat a predetermined limit on the number of bits or decimal digits of an `integer`, including the width of a machine integer type, as exhaustion of an execution resource.
 
@@ -7204,7 +7210,7 @@ The following functions convert values between the `urn:oasis:names:tc:acal:1.0:
 
 `urn:oasis:names:tc:acal:1.0:function:integer-to-double`
 
-: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:integer` and SHALL convert the exact value of the argument to a `urn:oasis:names:tc:acal:1.0:data-type:double` value using the round-to-nearest, ties-to-even rounding of [[IEEE754](#ieee754)]. If that conversion would produce positive or negative infinity, then the result SHALL be `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`. Otherwise the result SHALL be the converted value, which MAY differ from the argument when the argument cannot be represented exactly.
+: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:integer` and SHALL convert the exact value of the argument to a `urn:oasis:names:tc:acal:1.0:data-type:double` value using the round-to-nearest, ties-to-even rounding specified in [Section 8.6](#86-arithmetic-evaluation). If that conversion would produce positive or negative infinity, then the result SHALL be `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`. Otherwise the result SHALL be the converted value, which MAY differ from the argument when the argument cannot be represented exactly.
 
 ### C.3.5 Logical Functions
 
@@ -7242,7 +7248,7 @@ This section contains the specification for logical functions that operate on ar
 
 ### C.3.6 Numeric Comparison Functions
 
-These functions form a minimal set for comparing two numbers, yielding a Boolean result. For doubles they SHALL comply with the rules governed by IEEE 754 [IEEE754].
+These functions form a minimal set for comparing two numbers, yielding a Boolean result. For doubles they SHALL comply with [Section 8.6](#86-arithmetic-evaluation).
 
 * `urn:oasis:names:tc:acal:1.0:function:integer-greater-than`
 
@@ -7333,35 +7339,35 @@ These functions perform comparison operations on two arguments of non-numerical 
 
 `urn:oasis:names:tc:acal:1.0:function:dateTime-greater-than`
 
-: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:dateTime` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is greater than the second argument according to the order relation specified for `https://www.w3.org/2001/XMLSchema#dateTime` by [[XS](#xs)] part 2, Section 3.2.7. Otherwise, it SHALL return `false`. Note: if a dateTime value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [[XS](#xs)].
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:dateTime` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is greater than the second argument according to the order relation specified for `https://www.w3.org/2001/XMLSchema#dateTime` by [[XS](#xs)] part 2, Section 3.2.7. Otherwise, it SHALL return `false`. Note: if a `dateTime` value does not include a time-zone value, this function SHALL resolve it using the implicit timezone of the PDP's dynamic evaluation context, as defined by [[XF](#xf)]; see [Annex C.2](#c2-data-types) for the resulting cross-PDP hazard and the recommendation that every value carry an explicit time zone.
 
 `urn:oasis:names:tc:acal:1.0:function:dateTime-greater-than-or-equal`
 
-: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:dateTime` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is greater than or equal to the second argument according to the order relation specified for `https://www.w3.org/2001/XMLSchema#dateTime` by [[XS](#xs)] part 2, Section 3.2.7. Otherwise, it SHALL return `false`. Note: if a dateTime value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [[XS](#xs)].
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:dateTime` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is greater than or equal to the second argument according to the order relation specified for `https://www.w3.org/2001/XMLSchema#dateTime` by [[XS](#xs)] part 2, Section 3.2.7. Otherwise, it SHALL return `false`. Note: if a `dateTime` value does not include a time-zone value, this function SHALL resolve it using the implicit timezone of the PDP's dynamic evaluation context, as defined by [[XF](#xf)]; see [Annex C.2](#c2-data-types) for the resulting cross-PDP hazard and the recommendation that every value carry an explicit time zone.
 
 `urn:oasis:names:tc:acal:1.0:function:dateTime-less-than`
 
-: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:dateTime` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is less than the second argument according to the order relation specified for `urn:oasis:names:tc:acal:1.0:data-type:dateTime` by [XS, part 2, Section 3.2.7]. Otherwise, it SHALL return `false`. Note: if a dateTime value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [[XS](#xs)].
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:dateTime` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is less than the second argument according to the order relation specified for `urn:oasis:names:tc:acal:1.0:data-type:dateTime` by [XS, part 2, Section 3.2.7]. Otherwise, it SHALL return `false`. Note: if a `dateTime` value does not include a time-zone value, this function SHALL resolve it using the implicit timezone of the PDP's dynamic evaluation context, as defined by [[XF](#xf)]; see [Annex C.2](#c2-data-types) for the resulting cross-PDP hazard and the recommendation that every value carry an explicit time zone.
 
 `urn:oasis:names:tc:acal:1.0:function:dateTime-less-than-or-equal`
 
-: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type: dateTime` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is less than or equal to the second argument according to the order relation specified for `https://www.w3.org/2001/XMLSchema#dateTime` by [[XS](#xs)] part 2, Section 3.2.7. Otherwise, it SHALL return `false`. Note: if a dateTime value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [[XS](#xs)].
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type: dateTime` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is less than or equal to the second argument according to the order relation specified for `https://www.w3.org/2001/XMLSchema#dateTime` by [[XS](#xs)] part 2, Section 3.2.7. Otherwise, it SHALL return `false`. Note: if a `dateTime` value does not include a time-zone value, this function SHALL resolve it using the implicit timezone of the PDP's dynamic evaluation context, as defined by [[XF](#xf)]; see [Annex C.2](#c2-data-types) for the resulting cross-PDP hazard and the recommendation that every value carry an explicit time zone.
 
 `urn:oasis:names:tc:acal:1.0:function:date-greater-than`
 
-: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:date` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is greater than the second argument according to the order relation specified for `https://www.w3.org/2001/XMLSchema#date` by [[XS](#xs)] part 2, Section 3.2.9. Otherwise, it SHALL return `false`. Note: if a date value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [[XS](#xs)].
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:date` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is greater than the second argument according to the order relation specified for `https://www.w3.org/2001/XMLSchema#date` by [[XS](#xs)] part 2, Section 3.2.9. Otherwise, it SHALL return `false`. Note: if a `date` value does not include a time-zone value, this function SHALL resolve it using the implicit timezone of the PDP's dynamic evaluation context, as defined by [[XF](#xf)]; see [Annex C.2](#c2-data-types) for the resulting cross-PDP hazard and the recommendation that every value carry an explicit time zone.
 
 `urn:oasis:names:tc:acal:1.0:function:date-greater-than-or-equal`
 
-: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:date` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is greater than or equal to the second argument according to the order relation specified for `https://www.w3.org/2001/XMLSchema#date` by [[XS](#xs)] part 2, Section 3.2.9. Otherwise, it SHALL return `false`. Note: if a date value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [[XS](#xs)].
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:date` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is greater than or equal to the second argument according to the order relation specified for `https://www.w3.org/2001/XMLSchema#date` by [[XS](#xs)] part 2, Section 3.2.9. Otherwise, it SHALL return `false`. Note: if a `date` value does not include a time-zone value, this function SHALL resolve it using the implicit timezone of the PDP's dynamic evaluation context, as defined by [[XF](#xf)]; see [Annex C.2](#c2-data-types) for the resulting cross-PDP hazard and the recommendation that every value carry an explicit time zone.
 
 `urn:oasis:names:tc:acal:1.0:function:date-less-than`
 
-: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:date` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is less than the second argument according to the order relation specified for `https://www.w3.org/2001/XMLSchema#date` by [[XS](#xs)] part 2, Section 3.2.9. Otherwise, it SHALL return `false`. Note: if a date value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [[XS](#xs)].
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:date` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is less than the second argument according to the order relation specified for `https://www.w3.org/2001/XMLSchema#date` by [[XS](#xs)] part 2, Section 3.2.9. Otherwise, it SHALL return `false`. Note: if a `date` value does not include a time-zone value, this function SHALL resolve it using the implicit timezone of the PDP's dynamic evaluation context, as defined by [[XF](#xf)]; see [Annex C.2](#c2-data-types) for the resulting cross-PDP hazard and the recommendation that every value carry an explicit time zone.
 
 `urn:oasis:names:tc:acal:1.0:function:date-less-than-or-equal`
 
-: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:date` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is less than or equal to the second argument according to the order relation specified for `https://www.w3.org/2001/XMLSchema#date` by [[XS](#xs)] part 2, Section 3.2.9. Otherwise, it SHALL return `false`. Note: if a date value does not include a time-zone value, then an implicit time-zone value SHALL be assigned, as described in [[XS](#xs)].
+: This function SHALL take two arguments of data type `urn:oasis:names:tc:acal:1.0:data-type:date` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if the first argument is less than or equal to the second argument according to the order relation specified for `https://www.w3.org/2001/XMLSchema#date` by [[XS](#xs)] part 2, Section 3.2.9. Otherwise, it SHALL return `false`. Note: if a `date` value does not include a time-zone value, this function SHALL resolve it using the implicit timezone of the PDP's dynamic evaluation context, as defined by [[XF](#xf)]; see [Annex C.2](#c2-data-types) for the resulting cross-PDP hazard and the recommendation that every value carry an explicit time zone.
 
 ### C.3.9 String Functions
 

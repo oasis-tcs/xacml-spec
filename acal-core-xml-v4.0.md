@@ -1029,10 +1029,6 @@ J. Boyer et al, eds., Exclusive XML Canonicalization, Version 1.0, W3C Recommend
 
 Hancock, Polymorphic Type Checking, in Simon L. Peyton Jones, Implementation of Functional Programming Languages, Section 8, Prentice-Hall International, 1987.
 
-###### [IEEE754]
-
-IEEE Standard for Binary Floating-Point Arithmetic 1985, ISBN 1-5593-7653-8, IEEE Product No. SH10116-TBR.
-
 ###### [INFOSET]
 
 XML Information Set (Second Edition), W3C Recommendation, 4 February 2004, https://www.w3.org/TR/xml-infoset/

@@ -843,7 +843,10 @@ If the designated attribute category or entity value has a `Content` property, t
 : An item that is an atomic value not covered by the preceding four cases satisfies none of the cases of this step.
 
 &nbsp;
-: If an item is neither a node nor an atomic value (for example a map, an array or a function), or if a constructor function raises an error for an item, then an error has occurred when converting the values returned by the expression, and the result of the attribute selector MUST be `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`, as specified in [[ACAL-Core-1.0](#acal-core-10)] section 8.4.7. That result takes precedence over the result specified for an item that satisfies none of the cases of this step.
+: If the specified data type is one of `urn:oasis:names:tc:acal:1.0:data-type:x500Name`, `urn:oasis:names:tc:acal:1.0:data-type:rfc822Name`, `urn:oasis:names:tc:acal:1.0:data-type:ipAddress` or `urn:oasis:names:tc:acal:1.0:data-type:dnsName`, then each item of the sequence is converted to one value of that data type as follows. An item that is a node, or an atomic value of type `xs:string` or `xs:untypedAtomic`, is converted from the ACAL `string` value equal, respectively, to the string value of the node (the result of `fn:string` applied to the node) or to the item's own value cast to `xs:string`. In each case the conversion applies `urn:oasis:names:tc:acal:1.0:function:x500Name-from-string`, `urn:oasis:names:tc:acal:1.0:function:rfc822Name-from-string`, `urn:oasis:names:tc:acal:1.0:function:ipAddress-from-string` or `urn:oasis:names:tc:acal:1.0:function:dnsName-from-string` respectively ([[ACAL-Core-1.0](#acal-core-10)] Annex C.3.9) to that `string` value, using the same rule those functions use elsewhere in a policy for which strings are valid lexical representations of the target data type; if the applicable function evaluates to `Indeterminate`, that is a conversion error for the purpose of the following paragraph, not the `syntax-error` result the function itself would give elsewhere in a policy. An item that is an atomic value of any other type satisfies none of the cases of this step.
+
+&nbsp;
+: If an item is neither a node nor an atomic value (for example a map, an array or a function), or if a constructor function raises an error for an item, or if one of the `*-from-string` functions named above evaluates to `Indeterminate` for an item, then an error has occurred when converting the values returned by the expression, and the result of the attribute selector MUST be `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`, as specified in [[ACAL-Core-1.0](#acal-core-10)] section 8.4.7. That result takes precedence over the result specified for an item that satisfies none of the cases of this step.
 
 &nbsp;
 : If the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:entity`, and every item of the sequence is an element node, then convert each node to an `EntityType` object. Each object SHALL have a `Content` property and SHALL NOT have an `Attribute` property. The child element of the `Content`'s `Body` property SHALL be a copy of the element corresponding to the node, along with its entire content, plus whatever namespace declarations from ancestor elements as are required to define namespace prefixes used in the content. Namespace declarations from ancestor elements that are not visibly used in the content MAY be added. If some item of the sequence is not an element node, the result satisfies none of the cases of this step.
@@ -1041,10 +1044,6 @@ Hancock, Polymorphic Type Checking, in Simon L. Peyton Jones, Implementation of 
 ###### [Hier]
 
 XACML v3.0 Hierarchical Resource Profile Version 1.0. 18 May 2014. Committee Specification 02. https://docs.oasis-open.org/xacml/3.0/hierarchical/v1.0/xacml-3.0-hierarchical-v1.0.html
-
-###### [IEEE754]
-
-IEEE Standard for Binary Floating-Point Arithmetic 1985, ISBN 1-5593-7653-8, IEEE Product No. SH10116-TBR.
 
 ###### [INFOSET]
 
