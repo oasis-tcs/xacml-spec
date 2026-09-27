@@ -447,9 +447,21 @@ This document uses the following terms defined elsewhere:
 
 : [[NISTIR8318](#nistir8318)] An unordered collection of values, in which there may be duplicate values.
 
+**Lexical mapping**
+
+: [[XS](#xs)] Part 2, Section 2.3. The prescribed relation that maps each string of a datatype's **_lexical space_** to the value it denotes in that datatype's **_value space_**.
+
+**Lexical space**
+
+: [[XS](#xs)] Part 2, Section 2.3. The prescribed set of character strings that a datatype's **_lexical mapping_** maps to values of that datatype.
+
 **Type Unification**
 
 : [[Hancock](#hancock)] The method by which two type expressions are "unified". The type expressions are matched along their structure. Where a type variable appears in one expression it is then "unified" to represent the corresponding structure element of the other expression, be it another variable or subexpression. All variable assignments must remain consistent in both structures. Unification fails if the two expressions cannot be aligned, either by having dissimilar structure, or by having instance conflicts, such as a variable needs to represent both `xs:string` and `xs:integer`. For a full explanation of **_type unification_**, please see [[Hancock](#hancock)].
+
+**Value space**
+
+: [[XS](#xs)] Part 2, Section 2.1. The set of values of a datatype.
 
 ### 2.1.2 Terms Defined in this Document
 
@@ -3297,7 +3309,7 @@ Here are the simple types based on UML standard primitive types.
    @enduml
    ```
 
-* `Real`: real number in UML, typically represented using a floating point standard such as ISO/IEC/IEEE 60559:2011, the joint ISO/IEC/IEEE edition harmonized with IEEE 754.
+* `Real`: real number in UML, typically represented using a floating point standard such as ISO/IEC/IEEE 60559:2011, the joint ISO/IEC/IEEE edition harmonized with [[IEEE754](#ieee754)].
    ```plantuml
    @startuml
    hide empty members
@@ -3821,7 +3833,7 @@ URIs starting with `urn:oasis:names:tc:xacml:` or `urn:oasis:names:tc:acal:` are
 
 : sequence of `PolicyDefaultsType` objects containing each a set of default values specific to a particular ACAL Profile, applicable to the policy (e.g. ACAL XPath Profile's default XPath version). In particular, each object SHALL have a different concrete type (per ACAL profile). The scope of the `PolicyDefaults` property SHALL be the enclosing policy and any policy nested within it; where a nested policy carries its own `PolicyDefaults` object of a given concrete type, that object applies within the nested policy in place of the enclosing policy's object of that type. A policy that is included in another policy by a `PolicyReference` is not nested within the referencing policy for the purposes of this scope rule; the `PolicyDefaults` objects of the referencing policy do not apply within the referenced policy. The use of `PolicyDefaults` property is specified by particular ACAL Profiles (e.g. XPath Profile).
 
-: Note: A nested policy's `PolicyDefaults` object overriding the enclosing policy's object of the same concrete type is deliberate, and differs from `VariableDefinition`, which forbids a `VariableId` that repeats one declared by an enclosing policy ([Section 7.13](#713-variabledefinitiontype)). A Defaults object can affect how a policy's expressions are interpreted — under the XPath Profile, the default XPath version governs the `Path` of every XPath attribute selector in its scope — so a policy authored against one setting would change meaning if, when nested beneath a policy that declares another, it could not declare its own.
+: Note: A nested policy's `PolicyDefaults` object overriding the enclosing policy's object of the same concrete type is deliberate, and differs from `VariableDefinition`, which forbids a `VariableId` that repeats one declared by an enclosing policy ([Section 7.13](#713-variabledefinitiontype)). A Defaults object can affect how a policy's expressions are interpreted; e.g. under the XPath Profile, the default XPath version governs the `Path` of every XPath attribute selector in its scope. Therefore, a policy authored against one Defaults would change meaning if, when nested beneath a policy that declares a different Defaults, it does not declare its own.
 
 `Parameter` [Any Number]
 
@@ -3863,7 +3875,7 @@ Each `CombinerInputType` object contains exactly one of the following properties
 
 _**Supporting this part is optional.**_ _It is required only for supporting ACAL Profiles that define extensions (subtypes) of `PolicyDefaultsType` (e.g. XPath Profile)._
 
-`PolicyDefaultsType` is an abstract object type for default values that apply to the parent `PolicyType` object and to any policy nested within it, as specified for the `PolicyDefaults` property in [Section 7.4](#74-policytype). Concrete subtypes of `PolicyDefaultsType` are defined in separate ACAL Profiles, e.g. XPath Profile.
+`PolicyDefaultsType` is an abstract object type for default values that apply to the parent `PolicyType` object and to any policy nested within it (that does not override those defaults), as specified for the `PolicyDefaults` property in [Section 7.4](#74-policytype). Concrete subtypes of `PolicyDefaultsType` are defined in separate ACAL Profiles, e.g. XPath Profile.
 
 UML definition (class diagram):
 ```plantuml
@@ -6816,6 +6828,10 @@ RFC 3986, Berners-Lee T, Fielding R, Masinter L, Uniform Resource Identifiers (U
 
 Freed, N. and J. Klensin, "Multipurpose Internet Mail Extensions (MIME) Part Four: Registration Procedures", BCP 13, RFC 4289, DOI 10.17487/RFC4289, December 2005, <https://www.rfc-editor.org/info/rfc4289>.
 
+###### [RFC5321]
+
+Klensin, J., "Simple Mail Transfer Protocol", RFC 5321, DOI 10.17487/RFC5321, October 2008, <https://www.rfc-editor.org/info/rfc5321>.
+
 ###### [RFC6838]
 
 Freed, N., Klensin, J., and T. Hansen, "Media Type Specifications and Registration Procedures", BCP 13, RFC 6838, DOI 10.17487/RFC6838, January 2013, <https://www.rfc-editor.org/info/rfc6838>.
@@ -6976,7 +6992,7 @@ The value space of `x500Name` is the set of ITU-T Rec. X.520 Distinguished Names
 
 ### C.2.2 RFC 822 Name
 
-The `urn:oasis:names:tc:acal:1.0:data-type:rfc822Name` data type represents an electronic mail address. The valid syntax for such a name is described in IETF RFC 2821, Section 4.1.2, Command Argument Syntax, under the term "Mailbox".
+The `urn:oasis:names:tc:acal:1.0:data-type:rfc822Name` data type represents an electronic mail address. The valid syntax for such a name is described in [[RFC5321](#rfc5321)], Section 4.1.2, Command Argument Syntax, under the term "Mailbox".
 
 The value space of `rfc822Name` is the set of pairs of a local-part and a domain-part conforming to the Mailbox syntax above, together with the lexical string from which each value was constructed. The lexical space is the set of character strings conforming to that syntax, and the lexical mapping from such a string to the pair it denotes is given by parsing the string according to that syntax. `urn:oasis:names:tc:acal:1.0:function:rfc822Name-equal` ([Annex C.3.1](#c31-equality-predicates)) determines whether two `rfc822Name` values are equivalent, comparing the domain-part case-insensitively and the local-part case-sensitively; two values MAY be equivalent while retaining different original lexical strings, which `urn:oasis:names:tc:acal:1.0:function:string-from-rfc822Name` preserves rather than normalizing.
 
@@ -6994,7 +7010,7 @@ For an IPv6 address, the address and mask SHALL each conform to the `IP-literal`
 
 The mask, where present, uses the same syntactic rule as the address component (i.e., `IPv4address` for IPv4, `IP-literal` for IPv6) and represents a network address mask (e.g., `255.255.255.0` for IPv4 or `[ffff:ffff::]` for IPv6). The mask format is defined by this specification and is not derived from any external RFC.
 
-The value space of `ipAddress` is the set of triples of an IPv4 or IPv6 address, an optional network address mask of the same address family, and an optional port or port range (the port-range syntax, common to `ipAddress` and `dnsName`, is given below). The lexical mapping from a string to the triple it denotes is given by the syntax above and below. This specification defines no equality or matching relation on `ipAddress` values other than identity of the parsed triple (for example, it does not define whether two address strings that denote overlapping or numerically equal address ranges are related by any standard ACAL function). No standard ACAL function currently depends on such a relation.
+The value space of `ipAddress` is the set of triples of an IPv4 or IPv6 address, an optional network address mask of the same address family, and an optional port or port range (the port-range syntax, common to `ipAddress` and `dnsName`, is given below). The lexical space is the set of character strings conforming to the syntax above and below, and the lexical mapping from such a string to the triple it denotes is given by that syntax. This specification defines no equality or matching relation on `ipAddress` values other than identity of the parsed triple (for example, it does not define whether two address strings that denote overlapping or numerically equal address ranges are related by any standard ACAL function). No standard ACAL function currently depends on such a relation.
 
 ### C.2.4 DNS Name
 
@@ -7015,7 +7031,7 @@ portrange = portnumber | `-`portnumber | portnumber`-`[portnumber]
 
 where `portnumber` is a decimal port number. If the port number is of the form `-x`, where `x` is a port number, then the range is all ports numbered `x` and below. If the port number is of the form `x-`, then the range is all ports numbered `x` and above. [This syntax is taken from the Java SocketPermission.]
 
-The value space of `dnsName` is the set of pairs of a hostname (optionally beginning with a wildcard label) and an optional port or port range, each as constrained by the syntax above, together with the lexical string from which each value was constructed. The lexical mapping from a string to the pair it denotes preserves the hostname's original letter case. Per IETF RFC 4343, DNS name comparison is conventionally case-insensitive, but this specification currently defines no comparison or matching function for `dnsName` values, so no standard ACAL function depends on case sensitivity or insensitivity. Two `dnsName` values are the same value if and only if their parsed pairs are identical.
+The value space of `dnsName` is the set of pairs of a hostname (optionally beginning with a wildcard label) and an optional port or port range, each as constrained by the syntax above, together with the lexical string from which each value was constructed. The lexical space is the set of character strings conforming to that syntax, and the lexical mapping from such a string to the pair it denotes preserves the hostname's original letter case. Per IETF RFC 4343, DNS name comparison is conventionally case-insensitive, but this specification currently defines no comparison or matching function for `dnsName` values, so no standard ACAL function depends on case sensitivity or insensitivity. Two `dnsName` values are the same value if and only if their parsed pairs are identical.
 
 ### C.2.6 Entity
 
@@ -7134,7 +7150,7 @@ The following functions are the equality functions for the various data types. E
 
 ### C.3.2 Arithmetic Functions
 
-All of the following functions SHALL take two arguments of the specified data type, integer, or double, and SHALL return a value of integer or double data type, respectively. However, the `add` and `multiply` functions MAY take more than two arguments. Each function evaluation operating on doubles SHALL proceed as specified in [Section 8.6](#86-arithmetic-evaluation). For all of these functions, if any argument is `Indeterminate`, then the function SHALL evaluate to `Indeterminate`. In the case of `urn:oasis:names:tc:acal:1.0:function:integer-divide`, `urn:oasis:names:tc:acal:1.0:function:double-divide` and `urn:oasis:names:tc:acal:1.0:function:integer-mod`, if the second argument (the divisor) is zero, then the function SHALL evaluate to `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`.
+All of the following functions SHALL take two arguments of the specified data type, integer, or double, and SHALL return a value of integer or double data type, respectively, except the `add` and `multiply` functions which MAY take more than two arguments. Each function evaluation operating on doubles SHALL proceed as specified in [Section 8.6](#86-arithmetic-evaluation). For all of these functions, if any argument is `Indeterminate`, then the function SHALL evaluate to `Indeterminate`. In the case of `urn:oasis:names:tc:acal:1.0:function:integer-divide`, `urn:oasis:names:tc:acal:1.0:function:double-divide` and `urn:oasis:names:tc:acal:1.0:function:integer-mod`, if the second argument (the divisor) is zero, then the function SHALL evaluate to `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`.
 
 An arithmetic function defined in this section whose result is of data type `urn:oasis:names:tc:acal:1.0:data-type:integer`, and that completes, SHALL return exactly the result that its definition prescribes. Such a function SHALL NOT return a different value because the prescribed result exceeds the range of a fixed-width representation, and SHALL NOT wrap around, reduce modulo, saturate or lose precision. Such a function that cannot produce its prescribed result because an execution resource is exhausted SHALL return `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`, and SHALL NOT continue the evaluation with an altered value. An ACAL implementation SHALL NOT treat a predetermined limit on the number of bits or decimal digits of an `integer`, including the width of a machine integer type, as exhaustion of an execution resource.
 
@@ -7387,7 +7403,7 @@ The following functions operate on strings and convert to and from other data ty
 
 `urn:oasis:names:tc:acal:1.0:function:integer-from-string`
 
-: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:string`, and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:integer`. The result SHALL be the string converted to an integer. If the argument is not a valid lexical representation of an integer, then the result SHALL be `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`. If the argument is a valid lexical representation of an integer, then the result SHALL be exactly that integer, whatever its magnitude. If the implementation cannot produce that integer because an execution resource is exhausted, then the result SHALL be `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`.
+: This function SHALL take one argument of data type `urn:oasis:names:tc:acal:1.0:data-type:string`, and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:integer`. The result SHALL be the string converted to an integer. If the argument is not a valid lexical representation of an integer, then the result SHALL be `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`. If the argument is a valid lexical representation of an integer, then the result SHALL be exactly that integer, whatever its magnitude; an implementation SHALL NOT decline to produce that integer, or produce an altered value, merely because it exceeds a predetermined bound on the number of bits or decimal digits ([Annex C.2.7](#c27-data-types-defined-by-reference-to-xml-schema)). If the implementation cannot produce that integer because an execution resource is exhausted, then the result SHALL be `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`.
 
 `urn:oasis:names:tc:acal:1.0:function:string-from-integer`
 
@@ -8880,7 +8896,7 @@ ACAL 1.0 is a successor to XACML 3.0. ACAL 1.0 differs from XACML 3.0 in the fol
   - `DataType` attribute changed to be optional with the standard string type as default value to simplify the element declaration in most cases.
    * `MustBePresent`: changed to be optional with `false` as default value, to simplify the element declaration in most cases.
    * `AttributeSelector` and `Path` type of expression are abstract in ACAL model, concrete types of AttributeSelector Path expressions to be defined in ACAL Profiles, e.g. XPath Profile.
-   * The conversion of the result of a `Path` expression to a bag of values of the `DataType` ([Section 8.4.7](#847-selector-evaluation)) is likewise specified by the ACAL Profile that defines the concrete selector type; Core keeps only the rules that apply whatever the profile (an empty result, a result matching no conversion case, a data type extension, an error during conversion). The XPath Profile's conversion is in its Section 7, written for the sequence-of-items result of the supported XPath versions instead of XPath 1.0's node-set, and differs from the former Core table in ways that section's changes list describes.
+   * The conversion of the result of a `Path` expression to a bag of values of the `DataType` ([Section 8.4.7](#847-selector-evaluation)) is likewise specified by the ACAL Profile that defines the concrete selector type; this Core specification keeps only the rules that apply whatever the profile (an empty result, a result matching no conversion case, a data type extension, an error during conversion). The XPath Profile's conversion is in its Section 7, written for the sequence-of-items result of the supported XPath versions instead of XPath 1.0's node-set, and differs from the former Core table in ways that section's changes list describes.
 
 - The value space, lexical space and lexical mapping of the twelve data types that correspond to XML Schema datatypes are stated explicitly ([Annex C.2.7](#c27-data-types-defined-by-reference-to-xml-schema)), by reference to the like-named XML Schema 1.1 Part 2 datatype and independently of any ACAL representation format.
 
