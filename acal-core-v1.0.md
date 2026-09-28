@@ -6828,6 +6828,10 @@ RFC 3986, Berners-Lee T, Fielding R, Masinter L, Uniform Resource Identifiers (U
 
 Freed, N. and J. Klensin, "Multipurpose Internet Mail Extensions (MIME) Part Four: Registration Procedures", BCP 13, RFC 4289, DOI 10.17487/RFC4289, December 2005, <https://www.rfc-editor.org/info/rfc4289>.
 
+###### [RFC4514]
+
+Zeilenga, K., Ed., "Lightweight Directory Access Protocol (LDAP): String Representation of Distinguished Names", RFC 4514, DOI 10.17487/RFC4514, June 2006, <https://www.rfc-editor.org/info/rfc4514/>.
+
 ###### [RFC5321]
 
 Klensin, J., "Simple Mail Transfer Protocol", RFC 5321, DOI 10.17487/RFC5321, October 2008, <https://www.rfc-editor.org/info/rfc5321>.
@@ -6986,9 +6990,9 @@ ACAL defines a data type for representing structured data:
 
 ### C.2.1 X.500 Directory Name
 
-The `urn:oasis:names:tc:acal:1.0:data-type:x500Name` data type represents an ITU-T Rec. X.520 Distinguished Name. The valid syntax for such a name is described in IETF RFC 2253 "Lightweight Directory Access Protocol (v3): UTF-8 String Representation of Distinguished Names".
+The `urn:oasis:names:tc:acal:1.0:data-type:x500Name` data type represents an ITU-T Rec. X.520 Distinguished Name. The valid syntax for such a name is described in [[RFC4514](#rfc4514)] "Lightweight Directory Access Protocol (LDAP): String Representation of Distinguished Names".
 
-The value space of `x500Name` is the set of ITU-T Rec. X.520 Distinguished Names, together with the lexical string from which each value was constructed; a Distinguished Name is a sequence of Relative Distinguished Names (RDNs), each an unordered set of attribute-type-and-value pairs. The lexical space is the set of character strings conforming to the RFC 2253 syntax above, and the lexical mapping from such a string to the Distinguished Name it denotes is given by RFC 2253's parsing rules. `urn:oasis:names:tc:acal:1.0:function:x500Name-equal` ([Annex C.3.1](#c31-equality-predicates)) determines whether two `x500Name` values are equivalent; two values MAY be equivalent while retaining different original lexical strings, which `urn:oasis:names:tc:acal:1.0:function:string-from-x500Name` preserves rather than normalizing.
+The value space of `x500Name` is the set of ITU-T Rec. X.520 Distinguished Names, together with the lexical string from which each value was constructed; a Distinguished Name is a sequence of Relative Distinguished Names (RDNs), each an unordered set of attribute-type-and-value pairs. The lexical space is the set of character strings conforming to the [[RFC4514](#rfc4514)] syntax above, and the lexical mapping from such a string to the Distinguished Name it denotes is given by [[RFC4514](#rfc4514)]'s parsing rules. `urn:oasis:names:tc:acal:1.0:function:x500Name-equal` ([Annex C.3.1](#c31-equality-predicates)) determines whether two `x500Name` values are equivalent; two values MAY be equivalent while retaining different original lexical strings, which `urn:oasis:names:tc:acal:1.0:function:string-from-x500Name` preserves rather than normalizing.
 
 ### C.2.2 RFC 822 Name
 
@@ -7031,7 +7035,7 @@ portrange = portnumber | `-`portnumber | portnumber`-`[portnumber]
 
 where `portnumber` is a decimal port number. If the port number is of the form `-x`, where `x` is a port number, then the range is all ports numbered `x` and below. If the port number is of the form `x-`, then the range is all ports numbered `x` and above. [This syntax is taken from the Java SocketPermission.]
 
-The value space of `dnsName` is the set of pairs of a hostname (optionally beginning with a wildcard label) and an optional port or port range, each as constrained by the syntax above, together with the lexical string from which each value was constructed. The lexical space is the set of character strings conforming to that syntax, and the lexical mapping from such a string to the pair it denotes preserves the hostname's original letter case. Per IETF RFC 4343, DNS name comparison is conventionally case-insensitive, but this specification currently defines no comparison or matching function for `dnsName` values, so no standard ACAL function depends on case sensitivity or insensitivity. Two `dnsName` values are the same value if and only if their parsed pairs are identical.
+The value space of `dnsName` is the set of pairs of a hostname (optionally beginning with a wildcard label) and an optional port or port range, each as constrained by the syntax above, together with the lexical string from which each value was constructed. The lexical space is the set of character strings conforming to that syntax, and the lexical mapping from such a string to the pair it denotes preserves the hostname's original letter case. This specification defines no equality or matching relation on `dnsName` values other than identity of the parsed pair. Per IETF RFC 4343, DNS name comparison is conventionally case-insensitive, but no standard ACAL function implements such a case-insensitive relation; a `dnsName` value's original letter case is preserved by the lexical mapping and remains observable through `urn:oasis:names:tc:acal:1.0:function:string-from-dnsName` and functions built on it, such as `urn:oasis:names:tc:acal:1.0:function:dnsName-regexp-match`.
 
 ### C.2.6 Entity
 
@@ -7126,7 +7130,7 @@ The following functions are the equality functions for the various data types. E
 
 : This function SHALL take two arguments of `urn:oasis:names:tc:acal:1.0:data-type:x500Name` and SHALL return an `urn:oasis:names:tc:acal:1.0:data-type:boolean`. It SHALL return `true` if and only if each Relative Distinguished Name (RDN) in the two arguments matches. Otherwise, it SHALL return `false`. Two RDNs shall be said to match if and only if the result of the following operations is `true` .
 
-    1. Normalize the two arguments according to IETF RFC 2253 `Lightweight Directory Access Protocol (v3): UTF-8 String Representation of Distinguished Names`.
+    1. Normalize the two arguments according to [[RFC4514](#rfc4514)] `Lightweight Directory Access Protocol (LDAP): String Representation of Distinguished Names`.
 
     2. If any RDN contains multiple attributeTypeAndValue pairs, re-order the Attribute ValuePairs in that RDN in ascending order when compared as octet strings (described in ITU-T Rec. X.690 (1997 E) Section 11.6 `Set-of components`).
 
@@ -7150,7 +7154,7 @@ The following functions are the equality functions for the various data types. E
 
 ### C.3.2 Arithmetic Functions
 
-All of the following functions SHALL take two arguments of the specified data type, integer, or double, and SHALL return a value of integer or double data type, respectively, except the `add` and `multiply` functions which MAY take more than two arguments. Each function evaluation operating on doubles SHALL proceed as specified in [Section 8.6](#86-arithmetic-evaluation). For all of these functions, if any argument is `Indeterminate`, then the function SHALL evaluate to `Indeterminate`. In the case of `urn:oasis:names:tc:acal:1.0:function:integer-divide`, `urn:oasis:names:tc:acal:1.0:function:double-divide` and `urn:oasis:names:tc:acal:1.0:function:integer-mod`, if the second argument (the divisor) is zero, then the function SHALL evaluate to `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`.
+All of the following functions SHALL take two arguments of the specified data type, integer, or double, and SHALL return a value of integer or double data type, respectively, except that the `add` and `multiply` functions SHALL take two or more arguments. Each function evaluation operating on doubles SHALL proceed as specified in [Section 8.6](#86-arithmetic-evaluation). For all of these functions, if any argument is `Indeterminate`, then the function SHALL evaluate to `Indeterminate`. In the case of `urn:oasis:names:tc:acal:1.0:function:integer-divide`, `urn:oasis:names:tc:acal:1.0:function:double-divide` and `urn:oasis:names:tc:acal:1.0:function:integer-mod`, if the second argument (the divisor) is zero, then the function SHALL evaluate to `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`.
 
 An arithmetic function defined in this section whose result is of data type `urn:oasis:names:tc:acal:1.0:data-type:integer`, and that completes, SHALL return exactly the result that its definition prescribes. Such a function SHALL NOT return a different value because the prescribed result exceeds the range of a fixed-width representation, and SHALL NOT wrap around, reduce modulo, saturate or lose precision. Such a function that cannot produce its prescribed result because an execution resource is exhausted SHALL return `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`, and SHALL NOT continue the evaluation with an altered value. An ACAL implementation SHALL NOT treat a predetermined limit on the number of bits or decimal digits of an `integer`, including the width of a machine integer type, as exhaustion of an execution resource.
 
