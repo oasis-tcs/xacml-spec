@@ -111,6 +111,71 @@ Similarly, the JSONPath Profile defines JSONPath-based
 `AttributeSelector` extensions and is independent of both the core and
 the XPath Profile.
 
+### Integer Limits: Exact or Error, Within a Documented Interval
+
+XACML 3.0 stated no range for `integer` values. Its one overflow rule
+is in `integer-to-double` (an integer outside the range of a double
+gives `Indeterminate`), and its Arithmetic Evaluation section (7.5)
+applied IEEE 754 evaluation "enhanced with double precision" to integer
+functions as well as double ones, without saying what an integer
+result too large to represent becomes. ACAL Core now defines `integer` as the unbounded value space
+of `xs:integer`
+([Annex C.2.7](acal-core-v1.0.md#c27-data-types-defined-by-reference-to-xml-schema))
+and lets an implementation support only part of it:
+
+- An implementation should not impose a predetermined bound on the
+  magnitude of an `integer` value. One that does documents its
+  *supported integer interval*, which Core requires to include at
+  least −2<sup>63</sup> to 2<sup>63</sup>−1.
+- When an evaluation requires an `integer` value outside that
+  interval, or cannot preserve a required `integer` value because an
+  execution resource runs out, that evaluation returns `Indeterminate`
+  with `processing-error`. A result is never
+  wrapped, reduced modulo a bound, saturated or rounded, so two PDPs
+  can differ only as *a value versus an error*, never as two different
+  values.
+- A limit specific to integers (a fixed width, a maximum magnitude) is
+  an edge of the documented interval, not "resource exhaustion". A
+  general budget (memory, time, request size) is resource exhaustion
+  even when configured in advance.
+- The interval applies to the values the specification names
+  (literals, attribute values, selector results, function arguments and
+  results), not to an implementation's internal steps. So the result of
+  `integer-add` with several arguments, or of `integer-sum` over a bag,
+  does not depend on argument or bag order.
+- An out-of-range ACAL `integer` literal makes its policy `Indeterminate`
+  whenever the policy is evaluated, the same treatment an unsupported
+  function gets.
+
+**What to check:**
+
+- **The 64-bit floor is a choice.** It gives every conforming PDP a
+  common range, so a policy whose integer values stay inside it is not
+  affected by integer limits on any PDP. The alternative is no floor at
+  all. That would admit smaller (for example 32-bit) embedded PDPs, but
+  there would then be no range that works on every conforming PDP.
+- **Portability is not the same as testability.** The new
+  [Section 10.1.9](acal-core-v1.0.md#1019-implementation-defined-integer-limits)
+  explains that an out-of-range *literal* shows up on the first test,
+  whereas an out-of-range *request* value fails only for the requests
+  that carry it. It also explains that moving policies between PDPs
+  with different intervals, in either direction, can change a decision
+  from `Deny` to `Permit` (`permit-unless-deny` on the smaller
+  interval; `deny-unless-permit` on the larger). Confirm that these
+  cases, and the advice given for them, are the ones your deployments
+  face.
+- **`integer-mod(−2^63, −1)`** is 0 on a 64-bit implementation, even
+  though `integer-divide` with the same arguments is `Indeterminate`
+  there (the quotient 2<sup>63</sup> is outside the interval).
+  `integer-abs(−2^63)` is `Indeterminate`. These are the boundary cases
+  where a native two's-complement implementation wraps or has undefined
+  behavior, so they are worth adding to conformance tests.
+- **Representations.** JACAL and YACAL do not reject a well-formed
+  integer merely because it is outside a PDP's interval; Core decides
+  the result. JACAL's separate rule that a JSON *number* is limited to
+  ±(2<sup>53</sup>−1), with larger integers written as typed strings,
+  is a representation rule and is unchanged.
+
 ---
 
 ## The Three Expression Languages

@@ -698,13 +698,25 @@ The following rules apply to primitive `ValueType` forms:
 2. A YAML integer scalar represents `LiteralIntegerType`.  Its ACAL
    `DataType` is fixed to
    `urn:oasis:names:tc:acal:1.0:data-type:integer`.  A YACAL
-   processor SHALL preserve the exact value denoted by a YAML integer
+   processor SHALL NOT alter the value denoted by a YAML integer
    scalar. A YACAL processor that cannot determine that value from the
    decimal digits of the scalar (for example because a YAML parser has
    replaced it with a fixed-width or floating-point approximation)
    SHALL NOT accept the scalar as an ACAL integer, and SHALL NOT
-   continue with an altered integer value.  An ACAL integer that cannot
-   be carried as a YAML integer scalar without loss of precision MAY be
+   continue with an altered integer value.  A YACAL processor SHALL
+   accept a YAML integer scalar that this specification permits as
+   denoting its exact integer value if the processor can determine
+   that value from the scalar's decimal digits, unless an execution
+   resource is exhausted while the scalar is processed.  A YACAL processor SHALL accept a `Value`
+   string of the mapping form described in this item as denoting the
+   exact integer if the string is in the lexical space of
+   `xs:integer`, unless an execution resource is exhausted while the
+   string is processed.  A YACAL processor SHALL NOT reject either
+   form solely because the integer that it denotes is outside the
+   processor's supported integer interval ([[ACAL-Core](#acal-core)]
+   Annex C.2.7), which specifies the result when an evaluation
+   requires that integer.  An ACAL
+   integer that cannot be carried as a YAML integer scalar without loss of precision MAY be
    represented as a mapping with a `DataType` of
    `urn:oasis:names:tc:acal:1.0:data-type:integer` and a `Value` string
    in the lexical space of `xs:integer`.
