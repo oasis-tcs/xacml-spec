@@ -428,7 +428,7 @@ Table 1: Mapping ACAL primitive types to standard XSD data-types
 |URI|xs:anyURI|
 |Name|xs:Name|
 
-An `xs:integer` value that denotes an integer outside an implementation's supported integer interval ([[ACAL-Core-1.0](#acal-core-10)] Annex C.2.7) is a valid `xs:integer` value. An ACAL implementation SHALL NOT treat such a value as schema-invalid solely because of its magnitude; [[ACAL-Core-1.0](#acal-core-10)] Annex C.2.7 specifies the result when an evaluation requires it.
+An `xs:integer` value that denotes an integer outside an implementation's supported integer interval ([[ACAL-Core-1.0](#acal-core-10)] Annex C.2.7) is a valid `xs:integer` value. An ACAL implementation SHALL NOT treat such a value as schema-invalid solely because of its magnitude. [[ACAL-Core-1.0](#acal-core-10)] Annex C.2.7 specifies when an implementation is permitted to refuse the containing request or policy instead, and the result when an evaluation requires the value.
 
 ### 5.1.2 Restricted String types (UML stereotype `<<restrictedString>>`)
 
@@ -1381,7 +1381,7 @@ XACML 4.0 differs from XACML 3.0 in the following ways:
 
 - Deprecated prefixes `urn:oasis:names:tc:xacml:` and `https://www.w3.org/2001/XMLSchema#` in favor of `urn:oasis:names:tc:acal:` for all standard identifiers (algorithms, status codes, data-types, functions, attributes and categories)
 
-- An `xs:integer` value that is outside an implementation's supported integer interval is not schema-invalid ([Section 5.1.1](#511-primitive-types-mapped-to-standard-xsd-data-types)).
+- An `xs:integer` value that is outside an implementation's supported integer interval is not schema-invalid, although the implementation may refuse the containing request or policy ([Section 5.1.1](#511-primitive-types-mapped-to-standard-xsd-data-types)).
 
 ## Revision History
 

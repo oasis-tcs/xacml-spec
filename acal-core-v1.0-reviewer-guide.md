@@ -124,20 +124,33 @@ of `xs:integer`
 and lets an implementation support only part of it:
 
 - An implementation should not impose a predetermined bound on the
-  magnitude of an `integer` value. One that does documents its
-  *supported integer interval*, which Core requires to include at
-  least −2<sup>63</sup> to 2<sup>63</sup>−1.
+  magnitude of an `integer` value that it evaluates. Every implementation documents its
+  *supported integer interval* (all integers, if it imposes no
+  predetermined bound), which Core requires to include at least
+  −2<sup>63</sup> to 2<sup>63</sup>−1.
 - When an evaluation requires an `integer` value outside that
-  interval, or cannot preserve a required `integer` value because an
-  execution resource runs out, that evaluation returns `Indeterminate`
-  with `processing-error`. A result is never
+  interval, cannot obtain a required `integer` value because an input
+  acceptance limit applies, or cannot preserve a required `integer`
+  value because an execution resource runs out, that evaluation returns
+  `Indeterminate` with `processing-error`. A result is never
   wrapped, reduced modulo a bound, saturated or rounded, so two PDPs
   can differ only as *a value versus an error*, never as two different
   values.
-- A limit specific to integers (a fixed width, a maximum magnitude) is
-  an edge of the documented interval, not "resource exhaustion". A
-  general budget (memory, time, request size) is resource exhaustion
-  even when configured in advance.
+- A limit that the evaluator applies to integers (a fixed width, a
+  maximum magnitude), whether built in or configured, is an edge of the
+  documented interval, not "resource exhaustion". Memory, time or stack
+  limits reached during evaluation are resource exhaustion, even when
+  configured in advance.
+- *Input acceptance limits* are separate: bounds on what a request or
+  policy may contain (request size, number or string length), applied
+  at the parser, at a gateway or in the PDP. An implementation may
+  refuse a request **before evaluation** if it exceeds such a limit or
+  contains an integer outside the interval; if it returns a decision,
+  that decision is `Indeterminate`, with status `processing-error` if a
+  status code is returned. A request it
+  admits is evaluated normally, and an unused out-of-range value then
+  causes no error. Implementations document their input limits and
+  which path they take.
 - The interval applies to the values the specification names
   (literals, attribute values, selector results, function arguments and
   results), not to an implementation's internal steps. So the result of
@@ -170,11 +183,23 @@ and lets an implementation support only part of it:
   `integer-abs(−2^63)` is `Indeterminate`. These are the boundary cases
   where a native two's-complement implementation wraps or has undefined
   behavior, so they are worth adding to conformance tests.
-- **Representations.** JACAL and YACAL do not reject a well-formed
-  integer merely because it is outside a PDP's interval; Core decides
-  the result. JACAL's separate rule that a JSON *number* is limited to
-  ±(2<sup>53</sup>−1), with larger integers written as typed strings,
-  is a representation rule and is unchanged.
+- **Refusal before evaluation is optional, and documented.** It lets a
+  safety-critical or security-hardened deployment reject bad input at
+  the boundary, and lets an unbounded implementation evaluate it
+  instead. A refused request never reaches a combining algorithm, so
+  the `permit-unless-deny` effect above does not apply to it, but the
+  PEP's handling of `Indeterminate` still decides access (a
+  permit-biased PEP permits). Confirm this split matches how your
+  deployments validate input.
+- **Representations.** JACAL no longer limits a JSON *number* to
+  ±(2<sup>53</sup>−1). A processor accepts a JSON number only if it
+  reads the exact value, may reject one that exceeds its input limits,
+  and documents those limits. Writing integers beyond ±(2<sup>53</sup>−1)
+  as typed strings is recommended, because JSON software outside ACAL
+  that uses binary64 numbers can round them before the PDP sees them.
+  YACAL follows the same model. Rejecting a representation because its
+  integer is outside the interval counts as refusing the whole request
+  or policy, never as an error inside an admitted request.
 
 ---
 
