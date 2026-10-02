@@ -131,7 +131,7 @@ $defs:
       - properties:
           Value: 
             $comment: >
-              Primitive value case: number / string values may be mapped to a different ACAL data-type depending on the DataType property (as opposed to 'boolean' ones which have a fixed DataType - ACAL Boolean), e.g. number '1.0' may be mapped to ACAL Integer or Double or other non-standard user-defined number type according to the DataType
+              Primitive value case: number and string values are structurally permitted here; their ACAL data type is determined by YACAL Section 5.4.4 and the DataType agreement constraints (e.g. an integer scalar such as 3 under the standard ACAL Double denotes the double 3.0). Boolean values are excluded because their DataType is fixed to ACAL Boolean.
             type: ["number", "string"]
         required: 
         - Value

@@ -301,7 +301,7 @@ A `JSONPathAttributeSelectorType` or `JSONPathEntityAttributeSelector` object SH
 
 : Note: It is not necessary for an implementation to exactly follow this model. It is only necessary to produce results identical to those that would be produced by following this model.
 
-The first steps are already described in [[ACAL-Core-1.0](#acal-core-10)] section 9.4.7 and provided here as a reminder:
+The first steps are already described in [[ACAL-Core-1.0](#acal-core-10)] section 8.4.7 and provided here as a reminder:
 
 - If the attribute category given by the `Category` property is not found or does not have a `Content` property, then the return value is either `Indeterminate` or an empty bag as determined by the `MustBePresent` property.
 
@@ -369,6 +369,9 @@ If the designated attribute category or entity value has a `Content` property, t
 : If the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:dayTimeDuration`, then convert the string value of each node using the `xs:dayTimeDuration()` constructor function from [[XF](#xf)] Section 18.1.
 
 &nbsp;
+: If the specified data type is one of `urn:oasis:names:tc:acal:1.0:data-type:x500Name`, `urn:oasis:names:tc:acal:1.0:data-type:rfc822Name`, `urn:oasis:names:tc:acal:1.0:data-type:ipAddress` or `urn:oasis:names:tc:acal:1.0:data-type:dnsName`, then convert the string value of each node using `urn:oasis:names:tc:acal:1.0:function:x500Name-from-string`, `urn:oasis:names:tc:acal:1.0:function:rfc822Name-from-string`, `urn:oasis:names:tc:acal:1.0:function:ipAddress-from-string` or `urn:oasis:names:tc:acal:1.0:function:dnsName-from-string` respectively ([[ACAL-Core-1.0](#acal-core-10)] Annex C.3.9), using the same rule those functions use elsewhere in a policy for which strings are valid lexical representations of the target data type. If the applicable function evaluates to `Indeterminate`, that is an error in converting the node (see below), not the `syntax-error` result the function itself would give elsewhere in a policy.
+
+&nbsp;
 : If the specified data type is `urn:oasis:names:tc:acal:1.0:data-type:entity` and the value of every node in the nodelist is a JSON object, then convert each node to an ACAL `EntityType` object. Each `EntityType` object SHALL have a `Content` property and SHALL NOT have an `Attribute` property. The `Content` property SHALL have a `MediaType` property set to `application/json` and the value of the `Body` property SHALL be a copy of the JSON object.
 
 &nbsp;
@@ -378,7 +381,7 @@ If the designated attribute category or entity value has a `Content` property, t
 : If the data type is not one of the types referred to above, then the return values shall be constructed from the nodelist in a manner specified by the particular data type extension specification. If the data type extension does not specify an appropriate conversion function, then the attribute selector MUST return `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`.
 
 &nbsp;
-: If an error occurs when converting the values returned by the expression to the specified data type, then the result of the attribute selector MUST be `Indeterminate`, with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`
+: If an error occurs when converting the values returned by the expression to the specified data type — including a `urn:oasis:names:tc:acal:1.0:function:x500Name-from-string`, `-rfc822Name-from-string`, `-ipAddress-from-string` or `-dnsName-from-string` function evaluating to `Indeterminate` for a node's string value — then the result of the attribute selector MUST be `Indeterminate`, with status code `urn:oasis:names:tc:acal:1.0:status:processing-error`
 
 &nbsp;
 : If the result of step 3 is an empty nodelist, then the return value is either `Indeterminate` with status code `urn:oasis:names:tc:acal:1.0:status:syntax-error`, or an empty bag, as determined by the `MustBePresent` property.
@@ -538,10 +541,6 @@ J. Boyer et al, eds., Exclusive XML Canonicalization, Version 1.0, W3C Recommend
 ###### [Hancock]
 
 Hancock, Polymorphic Type Checking, in Simon L. Peyton Jones, Implementation of Functional Programming Languages, Section 8, Prentice-Hall International, 1987.
-
-###### [IEEE754]
-
-IEEE Standard for Binary Floating-Point Arithmetic 1985, ISBN 1-5593-7653-8, IEEE Product No. SH10116-TBR.
 
 ###### [INFOSET]
 

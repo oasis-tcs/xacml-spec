@@ -472,7 +472,7 @@ definitions remain those of [[ACAL-Core](#acal-core)] Section 7.1.
 | `String` | YAML string scalar | Quote when required by [Section 5.1.3](#513-string-quoting) |
 | `Boolean` | YAML boolean scalar | MUST use `true` or `false` |
 | `Integer` | YAML integer scalar | MUST resolve as integer under the Core Schema |
-| `Double` | YAML float scalar | MUST resolve as float under the Core Schema |
+| `Double` | YAML float scalar | MUST resolve as float under the Core Schema, except for an integer scalar under an explicit or inherited standard ACAL Double `DataType` ([Section 5.4.4](#544-valuetype-mapping-rules), rule 3) |
 | `NonNegativeInteger` | YAML integer scalar without the `-` sign, i.e. matching the regex `-?[0-9]+` under the Core Schema||
 | `URI`| YAML string scalar matching the same syntax as JSON schema's `format` assertion set to `uri-reference`||
 
@@ -487,8 +487,11 @@ Description: This rule permits read access to public content.
 ```
 
 A value of ACAL type `Double` MUST use a lexical form that YAML resolves
-as a float rather than an integer.  For example, `3.0` and `-0.5`
-represent doubles, whereas `3` represents an integer.
+as a float rather than an integer, unless an explicit or inherited
+`DataType` that is the standard ACAL Double applies to it
+([Section 5.4.4](#544-valuetype-mapping-rules), rule 3).  For example, `3.0` and `-0.5`
+represent doubles, whereas `3` represents an integer unless the
+standard ACAL Double is declared for it.
 
 ### 5.3.3 Restricted String Types
 
@@ -695,30 +698,83 @@ The following rules apply to primitive `ValueType` forms:
 1. A YAML boolean scalar represents `LiteralBooleanType`.  Its ACAL
    `DataType` is fixed to
    `urn:oasis:names:tc:acal:1.0:data-type:boolean`.
-2. A YAML integer scalar represents `LiteralIntegerType`.  Its ACAL
+2. A YAML integer scalar represents `LiteralIntegerType`, and its ACAL
    `DataType` is fixed to
-   `urn:oasis:names:tc:acal:1.0:data-type:integer`.
+   `urn:oasis:names:tc:acal:1.0:data-type:integer`, unless an explicit
+   or inherited `DataType` that is the standard ACAL Double applies to
+   the scalar and the scalar's text is a decimal integer as specified
+   in rule 3, in which case the scalar represents `LiteralDoubleType`
+   (rule 3).  The remaining requirements of this rule apply only to a
+   YAML integer scalar or `Value` string that represents
+   `LiteralIntegerType`.  An ACAL integer
+   MAY also be represented as a mapping with a `DataType` of
+   `urn:oasis:names:tc:acal:1.0:data-type:integer` and a `Value`
+   string in the lexical space of `xs:integer`, and an integer that
+   cannot be carried as a YAML integer scalar without loss of
+   precision MAY be represented that way.  A YACAL processor SHALL
+   NOT alter the value denoted by a YAML integer scalar.  A YACAL
+   processor SHALL NOT accept a YAML integer scalar as an ACAL integer
+   unless it has determined the exact integer value from the decimal
+   digits of the scalar (it cannot, for example, when a YAML parser
+   has replaced the scalar with a fixed-width or floating-point
+   approximation).  A YACAL processor SHALL NOT accept the `Value`
+   string of the mapping form if the string is not in the lexical
+   space of `xs:integer`.  A YACAL processor SHALL NOT continue with
+   an altered integer value in place of a representation that it does
+   not accept.  A YACAL processor MAY reject an integer scalar or a
+   `Value` string, without determining the integer that it denotes,
+   because it exceeds an input acceptance limit
+   ([[ACAL-Core](#acal-core)] Section 2.1.2 and Annex C.2.7).
+   Rejecting an integer scalar or a `Value` string because the
+   integer that it denotes is outside the processor's supported
+   integer interval is a refusal of the containing request or policy,
+   which [[ACAL-Core](#acal-core)] Annex C.2.7 governs; a YACAL
+   processor SHALL NOT reject a representation for that reason within
+   a request that the implementation has admitted to evaluation.  A
+   YACAL processor that does not reject, under this item, a YAML
+   integer scalar that this specification permits and whose exact
+   value it has determined, or a `Value` string in the lexical space
+   of `xs:integer`, SHALL accept it as denoting the exact integer.
 3. A YAML float scalar represents `LiteralDoubleType`.  Its ACAL
    `DataType` is fixed to
-   `urn:oasis:names:tc:acal:1.0:data-type:double`.
+   `urn:oasis:names:tc:acal:1.0:data-type:double`.  A YAML integer
+   scalar that this specification permits also represents
+   `LiteralDoubleType` when an explicit or inherited `DataType` that is
+   the standard ACAL Double applies to it and its text is a decimal
+   integer (matching `[-+]?[0-9]+`, which is in the lexical space of
+   `xs:double`); it then denotes the `xs:double` value that the lexical
+   mapping of `xs:double` ([[ACAL-Core](#acal-core)] Annex C.2.7)
+   assigns to the scalar's text.  For example,
+   `DataType: "urn:oasis:names:tc:acal:1.0:data-type:double"` with
+   `Value: 3` represents the double 3.0.  A YAML scalar in hexadecimal
+   notation SHALL NOT be used for this form.
 4. A YAML string scalar represents either:
    1. `LiteralStringType`, if no inherited or explicit non-string
       `DataType` applies
    2. `LiteralRestrictedStringType`, if an inherited or explicit ACAL
       lexical `DataType` such as `anyURI`, `date`, or `rfc822Name`
       applies
-5. If a fixed-datatype primitive value is accompanied by an explicit
-   `DataType`, that `DataType` MUST match the fixed data type of the
-   scalar and SHOULD be omitted.
+5. Rules 2 and 3 are applied before fixed-datatype agreement is
+   checked.  If a fixed-datatype primitive value is accompanied by an
+   explicit `DataType`, that `DataType` MUST match the fixed data type
+   of the resulting concrete literal subtype, and SHOULD be omitted when
+   the data type is otherwise implicit.  An explicit standard ACAL
+   Double `DataType` that is needed to select rule 3's
+   `LiteralDoubleType` representation SHALL NOT be omitted.
 6. If a YAML string scalar is used with an explicit or inherited
    `DataType`, that string MUST satisfy the lexical constraints of the
    effective ACAL data type.
 
 YAML Core Schema resolution determines whether an unquoted scalar is a
 boolean, integer, float, or string before the ACAL typing rules above
-are applied.  An explicit `DataType` therefore supplements YAML
-resolution but does not reinterpret a YAML integer scalar as
-`LiteralDoubleType` or a YAML float scalar as `LiteralIntegerType`.
+are applied.  An explicit or inherited `DataType` supplements YAML
+resolution.  A YACAL processor SHALL NOT treat a `DataType` as changing
+the YAML-resolved scalar category.  A YACAL processor SHALL NOT select a
+different fixed-datatype literal subtype on the basis of a `DataType`,
+except
+that rule 3 makes a decimal YAML integer scalar under the standard ACAL
+Double represent `LiteralDoubleType`.  A YAML float scalar SHALL NOT
+represent `LiteralIntegerType`.
 
 Primitive implicit examples:
 
@@ -751,13 +807,17 @@ DataType: "urn:oasis:names:tc:acal:1.0:data-type:anyURI"
 Value: "https://example.com/policies/permit-read"
 ```
 
-Explicit `DataType` complements YAML Core Schema resolution; it does not
-override the scalar category already determined by the YAML parser.
+Explicit `DataType` complements YAML Core Schema resolution.  Rule 3
+changes only the ACAL literal subtype assigned to a decimal integer
+scalar under the standard ACAL Double; the scalar remains a YAML
+integer scalar.
 
 The ACAL `DataType` of a `ValueType` is determined by the following
 precedence:
 
-1. the fixed data type of the concrete literal subtype, if any
+1. the fixed data type of the concrete literal subtype, if any (for a
+   decimal YAML integer scalar under an explicit or inherited standard
+   ACAL Double, the subtype is `LiteralDoubleType`, per rule 3)
 2. an explicit `DataType` in the `ValueType` mapping
 3. a parent-context inference rule defined by ACAL for the containing
    object or expression
