@@ -743,11 +743,11 @@ The following rules apply to primitive `ValueType` forms:
    the standard ACAL Double applies to it and its text is a decimal
    integer (matching `[-+]?[0-9]+`, which is in the lexical space of
    `xs:double`); it then denotes the `xs:double` value that the lexical
-   mapping of `xs:double` ([[ACAL-Core](#acal-core)] Annex C.2.7) assigns to the
-   scalar's text.  A YAML scalar in hexadecimal notation SHALL NOT be
-   used for this form.  For
-   example, `DataType: "urn:oasis:names:tc:acal:1.0:data-type:double"`
-   with `Value: 3` represents the double 3.0.
+   mapping of `xs:double` ([[ACAL-Core](#acal-core)] Annex C.2.7)
+   assigns to the scalar's text.  For example,
+   `DataType: "urn:oasis:names:tc:acal:1.0:data-type:double"` with
+   `Value: 3` represents the double 3.0.  A YAML scalar in hexadecimal
+   notation SHALL NOT be used for this form.
 4. A YAML string scalar represents either:
    1. `LiteralStringType`, if no inherited or explicit non-string
       `DataType` applies
